@@ -11,7 +11,7 @@ app:
       files:
         - app/package-lock.json
     paths:
-      - .npm/
+      - app/.npm/
 
   before_script:
     - cd app
