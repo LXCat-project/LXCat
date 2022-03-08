@@ -7,7 +7,7 @@ image: node:lts
 
 cache:
   paths:
-    - node_modules/
+    - app/node_modules/
 
 app:
   before_script:
