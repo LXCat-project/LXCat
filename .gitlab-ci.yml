@@ -1,0 +1,18 @@
+image: node:lts
+
+# services:
+#   - name: arangodb/arangodb:3.7.12
+#     alias: db
+
+
+cache:
+  paths:
+    - node_modules/
+
+app:
+  before_script:
+    - cd app
+  script:
+    - npm install
+    - npm build
+    - npm lint
