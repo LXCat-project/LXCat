@@ -5,14 +5,17 @@ image: node:lts
 #     alias: db
 
 
-cache:
-  paths:
-    - app/node_modules/
-
 app:
+  cache:
+    key:
+      files:
+        - app/package-lock.json
+    paths:
+      - .npm/
+
   before_script:
     - cd app
   script:
-    - npm install
+    - npm install --cache .npm --prefer-offline
     - npm build
     - npm lint
