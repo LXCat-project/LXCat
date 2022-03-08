@@ -17,5 +17,5 @@ app:
     - cd app
   script:
     - npm install --cache .npm --prefer-offline
-    - npm build
-    - npm lint
+    - npm run build
+    - npm run lint
