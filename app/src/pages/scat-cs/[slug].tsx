@@ -1,5 +1,5 @@
 import { GetStaticProps, NextPage } from "next"
-import { byId, CrossSection, search } from "../../db"
+import { byId, CrossSection, search } from "../../ScatteringCrossSection/db"
 
 interface Props {
     section: CrossSection

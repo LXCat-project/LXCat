@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CrossSection } from "../../db";
+import { CrossSection } from "./db";
 
 export function ListItem(props: CrossSection) {
     return (

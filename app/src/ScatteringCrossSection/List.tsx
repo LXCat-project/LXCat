@@ -1,4 +1,4 @@
-import { CrossSection } from "../../db"
+import { CrossSection } from "./db"
 import { ListItem } from "./ListItem"
 
 interface Props {

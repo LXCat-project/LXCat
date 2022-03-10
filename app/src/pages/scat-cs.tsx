@@ -1,8 +1,8 @@
 import { NextPage } from "next"
 import { useEffect, useState } from "react"
-import { List } from "../components/ScatteringCrossSection/List"
-import { SearchForm } from "../components/ScatteringCrossSection/SearchForm"
-import { CrossSection, facets, search } from "../db"
+import { List } from "../ScatteringCrossSection/List"
+import { SearchForm } from "../ScatteringCrossSection/SearchForm"
+import { CrossSection, facets, search } from "../ScatteringCrossSection/db"
 
 interface Props {
     items: CrossSection[]

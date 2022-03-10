@@ -1,5 +1,4 @@
-import { validFacets } from "../../db"
-import { CheckBoxGroup } from "../form/CheckBoxGroup"
+import { CheckBoxGroup } from "../shared/CheckBoxGroup"
 
 interface Props {
     facets: Record<string, string[]>

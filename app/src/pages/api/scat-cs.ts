@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import { search, validFacets } from "../../db";
+import { search, validFacets } from "../../ScatteringCrossSection/db";
 
 const handler = nc<NextApiRequest, NextApiResponse>()
     .post(async (req, res) => {
