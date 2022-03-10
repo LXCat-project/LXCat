@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { List } from "../ScatteringCrossSection/List"
 import { SearchForm } from "../ScatteringCrossSection/SearchForm"
 import { CrossSection, facets, search } from "../ScatteringCrossSection/db"
+import { Layout } from "../shared/Layout"
 
 interface Props {
     items: CrossSection[]
@@ -35,12 +36,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({ items, facets }) => {
         setSelection(newSelection)
     }
     return (
-        <div>
+        <Layout title="Scattering Cross Section">
             <h1>Scattering Cross Sections</h1>
             <SearchForm facets={facets} selection={selection} onChange={onSearchChange} enabledFacets={validFacets}/>
             <span>Filtered {filteredItems.length} of {items.length}</span>
             <List items={filteredItems} />
-        </div>
+        </Layout>
     )
 }
 

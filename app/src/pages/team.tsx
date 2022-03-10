@@ -1,10 +1,11 @@
 import { NextPage } from "next"
+import { Layout } from "../shared/Layout"
 
 const TeamPage: NextPage = () => {
     return (
-        <div>
+        <Layout>
             <h1>Team page</h1>
-        </div>
+        </Layout>
     )
 }
 

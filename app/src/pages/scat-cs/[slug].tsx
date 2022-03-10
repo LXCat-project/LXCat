@@ -1,5 +1,6 @@
 import { GetStaticProps, NextPage } from "next"
 import { byId, CrossSection, search } from "../../ScatteringCrossSection/db"
+import { Layout } from "../../shared/Layout"
 
 interface Props {
     section: CrossSection
@@ -7,7 +8,7 @@ interface Props {
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({section}) => {
     return (
-        <div>
+        <Layout title={`Scattering Cross Section of ${section.species1} / ${section.species2}`}>
             <h1>Scattering Cross Section</h1>
             <div>Species: {section.species1} / {section.species2}</div>
             <div>Database: {section.database}</div>
@@ -15,7 +16,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({section}) => {
             <div>
                 {section.data}
             </div>
-        </div>
+        </Layout>
     )
 }
 
