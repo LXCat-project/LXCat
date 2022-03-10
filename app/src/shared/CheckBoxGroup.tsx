@@ -40,8 +40,8 @@ export function CheckBoxGroup({ name, choices, selected, setSelected, enabled }:
             checked={selected.has(f)} />
     ));
     return (
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-            <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                 {boxes}
             </div>
             <div>
