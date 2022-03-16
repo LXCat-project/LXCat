@@ -2,11 +2,12 @@ import { NextPage } from "next"
 import { useEffect, useState } from "react"
 import { List } from "../ScatteringCrossSection/List"
 import { SearchForm } from "../ScatteringCrossSection/SearchForm"
-import { CrossSection, facets, search } from "../ScatteringCrossSection/db"
+import { facets, search } from "../ScatteringCrossSection/db"
 import { Layout } from "../shared/Layout"
+import { CrossSectionHeading } from "../ScatteringCrossSection/types"
 
 interface Props {
-    items: CrossSection[]
+    items: CrossSectionHeading[]
     facets: Record<string, string[]>
 }
 
@@ -33,7 +34,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({ items, facets }) => {
         fetchData()
     }, [selection])
 
-    async function onSearchChange(newSelection: Record<keyof CrossSection, Set<string>>) {
+    async function onSearchChange(newSelection: Record<keyof CrossSectionHeading, Set<string>>) {
         setSelection(newSelection)
     }
     return (

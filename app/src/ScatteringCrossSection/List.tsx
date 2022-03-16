@@ -1,8 +1,8 @@
-import { CrossSection } from "./db"
+import { CrossSectionHeading } from "./types"
 import { ListItem } from "./ListItem"
 
 interface Props {
-    items: CrossSection[]
+    items: CrossSectionHeading[]
 }
 
 export function List({ items }: Props) {

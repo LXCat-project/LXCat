@@ -1,12 +1,4 @@
-export interface CrossSection {
-    id: number
-    species1: string
-    species2: string
-    database: string
-    group: string
-    data: string
-    process: string
-}
+import type { CrossSection, CrossSectionHeading } from './types'
 
 // TODO retrieve from database
 const crossSections: CrossSection[] = [{
@@ -16,6 +8,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Coxon',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(01)',
 }, {
     id: 10,
@@ -24,6 +17,7 @@ const crossSections: CrossSection[] = [{
     database: 'Phelps',
     group: '',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Isotropic',
 }, {
     id: 7,
@@ -32,6 +26,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Coxon',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(01)',
 }, {
     id: 8,
@@ -40,6 +35,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Coxon',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(01)',
 }, {
     id: 9,
@@ -48,6 +44,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Coxon',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(02)',
 }, {
     id: 2,
@@ -56,6 +53,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Buchachenko',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(01)',
 }, {
     id: 3,
@@ -64,6 +62,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Buchachenko',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(02)',
 }, {
     id: 4,
@@ -72,6 +71,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Buchachenko',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(03)',
 }, {
     id: 5,
@@ -80,6 +80,7 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Buchachenko',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(04)',
 }, {
     id: 6,
@@ -88,12 +89,18 @@ const crossSections: CrossSection[] = [{
     database: 'Viehland',
     group: 'Buchachenko',
     data: 'something',
+    references: [{title:'ref1', authors:['a1'], 'container-title': 'j1'}],
     process: 'Moment Q(05)',
 }]
 
+function toHeading(cs: CrossSection): CrossSectionHeading {
+    const {data, ...r} = cs
+    return r
+}
+
 export async function search(selected: Record<string, string[]> = {}) {
     if (Object.entries(selected).length > 0) {
-        return crossSections.filter(d => {
+        return crossSections.map(toHeading).filter(d => {
             return Object.entries(selected).every(([sk, sv]) => {
                 if (sv.length === 0) {
                     // No selection means select all
@@ -103,7 +110,7 @@ export async function search(selected: Record<string, string[]> = {}) {
             })
         })
     }
-    return crossSections
+    return crossSections.map(toHeading)
 }
 
 export async function byId(id: number) {
