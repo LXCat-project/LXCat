@@ -1,8 +1,4 @@
-export interface Reference {
-    title: string
-    authors: string[]
-    'container-title': string  // aka journal
-}
+import { Reference } from "../shared/types"
 
 export interface CrossSectionHeading {
     id: number

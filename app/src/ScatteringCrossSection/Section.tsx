@@ -1,5 +1,6 @@
+import { HowToCite } from '../shared/HowToCite'
 import type { CrossSection } from './types'
-import { HowToCite } from './HowToCite'
+
 
 interface Props {
     section: CrossSection

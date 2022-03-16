@@ -2,7 +2,7 @@ import { GetStaticProps, NextPage } from "next"
 import { byId, search } from "../../ScatteringCrossSection/db"
 import { Section } from "../../ScatteringCrossSection/Section"
 import { CrossSection } from "../../ScatteringCrossSection/types"
-import { TermsOfUseCheck } from "../../ScatteringCrossSection/TermsOfUseCheck"
+import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck"
 import { Layout } from "../../shared/Layout"
 
 interface Props {
