@@ -136,7 +136,7 @@ export async function facets() {
     }
 }
 
-async function validFacet(key: keyof CrossSection, selected: Record<string, string[]>) {
+async function validFacet(key: keyof CrossSectionHeading, selected: Record<string, string[]>) {
     if (selected[key].length > 0) {
         return await facet(key)
     }

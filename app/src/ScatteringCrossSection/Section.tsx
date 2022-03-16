@@ -14,11 +14,10 @@ export const Section = ({section}: Props) => {
             <div>Group: {section.group}</div>
             
             <div>
-                {section.data}
+                Data: {section.data}
             </div>
 
-            <HowToCite references={...section.references}/>
-            bla
+            <HowToCite references={section.references}/>
         </div>
     )
 }

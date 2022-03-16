@@ -2,7 +2,7 @@ import { GetStaticProps, NextPage } from "next"
 import { byId, search } from "../../ScatteringCrossSection/db"
 import { Section } from "../../ScatteringCrossSection/Section"
 import { CrossSection } from "../../ScatteringCrossSection/types"
-import { HowToCiteCheck } from "../../ScatteringCrossSection/HowToCiteCheck"
+import { TermsOfUseCheck } from "../../ScatteringCrossSection/TermsOfUseCheck"
 import { Layout } from "../../shared/Layout"
 
 interface Props {
@@ -12,9 +12,9 @@ interface Props {
 const ScatteringCrossSectionPage: NextPage<Props> = ({section}) => {
     return (
         <Layout title={`Scattering Cross Section of ${section.species1} / ${section.species2}`}>
-            <HowToCiteCheck references={section.references}>
+            <TermsOfUseCheck references={section.references}>
                 <Section section={section}></Section>
-            </HowToCiteCheck>
+            </TermsOfUseCheck>
         </Layout>
     )
 }
