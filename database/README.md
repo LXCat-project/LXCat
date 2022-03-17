@@ -4,14 +4,33 @@ The web application needs an [arangodb](https://arangodb.com/) database to talk 
 
 ## Run for development
 
+Create `..env` file with
+
 ```shell
-cd database
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file ../app/.env.local -p 8529:8529 arangodb/arangodb:3.9.0
+ARANGO_ROOT_PASSWORD=<arangodb root password used for Docker container and migrations>
 ```
 
-The `../app/.env.local` file contains root password for the instance.
+Build Docker image for database with
+
+```shell
+docker build -t lxcat/database .
+```
+
+Spin up a database container.
+
+```shell
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 lxcat/database
+```
+
 The `./orangodb3` directory is used to persist the collection data.
 The container will listen on [http://localhost:8529](http://localhost:8529).
+
+Perform migrations to create collections and fill them with
+
+```shell
+npm install
+npx arango-migrate -u
+```
 
 ## Seeding
 

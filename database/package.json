@@ -1,0 +1,15 @@
+{
+  "name": "lxcat-db-utils",
+  "version": "1.0.0",
+  "description": "The web application needs an [arangodb](https://arangodb.com/) database to talk to.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stefan Verhoeven",
+  "license": "ISC",
+  "devDependencies": {
+    "arango-migrate": "^0.0.3",
+    "dotenv": "^16.0.0"
+  }
+}
