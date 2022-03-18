@@ -4,6 +4,9 @@ const nextConfig = {
   experimental: {
     outputStandalone: true,
   },
+  images: {
+    domains: ['s.gravatar.com'],
+  },
 }
 
 module.exports = nextConfig

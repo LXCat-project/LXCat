@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { CSSProperties } from 'react'
 import logo from '../../public/lxcat.png'
+import { UserAnchor } from '../auth/UserAnchor'
 
 const navStyle: CSSProperties = {
     backgroundColor: '#254779',
@@ -30,9 +31,7 @@ export const NavBar = () => {
                     <a>Team</a>
                 </Link>
             </div>
-            <div>
-                Login
-            </div>
+            <UserAnchor/>
         </nav>
     )
 }

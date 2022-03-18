@@ -40,3 +40,29 @@ Run with
 ```shell
 docker run -p 3000:3000 lxcat/app
 ```
+
+## Setup auth
+
+The app can use [Auth0](https://auth0.com/) to perform user management and authentication.
+
+In auth0 dashboard
+
+1. Create a new application of type `Regular Web Applications`.
+2. Create roles
+
+    - root, can do anything
+    - contributor, can add and edit own records
+    - developer, can get token to interact with API
+
+3. Make sure `disable sign ups` is disabled in auth0 authentication database settings
+
+In local directory
+
+1. In `.env.local` defined following key/value pairs
+
+    ```env
+    AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
+    AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
+    AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+    NEXTAUTH_SECRET=<Random string to get rid of warning>
+    ```
