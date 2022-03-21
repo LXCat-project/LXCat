@@ -67,3 +67,13 @@ This can be done by writing scripts inside a directory for example `seeds/testde
 ```shell
 npm run seed seeds/test
 ```
+
+## Setup & seed from Docker
+
+Build container with
+
+```shell
+docker build -t lxcat/dbimport -f database/Dockerfile .
+```
+
+All files to impot must be available within container so you must copy or mount the directory inside the container.

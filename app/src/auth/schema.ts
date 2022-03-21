@@ -18,6 +18,8 @@ const Account = z.object({
     session_state: z.string().optional(),
     oauth_token_secret: z.string().optional(),
     oauth_token: z.string().optional(),
+    expires_at: z.number().optional(),
+    created_at: z.number().optional(),
 }).strict()
 
 export const User = z.object({

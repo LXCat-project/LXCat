@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  database:
+    image: arangodb/arangodb:3.9.0
+    env_file: .env
+  app:
+    build:
+      context: ./app
+    volumes:
+      - db-data:/var/lib/arangodb3
+    env_file: .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    environment:
+      ARANGO_URL: http://database:8529
+  setup:
+    build:
+      context: .
+      dockerfile: database/Dockerfile
+    command: []
+    env_file: .env
+    depends_on:
+      - database
+    environment:
+      ARANGO_URL: http://database:8529
+volumes:
+  db-data:

@@ -90,3 +90,34 @@ For open source projects, say how it is licensed.
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+## Production deployment
+
+Create `.env` file with
+
+```dotenv
+ARANGO_ROOT_PASSWORD=<arangodb root password that is set inside db container>
+ARANGO_PASSWORD=<arangodb root password used to connect to db container>
+AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
+AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
+AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+GITLAB_CLIENT_ID=<Application ID from GitLab application page>
+GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
+NEXTAUTH_SECRET=<Random string to get rid of warning>
+NEXTAUTH_URL=<URL where app is running. Without reverse proxy is http://localhost:3000>
+```
+
+Startup containers with
+
+```shell
+docker-compose up --build
+```
+
+Fill database with
+
+```shell
+docker-compose run setup setup
+docker-compose run setup seed seeds/test
+```
+
+Web application will run at `http://localhost:3000`
