@@ -15,7 +15,9 @@
     "next-connect": "^0.12.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "sharp": "^0.30.2"
+    "sharp": "^0.30.2",
+    "zod": "^3.14.2",
+    "zod-to-json-schema": "^3.11.3"
   },
   "devDependencies": {
     "@types/node": "17.0.21",

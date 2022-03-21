@@ -1,3 +1,13 @@
-FROM arangodb/arangodb:3.9.0
+FROM node:16-alpine
 
-COPY createdatabase.js /docker-entrypoint-initdb.d/
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+WORKDIR /database
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY src src
+COPY setup setup
+
+
+ENTRYPOINT ["npm", "run"]
