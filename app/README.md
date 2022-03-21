@@ -43,20 +43,29 @@ docker run -p 3000:3000 lxcat/app
 
 ## Setup auth
 
-The app can use [Auth0](https://auth0.com/) to perform user management and authentication.
+The app can use [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is done in the ArangoDB users collection.
 
-In auth0 dashboard
+### In auth0 dashboard
 
 1. Create a new application of type `Regular Web Applications`.
-2. Create roles
 
-    - root, can do anything
-    - contributor, can add and edit own records
-    - developer, can get token to interact with API
+    - Allowed Callback URLs
+        - For dev deployment set to `http://localhost:3000/api/auth/callback/auth0`
+    - Allowed Logout URLs
+        - For dev deployment set to `http://localhost:3000`
 
-3. Make sure `disable sign ups` is disabled in auth0 authentication database settings
+2. Make sure `disable sign ups` is disabled in auth0 authentication database settings
 
-In local directory
+### In GitLab application settings
+
+1. Create a [new application](https://gitlab.com/-/profile/applications)
+
+    - Redirect URI
+        - For dev deployments set to `http://localhost:3000/api/auth/callback/gitlab`
+    - Scopes
+        - Select `openid`, `profile` and `email`
+
+### In local directory
 
 1. In `.env.local` defined following key/value pairs
 
@@ -64,5 +73,7 @@ In local directory
     AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
     AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
     AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+    GITLAB_CLIENT_ID=<Application ID from GitLab application page>
+    GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
     NEXTAUTH_SECRET=<Random string to get rid of warning>
     ```

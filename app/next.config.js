@@ -5,7 +5,7 @@ const nextConfig = {
     outputStandalone: true,
   },
   images: {
-    domains: ['s.gravatar.com'],
+    domains: ['s.gravatar.com', 'secure.gravatar.com'],
   },
 }
 
