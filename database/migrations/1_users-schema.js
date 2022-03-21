@@ -57,9 +57,10 @@ const migration = {
                   "type": "string"
                 }
               },
-              required: ["type", "provider", "providerAccountId"],
-              additionalProperties: false
-            }
+              "required": ["type", "provider", "providerAccountId"],
+              "additionalProperties": false
+            },
+            "default": []
           },
           "sessions": {
             "type": "array",
@@ -70,12 +71,13 @@ const migration = {
                 "expires": { "type": "string" },
                 "sessionToken": { "type": "string" }
               },
-              required: ["sessionToken", "expires"],
-              additionalProperties: false
-            }
+              "required": ["sessionToken", "expires"],
+              "additionalProperties": false
+            },
+            "default": []
           }
         },
-        additionalProperties: false
+        "additionalProperties": false
       }
       const schema = {
         rule
