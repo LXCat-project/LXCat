@@ -26,7 +26,13 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({ items, facets }) => {
         async function fetchData() {
             const setReplacer = (_key: string, value: unknown) => (value instanceof Set ? [...value] : value)
             const body = JSON.stringify(selection, setReplacer)
-            const resp = await fetch('/api/scat-cs', { method: 'POST', body })
+            const headers = new Headers({
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            })
+            const init = { method: 'POST', body, headers }
+            const url = '/api/scat-cs'
+            const resp = await fetch(url, init)
             const data = await resp.json()
             setFilteredItems(data.data)
             setValidFacets(data.validFacets)
