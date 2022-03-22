@@ -43,7 +43,7 @@ docker run -p 3000:3000 lxcat/app
 
 ## Setup auth
 
-The app can use [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is done in the ArangoDB users collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is done in the ArangoDB users collection.
 
 ### In auth0 dashboard
 
@@ -65,6 +65,21 @@ The app can use [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitla
     - Scopes
         - Select `openid`, `profile` and `email`
 
+### For Orcid sandbox
+
+1. Register on [https://sandbox.orcid.org/](https://sandbox.orcid.org/)
+
+    - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
+    - Use `<something>@mailinator.com` as email, because to register app you need a verified email and Orcid sandbox only sends mails to `mailinator.com`.
+
+2. Goto [https://www.mailinator.com/v4/public/inboxes.jsp](https://www.mailinator.com/v4/public/inboxes.jsp) and search for `<something>` and verify your email adress
+3. Goto [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools) to register for public API.
+
+    - Your website URL
+        - Does not allow localhost URL, so use `https://lxcat.net`
+    - Redirect URI
+        - For dev deployments set to `http://localhost:3000/api/auth/callback/orcidsandbox`
+
 ### In local directory
 
 1. In `.env.local` defined following key/value pairs
@@ -76,4 +91,6 @@ The app can use [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitla
     GITLAB_CLIENT_ID=<Application ID from GitLab application page>
     GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
     NEXTAUTH_SECRET=<Random string to get rid of warning>
+    ORCID_CLIENT_ID=<Client secret from Auth0 application settings page>
+    ORCID_CLIENT_SECRET=e9c78628-031d-47cb-8be8-5626d514f8df
     ```

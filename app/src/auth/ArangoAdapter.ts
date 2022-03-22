@@ -1,5 +1,6 @@
 import { aql, Database } from "arangojs";
 import { Adapter, AdapterUser } from "next-auth/adapters";
+import { Account } from "./schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
     return {
@@ -79,11 +80,12 @@ export const ArangoAdapter = (db: Database): Adapter => {
         },
         async linkAccount(data) {
             const { userId, ...account } = data
+            const prunedAccount = Account.parse(account)  // Removes extra keys
             await db.query(aql`
                 FOR u IN users
                     FILTER u._key == ${userId}
                 UPDATE u WITH {
-                    accounts: PUSH(u.accounts, ${account})
+                    accounts: PUSH(u.accounts, ${prunedAccount})
                 } IN users
             `)
             return data

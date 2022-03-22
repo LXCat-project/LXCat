@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
 import { ArangoAdapter } from "../../../auth/ArangoAdapter";
+import { OrcidSandboxProvider } from "../../../auth/OrcidProvider";
 import { db } from "../../../db";
 
 export default NextAuth({
@@ -14,6 +15,10 @@ export default NextAuth({
       GitlabProvider({
         clientId: process.env.GITLAB_CLIENT_ID,
         clientSecret: process.env.GITLAB_CLIENT_SECRET
+      }),
+      OrcidSandboxProvider({
+        clientId: process.env.ORCID_CLIENT_ID || '',
+        clientSecret: process.env.ORCID_CLIENT_SECRET || ''
       })
     ],
     adapter: ArangoAdapter(db)

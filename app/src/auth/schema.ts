@@ -1,12 +1,12 @@
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-const Session = z.object({
+export const Session = z.object({
     expires: z.string(),
     sessionToken: z.string(),
 }).strict()
 
-const Account = z.object({
+export const Account = z.object({
     type: z.string(),
     provider: z.string(),
     providerAccountId: z.string(),
@@ -18,9 +18,7 @@ const Account = z.object({
     session_state: z.string().optional(),
     oauth_token_secret: z.string().optional(),
     oauth_token: z.string().optional(),
-    expires_at: z.number().optional(),
-    created_at: z.number().optional(),
-}).strict()
+})
 
 export const User = z.object({
     name: z.string().optional(),
