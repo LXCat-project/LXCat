@@ -1,5 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from 'next/image'
+import Link from "next/link";
 import { Layout } from "../shared/Layout";
 
 const ProfilePage = () => {
@@ -22,6 +23,11 @@ const ProfilePage = () => {
           <div>{session.user!.email}</div>
         </div>
       </div>
+
+      <h2>API tokens</h2>
+      <p>Some API endpoints require authentication.</p>
+      <p> Use `Authentication: Bearer &lt;token&gt;` as header in request.</p>
+      <p><Link href="/api/auth/apitoken"><a target={"_blank"}>Click to generate API token</a></Link></p>
 
       <button onClick={() => signOut()}>Sign out</button>
     </Layout>

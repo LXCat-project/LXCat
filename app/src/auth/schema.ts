@@ -20,6 +20,12 @@ export const Account = z.object({
     oauth_token: z.string().optional(),
 })
 
+export const APIToken =  z.object({
+    name: z.string(),
+    apiToken: z.string(),
+    expires: z.string().optional()
+})
+
 export const User = z.object({
     name: z.string().optional(),
     email: z.string().optional(),
@@ -27,7 +33,9 @@ export const User = z.object({
     emailVerified: z.string().optional(),
     accounts: z.array(Account).optional(),
     sessions: z.array(Session).optional(),
+    apitokens: z.array(APIToken).optional(),
 }).strict()
+
 
 export type User = z.infer<typeof User>;
 
