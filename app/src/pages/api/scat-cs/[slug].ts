@@ -1,11 +1,11 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { AuthRequest, hasSessionOrJwt } from "../../../auth/middleware";
+import { AuthRequest, hasSessionOrAPIToken } from "../../../auth/middleware";
 import { byId } from "../../../ScatteringCrossSection/db";
 
 
 const handler = nc<AuthRequest, NextApiResponse>()
-    .use(hasSessionOrJwt)
+    .use(hasSessionOrAPIToken)
     .get(async (req, res) => {
         console.log(req.user)
         const {slug} = req.query

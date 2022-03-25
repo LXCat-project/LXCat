@@ -18,10 +18,10 @@ export interface AuthRequest extends NextApiRequest {
 }
 
 /**
- * Middleware to check if request contains an authenticated session or valid jwt.
+ * Middleware to check if request contains an authenticated session or valid API token.
  * Sets `user` property in `req` or returns 401.
  */
-export const hasSessionOrJwt: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
+export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
     const session = await getSession({ req })
     if (session?.user) {
         req.user = session.user
