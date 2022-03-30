@@ -43,7 +43,7 @@ docker run -p 3000:3000 lxcat/app
 
 ## Setup auth
 
-The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is done in the ArangoDB users collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
 
 ### In auth0 dashboard
 
@@ -80,17 +80,38 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
     - Redirect URI
         - For dev deployments set to `http://localhost:3000/api/auth/callback/orcidsandbox`
 
+### For Orcid
+
+1. Register on [https://orcid.org/](https://orcid.org/)
+
+    - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
+
+2. Goto [https://orcid.org/developer-tools](https://orcid.org/developer-tools) to register for public API.
+
+    - Your website URL
+        - Does not allow localhost URL, so use `https://lxcat.net`
+    - Redirect URI
+        - For dev deployments set to `http://localhost:3000/api/auth/callback/orcid`
+        - For production deployments set to `http://< lxcat ng domain >/api/auth/callback/orcid`
+
 ### In local directory
 
 1. In `.env.local` defined following key/value pairs
 
     ```env
+    NEXTAUTH_SECRET=<Random string to get rid of warning>
+    # When you want to use Auth0 as identity provider set the AUTH0_* vars
     AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
     AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
     AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+    # When you want to use GitLab as identity provider set the GITLAB_* vars
     GITLAB_CLIENT_ID=<Application ID from GitLab application page>
     GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
-    NEXTAUTH_SECRET=<Random string to get rid of warning>
-    ORCID_CLIENT_ID=<Client secret from Auth0 application settings page>
-    ORCID_CLIENT_SECRET=e9c78628-031d-47cb-8be8-5626d514f8df
+    # When you want to use Orcid as identity provider set the ORCID_* vars
+    ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
+    ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
+    # To use Orcid sandbox instead of production Orcid set following var
+    ORCID_SANDBOX=True
     ```
+
+At least one identity provider should be configured.
