@@ -4,11 +4,11 @@ services:
     image: arangodb/arangodb:3.9.0
     env_file: .env
     restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/arangodb3
   app:
     build:
       context: ./app
-    volumes:
-      - db-data:/var/lib/arangodb3
     env_file: .env
     ports:
       - "3000:3000"

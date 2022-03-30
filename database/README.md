@@ -20,8 +20,28 @@ docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 85
 The `./orangodb3` directory is used to persist the collection data.
 The container will listen on [http://localhost:8529](http://localhost:8529).
 
-## Filling the database with scripts
+## Setup
 
+To create database and create all empty collections run following command:
+
+```shell
+npm install
+# To run all setup/*.ts files
+npm run setup
+```
+
+## Seeding with test data
+
+The app requires some collections to be filled.
+This can be done by writing scripts inside a directory for example `seeds/test/` and running:
+
+```shell
+npm run seed seeds/test
+```
+
+## Creating own seed
+
+To create your own seed data you should create a directory with scripts.
 Each script file is a Typescript file which will be executed.
 
 To get a [ArangoJS Database object](https://arangodb.github.io/arangojs/7.7.0/classes/database.database-1.html) to perform database queries import `db` from the app use the following imports:
@@ -49,31 +69,8 @@ import { UserJsonSchema } from '../../app/src/auth/schema'
 
 To make sure the scripts are executed in the correct order when using `*`, name the scripts in an alphanumerically sorted way.
 
-## Setup
+To run the scripts use
 
-To create database and create all empty collections run following command:
-
-```shell
-npm install
-# To run all setup/*.ts files
-npm run setup
+```sh
+npm run seed <a directory with Typescript files (*.ts) that fill the database>
 ```
-
-## Seeding
-
-The app requires some collections to be filled.
-This can be done by writing scripts inside a directory for example `seeds/testdemo/` and running:
-
-```shell
-npm run seed seeds/test
-```
-
-## Setup & seed from Docker
-
-Build container with
-
-```shell
-docker build -t lxcat/dbimport -f database/Dockerfile .
-```
-
-All files to import must be available within container so you must copy or mount the directory inside the container.

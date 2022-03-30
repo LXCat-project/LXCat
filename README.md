@@ -28,7 +28,12 @@ Fill database with
 
 ```shell
 docker-compose run setup setup
+# To seed db with test data set use
 docker-compose run setup seed seeds/test
+# To seed db with production data use
+cp <production data seed>
+docker copy <production data seed> lxcat-ng_setup_1:/database/seeds/<production data seed>
+docker-compose run setup seed seeds/<production data seed>
 ```
 
 Web application will run at `http://localhost:3000`
