@@ -26,12 +26,14 @@ export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> 
     if (session?.user) {
         req.user = session.user
         next()
+        return
     }
     if (req.headers.authorization?.split(' ')[0] === 'Bearer') {
         const token1 = req.headers.authorization.split(' ')[1]
         const session1: JwtPayload = await verifier(token1)
         req.user = session1
         next()
+        return
     }
     res.status(401)
         .setHeader('WWW-Authenticate', 'Bearer, OAuth')
@@ -47,6 +49,7 @@ export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> 
     if (session?.user) {
         req.user = session.user
         next()
+        return
     }
     res.status(401)
         .setHeader('WWW-Authenticate', 'OAuth')
