@@ -3,6 +3,7 @@ services:
   database:
     image: arangodb/arangodb:3.9.0
     env_file: .env
+    restart: unless-stopped
   app:
     build:
       context: ./app
@@ -15,6 +16,7 @@ services:
       - database
     environment:
       ARANGO_URL: http://database:8529
+    restart: unless-stopped
   setup:
     build:
       context: .
