@@ -76,4 +76,4 @@ Build container with
 docker build -t lxcat/dbimport -f database/Dockerfile .
 ```
 
-All files to impot must be available within container so you must copy or mount the directory inside the container.
+All files to import must be available within container so you must copy or mount the directory inside the container.

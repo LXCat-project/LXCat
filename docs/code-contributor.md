@@ -1,8 +1,17 @@
 # Code contributor docs
 
-* Where is the code?
-* How to perform local deployment with test data?
-* How to make a merge request
+## Where is the code?
+
+Code to fill the database can be found in [../database/](../database/).
+Code to that runs the website can be found in [../app/](../app/).
+
+## How to perform local deployment with test data?
+
+See [../database/README](../database/README) how to seed the database with test data.
+
+## How to make a merge request
+
+See <https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html> how to create merge request in <https://gitlab.com/LXCat-project/lxcat-ng> repository.
 
 ## Technology choices
 
