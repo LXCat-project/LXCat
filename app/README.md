@@ -90,9 +90,18 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
 
     - Your website URL
         - Does not allow localhost URL, so use `https://lxcat.net`
-    - Redirect URI
-        - For dev deployments set to `http://localhost:3000/api/auth/callback/orcid`
-        - For production deployments set to `http://< lxcat ng domain >/api/auth/callback/orcid`
+    - Redirect URI, requires https
+        - For dev deployments the nextjs server on http://localhost:3000 has to be reversed-proxied to https
+            This can be done with [caddyserver](https://caddyserver.com/)
+
+            ```sh
+            docker run --network host --rm caddy:2.4.6 caddy reverse-proxy --to http://localhost:3000
+            ```
+
+            And set redirect URL to `https://localhost/api/auth/callback/orcid`
+            Also set `NEXTAUTH_URL=https://localhost/api/auth` in `.env.local` file.
+        - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
+            Also set `NEXTAUTH_URL=https://< lxcat ng domain >/api/auth` in `.env.local` file.
 
 ### In local directory
 
