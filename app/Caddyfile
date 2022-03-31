@@ -1,0 +1,7 @@
+{
+  http_port 8080
+}
+
+localhost:8443
+
+reverse_proxy 127.0.0.1:3000

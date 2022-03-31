@@ -41,7 +41,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
             if (result === undefined) {
                 return null
             }
-            const { _key, user } = result
+            const { _key, ...user } = result
             if ('emailVerified' in user) {
                 user.emailVerified = new Date(user.emailVerified)
             }
