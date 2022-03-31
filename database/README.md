@@ -80,7 +80,8 @@ npm run seed <a directory with Typescript files (*.ts) that fill the database>
 Some pages require the user to have a certain role.
 To assign new roles to user can be done on `/admin` page, but you need to have the `admin` role to access the page..
 There is a chicken and the egg problem to access the page.
-The admin roles can also be assigned on the command line with
+
+The admin role can also be assigned to a user that has already logged in once by running following command
 
 ```sh
 npm run make-admin <email of user>
