@@ -7,8 +7,10 @@ export function UserAnchor() {
   if (session) {
     return (
       <>
-        <Link href='/profile' passHref>
+        <Link href='/profile'>
+          <a>
             <Image src={session.user!.image!} title={`Logged in ${session.user?.name}`} alt="Picture of logged in user" width={40} height={40}/>
+            </a>
         </Link>
       </>
     )

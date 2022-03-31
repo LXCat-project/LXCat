@@ -1,14 +1,14 @@
 import { aql, Database } from "arangojs";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { Account } from "./schema";
+import { Account, Session, User } from "./schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
     return {
         async createUser(user) {
-            user.accounts = []
-            user.sessions = []
+            (user as Omit<User, "emailVerified">).accounts = [] as Account[]
+            (user as Omit<User, "emailVerified">).sessions = [] as Session[]
             if (user.emailVerified === null) {
-                delete user.emailVerified
+                delete (user as any).emailVerified
             }
             const result = await db.query(aql`
                 INSERT ${user} INTO users LET r = NEW RETURN r._key

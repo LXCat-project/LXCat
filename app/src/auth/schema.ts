@@ -5,6 +5,7 @@ export const Session = z.object({
     expires: z.string(),
     sessionToken: z.string(),
 }).strict()
+export type Session = z.infer<typeof Session>;
 
 export const Account = z.object({
     type: z.string(),
@@ -19,12 +20,16 @@ export const Account = z.object({
     oauth_token_secret: z.string().optional(),
     oauth_token: z.string().optional(),
 })
+export type Account = z.infer<typeof Account>;
 
 export const APIToken =  z.object({
     name: z.string(),
     apiToken: z.string(),
     expires: z.string().optional()
 })
+
+export const Role = z.enum(["admin", "editor", "developer", "author"])
+export type Role = z.infer<typeof Role>;
 
 export const User = z.object({
     name: z.string().optional(),
@@ -34,8 +39,8 @@ export const User = z.object({
     accounts: z.array(Account).optional(),
     sessions: z.array(Session).optional(),
     apitokens: z.array(APIToken).optional(),
+    roles: z.array(Role).optional(),
 }).strict()
-
 
 export type User = z.infer<typeof User>;
 
