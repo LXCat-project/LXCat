@@ -25,7 +25,7 @@ export const dropUser = async (userId: string) => {
 export const listUsers = async () =>{
     const cursor = await db.query(aql`
     FOR u IN users
-    RETURN u
+    RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
   `)
   const users = await cursor.all() as User[]
   return users
