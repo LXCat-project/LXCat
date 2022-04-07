@@ -99,7 +99,8 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
             # This will ask for sudo login to install a CA certificate into local trust store so browser trusts the URL
             ```
 
-            And set redirect URL to `https://localhost:8443/api/auth/callback/orcid`
+            This will make app available on [https://localhost:8443](https://localhost:8443).
+            In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
             Also set `NEXTAUTH_URL=https://localhost:8443/api/auth` in `.env.local` file.
         - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
             Also set `NEXTAUTH_URL=https://< lxcat ng domain >/api/auth` in `.env.local` file.
