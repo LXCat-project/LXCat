@@ -13,8 +13,9 @@ interface Props {
 
 const Admin: NextPage<Props> = ({ me, users: initalUsers }) => {
   const [users, setUsers] = useState(initalUsers)
+  // TODO move updateRole + deleteUser to client.ts
   const updateRole = async (user: User, role: Role) => {
-    const url = `/api/users/${(user as any)._key}/${role}/toggle`
+    const url = `/api/users/${(user as any)._key}/roles/${role}`
     const res = await fetch(url, {
       method: 'POST'
     })
@@ -87,7 +88,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     context.res.setHeader('WWW-Authenticate', 'OAuth')
     throw Error('Unauthorized')
   }
-
   if (session!.user!.roles!.includes(Role.enum.admin)) {
     const users = await listUsers()
     return {
