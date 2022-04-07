@@ -12,6 +12,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         const {user: userId } = req.query
         if (typeof userId === 'string') {
             await dropUser(userId)
+            res.status(204).send('')
         }
     })
 
