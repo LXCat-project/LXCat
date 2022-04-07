@@ -1,16 +1,16 @@
 import 'dotenv/config'
 import { db } from '../../app/src/db'
-import { User, UserJsonSchema } from '../../app/src/auth/schema'
+import { UserWithAccountSessionInDb, UserWithAccountSessionInDbAsJsonSchema } from '../../app/src/auth/schema'
 
 (async () => {
-    const users = db.collection<User>('users')
+    const users = db.collection<UserWithAccountSessionInDb>('users')
     if ((await users.exists())) {
         console.log('Users collection already exists')
         return;
     }
     await users.create({
         schema: {
-            rule: UserJsonSchema
+            rule: UserWithAccountSessionInDbAsJsonSchema
         }
     })
     await Promise.all([

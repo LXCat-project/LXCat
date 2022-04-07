@@ -2,7 +2,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
 import { ArangoAdapter } from "./ArangoAdapter";
-import { Role, User } from "./schema";
+import { Role, User, UserInDb } from "./schema";
 
 export const toggleRole = async (userId: string, role: Role): Promise<Role[] | undefined> => {
     const cursor: ArrayCursor<Role[]> = await db.query(aql`
@@ -23,10 +23,10 @@ export const dropUser = async (userId: string) => {
 }
 
 export const listUsers = async () =>{
-    const cursor = await db.query(aql`
+    const cursor: ArrayCursor<UserInDb[]> = await db.query(aql`
     FOR u IN users
     RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
   `)
-  const users = await cursor.all() as User[]
+  const users = await cursor.all()
   return users
 }

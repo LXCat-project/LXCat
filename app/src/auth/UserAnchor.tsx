@@ -5,11 +5,12 @@ import Image from 'next/image'
 export function UserAnchor() {
   const { data: session } = useSession()
   if (session) {
+    const user = session.user
     return (
       <>
         <Link href='/profile'>
           <a>
-            <Image src={session.user!.image!} title={`Logged in ${session.user?.name}`} alt="Picture of logged in user" width={40} height={40}/>
+            <Image src={user.image!} title={`Logged in ${user.name}`} alt="Picture of logged in user" width={40} height={40}/>
             </a>
         </Link>
       </>

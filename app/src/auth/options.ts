@@ -5,6 +5,7 @@ import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "../db";
 import { NextAuthOptions } from "next-auth"
+import { User } from "./schema";
 
 const providers: Provider[] = []
 if (process.env.AUTH0_CLIENT_ID) {
@@ -38,9 +39,10 @@ export const options: NextAuthOptions = {
     providers,
     adapter: ArangoAdapter(db),
     callbacks: {
-      async session({ session, token, user }) {
-        if ('roles' in user && session.user) {
-          session.user.roles = user.roles
+      async session({ session, user }) {
+        const parsedUser = User.parse(user)
+        if ('roles' in user) {
+          session.user.roles = parsedUser.roles
         }
         return session
       }

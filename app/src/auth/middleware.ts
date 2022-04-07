@@ -64,7 +64,7 @@ export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (r
  */
 export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
     if (req.user) {
-        if (req.user!.roles!.includes(Role.enum.admin)) {
+        if ('roles' in req.user && req.user.roles!.includes(Role.enum.admin)) {
             next()
         } else {
             res.status(403)
@@ -83,7 +83,7 @@ export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async 
  */
  export const hasDeveloperRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
     if (req.user) {
-        if (req.user!.roles!.includes(Role.enum.developer)) {
+        if ('roles' in req.user && req.user.roles!.includes(Role.enum.developer)) {
             next()
         } else {
             res.status(403)

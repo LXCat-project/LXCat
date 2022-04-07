@@ -2,7 +2,18 @@ import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
 export const Session = z.object({
-    expires: z.string(),
+    expires: z.preprocess((arg) => {
+        // ArangoDB does not handle Date object so convert to iso960 formatted string
+        if (arg instanceof Date) {
+            return arg.toISOString()
+        }
+        if (arg === null) {
+            // next-auth uses null when absent
+            // zod uses undefined when absent
+            return undefined
+        }
+        return arg
+    }, z.string()),
     sessionToken: z.string(),
 }).strict()
 export type Session = z.infer<typeof Session>;
@@ -22,26 +33,41 @@ export const Account = z.object({
 })
 export type Account = z.infer<typeof Account>;
 
-export const APIToken =  z.object({
-    name: z.string(),
-    apiToken: z.string(),
-    expires: z.string().optional()
-})
-
 export const Role = z.enum(["admin", "editor", "developer", "author"])
 export type Role = z.infer<typeof Role>;
 
 export const User = z.object({
     name: z.string().optional(),
-    email: z.string().optional(),
+    email: z.string(),
     image: z.string().optional(),
-    emailVerified: z.string().optional(),
-    accounts: z.array(Account).optional(),
-    sessions: z.array(Session).optional(),
-    apitokens: z.array(APIToken).optional(),
-    roles: z.array(Role).optional(),
-}).strict()
+    emailVerified: z.preprocess((arg) => {
+        // ArangoDB does not handle Date object so convert to iso960 formatted string
+        if (arg instanceof Date) {
+            return arg.toISOString()
+        }
+        if (arg === null) {
+            // next-auth uses null when absent
+            // zod uses undefined when absent
+            return undefined
+        }
+        return arg
+    }, z.string().optional()),
+    roles: z.array(Role).optional().default([]),
+})
 
-export type User = z.infer<typeof User>;
+export type User = z.infer<typeof User>
 
-export const UserJsonSchema = zodToJsonSchema(User)
+export const UserInDb = User.extend({
+    _key: z.string(),
+})
+
+export type UserInDb = z.infer<typeof UserInDb>
+
+export const UserWithAccountSessionInDb = UserInDb.extend({
+    accounts: z.array(Account).optional().default([]),
+    sessions: z.array(Session).optional().default([]),
+})
+
+export type UserWithAccountSessionInDb = z.infer<typeof UserWithAccountSessionInDb>
+
+export const UserWithAccountSessionInDbAsJsonSchema = zodToJsonSchema(UserWithAccountSessionInDb)

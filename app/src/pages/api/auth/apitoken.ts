@@ -10,10 +10,14 @@ const handler = nc<AuthRequest, NextApiResponse>()
     .use(hasSession)
     .use(hasDeveloperRole)
     .get(async (req, res) => {
+        const user = req.user
+        if (!user || 'iat' in user) {
+            throw Error('How did you get here?')
+        }
         const apiToken = await signer({
             // TODO use _key from db instead of user supplied info like email
-            email: req.user?.email,
-            roles: req.user?.roles
+            email: user.email,
+            roles: user.roles
         })
         res.json(apiToken)
     })

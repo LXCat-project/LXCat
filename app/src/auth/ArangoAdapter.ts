@@ -1,54 +1,52 @@
 import { aql, Database } from "arangojs";
+import { ArrayCursor } from "arangojs/cursor";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { Account, Session, User } from "./schema";
+import { Account, Session, UserInDb, UserWithAccountSessionInDb } from "./schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
+    function toAdapterUser(profile: UserInDb | undefined ): AdapterUser | null {
+        if (profile === undefined) {
+            return null
+        }
+        // ArangoDB does not return Date object so convert from iso960 formatted string if set
+        const emailVerified = profile.emailVerified ? new Date(profile.emailVerified) : null;
+        const { _key, ...user } = {
+            id: profile._key,
+            ...profile,
+            emailVerified
+        };
+        return user;
+    }
     return {
         async createUser(user) {
-            (user as Omit<User, "emailVerified">).accounts = [] as Account[]
-            (user as Omit<User, "emailVerified">).sessions = [] as Session[]
-            if (user.emailVerified === null) {
-                delete (user as any).emailVerified
-            }
+            const NewUser = UserWithAccountSessionInDb.omit({_key : true})
+            const profile = NewUser.parse(user)
             const result = await db.query(aql`
-                INSERT ${user} INTO users LET r = NEW RETURN r._key
+                INSERT ${profile} INTO users LET r = NEW RETURN r._key
             `)
-            const id = await result.next()
-            return { ...user, id } as AdapterUser
+            const id: string = await result.next()
+            return { ...user, id }
         },
         async getUser(id) {
-            const cursor = await db.query(aql`
+            const cursor: ArrayCursor<UserInDb> = await db.query(aql`
                 FOR u IN users
                     FILTER u._key == ${id}
                     RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
             `)
             const user = await cursor.next()
-            if (user === undefined) {
-                return null
-            }
-            if ('emailVerified' in user) {
-                user.emailVerified = new Date(user.emailVerified)
-            }
-            return { id, ...user }
+            return toAdapterUser(user)
         },
         async getUserByEmail(email) {
-            const cursor = await db.query(aql`
+            const cursor: ArrayCursor<UserInDb> = await db.query(aql`
                 FOR u IN users
                     FILTER u.email == ${email}
                     RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
             `)
-            const result = await cursor.next()
-            if (result === undefined) {
-                return null
-            }
-            const { _key, ...user } = result
-            if ('emailVerified' in user) {
-                user.emailVerified = new Date(user.emailVerified)
-            }
-            return { id: _key, ...user }
+            const user = await cursor.next()
+            return toAdapterUser(user)
         },
         async getUserByAccount({ provider, providerAccountId }) {
-            const cursor = await db.query(aql`
+            const cursor: ArrayCursor<UserInDb> = await db.query(aql`
                 FOR u IN users
                     FOR a IN u.accounts
                         FILTER
@@ -56,22 +54,21 @@ export const ArangoAdapter = (db: Database): Adapter => {
                             AND a.providerAccountId == ${providerAccountId}
                 RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
             `)
-            const result = await cursor.next()
-            if (result === undefined) {
-                return null
-            }
-            const { _key, ...user } = result
-            if ('emailVerified' in user) {
-                user.emailVerified = new Date(user.emailVerified)
-            }
-            return { id: _key, ...user }
+            const user = await cursor.next()
+            return toAdapterUser(user)
         },
         async updateUser(user) {
-            const result = await db.query(aql`
-                UPDATE {_key: ${user.id}} WITH ${user} IN users
+            const partialUser = {_key: user.id, ...user}
+            const profile = UserInDb.partial().parse(partialUser)
+            const cursor: ArrayCursor<UserInDb> = await db.query(aql`
+                FOR u IN users
+                    FILTER u._key == ${user.id}
+                UPDATE u WITH ${profile} IN users
+                LET updated = NEW
+                RETURN UNSET(updated, ["_id", "_rev", "accounts", "sessions"])
             `)
-            const id = await result.next()
-            return { ...user, id } as AdapterUser
+            const updatedUser = await cursor.next()
+            return toAdapterUser(updatedUser)!
         },
         async deleteUser(userId) {
             await db.query(aql`
@@ -85,78 +82,90 @@ export const ArangoAdapter = (db: Database): Adapter => {
                 FOR u IN users
                     FILTER u._key == ${userId}
                 UPDATE u WITH {
-                    accounts: PUSH(u.accounts, ${prunedAccount})
+                    accounts: PUSH(u.accounts, ${prunedAccount}, true)
                 } IN users
             `)
             return data
         },
         async unlinkAccount({ providerAccountId, provider }) {
-            try {
-                const cursor = await db.query(aql`
-                    FOR u IN users
-                        FOR a IN u.accounts
-                            FILTER a.provider == ${provider}
-                                AND a.providerAccountId == ${providerAccountId}
-                    UPDATE u WITH {
-                        accounts: REMOVE_VALUE(u.accounts, a)
-                    } IN users
-                    RETURN a
-                    `)
-                return await cursor.next()
-            } catch (error) {
-                console.error(`Account ${providerAccountId} for provider ${provider} not found`)
-                return null
-            }
+            await db.query(aql`
+                FOR u IN users
+                    FOR a IN u.accounts
+                        FILTER a.provider == ${provider}
+                            AND a.providerAccountId == ${providerAccountId}
+                UPDATE u WITH {
+                    accounts: REMOVE_VALUE(u.accounts, a)
+                } IN users
+                `)
         },
         async createSession(s) {
             const { sessionToken, userId, expires } = s
-            const session = { sessionToken, expires }
+            const session = Session.parse({
+                sessionToken,
+                expires: expires.toISOString()
+            })
             await db.query(aql`
                 FOR u IN users
                     FILTER u._key == ${userId}
                 UPDATE u WITH {
-                    sessions: PUSH(u.sessions, ${session})
+                    sessions: PUSH(u.sessions, ${session}, true)
                 } IN users
             `)
-            return {
-                id: sessionToken,
-                userId,
-                ...session
-            }
+            return {...s, id: sessionToken}
         },
         async getSessionAndUser(sessionToken) {
             try {
-                const result = await db.query(aql`
+                const cursor: ArrayCursor<{session: Session, user: UserInDb}> = await db.query(aql`
                     FOR u IN users
                         FOR s IN u.sessions
                             FILTER s.sessionToken == ${sessionToken}
                     RETURN {session: s, user: UNSET(u, ["_id", "_rev", "accounts", "sessions"])}
                 `)
-                const session_user = await result.next()
-                session_user.session.expires = new Date(session_user.session.expires)
-                session_user.user.id = session_user.user._key
-                delete session_user.user._key
-                return session_user
+                const session_user = await cursor.next()
+                if (session_user === undefined) {
+                    throw new Error('Session not found')
+                }
+                const user = toAdapterUser(session_user.user)
+                if (!user) {
+                    throw new Error('User not found')
+                }
+                const session = {
+                    ...session_user.session,
+                    // ArangoDB stores dates as string, but next-auth expects Date object
+                    expires: new Date(session_user.session.expires),
+                    userId: user.id,
+                    id: sessionToken // Dont have id for session in database because its part of bigger user document, so fake it
+                }
+                return {session, user}
             } catch (error) {
                 console.error(`Session and user for ${sessionToken} not found`)
                 return null
             }
         },
         async updateSession(session) {
+            const parsedSession = Session.partial().parse(session)
             const { sessionToken } = session
             try {
-                const result = await db.query(aql`
+                const result: ArrayCursor<{userId: string, session: Session}> = await db.query(aql`
                     FOR u IN users
                         FOR s IN u.sessions
                             FILTER s.sessionToken == ${sessionToken}
                     UPDATE u WITH {
-                        sessions: PUSH(REMOVE_VALUE(u.sessions, s), ${session})
+                        sessions: PUSH(REMOVE_VALUE(u.sessions, s), ${parsedSession})
                     } IN users
-                    RETURN s
+                    LET updated = NEW
+                    RETURN {session: LAST(updated.session), userId: update._key}
                     `)
-                const newSession = await result.next()
-                newSession.expires = new Date(newSession.expires)
-                return newSession
+                const sessionAndUserId = await result.next()
+                if (!sessionAndUserId) {
+                    throw new Error('Session not found')
+                }
+                return {
+                    ...sessionAndUserId.session,
+                    expires: new Date(sessionAndUserId.session.expires),
+                    userId: sessionAndUserId.userId,
+                    id: sessionToken
+                }
             } catch (error) {
                 console.error(`Session ${sessionToken} not found`)
                 return null
@@ -172,7 +181,6 @@ export const ArangoAdapter = (db: Database): Adapter => {
                                 sessions: REMOVE_VALUE(u.sessions, s)
                             } IN users
                 `)
-                return
             } catch (error) {
                 console.error(`Session ${sessionToken} not found`)
                 return null
