@@ -1,4 +1,3 @@
-// TODO switch from fast-jwt to jose as jose is already used by next-auth
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import { toggleRole } from "../../../../../auth/db";

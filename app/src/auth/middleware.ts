@@ -1,18 +1,13 @@
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
-import { createVerifier } from "fast-jwt";
 import { NextApiRequest, NextApiResponse } from "next";
 import { RequestHandler } from "next-connect";
 import { Role } from "./schema";
-
-
-const secret = process.env.NEXTAUTH_SECRET
-const verifier = createVerifier({ key: async () => secret })
-
+import { decode } from "next-auth/jwt";
 
 interface JwtPayload {
     email: string
-    iat: number
+    roles: Role[]
 }
 
 export interface AuthRequest extends NextApiRequest {
@@ -31,11 +26,17 @@ export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> 
         return
     }
     if (req.headers.authorization?.split(' ')[0] === 'Bearer') {
-        const token1 = req.headers.authorization.split(' ')[1]
-        const session1: JwtPayload = await verifier(token1)
-        req.user = session1
-        next()
-        return
+        const token = req.headers.authorization.split(' ')[1]
+        const secret = process.env.NEXTAUTH_SECRET!
+        const session1 = await decode({token, secret})
+        if (session1 !== null) {
+            req.user = {
+                roles: session1.roles as Role[],
+                email: session1.email as string
+            }
+            next()
+            return
+        }
     }
     res.status(401)
         .setHeader('WWW-Authenticate', 'Bearer, OAuth')

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "arangojs": "^7.7.0",
-    "fast-jwt": "^1.5.1",
     "next": "^12.1.4",
     "next-auth": "^4.3.1",
     "next-connect": "^0.12.2",
