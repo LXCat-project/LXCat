@@ -52,7 +52,7 @@ export const User = z.object({
         }
         return arg
     }, z.string().optional()),
-    roles: z.array(Role).optional().default([]),
+    roles: z.array(Role).optional(),
 })
 
 export type User = z.infer<typeof User>
@@ -64,6 +64,7 @@ export const UserInDb = User.extend({
 export type UserInDb = z.infer<typeof UserInDb>
 
 export const UserWithAccountSessionInDb = UserInDb.extend({
+    roles: z.array(Role).optional().default([]), // Same as User.roles, but defaults to []
     accounts: z.array(Account).optional().default([]),
     sessions: z.array(Session).optional().default([]),
 })

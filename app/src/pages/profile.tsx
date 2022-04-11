@@ -9,8 +9,8 @@ const ProfilePage = () => {
   if (!session) {
     return <Layout>Not logged in <br /><button onClick={() => signIn()}>Sign in</button></Layout>
   }
-  const isDeveloper = session.user.roles.includes(Role.enum.developer)
-  const isAdmin = session.user.roles.includes(Role.enum.admin)
+  const isDeveloper = session.user.roles!.includes(Role.enum.developer)
+  const isAdmin = session.user.roles!.includes(Role.enum.admin)
   return (
     <Layout>
       <h1>Profile</h1>

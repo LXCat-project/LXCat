@@ -70,8 +70,7 @@ export function OrcidSandboxProvider<
         id: orcidId,
         name,
         email,
-        image,
-        roles: []
+        image
       }
     },
     options,
@@ -102,8 +101,7 @@ export default function OrcidProvider<
         id: orcidId,
         name,
         email,
-        image,
-        roles: []
+        image
       }
     },
     options,
