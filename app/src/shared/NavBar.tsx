@@ -30,6 +30,9 @@ export const NavBar = () => {
                 <Link href="/team">
                     <a>Team</a>
                 </Link>
+                <Link href="/docs/index">
+                    <a>Docs</a>
+                </Link>
             </div>
             <UserAnchor/>
         </nav>
