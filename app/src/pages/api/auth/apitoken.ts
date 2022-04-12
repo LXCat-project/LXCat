@@ -3,6 +3,7 @@ import { encode } from "next-auth/jwt";
 import nc from "next-connect";
 import { AuthRequest, hasDeveloperRole, hasSession } from "../../../auth/middleware";
 
+const DEFAULT_MAX_AGE = 365 * 24 * 60 * 60 // year in seconds
 
 const handler = nc<AuthRequest, NextApiResponse>()
     .use(hasSession)
@@ -18,8 +19,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
             roles: user.roles
         }
         const secret = process.env.NEXTAUTH_SECRET!
-        const apiToken = await encode({token, secret})
-        res.json(apiToken)
+        const apiToken = await encode({token, secret, maxAge: DEFAULT_MAX_AGE})
+        const expires = new Date(Date.now() + DEFAULT_MAX_AGE * 1000).toISOString()
+        res.json({
+            token: apiToken,
+            expires
+        })
     })
 
 export default handler
