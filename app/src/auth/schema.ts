@@ -1,3 +1,4 @@
+import { DocumentData } from "arangojs/documents";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
@@ -57,13 +58,9 @@ export const User = z.object({
 
 export type User = z.infer<typeof User>
 
-export const UserInDb = User.extend({
-    _key: z.string(),
-})
+export type UserInDb = DocumentData<z.infer<typeof User>>
 
-export type UserInDb = z.infer<typeof UserInDb>
-
-export const UserWithAccountSessionInDb = UserInDb.extend({
+export const UserWithAccountSessionInDb = User.extend({
     roles: z.array(Role).optional().default([]), // Same as User.roles, but defaults to []
     accounts: z.array(Account).optional().default([]),
     sessions: z.array(Session).optional().default([]),

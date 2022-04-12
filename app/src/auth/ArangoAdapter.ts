@@ -1,11 +1,11 @@
 import { aql, Database } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { Account, Session, UserInDb, UserWithAccountSessionInDb } from "./schema";
+import { Account, Session, User, UserInDb, UserWithAccountSessionInDb } from "./schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
     function toAdapterUser(profile: UserInDb | undefined ): AdapterUser | null {
-        if (profile === undefined) {
+        if (profile === undefined || profile._key === undefined) {
             return null
         }
         // ArangoDB does not return Date object so convert from iso960 formatted string if set
@@ -19,13 +19,13 @@ export const ArangoAdapter = (db: Database): Adapter => {
     }
     return {
         async createUser(user) {
-            const NewUser = UserWithAccountSessionInDb.omit({_key : true})
-            const profile = NewUser.parse(user)
+            const profile = UserWithAccountSessionInDb.parse(user)
             const result = await db.query(aql`
                 INSERT ${profile} INTO users LET r = NEW RETURN r._key
             `)
             const id: string = await result.next()
-            return { ...user, id }
+            const newUser: AdapterUser = { ...user, id }
+            return newUser
         },
         async getUser(id) {
             const cursor: ArrayCursor<UserInDb> = await db.query(aql`
@@ -59,7 +59,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
         },
         async updateUser(user) {
             const partialUser = {_key: user.id, ...user}
-            const profile = UserInDb.partial().parse(partialUser)
+            const profile = User.partial().parse(partialUser)
             const cursor: ArrayCursor<UserInDb> = await db.query(aql`
                 FOR u IN users
                     FILTER u._key == ${user.id}
