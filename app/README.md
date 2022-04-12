@@ -6,8 +6,6 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -73,7 +71,8 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
     - Use `<something>@mailinator.com` as email, because to register app you need a verified email and Orcid sandbox only sends mails to `mailinator.com`.
 
 2. Goto [https://www.mailinator.com/v4/public/inboxes.jsp](https://www.mailinator.com/v4/public/inboxes.jsp) and search for `<something>` and verify your email adress
-3. Goto [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools) to register for public API.
+3. Goto [https://sandbox.orcid.org/account](https://sandbox.orcid.org/account), make email public for everyone
+4. Goto [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools) to register for public API.
 
     - Your website URL
         - Does not allow localhost URL, so use `https://lxcat.net`
@@ -101,28 +100,33 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
 
             This will make app available on [https://localhost:8443](https://localhost:8443).
             In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
-            Also set `NEXTAUTH_URL=https://localhost:8443/api/auth` in `.env.local` file.
+            Also set `NEXTAUTH_URL=https://localhost:8443` in `.env.local` file.
         - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
-            Also set `NEXTAUTH_URL=https://< lxcat ng domain >/api/auth` in `.env.local` file.
+            Also set `NEXTAUTH_URL=https://< lxcat ng domain >` in `.env.local` file.
 
 ### In local directory
 
-1. In `.env.local` defined following key/value pairs
+In `.env.local` defined following key/value pairs
 
-    ```env
-    NEXTAUTH_SECRET=<Random string to get rid of warning>
-    # When you want to use Auth0 as identity provider set the AUTH0_* vars
-    AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
-    AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
-    AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
-    # When you want to use GitLab as identity provider set the GITLAB_* vars
-    GITLAB_CLIENT_ID=<Application ID from GitLab application page>
-    GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
-    # When you want to use Orcid as identity provider set the ORCID_* vars
-    ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
-    ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
-    # To use Orcid sandbox instead of production Orcid set following var
-    ORCID_SANDBOX=True
-    ```
+```env
+# Where openid identity provider should redirect back to
+NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
+# Secret used to sign JWT api tokens
+NEXTAUTH_SECRET=<Random string>
+# Password used to connect to database
+ARANGO_PASSWORD=<Arangodb root password>
+# When you want to use Auth0 as identity provider set the AUTH0_* vars
+AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
+AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
+AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+# When you want to use GitLab as identity provider set the GITLAB_* vars
+GITLAB_CLIENT_ID=<Application ID from GitLab application page>
+GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
+# When you want to use Orcid as identity provider set the ORCID_* vars
+ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
+ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
+# To use Orcid sandbox instead of production Orcid set following var
+ORCID_SANDBOX=True
+```
 
 At least one identity provider should be configured.

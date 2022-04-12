@@ -26,6 +26,7 @@ To create database and create all empty collections run following command:
 
 ```shell
 npm install
+cd ../app && npm install && cd -
 # To run all setup/*.ts files
 npm run setup
 ```
@@ -38,6 +39,8 @@ This can be done by writing scripts inside a directory for example `seeds/test/`
 ```shell
 npm run seed seeds/test
 ```
+
+This will create a number of dummy documents in the database.
 
 ## Creating own seed
 
