@@ -11,6 +11,7 @@ const ProfilePage = () => {
   }
   const isDeveloper = session.user.roles!.includes(Role.enum.developer)
   const isAdmin = session.user.roles!.includes(Role.enum.admin)
+  const orcidURL = process.env.ORCID_SANDBOX ? `https://sandbox.orcid.org/${session.user.orcid}` : `https://orcid.org/${session.user.orcid}`
   return (
     <Layout>
       <h1>Profile</h1>
@@ -27,7 +28,7 @@ const ProfilePage = () => {
         </div>
         <div>
           <div>Orcid</div>
-          <div><a target={"_blank"} rel="noreferrer" href={`https://orcid.org/${session.user.orcid}`}>{session.user.orcid}</a></div>
+          <div><a target={"_blank"} rel="noreferrer" href={orcidURL}>{session.user.orcid}</a></div>
         </div>
       </div>
 
