@@ -1,9 +1,9 @@
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getServerSession, Session } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { RequestHandler } from "next-connect";
 import { Role } from "./schema";
 import { decode } from "next-auth/jwt";
+import { options } from "./options";
 
 interface JwtPayload {
     email: string
@@ -19,7 +19,7 @@ export interface AuthRequest extends NextApiRequest {
  * Sets `user` property in `req` or returns 401.
  */
 export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
-    const session = await getSession({ req })
+    const session = await getServerSession({ req, res }, options)
     if (session?.user) {
         req.user = session.user
         next()
@@ -48,7 +48,7 @@ export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> 
  * Sets `user` property in `req` or returns 401.
  */
 export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
-    const session = await getSession({ req })
+    const session = await getServerSession({ req, res }, options)
     if (session?.user) {
         req.user = session.user
         next()
