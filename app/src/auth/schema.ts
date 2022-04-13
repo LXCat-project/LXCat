@@ -54,6 +54,7 @@ export const User = z.object({
         return arg
     }, z.string().optional()),
     roles: z.array(Role).optional(),
+    orcid: z.string().optional()
 })
 
 export type User = z.infer<typeof User>

@@ -16,14 +16,18 @@ const ProfilePage = () => {
       <h1>Profile</h1>
 
       <div style={{ display: 'flex', gap: '2rem' }}>
-        <Image src={session.user!.image!} title={`Logged in ${session.user?.name}`} alt="Picture of logged in user" width={80} height={80} />
+        <Image src={session.user.image!} title={`Logged in ${session.user.name}`} alt="Picture of logged in user" width={80} height={80} />
         <div>
           <div>Name</div>
-          <div>{session.user!.name}</div>
+          <div>{session.user.name}</div>
         </div>
         <div>
           <div>Email</div>
-          <div>{session.user!.email}</div>
+          <div>{session.user.email}</div>
+        </div>
+        <div>
+          <div>Orcid</div>
+          <div><a target={"_blank"} rel="noreferrer" href={`https://orcid.org/${session.user.orcid}`}>{session.user.orcid}</a></div>
         </div>
       </div>
 
@@ -36,9 +40,13 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {isAdmin && <Link href="/admin">Perform admin tasks</Link>}
+      <div>
+        {isAdmin && <Link href="/admin">Perform admin tasks</Link>}
+      </div>
 
-      <button onClick={() => signOut()}>Sign out</button>
+      <div>
+        <button onClick={() => signOut()}>Sign out</button>
+      </div>
     </Layout>
   )
 }

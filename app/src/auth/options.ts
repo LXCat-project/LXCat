@@ -1,11 +1,12 @@
 import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
+import { NextAuthOptions } from "next-auth"
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "../db";
-import { NextAuthOptions } from "next-auth"
 import { User } from "./schema";
+import logo from '../../public/lxcat.png'
 
 const providers: Provider[] = []
 if (process.env.AUTH0_CLIENT_ID) {
@@ -45,7 +46,15 @@ export const options: NextAuthOptions = {
         if ('roles' in user) {
           session.user.roles = parsedUser.roles
         }
+        if ('orcid' in parsedUser && parsedUser.orcid !== undefined) {
+          session.user.orcid = parsedUser.orcid
+        }
         return session
       }
+    },
+    theme: {
+      colorScheme: 'auto',
+      brandColor: '254779',
+      logo: logo.src
     }
   }
