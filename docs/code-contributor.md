@@ -52,6 +52,9 @@ Whishes:
 * Validate during [inserting/updating into database](https://www.arangodb.com/docs/3.9/data-modeling-documents-schema-validation.html) with JSON schema
 * Support complex schemas like cross section document
 * Cross language: Should be able to generate or use JSON schemas
+* Schema should be rich
+  * title and description
+  * min/max/length/etc. validation rules
 
 Possible options see https://learning-notes.mistermicheels.com/javascript/typescript/runtime-type-checking
 
