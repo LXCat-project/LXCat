@@ -8,7 +8,8 @@ services:
       - db-data:/var/lib/arangodb3
   app:
     build:
-      context: ./app
+      context: .
+      dockerfile: app/Dockerfile
     env_file: .env
     ports:
       - "3000:3000"

@@ -34,6 +34,9 @@ docker-compose run setup seed seeds/test
 cp <production data seed>
 docker copy <production data seed> lxcat-ng_setup_1:/database/seeds/<production data seed>
 docker-compose run setup seed seeds/<production data seed>
+# To make a user admin
+docker-compose run setup make-admin <email of user>
 ```
 
-Web application will run at `http://localhost:3000`
+Web application will run at `http://localhost:3000`.
+The app should be reversed proxied by a web server to provide https.
