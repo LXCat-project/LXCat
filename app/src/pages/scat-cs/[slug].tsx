@@ -1,39 +1,35 @@
 import { GetStaticProps, NextPage } from "next"
-import { byId, search } from "../../ScatteringCrossSection/db"
-import { Section } from "../../ScatteringCrossSection/Section"
 import { CrossSection } from "../../ScatteringCrossSection/types"
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck"
 import { Layout } from "../../shared/Layout"
 
 interface Props {
-    section: CrossSection
+    section: CrossSection<any>
 }
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({section}) => {
     return (
-        <Layout title={`Scattering Cross Section of ${section.species1} / ${section.species2}`}>
-            <TermsOfUseCheck references={section.references}>
-                <Section section={section}></Section>
-            </TermsOfUseCheck>
-        </Layout>
+        <div>
+            TODO fetch cross section from DB
+        </div>
     )
 }
 
 export default ScatteringCrossSectionPage
 
-export async function getStaticPaths() {
-    const sections = await search()
-    const paths = sections.map(p => ({ params: {slug: p.id.toString()} }))
-    return {
-        paths,
-        fallback: false
-    };
-}
+// export async function getStaticPaths() {
+//     const sections = await search()
+//     const paths = sections.map(p => ({ params: {slug: p.id.toString()} }))
+//     return {
+//         paths,
+//         fallback: false
+//     };
+// }
 
-export const getStaticProps: GetStaticProps<Props, {slug: string}> = async (context) => {
-    const slug = context.params?.slug
-    const section = await byId(Number(slug))
-    return {
-        props: {section}
-    }
-}
+// export const getStaticProps: GetStaticProps<Props, {slug: string}> = async (context) => {
+//     const slug = context.params?.slug
+//     const section = await byId(Number(slug))
+//     return {
+//         props: {section}
+//     }
+// }

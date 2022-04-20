@@ -1,3 +1,7 @@
 import { CSL } from "./csl";
 
-export type Reference = CSL.Data
+interface SimpleReference {
+    string: string;
+  }
+
+export type Reference = CSL.Data | SimpleReference;
