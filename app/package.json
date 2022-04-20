@@ -19,6 +19,7 @@
     "remark": "^14.0.2",
     "remark-html": "^15.0.1",
     "sharp": "^0.30.2",
+    "ts-json-schema-generator": "^1.0.0",
     "zod": "^3.14.3",
     "zod-to-json-schema": "^3.11.3"
   },
