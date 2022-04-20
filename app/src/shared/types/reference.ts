@@ -1,7 +1,7 @@
 import { CSL } from "./csl";
 
 interface SimpleReference {
-    string: string;
-  }
+  string: string;
+}
 
 export type Reference = CSL.Data | SimpleReference;

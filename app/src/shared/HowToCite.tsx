@@ -11,7 +11,7 @@ export const HowToCite = ({references}: Props) => {
             <h2>How to reference data</h2>
             <ul>
                 <li>Reference to LXCat</li>
-                {references.map((r) => <li key={r.title}><Reference {...r}/></li>)}
+                {references.map((r, i) => <li key={i}><Reference {...r}/></li>)}
             </ul>
             ...
         </div>
