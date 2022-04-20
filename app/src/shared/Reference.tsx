@@ -1,10 +1,11 @@
-import { Reference as IReference } from "./types"
+import { Reference as ReferenceRecord } from "./types/reference"
 
-export const Reference = (r: IReference) => {
+export const Reference = (r: ReferenceRecord) => {
+    const authors = r.author?.map((p) => `${p.given} ${p.family} ${p.suffix}`).join(', ')
     return (
         <dl>
             <dt>{r.title}</dt>
-            <dd>{r.authors.join(', ')}, {r["container-title"]}</dd>
+            <dd>{authors}, {r["container-title"]}</dd>
         </dl>
     )
 }

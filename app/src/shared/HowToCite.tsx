@@ -1,8 +1,8 @@
 import { Reference } from "./Reference"
-import { Reference as IReference } from "./types"
+import { Reference as ReferenceRecord } from "./types/reference"
 
 interface Props {
-    references: IReference[]
+    references: ReferenceRecord[]
 }
 
 export const HowToCite = ({references}: Props) => {
