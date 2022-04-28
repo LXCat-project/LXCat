@@ -54,14 +54,14 @@ import 'dotenv/config'
 import { db } from '../../app/src/db'
 ```
 
-To use await you must wrap code inside an [IIFE (Immediately Invoked Function Expression)](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) like
+The code must be wrapped inside an async function which is exported as default:
 
 ```ts
-(async () => {
+export default async function() {
     // Call await here
     // For example:
     // const names = await db.listDatabases();
-})();
+}
 ```
 
 To perform [schema validation](https://www.arangodb.com/docs/3.8/data-modeling-documents-schema-validation.html) on a collection, you can import a JSON schema from the app with

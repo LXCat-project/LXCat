@@ -2,11 +2,11 @@ import 'dotenv/config'
 import { db } from "../../app/src/db";
 import { CrossSectionIndbAsJsonSchema, CrossSectionSetIndbAsJsonSchema, Relation } from "../../app/src/ScatteringCrossSection/schema"
 
-(async () => {
-    await createCrossSectionSetCollection()
+export default async function() {
+  await createCrossSectionSetCollection()
     await createCrossSectionCollection()
     await createEdgeCollections()
-})();
+}
 
 async function createCrossSectionSetCollection() {
     const collection = db.collection("CrossSectionSet");

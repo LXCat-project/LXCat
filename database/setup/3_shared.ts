@@ -9,14 +9,14 @@ import {
   StateIndbAsJsonSchema,
 } from "../../app/src/shared/schema";
 
-(async () => {
+export default async function() {
   await createParticleCollection();
   await createContributorCollection();
   await createReferenceCollection();
   await createStateCollection();
   await createReactionCollection()
   await createEdgeCollections()
-})();
+};
 
 async function createParticleCollection() {
   const collection = db.collection("Particle");
