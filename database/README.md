@@ -89,3 +89,11 @@ The admin role can also be assigned to a user that has already logged in once by
 ```sh
 npm run make-admin <email of user>
 ```
+
+## Start over
+
+To start over the whole database can be dropped with
+
+```sh
+npm run drop-database
+```
