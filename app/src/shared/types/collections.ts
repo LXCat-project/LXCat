@@ -19,18 +19,6 @@ export interface Particle {
   electron_configuration?: ElectronConfiguration;
 }
 
-export interface CrossSectionSet {
-  name: string;
-  description: string;
-  complete: boolean;
-}
-
-export type CrossSection = {
-  reaction: string;
-  parameters?: CSParameters;
-  threshold: number;
-} & CSStorage;
-
 export interface Contributor {
   name: string;
 }
