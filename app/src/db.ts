@@ -67,8 +67,7 @@ export async function insert_state_dict(
 	const id_dict: Dict<string> = {};
 
 	for (const [id, state] of Object.entries(states)) {
-		// FIXME: Newer TS is pickier, see https://github.com/microsoft/TypeScript/wiki/Breaking-Changes#generic-type-parameters-are-implicitly-constrained-to-unknown
-		// id_dict[id] = await insert_state_tree(state);
+		id_dict[id] = await insert_state_tree(state);
 	}
 
 	return id_dict;
@@ -80,93 +79,92 @@ async function insert_state<T>(
 	return upsert_document('State', state);
 }
 
-// FIXME: Newer TS is pickier, see https://github.com/microsoft/TypeScript/wiki/Breaking-Changes#generic-type-parameters-are-implicitly-constrained-to-unknown
-// async function insert_state_tree<T extends AtomicGenerator<E, any>, E>(
-// 	state: InState<T>
-// ): Promise<string>;
-// async function insert_state_tree<
-// 	T extends MolecularGenerator<E, V, R, any>,
-// 	E,
-// 	V,
-// 	R
-// >(state: InState<T>): Promise<string> {
-// 	// FIXME: This function assumes that compound states on multiple levels
-// 	// are not supported.
-// 	/* Strategy Add states in a top down fashion.  Compound levels should
-// 	 * be treated differently from singular levels.
-// 	 */
-// 	const in_compound: Array<string> = [];
-// 	let ret_id = "";
+async function insert_state_tree<T extends AtomicGenerator<E, any>, E>(
+	state: InState<T>
+): Promise<string>;
+async function insert_state_tree<
+	T extends MolecularGenerator<E, V, R, any>,
+	E,
+	V,
+	R
+>(state: InState<T>): Promise<string> {
+	// FIXME: This function assumes that compound states on multiple levels
+	// are not supported.
+	/* Strategy Add states in a top down fashion.  Compound levels should
+	 * be treated differently from singular levels.
+	 */
+	const in_compound: Array<string> = [];
+	let ret_id = "";
 
-// 	let tmp_state = { ...state };
-// 	delete tmp_state.type;
-// 	delete tmp_state.electronic;
+	let tmp_state = { ...state };
+	delete tmp_state.type;
+	delete tmp_state.electronic;
 
-// 	// FIXME: Link top level states to particle.
-// 	const t_ret = await insert_state(parse_state(tmp_state));
-// 	ret_id = t_ret.id;
+	// FIXME: Link top level states to particle.
+	const t_ret = await insert_state(parse_state(tmp_state));
+	ret_id = t_ret.id;
 
-// 	if (state.electronic) {
-// 		tmp_state = { ...state };
+	if (state.electronic) {
+		tmp_state = { ...state };
 
-// 		for (const elec of state.electronic) {
-// 			tmp_state.electronic = [{ ...elec }];
-// 			delete tmp_state.electronic[0].vibrational;
+		for (const elec of state.electronic) {
+			tmp_state.electronic = [{ ...elec }];
+			delete tmp_state.electronic[0].vibrational;
 
-// 			/* console.log(state_to_string(tmp_state)); */
-// 			const e_ret = await insert_state(parse_state(tmp_state));
-// 			if (e_ret.new)
-// 				await insert_edge('HasDirectSubstate', t_ret.id, e_ret.id);
+			/* console.log(state_to_string(tmp_state)); */
+			const e_ret = await insert_state(parse_state(tmp_state));
+			if (e_ret.new)
+				await insert_edge('HasDirectSubstate', t_ret.id, e_ret.id);
 
-// 			if (elec.vibrational) {
-// 				for (const vib of elec.vibrational) {
-// 					tmp_state.electronic[0].vibrational = [{ ...vib }];
-// 					delete tmp_state.electronic[0].vibrational[0].rotational;
+			if (elec.vibrational) {
+				for (const vib of elec.vibrational) {
+					tmp_state.electronic[0].vibrational = [{ ...vib }];
+					delete tmp_state.electronic[0].vibrational[0].rotational;
 
-// 					/* console.log(state_to_string(tmp_state)); */
-// 					const v_ret = await insert_state(parse_state(tmp_state));
-// 					if (v_ret.new)
-// 						await insert_edge('HasDirectSubstate', e_ret.id, v_ret.id);
+					/* console.log(state_to_string(tmp_state)); */
+					const v_ret = await insert_state(parse_state(tmp_state));
+					if (v_ret.new)
+						await insert_edge('HasDirectSubstate', e_ret.id, v_ret.id);
 
-// 					if (vib.rotational) {
-// 						for (const rot of vib.rotational) {
-// 							tmp_state.electronic[0].vibrational[0].rotational = [{ ...rot }];
-// 							/* console.log(state_to_string(tmp_state)); */
-// 							const r_ret = await insert_state(parse_state(tmp_state));
-// 							if (r_ret.new)
-// 								await insert_edge(
-// 									'HasDirectSubstate',
-// 									v_ret.id,
-// 									r_ret.id
-// 								);
+					if (vib.rotational) {
+						for (const rot of vib.rotational) {
+							tmp_state.electronic[0].vibrational[0].rotational = [{ ...rot }];
+							/* console.log(state_to_string(tmp_state)); */
+							const r_ret = await insert_state(parse_state(tmp_state));
+							if (r_ret.new)
+								await insert_edge(
+									'HasDirectSubstate',
+									v_ret.id,
+									r_ret.id
+								);
 
-// 							in_compound.push(r_ret.id);
-// 							ret_id = r_ret.id;
-// 						}
-// 					} else {
-// 						in_compound.push(v_ret.id);
-// 						ret_id = v_ret.id;
-// 					}
-// 				}
-// 			} else {
-// 				in_compound.push(e_ret.id);
-// 				ret_id = e_ret.id;
-// 			}
-// 		}
+							in_compound.push(r_ret.id);
+							ret_id = r_ret.id;
+						}
+					} else {
+						in_compound.push(v_ret.id);
+						ret_id = v_ret.id;
+					}
+				}
+			} else {
+				in_compound.push(e_ret.id);
+				ret_id = e_ret.id;
+			}
+		}
 
-// 		if (in_compound.length > 1) {
-// 			const c_ret = await insert_state(parse_state(state));
-// 			if (c_ret.new) {
-// 				for (const sub_id of in_compound) {
-// 					await insert_edge('InCompound', sub_id, c_ret.id);
-// 				}
-// 			}
-// 			return c_ret.id;
-// 		}
-// 	}
+		if (in_compound.length > 1) {
+			const c_ret = await insert_state(parse_state(state));
+			if (c_ret.new) {
+				for (const sub_id of in_compound) {
+					await insert_edge('InCompound', sub_id, c_ret.id);
+				}
+			}
+			return c_ret.id;
+		}
+	}
 
-// 	return ret_id;
-// }
+	return ret_id;
+}
 
 // TODO: Check what happens when adding a string instead of a 'Reference' object.
 export async function insert_reference_dict(
