@@ -4,7 +4,7 @@
     "name": "Some other name",
     "description": "Some other description",
     "references": {
-        "main": {
+        "main2": {
             "title": "Some other main reference title",
             "type": "article",
             "id": "SomeOtherMainId"
@@ -93,7 +93,8 @@
                     100,
                     1.61803
                 ]
-            ]
+            ],
+            "reference": ["main2"]
         }
     ]
 }
