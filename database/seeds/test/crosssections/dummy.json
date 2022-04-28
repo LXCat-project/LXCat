@@ -7,7 +7,12 @@
         "main": {
             "title": "Some main reference title",
             "type": "article",
-            "id": "SomeMainId"
+            "id": "SomeMainId",
+            "authors": [{
+                "given": "MyGiveName",
+                "family": "MyFamilyName"
+            }],
+            "container-title": "SomeJournal"
         }
     },
     "states": {
