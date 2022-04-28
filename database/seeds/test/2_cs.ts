@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import { insert_input_set } from '../../../app/src/ScatteringCrossSection/db'
+import { insert_input_set } from '../../../app/src/ScatteringCrossSection/queries'
 
 export default async function() {
     const dir = join(__dirname, 'crosssections')
