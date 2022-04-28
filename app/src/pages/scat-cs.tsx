@@ -1,7 +1,8 @@
 import { NextPage } from "next"
 import { Layout } from "../shared/Layout"
-import { CrossSectionHeading, list } from "../ScatteringCrossSection/queries"
+import { list } from "../ScatteringCrossSection/queries"
 import { List } from "../ScatteringCrossSection/List"
+import { CrossSectionHeading } from "../ScatteringCrossSection/types/public"
 
 interface Props {
     items: CrossSectionHeading[]

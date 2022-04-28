@@ -2,11 +2,10 @@ import { Dict } from "arangojs/connection";
 import { db } from "../db";
 import { insert_document, insert_edge, insert_reaction_with_dict, insert_reference_dict, insert_state_dict, upsert_document } from "../shared/queries";
 
-import { CrossSection, CrossSectionInput } from "./types";
-
 import { ArrayCursor } from "arangojs/cursor";
 import { aql } from "arangojs";
-import { CrossSectionHeading } from "./types/heading";
+import { CrossSectionItem, CrossSectionHeading } from "./types/public";
+import { CrossSection, CrossSectionInput } from "./types";
 
 // TODO split into shared and cs only documents
 enum Document {
@@ -70,7 +69,7 @@ export async function insert_input_set(dataset: CrossSectionInput<any>) {
 }
 
 export async function list() {
-	const cursor: ArrayCursor<CrossSectionHeading[]> = await db.query(aql`
+	const cursor: ArrayCursor<CrossSectionHeading> = await db.query(aql`
 	FOR cs IN CrossSection
 	LET refs = (
 	  FOR rs IN References
@@ -109,4 +108,50 @@ export async function list() {
 	`);
 
 	return await cursor.all()
+}
+
+export async function byId(id: string) {
+	const cursor: ArrayCursor<CrossSectionItem> = await db.query(aql`
+	FOR cs IN CrossSection
+    FILTER cs._key == ${id}
+	LET refs = (
+	  FOR rs IN References
+		FILTER rs._from == cs._id
+		  FOR r IN Reference
+			FILTER r._id == rs._to
+			RETURN UNSET(r, ["_key", "_rev", "_id"])
+	)
+	LET set = (
+	  FOR p IN IsPartOf
+		FILTER p._from == cs._id
+		FOR s IN CrossSectionSet
+		  FILTER s._id == p._to
+		  RETURN UNSET(s, ["_key", "_rev", "_id"])
+	)
+	LET reaction = (
+	FOR r in Reaction
+	  FILTER r._id == cs.reaction
+	  LET consumes = (
+		FOR c IN Consumes
+		  FILTER c._from == r._id
+			FOR c2s IN State
+			  FILTER c2s._id == c._to
+			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+	  )
+	  LET produces = (
+		FOR p IN Produces
+		  FILTER p._from == r._id
+			FOR p2s IN State
+			  FILTER p2s._id == p._to
+			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+	  )
+	  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+	)
+	RETURN MERGE(
+	  UNSET(cs, ["_key", "_rev", "_id"]),
+	  {id: cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
+	)
+	`);
+
+	return await cursor.next()
 }
