@@ -19,3 +19,5 @@ app:
     - npm install --cache .npm --prefer-offline
     - npm run build
     - npm run lint
+
+# TODO test running `npm run seed seeds/test`
