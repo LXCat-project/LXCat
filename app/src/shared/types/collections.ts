@@ -1,5 +1,3 @@
-import { CSParameters } from "../../ScatteringCrossSection/types";
-import { CSStorage } from "../../ScatteringCrossSection/types/data_types";
 import { AtomJ1L2_DB } from "./atoms/j1l2";
 import { AtomLS_DB } from "./atoms/ls";
 import { AtomLS1_DB } from "./atoms/ls1";

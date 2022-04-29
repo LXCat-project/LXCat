@@ -71,87 +71,105 @@ export async function insert_input_set(dataset: CrossSectionInput<any>) {
 export async function list() {
 	const cursor: ArrayCursor<CrossSectionHeading> = await db.query(aql`
 	FOR cs IN CrossSection
-	LET refs = (
-	  FOR rs IN References
-		FILTER rs._from == cs._id
-		  FOR r IN Reference
-			FILTER r._id == rs._to
-			RETURN UNSET(r, ["_key", "_rev", "_id"])
-	)
-	LET set = (
-	  FOR p IN IsPartOf
-		FILTER p._from == cs._id
-		FOR s IN CrossSectionSet
-		  FILTER s._id == p._to
-		  RETURN UNSET(s, ["_key", "_rev", "_id"])
-	)
-	LET reaction = (
-	FOR r in Reaction
-	  FILTER r._id == cs.reaction
-	  LET consumes = (
-		FOR c IN Consumes
-		  FILTER c._from == r._id
-			FOR c2s IN State
-			  FILTER c2s._id == c._to
-			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-	  )
-	  LET produces = (
-		FOR p IN Produces
-		  FILTER p._from == r._id
-			FOR p2s IN State
-			  FILTER p2s._id == p._to
-			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-	  )
-	  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-	)
-	RETURN { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
+		LET refs = (
+		FOR rs IN References
+			FILTER rs._from == cs._id
+			FOR r IN Reference
+				FILTER r._id == rs._to
+				RETURN UNSET(r, ["_key", "_rev", "_id"])
+		)
+		LET set = (
+		FOR p IN IsPartOf
+			FILTER p._from == cs._id
+			FOR s IN CrossSectionSet
+				FILTER s._id == p._to
+				RETURN UNSET(s, ["_key", "_rev", "_id"])
+		)
+		LET reaction = (
+			FOR r in Reaction
+				FILTER r._id == cs.reaction
+				LET consumes = (
+					FOR c IN Consumes
+					FILTER c._from == r._id
+						FOR c2s IN State
+						FILTER c2s._id == c._to
+						RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+				)
+				LET produces = (
+					FOR p IN Produces
+					FILTER p._from == r._id
+						FOR p2s IN State
+						FILTER p2s._id == p._to
+						RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+				)
+				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+		)
+		RETURN { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
 	`);
 
 	return await cursor.all()
 }
 
 export async function byId(id: string) {
+
 	const cursor: ArrayCursor<CrossSectionItem> = await db.query(aql`
 	FOR cs IN CrossSection
-    FILTER cs._key == ${id}
-	LET refs = (
-	  FOR rs IN References
-		FILTER rs._from == cs._id
-		  FOR r IN Reference
-			FILTER r._id == rs._to
-			RETURN UNSET(r, ["_key", "_rev", "_id"])
-	)
-	LET set = (
-	  FOR p IN IsPartOf
-		FILTER p._from == cs._id
-		FOR s IN CrossSectionSet
-		  FILTER s._id == p._to
-		  RETURN UNSET(s, ["_key", "_rev", "_id"])
-	)
-	LET reaction = (
-	FOR r in Reaction
-	  FILTER r._id == cs.reaction
-	  LET consumes = (
-		FOR c IN Consumes
-		  FILTER c._from == r._id
-			FOR c2s IN State
-			  FILTER c2s._id == c._to
-			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-	  )
-	  LET produces = (
-		FOR p IN Produces
-		  FILTER p._from == r._id
-			FOR p2s IN State
-			  FILTER p2s._id == p._to
-			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-	  )
-	  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-	)
-	RETURN MERGE(
-	  UNSET(cs, ["_key", "_rev", "_id"]),
-	  {id: cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
-	)
+		FILTER cs._key == ${id}
+		LET refs = (
+		FOR rs IN References
+			FILTER rs._from == cs._id
+			FOR r IN Reference
+				FILTER r._id == rs._to
+				RETURN UNSET(r, ["_key", "_rev", "_id"])
+		)
+		LET set = (
+		FOR p IN IsPartOf
+			FILTER p._from == cs._id
+			FOR s IN CrossSectionSet
+				FILTER s._id == p._to
+				RETURN UNSET(s, ["_key", "_rev", "_id"])
+		)
+		LET reaction = (
+			FOR r in Reaction
+				FILTER r._id == cs.reaction
+				LET consumes = (
+					FOR c IN Consumes
+					FILTER c._from == r._id
+						FOR c2s IN State
+						FILTER c2s._id == c._to
+						RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+				)
+				LET produces = (
+					FOR p IN Produces
+					FILTER p._from == r._id
+						FOR p2s IN State
+						FILTER p2s._id == p._to
+						RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+				)
+				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+		)
+		RETURN { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
 	`);
 
 	return await cursor.next()
+}
+
+export interface Facets {
+	set_name: string[]
+	lhs_primary_particle: string[]
+	rhs_primary_particle: string[]
+}
+
+export async function searchFacets(): Promise<Facets> {
+	// TODO fetch facets from db instead of processing list() return
+	const all = await list()
+	return {
+		set_name: [...new Set(all.map(d => d.isPartOf.name))],
+		lhs_primary_particle: [...new Set(all.flatMap(
+			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
+		)],
+		rhs_primary_particle: [...new Set(all.flatMap(
+			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
+		)],
+	}
 }
