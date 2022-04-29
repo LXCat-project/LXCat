@@ -65,7 +65,7 @@ export async function insert_input_set(dataset: CrossSectionInput<any>) {
 		const cs_id = await insert_cs_with_dict(cs, state_ids, reference_ids);
 		await insert_edge('IsPartOf', cs_id, cs_set_id);
 	}
-	return cs_set_id
+	return cs_set_id.replace('CrossSectionSet/', '')
 }
 
 export async function list() {

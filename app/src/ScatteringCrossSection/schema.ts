@@ -20,3 +20,10 @@ export enum Relation {
   References = "References", // Between a data object and its references
   Provides = "Provides", // Between a contributor and its data entries
 }
+
+const typesPath = join(__dirname, "types.ts");
+
+export const CrossSectionInputAsJsonSchema = generateJsonSchemaFromType(
+  typesPath,
+  "CrossSectionInputAny"
+)

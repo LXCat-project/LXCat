@@ -96,3 +96,22 @@ export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async 
             .end('Unauthorized')
     }
 }
+
+/**
+ * Middleware to check if user has author role.
+ * Returns 403 when user does not have author role.
+ */
+ export const hasAuthorRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
+    if (req.user) {
+        if ('roles' in req.user && req.user.roles!.includes(Role.enum.author)) {
+            next()
+        } else {
+            res.status(403)
+                .end('Forbidden')
+        }
+    } else {
+        res.status(401)
+            .setHeader('WWW-Authenticate', 'OAuth')
+            .end('Unauthorized')
+    }
+}

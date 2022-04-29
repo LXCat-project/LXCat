@@ -23,3 +23,5 @@ export type CrossSectionInput<StateType> = InputDocument<
   StateType,
   CrossSection<string, string>
 > & { complete: boolean };
+
+export type CrossSectionInputAny = CrossSectionInput<any>
