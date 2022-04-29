@@ -7,7 +7,14 @@
         "main2": {
             "title": "Some other main reference title",
             "type": "article",
-            "id": "SomeOtherMainId"
+            "id": "SomeOtherMainId",
+            "DOI": "10.1109/5.771073",
+            "URL": "https://doi.org/10.1109/5.771073",
+            "author": [{
+                "given": "MyGivenName",
+                "family": "MyFamilyName"
+            }],
+            "container-title": "SomeJournal"
         }
     },
     "states": {

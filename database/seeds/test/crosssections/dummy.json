@@ -8,8 +8,10 @@
             "title": "Some main reference title",
             "type": "article",
             "id": "SomeMainId",
-            "authors": [{
-                "given": "MyGiveName",
+            "DOI": "10.1109/5.771073",
+            "URL": "https://doi.org/10.1109/5.771073",
+            "author": [{
+                "given": "MyGivenName",
                 "family": "MyFamilyName"
             }],
             "container-title": "SomeJournal"

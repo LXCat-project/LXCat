@@ -9,7 +9,8 @@
     "setup": "ts-node src/main.ts setup",
     "seed": "ts-node src/main.ts",
     "make-admin": "ts-node src/make_admin.ts",
-    "drop-database": "ts-node src/drop_database.ts"
+    "drop-database": "ts-node src/drop_database.ts",
+    "reload": "npm run drop-database && npm run setup && npm run seed seeds/test"
   },
   "dependencies": {
     "arangojs": "^7.7.0",

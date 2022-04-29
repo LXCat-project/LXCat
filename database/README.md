@@ -92,8 +92,16 @@ npm run make-admin <email of user>
 
 ## Start over
 
+> Dangerous! These commands will wipe everything in the database
+
 To start over the whole database can be dropped with
 
 ```sh
 npm run drop-database
+```
+
+To start over and fill database with test seed use
+
+```sh
+npm run reload
 ```
