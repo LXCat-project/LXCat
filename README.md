@@ -31,8 +31,9 @@ docker-compose run setup setup
 # To seed db with test data set use
 docker-compose run setup seed seeds/test
 # To seed db with production data use
-cp <production data seed>
-docker copy <production data seed> lxcat-ng_setup_1:/database/seeds/<production data seed>
+# The `./database/seeds` directory is bind mounted inside the Docker container,
+# so copy any seed files to that directory
+cp -r <production data seed> ./database/seeds/<production data seed>
 docker-compose run setup seed seeds/<production data seed>
 # To make a user admin
 docker-compose run setup make-admin <email of user>

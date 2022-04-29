@@ -24,6 +24,8 @@ services:
       dockerfile: database/Dockerfile
     command: []
     env_file: .env
+    volumes:
+      - ./database/seeds:/database/seeds
     depends_on:
       - database
     environment:
