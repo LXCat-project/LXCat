@@ -1,4 +1,4 @@
-import { NextPage } from "next"
+import { GetServerSideProps, NextPage } from "next"
 import { Layout } from "../shared/Layout"
 import { list } from "../ScatteringCrossSection/queries"
 import { List } from "../ScatteringCrossSection/List"
@@ -20,7 +20,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({items}) => {
 
 export default ScatteringCrossSectionsPage
 
-export async function getStaticProps() {
+export const getServerSideProps: GetServerSideProps = async () => {
     return {
         props: {
             items: await list()
