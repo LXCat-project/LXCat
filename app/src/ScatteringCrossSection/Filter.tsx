@@ -1,64 +1,49 @@
 import Link from "next/link"
-import { Facets } from "./queries"
+import { CheckBoxGroup } from "./CheckBoxGroup"
+import { Facets, SearchOptions } from "./queries"
 
 interface Props {
     facets: Facets
+    selection: SearchOptions
 }
 
-export const Filter = ({facets}: Props) => {
+export const Filter = ({ facets, selection }: Props) => {
+    const hasAnySelection = Object.values(selection).some(s => s.length > 0)
     return (
-        <div style={{ display: 'flex' }}>
-            <fieldset>
-                <legend>Primary consumed particle</legend>
-                <ul>
-                    {facets.lhs_primary_particle.map(d => (
-                        <li key={d}>
-                            <Link href={{
-                                pathname: '/scat-cs',
-                                query: {
-                                    lhs_primary_particle: d
-                                }
-                            }}>
-                                <a>{d}</a>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </fieldset>
-            <fieldset>
-                <legend>Primary produced particle</legend>
-                <ul>
-                    {facets.rhs_primary_particle.map(d => (
-                        <li key={d}>
-                            <Link href={{
-                                pathname: '/scat-cs',
-                                query: {
-                                    rhs_primary_particle: d
-                                }
-                            }}>
-                                <a>{d}</a>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </fieldset>
-            <fieldset>
-                <legend>Set</legend>
-                <ul>
-                    {facets.set_name.map(d => (
-                        <li key={d}>
-                            <Link href={{
-                                pathname: '/scat-cs',
-                                query: {
-                                    set_name: d
-                                }
-                            }}>
-                                <a>{d}</a>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </fieldset>
+        <div>
+            <div style={{ display: 'flex' }}>
+                <fieldset>
+                    <legend>Primary consumed particle</legend>
+                    <CheckBoxGroup
+                        facet={facets.lhs_primary_particle}
+                        selection={selection}
+                        selectionKey="lhs_primary_particle"
+                    />
+                </fieldset>
+                <fieldset>
+                    <legend>Primary produced particle</legend>
+                    <CheckBoxGroup
+                        facet={facets.rhs_primary_particle}
+                        selection={selection}
+                        selectionKey="rhs_primary_particle"
+                    />
+                </fieldset>
+                <fieldset>
+                    <legend>Set</legend>
+                    <CheckBoxGroup
+                        facet={facets.set_name}
+                        selection={selection}
+                        selectionKey="set_name"
+                    />
+                </fieldset>
+            </div>
+            <div>
+                <Link href={{
+                    pathname: '/scat-cs'
+                }} passHref>
+                    <button disabled={!hasAnySelection}>Clear selection</button>
+                </Link>
+            </div>
         </div>
     )
 }

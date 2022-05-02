@@ -166,10 +166,61 @@ export async function searchFacets(): Promise<Facets> {
 	return {
 		set_name: [...new Set(all.map(d => d.isPartOf.name))],
 		lhs_primary_particle: [...new Set(all.flatMap(
+			// TODO is filtering out electron OK?
 			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
 		)],
 		rhs_primary_particle: [...new Set(all.flatMap(
 			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
 		)],
 	}
+}
+
+export interface SearchOptions {
+	set_name: string[]
+	lhs_primary_particle: string[]
+	rhs_primary_particle: string[]
+}
+
+export async function search(options: SearchOptions) {
+	const cursor: ArrayCursor<CrossSectionHeading> = await db.query(aql`
+	FOR cs IN CrossSection
+		LET refs = (
+			FOR rs IN References
+				FILTER rs._from == cs._id
+				FOR r IN Reference
+					FILTER r._id == rs._to
+					RETURN UNSET(r, ["_key", "_rev", "_id"])
+		)
+		LET set = FIRST(
+			FOR p IN IsPartOf
+				FILTER p._from == cs._id
+				FOR s IN CrossSectionSet
+					FILTER s._id == p._to
+					RETURN UNSET(s, ["_key", "_rev", "_id"])
+		)
+		LET reaction = FIRST(
+			FOR r in Reaction
+				FILTER r._id == cs.reaction
+				LET consumes = (
+					FOR c IN Consumes
+					FILTER c._from == r._id
+						FOR c2s IN State
+						FILTER c2s._id == c._to
+						RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+				)
+				LET produces = (
+					FOR p IN Produces
+					FILTER p._from == r._id
+						FOR p2s IN State
+						FILTER p2s._id == p._to
+						RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+				)
+				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+		)
+		FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY == set.name
+		// TODO implement filter for *_primary_particle
+		RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
+	`);
+
+	return await cursor.all()
 }
