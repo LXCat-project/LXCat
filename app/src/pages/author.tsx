@@ -40,6 +40,7 @@ const Admin: NextPage<Props> = () => {
       </h1>
 
       <h2>Scrattering cross sections</h2>
+      The JSON schema can be found <a href="/api/scat-cs/schema.json" target="_blank">here</a>
       <form>
           <textarea
             value={doc}
@@ -49,13 +50,14 @@ const Admin: NextPage<Props> = () => {
             cols={80}
           />
           <button
+            type="submit"
             onClick={uploadCS}
           >Upload cross section</button>
           {errors.length > 0 &&
             <div>
               <span>Error(s) during upload</span>
               <ul>
-                {errors.map((e, i) => <li key={i}>{e.message}, {JSON.stringify(e.params, undefined, 2)}</li>)}
+                {errors.map((e, i) => <li key={i}>{e.message}, {JSON.stringify(e.params, undefined, 2)} { e.dataPath && `@ ${e.dataPath}`}</li>)}
               </ul>
             </div>
           }
