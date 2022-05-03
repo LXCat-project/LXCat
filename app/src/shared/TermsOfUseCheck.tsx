@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { HowToCite } from './HowToCite'
-import { Reference } from "./types"
+import { Reference } from './types/reference'
 
 interface Props {
     references: Reference[]
@@ -9,7 +9,7 @@ interface Props {
 
 export const TermsOfUseCheck = ({references, children}: Props) => {
     // TODO remember that visitor agreed during current session
-    
+
     const [agreement, setAgreement] = useState(false)
     if (agreement) {
         return (

@@ -12,5 +12,6 @@ COPY database/setup setup
 RUN mkdir -p /app/src
 RUN ln -s /database/node_modules /app/node_modules
 COPY app/src /app/src
+COPY app/tsconfig.json /app/
 
 ENTRYPOINT ["npm", "run"]

@@ -1,5 +1,5 @@
-import { CrossSectionHeading } from "./types"
 import { ListItem } from "./ListItem"
+import { CrossSectionHeading } from "./types/public"
 
 interface Props {
     items: CrossSectionHeading[]

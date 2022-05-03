@@ -1,3 +1,4 @@
 app/node_modules
 database/arangodb3
 database/node_modules
+app/.next
