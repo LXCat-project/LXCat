@@ -1,0 +1,2658 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "complete": {
+            "type": "boolean"
+        },
+        "contributor": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "references": {
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "article",
+                                    "article-journal",
+                                    "article-magazine",
+                                    "article-newspaper",
+                                    "bill",
+                                    "book",
+                                    "broadcast",
+                                    "chapter",
+                                    "dataset",
+                                    "entry",
+                                    "entry-dictionary",
+                                    "entry-encyclopedia",
+                                    "figure",
+                                    "graphic",
+                                    "interview",
+                                    "legal_case",
+                                    "legislation",
+                                    "manuscript",
+                                    "map",
+                                    "motion_picture",
+                                    "musical_score",
+                                    "pamphlet",
+                                    "paper-conference",
+                                    "patent",
+                                    "personal_communication",
+                                    "post",
+                                    "post-weblog",
+                                    "report",
+                                    "review",
+                                    "review-book",
+                                    "song",
+                                    "speech",
+                                    "thesis",
+                                    "treaty",
+                                    "webpage"
+                                ]
+                            },
+                            "DOI": {
+                                "type": "string"
+                            },
+                            "ISBN": {
+                                "type": "string"
+                            },
+                            "ISSN": {
+                                "type": "string"
+                            },
+                            "PMCID": {
+                                "type": "string"
+                            },
+                            "PMID": {
+                                "type": "string"
+                            },
+                            "URL": {
+                                "type": "string"
+                            },
+                            "abstract": {
+                                "type": "string"
+                            },
+                            "annote": {
+                                "type": "string"
+                            },
+                            "archive": {
+                                "type": "string"
+                            },
+                            "archive-place": {
+                                "type": "string"
+                            },
+                            "archive_location": {
+                                "type": "string"
+                            },
+                            "authority": {
+                                "type": "string"
+                            },
+                            "call-number": {
+                                "type": "string"
+                            },
+                            "citation-label": {
+                                "type": "string"
+                            },
+                            "citation-number": {
+                                "type": "string"
+                            },
+                            "collection-title": {
+                                "type": "string"
+                            },
+                            "container-title": {
+                                "type": "string"
+                            },
+                            "container-title-short": {
+                                "type": "string"
+                            },
+                            "dimensions": {
+                                "type": "string"
+                            },
+                            "event": {
+                                "type": "string"
+                            },
+                            "event-place": {
+                                "type": "string"
+                            },
+                            "first-reference-note-number": {
+                                "type": "string"
+                            },
+                            "genre": {
+                                "type": "string"
+                            },
+                            "journalAbbreviation": {
+                                "type": "string"
+                            },
+                            "jurisdiction": {
+                                "type": "string"
+                            },
+                            "keyword": {
+                                "type": "string"
+                            },
+                            "language": {
+                                "type": "string"
+                            },
+                            "locator": {
+                                "type": "string"
+                            },
+                            "medium": {
+                                "type": "string"
+                            },
+                            "note": {
+                                "type": "string"
+                            },
+                            "number": {
+                                "type": "string"
+                            },
+                            "original-publisher": {
+                                "type": "string"
+                            },
+                            "original-publisher-place": {
+                                "type": "string"
+                            },
+                            "original-title": {
+                                "type": "string"
+                            },
+                            "page": {
+                                "type": "string"
+                            },
+                            "page-first": {
+                                "type": "string"
+                            },
+                            "publisher": {
+                                "type": "string"
+                            },
+                            "publisher-place": {
+                                "type": "string"
+                            },
+                            "references": {
+                                "type": "string"
+                            },
+                            "reviewed-title": {
+                                "type": "string"
+                            },
+                            "scale": {
+                                "type": "string"
+                            },
+                            "section": {
+                                "type": "string"
+                            },
+                            "shortTitle": {
+                                "type": "string"
+                            },
+                            "source": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "title-short": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            },
+                            "year-suffix": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "collection-editor": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "composer": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "container-author": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "director": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "editor": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "editorial-director": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "illustrator": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "interviewer": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "original-author": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "recipient": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "reviewed-author": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "translator": {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "family"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "family": {
+                                                    "type": "string",
+                                                    "description": "Surname minus any particles and suffixes"
+                                                },
+                                                "given": {
+                                                    "type": "string",
+                                                    "description": "Given names, either full (\"John Edward\") or initialized (\"J. E.\")"
+                                                },
+                                                "suffix": {
+                                                    "type": "string",
+                                                    "description": "Name suffix, e.g. \"Jr.\" in \"John Smith Jr.\" and \"III\" in \"Bill Gates III\""
+                                                },
+                                                "non-dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are not dropped when only the surname is shown (\"de\" in the Dutch surname \"de Koning\") but which may be treated separately from the family name, e.g. for sorting"
+                                                },
+                                                "dropping-particle": {
+                                                    "type": "string",
+                                                    "description": "Name particles that are dropped when only the surname is shown (\"van\" in \"Ludwig van Beethoven\", which becomes \"Beethoven\")"
+                                                },
+                                                "literal": {
+                                                    "type": "string"
+                                                },
+                                                "sequence": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "first",
+                                                        "additional"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "literal"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "chapter-number": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "collection-number": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "edition": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "issue": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "number-of-pages": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "number-of-volumes": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "volume": {
+                                "type": [
+                                    "string",
+                                    "number"
+                                ]
+                            },
+                            "accessed": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "container": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "event-date": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "issued": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "original-date": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "submitted": {
+                                "anyOf": [
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "date-parts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string"
+                                            },
+                                            "literal": {
+                                                "type": "string",
+                                                "description": "Literal date string. Should only be used as a last resort."
+                                            }
+                                        },
+                                        "required": [
+                                            "raw"
+                                        ]
+                                    },
+                                    {
+                                        "type": "object",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "date-parts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": [
+                                                            "string",
+                                                            "number"
+                                                        ]
+                                                    },
+                                                    "minItems": 1,
+                                                    "maxItems": 3
+                                                },
+                                                "minItems": 1,
+                                                "maxItems": 2
+                                            },
+                                            "season": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "number",
+                                                        "const": 1
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 2
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 3
+                                                    },
+                                                    {
+                                                        "type": "number",
+                                                        "const": 4
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ],
+                                                "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
+                                            },
+                                            "circa": {
+                                                "type": "boolean",
+                                                "description": "If date is approximate, this should be set to a \"truthy\" value."
+                                            },
+                                            "raw": {
+                                                "type": "string",
+                                                "description": "May be used with Citeproc-js. String must be able to parse directly into a valid `Date` using `new Date()` **NOT A CSL STANDARD**"
+                                            },
+                                            "literal": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "literal"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "type"
+                        ]
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "states": {
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "particle": {
+                                "type": "string"
+                            },
+                            "charge": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "charge",
+                            "particle"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "particle": {
+                                "type": "string"
+                            },
+                            "charge": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "charge",
+                            "particle"
+                        ]
+                    }
+                ]
+            }
+        },
+        "processes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "const": "LUT"
+                    },
+                    "labels": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                    },
+                    "units": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                        }
+                    },
+                    "reaction": {
+                        "type": "object",
+                        "properties": {
+                            "lhs": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "number"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "count",
+                                        "state"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "rhs": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "number"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "count",
+                                        "state"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "reversible": {
+                                "type": "boolean"
+                            },
+                            "type_tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Elastic",
+                                        "Effective",
+                                        "Electronic",
+                                        "Vibrational",
+                                        "Rotational",
+                                        "Attachment",
+                                        "Ionization"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "lhs",
+                            "rhs",
+                            "reversible",
+                            "type_tags"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "mass_ratio": {
+                                "type": "number"
+                            },
+                            "statistical_weight_ratio": {
+                                "type": "number"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "reference": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "threshold": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "data",
+                    "labels",
+                    "reaction",
+                    "threshold",
+                    "type",
+                    "units"
+                ]
+            }
+        }
+    },
+    "required": [
+        "complete",
+        "contributor",
+        "description",
+        "name",
+        "processes",
+        "references",
+        "states"
+    ],
+    "definitions": {}
+}

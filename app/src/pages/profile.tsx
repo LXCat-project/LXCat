@@ -11,6 +11,7 @@ const ProfilePage = () => {
   }
   const isDeveloper = session.user.roles!.includes(Role.enum.developer)
   const isAdmin = session.user.roles!.includes(Role.enum.admin)
+  const isAuthor = session.user.roles!.includes(Role.enum.author)
   const orcidURL = process.env.ORCID_SANDBOX ? `https://sandbox.orcid.org/${session.user.orcid}` : `https://orcid.org/${session.user.orcid}`
   return (
     <Layout>
@@ -43,6 +44,10 @@ const ProfilePage = () => {
 
       <div>
         {isAdmin && <Link href="/admin">Perform admin tasks</Link>}
+      </div>
+
+      <div>
+        {isAuthor && <Link href="/author">Perform author tasks</Link>}
       </div>
 
       <div>

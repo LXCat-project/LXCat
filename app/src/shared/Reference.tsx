@@ -1,10 +1,22 @@
-import { Reference as IReference } from "./types"
+import Cite from 'citation-js'
+import { Reference as ReferenceRecord } from "./types/reference"
 
-export const Reference = (r: IReference) => {
+export const Reference = (r: ReferenceRecord) => {
+    if ('string' in r) {
+        return <cite>{r}</cite>
+    }
+    const cite = new Cite(r)
+    // Format CSL into APA style bibliography
+    const bibliography = cite.format('bibliography')
     return (
-        <dl>
-            <dt>{r.title}</dt>
-            <dd>{r.authors.join(', ')}, {r["container-title"]}</dd>
-        </dl>
+        <cite>
+            {r.URL ?
+                <a href={r.URL} target="_blank" rel="noreferrer">
+                    {bibliography}
+                </a>
+                :
+                bibliography
+            }
+        </cite>
     )
 }

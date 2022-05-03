@@ -8,13 +8,16 @@
   "scripts": {
     "setup": "ts-node src/main.ts setup",
     "seed": "ts-node src/main.ts",
-    "make-admin": "ts-node src/make_admin.ts"
+    "make-admin": "ts-node src/make_admin.ts",
+    "drop-database": "ts-node src/drop_database.ts",
+    "reload": "npm run drop-database && npm run setup && npm run seed seeds/test"
   },
   "dependencies": {
     "arangojs": "^7.7.0",
     "dotenv": "^16.0.0",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^3.14.0",
+    "ts-json-schema-generator": "^1.0.0",
     "zod": "^3.14.2",
     "zod-to-json-schema": "^3.11.3"
   }
