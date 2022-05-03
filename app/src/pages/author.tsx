@@ -39,7 +39,7 @@ const Admin: NextPage<Props> = () => {
         Author corner
       </h1>
 
-      <h2>Scrattering cross sections</h2>
+      <h2>Scattering cross section set</h2>
       The JSON schema can be found <a href="/api/scat-cs/schema.json" target="_blank">here</a>
       <form>
           <textarea
