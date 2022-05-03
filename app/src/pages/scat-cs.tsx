@@ -41,7 +41,8 @@ export const getServerSideProps: GetServerSideProps<Props, Record<keyof SearchOp
 function query2options(query: ParsedUrlQuery): SearchOptions {
     return {
         set_name: query2array(query.set_name),
-        lhs_particles: query2array(query.lhs_particles)
+        species1: query2array(query.species1),
+        species2: query2array(query.species2)
     }
 }
 

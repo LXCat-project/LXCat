@@ -159,7 +159,8 @@ export async function byId(id: string) {
 
 export interface Facets {
 	set_name: string[]
-	lhs_particles: string[]
+	species1: string[]
+	species2: string[]
 }
 
 export async function searchFacets(): Promise<Facets> {
@@ -167,13 +168,15 @@ export async function searchFacets(): Promise<Facets> {
 	const all = await list()
 	return {
 		set_name: [...new Set(all.map(d => d.isPartOf.name))],
-		lhs_particles: [...new Set(all.flatMap(d => d.reaction.lhs.map(e => e.state.particle)))]
+		species1: [...new Set(all.flatMap(d => d.reaction.lhs[0].state.id))],
+		species2: [...new Set(all.flatMap(d => d.reaction.lhs[1].state.id))]
 	}
 }
 
 export interface SearchOptions {
 	set_name: string[]
-	lhs_particles: string[]
+	species1: string[]
+	species2: string[]
 }
 
 export async function search(options: SearchOptions) {
@@ -213,17 +216,9 @@ export async function search(options: SearchOptions) {
 				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
 		)
 		FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY == set.name
+		FILTER LENGTH(${options.species1}) == 0 OR ${options.species1} ANY == reaction.lhs[0].state.id
+		FILTER LENGTH(${options.species2}) == 0 OR ${options.species2} ANY == reaction.lhs[1].state.id
 		RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
 	`);
-	const items = await cursor.all()
-	// TODO perform filtering of lhs_particles in db query
-	const selected_lhs_particles = new Set(options.lhs_particles)
-	if (selected_lhs_particles.size > 0) {
-		return items.filter(
-			d => d.reaction.lhs.some(
-				s => selected_lhs_particles.has(s.state.particle)
-			)
-		)
-	}
-	return items
+	return await cursor.all()
 }
