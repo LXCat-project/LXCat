@@ -148,7 +148,10 @@ export async function byId(id: string) {
 				)
 				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
 		)
-		RETURN { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
+		RETURN MERGE(
+			UNSET(cs, ["_key", "_rev", "_id"]),
+			{ "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
+		)
 	`);
 
 	return await cursor.next()
