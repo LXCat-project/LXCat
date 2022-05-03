@@ -8,6 +8,7 @@ interface Props {
 }
 
 export const CheckBoxGroup = ({facet, selection, selectionKey}: Props) => {
+    console.log(selection, selectionKey)
     const selectionValue = selection[selectionKey]
     return (
         <div>

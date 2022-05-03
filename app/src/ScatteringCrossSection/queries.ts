@@ -156,8 +156,7 @@ export async function byId(id: string) {
 
 export interface Facets {
 	set_name: string[]
-	lhs_primary_particle: string[]
-	rhs_primary_particle: string[]
+	lhs_particles: string[]
 }
 
 export async function searchFacets(): Promise<Facets> {
@@ -165,20 +164,13 @@ export async function searchFacets(): Promise<Facets> {
 	const all = await list()
 	return {
 		set_name: [...new Set(all.map(d => d.isPartOf.name))],
-		lhs_primary_particle: [...new Set(all.flatMap(
-			// TODO is filtering out electron OK?
-			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
-		)],
-		rhs_primary_particle: [...new Set(all.flatMap(
-			d => d.reaction.lhs.map(e => e.state.particle).filter(p => p !== 'e'))
-		)],
+		lhs_particles: [...new Set(all.flatMap(d => d.reaction.lhs.map(e => e.state.particle)))]
 	}
 }
 
 export interface SearchOptions {
 	set_name: string[]
-	lhs_primary_particle: string[]
-	rhs_primary_particle: string[]
+	lhs_particles: string[]
 }
 
 export async function search(options: SearchOptions) {
@@ -218,9 +210,17 @@ export async function search(options: SearchOptions) {
 				RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
 		)
 		FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY == set.name
-		// TODO implement filter for *_primary_particle
 		RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
 	`);
-
-	return await cursor.all()
+	const items = await cursor.all()
+	// TODO perform filtering of lhs_particles in db query
+	const selected_lhs_particles = new Set(options.lhs_particles)
+	if (selected_lhs_particles.size > 0) {
+		return items.filter(
+			d => d.reaction.lhs.some(
+				s => selected_lhs_particles.has(s.state.particle)
+			)
+		)
+	}
+	return items
 }

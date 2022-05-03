@@ -13,19 +13,11 @@ export const Filter = ({ facets, selection }: Props) => {
         <div>
             <div style={{ display: 'flex' }}>
                 <fieldset>
-                    <legend>Primary consumed particle</legend>
+                    <legend>Consumed particles</legend>
                     <CheckBoxGroup
-                        facet={facets.lhs_primary_particle}
+                        facet={facets.lhs_particles}
                         selection={selection}
-                        selectionKey="lhs_primary_particle"
-                    />
-                </fieldset>
-                <fieldset>
-                    <legend>Primary produced particle</legend>
-                    <CheckBoxGroup
-                        facet={facets.rhs_primary_particle}
-                        selection={selection}
-                        selectionKey="rhs_primary_particle"
+                        selectionKey="lhs_particles"
                     />
                 </fieldset>
                 <fieldset>
