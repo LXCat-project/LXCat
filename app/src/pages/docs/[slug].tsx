@@ -2,9 +2,19 @@ import { R_OK } from "constants"
 import { access, readdir, readFile } from "fs/promises"
 import { GetStaticProps, NextPage } from "next"
 import { join } from "path"
-import { remark } from 'remark'
-import html from 'remark-html'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
+import rehypeStringify from 'rehype-stringify'
+import remarkMermaid from 'remark-mermaid-dataurl'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import remarkToc from 'remark-toc'
+import { unified } from 'unified'
+
 import { Layout } from "../../shared/Layout"
+
+import 'highlight.js/styles/github.css'
 
 interface Props {
     slug: string
@@ -50,7 +60,16 @@ export const getStaticProps: GetStaticProps<Props, {slug: string}> = async (cont
     }
 
     const fileContents = await readFile(fn)
-    const processedContent = await remark().use(html).process(fileContents)
+    const processedContent = await unified()
+        .use(remarkParse)
+        .use(remarkMermaid)
+        .use(remarkToc)
+        .use(remarkRehype)
+        .use(rehypeSlug)
+        .use(rehypeAutolinkHeadings, {behavior: 'wrap'})
+        .use(rehypeHighlight)
+        .use(rehypeStringify)
+        .process(fileContents)
     const contentHtml = processedContent.toString()
     return {
         props: {
