@@ -47,7 +47,7 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
     - Redirect URI
         - For dev deployments set to `http://localhost:3000/api/auth/callback/gitlab`
     - Scopes
-        - Select `openid`, `profile` and `email`
+        - Select `read_user`, `openid`, `profile` and `email`
 
 ### For Orcid sandbox
 
