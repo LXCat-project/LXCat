@@ -12,9 +12,12 @@
   "dependencies": {
     "arangojs": "^7.7.0",
     "citation-js": "^0.5.7",
+    "mdx-mermaid": "^1.2.2",
+    "mermaid": "^8.11.5",
     "next": "^12.1.4",
     "next-auth": "^4.3.1",
     "next-connect": "^0.12.2",
+    "next-mdx-remote": "^4.0.3",
     "node-fetch": "^3.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",

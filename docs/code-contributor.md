@@ -13,7 +13,7 @@ See [../database/README](../database/README) how to seed the database with test 
 
 ## How to make a merge request
 
-See <https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html> how to create merge request in <https://gitlab.com/LXCat-project/lxcat-ng> repository.
+See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create merge request in [repository](https://gitlab.com/LXCat-project/lxcat-ng).
 
 ## Documentation
 

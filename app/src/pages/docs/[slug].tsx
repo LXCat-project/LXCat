@@ -11,20 +11,36 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkToc from 'remark-toc'
 import { unified } from 'unified'
+import mdxMermaid from 'mdx-mermaid'
+// import { Mermaid } from 'mdx-mermaid/Mermaid';
+import { serialize } from 'next-mdx-remote/serialize'
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 import { Layout } from "../../shared/Layout"
 
 import 'highlight.js/styles/github.css'
+import { SerializeOptions } from "next-mdx-remote/dist/types"
 
 interface Props {
     slug: string
-    contentHtml: string
+    mdxSource: MDXRemoteSerializeResult
 }
 
-const MarkdownPage: NextPage<Props> = ({ slug, contentHtml }) => {
+const Mermaid = (props) => {
+    console.log(props)
+    return (
+        <pre>Chart is here</pre>
+    )
+}
+
+const components = {
+    Mermaid
+}
+
+const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
     return (
         <Layout title={`Docs - ${slug}`}>
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          <MDXRemote lazy {...mdxSource} components={components} />
         </Layout>
       )
 }
@@ -60,21 +76,37 @@ export const getStaticProps: GetStaticProps<Props, {slug: string}> = async (cont
     }
 
     const fileContents = await readFile(fn)
-    const processedContent = await unified()
-        .use(remarkParse)
-        .use(remarkMermaid)
-        .use(remarkToc)
-        .use(remarkRehype)
-        .use(rehypeSlug)
-        .use(rehypeAutolinkHeadings, {behavior: 'wrap'})
-        .use(rehypeHighlight)
-        .use(rehypeStringify)
-        .process(fileContents)
-    const contentHtml = processedContent.toString()
+    // const processedContent = await unified()
+    //     .use(remarkParse)
+    //     .use(remarkMermaid)
+    //     .use(remarkToc)
+    //     .use(remarkRehype)
+    //     .use(rehypeSlug)
+    //     .use(rehypeAutolinkHeadings, {behavior: 'wrap'})
+    //     .use(rehypeHighlight)
+    //     .use(rehypeStringify)
+    //     .process(fileContents)
+    // const contentHtml = processedContent.toString()
+    // console.log(mdxMermaid)
+    const options: SerializeOptions = {
+        mdxOptions: {
+            remarkPlugins:[
+                // mdxMermaid,
+                remarkToc,
+
+            ],
+            rehypePlugins: [
+                rehypeSlug,
+                [rehypeAutolinkHeadings, {behavior: 'wrap'}],
+                [rehypeHighlight, {ignoreMissing: true}]
+            ]
+        }
+    }
+    const mdxSource = await serialize(fileContents.toString(), options)
     return {
         props: {
             slug,
-            contentHtml
+            mdxSource
         }
     }
 }
