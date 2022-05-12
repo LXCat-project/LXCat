@@ -61,8 +61,7 @@ The current lxcat uses a [time machine](https://nl.lxcat.net/data/time_machine.p
 The current lxcat can show the whole lxcat website as it was at a date in the past.
 This time machine is mainly there to have a reference in a paper to a certain version of data.
 The new lxcat must also allow for showing previous versions of data for proper referencing aswell.
-Instead of a time machine implementation, we want to have each cross section set (called database in current lxcat) to have multiple versions.
-Each version should have its own URL (`/scat-cs/<set id>.<version>`) and the set should have an URL (`/scat-cs/<set id>`) without a version which should redirect to the latest version. A new version should be made when the author of the set makes major changes.
+Instead of a time machine implementation, we want to have multiple versions for each cross section or each cross.
 
 ### Full stack web framework
 
