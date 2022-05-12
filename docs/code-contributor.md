@@ -35,6 +35,16 @@ All the headers also become bookmarkable.
 Code block will be highlighted.
 For example
 
+````markdown
+```javascript
+function add(a: string, b: string): string {
+  return a + b
+}
+```
+````
+
+is highlighted as 
+
 ```javascript
 function add(a: string, b: string): string {
   return a + b
@@ -44,6 +54,33 @@ function add(a: string, b: string): string {
 ### Local images
 
 For example show the `./screenshot.png` image inside Markdown file use `![](../docs/screenshot.png)`. The `../docs/` is needed as HTML files are generated relative to `app/` directory.
+
+
+### Diagrams
+
+You can add code blocks using [mermaidjs](https://mermaid-js.github.io/mermaid/#/) format to render diagrams.
+
+For example
+
+````markdown
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+````
+
+is rendered as
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
 
 ## Technology wishes
 
@@ -62,6 +99,7 @@ The current lxcat can show the whole lxcat website as it was at a date in the pa
 This time machine is mainly there to have a reference in a paper to a certain version of data.
 The new lxcat must also allow for showing previous versions of data for proper referencing aswell.
 Instead of a time machine implementation, we want to have multiple versions for each cross section or each cross.
+Similar to [Zenodo](https://help.zenodo.org/#versioning) or [Uniprot](https://www.uniprot.org/uniprot/Q9Y5N1?version=*)
 
 ### Full stack web framework
 
