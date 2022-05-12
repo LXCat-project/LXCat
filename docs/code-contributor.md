@@ -23,6 +23,28 @@ The documentation is also hosted on the website at `https://<somewhere>/docs`.
 
 To have working links between Markdown files on the website use URLs without the `.md` extension.
 
+The following features are available in Markdown
+
+### Table of contents
+
+Adding `## Table of contents` will inject a table of contents for all headers.
+All the headers also become bookmarkable.
+
+### Code highlighting
+
+Code block will be highlighted.
+For example
+
+```javascript
+function add(a: string, b: string): string {
+  return a + b
+}
+```
+
+### Local images
+
+For example show the `./screenshot.png` image inside Markdown file use `![](../docs/screenshot.png)`. The `../docs/` is needed as HTML files are generated relative to `app/` directory.
+
 ## Technology wishes
 
 Document to figure out what pieces of software to use.
