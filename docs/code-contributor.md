@@ -36,7 +36,7 @@ Code block will be highlighted.
 For example
 
 ````markdown
-```javascript
+```ts
 function add(a: string, b: string): string {
   return a + b
 }
@@ -45,7 +45,7 @@ function add(a: string, b: string): string {
 
 is highlighted as 
 
-```javascript
+```ts
 function add(a: string, b: string): string {
   return a + b
 }
