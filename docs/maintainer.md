@@ -1,8 +1,32 @@
 # Maintainer docs
 
+## Table of contents
+
+## Services
+
+The lxcat website consists of several services.
+
+```mermaid
+graph TD
+    A((Web browser)) -->|https://ng.lxcat.net| B(reverse proxy)
+    B -->|http://localhost:3000| C(app)
+    F(setup) -->|Fill| D
+    C -->|Query| D(database)
+    C -->|Authentication| E((Orcid))
+```
+
+In above graph (written in [Mermaid](https://mermaid-js.github.io/mermaid) format) the boxes are services:
+
+* reverse proxy: Exposes app to Internet. Apache HTTP server is used.
+* app: The application. Responsible for rendering HTML pages from database queries and provides API web service endpoints. Uses NextJS as framework.
+* database: Database for storing cross sections, users etc. ArangoDB is used.
+* setup: Data base utility scripts. Written in Typescript.
+
+Docker compose can run all the services except for the reverse proxy which uses Apache provided by the OS.
+
 ## Deployment
 
-The LXCat servers run debian, and the following description is specific to debian 11. 
+The LXCat servers run debian, and the following description is specific to debian 11.
 It is considered good practice to run docker in rootless mode.
 To that end a special user `docker` is set up, which will run the service using systemd.
 
@@ -18,7 +42,7 @@ $ sudo curl -L https://github.com/docker/compose/releases/download/v2.0.1/docker
 ```
 
 ### systemd services
-Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:  
+Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
 1. For the docker service add the file `docker.service`:
   ```
   [Unit]
@@ -27,7 +51,7 @@ Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
 
   [Service]
   Environment=PATH=/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-  ExecStart=/usr/bin/dockerd-rootless.sh 
+  ExecStart=/usr/bin/dockerd-rootless.sh
   ExecReload=/bin/kill -s HUP $MAINPID
   TimeoutSec=0
   RestartSec=2
@@ -47,24 +71,24 @@ Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
   ```
 2. For the `docker-compose` service we use a template, by adding the file `docker-compose@.service`:
   ```
-  [Unit] 
+  [Unit]
   Description=docker-compose %i service
   Requires=docker.service network-online.target
   After=docker.service network-online.target
- 
-  [Service] 
+
+  [Service]
   Environment="DOCKER_HOST=unix:///run/user/%U/docker.sock"
   WorkingDirectory=%h/.config/docker-compose/%i
   Type=simple
   Restart=no
- 
+
   ExecStartPre=/usr/local/bin/docker-compose pull --ignore-pull-failures
   ExecStartPre=/usr/local/bin/docker-compose build --pull
- 
+
   ExecStart=/usr/local/bin/docker-compose up --remove-orphans
- 
+
   ExecStop=/usr/local/bin/docker-compose down --remove-orphans
- 
+
   ExecReload=/usr/local/bin/docker-compose pull --quiet --ignore-pull-failures
   ExecReload=/usr/local/bin/docker-compose build --pull
 

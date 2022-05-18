@@ -1,5 +1,7 @@
 # Code contributor docs
 
+## Table of contents
+
 ## Where is the code?
 
 Code to fill the database can be found in [../database/](../database/).
@@ -11,7 +13,7 @@ See [../database/README](../database/README) how to seed the database with test 
 
 ## How to make a merge request
 
-See <https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html> how to create merge request in <https://gitlab.com/LXCat-project/lxcat-ng> repository.
+See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create merge request in [repository](https://gitlab.com/LXCat-project/lxcat-ng).
 
 ## Documentation
 
@@ -21,6 +23,82 @@ The documentation is also hosted on the website at `https://<somewhere>/docs`.
 
 To have working links between Markdown files on the website use URLs without the `.md` extension.
 
+The following features are available in Markdown
+
+### Table of contents
+
+Adding `## Table of contents` will inject a table of contents for all headers.
+All the headers also become bookmarkable.
+
+### Code highlighting
+
+Code block will be highlighted.
+For example
+
+````markdown
+```ts
+function add(a: string, b: string): string {
+  return a + b
+}
+```
+````
+
+is highlighted as
+
+```ts
+function add(a: string, b: string): string {
+  return a + b
+}
+```
+
+### Local images
+
+For example show the `./screenshot.png` image inside Markdown file use `![](screenshot.png)`. The path of the image should be relative to the Markdown file..
+
+### Diagrams
+
+You can add code blocks using [mermaidjs](https://mermaid-js.github.io/mermaid/#/) format to render diagrams.
+
+For example
+
+````markdown
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+````
+
+is rendered as
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+### Math
+
+LaTeX equations can be added by wrapping the equation with `$$`.
+
+For example
+
+```markdown
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
+```
+
+is rendered as
+
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
+
 ## Technology wishes
 
 Document to figure out what pieces of software to use.
@@ -28,10 +106,17 @@ Document to figure out what pieces of software to use.
 Stack should be stable and usable by maintainers of lxcat.
 
 The current lxcat is written in PHP and uses Mysql as database with phpmyadmin as admin interface.
+In the new lxcat, the admin interface should be part of the web application and offer some one to upload or edit a cross section set using a web form. This new interface should be behind a login.
 
-Prototype by Daan is written in Typescript and uses Arangodb as database.
-
+The prototype by Daan is written in [Typescript](https://www.typescriptlang.org/) and uses [Arangodb](https://www.arangodb.com) as database.
 For the new lxcat we want to keep using TypeScript and ArangoDB.
+
+The current lxcat uses a [time machine](https://nl.lxcat.net/data/time_machine.php) to show previous versions of data.
+The current lxcat can show the whole lxcat website as it was at a date in the past.
+This time machine is mainly there to have a reference in a paper to a certain version of data.
+The new lxcat must also allow for showing previous versions of data for proper referencing aswell.
+Instead of a time machine implementation, we want to have multiple versions for each cross section or each cross.
+Similar to [Zenodo](https://help.zenodo.org/#versioning) or [Uniprot](https://www.uniprot.org/uniprot/Q9Y5N1?version=*)
 
 ### Full stack web framework
 
