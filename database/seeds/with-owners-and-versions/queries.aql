@@ -1,0 +1,20 @@
+// Fetch complete CrossSectionSet document
+FOR css IN CrossSectionSet
+    LET organization = FIRST(
+        FOR o IN Organization
+            FILTER css.organization == o._id
+            RETURN {name: o.name}
+    )
+    LET processes = (
+        FOR p IN IsPartOf
+            FILTER p._to == css._id
+            FOR cs IN CrossSection
+                FILTER p._from == cs._id
+                LET reaction = FIRST(
+                    FOR r IN Reaction
+                        FILTER cs.reaction == r._id
+                        RETURN r
+                )
+            RETURN MERGE(cs, {reaction})
+    )
+    RETURN MERGE(css, {organization, processes})

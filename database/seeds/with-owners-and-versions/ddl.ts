@@ -76,7 +76,7 @@ import { systemDb } from "../../src/systemDb";
   ]);
 
   await db.createCollection("Reaction");
-  await db.collection("Membership").saveAll([
+  await db.collection("Reaction").saveAll([
     {
       _key: "1",
       name: "Some reaction",
@@ -93,25 +93,30 @@ import { systemDb } from "../../src/systemDb";
         type: "object",
         properties: {
           reaction: {
-            type: "string", // id of item in reaction collection
+            type: "string", // A key in Reaction collection
           },
+          data: {
+              type: 'string'
+          }
         },
       },
     },
   });
   await db
     .collection("CrossSection")
-    .ensureIndex({ type: "persistent", fields: ["reaction"] }),
-    await db.collection("CrossSection").saveAll([
-      {
-        _key: "1",
-        reaction: "Reaction/1",
-      },
-      {
-        _key: "2",
-        reaction: "Reaction/2",
-      },
-    ]);
+    .ensureIndex({ type: "persistent", fields: ["reaction"] });
+  await db.collection("CrossSection").saveAll([
+    {
+      _key: "1",
+      reaction: "Reaction/1",
+      data: 'some data'
+    },
+    {
+      _key: "2",
+      reaction: "Reaction/2",
+      data: 'some other data'
+    },
+  ]);
 
   await db.createCollection("CrossSectionSet", {
     schema: {
@@ -120,32 +125,34 @@ import { systemDb } from "../../src/systemDb";
         properties: {
           name: {
             type: "string",
+          },
+          organization: {
+              type: "string" // A key in Organization collection
           }
         },
       },
     },
   });
+  await db.collection("CrossSectionSet").ensureIndex({ type: "persistent", fields: ["organization"] });
   await db.collection("CrossSectionSet").saveAll([
     {
       _key: "1",
       name: "Some set name",
+      organization: "Organization/1",
     },
   ]);
 
   // Which Cross sections are part of which Cross section set
   await db.createEdgeCollection("IsPartOf");
-  await db.collection("IsPartOf").saveAll([{
-      _from: 'CrossSection/1',
-      _to: 'CrossSectionSet/1'
-  },{
-      _from: 'CrossSection/2',
-      _to: 'CrossSectionSet/1'
-  }])
-
-  // Which organization owns which cross section set
-  await db.createEdgeCollection("BelongsTo");
-  await db.collection("BelongsTo").saveAll([{
-      _to: 'Organization/1',
-      _from: 'CrossSectionSet/1'
-  }])
+  // TODO have check so a crosssection can only be in sets from same organization
+  await db.collection("IsPartOf").saveAll([
+    {
+      _from: "CrossSection/1",
+      _to: "CrossSectionSet/1",
+    },
+    {
+      _from: "CrossSection/2",
+      _to: "CrossSectionSet/1",
+    },
+  ]);
 })();
