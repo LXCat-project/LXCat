@@ -35,7 +35,7 @@ docker-compose run setup seed seeds/test
 # so copy any seed files to that directory
 cp -r <production data seed> ./database/seeds/<production data seed>
 docker-compose run setup seed seeds/<production data seed>
-# To make a user admin
+# To give an already logged in user admin rights
 docker-compose run setup make-admin <email of user>
 ```
 

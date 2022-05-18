@@ -18,6 +18,7 @@ export const TermsOfUseCheck = ({references, children}: Props) => {
             </>
         )
     } else {
+        // TODO Use https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
         return (
             <div>
                 <h2>Terms of use</h2>

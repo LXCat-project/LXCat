@@ -15,6 +15,7 @@ async function createCrossSectionSetCollection() {
         rule: CrossSectionSetIndbAsJsonSchema,
       },
     });
+    // TODO add index on name, as it is used in search function
     console.log("CrossSectionSet collection created");
   }
 
@@ -25,6 +26,7 @@ async function createCrossSectionSetCollection() {
         rule: CrossSectionIndbAsJsonSchema,
       },
     });
+    // TODO add index on reaction.lhs[*].state.id, as it is used in search function
     console.log("CrossSection collection created");
   }
 
