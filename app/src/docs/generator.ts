@@ -1,5 +1,5 @@
 import { readdir, readFile } from "fs/promises";
-import { join } from "path";
+import { join, relative, sep } from "path";
 import remarkEmbedImages from "remark-embed-images";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
@@ -7,27 +7,45 @@ import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
 import remarkMath from "remark-math";
 import rehypeMathjax from "rehype-mathjax";
-import { serialize } from "next-mdx-remote/serialize";
 import { SerializeOptions } from "next-mdx-remote/dist/types";
+
+import { VFile } from 'vfile'
+
 import { rehypeMermaid } from "./transformer";
+import { serialize } from "./serialize";
 
-const DOC_ROOT = join(__dirname, "../../../../docs");
+const DOC_ROOT = join(__dirname, "../../../../../docs");
 
-export async function listDocFiles() {
-  const entities = await readdir(DOC_ROOT, { withFileTypes: true });
-  const paths = entities
-    .filter((e) => e.isFile() && e.name.endsWith(".md"))
-    .map((f) => ({
-      params: {
-        slug: f.name.replace(".md", ""),
-      },
-    }));
-  return paths;
+export async function listDocFiles(dir = DOC_ROOT) {
+  const files = await readdir(dir, { withFileTypes: true });
+  let paths: string[][] = []
+  for (const file of files) {
+    if (file.isFile() && file.name.endsWith('.md')) {
+        const fn = file.name.replace('.md', '')
+        const rdir = relative(DOC_ROOT, dir)
+        const subdirs = rdir ? rdir.split(sep) : []
+        paths.push([...subdirs, fn])
+    }
+    if (file.isDirectory()) {
+        const subdir = join(dir, file.name)
+        const subpaths = await listDocFiles(subdir)
+        paths = paths.concat(subpaths)
+    }
+  }
+  return paths
 }
 
-export async function md2mdx(slug: string) {
-  const fn = join(DOC_ROOT, `${slug}.md`);
-  const fileContents = await readFile(fn);
+export async function md2mdx(slug: string[]) {
+  const basename = slug.pop()
+  const dirname = join(DOC_ROOT, ...slug)
+  const fn = `${basename}.md`
+  const path = join(dirname, fn);
+  const fileContents = await readFile(path);
+  const vfile = new VFile({
+      value: fileContents,
+      path: fn,
+      cwd: dirname
+  })
   const options: SerializeOptions = {
     mdxOptions: {
       remarkPlugins: [
@@ -46,5 +64,5 @@ export async function md2mdx(slug: string) {
       ],
     },
   };
-  return await serialize(fileContents.toString(), options);
+  return await serialize(vfile, options);
 }

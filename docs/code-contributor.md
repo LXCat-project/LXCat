@@ -53,7 +53,7 @@ function add(a: string, b: string): string {
 
 ### Local images
 
-For example show the `./screenshot.png` image inside Markdown file use `![](../docs/screenshot.png)`. The `../docs/` is needed as HTML files are generated relative to `app/` directory.
+For example show the `./screenshot.png` image inside Markdown file use `![](screenshot.png)`. The path of the image should be relative to the Markdown file..
 
 ### Diagrams
 

@@ -7,7 +7,7 @@ import { Layout } from "../../shared/Layout";
 import "highlight.js/styles/github.css";
 
 interface Props {
-  slug: string;
+  slug: string[];
   mdxSource: MDXRemoteSerializeResult;
 }
 
@@ -17,7 +17,7 @@ const components = {
 
 const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
   return (
-    <Layout title={`Docs - ${slug}`}>
+    <Layout title={`Docs - ${slug.join('/')}`}>
       <MDXRemote {...mdxSource} components={components} />
     </Layout>
   );
@@ -26,14 +26,19 @@ const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
 export default MarkdownPage;
 
 export async function getStaticPaths() {
-  const paths = await listDocFiles();
+  const files = await listDocFiles();
+  const paths = files.map(slug => ({
+    params: {
+      slug
+    }
+  }))
   return {
     paths,
     fallback: false,
   };
 }
 
-export const getStaticProps: GetStaticProps<Props, { slug: string }> = async (
+export const getStaticProps: GetStaticProps<Props, { slug: string[] }> = async (
   context
 ) => {
   const slug = context.params!.slug;
