@@ -5,3 +5,5 @@ declare module 'remark-mermaid-dataurl' {
         mermaidCli?: any
     }
 }
+
+declare module 'mermaid'

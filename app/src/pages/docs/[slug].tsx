@@ -1,80 +1,92 @@
-import { R_OK } from "constants"
-import { access, readdir, readFile } from "fs/promises"
-import { GetStaticProps, NextPage } from "next"
-import { join } from "path"
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeSlug from 'rehype-slug'
-import rehypeStringify from 'rehype-stringify'
-import remarkMermaid from 'remark-mermaid-dataurl'
-import remarkParse from 'remark-parse'
-import remarkRehype from 'remark-rehype'
-import remarkToc from 'remark-toc'
-import { unified } from 'unified'
+import { R_OK } from "constants";
+import { access, readdir, readFile } from "fs/promises";
+import { GetStaticProps, NextPage } from "next";
+import { join } from "path";
+import remarkEmbedImages from 'remark-embed-images'
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import remarkToc from 'remark-toc';
+import { serialize } from "next-mdx-remote/serialize";
+import { SerializeOptions } from "next-mdx-remote/dist/types";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { Mermaid } from "../../docs/Mermaid";
+import { rehypeMermaid } from "../../docs/transformer";
+import { Layout } from "../../shared/Layout";
 
-import { Layout } from "../../shared/Layout"
-
-import 'highlight.js/styles/github.css'
+import "highlight.js/styles/github.css";
 
 interface Props {
-    slug: string
-    contentHtml: string
+  slug: string;
+  mdxSource: MDXRemoteSerializeResult;
 }
 
-const MarkdownPage: NextPage<Props> = ({ slug, contentHtml }) => {
-    return (
-        <Layout title={`Docs - ${slug}`}>
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-        </Layout>
-      )
-}
+const components = {
+  Mermaid,
+};
 
-export default MarkdownPage
+const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
+  return (
+    <Layout title={`Docs - ${slug}`}>
+      <MDXRemote {...mdxSource} components={components} />
+    </Layout>
+  );
+};
 
-const DOC_ROOT = join(__dirname, '../../../../../docs')
+export default MarkdownPage;
+
+const DOC_ROOT = join(__dirname, "../../../../../docs");
 
 export async function getStaticPaths() {
-    const entities = await readdir(DOC_ROOT, {withFileTypes: true})
-    const paths = entities
-        .filter(e => e.isFile() && e.name.endsWith('.md'))
-        .map(f => ({
-            params: {
-                slug: f.name.replace('.md', '')
-            }
-        }))
+  const entities = await readdir(DOC_ROOT, { withFileTypes: true });
+  const paths = entities
+    .filter((e) => e.isFile() && e.name.endsWith(".md"))
+    .map((f) => ({
+      params: {
+        slug: f.name.replace(".md", ""),
+      },
+    }));
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export const getStaticProps: GetStaticProps<Props, { slug: string }> = async (
+  context
+) => {
+  const slug = context.params!.slug;
+  const fn = join(DOC_ROOT, `${slug}.md`);
+  try {
+    await access(fn, R_OK);
+  } catch (error) {
     return {
-        paths,
-        fallback: false
+      notFound: true,
     };
-}
+  }
 
-export const getStaticProps: GetStaticProps<Props, {slug: string}> = async (context) => {
-    const slug = context.params!.slug
-    const fn = join(DOC_ROOT, `${slug}.md`)
-    try {
-        await access(fn, R_OK)
-    } catch (error) {
-        return {
-            notFound: true
-        }
+  const fileContents = await readFile(fn);
+  const options: SerializeOptions = {
+    mdxOptions: {
+      remarkPlugins: [
+          remarkToc,
+          // TODO make image links resolve relative to md file instead of app/
+          // As workaround use ../docs/bla.png as img src.
+          remarkEmbedImages
+      ],
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: "wrap" }],
+        [rehypeHighlight, { ignoreMissing: true }],
+        rehypeMermaid,
+      ]
     }
-
-    const fileContents = await readFile(fn)
-    const processedContent = await unified()
-        .use(remarkParse)
-        .use(remarkMermaid)
-        .use(remarkToc)
-        .use(remarkRehype)
-        .use(rehypeSlug)
-        .use(rehypeAutolinkHeadings, {behavior: 'wrap'})
-        .use(rehypeHighlight)
-        .use(rehypeStringify)
-        .process(fileContents)
-    const contentHtml = processedContent.toString()
-    return {
-        props: {
-            slug,
-            contentHtml
-        }
-    }
-}
+  };
+  const mdxSource = await serialize(fileContents.toString(), options);
+  return {
+    props: {
+      slug,
+      mdxSource,
+    },
+  };
+};
