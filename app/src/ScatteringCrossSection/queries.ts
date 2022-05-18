@@ -1,11 +1,10 @@
+import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
+import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
 import { insert_document, insert_edge, insert_reaction_with_dict, insert_reference_dict, insert_state_dict, upsert_document } from "../shared/queries";
-
-import { ArrayCursor } from "arangojs/cursor";
-import { aql } from "arangojs";
-import { CrossSectionItem, CrossSectionHeading } from "./types/public";
 import { CrossSection, CrossSectionInput } from "./types";
+import { CrossSectionHeading, CrossSectionItem } from "./types/public";
 
 // TODO split into shared and cs only documents
 enum Document {
@@ -83,7 +82,7 @@ export async function list() {
 			FILTER p._from == cs._id
 			FOR s IN CrossSectionSet
 				FILTER s._id == p._to
-				RETURN UNSET(s, ["_key", "_rev", "_id"])
+				RETURN MERGE(UNSET(s, ["_key", "_rev", "_id"]), {id: s._key})
 		)
 		LET reaction = (
 			FOR r in Reaction
@@ -127,7 +126,7 @@ export async function byId(id: string) {
 			FILTER p._from == cs._id
 			FOR s IN CrossSectionSet
 				FILTER s._id == p._to
-				RETURN UNSET(s, ["_key", "_rev", "_id"])
+				RETURN MERGE(UNSET(s, ["_key", "_rev", "_id"]), {id: s._key})
 		)
 		LET reaction = (
 			FOR r in Reaction

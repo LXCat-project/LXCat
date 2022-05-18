@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Reference } from "../shared/Reference"
 import { ReactionSummary } from "./ReactionSummary"
 import { CrossSectionItem } from "./types/public"
@@ -6,12 +7,17 @@ export const Item = (props: CrossSectionItem) => {
     return (
         <div>
             <h1>Scattering Cross Section</h1>
+            <ul>
+                <li><a href={`/api/scat-cs/${props.id}`}>Download JSON format</a></li>
+                <li><a href="TODO">Download Bolsig+ format</a></li>
+            </ul>
             <h2>Reaction</h2>
             <ReactionSummary {...props.reaction}/>
             {/* TODO show charge, non-simpleparticle data */}
             <h2>Part of set</h2>
+
             <div>
-                <div>Name: {props.isPartOf.name}</div>
+                <div>Name: <Link href={`/scat-css/${props.isPartOf.id}`}>{props.isPartOf.name}</Link></div>
                 <div>Description: {props.isPartOf.description}</div>
                 <div>Complete: {props.isPartOf.complete ? 'Yes' : 'No'}</div>
             </div>

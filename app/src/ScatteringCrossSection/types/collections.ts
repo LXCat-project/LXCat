@@ -6,9 +6,3 @@ export type CrossSection = {
   parameters?: CSParameters;
   threshold: number;
 } & CSStorage;
-
-export interface CrossSectionSet {
-  name: string;
-  description: string;
-  complete: boolean;
-}
