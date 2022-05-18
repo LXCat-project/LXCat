@@ -92,7 +92,7 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
 
 ### In local directory
 
-In `.env.local` defined following key/value pairs
+In `.env.local` file define the following key/value pairs
 
 ```env
 # Where openid identity provider should redirect back to
