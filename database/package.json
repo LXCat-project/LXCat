@@ -4,13 +4,13 @@
   "description": "The web application needs an [arangodb](https://arangodb.com/) database to talk to.",
   "author": "Stefan Verhoeven",
   "license": "ISC",
-  "main": "src/main.ts",
   "scripts": {
-    "setup": "ts-node src/main.ts setup",
-    "seed": "ts-node src/main.ts",
+    "setup": "ts-node src/seed.ts setup",
+    "seed": "ts-node src/seed.ts",
     "make-admin": "ts-node src/make_admin.ts",
     "drop-database": "ts-node src/drop_database.ts",
-    "reload": "npm run drop-database && npm run setup && npm run seed seeds/test"
+    "reload": "npm run drop-database && npm run setup && npm run seed seeds/test",
+    "load-css": "ts-node src/load_css.ts"
   },
   "dependencies": {
     "arangojs": "^7.7.0",

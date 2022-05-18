@@ -78,6 +78,16 @@ To run the scripts use
 npm run seed <a directory with Typescript files (*.ts) that fill the database>
 ```
 
+### Load directory of cross section set JSON documents
+
+Instead of writing seed scripts you can also load a directory of cross section set JSON documents with
+
+```shell
+npm run load-css <a directory with cross section set JSON documents>
+```
+
+> When runnning command with Docker, make sure directory is readable inside container.
+
 ## Make user an admin
 
 Some pages require the user to have a certain role.
