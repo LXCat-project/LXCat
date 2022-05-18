@@ -43,7 +43,7 @@ function add(a: string, b: string): string {
 ```
 ````
 
-is highlighted as 
+is highlighted as
 
 ```ts
 function add(a: string, b: string): string {
@@ -54,7 +54,6 @@ function add(a: string, b: string): string {
 ### Local images
 
 For example show the `./screenshot.png` image inside Markdown file use `![](../docs/screenshot.png)`. The `../docs/` is needed as HTML files are generated relative to `app/` directory.
-
 
 ### Diagrams
 
@@ -81,6 +80,24 @@ graph TD;
     B-->D;
     C-->D;
 ```
+
+### Math
+
+LaTeX equations can be added by wrapping the equation with `$$`.
+
+For example
+
+```markdown
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
+```
+
+is rendered as
+
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
 
 ## Technology wishes
 

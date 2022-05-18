@@ -7,6 +7,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkToc from 'remark-toc';
+import remarkMath from 'remark-math'
+import rehypeMathjax from 'rehype-mathjax'
 import { serialize } from "next-mdx-remote/serialize";
 import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
@@ -72,13 +74,15 @@ export const getStaticProps: GetStaticProps<Props, { slug: string }> = async (
           remarkToc,
           // TODO make image links resolve relative to md file instead of app/
           // As workaround use ../docs/bla.png as img src.
-          remarkEmbedImages
+          remarkEmbedImages,
+          remarkMath,
       ],
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: "wrap" }],
         [rehypeHighlight, { ignoreMissing: true }],
         rehypeMermaid,
+        rehypeMathjax,
       ]
     }
   };
