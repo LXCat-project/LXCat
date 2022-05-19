@@ -29,8 +29,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
             <div>Contributed by {set.contributor}</div>
             <div>Complete: {set.complete ? 'Yes' : 'No'}</div>
             <ul>
-                <li><a href={`/api/scat-css/${set.id}`}>Download JSON format</a></li>
-                <li><a href="TODO">Download Bolsig+ format</a></li>
+                <li><a href={`/api/scat-css/${set.id}`} target="_blank" rel="noreferrer">Download JSON format</a></li>
+                <li><a href="TODO" target="_blank" rel="noreferrer">Download Bolsig+ format</a></li>
             </ul>
             <h2>Processes</h2>
             <ol>

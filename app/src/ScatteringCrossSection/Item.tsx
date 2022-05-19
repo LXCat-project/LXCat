@@ -8,8 +8,8 @@ export const Item = (props: CrossSectionItem) => {
         <div>
             <h1>Scattering Cross Section</h1>
             <ul>
-                <li><a href={`/api/scat-cs/${props.id}`}>Download JSON format</a></li>
-                <li><a href="TODO">Download Bolsig+ format</a></li>
+                <li><a href={`/api/scat-cs/${props.id}`} target="_blank" rel="noreferrer">Download JSON format</a></li>
+                <li><a href="TODO" target="_blank" rel="noreferrer">Download Bolsig+ format</a></li>
             </ul>
             <h2>Reaction</h2>
             <ReactionSummary {...props.reaction}/>
