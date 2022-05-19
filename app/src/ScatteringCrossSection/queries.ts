@@ -2,22 +2,11 @@ import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
-import { insert_document, insert_edge, insert_reaction_with_dict, insert_reference_dict, insert_state_dict, upsert_document } from "../shared/queries";
-import { CrossSection, CrossSectionInput } from "./types";
+import { insert_document, insert_edge, insert_reaction_with_dict } from "../shared/queries";
+import { CrossSection } from "./types";
 import { CrossSectionHeading, CrossSectionItem } from "./types/public";
 
-// TODO split into shared and cs only documents
-enum Document {
-	Particle = "Particle",
-	State = "State",
-	Reaction = "Reaction",
-	CrossSection = "CrossSection",
-	CrossSectionSet = "CrossSectionSet",
-	Contributor = "Contributor",
-	Reference = "Reference",
-}
-
-async function insert_cs_with_dict(
+export async function insert_cs_with_dict(
 	cs: CrossSection<string, string>,
 	state_dict: Dict<string>,
 	ref_dict: Dict<string>
@@ -28,7 +17,7 @@ async function insert_cs_with_dict(
 	delete (cs as any)["reference"];
 	delete (cs as any)["reaction"];
 
-	const cs_id = await insert_document(Document.CrossSection, {
+	const cs_id = await insert_document('CrossSection', {
 		...cs,
 		reaction: r_id,
 	});
@@ -42,29 +31,6 @@ async function insert_cs_with_dict(
 	}
 
 	return cs_id;
-}
-
-export async function insert_input_set(dataset: CrossSectionInput<any>) {
-    const cs_set_id = await insert_document(Document.CrossSectionSet, {
-		name: dataset.name,
-		description: dataset.description,
-		complete: dataset.complete,
-	});
-
-	const contributor = await upsert_document(Document.Contributor, {
-		name: dataset.contributor,
-	});
-
-	await insert_edge('Provides', contributor.id, cs_set_id);
-
-	const state_ids = await insert_state_dict(dataset.states);
-	const reference_ids = await insert_reference_dict(dataset.references);
-
-	for (const cs of dataset.processes) {
-		const cs_id = await insert_cs_with_dict(cs, state_ids, reference_ids);
-		await insert_edge('IsPartOf', cs_id, cs_set_id);
-	}
-	return cs_set_id.replace('CrossSectionSet/', '')
 }
 
 export async function list() {

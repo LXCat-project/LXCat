@@ -17,7 +17,7 @@ const Admin: NextPage<Props> = () => {
     event.preventDefault();
     setErrors([])
     setId('')
-    const url = `/api/scat-cs`
+    const url = `/api/scat-css`
     const body = JSON.stringify(doc)
     const headers = new Headers({
         Accept: 'application/json',
@@ -40,7 +40,7 @@ const Admin: NextPage<Props> = () => {
       </h1>
 
       <h2>Scattering cross section set</h2>
-      The JSON schema can be found <a href="/api/scat-cs/schema.json" target="_blank">here</a>
+      The JSON schema can be found <a href="/api/scat-css/schema.json" target="_blank">here</a>
       <form>
           <textarea
             value={doc}

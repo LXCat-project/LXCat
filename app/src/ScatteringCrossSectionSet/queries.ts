@@ -1,7 +1,33 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
+import { insert_cs_with_dict } from "../ScatteringCrossSection/queries";
+import { insert_document, insert_edge, insert_reference_dict, insert_state_dict, upsert_document } from "../shared/queries";
+import { CrossSectionSetInput } from "./types";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "./types/public";
+
+export async function insert_input_set(dataset: CrossSectionSetInput) {
+    const cs_set_id = await insert_document('CrossSectionSet', {
+		name: dataset.name,
+		description: dataset.description,
+		complete: dataset.complete,
+	});
+
+	const contributor = await upsert_document('Contributor', {
+		name: dataset.contributor,
+	});
+
+	await insert_edge('Provides', contributor.id, cs_set_id);
+
+	const state_ids = await insert_state_dict(dataset.states);
+	const reference_ids = await insert_reference_dict(dataset.references);
+
+	for (const cs of dataset.processes) {
+		const cs_id = await insert_cs_with_dict(cs, state_ids, reference_ids);
+		await insert_edge('IsPartOf', cs_id, cs_set_id);
+	}
+	return cs_set_id.replace('CrossSectionSet/', '')
+}
 
 export async function search() {
     const cursor: ArrayCursor<CrossSectionSetHeading> = await db.query(aql`

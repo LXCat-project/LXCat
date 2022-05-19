@@ -1,10 +1,10 @@
 import fs from "fs/promises";
-import { CrossSectionInputAsJsonSchema } from "../ScatteringCrossSection/schema";
+import { CrossSectionSetInputAsJsonSchema } from "../ScatteringCrossSectionSet/schema";
 
 async function main() {
     await fs.writeFile(
-        'src/generated/input/CrossSection.schema.json',
-        JSON.stringify(CrossSectionInputAsJsonSchema, undefined, 4)
+        'src/generated/input/CrossSectionSet.schema.json',
+        JSON.stringify(CrossSectionSetInputAsJsonSchema, undefined, 4)
     )
 }
 

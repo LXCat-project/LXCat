@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'fs/promises';
-import { insert_input_set } from '../ScatteringCrossSection/queries'
 import { join } from 'path';
+import { insert_input_set } from './queries';
 
 export async function load_css(fn: string) {
     const content = await readFile(fn, {encoding: 'utf8' })
