@@ -1,11 +1,12 @@
 import { GetServerSideProps, NextPage } from "next"
 import { Layout } from "../../shared/Layout"
-import { Facets, list, search, searchFacets, SearchOptions } from "../../ScatteringCrossSection/queries"
+import { Facets, search, searchFacets, SearchOptions } from "../../ScatteringCrossSection/queries"
 import { List } from "../../ScatteringCrossSection/List"
 import { CrossSectionHeading } from "../../ScatteringCrossSection/types/public"
 import { Filter } from "../../ScatteringCrossSection/Filter"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
+import { query2array } from "../../shared/query2array"
 
 interface Props {
     items: CrossSectionHeading[]
@@ -43,17 +44,5 @@ function query2options(query: ParsedUrlQuery): SearchOptions {
         set_name: query2array(query.set_name),
         species1: query2array(query.species1),
         species2: query2array(query.species2)
-    }
-}
-
-function query2array(set_name: string | string[] | undefined): string[] {
-    if (set_name) {
-        if (typeof set_name === 'string') {
-            return [set_name]
-        } else {
-            return set_name
-        }
-    } else {
-        return []
     }
 }

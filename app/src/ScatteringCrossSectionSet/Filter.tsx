@@ -1,10 +1,10 @@
 import Link from "next/link"
 import { CheckBoxGroup } from "../shared/CheckBoxGroup"
-import { Facets, SearchOptions } from "./queries"
+import { Facets, FilterOptions } from "./queries"
 
 interface Props {
     facets: Facets
-    selection: SearchOptions
+    selection: FilterOptions
 }
 
 export const Filter = ({ facets, selection }: Props) => {
@@ -13,36 +13,27 @@ export const Filter = ({ facets, selection }: Props) => {
         <div>
             <div style={{ display: 'flex' }}>
                 <fieldset>
-                    <legend>First species</legend>
-                    <CheckBoxGroup
-                        facet={facets.species1}
-                        selection={selection}
-                        selectionKey="species1"
-                        path='/scat-cs'
-                    />
-                </fieldset>
-                <fieldset>
                     <legend>Second species</legend>
                     <CheckBoxGroup
                         facet={facets.species2}
                         selection={selection}
                         selectionKey="species2"
-                        path='/scat-cs'
+                        path="/scat-css"
                     />
                 </fieldset>
                 <fieldset>
-                    <legend>Set</legend>
+                    <legend>Contributor</legend>
                     <CheckBoxGroup
-                        facet={facets.set_name}
+                        facet={facets.contributor}
                         selection={selection}
-                        selectionKey="set_name"
-                        path='/scat-cs'
+                        selectionKey="contributor"
+                        path="/scat-css"
                     />
                 </fieldset>
             </div>
             <div>
                 <Link href={{
-                    pathname: '/scat-cs'
+                    pathname: '/scat-css'
                 }} passHref>
                     <button disabled={!hasAnySelection}>Clear selection</button>
                 </Link>

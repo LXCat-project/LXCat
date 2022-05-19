@@ -1,34 +1,29 @@
 import { GetServerSideProps, NextPage } from "next"
 import Link from "next/link"
-import { search } from "../../ScatteringCrossSectionSet/queries"
+import { useRouter } from "next/router"
+import { ParsedUrlQuery } from "querystring"
+import { Filter } from "../../ScatteringCrossSectionSet/Filter"
+import { List } from "../../ScatteringCrossSectionSet/List"
+import { Facets, FilterOptions, search, searchFacets, SortOptions } from "../../ScatteringCrossSectionSet/queries"
 import { CrossSectionSetHeading } from "../../ScatteringCrossSectionSet/types/public"
 import { Layout } from "../../shared/Layout"
+import { query2array } from "../../shared/query2array"
 
 interface Props {
     items: CrossSectionSetHeading[]
+    facets: Facets
 }
 
-const Card = ({ set }: { set: CrossSectionSetHeading }) => {
-    return (
-        <div>
-            <Link href={`/scat-css/${set.id}`}>
-                <a>{set.name}</a>
-            </Link>
-        </div>
-    )
-}
 
-const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items }) => {
+const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items, facets }) => {
+    const router = useRouter()
+    const selection = query2options(router.query)
     return (
         <Layout title="Scattering Cross Section sets">
             <h1>Scattering Cross Section set</h1>
-            <div>
-                TODO filter on species and/or contributor.
-            </div>
+            <Filter facets={facets} selection={selection}/>
             <hr />
-            <div>
-                {items.map(set => <Card key={set.id} set={set} />)}
-            </div>
+            <List items={items}/>
         </Layout>
     )
 }
@@ -36,10 +31,30 @@ const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items }) => {
 export default ScatteringCrossSectionSetsPage
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-    const items = await search()
+    const filter = query2options(context.query)
+    // TODO make adjustable by user
+    const sort: SortOptions = {
+        field: 'name',
+        dir: 'ASC'
+    }
+    // TODO make adjustable by user
+    const paging = {
+        offset: 0,
+        count: Number.MAX_SAFE_INTEGER
+    }
+    const items = await search(filter, sort, paging)
+    const facets = await searchFacets()
     return {
         props: {
             items,
+            facets
         }
+    }
+}
+
+function query2options(query: ParsedUrlQuery): FilterOptions {
+    return {
+        contributor: query2array(query.contributor),
+        species2: query2array(query.species2)
     }
 }

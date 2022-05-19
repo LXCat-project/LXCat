@@ -39,5 +39,6 @@ async function createCrossSectionCollection() {
 async function createEdgeCollections() {
   for (const name of Object.values(Relation)) {
     await db.createEdgeCollection(name);
+    console.log(`${name} edge collection created`);
   }
 }

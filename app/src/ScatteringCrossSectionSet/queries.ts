@@ -29,33 +29,126 @@ export async function insert_input_set(dataset: CrossSectionSetInput) {
 	return cs_set_id.replace('CrossSectionSet/', '')
 }
 
-export async function search() {
-    const cursor: ArrayCursor<CrossSectionSetHeading> = await db.query(aql`
+
+
+export interface FilterOptions {
+	contributor: string[]
+	species2: string[]
+}
+
+export interface SortOptions {
+   field: 'name' | 'contributor'
+   dir: 'ASC' | 'DESC'
+}
+
+export interface PagingOptions {
+    offset: number
+    count: number
+}
+
+export async function search(filter: FilterOptions, sort: SortOptions, paging: PagingOptions) {
+    let contributor_aql = aql``
+    if (filter.contributor.length > 0) {
+        contributor_aql = aql`FILTER ${filter.contributor} ANY == contributor`
+    }
+    let species2_aql = aql``
+    if (filter.species2.length > 0) {
+        // TODO what should this filter do?
+        // Now a set matches when one of reactions has its second consumed species equal to one in given filter
+        species2_aql = aql`
+        LET species2 = (
+            FOR p IN processes
+                RETURN p.reaction.lhs[1].state.id
+        )
+        FILTER species2 ANY IN ${filter.species2}
+        `
+    }
+    let sort_aql = aql``
+    if (sort.field === 'name') {
+        sort_aql = aql`SORT css.name ${sort.dir}`
+    } else if (sort.field === 'contributor') {
+        sort_aql = aql`SORT contributor ${sort.dir}`
+    }
+    const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`
+    const q = aql`
     FOR css IN CrossSectionSet
         LET processes = (
             FOR m IN IsPartOf
                 FILTER m._to == css._id
                 FOR cs IN CrossSection
                     FILTER cs._id == m._from
-                    FOR r in Reaction
-                        FILTER r._id == cs.reaction
-                        LET consumes = (
-                            FOR c IN Consumes
-                            FILTER c._from == r._id
-                                FOR c2s IN State
-                                FILTER c2s._id == c._to
-                                RETURN {state: {id: c2s.id}}
-                        )
-                        RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes})
+                        LET reaction = FIRST(
+                        FOR r in Reaction
+                            FILTER r._id == cs.reaction
+                            LET consumes = (
+                                FOR c IN Consumes
+                                FILTER c._from == r._id
+                                    FOR c2s IN State
+                                    FILTER c2s._id == c._to
+                                    RETURN {state: {id: c2s.id}}
+                            )
+                            RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes})
+                    )
+                    RETURN {id: cs._key, reaction}
             )
-        LET contributors = (
+        LET contributor = FIRST(
             FOR p IN Provides
                 FILTER p._to == css._id
                 FOR c IN Contributor
                     FILTER c._id == p._from
                     RETURN c.name
         )
-        RETURN MERGE({'id': css._key, processes, contributor: FIRST(contributors)}, UNSET(css, ["_key", "_rev", "_id"]))
+        ${contributor_aql}
+        ${species2_aql}
+        ${sort_aql}
+        ${limit_aql}
+        RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
+    `
+    const cursor: ArrayCursor<CrossSectionSetHeading> = await db.query(q)
+    return await cursor.all()
+}
+
+export interface Facets {
+	contributor: string[]
+	species2: string[]
+}
+
+export async function searchFacets(): Promise<Facets> {
+    return {
+        contributor: await searchContributors(),
+        species2: await searchSpecies2()
+    }
+}
+
+async function searchContributors() {
+    const cursor: ArrayCursor<string> = await db.query(aql`
+    FOR css IN CrossSectionSet
+        FOR p IN Provides
+            FILTER p._to == css._id
+            FOR c IN Contributor
+                FILTER p._from == c._id
+                RETURN DISTINCT c.name
+    `)
+    return await cursor.all()
+}
+
+async function searchSpecies2() {
+    const cursor: ArrayCursor<string> = await db.query(aql`
+    FOR css IN CrossSectionSet
+        FOR m IN IsPartOf
+            FILTER m._to == css._id
+            FOR cs IN CrossSection
+                FILTER cs._id == m._from
+                FOR r in Reaction
+                    FILTER r._id == cs.reaction
+                    LET lhs = LAST(
+                        FOR c IN Consumes
+                            FILTER c._from == r._id
+                            FOR c2s IN State
+                                FILTER c2s._id == c._to
+                                RETURN c2s.id
+                    )
+                    RETURN DISTINCT lhs
     `)
     return await cursor.all()
 }
