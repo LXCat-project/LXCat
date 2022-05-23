@@ -1,8 +1,8 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import { AuthRequest, hasSessionOrAPIToken } from "../../../auth/middleware";
-import { insert_input_set } from "../../../ScatteringCrossSection/queries";
-import { validate } from "../../../ScatteringCrossSection/validate";
+import { insert_input_set } from "../../../ScatteringCrossSectionSet/queries";
+import { validate } from "../../../ScatteringCrossSectionSet/validate";
 
 
 const handler = nc<AuthRequest, NextApiResponse>()

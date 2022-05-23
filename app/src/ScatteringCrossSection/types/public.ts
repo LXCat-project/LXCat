@@ -1,6 +1,7 @@
 import { Reference } from "../../shared/types/reference"
 import { Reaction } from "../../shared/types/reaction"
-import { CrossSection, CrossSectionSet } from "./collections"
+import { CrossSection } from "./collections"
+import { CrossSectionSet } from "../../ScatteringCrossSectionSet/types/collection"
 import { State } from "../../shared/types/collections"
 
 export interface CrossSectionHeading {
@@ -13,7 +14,7 @@ export interface CrossSectionHeading {
 
 export type CrossSectionItem = {
 	id: string
-	isPartOf: CrossSectionSet
+	isPartOf: CrossSectionSet & {id: string}
 	reaction: Reaction<State>
 	reference: Reference[]
 } & Omit<CrossSection, 'reaction'>

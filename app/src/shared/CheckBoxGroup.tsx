@@ -1,27 +1,27 @@
 import Link from "next/link"
-import type { SearchOptions } from "./queries"
 
 interface Props {
     facet: string[]
-    selection: SearchOptions
-    selectionKey: keyof SearchOptions
+    selection: any // TODO restrict to types to where it is used
+    selectionKey: string
+    path: string
 }
 
-export const CheckBoxGroup = ({facet, selection, selectionKey}: Props) => {
+export const CheckBoxGroup = ({facet, selection, selectionKey, path}: Props) => {
     const selectionValue = selection[selectionKey]
     return (
         <div>
             {facet.map(d => {
-                const checked = selectionValue.some(s => s === d)
+                const checked = selectionValue.some((s: unknown) => s === d)
                 const query = {
                     ...selection,
                     // If checked then remove item else add item
-                    [selectionKey]: checked ? selectionValue.filter(s => s !== d) : [...selectionValue, d]
+                    [selectionKey]: checked ? selectionValue.filter((s: unknown) => s !== d) : [...selectionValue, d]
                 }
                 return (
                     <div key={d}>
                         <Link href={{
-                            pathname: '/scat-cs',
+                            pathname: path,
                             query
                         }}>
                             <a>

@@ -9,14 +9,14 @@ import {
   StateIndbAsJsonSchema,
 } from "../../app/src/shared/schema";
 
-export default async function() {
+export default async function () {
   await createParticleCollection();
   await createContributorCollection();
   await createReferenceCollection();
   await createStateCollection();
-  await createReactionCollection()
-  await createEdgeCollections()
-};
+  await createReactionCollection();
+  await createEdgeCollections();
+}
 
 async function createParticleCollection() {
   const collection = db.collection("Particle");
@@ -69,17 +69,18 @@ async function createStateCollection() {
 }
 
 async function createReactionCollection() {
-    const collection = db.collection("Reaction");
-    await collection.create({
-      schema: {
-        rule: ReactionIndbAsJsonSchema,
-      },
-    });
-    console.log("Reaction collection created");
-  }
+  const collection = db.collection("Reaction");
+  await collection.create({
+    schema: {
+      rule: ReactionIndbAsJsonSchema,
+    },
+  });
+  console.log("Reaction collection created");
+}
 
 async function createEdgeCollections() {
-    for (const name of Object.values(Relation)) {
-		await db.createEdgeCollection(name);
-	}
+  for (const name of Object.values(Relation)) {
+    await db.createEdgeCollection(name);
+    console.log(`${name} edge collection created`);
+  }
 }
