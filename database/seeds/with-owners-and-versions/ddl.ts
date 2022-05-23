@@ -90,6 +90,11 @@ import { systemDb } from "../../src/systemDb";
     },
   ]);
 
+  // To focus on versioning, the following tables have been ommited in this test db
+  // Consumes, HasCS, HasDirectSubState, InCompound, Particle, Produces,
+  // Reference, References, State
+  // TODO Those tables need be included in actual db
+
   await db.createCollection("CrossSection", {
     schema: {
       rule: {
@@ -105,7 +110,7 @@ import { systemDb } from "../../src/systemDb";
             type: "object",
             properties: {
               current: {
-                type: "string", // A key in CrossSectionSet
+                type: "string", // A key in CrossSection
               },
               version: {
                 type: "string", // The version of this document
@@ -115,6 +120,9 @@ import { systemDb } from "../../src/systemDb";
               },
               commitMessage: {
                 type: "string", // Description of what was changed since previous version.
+              },
+              restractMessage: {
+                type: "string", // Description why item was retracted.
               },
             },
             required: ["version", "createdOn"],
@@ -182,6 +190,7 @@ import { systemDb } from "../../src/systemDb";
             required: ["version", "createdOn"],
           },
         },
+        // TODO should set have own references?
       },
     },
   });
@@ -192,7 +201,7 @@ import { systemDb } from "../../src/systemDb";
     {
       _key: "1",
       name: "Some set name",
-      organization: "Organization/1",
+      organization: "Organization/1", // Replaces Provides colllection, as set can only be owned by single organization
       versionInfo: {
         version: "2",
         createdOn: "Some date",
