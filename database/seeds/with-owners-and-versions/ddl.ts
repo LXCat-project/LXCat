@@ -56,22 +56,25 @@ import { systemDb } from "../../src/systemDb";
   });
   await db
     .collection("Organization")
+    .ensureIndex({ type: "persistent", fields: ["name"], unique: true });
+  await db
+    .collection("Organization")
     .saveAll([{ _key: "1", name: "University X" }]);
 
   // Which Users are members of which Organization
-  await db.createEdgeCollection("Membership");
-  await db.collection("Membership").saveAll([
+  await db.createEdgeCollection("MemberOf");
+  await db.collection("MemberOf").saveAll([
     {
-      _to: "User/1",
-      _from: "Organization/1",
+      _from: "User/1",
+      _to: "Organization/1",
     },
     {
-      _to: "User/2",
-      _from: "Organization/1",
+      _from: "User/2",
+      _to: "Organization/1",
     },
     {
-      _to: "User/3",
-      _from: "Organization/1",
+      _from: "User/3",
+      _to: "Organization/1",
     },
   ]);
 
@@ -129,7 +132,7 @@ import { systemDb } from "../../src/systemDb";
       reaction: "Reaction/1",
       data: "some data",
       versionInfo: {
-        version: 2,
+        version: "2",
         createdOn: "Some date",
         commitMessage: "Some message",
       },
@@ -139,7 +142,7 @@ import { systemDb } from "../../src/systemDb";
       reaction: "Reaction/2",
       data: "some other data",
       versionInfo: {
-        version: 1, // If 1 then document has no history in
+        version: "1", // If 1 then document has no history in
         createdOn: "Some date",
         commitMessage: "Initial commit",
       },
@@ -173,8 +176,8 @@ import { systemDb } from "../../src/systemDb";
                 type: "string", // Description of what was changed since previous version.
               },
               restractMessage: {
-                  type: 'string' // Description why item was retracted.
-              }
+                type: "string", // Description why item was retracted.
+              },
             },
             required: ["version", "createdOn"],
           },
@@ -191,7 +194,7 @@ import { systemDb } from "../../src/systemDb";
       name: "Some set name",
       organization: "Organization/1",
       versionInfo: {
-        version: 2,
+        version: "2",
         createdOn: "Some date",
         commitMessage: "Some message",
       },
@@ -264,12 +267,15 @@ import { systemDb } from "../../src/systemDb";
   ]);
 
   await db.createCollection("CrossSectionSetArchive");
+  await db
+    .collection("CrossSection")
+    .ensureIndex({ type: "persistent", fields: ["current"] });
   await db.collection("CrossSectionSetArchive").saveAll([
     {
       _id: "CrossSectionSetArchive/1",
       versionInfo: {
         current: "CrossSectionSet/1",
-        version: 1,
+        version: "1",
         createdOn: "Some date",
         commitMessage: "Some message",
       },
@@ -294,32 +300,32 @@ import { systemDb } from "../../src/systemDb";
     },
     // Retracted items are stored in this collection with a retract message
     {
-        _id: "CrossSectionSetArchive/1",
-        versionInfo: {
-          current: "CrossSectionSet/2",
-          version: 1,
-          createdOn: "Some date",
-          retractMessage: "Some message why set was retracted",
-        },
-        name: "Some set name",
-        organization: {
-          name: "University X",
-        },
-        processes: [
-          {
-            data: "some data with a typo",
-            reaction: {
-              name: "Some reaction",
-            },
-          },
-          {
-            data: "some other data",
-            reaction: {
-              name: "Some other reaction",
-            },
-          },
-        ],
+      _id: "CrossSectionSetArchive/1",
+      versionInfo: {
+        current: "CrossSectionSet/2", // ID of css that was present in CrossSectionSet collection before it was deleted
+        version: "1",
+        createdOn: "Some date",
+        retractMessage: "Some message why set was retracted",
       },
+      name: "Some set name",
+      organization: {
+        name: "University X",
+      },
+      processes: [
+        {
+          data: "some data with a typo",
+          reaction: {
+            name: "Some reaction",
+          },
+        },
+        {
+          data: "some other data",
+          reaction: {
+            name: "Some other reaction",
+          },
+        },
+      ],
+    },
   ]);
 
   // When a set is updated then any changed cross sections will also get a new version
@@ -331,7 +337,7 @@ import { systemDb } from "../../src/systemDb";
       _id: "CrossSectionArchive/1",
       versionInfo: {
         current: "CrossSection/1",
-        version: 1,
+        version: "1",
         createdOn: "Some date",
         commitMessage: "Some message",
       },
@@ -342,17 +348,17 @@ import { systemDb } from "../../src/systemDb";
     },
     // Retracted items are stored in this collection with a retract message
     {
-        _id: "CrossSectionArchive/1",
-        versionInfo: {
-          current: "CrossSection/1",
-          version: 1,
-          createdOn: "Some date",
-          retractMessage: "Some message explaining why cs was restracted.",
-        },
-        data: "some data with a typo",
-        reaction: {
-          name: "Some reaction",
-        },
+      _id: "CrossSectionArchive/1",
+      versionInfo: {
+        current: "CrossSection/2", // ID of cs that was present in CrossSection collection before it was deleted
+        version: "1",
+        createdOn: "Some date",
+        retractMessage: "Some message explaining why cs was restracted.",
       },
+      data: "some data with a typo",
+      reaction: {
+        name: "Some reaction",
+      },
+    },
   ]);
 })();

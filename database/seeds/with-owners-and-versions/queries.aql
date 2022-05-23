@@ -18,3 +18,37 @@ FOR css IN CrossSectionSet
             RETURN MERGE(cs, {reaction})
     )
     RETURN MERGE(css, {organization, processes})
+
+
+// Owned published/public and private css
+LET me = 'someone@example.com'
+FOR u IN User
+    FILTER u.email == me
+    FOR m IN MemberOf
+        FILTER m._from == u._id
+        FOR o IN Organization
+            FILTER m._to == o._id
+            LET publicss = (
+                FOR css IN CrossSectionSet
+                    FILTER css.organization == o._id
+                    // .. join with CrossSection and its children
+                    RETURN MERGE(css, {'state': 'public'})
+            )
+            LET privcss = (
+                    FOR cssp IN CrossSectionSetPrivate
+                    FILTER cssp.organization.name == o.name
+                    RETURN MERGE(cssp, {'state': 'private'})
+            )
+RETURN UNION(publicss, privcss)
+
+// Versions of a css
+LET cssid = "1"
+FOR css IN CrossSectionSet
+    FILTER css._key == cssid
+    LET versions = (
+        FOR cssa IN CrossSectionSetArchive
+            FILTER cssa.versionInfo.current == css._id
+            SORT cssa.versionInfo.version DESC
+            RETURN cssa
+    )
+    RETURN MERGE(css, {versions})
