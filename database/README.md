@@ -14,7 +14,7 @@ ARANGO_PASSWORD=<arangodb root password used to connect to Docker container>
 Spin up a database container.
 
 ```shell
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.9.0
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.9.1
 ```
 
 The `./orangodb3` directory is used to persist the collection data.
