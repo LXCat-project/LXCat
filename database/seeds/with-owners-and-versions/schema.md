@@ -49,10 +49,10 @@ erDiagram
     CrossSectionArchive }o--|{ CrossSection: HistoryOf
     CrossSection }|--|{ CrossSectionSet: IsPartOf
     Reference }|--|{ CrossSection: References
-    Reaction }|--|| CrossSection: react
     Reaction }|--|{ State: Produces
     Reaction }|--|{ State: Consumes
     State }o--|{ State: HasDirectSubstate
+    Reaction }|--|| CrossSection: react
 ```
 
 Can be edited on https://mermaid.live/
