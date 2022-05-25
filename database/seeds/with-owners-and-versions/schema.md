@@ -10,49 +10,34 @@ erDiagram
     }
     CrossSectionSet {
         string name
+        string isComplete "Self consistent set which can be used in calculations"
         string organization FK
-    }
-    CrossSectionSetPrivate {
-        string name
-        string from FK "Set under edit"
-        string organization FK
-        string processes "Inlined cross sections"
-    }
-    CrossSectionSetArchive {
-        string name
+        string previous FK ""
+        string status "draft | published | archived | retracted"
         string version
-        string commitMessage
-        string createdOn
-        string current FK "Old version of this set"
-        string organization FK
-        string processes "Inlined cross sections"
-    }
-    CrossSectionArchive {
-        string name
-        string version
-        string commitMessage
-        string createdOn
-        string current FK "Old version of this section"
-        string reaction "Inlined reaction"
-        string data
+        string commitMessage  
     }
     CrossSection {
         string reaction FK
         string data
+        string organization FK
+        string previous FK ""
+        string status "draft | published | archived | retracted"
+        string version
+        string commitMessage
     }
     User ||--o{ Organization: MemberOf
     Organization ||--o{ CrossSectionSet: Provides
-    CrossSectionSetPrivate }|--o| Organization : DraftBy
-    CrossSectionSetPrivate ||--o| CrossSectionSet : DraftOf
-    CrossSectionSetArchive }o--|{ CrossSectionSet : HistoryOf
-    CrossSectionSetArchive }|--|| Organization : HistoryBy
-    CrossSectionArchive }o--|{ CrossSection: HistoryOf
+    CrossSectionSet }o--|{ CrossSectionSet: previous
     CrossSection }|--|{ CrossSectionSet: IsPartOf
+    Organization ||--o{ CrossSection: Provides
+    CrossSection }o--|{ CrossSection: previous
     Reference }|--|{ CrossSection: References
     Reaction }|--|{ State: Produces
     Reaction }|--|{ State: Consumes
     State }o--|{ State: HasDirectSubstate
     Reaction }|--|| CrossSection: react
+    CrossSectionSet }|--|{ SoftwareMethod: compatibleWith
 ```
 
 Can be edited on https://mermaid.live/
