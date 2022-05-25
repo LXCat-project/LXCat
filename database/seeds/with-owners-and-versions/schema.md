@@ -12,7 +12,6 @@ erDiagram
         string name
         string isComplete "Self consistent set which can be used in calculations"
         string organization FK
-        string previous FK ""
         string status "draft | published | archived | retracted"
         string version
         string commitMessage  
@@ -21,17 +20,16 @@ erDiagram
         string reaction FK
         string data
         string organization FK
-        string previous FK ""
         string status "draft | published | archived | retracted"
         string version
         string commitMessage
     }
     User ||--o{ Organization: MemberOf
     Organization ||--o{ CrossSectionSet: Provides
-    CrossSectionSet }o--|{ CrossSectionSet: previous
+    CrossSectionSet }o--|{ CrossSectionSet: CrossSectionSetHistory
     CrossSection }|--|{ CrossSectionSet: IsPartOf
     Organization ||--o{ CrossSection: Provides
-    CrossSection }o--|{ CrossSection: previous
+    CrossSection }o--|{ CrossSection: CrossSectionHistory
     Reference }|--|{ CrossSection: References
     Reaction }|--|{ State: Produces
     Reaction }|--|{ State: Consumes

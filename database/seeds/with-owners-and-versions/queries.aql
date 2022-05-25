@@ -10,6 +10,7 @@ FOR css IN CrossSectionSet
             FILTER p._to == css._id
             FOR cs IN CrossSection
                 FILTER p._from == cs._id
+                FILTER cs.versionInfo.status == 'published'
                 LET reaction = FIRST(
                     FOR r IN Reaction
                         FILTER cs.reaction == r._id
@@ -28,27 +29,22 @@ FOR u IN User
         FILTER m._from == u._id
         FOR o IN Organization
             FILTER m._to == o._id
-            LET publicss = (
-                FOR css IN CrossSectionSet
+                FOR css IN CrossSection
                     FILTER css.organization == o._id
+                    FILTER ['published' ,'draft'] ANY == css.versionInfo.status
                     // .. join with CrossSection and its children
-                    RETURN MERGE(css, {'state': 'public'})
-            )
-            LET privcss = (
-                    FOR cssp IN CrossSectionSetPrivate
-                    FILTER cssp.organization.name == o.name
-                    RETURN MERGE(cssp, {'state': 'private'})
-            )
-RETURN UNION(publicss, privcss)
+                    RETURN css
 
-// Versions of a css
-LET cssid = "1"
-FOR css IN CrossSectionSet
-    FILTER css._key == cssid
-    LET versions = (
-        FOR cssa IN CrossSectionSetArchive
-            FILTER cssa.versionInfo.current == css._id
-            SORT cssa.versionInfo.version DESC
-            RETURN cssa
-    )
-    RETURN MERGE(css, {versions})
+// Versions of a cs
+FOR cs IN CrossSection
+  FILTER cs._key=="3"
+  FOR prev IN 0..9999999 OUTBOUND cs CrossSectionHistory
+    RETURN prev
+
+// find published/retracted cs of archived version
+FOR cs IN CrossSection
+  FILTER cs._key=="1"
+  FOR next IN 0..9999999 INBOUND cs CrossSectionHistory
+    FILTER ['published' ,'retracted'] ANY == next.versionInfo.status
+    LIMIT 1
+    RETURN next

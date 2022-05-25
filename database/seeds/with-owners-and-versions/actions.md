@@ -1,45 +1,69 @@
 # Actions
 
-## Create new cross section set
+## Create new draft cross section
 
-* Insert incoming document into CrossSectionSetPrivate collection
-* Look up organization, if not exists then raise error
+* Add to CrossSection with status=='draft' and version=='1'
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
 
-## Update existing cross section set
+## Update existing cross section by creating a draft
 
-* Insert incoming document into CrossSectionSetPrivate collection
-* Set versionInfo.current in CrossSectionSetPrivate collection to the id of the set in the CrossSectionSet collection
+* Add to CrossSection with status=='draft'
+* For draft version = prev version + 1
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
+* Add previous version and current version to CrossSectionHistory collection
 
-## Publish new draft cross section set
+## Publish new draft cross section
 
-* Move document from CrossSectionSetPrivate collection to CrossSectionSet collection
-* Assign version 1 to document in CrossSectionSet collection
-* Insert cs/references/reaction states into their respective collections,
-  * If exact reference already exists then use that id in edge collection
+* Change status of draft section to published
 
-## Publish updated draft cross section set
+## Publish updated draft cross section
 
-* Copy old CrossSectionSet collection to CrossSectionSetArchive collection
-* Store commit message in CrossSectionSetArchive collection
-* Move document from CrossSectionSetPrivate collection to CrossSectionSet collection.
-* Updated document in CrossSectionSet collection should retain its id.
-* Assign version +1 to updated document in CrossSectionSet collection
-* Insert cs/references/reaction states into their respective collections,
-  * If exact reference already exists then use that id in edge collection
-* If a cs has been removed in draft
-  * and if it was used in other set then ???
-  * and if it was not used in other set then move cs to archve
-
-## Retract cross section set
-
-* Copy old CrossSectionSet collection to CrossSectionSetArchive collection
-* Store commit message in CrossSectionSetArchive collection
-
-## Update existing cross section
-
-* Edit set in which cross section is part of
+In transaction do:
+1. Find sets with current published section
+  * Update IsPartOf collection to draft section
+  * Create new version of each set (see chapter below)
+2. Change status of current published section to archived
+3. Change status of draft section to published
 
 ## Retract cross section
 
-* Remove section from a set, by editing set
-* A orphaned cross section (aka cross section not part of section), should be archived with restraction message
+* Change status of published section to retracted
+* Set retract message
+1. Find sets with current published section
+  * give choice or
+    * remove cross section from set and create new set version
+    * or retract the set
+
+## Create new draft cross section set
+
+* Add to CrossSectionSet with status=='draft' and version=='1'
+* Insert or reuse cross section using `#Create new draft cross section` chapter.
+* Reuse Organization created by cross section drafting
+* Make cross sections part of set by adding to IsPartOf collection
+
+## Update existing cross section set by creating a draft
+
+* Add to CrossSectionSet with status=='draft'
+* For draft version = prev version + 1
+* Insert or reuse cross section using `#Create new draft cross section` chapter.
+* Make cross sections part of set by adding to IsPartOf collection
+* Add previous version and current version to CrossSectionSetHistory collection
+
+## Publish new draft cross section set
+
+In transaction do:
+1. Change status of draft section to published
+2. For each changed/added cross section perform publishing of cross section
+
+## Publish updated draft cross section set
+
+In transaction do:
+1. Change status of current published section to archived
+2. Change status of draft section to published
+3. For each changed/added cross section perform publishing of cross section
+
+## Retract cross section set
+
+* Change status of published section to retracted
+* Set retract message
+* Retract selected cross section
