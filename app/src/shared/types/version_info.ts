@@ -1,6 +1,6 @@
 
 
-export type Status = 'draft' | 'published' | 'archived' | 'restracted'
+export type Status = 'draft' | 'published' | 'archived' | 'retracted'
 
 // Used in database collection to store version info about document
 export interface VersionInfo {

@@ -131,3 +131,18 @@ export const mustBeAdmin = async (context: GetServerSidePropsContext<ParsedUrlQu
   context.res.statusCode = 403
   throw Error('Forbidden')
 }
+
+export const mustBeAuthor = async (context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) => {
+    const session = await getServerSession(context, options)
+    if (!session?.user) {
+      context.res.statusCode = 401
+      context.res.setHeader('WWW-Authenticate', 'OAuth')
+      throw Error('Unauthorized')
+    }
+    if (session!.user!.roles!.includes(Role.enum.author)) {
+      return session.user
+    }
+
+    context.res.statusCode = 403
+    throw Error('Forbidden')
+  }

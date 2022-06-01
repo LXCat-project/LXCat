@@ -28,7 +28,7 @@ export interface UserFromDB extends UserInDb {
 }
 
 export const listUsers = async () =>{
-    const cursor: ArrayCursor<UserFromDB[]> = await db.query(aql`
+    const cursor: ArrayCursor<UserFromDB> = await db.query(aql`
     FOR u IN users
         LET organization = FIRST(
             FOR m IN MemberOf
@@ -47,7 +47,7 @@ export interface OrganizationFromDB extends Organization {
 }
 
 export const listOrganizations = async () => {
-    const cursor: ArrayCursor<OrganizationFromDB[]> = await db.query(aql`
+    const cursor: ArrayCursor<OrganizationFromDB> = await db.query(aql`
     FOR o IN Organization
         RETURN UNSET(o, ["_id", "_rev"])
   `)
@@ -59,7 +59,7 @@ export const makeMember = async (userKey: string, orgKey: string) => {
     // create edge if user was memberless or update edge _to when already member
     const userId = 'users/' + userKey
     const orgId = 'Organization/' + orgKey
-    const cursor: ArrayCursor<OrganizationFromDB[]> = await db.query(aql`
+    const cursor: ArrayCursor<OrganizationFromDB> = await db.query(aql`
         UPSERT
             { _from: ${userId}}
         INSERT
