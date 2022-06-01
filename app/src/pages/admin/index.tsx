@@ -12,7 +12,7 @@ const Admin: NextPage = () => {
       </h1>
 
       <ul>
-        <li><Link href='users'><a>Users</a></Link></li>
+        <li><Link href='/admin/users'><a>Users</a></Link></li>
       </ul>
     </Layout>
   )
