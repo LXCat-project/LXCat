@@ -258,9 +258,6 @@ import { systemDb } from "../../src/systemDb";
   await db
     .collection("CrossSectionSet")
     .ensureIndex({ type: "persistent", fields: ["organization"] });
-  await db
-    .collection("CrossSectionSet")
-    .ensureIndex({ type: "persistent", fields: ["versionInfo.previous"] });
   await db.collection("CrossSectionSet").saveAll([
     { // Published version
       _key: "1",

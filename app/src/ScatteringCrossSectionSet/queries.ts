@@ -2,34 +2,38 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
 import { insert_cs_with_dict } from "../ScatteringCrossSection/queries";
+import { now } from "../shared/date";
 import { insert_document, insert_edge, insert_reference_dict, insert_state_dict, upsert_document } from "../shared/queries";
+import { VersionInfo } from "../shared/types/version_info";
 import { CrossSectionSetInput } from "./types";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "./types/public";
 
 export async function insert_input_set(dataset: CrossSectionSetInput) {
+    const organization = await upsert_document('Organization', {
+		name: dataset.contributor,
+	});
+    const versionInfo: VersionInfo = {
+        status: 'published',
+        version: '1',
+        createdOn: now(),
+    }
     const cs_set_id = await insert_document('CrossSectionSet', {
 		name: dataset.name,
 		description: dataset.description,
 		complete: dataset.complete,
+        organization: organization.id,
+        versionInfo
 	});
-
-	const contributor = await upsert_document('Contributor', {
-		name: dataset.contributor,
-	});
-
-	await insert_edge('Provides', contributor.id, cs_set_id);
 
 	const state_ids = await insert_state_dict(dataset.states);
 	const reference_ids = await insert_reference_dict(dataset.references);
 
 	for (const cs of dataset.processes) {
-		const cs_id = await insert_cs_with_dict(cs, state_ids, reference_ids);
+		const cs_id = await insert_cs_with_dict(cs, state_ids, reference_ids, organization.id);
 		await insert_edge('IsPartOf', cs_id, cs_set_id);
 	}
 	return cs_set_id.replace('CrossSectionSet/', '')
 }
-
-
 
 export interface FilterOptions {
 	contributor: string[]
@@ -92,11 +96,9 @@ export async function search(filter: FilterOptions, sort: SortOptions, paging: P
                     RETURN {id: cs._key, reaction}
             )
         LET contributor = FIRST(
-            FOR p IN Provides
-                FILTER p._to == css._id
-                FOR c IN Contributor
-                    FILTER c._id == p._from
-                    RETURN c.name
+            FOR o IN Organization
+                FILTER o._id == css.organization
+                RETURN o.name
         )
         ${contributor_aql}
         ${species2_aql}
@@ -123,11 +125,9 @@ export async function searchFacets(): Promise<Facets> {
 async function searchContributors() {
     const cursor: ArrayCursor<string> = await db.query(aql`
     FOR css IN CrossSectionSet
-        FOR p IN Provides
-            FILTER p._to == css._id
-            FOR c IN Contributor
-                FILTER p._from == c._id
-                RETURN DISTINCT c.name
+        FOR o IN Organization
+            FILTER o._id == css.organization
+            RETURN DISTINCT o.name
     `)
     return await cursor.all()
 }
@@ -194,11 +194,9 @@ export async function byId(id: string) {
                     )
             )
         LET contributors = (
-            FOR p IN Provides
-                FILTER p._to == css._id
-                FOR c IN Contributor
-                    FILTER c._id == p._from
-                    RETURN c.name
+            FOR o IN Organization
+                FILTER o._id == css.organization
+                RETURN o.name
         )
         RETURN MERGE({'id': css._key, processes, contributor: FIRST(contributors)}, UNSET(css, ["_key", "_rev", "_id"]))
     `);

@@ -27,7 +27,7 @@ erDiagram
     User ||--o{ MemberOf: from
     MemberOf |o--|{ Organization: to
     Organization ||--o{ CrossSectionSet: Provides
-    CrossSectionSet ||--|{ CrossSectionSetHistory: fromFutre
+    CrossSectionSet ||--|{ CrossSectionSetHistory: fromFuture
     CrossSectionSet ||--|{ CrossSectionSetHistory: toPast
     CrossSection ||--|{ IsPartOf: from
     IsPartOf }|--|| CrossSectionSet: to

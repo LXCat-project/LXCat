@@ -2,14 +2,17 @@ import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
+import { now } from "../shared/date";
 import { insert_document, insert_edge, insert_reaction_with_dict } from "../shared/queries";
+import { VersionInfo } from "../shared/types/version_info";
 import { CrossSection } from "./types";
 import { CrossSectionHeading, CrossSectionItem } from "./types/public";
 
 export async function insert_cs_with_dict(
 	cs: CrossSection<string, string>,
 	state_dict: Dict<string>,
-	ref_dict: Dict<string>
+	ref_dict: Dict<string>,
+	organization: string,
 ): Promise<string> {
 	const r_id = await insert_reaction_with_dict(state_dict, cs.reaction);
 	const ref_ids = cs.reference?.map((value: string) => ref_dict[value]);
@@ -17,12 +20,17 @@ export async function insert_cs_with_dict(
 	delete (cs as any)["reference"];
 	delete (cs as any)["reaction"];
 
+	const versionInfo: VersionInfo = {
+        status: 'published',
+        version: '1',
+        createdOn: now(),
+    }
 	const cs_id = await insert_document('CrossSection', {
 		...cs,
 		reaction: r_id,
+		versionInfo,
+		organization
 	});
-
-	await insert_edge('HasCS', r_id, cs_id);
 
 	if (ref_ids) {
 		for (const id of ref_ids) {
