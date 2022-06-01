@@ -1,9 +1,10 @@
 import { getServerSession, Session } from "next-auth";
-import { NextApiRequest, NextApiResponse } from "next";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, PreviewData } from "next";
 import { RequestHandler } from "next-connect";
 import { Role } from "./schema";
 import { decode } from "next-auth/jwt";
 import { options } from "./options";
+import { ParsedUrlQuery } from "querystring";
 
 interface JwtPayload {
     email: string
@@ -15,7 +16,7 @@ export interface AuthRequest extends NextApiRequest {
 }
 
 /**
- * Middleware to check if request contains an authenticated session or valid API token.
+ * API Middleware to check if request contains an authenticated session or valid API token.
  * Sets `user` property in `req` or returns 401.
  */
 export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
@@ -44,7 +45,7 @@ export const hasSessionOrAPIToken: RequestHandler<AuthRequest, NextApiResponse> 
 }
 
 /**
- * Middleware to check if request contains an authenticated session.
+ * API Middleware to check if request contains an authenticated session.
  * Sets `user` property in `req` or returns 401.
  */
 export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
@@ -60,7 +61,7 @@ export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (r
 }
 
 /**
- * Middleware to check if user has admin role.
+ * API Middleware to check if user has admin role.
  * Returns 403 when user does not have admin role.
  */
 export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
@@ -79,7 +80,7 @@ export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async 
 }
 
 /**
- * Middleware to check if user has developer role.
+ * API Middleware to check if user has developer role.
  * Returns 403 when user does not have developer role.
  */
  export const hasDeveloperRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
@@ -98,7 +99,7 @@ export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async 
 }
 
 /**
- * Middleware to check if user has author role.
+ * API Middleware to check if user has author role.
  * Returns 403 when user does not have author role.
  */
  export const hasAuthorRole: RequestHandler<AuthRequest, NextApiResponse> = async (req, res, next) => {
@@ -114,4 +115,19 @@ export const hasAdminRole: RequestHandler<AuthRequest, NextApiResponse> = async 
             .setHeader('WWW-Authenticate', 'OAuth')
             .end('Unauthorized')
     }
+}
+
+export const mustBeAdmin = async (context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) => {
+  const session = await getServerSession(context, options)
+  if (!session?.user) {
+    context.res.statusCode = 401
+    context.res.setHeader('WWW-Authenticate', 'OAuth')
+    throw Error('Unauthorized')
+  }
+  if (session!.user!.roles!.includes(Role.enum.admin)) {
+    return session.user
+  }
+
+  context.res.statusCode = 403
+  throw Error('Forbidden')
 }
