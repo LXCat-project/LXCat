@@ -147,7 +147,7 @@ import { systemDb } from "../../src/systemDb";
     await db.collection("CrossSection").saveAll([
       { // Initial version
         _key: `${index*4+1}`,
-        reaction: "Reaction/1",
+        reaction: "Reaction/1",  // Replaces HasCS colllection, as section can only be have single reaction
         data: "some data",
         organization: 'Organization/1',
         versionInfo: {
@@ -262,14 +262,25 @@ import { systemDb } from "../../src/systemDb";
     .collection("CrossSectionSet")
     .ensureIndex({ type: "persistent", fields: ["versionInfo.previous"] });
   await db.collection("CrossSectionSet").saveAll([
-    {
+    { // Published version
       _key: "1",
       name: "Some set name",
       organization: "Organization/1", // Replaces Provides colllection, as set can only be owned by single organization
       versionInfo: {
         status: "published",
-        version: "2",
+        version: "1",
         createdOn: "2000-01-03T00:00:00Z",
+        commitMessage: "Some message",
+      },
+    },
+    { // Draft version
+      _key: "2",
+      name: "Some other set name",
+      organization: "Organization/1", // Replaces Provides colllection, as set can only be owned by single organization
+      versionInfo: {
+        status: "draft",
+        version: "2",
+        createdOn: "2001-01-03T00:00:00Z",
         commitMessage: "Some message",
       },
     },
@@ -279,6 +290,10 @@ import { systemDb } from "../../src/systemDb";
   await db.createEdgeCollection("CrossSectionSetHistory");
   // TODO have check so a crosssection can only be in sets from same organization
   await db.collection("CrossSectionSetHistory").saveAll([
+    {
+      _from: "CrossSectionSet/2",
+      _to: "CrossSectionSet/1",
+    },
   ]);
 
   // Which Cross sections are part of which Cross section set
@@ -288,153 +303,14 @@ import { systemDb } from "../../src/systemDb";
     {
       _from: "CrossSection/3",
       _to: "CrossSectionSet/1",
+    },
+    {
+      _from: "CrossSection/3", // Draft set can have published section
+      _to: "CrossSectionSet/2",
+    },
+    {
+      _from: "CrossSection/8", // Draft set can have draft section
+      _to: "CrossSectionSet/2",
     }
   ]);
-
-  //   // Sets can be worked on in admin interface without being visible on public site
-  //   // They need to be copied and normalized to become an entry in CrossSectionSet collection
-  //   await db.createCollection("CrossSectionSetPrivate");
-  //   await db.collection("CrossSectionSetPrivate").saveAll([
-  //     // A new set
-  //     {
-  //       _id: "CrossSectionSetPrivate/1",
-  //       name: "Some set name",
-  //       organization: {
-  //         name: "University X",
-  //       },
-  //       processes: [
-  //         {
-  //           data: "some data",
-  //           reaction: {
-  //             name: "Some reaction",
-  //           },
-  //         },
-  //         {
-  //           data: "some other data",
-  //           reaction: {
-  //             name: "Some other reaction",
-  //           },
-  //         },
-  //       ],
-  //     },
-  //     // A updated set, needs to know from which set it is a update from
-  //     {
-  //       _id: "CrossSectionSetPrivate/2",
-  //       _from: "CrossSectionSet/1",
-  //       name: "Some set name",
-  //       organization: {
-  //         name: "University X",
-  //       },
-  //       processes: [
-  //         {
-  //           data: "some data",
-  //           reaction: {
-  //             name: "Some reaction",
-  //           },
-  //         },
-  //         {
-  //           data: "some other data",
-  //           reaction: {
-  //             name: "Some other reaction",
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   ]);
-
-  //   await db.createCollection("CrossSectionSetArchive");
-  //   await db
-  //     .collection("CrossSection")
-  //     .ensureIndex({ type: "persistent", fields: ["current"] });
-  //   await db.collection("CrossSectionSetArchive").saveAll([
-  //     {
-  //       _id: "CrossSectionSetArchive/1",
-  //       versionInfo: {
-  //         current: "CrossSectionSet/1",
-  //         version: "1",
-  //         createdOn: "Some date",
-  //         commitMessage: "Some message",
-  //       },
-  //       name: "Some set name",
-  //       organization: {
-  //         name: "University X",
-  //       },
-  //       processes: [
-  //         {
-  //           data: "some data with a typo",
-  //           reaction: {
-  //             name: "Some reaction",
-  //           },
-  //         },
-  //         {
-  //           data: "some other data",
-  //           reaction: {
-  //             name: "Some other reaction",
-  //           },
-  //         },
-  //       ],
-  //     },
-  //     // Retracted items are stored in this collection with a retract message
-  //     {
-  //       _id: "CrossSectionSetArchive/1",
-  //       versionInfo: {
-  //         current: "CrossSectionSet/2", // ID of css that was present in CrossSectionSet collection before it was deleted
-  //         version: "1",
-  //         createdOn: "Some date",
-  //         retractMessage: "Some message why set was retracted",
-  //       },
-  //       name: "Some set name",
-  //       organization: {
-  //         name: "University X",
-  //       },
-  //       processes: [
-  //         {
-  //           data: "some data with a typo",
-  //           reaction: {
-  //             name: "Some reaction",
-  //           },
-  //         },
-  //         {
-  //           data: "some other data",
-  //           reaction: {
-  //             name: "Some other reaction",
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   ]);
-
-  //   // When a set is updated then any changed cross sections will also get a new version
-  //   // The previous version is stored in the CrossSectionArchive collection
-  //   // and new version will be in CrossSection + other child collections
-  //   await db.createCollection("CrossSectionArchive");
-  //   await db.collection("CrossSectionArchive").saveAll([
-  //     {
-  //       _id: "CrossSectionArchive/1",
-  //       versionInfo: {
-  //         current: "CrossSection/1",
-  //         version: "1",
-  //         createdOn: "Some date",
-  //         commitMessage: "Some message",
-  //       },
-  //       data: "some data with a typo",
-  //       reaction: {
-  //         name: "Some reaction",
-  //       },
-  //     },
-  //     // Retracted items are stored in this collection with a retract message
-  //     {
-  //       _id: "CrossSectionArchive/1",
-  //       versionInfo: {
-  //         current: "CrossSection/2", // ID of cs that was present in CrossSection collection before it was deleted
-  //         version: "1",
-  //         createdOn: "Some date",
-  //         retractMessage: "Some message explaining why cs was restracted.",
-  //       },
-  //       data: "some data with a typo",
-  //       reaction: {
-  //         name: "Some reaction",
-  //       },
-  //     },
-  //   ]);
 })();

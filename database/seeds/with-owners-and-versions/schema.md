@@ -27,13 +27,13 @@ erDiagram
     User ||--o{ MemberOf: from
     MemberOf |o--|{ Organization: to
     Organization ||--o{ CrossSectionSet: Provides
-    CrossSectionSet ||--|{ CrossSectionSetHistory: from
-    CrossSectionSet ||--|{ CrossSectionSetHistory: to
+    CrossSectionSet ||--|{ CrossSectionSetHistory: fromFutre
+    CrossSectionSet ||--|{ CrossSectionSetHistory: toPast
     CrossSection ||--|{ IsPartOf: from
     IsPartOf }|--|| CrossSectionSet: to
     Organization ||--o{ CrossSection: Provides
-    CrossSection ||--|{ CrossSectionHistory: from
-    CrossSection ||--|{ CrossSectionHistory: to
+    CrossSection ||--|{ CrossSectionHistory: fromFuture
+    CrossSection ||--|{ CrossSectionHistory: toPast
     Reference ||--|{ References: to
     References }|--|| CrossSection: from
     Reaction ||--|{ Produces: from
