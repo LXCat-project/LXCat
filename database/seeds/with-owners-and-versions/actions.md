@@ -12,6 +12,10 @@
 * Insert into Organization, Reaction, State, Reference collection or reuse existing
 * Add previous version and current version to CrossSectionHistory collection
 
+## Update cross section set draft
+
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
+
 ## Publish new draft cross section
 
 * Change status of draft section to published
@@ -48,6 +52,11 @@ In transaction do:
 * Insert or reuse cross section using `#Create new draft cross section` chapter.
 * Make cross sections part of set by adding to IsPartOf collection
 * Add previous version and current version to CrossSectionSetHistory collection
+
+## Update cross section set draft
+
+* Insert or reuse cross section using `#Create new draft cross section` chapter.
+* Make cross sections part of set by adding to IsPartOf collection
 
 ## Publish new draft cross section set
 
