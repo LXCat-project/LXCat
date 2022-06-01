@@ -14,7 +14,7 @@ erDiagram
         string organization FK
         string status "draft | published | archived | retracted"
         string version
-        string commitMessage  
+        string commitMessage
     }
     CrossSection {
         string reaction FK
@@ -24,18 +24,25 @@ erDiagram
         string version
         string commitMessage
     }
-    User ||--o{ Organization: MemberOf
+    User ||--o{ MemberOf: from
+    MemberOf |o--|{ Organization: to
     Organization ||--o{ CrossSectionSet: Provides
-    CrossSectionSet }o--|{ CrossSectionSet: CrossSectionSetHistory
-    CrossSection }|--|{ CrossSectionSet: IsPartOf
+    CrossSectionSet ||--|{ CrossSectionSetHistory: from
+    CrossSectionSet ||--|{ CrossSectionSetHistory: to
+    CrossSection ||--|{ IsPartOf: from
+    IsPartOf }|--|| CrossSectionSet: to
     Organization ||--o{ CrossSection: Provides
-    CrossSection }o--|{ CrossSection: CrossSectionHistory
-    Reference }|--|{ CrossSection: References
-    Reaction }|--|{ State: Produces
-    Reaction }|--|{ State: Consumes
-    State }o--|{ State: HasDirectSubstate
-    Reaction }|--|| CrossSection: react
-    CrossSectionSet }|--|{ SoftwareMethod: compatibleWith
+    CrossSection ||--|{ CrossSectionHistory: from
+    CrossSection ||--|{ CrossSectionHistory: to
+    Reference ||--|{ References: to
+    References }|--|| CrossSection: from
+    Reaction ||--|{ Produces: from
+    Produces }|--|| State: to
+    Reaction ||--|{ Consumes: from
+    Consumes }|--|| State: to
+    State |o--|{ HasDirectSubstate: from
+    HasDirectSubstate ||--|{ State: to
+    Reaction }|--|| CrossSection: reaction
 ```
 
 Can be edited on https://mermaid.live/
