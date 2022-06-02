@@ -19,7 +19,7 @@ export async function insert_input_set(
   dataset: CrossSectionSetInput,
   status: Status = "published",
   version: string = "1",
-  commitMessage: string = "",
+  commitMessage: string = ""
 ) {
   const organization = await upsert_document("Organization", {
     name: dataset.contributor,
@@ -30,7 +30,7 @@ export async function insert_input_set(
     createdOn: now(),
   };
   if (commitMessage) {
-    versionInfo.commitMessage = commitMessage
+    versionInfo.commitMessage = commitMessage;
   }
   const cs_set_id = await insert_document("CrossSectionSet", {
     name: dataset.name,
@@ -256,56 +256,89 @@ export interface CrossSectionSetInputOwned extends CrossSectionSetInput {
 }
 
 export async function byOwnerAndId(email: string, id: string) {
-  // TODO update query so it matches CrossSectionSetInput
-  // TODO create lookup object for refs and states and use foreign keys in sections
   const cursor: ArrayCursor<CrossSectionSetInputOwned> = await db.query(aql`
-        FOR u IN users
-        FILTER u.email == ${email}
-        FOR m IN MemberOf
-            FILTER m._from == u._id
-            FOR o IN Organization
-                FILTER m._to == o._id
-                FOR css IN CrossSectionSet
-                    FILTER css.organization == o._id
-                    FILTER css._key == ${id}
-                    FILTER ['published' ,'draft', 'retracted'] ANY == css.versionInfo.status
-                    LET processes = (
-                        FOR i IN IsPartOf
-                            FILTER i._to == css._id
-                            FOR cs IN CrossSection
-                                FILTER cs._id == i._from
-                                LET refs = (
-                                    FOR rs IN References
-                                        FILTER rs._from == cs._id
-                                        FOR r IN Reference
-                                            FILTER r._id == rs._to
-                                            RETURN UNSET(r, ["_key", "_rev", "_id"])
-                                    )
-                                LET reaction = FIRST(
-                                    FOR r in Reaction
-                                        FILTER r._id == cs.reaction
-                                        LET consumes = (
-                                            FOR c IN Consumes
-                                            FILTER c._from == r._id
-                                                FOR c2s IN State
-                                                FILTER c2s._id == c._to
-                                                RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-                                        )
-                                        LET produces = (
-                                            FOR p IN Produces
-                                            FILTER p._from == r._id
-                                                FOR p2s IN State
-                                                FILTER p2s._id == p._to
-                                                RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-                                        )
-                                        RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-                                )
-                                RETURN MERGE(
-                                    UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                                    { reaction, "reference": refs}
-                                )
-                        )
-                    RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {contributor: o.name, processes, })
+  FOR u IN users
+  FILTER u.email == ${email}
+  FOR m IN MemberOf
+      FILTER m._from == u._id
+      FOR o IN Organization
+          FILTER m._to == o._id
+          FOR css IN CrossSectionSet
+              FILTER css.organization == o._id
+              FILTER css._key == ${id}
+              FILTER ['published' ,'draft', 'retracted'] ANY == css.versionInfo.status
+              LET refs = MERGE(
+                  FOR i IN IsPartOf
+                      FILTER i._to == css._id
+                      FOR cs IN CrossSection
+                          FILTER cs._id == i._from
+                              FOR rs IN References
+                                  FILTER rs._from == cs._id
+                                  FOR r IN Reference
+                                      FILTER r._id == rs._to
+                                      RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
+                              )
+              LET states = MERGE(
+                  FOR i IN IsPartOf
+                      FILTER i._to == css._id
+                      FOR cs IN CrossSection
+                          FILTER cs._id == i._from
+                              FOR r in Reaction
+                                  FILTER r._id == cs.reaction
+                                  LET consumes = (
+                                      FOR c IN Consumes
+                                      FILTER c._from == r._id
+                                          FOR c2s IN State
+                                          FILTER c2s._id == c._to
+                                          RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
+                                  )
+                                  LET produces = (
+                                      FOR p IN Produces
+                                      FILTER p._from == r._id
+                                          FOR p2s IN State
+                                          FILTER p2s._id == p._to
+                                          RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
+                                  )
+                                  RETURN MERGE(UNION(consumes, produces))
+
+                  )
+              LET processes = (
+                  FOR i IN IsPartOf
+                      FILTER i._to == css._id
+                      FOR cs IN CrossSection
+                          FILTER cs._id == i._from
+                          LET refs2 = (
+                              FOR rs IN References
+                                  FILTER rs._from == cs._id
+                                  FOR r IN Reference
+                                      FILTER r._id == rs._to
+                                      RETURN r._key
+                              )
+                          LET reaction = FIRST(
+                              FOR r in Reaction
+                                  FILTER r._id == cs.reaction
+                                  LET consumes2 = (
+                                      FOR c IN Consumes
+                                      FILTER c._from == r._id
+                                          FOR c2s IN State
+                                          FILTER c2s._id == c._to
+                                          RETURN {state: c2s._key, count: c.count}
+                                  )
+                                  LET produces2 = (
+                                      FOR p IN Produces
+                                      FILTER p._from == r._id
+                                          FOR p2s IN State
+                                          FILTER p2s._id == p._to
+                                          RETURN {state: p2s._key, count: p.count}
+                                  )
+                                  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
+                          )
+                          RETURN MERGE(
+                              UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
+                              { reaction, "reference": refs2}
+                          )
+              )
+              RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {references: refs, states, processes, contributor: o.name})
     `);
   return await cursor.next();
 }
@@ -352,9 +385,9 @@ export async function deleteSet(key: string, message: string) {
   const info = await getVersionInfo(key);
   if (info === undefined) {
     // Set does not exist, nothing to do
-    return
+    return;
   }
-  const {status} = info
+  const { status } = info;
   if (status === "draft") {
     const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
         FOR css IN CrossSectionSet
@@ -388,18 +421,23 @@ export async function updateSet(
   if (info === undefined) {
     throw Error("Can not update set that does not exist");
   }
-  const {status, version} = info
+  const { status, version } = info;
   if (status === "draft") {
     // TODO perform updates on existing draft
-    return key
+    return key;
   } else if (status === "published") {
     // create a draft
     const newStatus: Status = "draft";
     const newVersion = `${parseInt(version) + 1}`;
     // TODO perform insert_input_set+insert_edge inside transaction
-    const keyOfDraft = await insert_input_set(set, newStatus, newVersion, message)
+    const keyOfDraft = await insert_input_set(
+      set,
+      newStatus,
+      newVersion,
+      message
+    );
     await insert_edge("CrossSectionSetHistory", keyOfDraft, key);
-    return keyOfDraft
+    return keyOfDraft;
     // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
   } else {
     throw Error("Can not update set due to invalid status");
