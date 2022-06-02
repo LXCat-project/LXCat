@@ -160,3 +160,8 @@ Possible options see https://learning-notes.mistermicheels.com/javascript/typesc
 * Configuration = dotenv
 * Production deployment = docker-compose
 * Development deployment = Database in Docker container and app on bare-metal
+
+## Debugging
+
+In Visual Studio Code you can debug the server, client or fullstack by using the `/.vscode/launcher.json` file.
+See [NextJS debugging docs](https://nextjs.org/docs/advanced-features/debugging#debugging-with-vs-code) and [VS Code docs](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) for more info.
