@@ -18,3 +18,7 @@ a:hover {
 * {
   box-sizing: border-box;
 }
+
+.tos::backdrop {
+  background: rgba(0, 0, 0, 0.90);
+}

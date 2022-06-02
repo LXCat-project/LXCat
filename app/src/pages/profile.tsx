@@ -33,23 +33,11 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {isDeveloper && (
-        <div>
-          <h2>API tokens</h2>
-          <p>Some API endpoints require authentication.</p>
-          <p> Use `Authentication: Bearer &lt;token&gt;` as header in request.</p>
-          <p><Link href="/api/auth/apitoken"><a target={"_blank"}>Click to generate API token</a></Link></p>
-        </div>
-      )}
-
-      <div>
-        {isAdmin && <Link href="/admin">Perform admin tasks</Link>}
-      </div>
-
-      <div>
-        {isAuthor && <Link href="/author">Perform author tasks</Link>}
-      </div>
-
+      <ul>
+        {isDeveloper && <li><Link href="/developer">Perform developer tasks</Link></li>}
+        {isAdmin && <li><Link href="/admin">Perform admin tasks</Link></li>}
+        {isAuthor && <li><Link href="/author">Perform author tasks</Link></li>}
+      </ul>
       <div>
         <button onClick={() => signOut()}>Sign out</button>
       </div>

@@ -8,7 +8,6 @@ import { LinearTriatomInversionCenter_DB } from "./molecules/triatom_linear_inve
 import { DBState } from "./state";
 export type { Reference } from "./reference";
 
-// TODO convert to zod
 // The 'name' field can be used as the id of the document.
 type ElectronConfiguration = Array<Array<number>>;
 export interface Particle {

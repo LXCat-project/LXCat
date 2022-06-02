@@ -13,7 +13,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
             const data = await byId(id)
             res.json(data)
         }
-        // TODO else case string[]
+        throw Error('Unable to handle request')
     })
 
 export default handler

@@ -2,14 +2,17 @@ import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../db";
+import { now } from "../shared/date";
 import { insert_document, insert_edge, insert_reaction_with_dict } from "../shared/queries";
+import { VersionInfo } from "../shared/types/version_info";
 import { CrossSection } from "./types";
 import { CrossSectionHeading, CrossSectionItem } from "./types/public";
 
 export async function insert_cs_with_dict(
 	cs: CrossSection<string, string>,
 	state_dict: Dict<string>,
-	ref_dict: Dict<string>
+	ref_dict: Dict<string>,
+	organization: string,
 ): Promise<string> {
 	const r_id = await insert_reaction_with_dict(state_dict, cs.reaction);
 	const ref_ids = cs.reference?.map((value: string) => ref_dict[value]);
@@ -17,12 +20,17 @@ export async function insert_cs_with_dict(
 	delete (cs as any)["reference"];
 	delete (cs as any)["reaction"];
 
+	const versionInfo: VersionInfo = {
+        status: 'published',
+        version: '1',
+        createdOn: now(),
+    }
 	const cs_id = await insert_document('CrossSection', {
 		...cs,
 		reaction: r_id,
+		versionInfo,
+		organization
 	});
-
-	await insert_edge('HasCS', r_id, cs_id);
 
 	if (ref_ids) {
 		for (const id of ref_ids) {
@@ -187,3 +195,48 @@ export async function search(options: SearchOptions) {
 	`);
 	return await cursor.all()
 }
+
+/*
+
+# TODO Actions
+
+## Create new draft cross section
+
+* Add to CrossSection with status=='draft' and version=='1'
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
+
+## Update existing cross section by creating a draft
+
+* Add to CrossSection with status=='draft'
+* For draft version = prev version + 1
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
+* Add previous version and current version to CrossSectionHistory collection
+
+## Update cross section set draft
+
+* Insert into Organization, Reaction, State, Reference collection or reuse existing
+
+## Publish new draft cross section
+
+* Change status of draft section to published
+
+## Publish updated draft cross section
+
+In transaction do:
+1. Find sets with current published section
+  * Update IsPartOf collection to draft section
+  * Create new version of each set (see chapter below)
+2. Change status of current published section to archived.
+  * have check so a crosssection can only be in sets from same organization
+3. Change status of draft section to published
+
+## Retract cross section
+
+* Change status of published section to retracted
+* Set retract message
+1. Find sets with current published section
+  * give choice or
+    * remove cross section from set and create new set version
+    * or retract the set
+
+*/
