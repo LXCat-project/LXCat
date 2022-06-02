@@ -4,7 +4,7 @@ interface Props {
   isOpened: boolean,
   onSubmit: (returnValue: string) => void,
   children: React.ReactNode,
-  className: string
+  className?: string
 }
 
 export const Dialog = ({ isOpened, onSubmit: onsubmit, children, className }: Props) => {
