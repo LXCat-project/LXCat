@@ -24,6 +24,7 @@ export async function insert_input_set(
   version: string = "1",
   commitMessage: string = ""
 ) {
+  // Reuse Organization created by cross section drafting
   const organization = await upsert_document("Organization", {
     name: dataset.contributor,
   });
@@ -46,6 +47,8 @@ export async function insert_input_set(
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
 
+  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/src/ScatteringCrossSection/queries.ts.
+  // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     const cs_id = await insert_cs_with_dict(
       cs,
@@ -53,6 +56,7 @@ export async function insert_input_set(
       reference_ids,
       organization.id
     );
+    // Make cross sections part of set by adding to IsPartOf collection
     await insert_edge("IsPartOf", cs_id, cs_set_id);
   }
   return cs_set_id.replace("CrossSectionSet/", "");
@@ -347,8 +351,10 @@ export async function byOwnerAndId(email: string, id: string) {
 }
 
 export async function publish(key: string) {
-  // TODO when key has a published version then that old version should be archived
-  // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
+  // TODO Publishing db calls should be done in transaction
+  // TODO when key has a published version then that old version should be archived aka Change status of current published section to archived
+  // TODO For each changed/added cross section perform publishing of cross section
+  // Change status of draft section to published
   const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
@@ -403,6 +409,8 @@ export async function deleteSet(key: string, message: string) {
     return await cursor.next();
     // TODO remove orphaned sections, reactions, states, references
   } else if (status === "published") {
+    // Change status of published section to retracted
+    // and Set retract message
     const newStatus: Status = "retracted";
     const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
         FOR css IN CrossSectionSet
@@ -411,7 +419,7 @@ export async function deleteSet(key: string, message: string) {
             RETURN {id: css._key}
     `);
     return await cursor.next();
-    // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
+    // TODO Retract selected cross section
   } else {
     throw Error("Can not delete set due to invalid status");
   }
@@ -442,7 +450,9 @@ async function createDraftSet(
   message: string,
   key: string
 ) {
+  // Add to CrossSectionSet with status=='draft'
   const newStatus: Status = "draft";
+  // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
   // TODO perform insert_input_set+insert_edge inside transaction
   const keyOfDraft = await insert_input_set(
@@ -451,12 +461,13 @@ async function createDraftSet(
     newVersion,
     message
   );
+  // Add previous version (published )and current version (draft) to CrossSectionSetHistory collection
   await insert_edge(
     "CrossSectionSetHistory",
     `CrossSectionSet/${keyOfDraft}`,
     `CrossSectionSet/${key}`
   );
-  // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
+  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/src/ScatteringCrossSection/queries.ts.
   return keyOfDraft;
 }
 
@@ -485,6 +496,8 @@ async function updateDraftSet(
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
 
+  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/src/ScatteringCrossSection/queries.ts.
+  // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     const cs_id = await insert_cs_with_dict(
       cs,
@@ -492,6 +505,36 @@ async function updateDraftSet(
       reference_ids,
       organization.id
     );
+    // Make cross sections part of set by adding to IsPartOf collection
     await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
   }
+}
+
+/**
+ * Finds all previous versions of set with key
+ */
+export async function historyOfSet(key: string) {
+  const cursor: ArrayCursor<VersionInfo & {_key: string}> = await db.query(aql`
+    FOR css IN CrossSectionSet
+      FILTER css._key == ${key}
+      FOR prev IN 0..9999999 OUTBOUND css CrossSectionSetHistory
+        RETURN MERGE({_key: prev._key}, prev.versionInfo)
+  `);
+  return await cursor.all();
+}
+
+/**
+ * Find published/retracted css of archived version
+ */
+export async function activeSetOfArchivedSet(key: string) {
+  // TODO use query
+  const cursor: ArrayCursor<string> = await db.query(aql`
+  FOR css IN CrossSectionSet
+    FILTER css._key == ${key}
+    FOR next IN 0..9999999 INBOUND css CrossSectionSetHistory
+      FILTER ['published' ,'retracted'] ANY == next.versionInfo.status
+      LIMIT 1
+      RETURN next
+  `);
+  return await cursor.all();
 }

@@ -3,9 +3,9 @@ import { CSParameters } from "../types";
 import { CSStorage } from "./data_types";
 
 export type CrossSection = {
-  reaction: string;
+  reaction: string; // A key in Reaction collection
   parameters?: CSParameters;
   threshold: number;
-  organization: string;
+  organization: string; // A key in Organization collection
   versionInfo: VersionInfo;
 } & CSStorage;

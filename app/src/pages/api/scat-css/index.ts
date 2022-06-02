@@ -12,6 +12,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         try {
             const body = JSON.parse(req.body)
             if (validate(body)) {
+                // Add to CrossSectionSet with status=='draft' and version=='1'
                 const id = await insert_input_set(body, 'draft')
                 res.json({id})
             } else {

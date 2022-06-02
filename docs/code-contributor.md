@@ -165,3 +165,57 @@ Possible options see https://learning-notes.mistermicheels.com/javascript/typesc
 
 In Visual Studio Code you can debug the server, client or fullstack by using the `/.vscode/launcher.json` file.
 See [NextJS debugging docs](https://nextjs.org/docs/advanced-features/debugging#debugging-with-vs-code) and [VS Code docs](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) for more info.
+
+## Database diagram
+
+The following diagram shows all document and edge collections.
+
+> The columns mentioned are for illustration.
+> Each document collection has a JSON schema (defined in /app/src/**/schema.ts) which defines the shape of each document inserted/updated.
+
+```mermaid
+erDiagram
+    User {
+        string email
+    }
+    Organization {
+        string name
+    }
+    CrossSectionSet {
+        string name
+        string isComplete "Self consistent set which can be used in calculations"
+        string organization FK
+        string status "draft | published | archived | retracted"
+        string version
+        string commitMessage
+    }
+    CrossSection {
+        string reaction FK
+        string data
+        string organization FK
+        string status "draft | published | archived | retracted"
+        string version
+        string commitMessage
+    }
+    User ||--o{ MemberOf: from
+    MemberOf |o--|{ Organization: to
+    Organization ||--o{ CrossSectionSet: Provides
+    CrossSectionSet ||--|{ CrossSectionSetHistory: fromFuture
+    CrossSectionSet ||--|{ CrossSectionSetHistory: toPast
+    CrossSection ||--|{ IsPartOf: from
+    IsPartOf }|--|| CrossSectionSet: to
+    Organization ||--o{ CrossSection: Provides
+    CrossSection ||--|{ CrossSectionHistory: fromFuture
+    CrossSection ||--|{ CrossSectionHistory: toPast
+    Reference ||--|{ References: to
+    References }|--|| CrossSection: from
+    Reaction ||--|{ Produces: from
+    Produces }|--|| State: to
+    Reaction ||--|{ Consumes: from
+    Consumes }|--|| State: to
+    State |o--|{ HasDirectSubstate: from
+    HasDirectSubstate ||--|{ State: to
+    Reaction }|--|| CrossSection: reaction
+```
+
+The diagram can be edited on https://mermaid.live/ by copying the code block text.

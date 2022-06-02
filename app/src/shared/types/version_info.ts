@@ -1,5 +1,10 @@
 
-
+/**
+ * Valid transitions:
+ * * published
+ * * draft -> published + published -> archived (draft of published set gets published and published set gets archived)
+ * * published -> retracted
+ */
 export type Status = 'draft' | 'published' | 'archived' | 'retracted'
 
 // Used in database collection to store version info about document

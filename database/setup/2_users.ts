@@ -44,6 +44,7 @@ async function createOrganizationCollection() {
 }
 
 async function createMemberOfCollection() {
+    // Stores which Users are members of which Organization
     const collection = db.collection('MemberOf')
     if ((await collection.exists())) {
         console.log('MemberOf collection already exists')
