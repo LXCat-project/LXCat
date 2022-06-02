@@ -72,7 +72,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
         },
         async deleteUser(userId) {
             await db.query(aql`
-                DELETE { _key: ${userId}} IN users
+                REMOVE { _key: ${userId} } IN users
             `)
         },
         async linkAccount(data) {

@@ -1,8 +1,15 @@
 import 'dotenv/config'
 import { db } from '../../app/src/db'
-import { UserWithAccountSessionInDb, UserWithAccountSessionInDbAsJsonSchema } from '../../app/src/auth/schema'
+import { OrganizationAsJsonSchema, UserWithAccountSessionInDb, UserWithAccountSessionInDbAsJsonSchema } from '../../app/src/auth/schema'
+import { CollectionType } from 'arangojs/collection'
 
 export default async function() {
+    await createUserCollection()
+    await createOrganizationCollection()
+    await createMemberOfCollection()
+}
+
+async function createUserCollection() {
     const users = db.collection<UserWithAccountSessionInDb>('users')
     if ((await users.exists())) {
         console.log('Users collection already exists')
@@ -19,4 +26,30 @@ export default async function() {
         users.ensureIndex({ type: "persistent", fields: ["session[*].sessionToken"], unique: true })
     ])
     console.log('Users collection created')
+}
+
+async function createOrganizationCollection() {
+    const organizations = db.collection<UserWithAccountSessionInDb>('Organization')
+    if ((await organizations.exists())) {
+        console.log('Organization collection already exists')
+        return;
+    }
+    await organizations.create({
+        schema: {
+            rule: OrganizationAsJsonSchema
+        }
+    })
+    await organizations.ensureIndex({ type: "persistent", fields: ["name"], unique: true })
+    console.log('Organization collection created')
+}
+
+async function createMemberOfCollection() {
+    // Stores which Users are members of which Organization
+    const collection = db.collection('MemberOf')
+    if ((await collection.exists())) {
+        console.log('MemberOf collection already exists')
+        return;
+    }
+    await collection.create({ type: CollectionType.EDGE_COLLECTION })
+    console.log('MemberOf collection created')
 }

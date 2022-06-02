@@ -70,3 +70,11 @@ export const UserWithAccountSessionInDb = User.extend({
 export type UserWithAccountSessionInDb = z.infer<typeof UserWithAccountSessionInDb>
 
 export const UserWithAccountSessionInDbAsJsonSchema = zodToJsonSchema(UserWithAccountSessionInDb)
+
+export const Organization = z.object({
+    name: z.string()
+})
+
+export type Organization = z.infer<typeof Organization>
+
+export const OrganizationAsJsonSchema = zodToJsonSchema(Organization)

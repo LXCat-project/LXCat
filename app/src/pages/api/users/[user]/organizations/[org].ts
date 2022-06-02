@@ -1,17 +1,16 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { toggleRole } from "../../../../../auth/queries";
 import { AuthRequest, hasAdminRole, hasSession } from "../../../../../auth/middleware";
-import { Role } from "../../../../../auth/schema";
+import { makeMember } from "../../../../../auth/queries";
 
 
 const handler = nc<AuthRequest, NextApiResponse>()
     .use(hasSession)
     .use(hasAdminRole)
     .post(async (req, res) => {
-        const {user: userId, role } = req.query
-        if (typeof userId === 'string') {
-            const user = await toggleRole(userId, Role.parse(role))
+        const {user: userId, org: orgId } = req.query
+        if (typeof userId === 'string' && typeof orgId === 'string') {
+            const user = await makeMember(userId, orgId)
             return res.json(user)
         }
     })
