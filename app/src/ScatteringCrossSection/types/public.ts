@@ -9,7 +9,7 @@ export interface CrossSectionHeading {
 	isPartOf: CrossSectionSet
 	reaction: Reaction<State>
 	reference: Reference[]
-	// TODO add CrossSection.threshold?
+	// TODO add CrossSection.threshold? Is it useful when searching for a section?
 }
 
 export type CrossSectionItem = {

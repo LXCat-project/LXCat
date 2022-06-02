@@ -12,9 +12,8 @@ interface Props {
 const ScatteringCrossSectionPage: NextPage<Props> = ({section}) => {
     return (
         <Layout title={`Scattering Cross Section of TODO`}>
-            <TermsOfUseCheck references={section.reference}>
-                <Item {...section}></Item>
-            </TermsOfUseCheck>
+            <TermsOfUseCheck references={section.reference}/>
+            <Item {...section}></Item>
         </Layout>
 
     )

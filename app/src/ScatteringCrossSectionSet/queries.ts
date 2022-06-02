@@ -15,7 +15,7 @@ import { CrossSectionSetInput } from "./types";
 import { CrossSectionSet } from "./types/collection";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "./types/public";
 
-// TODO this file is becoming too big split into more files like queries/read.ts + queries/write.ts
+// TODO this file is becoming big split into more files like queries/public.ts + queries/read_author.ts  + queries/write_author.ts
 // also some queries have duplication which could be de-duped
 
 export async function insert_input_set(
@@ -351,7 +351,7 @@ export async function byOwnerAndId(email: string, id: string) {
 }
 
 export async function publish(key: string) {
-  // TODO Publishing db calls should be done in transaction
+  // TODO Publishing db calls should be done in a single transaction
   // TODO when key has a published version then that old version should be archived aka Change status of current published section to archived
   // TODO For each changed/added cross section perform publishing of cross section
   // Change status of draft section to published
@@ -419,7 +419,8 @@ export async function deleteSet(key: string, message: string) {
             RETURN {id: css._key}
     `);
     return await cursor.next();
-    // TODO Retract selected cross section
+    // TODO Retract involved cross sections,
+    // TODO any other set which had those involved cross sections should also be altered somehow?
   } else {
     throw Error("Can not delete set due to invalid status");
   }
@@ -454,7 +455,7 @@ async function createDraftSet(
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
-  // TODO perform insert_input_set+insert_edge inside transaction
+  // TODO perform insert_input_set+insert_edge inside single transaction
   const keyOfDraft = await insert_input_set(
     set,
     newStatus,
@@ -527,7 +528,7 @@ export async function historyOfSet(key: string) {
  * Find published/retracted css of archived version
  */
 export async function activeSetOfArchivedSet(key: string) {
-  // TODO use query
+  // TODO use query on some page
   const cursor: ArrayCursor<string> = await db.query(aql`
   FOR css IN CrossSectionSet
     FILTER css._key == ${key}

@@ -8,7 +8,7 @@ import {
 } from "../../../app/src/ScatteringCrossSectionSet/queries";
 
 export default async function () {
-  // TODO add sections, which have published and draft statuses
+  // TODO add set which has sections that have published and draft statuses
   const keycss1 = await insert_input_set(
     {
       complete: true,

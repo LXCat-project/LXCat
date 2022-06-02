@@ -13,7 +13,7 @@ interface Props {
 
 const AdminUsers: NextPage<Props> = ({ me, users: initalUsers, organizations }) => {
     const [users, setUsers] = useState(initalUsers)
-    // TODO move updateRole + deleteUser to client.ts
+    // TODO move functions that to API endpoints to client.ts
     const updateRole = async (user: UserFromDB, role: Role) => {
         const url = `/api/users/${user._key}/roles/${role}`
         const res = await fetch(url, {

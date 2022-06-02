@@ -36,7 +36,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
             <div>Complete: {set.complete ? 'Yes' : 'No'}</div>
             <ul>
                 <li><a href={`/api/scat-css/${set.id}`} target="_blank" rel="noreferrer">Download JSON format</a></li>
-                <li><a href="TODO" target="_blank" rel="noreferrer">Download Bolsig+ format</a></li>
+                {/* TODO implement API endpoint for Bolsig+ format download */}
+                <li><a href="/api/scat-css/${set.id}.txt" target="_blank" rel="noreferrer">Download Bolsig+ format</a></li>
             </ul>
             <h2>Processes</h2>
             <ol>

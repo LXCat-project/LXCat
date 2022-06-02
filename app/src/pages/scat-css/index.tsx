@@ -37,7 +37,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         field: 'name',
         dir: 'ASC'
     }
-    // TODO make adjustable by user
     const paging = {
         offset: 0,
         count: Number.MAX_SAFE_INTEGER

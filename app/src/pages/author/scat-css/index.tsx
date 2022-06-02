@@ -44,7 +44,7 @@ const Admin: NextPage<Props> = ({ items }) => {
                       :
                       <>{item.name}</>
                   }
-                  {/* TODO link to preview a draft*/}
+                  {/* TODO link to preview a draft + create preview page reusing components from public page */}
                 </td>
                 <td>{item.versionInfo.status}</td>
                 <td>{item.versionInfo.createdOn}</td>
@@ -87,7 +87,7 @@ const Admin: NextPage<Props> = ({ items }) => {
         selectedSetId={selectedSetId}
         onClose={() => {
           // TODO give user feed back
-          // TODO update list
+          // TODO update list, now page refresh is needed
           setOpenRetractDialog(false)
         }}
       />
@@ -96,7 +96,7 @@ const Admin: NextPage<Props> = ({ items }) => {
         selectedSetId={selectedSetId}
         onClose={() => {
           // TODO give user feed back
-          // TODO update list
+          // TODO update list, now page refresh is needed
           setOpenDeleteDialog(false)
         }}
       />
@@ -105,7 +105,7 @@ const Admin: NextPage<Props> = ({ items }) => {
         selectedSetId={selectedSetId}
         onClose={() => {
           // TODO give user feed back
-          // TODO update list
+          // TODO update list, now page refresh is needed
           setOpenPublishDialog(false)
         }}
       />
