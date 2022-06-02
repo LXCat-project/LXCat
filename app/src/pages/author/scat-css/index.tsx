@@ -32,6 +32,7 @@ const Admin: NextPage<Props> = ({ items }) => {
           </tr>
         </thead>
         <tbody>
+          {/* TODO a set can be published and a new version of it can be in draft. Should make clear to user which set is published and in draft. */}
           {
             items.map(item => (
               <tr key={item.name}>

@@ -372,7 +372,7 @@ export async function isOwner(key: string, email: string) {
   return cursor.hasNext;
 }
 
-async function getVersionInfo(key: string) {
+export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
@@ -423,23 +423,71 @@ export async function updateSet(
   }
   const { status, version } = info;
   if (status === "draft") {
-    // TODO perform updates on existing draft
+    await updateDraftSet(key, set, info, message);
     return key;
   } else if (status === "published") {
-    // create a draft
-    const newStatus: Status = "draft";
-    const newVersion = `${parseInt(version) + 1}`;
-    // TODO perform insert_input_set+insert_edge inside transaction
-    const keyOfDraft = await insert_input_set(
-      set,
-      newStatus,
-      newVersion,
-      message
-    );
-    await insert_edge("CrossSectionSetHistory", keyOfDraft, key);
-    return keyOfDraft;
-    // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
+    return await createDraftSet(version, set, message, key);
   } else {
     throw Error("Can not update set due to invalid status");
+  }
+}
+async function createDraftSet(
+  version: string,
+  set: CrossSectionSetInput,
+  message: string,
+  key: string
+) {
+  const newStatus: Status = "draft";
+  const newVersion = `${parseInt(version) + 1}`;
+  // TODO perform insert_input_set+insert_edge inside transaction
+  const keyOfDraft = await insert_input_set(
+    set,
+    newStatus,
+    newVersion,
+    message
+  );
+  await insert_edge(
+    "CrossSectionSetHistory",
+    `CrossSectionSet/${keyOfDraft}`,
+    `CrossSectionSet/${key}`
+  );
+  // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
+  return keyOfDraft;
+}
+
+async function updateDraftSet(
+  key: string,
+  dataset: CrossSectionSetInput,
+  versionInfo: VersionInfo,
+  message: string
+) {
+  debugger
+  const organization = await upsert_document("Organization", {
+    name: dataset.contributor,
+  });
+  versionInfo.commitMessage = message
+  versionInfo.createdOn = now()
+  const set = {
+    name: dataset.name,
+    description: dataset.description,
+    complete: dataset.complete,
+    organization: organization.id,
+    versionInfo,
+  }
+  await db.query(aql`
+    REPLACE { _key: ${key} } WITH ${set} IN CrossSectionSet
+  `)
+
+  const state_ids = await insert_state_dict(dataset.states);
+  const reference_ids = await insert_reference_dict(dataset.references);
+
+  for (const cs of dataset.processes) {
+    const cs_id = await insert_cs_with_dict(
+      cs,
+      state_ids,
+      reference_ids,
+      organization.id
+    );
+    await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
   }
 }

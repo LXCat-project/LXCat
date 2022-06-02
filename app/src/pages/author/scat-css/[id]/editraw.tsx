@@ -3,16 +3,17 @@ import { Layout } from '../../../../shared/Layout';
 import type { ErrorObject } from 'ajv'
 import { useState, MouseEvent } from 'react';
 import { mustBeAuthor } from '../../../../auth/middleware';
-import { byOwnerAndId, CrossSectionSetInputOwned } from '../../../../ScatteringCrossSectionSet/queries';
+import { byOwnerAndId, CrossSectionSetInputOwned, getVersionInfo } from '../../../../ScatteringCrossSectionSet/queries';
 
 interface Props {
     section: CrossSectionSetInputOwned
     sectionKey: string
+    commitMessage: string
 }
 
-const EditRawCrossSectionSetPage: NextPage<Props> = ({ section, sectionKey }) => {
+const EditRawCrossSectionSetPage: NextPage<Props> = ({ section, sectionKey, commitMessage }) => {
     const [doc, setDoc] = useState(JSON.stringify(section, undefined, 4))
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState(commitMessage)
     const [errors, setErrors] = useState<ErrorObject[]>([])
     const [id, setId] = useState('')
     const uploadCS = async (event: MouseEvent<HTMLButtonElement>) => {
@@ -91,6 +92,8 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
     const me = await mustBeAuthor(context)
     const id = context.params?.id!
     const section = await byOwnerAndId(me.email, id)
+    const info = await getVersionInfo(id)
+    const commitMessage = info !== undefined && info.commitMessage ? info.commitMessage : ''
     if (section === undefined) {
         return {
             // TODO should return notFound when id does not exist
@@ -102,7 +105,8 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
     return {
         props: {
             section,
-            sectionKey: id
+            sectionKey: id,
+            commitMessage
         }
     }
 }
