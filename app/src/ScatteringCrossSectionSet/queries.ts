@@ -15,6 +15,9 @@ import { CrossSectionSetInput } from "./types";
 import { CrossSectionSet } from "./types/collection";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "./types/public";
 
+// TODO this file is becoming too big split into more files like queries/read.ts + queries/write.ts
+// also some queries have duplication which could be de-duped
+
 export async function insert_input_set(
   dataset: CrossSectionSetInput,
   status: Status = "published",
@@ -344,6 +347,8 @@ export async function byOwnerAndId(email: string, id: string) {
 }
 
 export async function publish(key: string) {
+  // TODO when key has a published version then that old version should be archived
+  // TODO perform steps at /database/seeds/with-owners-and-versions/actions.md
   const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
@@ -461,22 +466,21 @@ async function updateDraftSet(
   versionInfo: VersionInfo,
   message: string
 ) {
-  debugger
   const organization = await upsert_document("Organization", {
     name: dataset.contributor,
   });
-  versionInfo.commitMessage = message
-  versionInfo.createdOn = now()
+  versionInfo.commitMessage = message;
+  versionInfo.createdOn = now();
   const set = {
     name: dataset.name,
     description: dataset.description,
     complete: dataset.complete,
     organization: organization.id,
     versionInfo,
-  }
+  };
   await db.query(aql`
     REPLACE { _key: ${key} } WITH ${set} IN CrossSectionSet
-  `)
+  `);
 
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
