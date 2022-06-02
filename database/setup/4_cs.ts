@@ -25,7 +25,7 @@ async function createCrossSectionSetCollection() {
     },
   });
   await Promise.all([
-    collection.ensureIndex({ type: "persistent", fields: ["name"], unique: true }),
+    collection.ensureIndex({ type: "persistent", fields: ["name"] }),
     collection.ensureIndex({ type: "persistent", fields: ["organization"] }),
     collection.ensureIndex({ type: "persistent", fields: ["versionInfo.status"] }),
   ])
