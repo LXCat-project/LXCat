@@ -25,6 +25,12 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
     return (
         <Layout title={`Scattering Cross Section set - ${set.name}`}>
             <h1>{set.name}</h1>
+            {set.versionInfo.status === 'retracted' && (
+                <div style={{backgroundColor: 'red', color: 'white', padding: 16 }}>
+                    <h2>This set has been retracted. Please do not use.</h2>
+                    <p>{set.versionInfo.retractMessage}</p>
+                </div>
+            )}
             <div>{set.description}</div>
             <div>Contributed by {set.contributor}</div>
             <div>Complete: {set.complete ? 'Yes' : 'No'}</div>

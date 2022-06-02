@@ -35,7 +35,16 @@ const Admin: NextPage<Props> = ({ items }) => {
           {
             items.map(item => (
               <tr key={item.name}>
-                <td>{item.name}</td>
+                <td>
+                  {
+                    (item.versionInfo.status === 'published' || item.versionInfo.status === 'retracted')
+                      ?
+                      <Link href={`/scat-css/${item._key}`}><a>{item.name}</a></Link>
+                      :
+                      <>{item.name}</>
+                  }
+                  {/* TODO link to preview a draft*/}
+                </td>
                 <td>{item.versionInfo.status}</td>
                 <td>{item.versionInfo.createdOn}</td>
                 <td>{item.versionInfo.version}</td>
@@ -43,7 +52,6 @@ const Admin: NextPage<Props> = ({ items }) => {
                   {item.versionInfo.status === 'draft' && (
                     <>
                       <Link href={`/author/scat-css/${item._key}/editraw`}><a><button>Edit</button></a></Link>
-                      {/* TODO add preview link */}
                       <button onClick={() => {
                         setselectedSetId(item._key)
                         setOpenDeleteDialog(true)
@@ -77,27 +85,27 @@ const Admin: NextPage<Props> = ({ items }) => {
         isOpened={openRestractDialog}
         selectedSetId={selectedSetId}
         onClose={() => {
-            // TODO give user feed back
-            // TODO update list
-            setOpenRetractDialog(false)
+          // TODO give user feed back
+          // TODO update list
+          setOpenRetractDialog(false)
         }}
       />
       <DeleteDialog
         isOpened={openDeleteDialog}
         selectedSetId={selectedSetId}
         onClose={() => {
-            // TODO give user feed back
-            // TODO update list
-            setOpenDeleteDialog(false)
+          // TODO give user feed back
+          // TODO update list
+          setOpenDeleteDialog(false)
         }}
       />
       <PublishDialog
         isOpened={openPublishDialog}
         selectedSetId={selectedSetId}
         onClose={() => {
-            // TODO give user feed back
-            // TODO update list
-            setOpenPublishDialog(false)
+          // TODO give user feed back
+          // TODO update list
+          setOpenPublishDialog(false)
         }}
       />
     </Layout>
