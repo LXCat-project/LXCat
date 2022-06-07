@@ -5,7 +5,7 @@ import { createGenerator, Config } from "ts-json-schema-generator";
 export function generateJsonSchemaFromType(path: string, typeName: string) {
   // TODO ts-json-schema-generator needs tsconfig, depending on deployment it can be somewhere,
   // code below is very hacky and should be improved
-  const tsconfig = join(__dirname, "..", "..", "tsconfig.json")
+  const tsconfig = join(__dirname, "..", "..", "tsconfig.json");
   const config: Config = {
     tsconfig,
     expose: "none",
@@ -31,9 +31,10 @@ export const ReferenceIndbAsJsonSchema = generateJsonSchemaFromType(
   "Reference"
 );
 
-// TODO fix LogicError: Unexpected key type "undefined" for type "{ [key in T]?: never }" (expected "UnionType" or "StringType")
-// export const StateIndbAsJsonSchema = generateJsonSchemaFromType(collectionsPath, 'State')
-export const StateIndbAsJsonSchema = { type: "object" };
+export const StateIndbAsJsonSchema = generateJsonSchemaFromType(
+  collectionsPath,
+  "State"
+);
 
 export const ReactionIndbAsJsonSchema = generateJsonSchemaFromType(
   collectionsPath,
