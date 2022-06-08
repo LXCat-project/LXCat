@@ -1,3 +1,5 @@
+.direnv
 .env
+.envrc
 .turbo
 node_modules
