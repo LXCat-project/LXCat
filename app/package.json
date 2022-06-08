@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write src/",
     "schemas": "ts-node --skip-project src/generated/main.ts"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "@types/unist": "^2.0.6",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",
+    "prettier": "^2.6.2",
     "typescript": "4.6.2"
   }
 }
