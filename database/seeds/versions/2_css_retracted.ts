@@ -5,7 +5,6 @@ import {
   publish,
 } from "../../../app/src/ScatteringCrossSectionSet/queries";
 
-
 export default async function () {
   const keycss1 = await insert_input_set(
     {
@@ -26,5 +25,5 @@ export default async function () {
 
   await deleteSet(keycss1, "I forgot to put in cross sections");
 
-  console.log(`Created retracted set with id ${keycss1}`)
+  console.log(`Created retracted set with id ${keycss1}`);
 }

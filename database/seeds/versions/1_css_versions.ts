@@ -48,7 +48,7 @@ export default async function () {
 
   const keycss4 = await updateSet(keycss3, css4!, "Third edit");
 
-  const history = await historyOfSet(keycss4)
+  const history = await historyOfSet(keycss4);
 
   console.log("Created versioned CrossSectionSet: ", history);
 }

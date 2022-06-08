@@ -1,75 +1,66 @@
 {
-    "complete": true,
-    "contributor": "Some organization",
-    "name": "Some name",
-    "description": "Some description",
-    "references": {
-        "main": {
-            "title": "Some main reference title",
-            "type": "article",
-            "id": "SomeMainId",
-            "DOI": "10.1109/5.771073",
-            "URL": "https://doi.org/10.1109/5.771073",
-            "author": [{
-                "given": "MyGivenName",
-                "family": "MyFamilyName"
-            }],
-            "container-title": "SomeJournal"
-        }
-    },
-    "states": {
-        "e": {
-            "particle": "e",
-            "charge": -1
-        },
-        "Unobtainium": {
-            "particle": "Uo",
-            "charge": 0
-        },
-        "UnobtainiumCharged": {
-            "particle": "Uo",
-            "charge": -42
-        }
-    },
-    "processes": [
+  "complete": true,
+  "contributor": "Some organization",
+  "name": "Some name",
+  "description": "Some description",
+  "references": {
+    "main": {
+      "title": "Some main reference title",
+      "type": "article",
+      "id": "SomeMainId",
+      "DOI": "10.1109/5.771073",
+      "URL": "https://doi.org/10.1109/5.771073",
+      "author": [
         {
-            "reaction": {
-                "lhs": [
-                    {
-                        "count": 13,
-                        "state": "e"
-                    },
-                    {
-                        "count": 1,
-                        "state": "Unobtainium"
-                    }
-                ],
-                "rhs": [
-                    {
-                        "count": 1,
-                        "state": "UnobtainiumCharged"
-                    }
-                ],
-                "reversible": false,
-                "type_tags": []
-            },
-            "type": "LUT",
-            "labels": [
-                "Energy",
-                "Cross Section"
-            ],
-            "units": [
-                "eV",
-                "m^2"
-            ],
-            "threshold": 42,
-            "data": [
-                [
-                    0,
-                    3.14e-20
-                ]
-            ],
-            "reference": ["main"]
+          "given": "MyGivenName",
+          "family": "MyFamilyName"
         }
-    ]
+      ],
+      "container-title": "SomeJournal"
+    }
+  },
+  "states": {
+    "e": {
+      "particle": "e",
+      "charge": -1
+    },
+    "Unobtainium": {
+      "particle": "Uo",
+      "charge": 0
+    },
+    "UnobtainiumCharged": {
+      "particle": "Uo",
+      "charge": -42
+    }
+  },
+  "processes": [
+    {
+      "reaction": {
+        "lhs": [
+          {
+            "count": 13,
+            "state": "e"
+          },
+          {
+            "count": 1,
+            "state": "Unobtainium"
+          }
+        ],
+        "rhs": [
+          {
+            "count": 1,
+            "state": "UnobtainiumCharged"
+          }
+        ],
+        "reversible": false,
+        "type_tags": []
+      },
+      "type": "LUT",
+      "labels": ["Energy", "Cross Section"],
+      "units": ["eV", "m^2"],
+      "threshold": 42,
+      "data": [[0, 3.14e-20]],
+      "reference": ["main"]
+    }
+  ]
 }

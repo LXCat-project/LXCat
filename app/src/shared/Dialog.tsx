@@ -1,14 +1,19 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 
 interface Props {
-  isOpened: boolean,
-  onSubmit: (returnValue: string) => void,
-  children: React.ReactNode,
-  className?: string
+  isOpened: boolean;
+  onSubmit: (returnValue: string) => void;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export const Dialog = ({ isOpened, onSubmit: onsubmit, children, className }: Props) => {
-  const ref: any = useRef(null)
+export const Dialog = ({
+  isOpened,
+  onSubmit: onsubmit,
+  children,
+  className,
+}: Props) => {
+  const ref: any = useRef(null);
   useEffect(() => {
     if (isOpened) {
       ref.current?.showModal();
@@ -19,11 +24,11 @@ export const Dialog = ({ isOpened, onSubmit: onsubmit, children, className }: Pr
   return (
     <dialog
       ref={ref}
-      onCancel={() => onsubmit('cancel')}
+      onCancel={() => onsubmit("cancel")}
       onClose={(e) => onsubmit((e.target as any).returnValue)}
       className={className}
     >
       {children}
     </dialog>
-  )
-}
+  );
+};

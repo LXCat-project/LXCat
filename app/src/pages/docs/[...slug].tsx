@@ -17,7 +17,7 @@ const components = {
 
 const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
   return (
-    <Layout title={`Docs - ${slug.join('/')}`}>
+    <Layout title={`Docs - ${slug.join("/")}`}>
       <MDXRemote {...mdxSource} components={components} />
     </Layout>
   );
@@ -27,11 +27,11 @@ export default MarkdownPage;
 
 export async function getStaticPaths() {
   const files = await listDocFiles();
-  const paths = files.map(slug => ({
+  const paths = files.map((slug) => ({
     params: {
-      slug
-    }
-  }))
+      slug,
+    },
+  }));
   return {
     paths,
     fallback: false,
@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps<Props, { slug: string[] }> = async (
 ) => {
   const slug = context.params!.slug;
   try {
-    const mdxSource = await md2mdx(slug)
+    const mdxSource = await md2mdx(slug);
     return {
       props: {
         slug,

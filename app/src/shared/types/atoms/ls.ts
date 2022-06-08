@@ -2,7 +2,6 @@ import { AtomicGenerator, AtomicDBGenerator } from "../generators";
 import { ConfigTerm, TotalAngularSpecifier } from "./common";
 import { CouplingScheme } from "./coupling_scheme";
 
-
 export interface LSTermImpl {
   L: number;
   S: number;

@@ -5,9 +5,7 @@ import {
   CrossSectionIndbAsJsonSchema,
   Relation,
 } from "../../app/src/ScatteringCrossSection/schema";
-import {
-  CrossSectionSetIndbAsJsonSchema,
-} from "../../app/src/ScatteringCrossSectionSet/schema";
+import { CrossSectionSetIndbAsJsonSchema } from "../../app/src/ScatteringCrossSectionSet/schema";
 
 export default async function () {
   await createCrossSectionSetCollection();
@@ -27,8 +25,11 @@ async function createCrossSectionSetCollection() {
   await Promise.all([
     collection.ensureIndex({ type: "persistent", fields: ["name"] }),
     collection.ensureIndex({ type: "persistent", fields: ["organization"] }),
-    collection.ensureIndex({ type: "persistent", fields: ["versionInfo.status"] }),
-  ])
+    collection.ensureIndex({
+      type: "persistent",
+      fields: ["versionInfo.status"],
+    }),
+  ]);
   console.log("CrossSectionSet collection created");
 }
 
@@ -42,8 +43,11 @@ async function createCrossSectionCollection() {
   await Promise.all([
     collection.ensureIndex({ type: "persistent", fields: ["reaction"] }),
     collection.ensureIndex({ type: "persistent", fields: ["organization"] }),
-    collection.ensureIndex({ type: "persistent", fields: ["versionInfo.status"] }),
-  ])
+    collection.ensureIndex({
+      type: "persistent",
+      fields: ["versionInfo.status"],
+    }),
+  ]);
   console.log("CrossSection collection created");
 }
 
@@ -55,21 +59,21 @@ async function createEdgeCollections() {
 }
 
 async function createCrossSectionHistoryCollection() {
-  const collection = db.collection('CrossSectionHistory')
-  if ((await collection.exists())) {
-      console.log('CrossSectionHistory collection already exists')
-      return;
+  const collection = db.collection("CrossSectionHistory");
+  if (await collection.exists()) {
+    console.log("CrossSectionHistory collection already exists");
+    return;
   }
-  await collection.create({ type: CollectionType.EDGE_COLLECTION })
-  console.log('CrossSectionHistory collection created')
+  await collection.create({ type: CollectionType.EDGE_COLLECTION });
+  console.log("CrossSectionHistory collection created");
 }
 
 async function createCrossSectionSetHistoryCollection() {
-  const collection = db.collection('CrossSectionSetHistory')
-  if ((await collection.exists())) {
-      console.log('CrossSectionSetHistory collection already exists')
-      return;
+  const collection = db.collection("CrossSectionSetHistory");
+  if (await collection.exists()) {
+    console.log("CrossSectionSetHistory collection already exists");
+    return;
   }
-  await collection.create({ type: CollectionType.EDGE_COLLECTION })
-  console.log('CrossSectionSetHistory collection created')
+  await collection.create({ type: CollectionType.EDGE_COLLECTION });
+  console.log("CrossSectionSetHistory collection created");
 }

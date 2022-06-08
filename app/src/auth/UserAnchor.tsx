@@ -1,24 +1,30 @@
-import { useSession, signIn, signOut } from "next-auth/react"
-import Link from "next/link"
-import Image from 'next/image'
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
 
 export function UserAnchor() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   if (session) {
-    const user = session.user
+    const user = session.user;
     return (
       <>
-        <Link href='/profile'>
+        <Link href="/profile">
           <a>
-            <Image src={user.image!} title={`Logged in ${user.name}`} alt="Picture of logged in user" width={40} height={40}/>
-            </a>
+            <Image
+              src={user.image!}
+              title={`Logged in ${user.name}`}
+              alt="Picture of logged in user"
+              width={40}
+              height={40}
+            />
+          </a>
         </Link>
       </>
-    )
+    );
   }
   return (
     <>
       <button onClick={() => signIn()}>Sign in</button>
     </>
-  )
+  );
 }

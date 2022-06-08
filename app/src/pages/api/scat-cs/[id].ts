@@ -1,19 +1,22 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { AuthRequest, hasDeveloperRole, hasSessionOrAPIToken } from "../../../auth/middleware";
+import {
+  AuthRequest,
+  hasDeveloperRole,
+  hasSessionOrAPIToken,
+} from "../../../auth/middleware";
 import { byId } from "../../../ScatteringCrossSection/queries";
 
-
 const handler = nc<AuthRequest, NextApiResponse>()
-    .use(hasSessionOrAPIToken)
-    .use(hasDeveloperRole)
-    .get(async (req, res) => {
-        const {id} = req.query
-        if (typeof id === 'string') {
-            const data = await byId(id)
-            res.json(data)
-        }
-        throw Error('Unable to handle request')
-    })
+  .use(hasSessionOrAPIToken)
+  .use(hasDeveloperRole)
+  .get(async (req, res) => {
+    const { id } = req.query;
+    if (typeof id === "string") {
+      const data = await byId(id);
+      res.json(data);
+    }
+    throw Error("Unable to handle request");
+  });
 
-export default handler
+export default handler;

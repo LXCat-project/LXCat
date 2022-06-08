@@ -1,107 +1,98 @@
 {
-    "complete": false,
-    "contributor": "Some other organization",
-    "name": "Some other name",
-    "description": "Some other description",
-    "references": {
-        "main2": {
-            "title": "Some other main reference title",
-            "type": "article",
-            "id": "SomeOtherMainId",
-            "DOI": "10.1109/5.771073",
-            "URL": "https://doi.org/10.1109/5.771073",
-            "author": [{
-                "given": "MyGivenName",
-                "family": "MyFamilyName"
-            }],
-            "container-title": "SomeJournal"
-        }
-    },
-    "states": {
-        "e": {
-            "particle": "e",
-            "charge": -1
-        },
-        "UoV1": {
-            "particle": "Uo",
-            "charge": 0,
-            "type": "HomonuclearDiatom",
-            "electronic": [
-                {
-                    "e": "X",
-                    "Lambda": 0,
-                    "S": 0,
-                    "parity": "g",
-                    "vibrational": [
-                        {
-                            "v": 1
-                        }
-                    ]
-                }
-            ]
-        },
-        "UoV2": {
-            "particle": "Uo",
-            "charge": 0,
-            "type": "HomonuclearDiatom",
-            "electronic": [
-                {
-                    "e": "B",
-                    "Lambda": 0,
-                    "S": 0,
-                    "parity": "u",
-                    "vibrational": [
-                        {
-                            "v": 2
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    "processes": [
+  "complete": false,
+  "contributor": "Some other organization",
+  "name": "Some other name",
+  "description": "Some other description",
+  "references": {
+    "main2": {
+      "title": "Some other main reference title",
+      "type": "article",
+      "id": "SomeOtherMainId",
+      "DOI": "10.1109/5.771073",
+      "URL": "https://doi.org/10.1109/5.771073",
+      "author": [
         {
-            "reaction": {
-                "lhs": [
-                    {
-                        "count": 1,
-                        "state": "e"
-                    },
-                    {
-                        "count": 1,
-                        "state": "UoV1"
-                    }
-                ],
-                "rhs": [
-                    {
-                        "count": 1,
-                        "state": "e"
-                    },
-                    {
-                        "count": 1,
-                        "state": "UoV2"
-                    }
-                ],
-                "type_tags": ["Electronic", "Vibrational"],
-                "reversible": false
-            },
-            "type": "LUT",
-            "labels": [
-                "Energy",
-                "Cross Section"
-            ],
-            "units": [
-                "eV",
-                "m^2"
-            ],
-            "threshold": 13.5,
-            "data": [
-                [
-                    100,
-                    1.61803
-                ]
-            ],
-            "reference": ["main2"]
+          "given": "MyGivenName",
+          "family": "MyFamilyName"
         }
-    ]
+      ],
+      "container-title": "SomeJournal"
+    }
+  },
+  "states": {
+    "e": {
+      "particle": "e",
+      "charge": -1
+    },
+    "UoV1": {
+      "particle": "Uo",
+      "charge": 0,
+      "type": "HomonuclearDiatom",
+      "electronic": [
+        {
+          "e": "X",
+          "Lambda": 0,
+          "S": 0,
+          "parity": "g",
+          "vibrational": [
+            {
+              "v": 1
+            }
+          ]
+        }
+      ]
+    },
+    "UoV2": {
+      "particle": "Uo",
+      "charge": 0,
+      "type": "HomonuclearDiatom",
+      "electronic": [
+        {
+          "e": "B",
+          "Lambda": 0,
+          "S": 0,
+          "parity": "u",
+          "vibrational": [
+            {
+              "v": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "processes": [
+    {
+      "reaction": {
+        "lhs": [
+          {
+            "count": 1,
+            "state": "e"
+          },
+          {
+            "count": 1,
+            "state": "UoV1"
+          }
+        ],
+        "rhs": [
+          {
+            "count": 1,
+            "state": "e"
+          },
+          {
+            "count": 1,
+            "state": "UoV2"
+          }
+        ],
+        "type_tags": ["Electronic", "Vibrational"],
+        "reversible": false
+      },
+      "type": "LUT",
+      "labels": ["Energy", "Cross Section"],
+      "units": ["eV", "m^2"],
+      "threshold": 13.5,
+      "data": [[100, 1.61803]],
+      "reference": ["main2"]
+    }
+  ]
 }

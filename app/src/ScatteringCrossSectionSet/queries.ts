@@ -515,7 +515,8 @@ async function updateDraftSet(
  * Finds all previous versions of set with key
  */
 export async function historyOfSet(key: string) {
-  const cursor: ArrayCursor<VersionInfo & {_key: string}> = await db.query(aql`
+  const cursor: ArrayCursor<VersionInfo & { _key: string }> =
+    await db.query(aql`
     FOR css IN CrossSectionSet
       FILTER css._key == ${key}
       FOR prev IN 0..9999999 OUTBOUND css CrossSectionSetHistory

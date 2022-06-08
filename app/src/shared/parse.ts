@@ -1,7 +1,12 @@
 import { AnyAtom } from "./types/atoms";
 import { ParticleType } from "./types/enumeration";
 import { ExtractE, ExtractV, ExtractR, ExtractAtomic } from "./types/extract";
-import { AtomicDBGenerator, AtomicGenerator, MolecularDBGenerator, MolecularGenerator } from "./types/generators";
+import {
+  AtomicDBGenerator,
+  AtomicGenerator,
+  MolecularDBGenerator,
+  MolecularGenerator,
+} from "./types/generators";
 import { AnyMolecule } from "./types/molecules";
 import { get_particle_type, parsers } from "./parsers";
 import { InState, DBState } from "./types/state";
@@ -22,11 +27,11 @@ export interface ParseAtom<A extends AtomicGenerator<any, string>> {
 }
 
 type AtomParserDict<T extends AtomicGenerator<any, string>> = {
-    [key in T["type"]]: ParseAtom<T>;
-  };
-  type MoleculeParserDict<T extends MolecularGenerator<any, any, any, string>> = {
-    [key in T["type"]]: ParseMolecule<T>;
-  };
+  [key in T["type"]]: ParseAtom<T>;
+};
+type MoleculeParserDict<T extends MolecularGenerator<any, any, any, string>> = {
+  [key in T["type"]]: ParseMolecule<T>;
+};
 
 export type StateParserDict<
   A extends AtomicGenerator<any, string>,
@@ -34,12 +39,12 @@ export type StateParserDict<
 > = AtomParserDict<A> & MoleculeParserDict<M>;
 
 export function parse_charge(charge: number): string {
-    if (charge == 0) return "";
-    if (charge == 1) return "^+";
-    if (charge == -1) return "^-";
+  if (charge == 0) return "";
+  if (charge == 1) return "^+";
+  if (charge == -1) return "^-";
 
-    return "^" + charge + (charge > 1) ? "+" : "-";
-  }
+  return "^" + charge + (charge > 1) ? "+" : "-";
+}
 
 // FIXME: This function is in a weird position (it can be part of the central
 // library). HOW: Add parsers as a function argument and move this to e.g.

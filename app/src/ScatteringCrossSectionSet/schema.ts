@@ -11,4 +11,4 @@ const typesPath = join(__dirname, "types/index.ts");
 export const CrossSectionSetInputAsJsonSchema = generateJsonSchemaFromType(
   typesPath,
   "CrossSectionSetInput"
-)
+);

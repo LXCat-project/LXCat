@@ -12,7 +12,7 @@ a {
 }
 
 a:hover {
-  text-decoration: underline
+  text-decoration: underline;
 }
 
 * {
@@ -20,5 +20,5 @@ a:hover {
 }
 
 .tos::backdrop {
-  background: rgba(0, 0, 0, 0.90);
+  background: rgba(0, 0, 0, 0.9);
 }
