@@ -5,7 +5,7 @@ import { NextAuthOptions } from "next-auth";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "@lxcat/database";
-import { User } from "./schema";
+import { User } from "@lxcat/database/src/auth/schema";
 import logo from "../../public/lxcat.png";
 
 const providers: Provider[] = [];

@@ -1,7 +1,6 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "@lxcat/database";
-import { ArangoAdapter } from "./ArangoAdapter";
 import { Organization, Role, UserInDb } from "./schema";
 
 export const toggleRole = async (
@@ -21,8 +20,7 @@ export const toggleRole = async (
 };
 
 export const dropUser = async (userId: string) => {
-  const adapter = ArangoAdapter(db);
-  await adapter.deleteUser!(userId);
+  await db.query(aql`REMOVE { _key: ${userId} } IN users`);
 };
 
 export interface UserFromDB extends UserInDb {

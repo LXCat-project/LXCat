@@ -1,13 +1,14 @@
 import { aql, Database } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { Adapter, AdapterUser } from "next-auth/adapters";
+import {dropUser as deleteUser} from "@lxcat/database/src/auth/queries";
 import {
   Account,
   Session,
   User,
   UserInDb,
   UserWithAccountSessionInDb,
-} from "./schema";
+} from "@lxcat/database/src/auth/schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
   function toAdapterUser(profile: UserInDb | undefined): AdapterUser | null {
@@ -78,11 +79,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
       const updatedUser = await cursor.next();
       return toAdapterUser(updatedUser)!;
     },
-    async deleteUser(userId) {
-      await db.query(aql`
-                REMOVE { _key: ${userId} } IN users
-            `);
-    },
+    deleteUser,
     async linkAccount(data) {
       const { userId, ...account } = data;
       const prunedAccount = Account.parse(account); // Removes extra keys

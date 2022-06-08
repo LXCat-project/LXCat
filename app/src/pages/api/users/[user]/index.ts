@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { dropUser } from "../../../../auth/queries";
+import { dropUser } from "@lxcat/database/src/auth/queries";
 import {
   AuthRequest,
   hasAdminRole,

@@ -17,7 +17,8 @@
     "drop-database": "ts-node src/drop_database.ts",
     "reload": "npm run drop-database && npm run setup && npm run seed seeds/test",
     "load-css": "ts-node src/load_css.ts",
-    "format": "prettier --write src/ seeds/ setup/"
+    "format": "prettier --write src/ seeds/ setup/",
+    "build": "tsc"
   },
   "dependencies": {
     "arangojs": "^7.7.0",

@@ -1,13 +1,13 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
-import { Role, User } from "../../auth/schema";
+import { Role, User } from "@lxcat/database/src/auth/schema";
 import { useState } from "react";
 import {
   listOrganizations,
   listUsers,
   OrganizationFromDB,
   UserFromDB,
-} from "../../auth/queries";
+} from "@lxcat/database/src/auth/queries";
 import { mustBeAdmin } from "../../auth/middleware";
 
 interface Props {
