@@ -1,0 +1,16 @@
+{
+  "workspaces": [
+    "app",
+    "database",
+    "schema"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "start": "turbo run start"
+  },
+  "devDependencies": {
+    "turbo": "^1.2.16"
+  }
+}
