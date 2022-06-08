@@ -1,5 +1,5 @@
 {
-  "name": "lxcat-ng",
+  "name": "@lxcat/app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
     "schemas": "ts-node --skip-project src/generated/main.ts"
   },
   "dependencies": {
+    "@lxcat/database": "*",
     "arangojs": "^7.7.0",
     "citation-js": "^0.5.7",
     "mermaid": "^9.1.1",

@@ -51,7 +51,7 @@ To get a [ArangoJS Database object](https://arangodb.github.io/arangojs/7.7.0/cl
 
 ```ts
 import 'dotenv/config'
-import { db } from '../../app/src/db'
+import { db } from '../../src/db'
 ```
 
 The code must be wrapped inside an async function which is exported as default:

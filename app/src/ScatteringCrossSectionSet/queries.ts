@@ -1,6 +1,6 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../db";
+import { db } from "@lxcat/database";
 import { insert_cs_with_dict } from "../ScatteringCrossSection/queries";
 import { now } from "../shared/date";
 import {

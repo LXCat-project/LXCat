@@ -1,9 +1,15 @@
 {
-  "name": "lxcat-db-utils",
+  "name": "@lxcat/database",
   "version": "1.0.0",
   "description": "The web application needs an [arangodb](https://arangodb.com/) database to talk to.",
   "author": "Stefan Verhoeven",
   "license": "ISC",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src/**"
+  ],
+  "private": true,
   "scripts": {
     "setup": "ts-node src/seed.ts setup",
     "seed": "ts-node src/seed.ts",

@@ -1,6 +1,6 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../db";
+import { db } from "@lxcat/database";
 import { ArangoAdapter } from "./ArangoAdapter";
 import { Organization, Role, UserInDb } from "./schema";
 

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { aql } from "arangojs";
-import { db } from "../../app/src/db";
+import { db } from "./db";
 import { Role } from "../../app/src/auth/schema";
 
 (async () => {

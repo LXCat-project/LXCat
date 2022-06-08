@@ -4,7 +4,7 @@ import { AtomicGenerator, MolecularGenerator } from "./types/generators";
 import { Reaction } from "./types/reaction";
 import { DBState, InState } from "./types/state";
 import { Dict } from "./types/util";
-import { db } from "../db";
+import { db } from "@lxcat/database";
 
 export async function insert_document(
   collection: string,

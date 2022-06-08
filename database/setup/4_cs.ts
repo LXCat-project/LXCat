@@ -1,6 +1,6 @@
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
-import { db } from "../../app/src/db";
+import { db } from "../src/db";
 import {
   CrossSectionIndbAsJsonSchema,
   Relation,
