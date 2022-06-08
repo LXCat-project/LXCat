@@ -11,8 +11,8 @@ import {
   deleteSet,
   isOwner,
   updateSet,
-} from "../../../../ScatteringCrossSectionSet/queries";
-import { validate } from "../../../../ScatteringCrossSectionSet/validate";
+} from "@lxcat/database/dist/css/queries";
+import { validate } from "@lxcat/schema/dist/css/validate";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

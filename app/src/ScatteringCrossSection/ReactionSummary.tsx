@@ -1,5 +1,5 @@
-import { State } from "../shared/types/collections";
-import { Reaction, ReactionEntry } from "../shared/types/reaction";
+import { State } from "@lxcat/database/dist/shared/types/collections";
+import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
 
 function stateEntry(entry: ReactionEntry<State>) {
   if (entry.count === 1) {

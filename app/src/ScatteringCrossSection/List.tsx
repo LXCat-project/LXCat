@@ -1,5 +1,5 @@
 import { ListItem } from "./ListItem";
-import { CrossSectionHeading } from "./types/public";
+import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 
 interface Props {
   items: CrossSectionHeading[];

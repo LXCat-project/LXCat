@@ -7,7 +7,7 @@ import {
   ReferenceIndbAsJsonSchema,
   Relation,
   StateIndbAsJsonSchema,
-} from "../../app/src/shared/schema";
+} from "../src/shared/schema";
 
 export default async function () {
   await createParticleCollection();

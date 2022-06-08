@@ -7,7 +7,7 @@ import {
   byOwnerAndId,
   CrossSectionSetInputOwned,
   getVersionInfo,
-} from "../../../../ScatteringCrossSectionSet/queries";
+} from "@lxcat/database/dist/css/queries";
 
 interface Props {
   section: CrossSectionSetInputOwned;
