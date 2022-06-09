@@ -8,6 +8,7 @@
     "json": "ts-node src/core/write_schema.ts",
     "build": "npm run json && npm run compile",
     "lint": "eslint src/ --ext .ts",
+    "format": "prettier --write src/",
     "dev": "tsc --watch"
   },
   "author": "",
