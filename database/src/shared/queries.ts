@@ -8,7 +8,7 @@ import { db } from "@lxcat/database";
 
 export async function insert_document(
   collection: string,
-  object: any
+  object: unknown
 ): Promise<string> {
   const result = await db.query(
     "INSERT @object INTO @@collection LET r = NEW return r._id",
@@ -21,7 +21,7 @@ export async function insert_document(
 
 export async function upsert_document(
   collection: string,
-  object: any
+  object: unknown
 ): Promise<{ id: string; new: boolean }> {
   if (typeof object === "string") object = { string: object };
   const result = await db.query(
@@ -36,7 +36,7 @@ export async function insert_edge(
   collection: string,
   from: string,
   to: string,
-  properties: any = {}
+  properties: Record<string, unknown> = {}
 ): Promise<string> {
   const edge_object = { _from: from, _to: to };
 
