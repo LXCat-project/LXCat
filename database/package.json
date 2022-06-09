@@ -19,7 +19,8 @@
     "load-css": "ts-node src/load_css.ts",
     "format": "prettier --write src/ seeds/ setup/",
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint --ext .ts src/ seeds/ setup/"
   },
   "dependencies": {
     "@lxcat/schema": "*",
