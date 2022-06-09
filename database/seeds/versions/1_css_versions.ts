@@ -5,7 +5,7 @@ import {
   insert_input_set,
   publish,
   updateSet,
-} from "../../../app/src/ScatteringCrossSectionSet/queries";
+} from "../../src/css/queries";
 
 export default async function () {
   // TODO add set which has sections that have published and draft statuses
