@@ -5,10 +5,7 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import {
-  isOwner,
-  publish,
-} from "@lxcat/database/dist/css/queries";
+import { isOwner, publish } from "@lxcat/database/dist/css/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

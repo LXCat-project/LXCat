@@ -1,6 +1,9 @@
 import { parse_state } from "@lxcat/schema/dist/core/parse";
 import { CSL } from "@lxcat/schema/dist/core/csl";
-import { AtomicGenerator, MolecularGenerator } from "@lxcat/schema/dist/core/generators";
+import {
+  AtomicGenerator,
+  MolecularGenerator,
+} from "@lxcat/schema/dist/core/generators";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { DBState, InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";

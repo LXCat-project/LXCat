@@ -5,4 +5,3 @@ export const CrossSectionSetIndbAsJsonSchema = generateJsonSchemaFromType(
   join(__dirname, "types", "collections.ts"),
   "CrossSectionSet"
 );
-
