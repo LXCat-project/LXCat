@@ -10,22 +10,24 @@ import { ls_parser } from "./ls";
 import { ls1_parser } from "./ls1";
 import { ltic_parser } from "./ltic";
 
-type AtomParserDict<T extends AtomicGenerator<any, string>> = {
+type AtomParserDict<T extends AtomicGenerator<unknown, string>> = {
   [key in T["type"]]: ParseAtom<T>;
 };
-type MoleculeParserDict<T extends MolecularGenerator<any, any, any, string>> = {
+type MoleculeParserDict<
+  T extends MolecularGenerator<unknown, unknown, unknown, string>
+> = {
   [key in T["type"]]: ParseMolecule<T>;
 };
 
 export type StateParserDict<
-  A extends AtomicGenerator<any, string>,
-  M extends MolecularGenerator<any, any, any, string>
+  A extends AtomicGenerator<unknown, string>,
+  M extends MolecularGenerator<unknown, unknown, unknown, string>
 > = AtomParserDict<A> & MoleculeParserDict<M>;
 
 export type ParticleTypeDict<
   T extends
-    | AtomicGenerator<any, string>
-    | MolecularGenerator<any, any, any, string>
+    | AtomicGenerator<unknown, string>
+    | MolecularGenerator<unknown, unknown, unknown, string>
 > = {
   [key in T["type"]]: ParticleType;
 };

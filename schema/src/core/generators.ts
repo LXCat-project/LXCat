@@ -44,7 +44,7 @@ type ArrayMinOne<T> = [T, ...Array<T>];
  */
 export type AtomicGenericGenerator<
   E,
-  AT = {},
+  AT = Record<string, unknown>,
   SE extends string = "electronic"
 > = {
   [key in SE]: ArrayMinOne<AT & (UAtomic<E> | E)>;
@@ -103,7 +103,7 @@ type MolecularGenericGenerator<
   E,
   V,
   R,
-  AT = {},
+  AT = Record<string, unknown>,
   SE extends string = "electronic",
   SV extends string = "vibrational",
   SR extends string = "rotational"

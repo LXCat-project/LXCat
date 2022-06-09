@@ -13,7 +13,7 @@ import { State, DBState } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
 export interface ParseMolecule<
-  M extends MolecularGenerator<any, any, any, string>
+  M extends MolecularGenerator<unknown, unknown, unknown, string>
 > {
   // particle_type: ParticleType.Molecule;
   e(state: ExtractE<M>): string;
@@ -21,21 +21,23 @@ export interface ParseMolecule<
   r(state: ExtractR<M>): string;
 }
 
-export interface ParseAtom<A extends AtomicGenerator<any, string>> {
+export interface ParseAtom<A extends AtomicGenerator<unknown, string>> {
   // particle_type: ParticleType.Atom;
   e(state: ExtractAtomic<A>): string;
 }
 
-type AtomParserDict<T extends AtomicGenerator<any, string>> = {
+type AtomParserDict<T extends AtomicGenerator<unknown, string>> = {
   [key in T["type"]]: ParseAtom<T>;
 };
-type MoleculeParserDict<T extends MolecularGenerator<any, any, any, string>> = {
+type MoleculeParserDict<
+  T extends MolecularGenerator<unknown, unknown, unknown, string>
+> = {
   [key in T["type"]]: ParseMolecule<T>;
 };
 
 export type StateParserDict<
-  A extends AtomicGenerator<any, string>,
-  M extends MolecularGenerator<any, any, any, string>
+  A extends AtomicGenerator<unknown, string>,
+  M extends MolecularGenerator<unknown, unknown, unknown, string>
 > = AtomParserDict<A> & MoleculeParserDict<M>;
 
 export function parse_charge(charge: number): string {

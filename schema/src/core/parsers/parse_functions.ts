@@ -94,7 +94,7 @@ export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
     return e.e;
   }
 
-  let config =
+  const config =
     parse_shell_config(e.config.core.config) +
     "(" +
     parse_LS_term(e.config.core.term) +
@@ -126,7 +126,7 @@ export function parse_LS1(e: PUA<AtomLS1Impl>): string {
     return e.e;
   }
 
-  let config =
+  const config =
     parse_shell_config(e.config.core.config) +
     "(" +
     parse_LS_term_impl(e.config.core.term) +
