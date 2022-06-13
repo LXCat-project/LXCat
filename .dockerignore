@@ -1,4 +1,8 @@
 app/node_modules
+app/.next
 database/arangodb3
 database/node_modules
-app/.next
+database/dist
+schema/node_modules
+schema/dist
+node_modules
