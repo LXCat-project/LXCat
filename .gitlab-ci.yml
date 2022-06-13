@@ -4,19 +4,21 @@ image: node:lts-bullseye
 #   - name: arangodb/arangodb:3.7.12
 #     alias: db
 
-app:
+root:
+  stage: build
   cache:
     key:
       files:
-        - app/package-lock.json
+        - package-lock.json
     paths:
-      - app/.npm/
-
-  before_script:
-    - cd app
+      - .npm/
   script:
-    - npm install --cache .npm --prefer-offline
+    - npm ci --cache .npm --prefer-offline
     - npm run build
     - npm run lint
+    # TODO Run prettier with --check
+  artifacts:
+    paths:
+      - node_modules
 
 # TODO test running `npm run seed seeds/test`
