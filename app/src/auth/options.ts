@@ -4,8 +4,8 @@ import GitlabProvider from "next-auth/providers/gitlab";
 import { NextAuthOptions } from "next-auth";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
-import { db } from "../db";
-import { User } from "./schema";
+import { db } from "@lxcat/database";
+import { User } from "@lxcat/database/dist/auth/schema";
 import logo from "../../public/lxcat.png";
 
 const providers: Provider[] = [];

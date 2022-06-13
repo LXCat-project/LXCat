@@ -12,7 +12,7 @@ import { matter } from "vfile-matter";
 /*
  * The next-mdx-remote serialize() uses process.cwd() as cwd, while to have links to images you need mdfile.dirname as cwd.
  *
- * Below is a copy of https://github.com/hashicorp/next-mdx-remote/blob/main/src/serialize.ts#L34
+ * Below is a copy of https://github.com/hashicorp/next-mdx-remote/blob/main/dist/serialize.ts#L34
  * with a vfile as argument instead of a markdown string for serialize()
  */
 

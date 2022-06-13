@@ -5,7 +5,7 @@ import {
   hasDeveloperRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import { byId } from "../../../ScatteringCrossSection/queries";
+import { byId } from "@lxcat/database/dist/cs/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

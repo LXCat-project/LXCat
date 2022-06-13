@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionHeading } from "./types/public";
+import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 
 export function ListItem(props: CrossSectionHeading) {
   return (

@@ -1,11 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { ReactionSummary } from "../../ScatteringCrossSection/ReactionSummary";
-import { byId } from "../../ScatteringCrossSectionSet/queries";
+import { byId } from "@lxcat/database/dist/css/queries";
 import {
   CrossSectionSetItem,
   OrphanedCrossSectionItem,
-} from "../../ScatteringCrossSectionSet/types/public";
+} from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 
 interface Props {

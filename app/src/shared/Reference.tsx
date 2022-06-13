@@ -1,5 +1,5 @@
 import Cite from "citation-js";
-import { Reference as ReferenceRecord } from "./types/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 export const Reference = (r: ReferenceRecord) => {
   if ("string" in r) {

@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { load_css_dir } from "../../app/src/ScatteringCrossSectionSet/loaders";
+import { load_css_dir } from "./css/loaders";
 
 (async () => {
   const dir = process.argv[2];

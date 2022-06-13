@@ -25,9 +25,8 @@ The container will listen on [http://localhost:8529](http://localhost:8529).
 To create database and create all empty collections run following command:
 
 ```shell
-npm install
-cd ../app && npm install && cd -
-# To run all setup/*.ts files
+# First install all dependencies and build the JSON schemas
+cd .. && npm install && npm run build --workspace schema && cd database
 npm run setup
 ```
 
@@ -51,7 +50,7 @@ To get a [ArangoJS Database object](https://arangodb.github.io/arangojs/7.7.0/cl
 
 ```ts
 import 'dotenv/config'
-import { db } from '../../app/src/db'
+import { db } from '../../src/db'
 ```
 
 The code must be wrapped inside an async function which is exported as default:

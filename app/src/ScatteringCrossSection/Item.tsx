@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionItem } from "./types/public";
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 
 export const Item = (props: CrossSectionItem) => {
   return (

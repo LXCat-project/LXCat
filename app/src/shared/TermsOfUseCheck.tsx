@@ -1,7 +1,7 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Dialog } from "./Dialog";
 import { HowToCite } from "./HowToCite";
-import { Reference } from "./types/reference";
+import { Reference } from "@lxcat/schema/dist/core/reference";
 
 interface Props {
   references: Reference[];
