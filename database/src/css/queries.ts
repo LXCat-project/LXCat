@@ -21,8 +21,8 @@ import { CrossSectionSetHeading, CrossSectionSetItem } from "./public";
 export async function insert_input_set(
   dataset: CrossSectionSetInput,
   status: Status = "published",
-  version: string = "1",
-  commitMessage: string = ""
+  version = "1",
+  commitMessage = ""
 ) {
   // Reuse Organization created by cross section drafting
   const organization = await upsert_document("Organization", {

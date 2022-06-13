@@ -21,7 +21,7 @@ export async function insert_cs_with_dict(
   const r_id = await insert_reaction_with_dict(state_dict, cs.reaction);
   const ref_ids = cs.reference?.map((value: string) => ref_dict[value]);
 
-  delete (cs as any)["reference"];
+  delete cs["reference"];
   delete (cs as any)["reaction"];
 
   const versionInfo: VersionInfo = {
