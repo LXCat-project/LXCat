@@ -17,12 +17,38 @@ build-dev:
     - npm run lint
     # TODO Run prettier --check to enforce merge requests are formatted correctly
   # TODO reuse artifacts in workspace specific ci tasks like tests
-  # artifacts:
-  #   paths:
-  #     - node_modules
+  artifacts:
+    paths:
+      - node_modules
   #     - schema/dist
   #     - database/dist
   #     - app/.next
+
+test-database:
+  stage: test
+  dependencies:
+    - build-dev
+  image: node:lts-bullseye
+  # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
+  services:
+    - name: docker:20.10.16-dind
+      # explicitly disable tls to avoid docker startup interruption
+      command: ["--tls=false"]
+  variables:
+    # Instruct Testcontainers to use the daemon of DinD.
+    DOCKER_HOST: "tcp://docker:2375"
+    # Instruct Docker not to start over TLS.
+    DOCKER_TLS_CERTDIR: ""
+    # Improve performance with overlayfs.
+    DOCKER_DRIVER: overlay2
+  script:
+    - npm run test -w database -- --coverage --coverageReporters=text-summary --coverageReporters=lcov --coverageReporters=cobertura --reporters=default --reporters=jest-junit
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: database/coverage/cobertura-coverage.xml
+      junit: database/junit.xml
 
 # TODO test running `npm run seed seeds/test`
 

@@ -20,6 +20,7 @@ export const toggleRole = async (
 };
 
 export const dropUser = async (userId: string) => {
+  await makeMemberless(userId)
   await db().query(aql`REMOVE { _key: ${userId} } IN users`);
 };
 

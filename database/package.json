@@ -32,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "eslint": "8.10.0",
     "jest": "^28.1.1",
+    "jest-junit": "^13.2.0",
     "prettier": "^2.6.2",
     "testcontainers": "^8.10.1",
     "ts-jest": "^28.0.4",

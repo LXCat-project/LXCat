@@ -2,3 +2,5 @@
 arangodb3/
 dist/
 node_modules/
+coverage
+junit.xml

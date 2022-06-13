@@ -6,6 +6,7 @@ import {
   toggleRole,
   makeMemberless,
   makeMember,
+  listOrganizations,
 } from "./queries";
 
 describe("given filled ArangoDB container", () => {
@@ -30,6 +31,15 @@ describe("given filled ArangoDB container", () => {
       name: "somename",
       organization: "Some organization",
       roles: [],
+    };
+    expect(result).toEqual([expected]);
+  });
+
+  it("should have a single org", async () => {
+    const result = await listOrganizations();
+    const expected = {
+      _key: testKeys.testOrgKey,
+      name: "Some organization",
     };
     expect(result).toEqual([expected]);
   });
