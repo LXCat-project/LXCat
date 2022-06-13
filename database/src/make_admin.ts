@@ -7,7 +7,7 @@ import { Role } from "./auth/schema";
   try {
     const email = process.argv[2];
     const roles = Role.options;
-    db.query(aql`
+    db().query(aql`
             FOR u IN users
                 FILTER u.email == ${email}
             UPDATE u WITH {

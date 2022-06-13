@@ -1,12 +1,31 @@
 import { Database } from "arangojs";
 
+let _db: Database | undefined = undefined;
+
 export function systemDb() {
-  // Do not use `db` from app as it will error trying to connect to non-existing db
-  return new Database({
-    url: process.env.ARANGO_URL || "http://localhost:8529",
+  if (_db === undefined) {
+    // Do not use `db` from app as it will error trying to connect to non-existing db
+    return setSystemDb(
+      process.env.ARANGO_URL || "http://localhost:8529",
+      process.env.ARANGO_ROOT_PASSWORD,
+      process.env.ARANGO_USERNAME || "root"
+    );
+  }
+
+  return _db;
+}
+
+export const setSystemDb = (
+  url: string,
+  password: string | undefined,
+  username = "root"
+) => {
+  _db = new Database({
+    url,
     auth: {
-      username: process.env.ARANGO_USERNAME || "root",
-      password: process.env.ARANGO_ROOT_PASSWORD,
+      username,
+      password,
     },
   });
-}
+  return _db;
+};

@@ -13,7 +13,7 @@ export async function insert_document(
   collection: string,
   object: unknown
 ): Promise<string> {
-  const result = await db.query(
+  const result = await db().query(
     "INSERT @object INTO @@collection LET r = NEW return r._id",
     { object, "@collection": collection }
   );
@@ -27,7 +27,7 @@ export async function upsert_document(
   object: unknown
 ): Promise<{ id: string; new: boolean }> {
   if (typeof object === "string") object = { string: object };
-  const result = await db.query(
+  const result = await db().query(
     "UPSERT @object INSERT @object UPDATE {} IN @@collection LET ret = NEW RETURN { id: ret._id, new: OLD ? false : true }",
     { object, "@collection": collection }
   );
@@ -43,7 +43,7 @@ export async function insert_edge(
 ): Promise<string> {
   const edge_object = { _from: from, _to: to };
 
-  const result = await db.query(
+  const result = await db().query(
     "UPSERT @from_to INSERT @edge UPDATE {} IN @@collection LET ret = NEW RETURN ret._id",
     {
       "@collection": collection,

@@ -9,7 +9,8 @@
     "dev": "turbo run dev --no-cache --parallel --continue",
     "format": "turbo run format",
     "lint": "turbo run lint",
-    "start": "turbo run start"
+    "start": "turbo run start",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "turbo": "^1.2.16"

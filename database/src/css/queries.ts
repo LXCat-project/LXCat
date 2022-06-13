@@ -138,7 +138,7 @@ export async function search(
         ${limit_aql}
         RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
     `;
-  const cursor: ArrayCursor<CrossSectionSetHeading> = await db.query(q);
+  const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
   return await cursor.all();
 }
 
@@ -155,7 +155,7 @@ export async function searchFacets(): Promise<Facets> {
 }
 
 async function searchContributors() {
-  const cursor: ArrayCursor<string> = await db.query(aql`
+  const cursor: ArrayCursor<string> = await db().query(aql`
     FOR css IN CrossSectionSet
         FOR o IN Organization
             FILTER o._id == css.organization
@@ -165,7 +165,7 @@ async function searchContributors() {
 }
 
 async function searchSpecies2() {
-  const cursor: ArrayCursor<string> = await db.query(aql`
+  const cursor: ArrayCursor<string> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
         FOR m IN IsPartOf
@@ -187,7 +187,7 @@ async function searchSpecies2() {
 }
 
 export async function byId(id: string) {
-  const cursor: ArrayCursor<CrossSectionSetItem> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionSetItem> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
         FILTER ['published' ,'retracted', 'archived'] ANY == css.versionInfo.status
@@ -243,7 +243,7 @@ export interface CrossSectionSetOwned extends CrossSectionSet {
 }
 
 export async function listOwned(email: string) {
-  const cursor: ArrayCursor<CrossSectionSetOwned> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionSetOwned> = await db().query(aql`
         FOR u IN users
             FILTER u.email == ${email}
             FOR m IN MemberOf
@@ -263,7 +263,7 @@ export interface CrossSectionSetInputOwned extends CrossSectionSetInput {
 }
 
 export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<CrossSectionSetInputOwned> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionSetInputOwned> = await db().query(aql`
   FOR u IN users
   FILTER u.email == ${email}
   FOR m IN MemberOf
@@ -355,7 +355,7 @@ export async function publish(key: string) {
   // TODO when key has a published version then that old version should be archived aka Change status of current published section to archived
   // TODO For each changed/added cross section perform publishing of cross section
   // Change status of draft section to published
-  const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
+  const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: 'published'}) } IN CrossSectionSet
@@ -368,7 +368,7 @@ export async function publish(key: string) {
  * Checks whether set with key is owned by user with email.
  */
 export async function isOwner(key: string, email: string) {
-  const cursor: ArrayCursor<boolean> = await db.query(aql`
+  const cursor: ArrayCursor<boolean> = await db().query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         FOR m IN MemberOf
@@ -384,7 +384,7 @@ export async function isOwner(key: string, email: string) {
 }
 
 export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db.query(aql`
+  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         RETURN css.versionInfo
@@ -400,7 +400,7 @@ export async function deleteSet(key: string, message: string) {
   }
   const { status } = info;
   if (status === "draft") {
-    const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
+    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
         FOR css IN CrossSectionSet
             FILTER css._key == ${key}
             REMOVE css IN CrossSectionSet
@@ -412,7 +412,7 @@ export async function deleteSet(key: string, message: string) {
     // Change status of published section to retracted
     // and Set retract message
     const newStatus: Status = "retracted";
-    const cursor: ArrayCursor<{ id: string }> = await db.query(aql`
+    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
         FOR css IN CrossSectionSet
             FILTER css._key == ${key}
             UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
@@ -490,7 +490,7 @@ async function updateDraftSet(
     organization: organization.id,
     versionInfo,
   };
-  await db.query(aql`
+  await db().query(aql`
     REPLACE { _key: ${key} } WITH ${set} IN CrossSectionSet
   `);
 
@@ -515,8 +515,8 @@ async function updateDraftSet(
  * Finds all previous versions of set with key
  */
 export async function historyOfSet(key: string) {
-  const cursor: ArrayCursor<VersionInfo & { _key: string }> =
-    await db.query(aql`
+  const cursor: ArrayCursor<VersionInfo & { _key: string }> = await db()
+    .query(aql`
     FOR css IN CrossSectionSet
       FILTER css._key == ${key}
       FOR prev IN 0..9999999 OUTBOUND css CrossSectionSetHistory
@@ -530,7 +530,7 @@ export async function historyOfSet(key: string) {
  */
 export async function activeSetOfArchivedSet(key: string) {
   // TODO use query on some page
-  const cursor: ArrayCursor<string> = await db.query(aql`
+  const cursor: ArrayCursor<string> = await db().query(aql`
   FOR css IN CrossSectionSet
     FILTER css._key == ${key}
     FOR next IN 0..9999999 INBOUND css CrossSectionSetHistory

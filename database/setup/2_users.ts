@@ -14,7 +14,7 @@ export default async function () {
 }
 
 async function createUserCollection() {
-  const users = db.collection<UserWithAccountSessionInDb>("users");
+  const users = db().collection<UserWithAccountSessionInDb>("users");
   if (await users.exists()) {
     console.log("Users collection already exists");
     return;
@@ -42,7 +42,7 @@ async function createUserCollection() {
 
 async function createOrganizationCollection() {
   const organizations =
-    db.collection<UserWithAccountSessionInDb>("Organization");
+    db().collection<UserWithAccountSessionInDb>("Organization");
   if (await organizations.exists()) {
     console.log("Organization collection already exists");
     return;
@@ -62,7 +62,7 @@ async function createOrganizationCollection() {
 
 async function createMemberOfCollection() {
   // Stores which Users are members of which Organization
-  const collection = db.collection("MemberOf");
+  const collection = db().collection("MemberOf");
   if (await collection.exists()) {
     console.log("MemberOf collection already exists");
     return;

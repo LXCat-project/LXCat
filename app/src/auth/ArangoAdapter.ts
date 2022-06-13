@@ -1,7 +1,7 @@
 import { aql, Database } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { dropUser as deleteUser } from "@lxcat/database/dist/auth/queries";
+import { dropUser as deleteUser, getUserByKey } from "@lxcat/database/dist/auth/queries";
 import {
   Account,
   Session,
@@ -37,12 +37,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
       return newUser;
     },
     async getUser(id) {
-      const cursor: ArrayCursor<UserInDb> = await db.query(aql`
-                FOR u IN users
-                    FILTER u._key == ${id}
-                    RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
-            `);
-      const user = await cursor.next();
+      const user = await getUserByKey(id)
       return toAdapterUser(user);
     },
     async getUserByEmail(email) {

@@ -46,7 +46,7 @@ if (process.env.ORCID_CLIENT_ID) {
 
 export const options: NextAuthOptions = {
   providers,
-  adapter: ArangoAdapter(db),
+  adapter: ArangoAdapter(db()),
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, user }) {
