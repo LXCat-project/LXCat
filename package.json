@@ -12,9 +12,6 @@
     "start": "turbo run start"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.27.1",
-    "eslint": "8.10.0",
-    "prettier": "^2.6.2",
     "turbo": "^1.2.16"
   }
 }

@@ -9,7 +9,7 @@
     "build": "npm run json && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "format": "prettier --write src/",
-    "dev": "tsc --watch"
+    "dev": "npm run json && tsc --watch"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +18,9 @@
     "ts-json-schema-generator": "^1.1.0-next.5"
   },
   "devDependencies": {
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.8.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "eslint": "8.10.0",
+    "prettier": "^2.6.2"
   }
 }

@@ -26,9 +26,13 @@
     "@lxcat/schema": "*",
     "arangojs": "^7.7.0",
     "dotenv": "^16.0.0",
-    "ts-node": "^10.7.0",
-    "tsconfig-paths": "^3.14.0",
     "zod": "^3.14.2",
     "zod-to-json-schema": "^3.11.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "eslint": "8.10.0",
+    "prettier": "^2.6.2"
   }
 }
