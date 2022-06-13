@@ -38,3 +38,4 @@ build-prod:
   script:
     - touch .env
     - docker-compose build
+    # TODO do stuff with build images
