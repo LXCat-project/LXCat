@@ -3,13 +3,9 @@ import nc from "next-connect";
 import {
   AuthRequest,
   hasAuthorRole,
-  hasDeveloperRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import {
-  isOwner,
-  publish,
-} from "../../../../ScatteringCrossSectionSet/queries";
+import { isOwner, publish } from "@lxcat/database/dist/css/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

@@ -6,7 +6,7 @@ import {
   PreviewData,
 } from "next";
 import { RequestHandler } from "next-connect";
-import { Role } from "./schema";
+import { Role } from "@lxcat/database/dist/auth/schema";
 import { decode } from "next-auth/jwt";
 import { options } from "./options";
 import { ParsedUrlQuery } from "querystring";

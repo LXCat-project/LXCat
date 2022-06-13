@@ -5,7 +5,7 @@ import {
   hasAdminRole,
   hasSession,
 } from "../../../../../auth/middleware";
-import { makeMemberless } from "../../../../../auth/queries";
+import { makeMemberless } from "@lxcat/database/dist/auth/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSession)

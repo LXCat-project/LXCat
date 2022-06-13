@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { db } from "../../app/src/db";
+import { db } from "./db";
 import { systemDb } from "./systemDb";
 
 (async () => {

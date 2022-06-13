@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { db } from "../../app/src/db";
+import { db } from "../src/db";
 import {
   ContributorIndbAsJsonSchema,
   ParticleIndbAsJsonSchema,
@@ -7,7 +7,7 @@ import {
   ReferenceIndbAsJsonSchema,
   Relation,
   StateIndbAsJsonSchema,
-} from "../../app/src/shared/schema";
+} from "../src/shared/schema";
 
 export default async function () {
   await createParticleCollection();

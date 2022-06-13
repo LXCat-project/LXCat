@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import CrossSectionSetInputAsJsonSchema from "../../../generated/input/CrossSectionSet.schema.json";
+import CrossSectionSetInputAsJsonSchema from "@lxcat/schema/dist/css/CrossSectionSet.schema.json";
 
 // Route to host JSON schema of CrossSectionSet
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (_req, res) => {

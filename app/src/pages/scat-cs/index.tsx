@@ -5,9 +5,9 @@ import {
   search,
   searchFacets,
   SearchOptions,
-} from "../../ScatteringCrossSection/queries";
+} from "@lxcat/database/dist/cs/queries";
 import { List } from "../../ScatteringCrossSection/List";
-import { CrossSectionHeading } from "../../ScatteringCrossSection/types/public";
+import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";

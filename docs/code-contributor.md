@@ -6,6 +6,7 @@
 
 Code to fill the database can be found in [../database/](../database/).
 Code to that runs the website can be found in [../app/](../app/).
+Code to that describes the shape of LXCat documents can be found in [../schema/](../schema/).
 
 ## How to perform local deployment with test data?
 
@@ -25,7 +26,7 @@ To have working links between Markdown files on the website use URLs without the
 
 The following features are available in Markdown
 
-### Table of contents
+### Inject Table of contents
 
 Adding `## Table of contents` will inject a table of contents for all headers.
 All the headers also become bookmarkable.

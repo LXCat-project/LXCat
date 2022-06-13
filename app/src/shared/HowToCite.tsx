@@ -1,5 +1,5 @@
 import { Reference } from "./Reference";
-import { Reference as ReferenceRecord } from "./types/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 interface Props {
   references: ReferenceRecord[];

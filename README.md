@@ -9,6 +9,7 @@ To get familiar with the code read the following documentation:
 - [docs/code-contributor.md](docs/code-contributor.md) for technology choices.
 - [database/README.md](database/README.md) for spinning up the database and filling it.
 - [app/README.md](app/README.md) for web application and web service
+- [schema/README.md](schema/README.md) for JSON schemas and Typescript types of LXCat documents
 
 ## Documentation
 

@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { db } from "../../../app/src/db";
+import { db } from "../../src/db";
 import {
   Organization,
   UserWithAccountSessionInDb,
-} from "../../../app/src/auth/schema";
+} from "../../src/auth/schema";
 import { EdgeCollection } from "arangojs/collection";
 
 export default async function () {

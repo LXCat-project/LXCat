@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CrossSectionSetHeading } from "./types/public";
+import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 
 export const ListItem = (props: CrossSectionSetHeading) => {
   return (

@@ -1,5 +1,4 @@
 import { GetServerSideProps, NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
@@ -10,8 +9,8 @@ import {
   search,
   searchFacets,
   SortOptions,
-} from "../../ScatteringCrossSectionSet/queries";
-import { CrossSectionSetHeading } from "../../ScatteringCrossSectionSet/types/public";
+} from "@lxcat/database/dist/css/queries";
+import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { query2array } from "../../shared/query2array";
 

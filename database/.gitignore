@@ -1,3 +1,4 @@
 .env
 arangodb3/
+dist/
 node_modules/
