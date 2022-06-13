@@ -2,6 +2,8 @@
 // Project: https://github.com/citation-style-language/schema
 // Definitions by: Derek P Sifford <https://github.com/dsifford>
 
+// TODO do not disable linter
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CSL {
   export type ItemType =
     | "article"

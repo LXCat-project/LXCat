@@ -7,4 +7,6 @@ export type CrossSectionInput<StateType> = InputDocument<
 > & { complete: boolean };
 
 // TODO should set have own references?
+// TODO do not disable linter
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CrossSectionSetInput = CrossSectionInput<any>;
