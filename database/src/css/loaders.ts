@@ -14,7 +14,7 @@ export async function load_css_dir(dir: string) {
   for (const file of files) {
     const afile = join(dir, file);
     if (afile.endsWith(".json")) {
-      load_css(afile);
+      await load_css(afile);
     }
   }
 }
