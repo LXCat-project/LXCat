@@ -1,5 +1,7 @@
 import { CrossSection } from "../cs/cs";
 import { InputDocument } from "../core/document";
+import { AnyAtomJSON } from "../core/atoms";
+import { AnyMoleculeJSON } from "../core/molecules";
 
 export type CrossSectionInput<StateType> = InputDocument<
   StateType,
@@ -8,5 +10,6 @@ export type CrossSectionInput<StateType> = InputDocument<
 
 // TODO should set have own references?
 // TODO do not disable linter
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CrossSectionSetInput = CrossSectionInput<any>;
+export type CrossSectionSetInput = CrossSectionInput<
+  AnyAtomJSON | AnyMoleculeJSON
+>;
