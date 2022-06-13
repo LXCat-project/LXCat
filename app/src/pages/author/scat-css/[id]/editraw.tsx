@@ -85,7 +85,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
               {errors.map((e, i) => (
                 <li key={i}>
                   {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
-                  {e.dataPath && `@ ${e.dataPath}`}
+                  {e.instancePath && `@ ${e.instancePath}`}
                 </li>
               ))}
             </ul>

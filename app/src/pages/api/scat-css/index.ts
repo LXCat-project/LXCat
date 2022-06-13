@@ -6,7 +6,7 @@ import {
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
 import { insert_input_set } from "@lxcat/database/dist/css/queries";
-import { validate } from "@lxcat/schema/dist/css/validate";
+import { validator } from "@lxcat/schema/dist/css/validate";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
@@ -14,12 +14,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
   .post(async (req, res) => {
     try {
       const body = JSON.parse(req.body);
-      if (validate(body)) {
+      if (validator.validate(body)) {
         // Add to CrossSectionSet with status=='draft' and version=='1'
         const id = await insert_input_set(body, "draft");
         res.json({ id });
       } else {
-        const errors = validate.errors;
+        const errors = validator.errors;
         res.statusCode = 500;
         res.json({ errors });
       }

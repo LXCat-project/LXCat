@@ -1,7 +1,7 @@
 import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "@lxcat/database";
+import { db } from "../db";
 import { now } from "../date";
 import {
   insert_document,

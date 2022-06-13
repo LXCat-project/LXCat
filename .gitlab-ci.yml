@@ -4,7 +4,7 @@ image: node:lts-bullseye
 #   - name: arangodb/arangodb:3.7.12
 #     alias: db
 
-root:
+build:
   stage: build
   cache:
     key:
@@ -16,9 +16,13 @@ root:
     - npm ci --cache .npm --prefer-offline
     - npm run build
     - npm run lint
-    # TODO Run prettier with --check
-  artifacts:
-    paths:
-      - node_modules
+    # TODO Run prettier --check to enforce merge requests are formatted correctly
+  # TODO reuse artifacts in workspace specific ci tasks like tests
+  # artifacts:
+  #   paths:
+  #     - node_modules
+  #     - schema/dist
+  #     - database/dist
+  #     - app/.next
 
 # TODO test running `npm run seed seeds/test`

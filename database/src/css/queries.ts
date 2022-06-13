@@ -1,6 +1,6 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "@lxcat/database";
+import { db } from "../db";
 import { insert_cs_with_dict } from "../cs/queries";
 import { now } from "../date";
 import {

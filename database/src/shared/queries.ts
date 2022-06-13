@@ -7,7 +7,7 @@ import {
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { DBState, InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { db } from "@lxcat/database";
+import { db } from "../db";
 
 export async function insert_document(
   collection: string,

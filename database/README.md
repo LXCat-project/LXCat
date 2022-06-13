@@ -25,9 +25,8 @@ The container will listen on [http://localhost:8529](http://localhost:8529).
 To create database and create all empty collections run following command:
 
 ```shell
-npm install
-cd ../app && npm install && cd -
-# To run all setup/*.ts files
+# First install all dependencies and build the JSON schemas
+cd .. && npm install && npm run build --workspace schema && cd database
 npm run setup
 ```
 

@@ -4,11 +4,8 @@
   "description": "The web application needs an [arangodb](https://arangodb.com/) database to talk to.",
   "author": "Stefan Verhoeven",
   "license": "ISC",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "files": [
-    "src/**"
-  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
     "setup": "ts-node src/seed.ts setup",
@@ -32,6 +29,7 @@
   "devDependencies": {
     "ts-node": "^10.7.0",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "typescript": "^4.7.3",
     "eslint": "8.10.0",
     "prettier": "^2.6.2"
   }
