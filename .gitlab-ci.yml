@@ -36,4 +36,5 @@ build-prod:
   before_script:
     - apk add --no-cache docker-compose
   script:
+    - touch .env
     - docker-compose build
