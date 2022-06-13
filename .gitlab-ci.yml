@@ -20,8 +20,8 @@ build-dev:
   artifacts:
     paths:
       - node_modules
-  #     - schema/dist
-  #     - database/dist
+      - schema/dist
+      - database/dist
   #     - app/.next
 
 test-database:
