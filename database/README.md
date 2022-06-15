@@ -127,9 +127,18 @@ npx tsup src/css/collection.ts src/css/queries/author_read.ts src/css/queries/au
 
 ```
 
+## Generate collection schemas
+
+The JSON schemas for the ArangoDB collections are stored as `src/**/*.schema.json` and are generated from Typescript types.
+Any time the types change run
+
+```shell
+npm run collectionschema
+```
+
 ## Tests
 
-Tests can be written as `src/**/*.spec.ts` and run with
+Tests can be written as `src/**/*.spec.ts` files  with [vitest](https://vitest.dev/) framework and run with
 
 ```shell
 npm run test
@@ -140,6 +149,6 @@ The tests are done against a database running in a container using the [testcont
 To run tests with code coverage use
 
 ```shell
-npm run test --coverage
+npm run test -- run --coverage
 xdg-open coverage/index.html
 ```
