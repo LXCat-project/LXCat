@@ -1,3 +1,5 @@
+import { describe, beforeAll, afterAll, it, expect } from 'vitest'
+
 import { StartedArangoContainer } from "testcontainers";
 import { startDbContainer } from "../testutils";
 import {
@@ -11,8 +13,6 @@ import {
 import { TestKeys, createTestUserAndOrg } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
-  jest.setTimeout(180_000);
-
   let container: StartedArangoContainer;
   let testKeys: TestKeys;
   beforeAll(async () => {

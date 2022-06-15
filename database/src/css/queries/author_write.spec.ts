@@ -1,3 +1,5 @@
+import { describe, beforeAll, afterAll, it, expect } from 'vitest'
+
 import { StartedArangoContainer } from "testcontainers";
 import { toggleRole } from "../../auth/queries";
 import { TestKeys, createTestUserAndOrg } from "../../auth/testutils";
@@ -8,8 +10,6 @@ import { historyOfSet, KeyedVersionInfo } from "./public";
 import { createCsCollections, ISO_8601_UTC } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
-  jest.setTimeout(180_000);
-
   let container: StartedArangoContainer;
   let testKeys: TestKeys;
   beforeAll(async () => {

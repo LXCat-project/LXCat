@@ -126,3 +126,20 @@ find src -type f |grep -v cli | grep -v spec |grep -v testutils |perl -pe 's/\n/
 npx tsup src/css/collection.ts src/css/queries/author_read.ts src/css/queries/author_write.ts src/css/queries/public.ts src/css/loaders.ts src/css/schema.ts src/css/public.ts src/systemDb.ts src/db.ts src/cs/queries.ts src/cs/collections.ts src/cs/schema.ts src/cs/public.ts src/auth/queries.ts src/auth/schema.ts src/shared/queries.ts src/shared/types/collections.ts src/shared/types/version_info.ts src/shared/schema.ts src/index.ts src/date.ts --dts
 
 ```
+
+## Tests
+
+Tests can be written as `src/**/*.spec.ts` and run with
+
+```shell
+npm run test
+```
+
+The tests are done against a database running in a container using the [testcontainers](https://github.com/testcontainers/testcontainers-node) library.
+
+To run tests with code coverage use
+
+```shell
+npm run test --coverage
+xdg-open coverage/index.html
+```

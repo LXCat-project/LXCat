@@ -7,6 +7,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "private": true,
   "scripts": {
     "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts setup",
@@ -19,7 +22,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "lint": "eslint --ext .ts src/ seeds/ setup/",
-    "test": "NODE_OPTIONS='--experimental-specifier-resolution=node --experimental-vm-modules' npx jest",
+    "test": "vitest",
     "collectionschema:Particle": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Particle --out src/shared/schemas/Particle.schema.json -e none --no-top-ref",
     "collectionschema:Contributor": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Contributor --out src/shared/schemas/Contributor.schema.json -e none --no-top-ref",
     "collectionschema:Reference": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Reference --out src/shared/schemas/Reference.schema.json -e none --no-top-ref",
@@ -39,29 +42,15 @@
     "zod-to-json-schema": "^3.11.3"
   },
   "devDependencies": {
-    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "c8": "^7.11.3",
     "eslint": "8.10.0",
-    "jest": "^28.1.1",
-    "jest-junit": "^13.2.0",
     "prettier": "^2.6.2",
     "testcontainers": "^8.10.1",
-    "ts-jest": "^28.0.4",
     "ts-json-schema-generator": "^1.1.0-next.5",
     "ts-node": "^10.7.0",
     "tsup": "^6.1.2",
-    "typescript": "^4.7.3"
-  },
-  "jest": {
-    "preset": "ts-jest/presets/default-esm",
-    "globals": {
-      "ts-jest": {
-        "useESM": true
-      }
-    },
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "extensionsToTreatAsEsm": [".ts"]
+    "typescript": "^4.7.3",
+    "vitest": "^0.15.1"
   }
 }

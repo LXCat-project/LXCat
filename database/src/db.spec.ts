@@ -1,10 +1,9 @@
+import { describe, beforeAll, afterAll, it, expect } from 'vitest'
 import { StartedArangoContainer } from "testcontainers";
 import { db } from "./db";
 import { startDbContainer } from "./testutils";
 
 describe("given running ArangoDB container with empty lxcat database", () => {
-  jest.setTimeout(180_000);
-
   let container: StartedArangoContainer;
   beforeAll(async () => {
     container = await startDbContainer();

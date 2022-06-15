@@ -42,7 +42,7 @@ test-database:
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
   script:
-    - npm run test -w database -- --coverage --coverageReporters=text-summary --coverageReporters=lcov --coverageReporters=cobertura --reporters=default --reporters=jest-junit
+    - npm run test -w database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:

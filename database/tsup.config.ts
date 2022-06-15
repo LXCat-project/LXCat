@@ -12,8 +12,9 @@ async function* walk(dir) {
 
 // TODO in watch mode new files, dropped files will not be part of entry,
 const entry: string[] = []
+const excludes = ['cli', '.spec.', 'testutils.ts', '.schema.json']
 for await (const p of walk('./src')) {
-  if (p.includes('cli') || p.includes('.spec.') || p.includes('testutils.ts')) {
+  if (excludes.some(e => p.includes(e))) {
     // ignore for build
   } else {
     entry.push(p)
@@ -23,6 +24,6 @@ for await (const p of walk('./src')) {
 export default defineConfig({
   entry,
   dts: true,
-  sourcemap: true,
-  target: 'node16'
+  target: 'node16',
+  format: 'esm'
 })
