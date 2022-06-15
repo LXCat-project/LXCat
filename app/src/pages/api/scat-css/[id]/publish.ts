@@ -8,7 +8,6 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 
-
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasAuthorRole)

@@ -1,26 +1,37 @@
-import { describe, beforeAll, afterAll, it, expect } from 'vitest'
+import { describe, beforeAll, it, expect } from "vitest";
 
-import { StartedArangoContainer } from "testcontainers";
 import { toggleRole } from "../../auth/queries";
-import { TestKeys, createTestUserAndOrg } from "../../auth/testutils";
+import {
+  loadTestUserAndOrg,
+  createAuthCollections,
+} from "../../auth/testutils";
 import { startDbContainer } from "../../testutils";
-import { byOwnerAndId, CrossSectionSetOwned, listOwned } from "./author_read";
+import {
+  byOwnerAndId,
+  CrossSectionSetOwned,
+  deleteSet,
+  listOwned,
+} from "./author_read";
 import { insert_input_set, publish, updateSet } from "./author_write";
-import { historyOfSet, KeyedVersionInfo } from "./public";
+import {
+  byId,
+  historyOfSet,
+  KeyedVersionInfo,
+  search,
+  SortOptions,
+} from "./public";
 import { createCsCollections, ISO_8601_UTC } from "./testutils";
+import { CrossSectionSetItem } from "../public";
 
 describe("given filled ArangoDB container", () => {
-  let container: StartedArangoContainer;
-  let testKeys: TestKeys;
   beforeAll(async () => {
-    container = await startDbContainer();
-    testKeys = await createTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
+    // TODO now 2 containers are started, starting container is slow so try to reuse container
+    const stopContainer = await startDbContainer();
+    await createAuthCollections();
     await createCsCollections();
-  });
-
-  afterAll(async () => {
-    await container.stop();
+    const testKeys = await loadTestUserAndOrg();
+    await toggleRole(testKeys.testUserKey, "author");
+    return stopContainer;
   });
 
   // TODO add set which has sections that have published and draft statuses
@@ -198,5 +209,84 @@ describe("given filled ArangoDB container", () => {
         });
       });
     });
+  });
+});
+
+describe("given published set and retracting it", () => {
+  let keycss1: string;
+  beforeAll(async () => {
+    const stopContainer = await startDbContainer();
+    await createAuthCollections();
+    await createCsCollections();
+    const testKeys = await loadTestUserAndOrg();
+    await toggleRole(testKeys.testUserKey, "author");
+    keycss1 = await insert_input_set(
+      {
+        complete: true,
+        contributor: "Some organization",
+        name: "Some versioned name",
+        description: "Some description",
+        references: {},
+        states: {},
+        processes: [],
+      },
+      "draft",
+      "1",
+      "Initial version"
+    );
+    await publish(keycss1);
+
+    await deleteSet(keycss1, "I forgot to put in cross sections");
+
+    return stopContainer;
+  });
+
+  it("should have status retracted", async () => {
+    const result = await byId(keycss1);
+    const expected: Omit<CrossSectionSetItem, "organization"> = {
+      id: keycss1,
+      complete: true,
+      description: "Some description",
+      name: "Some versioned name",
+      contributor: "Some organization", // TODO should have organization or contributor not both
+      versionInfo: {
+        commitMessage: "Initial version",
+        createdOn: expect.stringMatching(ISO_8601_UTC),
+        status: "retracted",
+        retractMessage: "I forgot to put in cross sections",
+        version: "1",
+      },
+      processes: [],
+    };
+    expect(result).toEqual(expected);
+  });
+
+  it("should not be in public listing", async () => {
+    const filter = { contributor: [], species2: [] };
+    const sort: SortOptions = { field: "name", dir: "DESC" };
+    const paging = { offset: 0, count: 10 };
+    const result = await search(filter, sort, paging);
+    expect(result.some((s) => s.id === keycss1)).toBeFalsy();
+  });
+
+  it("should be in authors listing", async () => {
+    const result = await listOwned("somename@example.com");
+    const expected: CrossSectionSetOwned[] = [
+      {
+        _key: keycss1,
+        complete: true,
+        description: "Some description",
+        name: "Some versioned name",
+        organization: "Some organization",
+        versionInfo: {
+          commitMessage: "Initial version",
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "retracted",
+          retractMessage: "I forgot to put in cross sections",
+          version: "1",
+        },
+      },
+    ];
+    expect(result).toEqual(expected);
   });
 });

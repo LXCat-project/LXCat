@@ -1,17 +1,9 @@
-import { describe, beforeAll, afterAll, it, expect } from 'vitest'
-import { StartedArangoContainer } from "testcontainers";
+import { describe, beforeAll, it, expect } from "vitest";
 import { db } from "./db";
 import { startDbContainer } from "./testutils";
 
 describe("given running ArangoDB container with empty lxcat database", () => {
-  let container: StartedArangoContainer;
-  beforeAll(async () => {
-    container = await startDbContainer();
-  });
-
-  afterAll(async () => {
-    await container.stop();
-  });
+  beforeAll(startDbContainer);
 
   it("should be pingable", async () => {
     const result = await db().version();

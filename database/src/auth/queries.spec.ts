@@ -1,6 +1,5 @@
-import { describe, beforeAll, afterAll, it, expect } from 'vitest'
+import { describe, beforeAll, afterAll, it, expect } from "vitest";
 
-import { StartedArangoContainer } from "testcontainers";
 import { startDbContainer } from "../testutils";
 import {
   getUserByKey,
@@ -10,18 +9,19 @@ import {
   makeMember,
   listOrganizations,
 } from "./queries";
-import { TestKeys, createTestUserAndOrg } from "./testutils";
+import {
+  TestKeys,
+  loadTestUserAndOrg,
+  createAuthCollections,
+} from "./testutils";
 
 describe("given filled ArangoDB container", () => {
-  let container: StartedArangoContainer;
   let testKeys: TestKeys;
   beforeAll(async () => {
-    container = await startDbContainer();
-    testKeys = await createTestUserAndOrg();
-  });
-
-  afterAll(async () => {
-    await container.stop();
+    const stopContainer = await startDbContainer();
+    await createAuthCollections();
+    testKeys = await loadTestUserAndOrg();
+    return stopContainer;
   });
 
   it("should have a single user", async () => {

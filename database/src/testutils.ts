@@ -12,5 +12,7 @@ export async function startDbContainer() {
   setSystemDb(url, password);
   await systemDb().createDatabase("lxcat");
   setDb(url, password);
-  return container;
+  return async () => {
+    await container.stop();
+  };
 }

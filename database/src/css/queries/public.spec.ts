@@ -1,27 +1,24 @@
-import { describe, beforeAll, afterAll, it, expect } from 'vitest'
+import { describe, beforeAll, it, expect } from "vitest";
 
-import { StartedArangoContainer } from "testcontainers";
 import { toggleRole } from "../../auth/queries";
-import { createTestUserAndOrg, TestKeys } from "../../auth/testutils";
+import {
+  createAuthCollections,
+  loadTestUserAndOrg,
+} from "../../auth/testutils";
 import { startDbContainer } from "../../testutils";
 import { CrossSectionSetHeading } from "../public";
 import { createCsCollections, loadTestSets } from "./testutils";
 import { search, SortOptions } from "./public";
 
 describe("given filled ArangoDB container", () => {
-
-  let container: StartedArangoContainer;
-  let testKeys: TestKeys;
   beforeAll(async () => {
-    container = await startDbContainer();
-    testKeys = await createTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
+    const stopContainer = await startDbContainer();
+    await createAuthCollections();
     await createCsCollections();
+    const testKeys = await loadTestUserAndOrg();
+    await toggleRole(testKeys.testUserKey, "author");
     await loadTestSets();
-  });
-
-  afterAll(async () => {
-    await container.stop();
+    return stopContainer;
   });
 
   describe("search()", () => {

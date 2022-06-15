@@ -6,8 +6,15 @@ import { List } from "../../ScatteringCrossSectionSet/List";
 import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { query2array } from "../../shared/query2array";
-import { Facets, search, searchFacets } from "@lxcat/database/dist/css/queries/public";
-import { SortOptions, FilterOptions } from "@lxcat/database/dist/css/queries/public";
+import {
+  Facets,
+  search,
+  searchFacets,
+} from "@lxcat/database/dist/css/queries/public";
+import {
+  SortOptions,
+  FilterOptions,
+} from "@lxcat/database/dist/css/queries/public";
 
 interface Props {
   items: CrossSectionSetHeading[];
