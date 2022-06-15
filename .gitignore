@@ -4,3 +4,5 @@
 .turbo
 node_modules
 */dist
+*/coverage
+*/junit.xml
