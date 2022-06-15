@@ -1,3 +1,5 @@
+import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
+import { publish } from "@lxcat/database/dist/css/queries/author_write";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -5,7 +7,6 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { isOwner, publish } from "@lxcat/database/dist/css/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

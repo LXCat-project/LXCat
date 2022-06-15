@@ -1,13 +1,11 @@
 import "dotenv/config";
 import { db } from "../src/db";
-import {
-  ContributorIndbAsJsonSchema,
-  ParticleIndbAsJsonSchema,
-  ReactionIndbAsJsonSchema,
-  ReferenceIndbAsJsonSchema,
-  Relation,
-  StateIndbAsJsonSchema,
-} from "../src/shared/schema";
+import ContributorIndbAsJsonSchema from "../src/shared/schemas/Contributor.schema.json";
+import ParticleIndbAsJsonSchema from "../src/shared/schemas/Particle.schema.json";
+import ReactionIndbAsJsonSchema from "../src/shared/schemas/Reaction.schema.json";
+import ReferenceIndbAsJsonSchema from "../src/shared/schemas/Reference.schema.json";
+import StateIndbAsJsonSchema from "../src/shared/schemas/State.schema.json";
+import { Relation } from "../src/shared/schema";
 
 export default async function () {
   await createParticleCollection();
@@ -19,7 +17,7 @@ export default async function () {
 }
 
 async function createParticleCollection() {
-  const collection = db.collection("Particle");
+  const collection = db().collection("Particle");
   await collection.create({
     schema: {
       rule: ParticleIndbAsJsonSchema,
@@ -34,7 +32,7 @@ async function createParticleCollection() {
 }
 
 async function createContributorCollection() {
-  const collection = db.collection("Contributor");
+  const collection = db().collection("Contributor");
   await collection.create({
     schema: {
       rule: ContributorIndbAsJsonSchema,
@@ -44,7 +42,7 @@ async function createContributorCollection() {
 }
 
 async function createReferenceCollection() {
-  const collection = db.collection("Reference");
+  const collection = db().collection("Reference");
   await collection.create({
     schema: {
       rule: ReferenceIndbAsJsonSchema,
@@ -54,7 +52,7 @@ async function createReferenceCollection() {
 }
 
 async function createStateCollection() {
-  const collection = db.collection("State");
+  const collection = db().collection("State");
   await collection.create({
     schema: {
       rule: StateIndbAsJsonSchema,
@@ -69,7 +67,7 @@ async function createStateCollection() {
 }
 
 async function createReactionCollection() {
-  const collection = db.collection("Reaction");
+  const collection = db().collection("Reaction");
   await collection.create({
     schema: {
       rule: ReactionIndbAsJsonSchema,
@@ -80,7 +78,7 @@ async function createReactionCollection() {
 
 async function createEdgeCollections() {
   for (const name of Object.values(Relation)) {
-    await db.createEdgeCollection(name);
+    await db().createEdgeCollection(name);
     console.log(`${name} edge collection created`);
   }
 }

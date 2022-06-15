@@ -46,7 +46,7 @@ export async function insert_cs_with_dict(
 }
 
 export async function list() {
-  const cursor: ArrayCursor<CrossSectionHeading> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(aql`
 	FOR cs IN CrossSection
 		LET refs = (
 		FOR rs IN References
@@ -88,7 +88,7 @@ export async function list() {
 }
 
 export async function byId(id: string) {
-  const cursor: ArrayCursor<CrossSectionItem> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
 	FOR cs IN CrossSection
 		FILTER cs._key == ${id}
 		LET refs = (
@@ -156,7 +156,7 @@ export interface SearchOptions {
 }
 
 export async function search(options: SearchOptions) {
-  const cursor: ArrayCursor<CrossSectionHeading> = await db.query(aql`
+  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(aql`
 	FOR cs IN CrossSection
 		LET refs = (
 			FOR rs IN References

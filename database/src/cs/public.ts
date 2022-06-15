@@ -1,7 +1,7 @@
 import { Reference } from "@lxcat/schema/dist/core/reference";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { CrossSection } from "../cs/collections";
-import { CrossSectionSet } from "../css/collection";
+import { CrossSectionSet } from "../css/collections";
 import { State } from "../shared/types/collections";
 
 export interface CrossSectionHeading {

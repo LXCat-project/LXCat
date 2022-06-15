@@ -1,6 +1,6 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { insert_input_set } from "./queries";
+import { insert_input_set } from "./queries/author_write";
 
 export async function load_css(fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });
@@ -14,7 +14,7 @@ export async function load_css_dir(dir: string) {
   for (const file of files) {
     const afile = join(dir, file);
     if (afile.endsWith(".json")) {
-      load_css(afile);
+      await load_css(afile);
     }
   }
 }

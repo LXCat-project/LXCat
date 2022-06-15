@@ -5,7 +5,7 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import { insert_input_set } from "@lxcat/database/dist/css/queries";
+import { insert_input_set } from "@lxcat/database/dist/css/queries/author_write";
 import { validator } from "@lxcat/schema/dist/css/validate";
 
 const handler = nc<AuthRequest, NextApiResponse>()

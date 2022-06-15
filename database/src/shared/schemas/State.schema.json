@@ -1,0 +1,976 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "scheme": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "l": {
+                          "type": "number"
+                        },
+                        "n": {
+                          "type": "number"
+                        },
+                        "occupance": {
+                          "type": "number"
+                        }
+                      },
+                      "required": ["n", "l", "occupance"],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "scheme": {
+                    "const": "LS",
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "J": {
+                        "type": "number"
+                      },
+                      "L": {
+                        "type": "number"
+                      },
+                      "P": {
+                        "enum": [-1, 1],
+                        "type": "number"
+                      },
+                      "S": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["J", "L", "P", "S"],
+                    "type": "object"
+                  }
+                },
+                "required": ["config", "scheme", "summary", "term"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "AtomLS",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "scheme": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "core": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "config": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "l": {
+                                  "type": "number"
+                                },
+                                "n": {
+                                  "type": "number"
+                                },
+                                "occupance": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["n", "l", "occupance"],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "scheme": {
+                            "const": "LS",
+                            "type": "string"
+                          },
+                          "term": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "J": {
+                                "type": "number"
+                              },
+                              "L": {
+                                "type": "number"
+                              },
+                              "P": {
+                                "enum": [-1, 1],
+                                "type": "number"
+                              },
+                              "S": {
+                                "type": "number"
+                              }
+                            },
+                            "required": ["J", "L", "P", "S"],
+                            "type": "object"
+                          }
+                        },
+                        "required": ["scheme", "config", "term"],
+                        "type": "object"
+                      },
+                      "excited": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "config": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "l": {
+                                  "type": "number"
+                                },
+                                "n": {
+                                  "type": "number"
+                                },
+                                "occupance": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["n", "l", "occupance"],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "scheme": {
+                            "const": "LS",
+                            "type": "string"
+                          },
+                          "term": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "L": {
+                                "type": "number"
+                              },
+                              "P": {
+                                "enum": [-1, 1],
+                                "type": "number"
+                              },
+                              "S": {
+                                "type": "number"
+                              }
+                            },
+                            "required": ["L", "S", "P"],
+                            "type": "object"
+                          }
+                        },
+                        "required": ["scheme", "config", "term"],
+                        "type": "object"
+                      }
+                    },
+                    "required": ["core", "excited"],
+                    "type": "object"
+                  },
+                  "scheme": {
+                    "const": "J1L2",
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "J": {
+                        "type": "number"
+                      },
+                      "K": {
+                        "type": "number"
+                      },
+                      "P": {
+                        "type": "number"
+                      },
+                      "S": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["J", "K", "P", "S"],
+                    "type": "object"
+                  }
+                },
+                "required": ["config", "scheme", "summary", "term"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "AtomJ1L2",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "scheme": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "config": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "core": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "config": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "l": {
+                                  "type": "number"
+                                },
+                                "n": {
+                                  "type": "number"
+                                },
+                                "occupance": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["n", "l", "occupance"],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "scheme": {
+                            "const": "LS",
+                            "type": "string"
+                          },
+                          "term": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "L": {
+                                "type": "number"
+                              },
+                              "P": {
+                                "enum": [-1, 1],
+                                "type": "number"
+                              },
+                              "S": {
+                                "type": "number"
+                              }
+                            },
+                            "required": ["L", "S", "P"],
+                            "type": "object"
+                          }
+                        },
+                        "required": ["scheme", "config", "term"],
+                        "type": "object"
+                      },
+                      "excited": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "config": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "l": {
+                                  "type": "number"
+                                },
+                                "n": {
+                                  "type": "number"
+                                },
+                                "occupance": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": ["n", "l", "occupance"],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "scheme": {
+                            "const": "LS",
+                            "type": "string"
+                          },
+                          "term": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "L": {
+                                "type": "number"
+                              },
+                              "P": {
+                                "enum": [-1, 1],
+                                "type": "number"
+                              },
+                              "S": {
+                                "type": "number"
+                              }
+                            },
+                            "required": ["L", "S", "P"],
+                            "type": "object"
+                          }
+                        },
+                        "required": ["scheme", "config", "term"],
+                        "type": "object"
+                      }
+                    },
+                    "required": ["core", "excited"],
+                    "type": "object"
+                  },
+                  "scheme": {
+                    "const": "LS1",
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "J": {
+                        "type": "number"
+                      },
+                      "K": {
+                        "type": "number"
+                      },
+                      "L": {
+                        "type": "number"
+                      },
+                      "P": {
+                        "enum": [-1, 1],
+                        "type": "number"
+                      },
+                      "S": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["J", "K", "L", "P", "S"],
+                    "type": "object"
+                  }
+                },
+                "required": ["config", "scheme", "summary", "term"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "AtomLS1",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "not": {}
+                  },
+                  "S": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "parity": {
+                    "not": {}
+                  },
+                  "reflection": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "type": "number"
+                  },
+                  "S": {
+                    "type": "number"
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "parity": {
+                    "enum": ["g", "u"],
+                    "type": "string"
+                  },
+                  "reflection": {
+                    "enum": ["-", "+"],
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "description": "Helper type for defining an array with minimum size one.",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "not": {}
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "description": "Helper type for defining an array with minimum size one.",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "string"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  }
+                                ]
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "type": "number"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": ["Lambda", "S", "e", "parity", "summary"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "HomonuclearDiatom",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "not": {}
+                  },
+                  "S": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "reflection": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "type": "number"
+                  },
+                  "S": {
+                    "type": "number"
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "reflection": {
+                    "enum": ["-", "+"],
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "description": "Helper type for defining an array with minimum size one.",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "not": {}
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "description": "Helper type for defining an array with minimum size one.",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "string"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  }
+                                ]
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "type": "number"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": ["Lambda", "S", "e", "summary"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "HeteronuclearDiatom",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "description": "Helper type for defining an array with minimum size one.",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "not": {}
+                  },
+                  "S": {
+                    "not": {}
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "parity": {
+                    "not": {}
+                  },
+                  "reflection": {
+                    "not": {}
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "not": {}
+                  }
+                },
+                "required": ["e", "summary"],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "type": "number"
+                  },
+                  "S": {
+                    "type": "number"
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "parity": {
+                    "enum": ["g", "u"],
+                    "type": "string"
+                  },
+                  "reflection": {
+                    "enum": ["-", "+"],
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "description": "Helper type for defining an array with minimum size one.",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "not": {}
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "rotational": {
+                              "description": "Helper type for defining an array with minimum size one.",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "string"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      },
+                                      "summary": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["J", "summary"],
+                                    "type": "object"
+                                  }
+                                ]
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "v": {
+                              "items": {
+                                "type": "number"
+                              },
+                              "type": "array"
+                            }
+                          },
+                          "required": ["summary", "v"],
+                          "type": "object"
+                        }
+                      ]
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": ["Lambda", "S", "e", "parity", "summary"],
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "const": "LinearTriatomInversionCenter",
+          "type": "string"
+        }
+      },
+      "required": ["charge", "electronic", "id", "particle", "type"],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "electronic": {
+          "not": {}
+        },
+        "id": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "type": {
+          "not": {}
+        }
+      },
+      "required": ["charge", "id", "particle"],
+      "type": "object"
+    }
+  ],
+  "definitions": {}
+}

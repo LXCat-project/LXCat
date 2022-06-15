@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { ReactionSummary } from "../../ScatteringCrossSection/ReactionSummary";
-import { byId } from "@lxcat/database/dist/css/queries";
+import { byId } from "@lxcat/database/dist/css/queries/public";
 import {
   CrossSectionSetItem,
   OrphanedCrossSectionItem,

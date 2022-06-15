@@ -114,3 +114,41 @@ To start over and fill database with test seed use
 ```sh
 npm run reload
 ```
+
+## Make usable for app
+
+```
+npx tsup src/index.ts src/*/queries.ts src/*/schema.ts src/*/queries --dts
+
+# Exclude cli tests and test utils from dist
+find src -type f |grep -v cli | grep -v spec |grep -v testutils |perl -pe 's/\n/ /'
+
+npx tsup src/css/collection.ts src/css/queries/author_read.ts src/css/queries/author_write.ts src/css/queries/public.ts src/css/loaders.ts src/css/schema.ts src/css/public.ts src/systemDb.ts src/db.ts src/cs/queries.ts src/cs/collections.ts src/cs/schema.ts src/cs/public.ts src/auth/queries.ts src/auth/schema.ts src/shared/queries.ts src/shared/types/collections.ts src/shared/types/version_info.ts src/shared/schema.ts src/index.ts src/date.ts --dts
+
+```
+
+## Generate collection schemas
+
+The JSON schemas for the ArangoDB collections are stored as `src/**/*.schema.json` and are generated from Typescript types.
+Any time the types change run
+
+```shell
+npm run collectionschema
+```
+
+## Tests
+
+Tests can be written as `src/**/*.spec.ts` files  with [vitest](https://vitest.dev/) framework and run with
+
+```shell
+npm run test
+```
+
+The tests are done against a database running in a container using the [testcontainers](https://github.com/testcontainers/testcontainers-node) library.
+
+To run tests with code coverage use
+
+```shell
+npm run test -- run --coverage
+xdg-open coverage/index.html
+```
