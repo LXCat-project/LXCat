@@ -1,8 +1,9 @@
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
 import { db } from "../src/db";
-import { CrossSectionIndbAsJsonSchema, Relation } from "../src/cs/schema";
-import { CrossSectionSetIndbAsJsonSchema } from "../src/css/schema";
+import { Relation } from "../src/cs/schema";
+import CrossSectionIndbAsJsonSchema from "../src/cs/schemas/CrossSection.schema.json";
+import CrossSectionSetIndbAsJsonSchema from "../src/css/schemas/CrossSectionSet.schema.json";
 
 export default async function () {
   await createCrossSectionSetCollection();

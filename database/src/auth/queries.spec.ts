@@ -1,5 +1,5 @@
 import { StartedArangoContainer } from "testcontainers";
-import { startDbContainer } from "../db.spec";
+import { startDbContainer } from "../testutils";
 import {
   getUserByKey,
   listUsers,
@@ -8,6 +8,7 @@ import {
   makeMember,
   listOrganizations,
 } from "./queries";
+import { TestKeys, createTestUserAndOrg } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
   jest.setTimeout(180_000);
@@ -87,17 +88,3 @@ describe("given filled ArangoDB container", () => {
     });
   });
 });
-
-export interface TestKeys {
-  testUserKey: string;
-  testOrgKey: string;
-}
-
-export async function createTestUserAndOrg(): Promise<TestKeys> {
-  const { default: userCollectionCreator } = await import(
-    "../../setup/2_users"
-  );
-  await userCollectionCreator();
-  const { default: testUserCreator } = await import("../../seeds/test/1_users");
-  return await testUserCreator();
-}

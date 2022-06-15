@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { db } from "./db";
-import { systemDb } from "./systemDb";
+import { db } from "../db";
+import { systemDb } from "../systemDb";
 
 (async () => {
   try {

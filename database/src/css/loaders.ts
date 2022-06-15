@@ -1,6 +1,6 @@
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { insert_input_set } from "./queries";
+import { insert_input_set } from "./queries/author_write";
 
 export async function load_css(fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });

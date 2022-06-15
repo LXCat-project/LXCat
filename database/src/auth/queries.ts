@@ -19,8 +19,19 @@ export const toggleRole = async (
   return await cursor.next();
 };
 
+export const makeAdmin = async (email: string) => {
+  const roles = Role.options;
+  await db().query(aql`
+    FOR u IN users
+        FILTER u.email == ${email}
+    UPDATE u WITH {
+        roles: ${roles}
+    } IN users
+  `);
+};
+
 export const dropUser = async (userId: string) => {
-  await makeMemberless(userId)
+  await makeMemberless(userId);
   await db().query(aql`REMOVE { _key: ${userId} } IN users`);
 };
 

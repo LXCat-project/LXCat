@@ -1,8 +1,10 @@
 import { StartedArangoContainer } from "testcontainers";
-import { toggleRole } from "../auth/queries";
-import { createTestUserAndOrg, TestKeys } from "../auth/queries.spec";
-import { startDbContainer } from "../db.spec";
-import { search, SortOptions } from "./queries";
+import { toggleRole } from "../../auth/queries";
+import { createTestUserAndOrg, TestKeys } from "../../auth/testutils";
+import { startDbContainer } from "../../testutils";
+import { CrossSectionSetHeading } from "../public";
+import { createCsCollections, loadTestSets } from "./testutils";
+import { search, SortOptions } from "./public";
 
 describe("given filled ArangoDB container", () => {
   jest.setTimeout(180_000);
@@ -13,7 +15,8 @@ describe("given filled ArangoDB container", () => {
     container = await startDbContainer();
     testKeys = await createTestUserAndOrg();
     await toggleRole(testKeys.testUserKey, "author");
-    await createTestSets();
+    await createCsCollections();
+    await loadTestSets();
   });
 
   afterAll(async () => {
@@ -22,24 +25,18 @@ describe("given filled ArangoDB container", () => {
 
   describe("search()", () => {
     describe("given no filter", () => {
-      it("should have 2 sets", async () => {
+      let result: CrossSectionSetHeading[] = [];
+
+      beforeAll(async () => {
         const filter = { contributor: [], species2: [] };
         const sort: SortOptions = { field: "name", dir: "DESC" };
         const paging = { offset: 0, count: 10 };
-        const result = await search(filter, sort, paging);
+        result = await search(filter, sort, paging);
+      });
+
+      it("should have 2 sets", () => {
         expect(result.length).toEqual(2);
       });
     });
   });
 });
-
-export async function createTestSets() {
-  const { default: sharedCollectionsCreator } = await import(
-    "../../setup/3_shared"
-  );
-  await sharedCollectionsCreator();
-  const { default: csCollectionsCreator } = await import("../../setup/4_cs");
-  await csCollectionsCreator();
-  const { default: testCsCreator } = await import("../../seeds/test/2_cs");
-  await testCsCreator();
-}

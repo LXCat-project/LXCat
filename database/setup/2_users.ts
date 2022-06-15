@@ -1,11 +1,11 @@
 import "dotenv/config";
+import { CollectionType } from "arangojs/collection";
 import { db } from "../src/db";
 import {
   OrganizationAsJsonSchema,
   UserWithAccountSessionInDb,
   UserWithAccountSessionInDbAsJsonSchema,
 } from "../src/auth/schema";
-import { CollectionType } from "arangojs/collection";
 
 export default async function () {
   await createUserCollection();

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {},
+  "properties": {
+    "reversible": {
+      "type": "boolean"
+    },
+    "type_tags": {
+      "items": {
+        "enum": [
+          "Elastic",
+          "Effective",
+          "Electronic",
+          "Vibrational",
+          "Rotational",
+          "Attachment",
+          "Ionization"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": ["reversible", "type_tags"],
+  "type": "object"
+}

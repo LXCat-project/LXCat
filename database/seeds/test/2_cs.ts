@@ -1,8 +1,10 @@
 import "dotenv/config";
-import { join } from "path";
+import { join, dirname } from "path";
 import { load_css_dir } from "../../src/css/loaders";
 
 export default async function () {
-  const dir = join(__dirname, "crosssections");
+  const thisfile = new URL(import.meta.url);
+  console.log(thisfile)
+  const dir = join(dirname(thisfile.pathname), "crosssections");
   await load_css_dir(dir);
 }
