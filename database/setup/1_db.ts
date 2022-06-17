@@ -7,6 +7,7 @@ export default async function () {
   const names = await db.listDatabases();
   const databaseName = process.env.ARANGO_NAME || "lxcat";
   if (!names.includes(databaseName)) {
+    // TODO only print log when not testing aka calling from cli
     console.log(`Creating database ${databaseName}`);
     await db.createDatabase(databaseName);
   } else {

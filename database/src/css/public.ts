@@ -1,5 +1,5 @@
 import { CrossSectionHeading, CrossSectionItem } from "../cs/public";
-import { CrossSectionSet } from "./collection";
+import { CrossSectionSet } from "./collections";
 
 export interface CrossSectionSetHeading extends CrossSectionSet {
   id: string;

@@ -4,10 +4,10 @@ import type { ErrorObject } from "ajv";
 import { useState, MouseEvent } from "react";
 import { mustBeAuthor } from "../../../../auth/middleware";
 import {
-  byOwnerAndId,
   CrossSectionSetInputOwned,
+  byOwnerAndId,
   getVersionInfo,
-} from "@lxcat/database/dist/css/queries";
+} from "@lxcat/database/dist/css/queries/author_read";
 
 interface Props {
   section: CrossSectionSetInputOwned;

@@ -4,7 +4,7 @@ import { mustBeAuthor } from "../../../auth/middleware";
 import {
   CrossSectionSetOwned,
   listOwned,
-} from "@lxcat/database/dist/css/queries";
+} from "@lxcat/database/dist/css/queries/author_read";
 import Link from "next/link";
 import { useState } from "react";
 import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";

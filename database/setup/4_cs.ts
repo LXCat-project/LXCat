@@ -1,8 +1,9 @@
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
 import { db } from "../src/db";
-import { CrossSectionIndbAsJsonSchema, Relation } from "../src/cs/schema";
-import { CrossSectionSetIndbAsJsonSchema } from "../src/css/schema";
+import { Relation } from "../src/cs/schema";
+import CrossSectionIndbAsJsonSchema from "../src/cs/schemas/CrossSection.schema.json";
+import CrossSectionSetIndbAsJsonSchema from "../src/css/schemas/CrossSectionSet.schema.json";
 
 export default async function () {
   await createCrossSectionSetCollection();
@@ -13,7 +14,7 @@ export default async function () {
 }
 
 async function createCrossSectionSetCollection() {
-  const collection = db.collection("CrossSectionSet");
+  const collection = db().collection("CrossSectionSet");
   await collection.create({
     schema: {
       rule: CrossSectionSetIndbAsJsonSchema,
@@ -31,7 +32,7 @@ async function createCrossSectionSetCollection() {
 }
 
 async function createCrossSectionCollection() {
-  const collection = db.collection("CrossSection");
+  const collection = db().collection("CrossSection");
   await collection.create({
     schema: {
       rule: CrossSectionIndbAsJsonSchema,
@@ -50,13 +51,13 @@ async function createCrossSectionCollection() {
 
 async function createEdgeCollections() {
   for (const name of Object.values(Relation)) {
-    await db.createEdgeCollection(name);
+    await db().createEdgeCollection(name);
     console.log(`${name} edge collection created`);
   }
 }
 
 async function createCrossSectionHistoryCollection() {
-  const collection = db.collection("CrossSectionHistory");
+  const collection = db().collection("CrossSectionHistory");
   if (await collection.exists()) {
     console.log("CrossSectionHistory collection already exists");
     return;
@@ -66,7 +67,7 @@ async function createCrossSectionHistoryCollection() {
 }
 
 async function createCrossSectionSetHistoryCollection() {
-  const collection = db.collection("CrossSectionSetHistory");
+  const collection = db().collection("CrossSectionSetHistory");
   if (await collection.exists()) {
     console.log("CrossSectionSetHistory collection already exists");
     return;

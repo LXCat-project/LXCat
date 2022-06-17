@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
-import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries";
+import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries/public";
 
 interface Props {
   facets: Facets;

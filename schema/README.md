@@ -27,3 +27,18 @@ npm run json
 ```
 
 Whenever the types from which the schemas are derived are changed then this command should be run.
+
+## Tests
+
+Tests can be written as `src/**/*.test.ts` files  with [vitest](https://vitest.dev/) framework and run with
+
+```shell
+npm run test
+```
+
+To run tests with code coverage use
+
+```shell
+npm run test -- run --coverage
+xdg-open coverage/index.html
+```

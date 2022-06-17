@@ -7,7 +7,7 @@ export const toggleRole = async (
   userId: string,
   role: Role
 ): Promise<Role[] | undefined> => {
-  const cursor: ArrayCursor<Role[]> = await db.query(aql`
+  const cursor: ArrayCursor<Role[]> = await db().query(aql`
         LET role = ${role}
         FOR u IN users
             FILTER u._key == ${userId}
@@ -19,8 +19,20 @@ export const toggleRole = async (
   return await cursor.next();
 };
 
+export const makeAdmin = async (email: string) => {
+  const roles = Role.options;
+  await db().query(aql`
+    FOR u IN users
+        FILTER u.email == ${email}
+    UPDATE u WITH {
+        roles: ${roles}
+    } IN users
+  `);
+};
+
 export const dropUser = async (userId: string) => {
-  await db.query(aql`REMOVE { _key: ${userId} } IN users`);
+  await makeMemberless(userId);
+  await db().query(aql`REMOVE { _key: ${userId} } IN users`);
 };
 
 export interface UserFromDB extends UserInDb {
@@ -28,8 +40,17 @@ export interface UserFromDB extends UserInDb {
   organization?: string;
 }
 
+export const getUserByKey = async (key: string) => {
+  const cursor: ArrayCursor<UserInDb> = await db().query(aql`
+    FOR u IN users
+        FILTER u._key == ${key}
+        RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+  `);
+  return await cursor.next();
+};
+
 export const listUsers = async () => {
-  const cursor: ArrayCursor<UserFromDB> = await db.query(aql`
+  const cursor: ArrayCursor<UserFromDB> = await db().query(aql`
     FOR u IN users
         LET organization = FIRST(
             FOR m IN MemberOf
@@ -48,7 +69,7 @@ export interface OrganizationFromDB extends Organization {
 }
 
 export const listOrganizations = async () => {
-  const cursor: ArrayCursor<OrganizationFromDB> = await db.query(aql`
+  const cursor: ArrayCursor<OrganizationFromDB> = await db().query(aql`
     FOR o IN Organization
         RETURN UNSET(o, ["_id", "_rev"])
   `);
@@ -60,7 +81,7 @@ export const makeMember = async (userKey: string, orgKey: string) => {
   // create edge if user was memberless or update edge _to when already member
   const userId = "users/" + userKey;
   const orgId = "Organization/" + orgKey;
-  const cursor: ArrayCursor<OrganizationFromDB> = await db.query(aql`
+  const cursor: ArrayCursor<OrganizationFromDB> = await db().query(aql`
         UPSERT
             { _from: ${userId}}
         INSERT
@@ -77,7 +98,7 @@ export const makeMember = async (userKey: string, orgKey: string) => {
 
 export const makeMemberless = async (userKey: string) => {
   const userId = "users/" + userKey;
-  await db.query(aql`
+  await db().query(aql`
         FOR m IN MemberOf
             FILTER m._from == ${userId}
             REMOVE m IN MemberOf
