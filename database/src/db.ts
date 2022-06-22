@@ -4,10 +4,9 @@ let _db: Database | undefined = undefined;
 
 export function db() {
   if (_db === undefined) {
-    // Do not use `db` from app as it will error trying to connect to non-existing db
     return setDb(
       process.env.ARANGO_URL || "http://localhost:8529",
-      process.env.ARANGO_ROOT_PASSWORD,
+      process.env.ARANGO_PASSWORD,
       process.env.ARANGO_USERNAME || "root",
       process.env.ARANGO_DB
     );

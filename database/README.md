@@ -7,8 +7,13 @@ The web application needs an [arangodb](https://arangodb.com/) database to talk 
 Create `.env` file inside `database/` directory with
 
 ```shell
-ARANGO_ROOT_PASSWORD=<arangodb root password that is set inside Docker container>
 ARANGO_PASSWORD=<arangodb root password used to connect to Docker container>
+# To connect to ArangoDB running on URL other then http://localhost:8529 uncomment line below
+# ARANGO_URL=<URL where ArangoDB is running>
+# To use database other then lxcat uncomment line below
+# ARANGO_DB=<database name>
+# To connect to ArangoDB with other user then root uncomment line below
+# ARANGO_USERNAME=<user name>
 ```
 
 Spin up a database container.
