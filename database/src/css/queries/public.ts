@@ -191,6 +191,7 @@ export async function historyOfSet(key: string) {
   const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
+        FILTER css.versionInfo.status != 'draft'
         FOR prev IN 0..9999999 OUTBOUND css CrossSectionSetHistory
           RETURN MERGE({_key: prev._key}, prev.versionInfo)
     `);

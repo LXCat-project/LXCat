@@ -34,6 +34,12 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
           <p>{set.versionInfo.retractMessage}</p>
         </div>
       )}
+      {set.versionInfo.status === "archived" && (
+        <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>
+          <h2>This set is not the latest version.</h2>
+          <p>Visit <Link href={`/scat-css/${set.id}/history`}><a>history page</a></Link> to see newer versions.</p>
+        </div>
+      )}
       <div>{set.description}</div>
       <div>Contributed by {set.contributor}</div>
       <div>Complete: {set.complete ? "Yes" : "No"}</div>
