@@ -1,15 +1,15 @@
 import Ajv, { ErrorObject } from "ajv";
-import schema from "./CrossSectionSet.schema.json";
-import { CrossSectionSetInput } from "./input";
+import schema from "./CrossSectionSetRaw.schema.json";
+import { CrossSectionSetRaw } from "./input";
 
 const ajv = new Ajv({ allErrors: true });
 
-export const validateJSONSchema = ajv.compile<CrossSectionSetInput>(schema);
+export const validateJSONSchema = ajv.compile<CrossSectionSetRaw>(schema);
 
 class Validator {
   errors: ErrorObject[] | undefined | null = [];
 
-  validate(data: unknown): data is CrossSectionSetInput {
+  validate(data: unknown): data is CrossSectionSetRaw {
     const result = validateJSONSchema(data);
     this.errors = validateJSONSchema.errors;
     // TODO add other validators like

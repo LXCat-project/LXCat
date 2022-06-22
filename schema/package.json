@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "json:css": "ts-json-schema-generator -f ./tsconfig.json --path src/css/input.ts --type CrossSectionSetInput --out src/css/CrossSectionSet.schema.json -e none",
+    "json:css": "ts-json-schema-generator -f ./tsconfig.json --no-top-ref --path src/css/input.ts --type CrossSectionSetRaw --out src/css/CrossSectionSetRaw.schema.json -e none",
     "json": "npm run json:css",
     "build": "tsc",
     "lint": "eslint src/ --ext .ts",

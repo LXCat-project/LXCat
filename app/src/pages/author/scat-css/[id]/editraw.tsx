@@ -51,7 +51,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
     <Layout>
       <h1>Edit scattering cross section set</h1>
       The JSON schema can be found{" "}
-      <a href="/api/scat-css/schema.json" target="_blank">
+      <a href="/api/scat-css/CrossSectionSetRaw.schema.json" target="_blank">
         here
       </a>
       <form>

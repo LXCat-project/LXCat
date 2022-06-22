@@ -64,14 +64,14 @@ export async function byOwnerAndId(email: string, id: string) {
                                       FILTER c._from == r._id
                                           FOR c2s IN State
                                           FILTER c2s._id == c._to
-                                          RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
+                                          RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
                                   )
                                   LET produces = (
                                       FOR p IN Produces
                                       FILTER p._from == r._id
                                           FOR p2s IN State
                                           FILTER p2s._id == p._to
-                                          RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
+                                          RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
                                   )
                                   RETURN MERGE(UNION(consumes, produces))
 
