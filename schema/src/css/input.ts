@@ -10,6 +10,9 @@ export type CrossSectionInput<StateType> = InputDocument<
 
 // TODO should set have own references?
 // TODO do not disable linter
-export type CrossSectionSetInput = CrossSectionInput<
+/**
+ * To add a cross section set to the LXCat application, the set should be valid against this schema.
+ */
+export type CrossSectionSetRaw = CrossSectionInput<
   AnyAtomJSON | AnyMoleculeJSON
 >;

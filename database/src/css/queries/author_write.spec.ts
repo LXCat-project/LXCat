@@ -144,19 +144,6 @@ describe("given filled ArangoDB container", () => {
             // TODO publish should have made keycss1 archived and listOwned should not have returned keycss1
             const expected: CrossSectionSetOwned[] = [
               {
-                _key: keycss1,
-                complete: true,
-                description: "Some description",
-                name: "Some versioned name",
-                organization: "Some organization",
-                versionInfo: {
-                  commitMessage: "Initial version",
-                  createdOn: expect.stringMatching(ISO_8601_UTC),
-                  status: "published",
-                  version: "1",
-                },
-              },
-              {
                 _key: keycss2,
                 complete: true,
                 description: "Some description 1st edit",
@@ -187,7 +174,7 @@ describe("given filled ArangoDB container", () => {
                 _key: keycss1,
                 commitMessage: "Initial version",
                 createdOn: expect.stringMatching(ISO_8601_UTC),
-                status: "published", // TODO publish(keycss2) should mark keycss1 as archived
+                status: "archived", // TODO publish(keycss2) should mark keycss1 as archived
                 version: "1",
               },
             ];

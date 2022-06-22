@@ -2,7 +2,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetInput } from "@lxcat/schema/dist/css/input";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { CrossSectionSet } from "../collections";
 
 export interface CrossSectionSetOwned extends CrossSectionSet {
@@ -37,7 +37,7 @@ export async function listOwned(email: string) {
   return await cursor.all();
 }
 
-export interface CrossSectionSetInputOwned extends CrossSectionSetInput {
+export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
   _key: string;
 }
 
@@ -76,14 +76,14 @@ export async function byOwnerAndId(email: string, id: string) {
                                       FILTER c._from == r._id
                                           FOR c2s IN State
                                           FILTER c2s._id == c._to
-                                          RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
+                                          RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
                                   )
                                   LET produces = (
                                       FOR p IN Produces
                                       FILTER p._from == r._id
                                           FOR p2s IN State
                                           FILTER p2s._id == p._to
-                                          RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
+                                          RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
                                   )
                                   RETURN MERGE(UNION(consumes, produces))
 

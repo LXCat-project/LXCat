@@ -103,6 +103,7 @@ NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
 NEXTAUTH_SECRET=<Random string>
 # Password used to connect to database
 ARANGO_PASSWORD=<Arangodb root password>
+ARANGO_ROOT_PASSWORD=<Arangodb root password used in docker>
 # When you want to use Auth0 as identity provider set the AUTH0_* vars
 AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
 AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
