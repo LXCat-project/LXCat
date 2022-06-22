@@ -14,7 +14,7 @@ export interface CrossSectionHeading {
 
 export type CrossSectionItem = {
   id: string;
-  isPartOf: CrossSectionSet & { id: string };
+  isPartOf: Array<CrossSectionSet & { id: string }>;
   reaction: Reaction<State>;
   reference: Reference[];
 } & Omit<CrossSection, "reaction">;

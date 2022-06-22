@@ -12,6 +12,11 @@ const Admin: NextPage<Props> = () => {
       <span>To add, update, publish, retract documents.</span>
       <ul>
         <li>
+          <Link href="/author/scat-cs">
+            <a>Scattering cross section</a>
+          </Link>
+        </li>
+        <li>
           <Link href="/author/scat-css">
             <a>Scattering cross section set</a>
           </Link>

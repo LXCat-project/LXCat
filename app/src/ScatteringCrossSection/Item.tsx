@@ -25,14 +25,15 @@ export const Item = (props: CrossSectionItem) => {
       <h2>Part of set</h2>
 
       <div>
-        <div>
-          Name:{" "}
-          <Link href={`/scat-css/${props.isPartOf.id}`}>
-            {props.isPartOf.name}
-          </Link>
-        </div>
-        <div>Description: {props.isPartOf.description}</div>
-        <div>Complete: {props.isPartOf.complete ? "Yes" : "No"}</div>
+        {props.isPartOf.map((s) => (
+          <div key={s.id}>
+            <div>
+              Name: <Link href={`/scat-css/${s.id}`}>{s.name}</Link>
+            </div>
+            <div>Description: {s.description}</div>
+            <div>Complete: {s.complete ? "Yes" : "No"}</div>
+          </div>
+        ))}
       </div>
       <h2>Data</h2>
       <table>

@@ -126,7 +126,7 @@ export async function byId(id: string) {
 		)
 		RETURN MERGE(
 			UNSET(cs, ["_key", "_rev", "_id"]),
-			{ "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
+			{ "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": set}
 		)
 	`);
 
@@ -195,6 +195,48 @@ export async function search(options: SearchOptions) {
 		FILTER LENGTH(${options.species1}) == 0 OR ${options.species1} ANY == reaction.lhs[0].state.id
 		FILTER LENGTH(${options.species2}) == 0 OR ${options.species2} ANY == reaction.lhs[1].state.id
 		RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
+	`);
+  return await cursor.all();
+}
+
+export async function listOwned(email: string) {
+  const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
+		FOR u IN users
+			FILTER u.email == ${email}
+			FOR m IN MemberOf
+				FILTER m._from == u._id
+				FOR o IN Organization
+					FILTER m._to == o._id
+					FOR cs IN CrossSection
+						FILTER cs.organization == o._id
+						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+						LET sets = (
+							FOR i IN IsPartOf
+							FILTER i._from == cs._id
+							FOR css IN CrossSectionSet
+								FILTER i._to == css._id
+								RETURN {_key: css.key, name: css.name, id: css.key}
+						)
+						LET reaction = FIRST(
+							FOR r in Reaction
+								FILTER r._id == cs.reaction
+								LET consumes = (
+									FOR c IN Consumes
+									FILTER c._from == r._id
+										FOR c2s IN State
+										FILTER c2s._id == c._to
+										RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+								)
+								LET produces = (
+									FOR p IN Produces
+									FILTER p._from == r._id
+										FOR p2s IN State
+										FILTER p2s._id == p._to
+										RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+								)
+								RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+						)
+						RETURN MERGE(cs, {"id": cs._key, organization: o.name, "isPartOf": sets, reaction})
 	`);
   return await cursor.all();
 }
