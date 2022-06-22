@@ -72,7 +72,7 @@ async function updateVersionStatus(key: string, status: Status) {
 
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
-  // TODO when key has a published version then that old version should be archived aka Change status of current published section to archived
+  // when key has a published version then that old version should be archived aka Change status of current published section to archived
   const history = await historyOfSet(key)
   const previous_published_key = history.find(h => h.status === 'published')
   if (previous_published_key !== undefined) {
