@@ -11,14 +11,14 @@ import {
   upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetInput } from "@lxcat/schema/dist/css/input";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { getVersionInfo } from "./author_read";
 
 // TODO this file is becoming big split into more files like queries/public.ts + queries/read_author.ts  + queries/write_author.ts
 // also some queries have duplication which could be de-duped
 
 export async function insert_input_set(
-  dataset: CrossSectionSetInput,
+  dataset: CrossSectionSetRaw,
   status: Status = "published",
   version = "1",
   commitMessage = ""
@@ -77,7 +77,7 @@ export async function publish(key: string) {
 
 export async function updateSet(
   key: string,
-  set: CrossSectionSetInput,
+  set: CrossSectionSetRaw,
   message: string
 ) {
   const info = await getVersionInfo(key);
@@ -96,7 +96,7 @@ export async function updateSet(
 }
 async function createDraftSet(
   version: string,
-  set: CrossSectionSetInput,
+  set: CrossSectionSetRaw,
   message: string,
   key: string
 ) {
@@ -123,7 +123,7 @@ async function createDraftSet(
 
 async function updateDraftSet(
   key: string,
-  dataset: CrossSectionSetInput,
+  dataset: CrossSectionSetRaw,
   versionInfo: VersionInfo,
   message: string
 ) {

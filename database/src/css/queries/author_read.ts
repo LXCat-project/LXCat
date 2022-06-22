@@ -2,7 +2,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetInput } from "@lxcat/schema/dist/css/input";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { CrossSectionSet } from "../collections";
 
 export interface CrossSectionSetOwned extends CrossSectionSet {
@@ -25,7 +25,7 @@ export async function listOwned(email: string) {
   return await cursor.all();
 }
 
-export interface CrossSectionSetInputOwned extends CrossSectionSetInput {
+export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
   _key: string;
 }
 
