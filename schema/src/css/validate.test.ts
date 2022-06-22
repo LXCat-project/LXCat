@@ -36,7 +36,7 @@ describe("validate()", () => {
         params: {
           missingProperty: "name",
         },
-        schemaPath: "#/definitions/CrossSectionSetInput/required",
+        schemaPath: "#/required",
       },
     ];
     expect(validator.errors).toEqual(expected);
