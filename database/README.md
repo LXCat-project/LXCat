@@ -8,6 +8,7 @@ Create `.env` file inside `database/` directory with
 
 ```shell
 ARANGO_PASSWORD=<arangodb root password used to connect to Docker container>
+ARANGO_ROOT_PASSWORD=<Arangodb root password used to set pw in Docker container>
 # To connect to ArangoDB running on URL other then http://localhost:8529 uncomment line below
 # ARANGO_URL=<URL where ArangoDB is running>
 # To use database other then lxcat uncomment line below
