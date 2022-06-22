@@ -13,6 +13,7 @@ import {
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { getVersionInfo } from "./author_read";
+import { historyOfSet } from "./public";
 
 // TODO this file is becoming big split into more files like queries/public.ts + queries/read_author.ts  + queries/write_author.ts
 // also some queries have duplication which could be de-duped
@@ -61,18 +62,25 @@ export async function insert_input_set(
   return cs_set_id.replace("CrossSectionSet/", "");
 }
 
+async function updateVersionStatus(key: string, status: Status) {
+  await db().query(aql`
+    FOR css IN CrossSectionSet
+        FILTER css._key == ${key}
+        UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${status}}) } IN CrossSectionSet
+  `);
+}
+
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
   // TODO when key has a published version then that old version should be archived aka Change status of current published section to archived
+  const history = await historyOfSet(key)
+  const previous_published_key = history.find(h => h.status === 'published')
+  if (previous_published_key !== undefined) {
+    await updateVersionStatus(previous_published_key._key, 'archived')
+  }
   // TODO For each changed/added cross section perform publishing of cross section
   // Change status of draft section to published
-  const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
-    FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: 'published'}) } IN CrossSectionSet
-        RETURN {id: css._key}
-  `);
-  return await cursor.next();
+  await updateVersionStatus(key, 'published')
 }
 
 export async function updateSet(
