@@ -118,19 +118,6 @@ describe("given filled ArangoDB container", () => {
           // TODO listOwned should hide published sets which have drafts
           const expected: CrossSectionSetOwned[] = [
             {
-              _key: keycss1,
-              complete: true,
-              description: "Some description",
-              name: "Some versioned name",
-              organization: "Some organization",
-              versionInfo: {
-                commitMessage: "Initial version",
-                createdOn: expect.stringMatching(ISO_8601_UTC),
-                status: "published",
-                version: "1",
-              },
-            },
-            {
               _key: keycss2,
               complete: true,
               description: "Some description 1st edit",

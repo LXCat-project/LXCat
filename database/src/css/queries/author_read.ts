@@ -11,16 +11,28 @@ export interface CrossSectionSetOwned extends CrossSectionSet {
 
 export async function listOwned(email: string) {
   const cursor: ArrayCursor<CrossSectionSetOwned> = await db().query(aql`
-        FOR u IN users
-            FILTER u.email == ${email}
-            FOR m IN MemberOf
-                FILTER m._from == u._id
-                FOR o IN Organization
-                    FILTER m._to == o._id
-                    FOR css IN CrossSectionSet
-                        FILTER css.organization == o._id
-                        FILTER ['published' ,'draft', 'retracted'] ANY == css.versionInfo.status
-                        RETURN MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
+    FOR u IN users
+        FILTER u.email == ${email}
+        LIMIT 1
+        FOR m IN MemberOf
+            FILTER m._from == u._id
+            FOR o IN Organization
+                FILTER m._to == o._id
+                FOR css IN CrossSectionSet
+                    FILTER css.organization == o._id
+                    FILTER css.versionInfo.status != 'archived'
+                    
+                    LET with_draft = FIRST(
+                        FILTER css.versionInfo.status == 'published'
+                        RETURN COUNT(
+                            FOR css_draft IN INBOUND css CrossSectionSetHistory
+                                LIMIT 1
+                                return 1
+                        )
+                    )
+                    
+                    FILTER with_draft != 1
+                        return MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
     `);
   return await cursor.all();
 }
