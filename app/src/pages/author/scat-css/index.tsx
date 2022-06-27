@@ -10,16 +10,25 @@ import { useState } from "react";
 import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";
 import { DeleteDialog } from "../../../ScatteringCrossSectionSet/DeleteDialog";
 import { PublishDialog } from "../../../ScatteringCrossSectionSet/PublishDialog";
+import { listSetsOfOwner } from "../../../ScatteringCrossSectionSet/client";
 
 interface Props {
   items: CrossSectionSetOwned[];
 }
 
-const Admin: NextPage<Props> = ({ items }) => {
+const Admin: NextPage<Props> = ({ items: initialItems }) => {
+  const [items, setItems] = useState(initialItems);
   const [selectedSetId, setselectedSetId] = useState("");
   const [openRestractDialog, setOpenRetractDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
+
+  async function reloadItems() {
+    // TODO instead of reloading whole list only alter the item that was changed
+    const newItems = await listSetsOfOwner();
+    setItems(newItems);
+  }
+
   return (
     <Layout>
       <h1>Author scattering cross section sets</h1>
@@ -110,28 +119,34 @@ const Admin: NextPage<Props> = ({ items }) => {
       <RetractDialog
         isOpened={openRestractDialog}
         selectedSetId={selectedSetId}
-        onClose={() => {
+        onClose={(confirmed) => {
           // TODO give user feed back
-          // TODO update list, now page refresh is needed
           setOpenRetractDialog(false);
+          if (confirmed) {
+            reloadItems();
+          }
         }}
       />
       <DeleteDialog
         isOpened={openDeleteDialog}
         selectedSetId={selectedSetId}
-        onClose={() => {
+        onClose={(confirmed) => {
           // TODO give user feed back
-          // TODO update list, now page refresh is needed
           setOpenDeleteDialog(false);
+          if (confirmed) {
+            reloadItems();
+          }
         }}
       />
       <PublishDialog
         isOpened={openPublishDialog}
         selectedSetId={selectedSetId}
-        onClose={() => {
+        onClose={(confirmed) => {
           // TODO give user feed back
-          // TODO update list, now page refresh is needed
           setOpenPublishDialog(false);
+          if (confirmed) {
+            reloadItems();
+          }
         }}
       />
     </Layout>
@@ -140,7 +155,9 @@ const Admin: NextPage<Props> = ({ items }) => {
 
 export default Admin;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   const me = await mustBeAuthor(context);
   const items = await listOwned(me.email);
   return {

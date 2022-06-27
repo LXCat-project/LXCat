@@ -7,6 +7,12 @@ import {
 } from "../../../auth/middleware";
 import { insert_input_set } from "@lxcat/database/dist/css/queries/author_write";
 import { validator } from "@lxcat/schema/dist/css/validate";
+import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
+import {
+  FilterOptions,
+  search,
+  SortOptions,
+} from "@lxcat/database/dist/css/queries/public";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
@@ -38,6 +44,33 @@ const handler = nc<AuthRequest, NextApiResponse>()
         ],
       });
     }
+  })
+  .get(async (req, res) => {
+    if (req.query.private) {
+      const user = req.user;
+      if (!user || "iat" in user) {
+        throw Error("How did you get here?");
+      }
+      const items = await listOwned(user.email);
+      res.json({ items });
+      return;
+    }
+    // TODO make adjustable by user
+    const filter: FilterOptions = {
+      contributor: [],
+      species2: [],
+    };
+    const sort: SortOptions = {
+      field: "name",
+      dir: "ASC",
+    };
+    const paging = {
+      offset: 0,
+      count: Number.MAX_SAFE_INTEGER,
+    };
+    const items = await search(filter, sort, paging);
+    res.json({ items });
+    return;
   });
 
 export default handler;

@@ -3,6 +3,7 @@ import { Layout } from "../../../shared/Layout";
 import type { ErrorObject } from "ajv";
 import { useState, MouseEvent } from "react";
 import { mustBeAuthor } from "../../../auth/middleware";
+import Link from "next/link";
 
 interface Props {}
 
@@ -65,6 +66,9 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
         )}
         {id && <span>Upload successful, id is {id}</span>}
       </form>
+      <Link href={`/author/scat-css`}>
+        <a>Back</a>
+      </Link>
     </Layout>
   );
 };
