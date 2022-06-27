@@ -29,7 +29,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Setup auth
 
-The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keycloak](http://www.keycloak.org/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
 
 ### In auth0 dashboard
 
@@ -92,6 +92,12 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
         - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
             Also set `NEXTAUTH_URL=https://< lxcat ng domain >` in `.env.local` file.
 
+### For Keycloak
+
+Keycloak is used for running end-to-end tests. See [e2e/keycloak-dump/README.md](e2e/keycloak-dump/README.md) how it has been setup.
+
+Keycloak can also be used for local accounts in production.
+
 ### In local directory
 
 In `.env.local` file define the following key/value pairs
@@ -116,6 +122,20 @@ ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
 ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
 # To use Orcid sandbox instead of production Orcid set following var
 ORCID_SANDBOX=True
+# To use a mocked authenticator set MOCK_AUTH_PROVIDER to true
+MOCK_AUTH_PROVIDER=Keycloak
+# When you want to use Keycloak as identity provider set the KEYCLOAK_* vars
+KEYCLOAK_CLIENT_ID=<Client ID from Keycloak application settings page>
+KEYCLOAK_CLIENT_SECRET=<Client secret from Keycloak application settings page>
+KEYCLOAK_ISSUER=<Keycloak base url and realm. eg. http://localhost:8080/realms/master>
 ```
 
 At least one identity provider should be configured.
+
+## End to end tests
+
+Make sure port 3000 and 8080 are not in use.
+
+```shell
+npm run test:e2e
+```

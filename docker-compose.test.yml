@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.2
+    env_file: ./app/e2e/.env.test
+    volumes:
+      - ./app/e2e/keycloak-dump:/opt/keycloak/data/import
+    command: ["start-dev", "--import-realm"]
+    ports:
+      - "127.0.0.1:8080:8080"
+  app:
+    env_file: ./app/e2e/.env.test
+    

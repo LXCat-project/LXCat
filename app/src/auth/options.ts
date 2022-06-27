@@ -1,7 +1,8 @@
 import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
-import { NextAuthOptions } from "next-auth";
+import KeycloakProvider from "next-auth/providers/keycloak";
+import { NextAuthOptions, } from "next-auth";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "@lxcat/database";
@@ -23,6 +24,15 @@ if (process.env.GITLAB_CLIENT_ID) {
     GitlabProvider({
       clientId: process.env.GITLAB_CLIENT_ID,
       clientSecret: process.env.GITLAB_CLIENT_SECRET,
+    })
+  );
+}
+if (process.env.KEYCLOAK_CLIENT_ID) {
+  providers.push(
+    KeycloakProvider({
+      clientId: process.env.KEYCLOAK_CLIENT_ID,
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || '',
+      issuer: process.env.KEYCLOAK_ISSUER,
     })
   );
 }

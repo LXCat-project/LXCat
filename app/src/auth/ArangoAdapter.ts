@@ -31,6 +31,7 @@ export const ArangoAdapter = (db: Database): Adapter => {
   }
   return {
     async createUser(user) {
+      console.log(user) // TODO remove
       const profile = UserWithAccountSessionInDb.parse(user);
       const result = await db.query(aql`
                 INSERT ${profile} INTO users LET r = NEW RETURN r._key
