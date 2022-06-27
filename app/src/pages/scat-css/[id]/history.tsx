@@ -1,6 +1,8 @@
 import { historyOfSet, KeyedVersionInfo } from "@lxcat/database/dist/css/queries/public";
 import { GetServerSideProps, NextPage } from "next";
+import { HistoryTable } from "../../../ScatteringCrossSectionSet/HistoryTable";
 import { Layout } from "../../../shared/Layout";
+
 
 interface Props {
     id: string
@@ -9,11 +11,9 @@ interface Props {
 
 const ScatteringCrossSectionSetHistoryPage: NextPage<Props> = ({versions}) => {
     return (
-        <Layout title={`History of TODO`}>
-            <h1>History</h1>
-            <pre>
-                {JSON.stringify(versions, undefined, 4)}
-            </pre>
+        <Layout title={`History of ${versions[0].name} set`}>
+            <h1>History of {versions[0].name} set</h1>
+            <HistoryTable versions={versions}/>
         </Layout>
     )
 }
