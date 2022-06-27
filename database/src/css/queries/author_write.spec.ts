@@ -160,13 +160,37 @@ describe("given filled ArangoDB container", () => {
             expect(result).toEqual(expected);
           });
 
-          it("should have a history of length 2", async () => {
+          it("for archived key should have a history of length 2", async () => {
+            const result = await historyOfSet(keycss1);
+            const expected: KeyedVersionInfo[] = [
+              {
+                _key: keycss2,
+                commitMessage: "First edit",
+                createdOn: expect.stringMatching(ISO_8601_UTC),
+                status: "published",
+                name: "Some versioned name",
+                version: "2",
+              },
+              {
+                _key: keycss1,
+                commitMessage: "Initial version",
+                createdOn: expect.stringMatching(ISO_8601_UTC),
+                name: "Some versioned name",
+                status: "archived",
+                version: "1",
+              },
+            ];
+            expect(result).toEqual(expected);
+          });
+
+          it("for published key should have a history of length 2", async () => {
             const result = await historyOfSet(keycss2);
             const expected: KeyedVersionInfo[] = [
               {
                 _key: keycss2,
                 commitMessage: "First edit",
                 createdOn: expect.stringMatching(ISO_8601_UTC),
+                name: "Some versioned name",
                 status: "published",
                 version: "2",
               },
@@ -174,7 +198,8 @@ describe("given filled ArangoDB container", () => {
                 _key: keycss1,
                 commitMessage: "Initial version",
                 createdOn: expect.stringMatching(ISO_8601_UTC),
-                status: "archived", // TODO publish(keycss2) should mark keycss1 as archived
+                name: "Some versioned name",
+                status: "archived",
                 version: "1",
               },
             ];
@@ -259,6 +284,22 @@ describe("given published set and retracting it", () => {
           retractMessage: "I forgot to put in cross sections",
           version: "1",
         },
+      },
+    ];
+    expect(result).toEqual(expected);
+  });
+
+  it("should have a history of 1 item", async () => {
+    const result = await historyOfSet(keycss1);
+    const expected: KeyedVersionInfo[] = [
+      {
+        _key: keycss1,
+        commitMessage: "Initial version",
+        createdOn: expect.stringMatching(ISO_8601_UTC),
+        name: "Some versioned name",
+        status: "retracted",
+        retractMessage: "I forgot to put in cross sections",
+        version: "1",
       },
     ];
     expect(result).toEqual(expected);

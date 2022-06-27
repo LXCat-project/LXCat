@@ -8,6 +8,7 @@ import {
   byOwnerAndId,
   getVersionInfo,
 } from "@lxcat/database/dist/css/queries/author_read";
+import Link from "next/link";
 
 interface Props {
   section: CrossSectionSetInputOwned;
@@ -100,6 +101,9 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
           <span>Update successful, the draft been updated.</span>
         )}
       </form>
+      <Link href={`/author/scat-css`}>
+        <a>Back</a>
+      </Link>
     </Layout>
   );
 };

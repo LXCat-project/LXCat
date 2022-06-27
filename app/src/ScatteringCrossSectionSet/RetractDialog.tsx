@@ -6,16 +6,17 @@ import { deleteSet } from "./client";
 interface Props {
   isOpened: boolean;
   selectedSetId: string;
-  onClose: () => void;
+  onClose: (confirmed: boolean) => void;
 }
 
 export const RetractDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
   const [restractMessage, setRetractMessage] = useState("");
   async function onSubmit(pressedButton: string) {
-    if (pressedButton === "default") {
-      deleteSet(selectedSetId, restractMessage);
+    const confirmed = pressedButton === "default";
+    if (confirmed) {
+      await deleteSet(selectedSetId, restractMessage);
     }
-    onClose();
+    onClose(confirmed);
   }
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>
