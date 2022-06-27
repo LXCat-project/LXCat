@@ -189,7 +189,7 @@ export interface KeyedVersionInfo extends VersionInfo {
  * Finds all previous versions of set with key
  */
 export async function historyOfSet(key: string) {
-  const id = `CrossSectionSet/${key}`
+  const id = `CrossSectionSet/${key}`;
   const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
     FOR h
       IN 0..9999999
@@ -207,7 +207,7 @@ export async function historyOfSet(key: string) {
  */
 export async function activeSetOfArchivedSet(key: string) {
   // TODO use query on some page
-  const id = `CrossSectionSet/${key}`
+  const id = `CrossSectionSet/${key}`;
   const cursor: ArrayCursor<string> = await db().query(aql`
     FOR h
       IN 0..9999999

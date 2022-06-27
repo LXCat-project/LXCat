@@ -71,14 +71,16 @@ async function updateVersionStatus(key: string, status: Status) {
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
   // when key has a published version then that old version should be archived aka Change status of current published section to archived
-  const history = await historyOfSet(key)
-  const previous_published_key = history.filter(h => h !== null).find(h => h.status === 'published')
+  const history = await historyOfSet(key);
+  const previous_published_key = history
+    .filter((h) => h !== null)
+    .find((h) => h.status === "published");
   if (previous_published_key !== undefined) {
-    await updateVersionStatus(previous_published_key._key, 'archived')
+    await updateVersionStatus(previous_published_key._key, "archived");
   }
   // TODO For each changed/added cross section perform publishing of cross section
   // Change status of draft section to published
-  await updateVersionStatus(key, 'published')
+  await updateVersionStatus(key, "published");
 }
 
 export async function updateSet(
