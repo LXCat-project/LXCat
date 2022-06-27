@@ -32,6 +32,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
         <div style={{ backgroundColor: "red", color: "white", padding: 16 }}>
           <h2>This set has been retracted. Please do not use.</h2>
           <p>{set.versionInfo.retractMessage}</p>
+          <p>Visit <Link href={`/scat-css/${set.id}/history`}><a>history page</a></Link> to see newer versions.</p>
         </div>
       )}
       {set.versionInfo.status === "archived" && (
@@ -66,6 +67,11 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
           <Process {...p} key={p.id} />
         ))}
       </ol>
+      {set.versionInfo.status === "published" && set.versionInfo.version !== "1" && (
+        <div>
+          <p>Visit <Link href={`/scat-css/${set.id}/history`}><a>history page</a></Link> to see older versions.</p>
+        </div>
+      )}
     </Layout>
   );
 };
