@@ -1,5 +1,4 @@
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { insert_cs_with_dict } from "../../cs/queries";
 import { now } from "../../date";
@@ -15,8 +14,7 @@ import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { getVersionInfo } from "./author_read";
 import { historyOfSet } from "./public";
 
-// TODO this file is becoming big split into more files like queries/public.ts + queries/read_author.ts  + queries/write_author.ts
-// also some queries have duplication which could be de-duped
+// TODO some queries have duplication which could be de-duped
 
 export async function insert_input_set(
   dataset: CrossSectionSetRaw,
@@ -74,7 +72,7 @@ export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
   // when key has a published version then that old version should be archived aka Change status of current published section to archived
   const history = await historyOfSet(key)
-  const previous_published_key = history.find(h => h.status === 'published')
+  const previous_published_key = history.filter(h => h !== null).find(h => h.status === 'published')
   if (previous_published_key !== undefined) {
     await updateVersionStatus(previous_published_key._key, 'archived')
   }

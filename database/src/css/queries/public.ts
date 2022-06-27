@@ -182,19 +182,23 @@ export async function byId(id: string) {
 
 export interface KeyedVersionInfo extends VersionInfo {
   _key: string;
+  name: string;
 }
 
 /**
  * Finds all previous versions of set with key
  */
 export async function historyOfSet(key: string) {
+  const id = `CrossSectionSet/${key}`
   const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
-      FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        FILTER css.versionInfo.status != 'draft'
-        FOR prev IN 0..9999999 OUTBOUND css CrossSectionSetHistory
-          RETURN MERGE({_key: prev._key}, prev.versionInfo)
-    `);
+    FOR h
+      IN 0..9999999
+      ANY ${id}
+      CrossSectionSetHistory
+      FILTER h.versionInfo.status != 'draft'
+      SORT h.versionInfo.version DESC
+      RETURN MERGE({_key: h._key, name: h.name}, h.versionInfo)
+  `);
   return await cursor.all();
 }
 
@@ -203,13 +207,14 @@ export async function historyOfSet(key: string) {
  */
 export async function activeSetOfArchivedSet(key: string) {
   // TODO use query on some page
+  const id = `CrossSectionSet/${key}`
   const cursor: ArrayCursor<string> = await db().query(aql`
-    FOR css IN CrossSectionSet
-      FILTER css._key == ${key}
-      FOR next IN 0..9999999 INBOUND css CrossSectionSetHistory
-        FILTER ['published' ,'retracted'] ANY == next.versionInfo.status
-        LIMIT 1
-        RETURN next
-    `);
-  return await cursor.all();
+    FOR h
+      IN 0..9999999
+      ANY ${id}
+      CrossSectionSetHistory
+      FILTER ['published' ,'retracted'] ANY == h.versionInfo.status
+      RETURN MERGE({_key: h._key, name: h.name}, h.versionInfo)
+  `);
+  return await cursor.next();
 }
