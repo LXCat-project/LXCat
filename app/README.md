@@ -94,9 +94,50 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
 
 ### For Keycloak
 
-Keycloak is used for running end-to-end tests. See [e2e/keycloak-dump/README.md](e2e/keycloak-dump/README.md) how it has been setup.
+[Keycloak](http://www.keycloak.org/) is an open source oauth provider which can be used for local accounts in production.
 
-Keycloak can also be used for local accounts in production.
+<details>
+<summary>How to configure keycloak</summary>
+
+First spinup a container with
+
+```shell
+docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.2 start-dev
+```
+
+Goto http://localhost:8080/admin/master/console and login with ADMIN:ADMIN.
+
+1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-ng-test-realm`
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users) with following username:email:password
+   * admin:admin@lxcat.net:pass
+   * author1:author1@lxcat.net:pass
+   * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
+   * Set `orcid` and `image` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-ng-test-real). This is the oauth provider the lxcat app will authenticate against.
+   * Client ID: lxcat-ng-test
+   * Client protocol: openid-connect
+   * Root URL: http://localhost:3000
+   * After creation edit client some more
+   * Access type: confidential
+   * To Valid Redirect URIs field add `https://localhost:8443`
+   * Save it
+   * On Mappers tab create mapper to expose orcid and image user attributes
+     * orcid mapper
+       * Name: orcid
+       * Mapper type: User Attribute
+       * User attribute: orcid
+       * Token Claim Name: orcid
+       * Claim JSON Type: string
+       * Save it
+   * image mapper
+       * Name: image
+       * Mapper type: User Attribute
+       * User attribute: image
+       * Token Claim Name: image
+       * Claim JSON Type: string
+   * On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
+
+</details>
 
 ### In local directory
 
@@ -134,7 +175,7 @@ At least one identity provider should be configured.
 
 ## End to end tests
 
-Make sure port 3000 and 8080 are not in use.
+Make sure port 8001, 8002, and 8003 are not in use.
 
 ```shell
 npm run test:e2e

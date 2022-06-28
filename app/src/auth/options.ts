@@ -8,6 +8,7 @@ import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "@lxcat/database";
 import { User } from "@lxcat/database/dist/auth/schema";
 import logo from "../../public/lxcat.png";
+import { env } from "process";
 
 const providers: Provider[] = [];
 if (process.env.AUTH0_CLIENT_ID) {
@@ -52,6 +53,30 @@ if (process.env.ORCID_CLIENT_ID) {
       })
     );
   }
+}
+if (process.env.TESTOIDC_CLIENT_ID) {
+  const nextauthUrl = new URL(process.env.NEXTAUTH_URL!)
+  if (nextauthUrl.hostname !== 'localhost') {
+    throw Error('Can not use test oidc auth provider unless NEXTAUTH_URL env var is on localhost')
+  }
+  providers.push({
+    id: "testoidc",
+    name: "Test dummy",
+    type: "oauth",
+    wellKnown: env.TESTOIDC_CLIENT_ISSUER + "/.well-known/openid-configuration",
+    authorization: { params: { scope: "openid email profile" } },
+    idToken: true,
+    checks: ["pkce", "state"],
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture,
+        orcid: profile.orcid
+      }
+    },
+  })
 }
 
 export const options: NextAuthOptions = {

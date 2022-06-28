@@ -38,9 +38,11 @@
   "devDependencies": {
     "@playwright/test": "^1.22.2",
     "@types/node": "17.0.21",
+    "@types/oidc-provider": "^7.11.1",
     "@types/react": "17.0.45",
     "@types/unist": "^2.0.6",
     "eslint-config-next": "12.1.0",
+    "oidc-provider": "^7.11.3",
     "prettier": "^2.6.2",
     "testcontainers": "^8.11.0",
     "typescript": "^4.7.3"
