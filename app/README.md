@@ -180,3 +180,9 @@ Make sure port 8001, 8002, and 8003 are not in use.
 ```shell
 npm run test:e2e
 ```
+
+To debug and record add `await page.pause()` and run tests with
+
+```shell
+npm run test:e2e -- --headed
+```

@@ -2,7 +2,7 @@ import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
 import KeycloakProvider from "next-auth/providers/keycloak";
-import { NextAuthOptions, } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
 import { db } from "@lxcat/database";
@@ -32,7 +32,7 @@ if (process.env.KEYCLOAK_CLIENT_ID) {
   providers.push(
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID,
-      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || '',
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
       issuer: process.env.KEYCLOAK_ISSUER,
     })
   );
@@ -55,15 +55,19 @@ if (process.env.ORCID_CLIENT_ID) {
   }
 }
 if (process.env.TESTOIDC_CLIENT_ID) {
-  const nextauthUrl = new URL(process.env.NEXTAUTH_URL!)
-  if (nextauthUrl.hostname !== 'localhost') {
-    throw Error('Can not use test oidc auth provider unless NEXTAUTH_URL env var is on localhost')
+  const nextauthUrl = new URL(process.env.NEXTAUTH_URL!);
+  if (nextauthUrl.hostname !== "localhost") {
+    throw Error(
+      "Can not use test oidc auth provider unless NEXTAUTH_URL env var is on localhost"
+    );
   }
   providers.push({
     id: "testoidc",
     name: "Test dummy",
     type: "oauth",
     wellKnown: env.TESTOIDC_CLIENT_ISSUER + "/.well-known/openid-configuration",
+    clientId: process.env.TESTOIDC_CLIENT_ID || "",
+    clientSecret: process.env.TESTOIDC_CLIENT_SECRET || "",
     authorization: { params: { scope: "openid email profile" } },
     idToken: true,
     checks: ["pkce", "state"],
@@ -73,10 +77,10 @@ if (process.env.TESTOIDC_CLIENT_ID) {
         name: profile.name,
         email: profile.email,
         image: profile.picture,
-        orcid: profile.orcid
-      }
+        orcid: profile.orcid,
+      };
     },
-  })
+  });
 }
 
 export const options: NextAuthOptions = {

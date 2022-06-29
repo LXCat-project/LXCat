@@ -27,7 +27,8 @@ export function testOidcServer(client_id: string, client_secret: string, redirec
       claims: {
         email: ['email', 'email_verified'],
         profile: ['name', 'picture', 'orcid']
-      }
+      },
+      conformIdTokenClaims: false // Make sure id_token has not just sub key
     };
     
     const provider = new Provider(`http://localhost:${port}`, configuration);
