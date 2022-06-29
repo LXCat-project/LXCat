@@ -4,7 +4,7 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? 'github' : 'list',
+  reporter: 'list',
 
   globalSetup: require.resolve('./e2e/global-setup'),
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database

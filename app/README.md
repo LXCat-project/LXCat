@@ -105,23 +105,21 @@ First spinup a container with
 docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.2 start-dev
 ```
 
-Goto http://localhost:8080/admin/master/console and login with ADMIN:ADMIN.
+Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
 1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-ng-test-realm`
-2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users) with following username:email:password
-   * admin:admin@lxcat.net:pass
-   * author1:author1@lxcat.net:pass
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users)
    * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
-   * Set `orcid` and `image` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
+   * Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
 3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-ng-test-real). This is the oauth provider the lxcat app will authenticate against.
    * Client ID: lxcat-ng-test
    * Client protocol: openid-connect
-   * Root URL: http://localhost:3000
+   * Root URL: http://localhost:3000 or whatever url the application is running on.
    * After creation edit client some more
    * Access type: confidential
-   * To Valid Redirect URIs field add `https://localhost:8443`
+   * To Valid Redirect URIs field add `https://localhost:3000/*` 
    * Save it
-   * On Mappers tab create mapper to expose orcid and image user attributes
+   * On Mappers tab create mapper to expose orcid and picture user attributes
      * orcid mapper
        * Name: orcid
        * Mapper type: User Attribute
@@ -129,11 +127,11 @@ Goto http://localhost:8080/admin/master/console and login with ADMIN:ADMIN.
        * Token Claim Name: orcid
        * Claim JSON Type: string
        * Save it
-   * image mapper
-       * Name: image
+     * picture mapper
+       * Name: picture
        * Mapper type: User Attribute
-       * User attribute: image
-       * Token Claim Name: image
+       * User attribute: picture
+       * Token Claim Name: picture
        * Claim JSON Type: string
    * On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
 
@@ -163,11 +161,9 @@ ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
 ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
 # To use Orcid sandbox instead of production Orcid set following var
 ORCID_SANDBOX=True
-# To use a mocked authenticator set MOCK_AUTH_PROVIDER to true
-MOCK_AUTH_PROVIDER=Keycloak
 # When you want to use Keycloak as identity provider set the KEYCLOAK_* vars
-KEYCLOAK_CLIENT_ID=<Client ID from Keycloak application settings page>
-KEYCLOAK_CLIENT_SECRET=<Client secret from Keycloak application settings page>
+KEYCLOAK_CLIENT_ID=<Client ID from Keycloak client page>
+KEYCLOAK_CLIENT_SECRET=<Client secret from credentials tab on the Keycloak client page>
 KEYCLOAK_ISSUER=<Keycloak base url and realm. eg. http://localhost:8080/realms/master>
 ```
 

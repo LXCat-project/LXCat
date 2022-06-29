@@ -55,22 +55,25 @@ const handler = nc<AuthRequest, NextApiResponse>()
       res.json({ items });
       return;
     }
+    res.status(500)
+    res.end()
+    // TODO make /api/scat-css return stuff when not logged in
     // TODO make adjustable by user
-    const filter: FilterOptions = {
-      contributor: [],
-      species2: [],
-    };
-    const sort: SortOptions = {
-      field: "name",
-      dir: "ASC",
-    };
-    const paging = {
-      offset: 0,
-      count: Number.MAX_SAFE_INTEGER,
-    };
-    const items = await search(filter, sort, paging);
-    res.json({ items });
-    return;
+    // const filter: FilterOptions = {
+    //   contributor: [],
+    //   species2: [],
+    // };
+    // const sort: SortOptions = {
+    //   field: "name",
+    //   dir: "ASC",
+    // };
+    // const paging = {
+    //   offset: 0,
+    //   count: Number.MAX_SAFE_INTEGER,
+    // };
+    // const items = await search(filter, sort, paging);
+    // res.json({ items });
+    // return;
   });
 
 export default handler;
