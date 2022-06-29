@@ -28,7 +28,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: ubuntu:jammy
+  image: mcr.microsoft.com/playwright:v1.23.0-focal
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -42,10 +42,6 @@ test-app:
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
   script:
-    - apt update && apt -yq upgrade && apt install -yq curl
-    - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-    - apt update && apt-get install -y nodejs
-    - npx playwright install --with-deps chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
   artifacts:
     reports:
