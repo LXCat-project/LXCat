@@ -59,7 +59,12 @@
       "labels": ["Energy", "Cross Section"],
       "units": ["eV", "m^2"],
       "threshold": 42,
-      "data": [[0, 3.14e-20]],
+      "data": [
+        [0, 3.14e-20],
+        [10, 3.14e-19],
+        [100, 3.14e-17],
+        [1000, 3.14e-18]
+      ],
       "reference": ["main"]
     }
   ]

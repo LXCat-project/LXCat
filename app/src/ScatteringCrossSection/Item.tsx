@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { LutPlot } from "./LutPlot";
 
 export const Item = (props: CrossSectionItem) => {
   return (
@@ -56,6 +57,7 @@ export const Item = (props: CrossSectionItem) => {
           ))}
         </tbody>
       </table>
+      <LutPlot data={props.data} labels={props.labels} units={props.units}/>
       <h2>Reference</h2>
       <ul>
         {props.reference.map((r, i) => (

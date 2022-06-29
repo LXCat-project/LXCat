@@ -22,6 +22,7 @@
     "node-fetch": "^3.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-vega": "^7.6.0",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-highlight": "^5.0.2",
     "rehype-mathjax": "^4.0.2",
@@ -32,14 +33,16 @@
     "sharp": "^0.30.2",
     "unified": "^10.1.2",
     "unist-util-remove": "^3.1.0",
-    "unist-util-visit": "^4.1.0"
+    "unist-util-visit": "^4.1.0",
+    "vega": "^5.22.1",
+    "vega-lite": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
     "@types/react": "17.0.45",
     "@types/unist": "^2.0.6",
     "eslint-config-next": "12.1.0",
-    "typescript": "^4.7.3",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.3"
   }
 }
