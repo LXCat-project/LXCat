@@ -28,7 +28,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: node:lts-bullseye
+  image: ubuntu:jammy
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -42,7 +42,12 @@ test-app:
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
   script:
-    - npx playwright install --with-deps
+    - apt update && apt install -yq curl
+    - curl https://get.volta.sh | bash
+    - export VOLTA_HOME="$HOME/.volta"
+    - export PATH="$VOLTA_HOME/bin:$PATH"
+    - volta install node@16
+    - npx playwright install --with-deps chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
   artifacts:
     reports:

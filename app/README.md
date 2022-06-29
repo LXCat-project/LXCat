@@ -171,6 +171,14 @@ At least one identity provider should be configured.
 
 ## End to end tests
 
+The end to end tests (`e2e/**.spec.ts`) are written and run using [playwright](https://playwright.dev/).
+
+Before running test ensure browser are installed with
+
+```shell
+npx playwright install chromium
+```
+
 Make sure port 8001, 8002, and 8003 are not in use.
 
 ```shell
