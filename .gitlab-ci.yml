@@ -42,16 +42,15 @@ test-app:
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
   script:
-    - apt update && apt install -yq curl
-    - curl https://get.volta.sh | bash
-    - export VOLTA_HOME="$HOME/.volta"
-    - export PATH="$VOLTA_HOME/bin:$PATH"
-    - volta install node@16
+    - apt update && apt -yq upgrade && apt install -yq curl
+    - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+    - apt update && apt-get install -y nodejs
     - npx playwright install --with-deps chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
   artifacts:
     reports:
       junit: app/junit.xml
+# TODO cache ~/.cache/ms-playwright
 
 test-database:
   stage: test
