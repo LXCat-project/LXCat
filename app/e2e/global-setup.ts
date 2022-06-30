@@ -34,8 +34,8 @@ async function globalSetup(config: FullConfig) {
     process.env.ARANGO_ROOT_PASSWORD = env.ARANGO_PASSWORD
     process.env.ARANGO_URL = env.ARANGO_URL
 
-    console.log('Is db running?')
-    await runDbCommand('docker ps')
+    // console.log('Is db running?')
+    // await runDbCommand('docker ps')
 
     console.log('Create collections')
     // create db collections
