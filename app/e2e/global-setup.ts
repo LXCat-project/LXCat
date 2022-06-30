@@ -68,9 +68,11 @@ async function globalSetup(config: FullConfig) {
 export default globalSetup;
 
 export async function runDbCommand(command: string) {
+    console.log(`Command ${command} ran with ${JSON.stringify(process.env)}`)
     return new Promise((presolve, reject) => {
         exec(command, {
-            cwd: resolve(__dirname, '../../database')
+            cwd: resolve(__dirname, '../../database'),
+            env: process.env
         },
             (error, stdout, stderr) => {
                 console.log(stdout)

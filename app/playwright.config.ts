@@ -15,7 +15,7 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: !process.env.CI,
     env: {
         ARANGO_PASSWORD:"pw4tests",
-        ARANGO_URL: 'http://0.0.0.0:8003',
+        ARANGO_URL: 'http://localhost:8004',
         NEXTAUTH_SECRET: "secret4tests",
         NEXTAUTH_URL: "http://localhost:8001/api/auth",
         TESTOIDC_CLIENT_ID: 'lxcat-ng-test',
