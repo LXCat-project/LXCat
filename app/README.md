@@ -191,17 +191,20 @@ To debug and record add `await page.pause()` and run tests with
 npm run test:e2e -- --headed
 ```
 
-The test command spins up the app dev server, ArangoDB in a Docker container, a test identity provider and then executes the tests in the `e2e/` directory.
+The test command spins up the app dev server, ArangoDB in a Docker container, a test OpenID connect server and then executes the tests in the `e2e/` directory.
 
 ```mermaid
 graph TD
     playwright --> g[global setup]
     g -->|test container| a[ArangoDB:8003]
-    g --> o[openid connect test server:8002]
-    playwright --> d[dev server:8001]
+    g --> o[test OpenID connect server:8002]
+    playwright --> d[app dev server:8001]
     playwright -->|execute| t[tests]
 ```
 
-The `app/e2e/global-setup.ts` is used to spinup the ArangoDB and test identity provider. It also 
-* logs in as admin, to become admin in tests add `test.use({ storageState: "adminStorageState.json" });`
+The `app/e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also 
+* signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`
 * has utility functions to fill or truncate database
+
+The `app/e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
+a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars. 
