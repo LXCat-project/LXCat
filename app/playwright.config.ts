@@ -5,7 +5,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'list',
-
+  workers: 1, // We only run one database so tests that need db need to be run sequentially
   globalSetup: require.resolve('./e2e/global-setup'),
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
