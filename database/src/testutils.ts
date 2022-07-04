@@ -19,6 +19,7 @@ export async function startDbContainer(
     .on("end", () => console.log("Stream closed"));
   const url = container.getHttpUrl();
   setSystemDb(url, password);
+  console.log({url, password})
   await systemDb().createDatabase("lxcat");
   setDb(url, password);
   return async () => {
