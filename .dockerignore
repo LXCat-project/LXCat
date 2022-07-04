@@ -6,3 +6,6 @@ database/dist
 schema/node_modules
 schema/dist
 node_modules
+app/.env.local
+database/.env
+.env
