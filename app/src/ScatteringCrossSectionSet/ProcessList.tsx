@@ -41,7 +41,7 @@ const INITIAL_PROCESSES2PLOT = 4
 export const ProcessList = ({ processes }: Props) => {
   const [inPlot, setInPlot] = useState(processes.map((d, i) => i < INITIAL_PROCESSES2PLOT));
   return (
-    <div style={{display: "flex"}}>
+    <div className="proceses-list" style={{display: "flex"}}>
       <ol>
         {processes.map((p, i) => (
           <Process {...p} key={p.id} inPlot={inPlot[i]} toggleInPlot={() => {
