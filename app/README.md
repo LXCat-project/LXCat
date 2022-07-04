@@ -29,7 +29,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Setup auth
 
-The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keycloak](http://www.keycloak.org/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
 
 ### In auth0 dashboard
 
@@ -92,6 +92,51 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/) or [GitL
         - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
             Also set `NEXTAUTH_URL=https://< lxcat ng domain >` in `.env.local` file.
 
+### For Keycloak
+
+[Keycloak](http://www.keycloak.org/) is an open source oauth provider which can be used for local accounts in production.
+
+<details>
+<summary>How to configure keycloak</summary>
+
+First spinup a container with
+
+```shell
+docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.2 start-dev
+```
+
+Goto http://localhost:8080/admin/master/console and login with admin:admin.
+
+1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-ng-test-realm`
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users)
+   * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
+   * Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-ng-test-real). This is the oauth provider the lxcat app will authenticate against.
+   * Client ID: lxcat-ng-test
+   * Client protocol: openid-connect
+   * Root URL: http://localhost:3000 or whatever url the application is running on.
+   * After creation edit client some more
+   * Access type: confidential
+   * To Valid Redirect URIs field add `https://localhost:3000/*` 
+   * Save it
+   * On Mappers tab create mapper to expose orcid and picture user attributes
+     * orcid mapper
+       * Name: orcid
+       * Mapper type: User Attribute
+       * User attribute: orcid
+       * Token Claim Name: orcid
+       * Claim JSON Type: string
+       * Save it
+     * picture mapper
+       * Name: picture
+       * Mapper type: User Attribute
+       * User attribute: picture
+       * Token Claim Name: picture
+       * Claim JSON Type: string
+   * On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
+
+</details>
+
 ### In local directory
 
 In `.env.local` file define the following key/value pairs
@@ -116,6 +161,43 @@ ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
 ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
 # To use Orcid sandbox instead of production Orcid set following var
 ORCID_SANDBOX=True
+# When you want to use Keycloak as identity provider set the KEYCLOAK_* vars
+KEYCLOAK_CLIENT_ID=<Client ID from Keycloak client page>
+KEYCLOAK_CLIENT_SECRET=<Client secret from credentials tab on the Keycloak client page>
+KEYCLOAK_ISSUER=<Keycloak base url and realm. eg. http://localhost:8080/realms/master>
 ```
 
 At least one identity provider should be configured.
+
+## End to end tests
+
+The end to end tests (`e2e/**.spec.ts`) are written and run using [playwright](https://playwright.dev/).
+
+Before running test ensure browser are installed with
+
+```shell
+npx playwright install chromium
+```
+
+Make sure port 8001, 8002, and 8003 are not in use.
+
+```shell
+npm run test:e2e
+```
+
+To debug and record add `await page.pause()` and run tests with
+
+```shell
+npm run test:e2e -- --headed
+```
+
+The test command spins up the app dev server, arangodb in a Docker container, a test identity provider and then executes the tests in the `e2e/` directory.
+
+```mermaid
+graph TD
+    playwright --> g[global setup]
+    g -->|test container| a[arangodb:8003]
+    g --> o[openid connect test server:8002]
+    playwright --> d[dev server:8001]
+    playwright -->|execute| t[tests]
+```

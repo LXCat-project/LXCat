@@ -1,28 +1,15 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-import { ReactionSummary } from "../../ScatteringCrossSection/ReactionSummary";
 import { byId } from "@lxcat/database/dist/css/queries/public";
 import {
   CrossSectionSetItem,
-  OrphanedCrossSectionItem,
 } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
+import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 
 interface Props {
   set: CrossSectionSetItem;
 }
-
-const Process = (props: OrphanedCrossSectionItem) => {
-  return (
-    <li>
-      <Link href={`/scat-cs/${props.id}`}>
-        <a>
-          <ReactionSummary {...props.reaction} />
-        </a>
-      </Link>
-    </li>
-  );
-};
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
   return (
@@ -74,11 +61,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
         </li>
       </ul>
       <h2>Processes</h2>
-      <ol>
-        {set.processes.map((p) => (
-          <Process {...p} key={p.id} />
-        ))}
-      </ol>
+      <ProcessList processes={set.processes}/>
+
       {set.versionInfo.status === "published" &&
         set.versionInfo.version !== "1" && (
           <div>
