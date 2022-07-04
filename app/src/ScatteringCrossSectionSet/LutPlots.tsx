@@ -59,8 +59,9 @@ function toVegaSpec(processes: OrphanedCrossSectionItem[]) {
         scale: { type: scaleType },
         title: `${labels[1]} (${units[1]})`,
       },
-      section: {
+      color: {
         field: "s",
+        title: "Process",
         scale: { scheme: "category20b" }, // When more then 20 sections are shown then colors will be re-used
       },
     },
