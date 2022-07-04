@@ -190,3 +190,14 @@ To debug and record add `await page.pause()` and run tests with
 ```shell
 npm run test:e2e -- --headed
 ```
+
+The test command spins up the app dev server, arangodb in a Docker container, a test identity provider and then executes the tests in the `e2e/` directory.
+
+```mermaid
+graph TD
+    playwright --> g[global setup]
+    g -->|test container| a[arangodb:8003]
+    g --> o[openid connect test server:8002]
+    playwright --> d[dev server:8001]
+    playwright -->|execute| t[tests]
+```
