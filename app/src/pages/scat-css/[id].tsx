@@ -1,9 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { byId } from "@lxcat/database/dist/css/queries/public";
-import {
-  CrossSectionSetItem,
-} from "@lxcat/database/dist/css/public";
+import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 
@@ -61,7 +59,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
         </li>
       </ul>
       <h2>Processes</h2>
-      <ProcessList processes={set.processes}/>
+      <ProcessList processes={set.processes} />
 
       {set.versionInfo.status === "published" &&
         set.versionInfo.version !== "1" && (

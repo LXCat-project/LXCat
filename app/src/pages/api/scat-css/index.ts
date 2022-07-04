@@ -55,8 +55,8 @@ const handler = nc<AuthRequest, NextApiResponse>()
       res.json({ items });
       return;
     }
-    res.status(500)
-    res.end()
+    res.status(500);
+    res.end();
     // TODO make /api/scat-css return stuff when not logged in
     // TODO make adjustable by user
     // const filter: FilterOptions = {

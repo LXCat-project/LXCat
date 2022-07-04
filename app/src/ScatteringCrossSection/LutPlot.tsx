@@ -17,8 +17,8 @@ function toVegaData(data: LUT["data"]) {
 
 function toVegaSpec({ labels, units, data }: Props) {
   const values = toVegaData(data);
-  const markType: Mark = 'point'
-  const scaleType: ScaleType = 'log'
+  const markType: Mark = "point";
+  const scaleType: ScaleType = "log";
   return {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     width: 800,
@@ -29,7 +29,7 @@ function toVegaSpec({ labels, units, data }: Props) {
     encoding: {
       x: {
         field: "x",
-        scale: { type: scaleType},
+        scale: { type: scaleType },
         title: `${labels[0]} (${units[0]})`,
       },
       y: {

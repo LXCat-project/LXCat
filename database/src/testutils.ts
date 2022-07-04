@@ -10,7 +10,7 @@ export async function startDbContainer(
   const dbImage = "arangodb/arangodb:3.9.1";
   const container = await new ArangoDBContainer(dbImage, password)
     .withExposedPorts(port)
-    .withWaitStrategy(Wait.forLogMessage('is ready for business. Have fun'))
+    .withWaitStrategy(Wait.forLogMessage("is ready for business. Have fun"))
     .start();
   const stream = await container.logs();
   stream
