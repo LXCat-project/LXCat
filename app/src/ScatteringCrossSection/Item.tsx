@@ -3,6 +3,7 @@ import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { LutPlot } from "./LutPlot";
+import { LutTable } from "./LutTable";
 
 export const Item = (props: CrossSectionItem) => {
   return (
@@ -37,27 +38,11 @@ export const Item = (props: CrossSectionItem) => {
         ))}
       </div>
       <h2>Data</h2>
-      <table>
-        <thead>
-          <tr>
-            {props.labels.map((l, i) => (
-              <td key={l}>
-                {l} ({props.units[i]})
-              </td>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {props.data.map((r, i) => (
-            <tr key={i}>
-              {r.map((c, j) => (
-                <td key={j}>{c}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <LutPlot data={props.data} labels={props.labels} units={props.units}/>
+      <LutPlot data={props.data} labels={props.labels} units={props.units} />
+      <details>
+        <summary>Data as table</summary>
+        <LutTable data={props.data} labels={props.labels} units={props.units}/>
+      </details>
       <h2>Reference</h2>
       <ul>
         {props.reference.map((r, i) => (
