@@ -9,12 +9,14 @@ function stateEntry(entry: ReactionEntry<State>) {
 }
 
 export const ReactionSummary = (props: Reaction<State>) => {
+  const label = reactionLabel(props);
+  return <div>{label}</div>;
+};
+
+export function reactionLabel(props: Reaction<State>) {
   const lhs = props.lhs.map(stateEntry).join(" + ");
   const rhs = props.rhs.map(stateEntry).join(" + ");
-  const arrow = props.reversible ? <span>&#8651;</span> : <span>&#8594;</span>;
-  return (
-    <div>
-      {lhs} {arrow} {rhs}
-    </div>
-  );
-};
+  const arrow = props.reversible ? "⇋" : "→";
+  const label = `${lhs} ${arrow} ${rhs}`;
+  return label;
+}

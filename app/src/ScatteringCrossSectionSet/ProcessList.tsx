@@ -25,7 +25,7 @@ const Process = ({ id, reaction, toggleInPlot, inPlot }: ProcessProps) => {
       <div>
         <label>
           Plot?
-          <input type="checkbox" onClick={toggleInPlot} checked={inPlot} />
+          <input type="checkbox" onChange={toggleInPlot} checked={inPlot} />
         </label>
       </div>
     </li>
@@ -36,22 +36,29 @@ interface Props {
   processes: OrphanedCrossSectionItem[];
 }
 
-const INITIAL_PROCESSES2PLOT = 4
+const INITIAL_PROCESSES2PLOT = 4;
 
 export const ProcessList = ({ processes }: Props) => {
-  const [inPlot, setInPlot] = useState(processes.map((d, i) => i < INITIAL_PROCESSES2PLOT));
+  const [inPlot, setInPlot] = useState(
+    processes.map((d, i) => i < INITIAL_PROCESSES2PLOT)
+  );
   return (
-    <div className="proceses-list" style={{display: "flex"}}>
+    <div className="proceses-list" style={{ display: "flex" }}>
       <ol>
         {processes.map((p, i) => (
-          <Process {...p} key={p.id} inPlot={inPlot[i]} toggleInPlot={() => {
-            const newInPlot = [...inPlot]
-            newInPlot[i] = !newInPlot[i]
-            setInPlot(newInPlot)
-        }}/>
+          <Process
+            {...p}
+            key={p.id}
+            inPlot={inPlot[i]}
+            toggleInPlot={() => {
+              const newInPlot = [...inPlot];
+              newInPlot[i] = !newInPlot[i];
+              setInPlot(newInPlot);
+            }}
+          />
         ))}
       </ol>
-      <LutPlots processes={processes.filter((_p, i) => inPlot[i])}/>
+      <LutPlots processes={processes.filter((_p, i) => inPlot[i])} />
     </div>
   );
 };
