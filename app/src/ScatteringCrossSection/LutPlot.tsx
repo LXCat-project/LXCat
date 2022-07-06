@@ -11,7 +11,7 @@ export const LutPlot = (props: Props) => {
 };
 
 function toVegaData(data: LUT["data"]) {
-  const rows = data.map((d) => ({ x: d[0], y: d[1] }));
+  const rows = data.filter(d => d[0] !== 0.0 && d[1] !== 0.0).map((d) => ({ x: d[0], y: d[1] }));
   return rows;
 }
 
