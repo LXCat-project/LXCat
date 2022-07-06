@@ -45,7 +45,6 @@ function toVegaSpec(processes: OrphanedCrossSectionItem[]) {
   const firstProcess = processes[0];
   const labels = firstProcess.labels;
   const units = firstProcess.units;
-  console.log(values);
   return {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     width: 800,
