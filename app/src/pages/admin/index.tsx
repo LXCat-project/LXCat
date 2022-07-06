@@ -14,6 +14,11 @@ const Admin: NextPage = () => {
             <a>Users</a>
           </Link>
         </li>
+        <li>
+          <Link href="/admin/organizations">
+            <a>Organizations</a>
+          </Link>
+        </li>
       </ul>
     </Layout>
   );
