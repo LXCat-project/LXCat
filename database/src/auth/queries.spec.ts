@@ -8,6 +8,8 @@ import {
   makeMemberless,
   makeMember,
   listOrganizations,
+  addOrganization,
+  dropOrganization,
 } from "./queries";
 import {
   TestKeys,
@@ -87,4 +89,22 @@ describe("given filled ArangoDB container", () => {
       });
     });
   });
+
+  describe('addOrganization()', () => {
+    let orgKey: string | undefined = '';
+    beforeAll(async () => {
+      orgKey = await addOrganization({name:'some new org'})
+    })
+
+    afterAll(async () => {
+      if (orgKey) {
+        await dropOrganization(orgKey)
+      }
+    });
+
+    it('after add should have new org in list', async () => {
+      const orgs = await listOrganizations()
+      expect(orgs).toContainEqual({name: 'some new org', _key: orgKey})
+    })
+  })
 });
