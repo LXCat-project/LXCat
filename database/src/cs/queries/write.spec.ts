@@ -9,6 +9,7 @@ import { startDbContainer } from "../../testutils";
 import { insert_cs_with_dict, publish, updateSection } from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
+import { LUT } from "@lxcat/schema/dist/core/data_types";
 
 describe('insert_cs_with_dict()', () => {
     beforeAll(async () => {
@@ -88,14 +89,16 @@ describe('insert_cs_with_dict()', () => {
                 expect(info).toEqual(expected)
             })
 
-            describe('create draft from published cross section with changed data', () => {
-                let keycs2
+            describe('create draft from published cross section with changed data property', () => {
+                let keycs2: string
+                let cs1: CrossSection<string, string, LUT>
                 beforeAll(async () => {
-                    const publishedcs = await byOwnerAndId("somename@example.com", keycs1)
-                    if (publishedcs === undefined) {
+                    const cs = await byOwnerAndId("somename@example.com", keycs1)
+                    if (cs === undefined) {
                         throw Error(`Unable to retrieve cross section with id ${keycs1}`)
                     }
-                    const draftcs = deepClone(publishedcs)
+                    cs1 = cs
+                    const draftcs = deepClone(cs1)
                     draftcs.data = [
                         [1000, 1.2345e-20],
                       ]
@@ -112,6 +115,19 @@ describe('insert_cs_with_dict()', () => {
                         commitMessage: 'My first update'
                     }
                     expect(info).toEqual(expected)
+                })
+
+                it('should have different id then previous version', () => {
+                    expect(keycs2).not.toEqual(keycs1)
+                })
+
+                it('should have same ids for states', async () => {
+                    const draftcs = await byOwnerAndId("somename@example.com", keycs2)
+                    const expected = deepClone(cs1)
+                    expected.data = [
+                        [1000, 1.2345e-20],
+                      ]
+                    expect(draftcs).toEqual(expected)
                 })
             })
         })
