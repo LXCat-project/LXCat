@@ -105,3 +105,20 @@ export const makeMemberless = async (userKey: string) => {
     `);
   return null;
 };
+
+export const addOrganization = async (org: Organization) => {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+        INSERT
+            ${org}
+        IN Organization
+        RETURN NEW._key
+    `);
+  return await cursor.next();
+}
+
+export const dropOrganization = async (orgKey: string) => {
+  // TODO check org does not own anything
+  await db().query(aql`
+      REMOVE {_key: ${orgKey}} IN Organization
+  `); 
+}

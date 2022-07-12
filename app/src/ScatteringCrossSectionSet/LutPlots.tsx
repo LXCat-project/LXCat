@@ -27,7 +27,9 @@ interface VegaData {
 
 function sectionToVegaData(data: LUT["data"], reaction: Reaction<State>) {
   const label = reactionLabel(reaction) + " " + reaction.type_tags.join(",");
-  const rows = data.filter(d => d[0] !== 0.0 && d[1] !== 0.0).map((d) => ({ x: d[0], y: d[1], s: label }));
+  const rows = data
+    .filter((d) => d[0] !== 0.0 && d[1] !== 0.0)
+    .map((d) => ({ x: d[0], y: d[1], s: label }));
   return rows;
 }
 
