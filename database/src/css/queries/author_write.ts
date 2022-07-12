@@ -1,6 +1,6 @@
 import { aql } from "arangojs";
 import { db } from "../../db";
-import { insert_cs_with_dict } from "../../cs/queries";
+import { insert_cs_with_dict } from "../../cs/queries/write";
 import { now } from "../../date";
 import {
   insert_document,
@@ -84,6 +84,9 @@ export async function publish(key: string) {
 }
 
 export async function updateSet(
+  /**
+	 * Key of set that needs to be updated aka create a draft from
+	 */
   key: string,
   set: CrossSectionSetRaw,
   message: string
@@ -102,6 +105,7 @@ export async function updateSet(
     throw Error("Can not update set due to invalid status");
   }
 }
+
 async function createDraftSet(
   version: string,
   set: CrossSectionSetRaw,
