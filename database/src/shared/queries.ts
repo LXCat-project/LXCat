@@ -8,6 +8,7 @@ import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { DBState, InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { db } from "../db";
+import { findReactionId } from "./queries/reaction";
 
 export async function insert_document(
   collection: string,
@@ -175,7 +176,12 @@ export async function insert_reaction_with_dict(
   // Insert all states.
   // Insert the reaction and connect all states using 'Consumes'
   // and 'Produces' edges. Annotate them with the count.
-  // FIXME: Check whether a reaction already exists.
+  const mappedReaction = mapReaction(dict, reaction)
+  const reactionIdFromDb = await findReactionId(mappedReaction)
+  if (reactionIdFromDb !== undefined) {
+    return reactionIdFromDb
+  }
+
   const r_id = await insert_document("Reaction", {
     reversible: reaction.reversible,
     type_tags: reaction.type_tags,
@@ -194,3 +200,9 @@ export async function insert_reaction_with_dict(
 
   return r_id;
 }
+function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
+  const lhs = reaction.lhs.map(s => ({...s, state: dict[s.state]}))
+  const rhs = reaction.rhs.map(s => ({...s, state: dict[s.state]}))
+  return {...reaction, lhs, rhs}
+}
+

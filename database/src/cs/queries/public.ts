@@ -1,6 +1,7 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionHeading, CrossSectionItem } from "../public";
 
 export async function list() {
@@ -198,3 +199,24 @@ export async function listOwned(email: string) {
 	`);
   return await cursor.all();
 }
+
+export interface KeyedVersionInfo extends VersionInfo {
+	_key: string;
+}
+
+/**
+ * Finds all previous versions of set with key
+ */
+ export async function historyOfSection(key: string) {
+	const id = `CrossSection/${key}`;
+	const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+	  FOR h
+		IN 0..9999999
+		ANY ${id}
+		CrossSectionHistory
+		FILTER h.versionInfo.status != 'draft'
+		SORT h.versionInfo.version DESC
+		RETURN MERGE({_key: h._key}, h.versionInfo)
+	`);
+	return await cursor.all();
+  }

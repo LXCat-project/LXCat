@@ -5,16 +5,17 @@ import { db } from "../../db";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 
 export async function getVersionInfo(key: string) {
-    const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
       FOR cs IN CrossSection
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
     `);
-    return cursor.next();
-  }
+  return cursor.next();
+}
 
-  export async function byOwnerAndId(email: string, id: string) {
-    const cursor: ArrayCursor<CrossSection<string, string>> = await db().query(aql`
+export async function byOwnerAndId(email: string, id: string) {
+  const cursor: ArrayCursor<CrossSection<string, string>> = await db()
+    .query(aql`
     FOR u IN users
     FILTER u.email == ${email}
     FOR m IN MemberOf
@@ -22,10 +23,36 @@ export async function getVersionInfo(key: string) {
         FOR o IN Organization
             FILTER m._to == o._id
             FOR cs IN CrossSection
-                FILTER cs.organization == o._id
+                FILTER cs.organization == o.name
                 FILTER cs._key == ${id}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                RETURN UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"])
+                LET reference = (
+                  FOR rs IN References
+                      FILTER rs._from == cs._id
+                      FOR r IN Reference
+                          FILTER r._id == rs._to
+                          RETURN r._key
+                  )
+                LET reaction = FIRST(
+                  FOR r in Reaction
+                      FILTER r._id == cs.reaction
+                      LET consumes2 = (
+                          FOR c IN Consumes
+                          FILTER c._from == r._id
+                              FOR c2s IN State
+                              FILTER c2s._id == c._to
+                              RETURN {state: c2s._key, count: c.count}
+                      )
+                      LET produces2 = (
+                          FOR p IN Produces
+                          FILTER p._from == r._id
+                              FOR p2s IN State
+                              FILTER p2s._id == p._to
+                              RETURN {state: p2s._key, count: p.count}
+                      )
+                      RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
+              )
+                RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
       `);
-    return await cursor.next();
-  }
+  return await cursor.next();
+}
