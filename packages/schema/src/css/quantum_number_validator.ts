@@ -27,7 +27,7 @@ export class ValidateData {
     parity() {
 	const config = this.component.config
 
-	if (config.scheme == "AtomLS") {
+	if (this.component.scheme == "LS") {
 	    if (config.length < 1) return true; // nothing to check
 
 	    const _P: number = combine_parity(shell_parities(config));
@@ -76,8 +76,8 @@ export class ValidateData {
 	let config = this.component.config;
 	let term = this.component.term;
 	// NOTE: assumes config must have core and excited, is this correct?
-	const [L1, L2] = config.values().map((val: any, _: any) => val.term.L);
-	const [S1, S2] = config.values().map((val: any, _: any) => val.term.S);
+	const [L1, L2] = Object.values(config).map((val: any, _: any) => val.term.L);
+	const [S1, S2] = Object.values(config).map((val: any, _: any) => val.term.S);
 
 	let res1 = check_couplings(L1, L2, S1, term.K);
 	if (!res1.result) {
