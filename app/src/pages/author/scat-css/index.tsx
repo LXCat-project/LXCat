@@ -115,6 +115,7 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
           <button>Add</button>
         </a>
       </Link>
+      <Link href="/author"><a>Back</a></Link>
 
       <RetractDialog
         isOpened={openRestractDialog}

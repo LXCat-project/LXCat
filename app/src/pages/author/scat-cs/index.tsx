@@ -1,5 +1,5 @@
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { listOwned } from "@lxcat/database/dist/cs/queries";
+import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { mustBeAuthor } from "../../../auth/middleware";
@@ -57,6 +57,7 @@ const Page: NextPage<Props> = ({ items }) => {
         </thead>
         <tbody>{rows}</tbody>
       </table>
+      <Link href="/author"><a>Back</a></Link>
     </Layout>
   );
 };

@@ -11,17 +11,17 @@ import {
 import Link from "next/link";
 
 interface Props {
-  section: CrossSectionSetInputOwned;
-  sectionKey: string;
+  set: CrossSectionSetInputOwned;
+  setKey: string;
   commitMessage: string;
 }
 
 const EditRawCrossSectionSetPage: NextPage<Props> = ({
-  section,
-  sectionKey,
+  set,
+  setKey,
   commitMessage,
 }) => {
-  const [doc, setDoc] = useState(JSON.stringify(section, undefined, 4));
+  const [doc, setDoc] = useState(JSON.stringify(set, undefined, 4));
   const [message, setMessage] = useState(commitMessage);
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
@@ -29,7 +29,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
     event.preventDefault();
     setErrors([]);
     setId("");
-    const url = `/api/scat-css/${sectionKey}`;
+    const url = `/api/scat-css/${setKey}`;
     const body = JSON.stringify({
       doc: JSON.parse(doc),
       message,
@@ -92,12 +92,12 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
             </ul>
           </div>
         )}
-        {id && id === section._key && (
+        {id && id === set._key && (
           <span>
             Update successful, a draft has been created with id is {id}
           </span>
         )}
-        {id && id !== section._key && (
+        {id && id !== set._key && (
           <span>Update successful, the draft been updated.</span>
         )}
       </form>
@@ -116,11 +116,11 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
-  const section = await byOwnerAndId(me.email, id);
+  const set = await byOwnerAndId(me.email, id);
   const info = await getVersionInfo(id);
   const commitMessage =
     info !== undefined && info.commitMessage ? info.commitMessage : "";
-  if (section === undefined) {
+  if (set === undefined) {
     return {
       // TODO should return notFound when id does not exist
       //, but should return forbidden response when not owned by user?
@@ -130,8 +130,8 @@ export const getServerSideProps: GetServerSideProps<
   }
   return {
     props: {
-      section,
-      sectionKey: id,
+      set,
+      setKey: id,
       commitMessage,
     },
   };
