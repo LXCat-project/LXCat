@@ -72,12 +72,18 @@ export class ValidateData {
         return res.result
     }
 
-    LS1() {
+    get_Ls_Ss() {
         let config = this.component.config;
         let term = this.component.term;
-        // NOTE: assumes config must have core and excited, is this correct?
+        // NOTE: assumes config must have core and excited
         const [L1, L2] = Object.values(config).map((val: any, _: any) => val.term.L);
         const [S1, S2] = Object.values(config).map((val: any, _: any) => val.term.S);
+	return [L1, L2, S1, S2];
+    }
+
+    LS1() {
+        let term = this.component.term;
+	const [L1, L2, S1, S2] = this.get_Ls_Ss()
 
         let res1 = check_couplings(L1, L2, S1, term.K);
         if (!res1.result) {
@@ -93,13 +99,9 @@ export class ValidateData {
     }
 
     J1L2() {
-        // FIXME: code duplication
-        let config = this.component.config;
         let term = this.component.term;
-        // NOTE: assumes config must have core and excited, is this correct?
-        const [L1, L2] = Object.values(config).map((val: any, _: any) => val.term.L);
-        const [S1, S2] = Object.values(config).map((val: any, _: any) => val.term.S);
-        const J1 = config.core.term.J;
+	const [L1, L2, S1, S2] = this.get_Ls_Ss()
+        const J1 = this.component.config.core.term.J;
 
         let res1 = check_momenta(L1, S1, J1);
         if (!res1.result) {
