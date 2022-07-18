@@ -4,6 +4,7 @@ import {
   insert_document,
   insert_edge,
   insert_reaction_with_dict,
+  upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
@@ -11,6 +12,7 @@ import { aql } from "arangojs";
 import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
+import { findReactionId } from "../../shared/queries/reaction";
 
 export async function insert_cs_with_dict(
   cs: CrossSection<string, string>,
@@ -58,7 +60,7 @@ async function updateVersionStatus(key: string, status: Status) {
 }
 
 export async function publish(key: string) {
-  const history = await historyOfSection(key)
+  const history = await historyOfSection(key);
   const previous_published_key = history
     .filter((h) => h !== null)
     .find((h) => h.status === "published");
@@ -95,6 +97,17 @@ export async function updateSection(
       ref_dict,
       organization
     );
+  } else if (status === "draft") {
+    await updateDraftSection(
+      version,
+      section,
+      message,
+      key,
+      state_dict,
+      ref_dict,
+      organization
+    );
+    return key;
   } else {
     throw Error("Can not update set due to invalid status");
   }
@@ -131,12 +144,55 @@ async function createDraftSection(
   );
 
   // Add previous version (published )and current version (draft) to CrossSectionHistory collection
-  await insert_edge(
-    "CrossSectionHistory",
-    idOfDraft,
-    `CrossSection/${key}`
-  );
+  await insert_edge("CrossSectionHistory", idOfDraft, `CrossSection/${key}`);
   return idOfDraft;
+}
+
+async function updateDraftSection(
+  version: string,
+  section: CrossSection<
+    string,
+    string,
+    import("@lxcat/schema/dist/core/data_types").LUT
+  >,
+  message: string,
+  /**
+   * Key of section that needs to be updated
+   */
+  key: string,
+  state_dict: Dict<string>,
+  ref_dict: Dict<string>,
+  organization: string
+) {
+  const versionInfo = {
+    status: "draft",
+    version,
+    commitMessage: message,
+    createdOn: now(),
+  };
+
+  const { reference, reaction, ...draftSection } = section;
+
+  reaction.lhs.forEach((s) => {
+    s.state = `State/${s.state}`;
+  });
+  reaction.rhs.forEach((s) => {
+    s.state = `State/${s.state}`;
+  });
+  const reactionKey = await findReactionId(reaction);
+  if (reactionKey === undefined) {
+    // TODO handle updated reaction / states
+  }
+
+  const doc = {
+    ...draftSection,
+    reaction: reactionKey,
+    versionInfo,
+    organization,
+  };
+  await db().collection("CrossSection").replace({ _key: key }, doc);
+
+  // TODO handle updated refs
 }
 
 export async function deleteSection(key: string, message: string) {

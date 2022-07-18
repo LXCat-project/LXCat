@@ -159,15 +159,15 @@ export async function search(options: SearchOptions) {
 }
 
 export interface KeyedVersionInfo extends VersionInfo {
-	_key: string;
+  _key: string;
 }
 
 /**
  * Finds all previous versions of set with key
  */
- export async function historyOfSection(key: string) {
-	const id = `CrossSection/${key}`;
-	const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+export async function historyOfSection(key: string) {
+  const id = `CrossSection/${key}`;
+  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
 	  FOR h
 		IN 0..9999999
 		ANY ${id}
@@ -176,5 +176,5 @@ export interface KeyedVersionInfo extends VersionInfo {
 		SORT h.versionInfo.version DESC
 		RETURN MERGE({_key: h._key}, h.versionInfo)
 	`);
-	return await cursor.all();
-  }
+  return await cursor.all();
+}

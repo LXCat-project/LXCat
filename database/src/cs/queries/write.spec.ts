@@ -6,19 +6,22 @@ import {
   createAuthCollections,
   loadTestUserAndOrg,
 } from "../../auth/testutils";
-import {
-  createCsCollections,
-  deepClone,
-  ISO_8601_UTC,
-} from "../../css/queries/testutils";
+import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
+import { deepClone } from "../../css/queries/deepClone";
 import { insert_state_dict } from "../../shared/queries";
 import { startDbContainer } from "../../testutils";
-import { deleteSection, insert_cs_with_dict, publish, updateSection } from "./write";
+import {
+  deleteSection,
+  insert_cs_with_dict,
+  publish,
+  updateSection,
+} from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { historyOfSection } from "./public";
 import { db } from "../../db";
+import { aql } from "arangojs";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
@@ -215,6 +218,7 @@ describe("given db with test user and organization", () => {
           "draft"
         );
         keycs1 = idcs1.replace("CrossSection/", "");
+        return truncateCrossSectionCollections;
       });
 
       it("should have draft status", async () => {
@@ -244,10 +248,10 @@ describe("given db with test user and organization", () => {
           expect(info).toEqual(expected);
         });
 
-        describe('given published cross section has been retracted', () => {
+        describe("given published cross section has been retracted", () => {
           beforeAll(async () => {
-            await deleteSection(keycs1, 'I do not want to talk about it')
-          })
+            await deleteSection(keycs1, "I do not want to talk about it");
+          });
 
           it("should have restracted status", async () => {
             const info = await getVersionInfo(keycs1);
@@ -256,11 +260,74 @@ describe("given db with test user and organization", () => {
               version: "1",
               createdOn: expect.stringMatching(ISO_8601_UTC),
               commitMessage: "",
-              retractMessage: 'I do not want to talk about it'
+              retractMessage: "I do not want to talk about it",
             };
             expect(info).toEqual(expected);
           });
-        })
+        });
+      });
+    });
+
+    describe("create draft cross section and update it", () => {
+      let keycs1: string;
+      let keycs2: string;
+      beforeAll(async () => {
+        const cs: CrossSection<string, string> = {
+          reaction: {
+            lhs: [{ count: 1, state: "s1" }],
+            rhs: [{ count: 1, state: "s2" }],
+            reversible: false,
+            type_tags: [],
+          },
+          threshold: 42,
+          type: Storage.LUT,
+          labels: ["Energy", "Cross Section"],
+          units: ["eV", "m^2"],
+          data: [[1, 3.14e-20]],
+          reference: [],
+        };
+        const idcs1 = await insert_cs_with_dict(
+          cs,
+          state_ids,
+          {},
+          "Some organization",
+          "draft"
+        );
+        keycs1 = idcs1.replace("CrossSection/", "");
+        const draft = await byOwnerAndId("somename@example.com", keycs1);
+        if (draft === undefined) {
+          throw new Error(`Unable to retrieve draft section ${keycs1}`);
+        }
+        draft.threshold = 999;
+        keycs2 = await updateSection(
+          keycs1,
+          draft,
+          "Updated threshold",
+          state_ids,
+          {},
+          "Some organization"
+        );
+        return truncateCrossSectionCollections;
+      });
+
+      it("should have draft version", async () => {
+        const info = await getVersionInfo(keycs2);
+        const expected = {
+          status: "draft",
+          version: "1",
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          commitMessage: "Updated threshold",
+        };
+        expect(info).toEqual(expected);
+      });
+
+      it("should have same key", () => {
+        expect(keycs1).toEqual(keycs2);
+      });
+
+      it("should have only one cross section in db", async () => {
+        const data = await db().collection("CrossSection").count();
+        expect(data.count).toEqual(1);
       });
     });
   });
@@ -317,20 +384,21 @@ async function createPubishedCrossSection(state_ids: Dict<string>) {
   );
   const keycs1 = idcs1.replace("CrossSection/", "");
   return {
-    __return: async () => {
-      const collections2Truncate = [
-        "Consumes",
-        "CrossSection",
-        "CrossSectionHistory",
-        "Reaction",
-        "Produces",
-        "Reference",
-        "References",
-      ];
-      await Promise.all(
-        collections2Truncate.map((c) => db().collection(c).truncate())
-      );
-    },
+    __return: truncateCrossSectionCollections,
     keycs1,
   };
+}
+async function truncateCrossSectionCollections() {
+  const collections2Truncate = [
+    "Consumes",
+    "CrossSection",
+    "CrossSectionHistory",
+    "Reaction",
+    "Produces",
+    "Reference",
+    "References",
+  ];
+  await Promise.all(
+    collections2Truncate.map((c) => db().collection(c).truncate())
+  );
 }

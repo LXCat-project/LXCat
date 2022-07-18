@@ -25,7 +25,8 @@ import {
   search,
   SortOptions,
 } from "./public";
-import { createCsCollections, deepClone, ISO_8601_UTC } from "./testutils";
+import { createCsCollections, ISO_8601_UTC } from "./testutils";
+import { deepClone } from "./deepClone";
 import { CrossSectionSetItem } from "../public";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
@@ -348,9 +349,10 @@ describe("given filled ArangoDB container", () => {
         } else {
           throw Error("Could not find state with particle A");
         }
-
+        console.log(JSON.stringify(cssdraft, undefined, 2))
         keycss2 = await updateSet(keycss1, cssdraft, "First edit");
         const css = await byOwnerAndId("somename@example.com", keycss2);
+        console.log(JSON.stringify(css, undefined, 2))
         if (css !== undefined) {
           css2 = css;
         } else {

@@ -47,19 +47,19 @@ describe("given db with test user and organization", () => {
         reactionId = id;
       });
 
-      it('should have an id', () => {
-        expect(reactionId).toMatch(/\d+/)
-      })
+      it("should have an id", () => {
+        expect(reactionId).toMatch(/\d+/);
+      });
 
-      it('adding same again should return same id', async () => {
+      it("adding same again should return same id", async () => {
         const id = await insert_reaction_with_dict(state_ids, {
-            lhs: [{ count: 1, state: "s1" }],
-            rhs: [],
-            reversible: false,
-            type_tags: [],
-          });
-          expect(id).toEqual(reactionId)
-      })
+          lhs: [{ count: 1, state: "s1" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [],
+        });
+        expect(id).toEqual(reactionId);
+      });
     });
   });
 });

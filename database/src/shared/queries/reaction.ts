@@ -4,11 +4,10 @@ import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 
 export async function findReactionId(reaction: Reaction<string>) {
-    // TODO optimize naive query, 
-    // instead of denormalizing every reaction in db and comparing it to the query reaction
-    // do something more efficient
-    const cursor: ArrayCursor<string> = await db()
-        .query(aql`
+  // TODO optimize naive query,
+  // instead of denormalizing every reaction in db and comparing it to the query reaction
+  // do something more efficient
+  const cursor: ArrayCursor<string> = await db().query(aql`
             FOR r IN Reaction
                 LET lhs = (
                     FOR s IN Consumes
@@ -26,6 +25,6 @@ export async function findReactionId(reaction: Reaction<string>) {
                 AND rhs ALL IN ${reaction.rhs}
                 LIMIT 1 // Stop when found
                 RETURN r._id
-        `)
-    return cursor.next()
+        `);
+  return cursor.next();
 }

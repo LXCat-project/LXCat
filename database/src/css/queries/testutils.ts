@@ -13,7 +13,3 @@ export async function createCsCollections() {
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;
-
-export function deepClone<T>(i: T): T {
-  return JSON.parse(JSON.stringify(i))
-}

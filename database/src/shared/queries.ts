@@ -176,10 +176,10 @@ export async function insert_reaction_with_dict(
   // Insert all states.
   // Insert the reaction and connect all states using 'Consumes'
   // and 'Produces' edges. Annotate them with the count.
-  const mappedReaction = mapReaction(dict, reaction)
-  const reactionIdFromDb = await findReactionId(mappedReaction)
+  const mappedReaction = mapReaction(dict, reaction);
+  const reactionIdFromDb = await findReactionId(mappedReaction);
   if (reactionIdFromDb !== undefined) {
-    return reactionIdFromDb
+    return reactionIdFromDb;
   }
 
   const r_id = await insert_document("Reaction", {
@@ -201,8 +201,7 @@ export async function insert_reaction_with_dict(
   return r_id;
 }
 function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
-  const lhs = reaction.lhs.map(s => ({...s, state: dict[s.state]}))
-  const rhs = reaction.rhs.map(s => ({...s, state: dict[s.state]}))
-  return {...reaction, lhs, rhs}
+  const lhs = reaction.lhs.map((s) => ({ ...s, state: dict[s.state] }));
+  const rhs = reaction.rhs.map((s) => ({ ...s, state: dict[s.state] }));
+  return { ...reaction, lhs, rhs };
 }
-

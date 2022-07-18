@@ -1,6 +1,6 @@
 import { aql } from "arangojs";
 import { db } from "../../db";
-import { insert_cs_with_dict } from "../../cs/queries/write";
+import { insert_cs_with_dict, updateSection } from "../../cs/queries/write";
 import { now } from "../../date";
 import {
   insert_document,
@@ -11,14 +11,18 @@ import {
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
-import { getVersionInfo } from "./author_read";
+import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
 import { historyOfSet } from "./public";
 import { ArrayCursor } from "arangojs/cursor";
+import { byOrgAndId } from "../../cs/queries/author_read";
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { deepClone } from "./deepClone";
 
 // TODO some queries have duplication which could be de-duped
 
 export async function insert_input_set(
-  dataset: CrossSectionSetRaw,
+  dataset: CrossSectionSetInputOwned,
   status: Status = "published",
   version = "1",
   commitMessage = ""
@@ -49,14 +53,39 @@ export async function insert_input_set(
   // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/dist/ScatteringCrossSection/queries.ts.
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
-    const cs_id = await insert_cs_with_dict(
-      cs,
-      state_ids,
-      reference_ids,
-      organization.id
-    );
-    // Make cross sections part of set by adding to IsPartOf collection
-    await insert_edge("IsPartOf", cs_id, cs_set_id);
+    if (cs.id !== undefined) {
+      const prevCs = await byOrgAndId(dataset.contributor, cs.id);
+      if (prevCs !== undefined) {
+        const newCs = deepClone(cs);
+        delete newCs.id;
+        if (isEqualSection(newCs, prevCs)) {
+          // nothing todo, the cross section in db with id cs.id has same content as given cs
+        } else {
+          const cs_id = await updateSection(
+            cs.id,
+            newCs,
+            `Indirect draft by editing set ${dataset.name} / ${dataset._key}`,
+            state_ids,
+            reference_ids,
+            dataset.contributor
+          );
+          // Make cross sections part of set by adding to IsPartOf collection
+          await insert_edge("IsPartOf", cs_id, cs_set_id);
+        }
+      } else {
+        // TODO handle id which is not owned by organization, or does not exist.
+      }
+    } else {
+      delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while insert_cs_with_dict does not need it
+      const cs_id = await insert_cs_with_dict(
+        cs,
+        state_ids,
+        reference_ids,
+        organization.id
+      );
+      // Make cross sections part of set by adding to IsPartOf collection
+      await insert_edge("IsPartOf", cs_id, cs_set_id);
+    }
   }
   return cs_set_id.replace("CrossSectionSet/", "");
 }
@@ -86,8 +115,8 @@ export async function publish(key: string) {
 
 export async function updateSet(
   /**
-	 * Key of set that needs to be updated aka create a draft from
-	 */
+   * Key of set that needs to be updated aka create a draft from
+   */
   key: string,
   set: CrossSectionSetRaw,
   message: string
@@ -136,7 +165,7 @@ async function createDraftSet(
 
 async function updateDraftSet(
   key: string,
-  dataset: CrossSectionSetRaw,
+  dataset: CrossSectionSetInputOwned,
   versionInfo: VersionInfo,
   message: string
 ) {
@@ -162,14 +191,38 @@ async function updateDraftSet(
   // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/dist/ScatteringCrossSection/queries.ts.
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
-    const cs_id = await insert_cs_with_dict(
-      cs,
-      state_ids,
-      reference_ids,
-      organization.id
-    );
-    // Make cross sections part of set by adding to IsPartOf collection
-    await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
+    if (cs.id !== undefined) {
+      const prevCs = await byOrgAndId(dataset.contributor, cs.id);
+      if (prevCs !== undefined) {
+        const newCs = deepClone(cs);
+        delete newCs.id;
+        if (isEqualSection(newCs, prevCs)) {
+          // nothing todo, the cross section in db with id cs.id has same content as given cs
+        } else {
+          const cs_id = await updateSection(
+            cs.id,
+            newCs,
+            `Indirect draft by editing set ${dataset.name} / ${dataset._key}`,
+            state_ids,
+            reference_ids,
+            dataset.contributor
+          );
+          // Make cross sections part of set by adding to IsPartOf collection
+          await insert_edge("IsPartOf", cs_id, key);
+        }
+      } else {
+        // TODO handle id which is not owned by organization, or does not exist.
+      }
+    } else {
+      const cs_id = await insert_cs_with_dict(
+        cs,
+        state_ids,
+        reference_ids,
+        organization.id
+      );
+      // Make cross sections part of set by adding to IsPartOf collection
+      await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
+    }
   }
 }
 
@@ -205,4 +258,12 @@ export async function deleteSet(key: string, message: string) {
   } else {
     throw Error("Can not delete set due to invalid status");
   }
+}
+
+function isEqualSection(
+  newCs: CrossSection<string, string, LUT>,
+  prevCs: CrossSection<string, string, LUT>
+) {
+  // TODO make order of keys not matter
+  return JSON.stringify(newCs) === JSON.stringify(prevCs);
 }

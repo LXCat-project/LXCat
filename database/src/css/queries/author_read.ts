@@ -37,8 +37,11 @@ export async function listOwned(email: string) {
   return await cursor.all();
 }
 
+type Process = CrossSectionSetRaw["processes"][0]; // TODO add id of reaction
+
 export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
-  _key: string;
+  _key?: string;
+  processes: (Process & { id?: string })[];
 }
 
 export async function byOwnerAndId(email: string, id: string) {
@@ -121,7 +124,7 @@ export async function byOwnerAndId(email: string, id: string) {
                           )
                           RETURN MERGE(
                               UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                              { reaction, "reference": refs2}
+                              { id: cs._key, reaction, reference: refs2}
                           )
               )
               RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {references: refs, states, processes, contributor: o.name})
