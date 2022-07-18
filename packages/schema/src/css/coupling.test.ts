@@ -27,5 +27,13 @@ describe("momenta", () => {
         const spin = 1;
         // FIXME: very example specific length test: spin = 1 => intermediate momenta overlap
         expect(momenta_couplings(els, spin)).toHaveLength(els.length + 1);
+
+	// different non-overlapping sets of momenta
+        var spins = [1, 1.5];
+        expect(momenta_couplings(els, spins)).toHaveLength(els.length * 2 + 2);
+
+	// overlapping sets of momenta, larger set is w/ spin 2
+        spins = [1, 2];
+        expect(momenta_couplings(els, spins)).toHaveLength(els.length + 2);
     });
 });

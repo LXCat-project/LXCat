@@ -14,6 +14,7 @@ export function momenta_max_min(orbital: number, spin: number) {
 }
 
 
+// API 1: (number, number) -> number[]
 /**
  * Given two angular momenta, calculate all possible values of total
  * angular momentum
@@ -21,7 +22,7 @@ export function momenta_max_min(orbital: number, spin: number) {
  * @param {number} orbital - typically the orbital angular momentum, but
  *                           it can be any kind of angular momentum
  *
- * @param {number} spin - spin angular momentum, but as `orbital`, it can
+ * @param {number} spin - spin angular momentum, same as `orbital`, it can
  *                        be any kind of angular momentum
  *
  * @return {number[]} Array of all possible values of angular momenta:
@@ -33,8 +34,32 @@ export function momenta(orbital: number, spin: number) {
 }
 
 
-export function momenta_couplings(els: number[], spin: number) {
-    return Array.from(new Set(els.flatMap((el: number) => momenta(el, spin))));
+// API 2/3: (number[], number|number[]) -> number[]
+/**
+ * Given two sets of angular momenta, calculate all possible values of
+ * total angular momentum (couplings)
+ *
+ * @param {number[]} orbital - set of orbital angular momentum, but it
+ *                             can be any kind of angular momentum
+ *
+ * @param {number|number[]} spin - single/set of spin angular momenta, but
+ *                                 it can be any kind of angular momentum
+ *
+ * @return {number[]} Array of all possible values of angular momenta:
+ *                    [max, max-1, max-2, ..., min]
+ */
+export function momenta_couplings(els: number[], spin: number | number[]) {
+    let spins: number[];
+    if (spin.length == undefined) {
+        spins = [spin];
+    } else {
+        spins = spin;
+    }
+    return Array.from(new Set(spins.flatMap(
+        (_spin: number) => Array.from(new Set(els.flatMap(
+            (el: number) => momenta(el, _spin)
+        )))
+    )));
 }
 
 
@@ -55,6 +80,3 @@ export function check_couplings(L1: number, L2: number, S1: number, expected_K: 
         allowed: ls1s
     };
 }
-
-
-// TODO: (number[], number[]) -> number[]
