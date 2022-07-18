@@ -36,7 +36,8 @@ describe("validate parity data", () => {
         let validator: ValidateData;
         const bad: Dict = {
             "second": { 0: "excited" },
-            "third": { 1: "core" }
+            "third": { 1: "core" },
+	    "carbon": { 0: "P" }
         };
         for (let [key, atom] of inputs_nok) {
             if (!(bad.hasOwnProperty(key))) continue;
@@ -57,7 +58,7 @@ describe("validate parity data", () => {
 });
 
 describe("validate angular momenta", () => {
-    test("coupling - LS, J1L2", () => { // FIXME: add LS1 example
+    test("coupling - LS, LS1, J1L2", () => { // FIXME: add LS1 example
         var err: ErrorObject;
         let validator: ValidateData;
         let status: boolean;
