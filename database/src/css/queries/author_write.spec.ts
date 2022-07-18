@@ -10,10 +10,14 @@ import {
   byOwnerAndId,
   CrossSectionSetInputOwned,
   CrossSectionSetOwned,
-  deleteSet,
   listOwned,
 } from "./author_read";
-import { insert_input_set, publish, updateSet } from "./author_write";
+import {
+  deleteSet,
+  insert_input_set,
+  publish,
+  updateSet,
+} from "./author_write";
 import {
   byId,
   historyOfSet,
@@ -212,8 +216,8 @@ describe("given filled ArangoDB container", () => {
     });
   });
 
-  describe('given published set with 3 refs, 4 simple particle states and 2 processes', () => {
-    let keycss1: string
+  describe("given published set with 3 refs, 4 simple particle states and 2 processes", () => {
+    let keycss1: string;
     let css1: CrossSectionSetInputOwned;
 
     beforeAll(async () => {
@@ -227,159 +231,160 @@ describe("given filled ArangoDB container", () => {
             ref1: {
               id: "ref1",
               type: "article",
-              title: 'First reference'
+              title: "First reference",
             },
             ref2: {
               id: "ref2",
               type: "article",
-              title: 'Second reference title'
+              title: "Second reference title",
             },
             ref3: {
               id: "ref3",
               type: "article",
-              title: 'Third reference title'
+              title: "Third reference title",
             },
           },
           states: {
             s1: {
-              particle: 'A',
-              charge: 0
+              particle: "A",
+              charge: 0,
             },
             s2: {
-              particle: 'B',
-              charge: 1
+              particle: "B",
+              charge: 1,
             },
             s3: {
-              particle: 'C',
-              charge: 2
+              particle: "C",
+              charge: 2,
             },
             s4: {
-              particle: 'D',
-              charge: 3
+              particle: "D",
+              charge: 3,
             },
           },
-          processes: [{
-            reaction: {
-              lhs: [
-                { count: 1, state: 's1' },
-              ],
-              rhs: [
-                { count: 1, state: 's2' },
-              ],
-              reversible: false,
-              type_tags: []
+          processes: [
+            {
+              reaction: {
+                lhs: [{ count: 1, state: "s1" }],
+                rhs: [{ count: 1, state: "s2" }],
+                reversible: false,
+                type_tags: [],
+              },
+              threshold: 42,
+              type: Storage.LUT,
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              data: [[1, 3.14e-20]],
+              reference: ["ref1", "ref2"],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [
-              [1, 3.14e-20],
-            ],
-            reference: ['ref1', 'ref2']
-          }, {
-            reaction: {
-              lhs: [
-                { count: 1, state: 's3' },
-              ],
-              rhs: [
-                { count: 1, state: 's4' },
-              ],
-              reversible: false,
-              type_tags: []
+            {
+              reaction: {
+                lhs: [{ count: 1, state: "s3" }],
+                rhs: [{ count: 1, state: "s4" }],
+                reversible: false,
+                type_tags: [],
+              },
+              threshold: 42,
+              type: Storage.LUT,
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              data: [[1, 3.14e-20]],
+              reference: ["ref3"],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [
-              [1, 3.14e-20],
-            ],
-            reference: ['ref3']
-          }],
+          ],
         },
         "published",
         "1",
         "Initial version"
       );
-      const css = await byOwnerAndId('somename@example.com', keycss1)
+      const css = await byOwnerAndId("somename@example.com", keycss1);
       if (css !== undefined) {
-        css1 = css
+        css1 = css;
       } else {
-        throw Error(`Unable to retrieve ccs with id ${keycss1}`)
+        throw Error(`Unable to retrieve ccs with id ${keycss1}`);
       }
     });
 
-    describe('when draft is made with only change to description', () => {
-      let keycss2: string
-      let css2: CrossSectionSetInputOwned
+    describe("when draft is made with only change to description", () => {
+      let keycss2: string;
+      let css2: CrossSectionSetInputOwned;
 
       beforeAll(async () => {
-        const cssdraft = deepClone(css1)
-        cssdraft.description = "Some description 1st edit"
+        const cssdraft = deepClone(css1);
+        cssdraft.description = "Some description 1st edit";
 
         keycss2 = await updateSet(keycss1, cssdraft, "First edit");
-        const css = await byOwnerAndId('somename@example.com', keycss2)
+        const css = await byOwnerAndId("somename@example.com", keycss2);
         if (css !== undefined) {
-          css2 = css
+          css2 = css;
         } else {
-          throw Error(`Unable to retrieve ccs with id ${keycss2}`)
+          throw Error(`Unable to retrieve ccs with id ${keycss2}`);
         }
-      })
+      });
 
-      it('draft set should have same ids and values for references and states as published set', () => {
-        const expected = deepClone(css1)
-        expected.description = css2.description
-        
-        expect(css2).toEqual(expected)
-      })
+      it("draft set should have same ids and values for references and states as published set", () => {
+        const expected = deepClone(css1);
+        expected.description = css2.description;
 
-      it('draft set should have other id as published set', () => {
-        expect(keycss2).not.toEqual(keycss1)
-      })
-    })
+        expect(css2).toEqual(expected);
+      });
 
-    describe('when draft is made with only change to charge of state with particle A', () => {
-      let keycss2: string
-      let css2: CrossSectionSetInputOwned
+      it("draft set should have other id as published set", () => {
+        expect(keycss2).not.toEqual(keycss1);
+      });
+    });
+
+    describe("when draft is made with only change to charge of state with particle A", () => {
+      let keycss2: string;
+      let css2: CrossSectionSetInputOwned;
 
       beforeAll(async () => {
-        const cssdraft = deepClone(css1)
-        const stateA = Object.values(cssdraft.states).find(s => s.particle === 'A')
+        const cssdraft = deepClone(css1);
+        const stateA = Object.values(cssdraft.states).find(
+          (s) => s.particle === "A"
+        );
         if (stateA !== undefined) {
-          stateA.charge = 99
+          stateA.charge = 99;
         } else {
-          throw Error('Could not find state with particle A')
+          throw Error("Could not find state with particle A");
         }
 
         keycss2 = await updateSet(keycss1, cssdraft, "First edit");
-        const css = await byOwnerAndId('somename@example.com', keycss2)
+        const css = await byOwnerAndId("somename@example.com", keycss2);
         if (css !== undefined) {
-          css2 = css
+          css2 = css;
         } else {
-          throw Error(`Unable to retrieve ccs with id ${keycss2}`)
+          throw Error(`Unable to retrieve ccs with id ${keycss2}`);
         }
-      })
+      });
 
-      it('draft set should have new id for state with particle A', () => {
-        const expected = deepClone(css1)
-        const oldStateEntry = Object.entries(css1.states).find(s => s[1].particle === 'A')
-        const newStateEntry = Object.entries(css2.states).find(s => s[1].particle === 'A')
-        const reactionEntry = expected.processes[0].reaction.lhs[0]
-        if (oldStateEntry !== undefined && newStateEntry !== undefined && reactionEntry.state === oldStateEntry[0] ) {
-          delete expected.states[oldStateEntry[0]]
-          expected.states[newStateEntry[0]] = newStateEntry[1]
-          reactionEntry.state = newStateEntry[0]
+      it("draft set should have new id for state with particle A", () => {
+        const expected = deepClone(css1);
+        const oldStateEntry = Object.entries(css1.states).find(
+          (s) => s[1].particle === "A"
+        );
+        const newStateEntry = Object.entries(css2.states).find(
+          (s) => s[1].particle === "A"
+        );
+        const reactionEntry = expected.processes[0].reaction.lhs[0];
+        if (
+          oldStateEntry !== undefined &&
+          newStateEntry !== undefined &&
+          reactionEntry.state === oldStateEntry[0]
+        ) {
+          delete expected.states[oldStateEntry[0]];
+          expected.states[newStateEntry[0]] = newStateEntry[1];
+          reactionEntry.state = newStateEntry[0];
         }
 
-        expect(css2).toEqual(expected)
-      })
+        expect(css2).toEqual(expected);
+      });
 
-      it('draft set should have other id as published set', () => {
-        expect(keycss2).not.toEqual(keycss1)
-      })
-    })
-  })
+      it("draft set should have other id as published set", () => {
+        expect(keycss2).not.toEqual(keycss1);
+      });
+    });
+  });
 });
 
 describe("given published set and retracting it", () => {

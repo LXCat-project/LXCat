@@ -51,9 +51,9 @@ export async function insert_cs_with_dict(
 
 async function updateVersionStatus(key: string, status: Status) {
   await db().query(aql`
-	  FOR css IN CrossSection
-		  FILTER css._key == ${key}
-		  UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${status}}) } IN CrossSection
+	  FOR cs IN CrossSection
+		  FILTER cs._key == ${key}
+		  UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${status}}) } IN CrossSection
 	`);
 }
 
@@ -138,6 +138,32 @@ async function createDraftSection(
   );
   return idOfDraft;
 }
+
+export async function deleteSection(key: string, message: string) {
+  const info = await getVersionInfo(key);
+  if (info === undefined) {
+    // Set does not exist, nothing to do
+    return;
+  }
+  const { status } = info;
+  if (status === "draft") {
+    // TODO
+  } else if (status === "published") {
+    // Change status of published section to retracted
+    // and Set retract message
+    const newStatus: Status = "retracted";
+    await db().query(aql`
+        FOR cs IN CrossSection
+            FILTER cs._key == ${key}
+            UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
+    `);
+    // TODO Find sets with current published section give choice or
+    // * remove cross section from set and create new set version
+    // * or retract the whole set
+  } else {
+    throw Error("Can not delete section due to invalid status");
+  }
+}
 /*
 
 # TODO Actions
@@ -149,18 +175,14 @@ async function createDraftSection(
 
 ## Update existing cross section by creating a draft
 
-* Add to CrossSection with status=='draft'
-* For draft version = prev version + 1
+* [x] Add to CrossSection with status=='draft'
+* [x] For draft version = prev version + 1
 * Insert into Organization, Reaction, State, Reference collection or reuse existing
-* Add previous version and current version to CrossSectionHistory collection
+* [x] Add previous version and current version to CrossSectionHistory collection
 
 ## Update cross section set draft
 
 * Insert into Organization, Reaction, State, Reference collection or reuse existing
-
-## Publish new draft cross section
-
-* [x] Change status of draft section to published
 
 ## Publish updated draft cross section
 
@@ -171,14 +193,5 @@ In transaction do:
 2. Change status of current published section to archived.
   * have check so a crosssection can only be in sets from same organization
 3. Change status of draft section to published
-
-## Retract cross section
-
-* Change status of published section to retracted
-* Set retract message
-1. Find sets with current published section
-  * give choice or
-    * remove cross section from set and create new set version
-    * or retract the set
 
 */

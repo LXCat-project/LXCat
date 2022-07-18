@@ -1,6 +1,6 @@
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
@@ -13,7 +13,7 @@ import {
 } from "../../css/queries/testutils";
 import { insert_state_dict } from "../../shared/queries";
 import { startDbContainer } from "../../testutils";
-import { insert_cs_with_dict, publish, updateSection } from "./write";
+import { deleteSection, insert_cs_with_dict, publish, updateSection } from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
@@ -22,7 +22,6 @@ import { db } from "../../db";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
-    // TODO now 2 containers are started, starting container is slow so try to reuse container
     const stopContainer = await startDbContainer();
     await createAuthCollections();
     await createCsCollections();
@@ -62,158 +61,132 @@ describe("given db with test user and organization", () => {
       };
     });
 
-    describe("create published cross section", () => {
+    describe("create draft from published cross section with changed data property", () => {
       let keycs1: string;
+      let keycs2: string;
+      let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+          cs.data = [[1000, 1.2345e-20]];
+        }));
         return __return;
       });
 
-      it("should have published status", async () => {
-        const info = await getVersionInfo(keycs1);
+      it("should have draft status", async () => {
+        const info = await getVersionInfo(keycs2);
         const expected = {
-          status: "published",
-          version: "1",
+          status: "draft",
+          version: "2",
           createdOn: expect.stringMatching(ISO_8601_UTC),
-          commitMessage: "",
+          commitMessage: "My first update",
         };
         expect(info).toEqual(expected);
       });
 
-      describe("create draft from published cross section with changed data property", () => {
-        let keycs2: string;
-        let cs1: CrossSection<string, string, LUT>;
+      it("should have different id then previous version", () => {
+        expect(keycs2).not.toEqual(keycs1);
+      });
+
+      it("should have same ids for states", async () => {
+        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const expected = deepClone(cs1);
+        expected.data = [[1000, 1.2345e-20]];
+        expect(draftcs).toEqual(expected);
+      });
+
+      describe("publishing draft", () => {
         beforeAll(async () => {
-          ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
-            cs.data = [[1000, 1.2345e-20]];
-          }));
+          await publish(keycs2);
         });
 
-        it("should have draft status", async () => {
-          const info = await getVersionInfo(keycs2);
-          const expected = {
-            status: "draft",
-            version: "2",
-            createdOn: expect.stringMatching(ISO_8601_UTC),
-            commitMessage: "My first update",
-          };
-          expect(info).toEqual(expected);
-        });
-
-        it("should have different id then previous version", () => {
-          expect(keycs2).not.toEqual(keycs1);
-        });
-
-        it("should have same ids for states", async () => {
-          const draftcs = await byOwnerAndId("somename@example.com", keycs2);
-          const expected = deepClone(cs1);
-          expected.data = [[1000, 1.2345e-20]];
-          expect(draftcs).toEqual(expected);
-        });
-
-        describe("publishing draft", () => {
-          beforeAll(async () => {
-            await publish(keycs2);
-          });
-
-          it("should have 2 versions recorded in history", async () => {
-            const history = await historyOfSection(keycs2);
-            const expected = [
-              {
-                _key: keycs2,
-                commitMessage: "My first update",
-                createdOn: expect.stringMatching(ISO_8601_UTC),
-                status: "published",
-                version: "2",
-              },
-              {
-                _key: keycs1,
-                commitMessage: "",
-                createdOn: expect.stringMatching(ISO_8601_UTC),
-                status: "archived",
-                version: "1",
-              },
-            ];
-            expect(history).toEqual(expected);
-          });
+        it("should have 2 versions recorded in history", async () => {
+          const history = await historyOfSection(keycs2);
+          const expected = [
+            {
+              _key: keycs2,
+              commitMessage: "My first update",
+              createdOn: expect.stringMatching(ISO_8601_UTC),
+              status: "published",
+              version: "2",
+            },
+            {
+              _key: keycs1,
+              commitMessage: "",
+              createdOn: expect.stringMatching(ISO_8601_UTC),
+              status: "archived",
+              version: "1",
+            },
+          ];
+          expect(history).toEqual(expected);
         });
       });
     });
-    describe("create published cross section", () => {
+    describe("create draft from published section with changed reversible prop in reaction", () => {
       let keycs1: string;
+      let keycs2: string;
+      let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+          cs.reaction.reversible = true;
+        }));
         return __return;
       });
 
-      describe("create draft from published section with changed reversible prop in reaction", () => {
-        let keycs2: string;
-        let cs1: CrossSection<string, string, LUT>;
-        beforeAll(async () => {
-          ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
-            cs.reaction.reversible = true;
-          }));
-        });
+      it("should have draft status", async () => {
+        const info = await getVersionInfo(keycs2);
+        const expected = {
+          status: "draft",
+          version: "2",
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          commitMessage: "My first update",
+        };
+        expect(info).toEqual(expected);
+      });
 
-        it("should have draft status", async () => {
-          const info = await getVersionInfo(keycs2);
-          const expected = {
-            status: "draft",
-            version: "2",
-            createdOn: expect.stringMatching(ISO_8601_UTC),
-            commitMessage: "My first update",
-          };
-          expect(info).toEqual(expected);
-        });
+      it("should have different id then previous version", () => {
+        expect(keycs2).not.toEqual(keycs1);
+      });
 
-        it("should have different id then previous version", () => {
-          expect(keycs2).not.toEqual(keycs1);
-        });
+      it("should have same ids for states", async () => {
+        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const expected = deepClone(cs1);
+        expected.reaction.reversible = true;
+        expect(draftcs).toEqual(expected);
+      });
 
-        it("should have same ids for states", async () => {
-          const draftcs = await byOwnerAndId("somename@example.com", keycs2);
-          const expected = deepClone(cs1);
-          expected.reaction.reversible = true;
-          expect(draftcs).toEqual(expected);
-        });
-
-        it("should have create an additional reaction row", async () => {
-          const result = await db().collection("Reaction").count();
-          expect(result.count).toEqual(2); // One for published and one for draft cross section
-        });
+      it("should have create an additional reaction row", async () => {
+        const result = await db().collection("Reaction").count();
+        expect(result.count).toEqual(2); // One for published and one for draft cross section
       });
     });
 
-    describe("create published cross section", () => {
+    describe("create draft from published section with changed first state in reaction", () => {
       let keycs1: string;
+      let keycs2: string;
+      let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+          cs.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
+        }));
         return __return;
       });
 
-      describe("create draft from published section with changed first state in reaction", () => {
-        let keycs2: string;
-        let cs1: CrossSection<string, string, LUT>;
-        beforeAll(async () => {
-          ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
-            cs.reaction.lhs[0].state = state_ids.s3.replace('State/', '');
-          }));
-        });
+      it("should have one different state id and one same state id", async () => {
+        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const expected = deepClone(cs1);
+        expected.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
+        expect(draftcs).toEqual(expected);
+      });
 
-        it("should have one different and one ids for states", async () => {
-          const draftcs = await byOwnerAndId("somename@example.com", keycs2);
-          const expected = deepClone(cs1);
-          expected.reaction.lhs[0].state = state_ids.s3.replace('State/', '');
-          expect(draftcs).toEqual(expected);
-        });
-
-        it("should have create an additional reaction row", async () => {
-          const result = await db().collection("Reaction").count();
-          expect(result.count).toEqual(2); // One for published and one for draft cross section
-        });
+      it("should have create an additional reaction row", async () => {
+        const result = await db().collection("Reaction").count();
+        expect(result.count).toEqual(2); // One for published and one for draft cross section
       });
     });
 
@@ -270,6 +243,24 @@ describe("given db with test user and organization", () => {
           };
           expect(info).toEqual(expected);
         });
+
+        describe('given published cross section has been retracted', () => {
+          beforeAll(async () => {
+            await deleteSection(keycs1, 'I do not want to talk about it')
+          })
+
+          it("should have restracted status", async () => {
+            const info = await getVersionInfo(keycs1);
+            const expected = {
+              status: "retracted",
+              version: "1",
+              createdOn: expect.stringMatching(ISO_8601_UTC),
+              commitMessage: "",
+              retractMessage: 'I do not want to talk about it'
+            };
+            expect(info).toEqual(expected);
+          });
+        })
       });
     });
   });

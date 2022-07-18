@@ -7,12 +7,11 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import {
-  deleteSet,
   isOwner,
 } from "@lxcat/database/dist/css/queries/author_read";
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { byId } from "@lxcat/database/dist/css/queries/public";
-import { updateSet } from "@lxcat/database/dist/css/queries/author_write";
+import { deleteSet, updateSet } from "@lxcat/database/dist/css/queries/author_write";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
