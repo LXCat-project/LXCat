@@ -122,6 +122,32 @@ export class ValidateData {
         }
         return res1.result && res2.result && res3.result;
     }
+
+    J1J2() {
+        let term = this.component.term;
+	const [L1, L2, S1, S2] = this.get_Ls_Ss()
+        const J1 = this.component.config.core.term.J;
+        const J2 = this.component.config.excited.term.J;
+
+        let res1 = check_momenta(L1, S1, J1);
+        if (!res1.result) {
+            this.err.params.allowed.core = { J: res1.allowed };
+            this.err.message += ":bad core.J";
+        }
+
+        let res2 = check_momenta(L2, S2, J2);
+        if (!res2.result) {
+            this.err.params.allowed.excited = { J: res2.allowed };
+            this.err.message += ":bad excited.J";
+        }
+
+        let res3 = check_momenta(J1, J2, term.J);
+        if (!res3.result) {
+            this.err.params.allowed.J = res3.allowed;
+            this.err.message += ":bad J";
+        }
+	return res1.result && res2.result && res2.result;
+    }
 }
 
 export function get_states(jsonobj: any) {
