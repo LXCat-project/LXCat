@@ -6,7 +6,11 @@ import {
 } from "../../auth/testutils";
 import { startDbContainer } from "../../testutils";
 import { insert_input_set, updateSet } from "./author_write";
-import { createCsCollections, ISO_8601_UTC } from "./testutils";
+import {
+  createCsCollections,
+  ISO_8601_UTC,
+  truncateCrossSectionSetCollections,
+} from "./testutils";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { byOwnerAndId } from "./author_read";
 import { listOwned } from "../../cs/queries/author_read";
@@ -16,7 +20,6 @@ import { aql } from "arangojs";
 const email = "somename@example.com";
 
 beforeAll(async () => {
-  // TODO now 2 containers are started, starting container is slow so try to reuse container
   const stopContainer = await startDbContainer();
   await createAuthCollections();
   await createCsCollections();
@@ -90,6 +93,7 @@ describe("given cross section set draft where data of 1 published cross section 
       [2, 3.15e-20],
     ];
     keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
   });
 
   it("should create a draft for the altered cross section set", async () => {
@@ -131,6 +135,9 @@ describe("given cross section set draft where data of 1 published cross section 
           {
             id: keycs2,
             name: "Some name",
+            versionInfo: {
+              version: "2",
+            },
           },
         ],
         data: [
@@ -180,10 +187,16 @@ describe("given cross section set draft where data of 1 published cross section 
           {
             id: keycs1,
             name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
           },
           {
             id: keycs2,
             name: "Some name",
+            versionInfo: {
+              version: "2",
+            },
           },
         ],
         data: [[2, 5.12e-10]],

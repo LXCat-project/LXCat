@@ -39,7 +39,7 @@ export async function listOwned(email: string) {
 							FILTER i._from == cs._id
 							FOR css IN CrossSectionSet
 								FILTER i._to == css._id
-								RETURN { name: css.name, id: css._key}
+								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
 						)
 						LET reaction = FIRST(
 							FOR r in Reaction

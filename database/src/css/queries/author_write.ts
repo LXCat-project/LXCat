@@ -72,7 +72,11 @@ export async function insert_input_set(
             organization.id
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", cs_id, cs_set_id);
+          await insert_edge(
+            "IsPartOf",
+            `CrossSection/${cs_id.replace("CrossSection/", "")}`,
+            cs_set_id
+          );
         }
       } else {
         // TODO handle id which is not owned by organization, or does not exist.
@@ -201,7 +205,11 @@ async function updateDraftSet(
         if (isEqualSection(newCs, prevCs)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", cs.id, key);
+          await insert_edge(
+            "IsPartOf",
+            `CrossSection/${cs.id}`,
+            `CrossSectionSet/${key}`
+          );
         } else {
           const cs_id = await updateSection(
             cs.id,
@@ -209,10 +217,14 @@ async function updateDraftSet(
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
             reference_ids,
-            dataset.contributor
+            organization.id
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", cs_id, key);
+          await insert_edge(
+            "IsPartOf",
+            `CrossSection/${cs_id}`,
+            `CrossSectionSet/${key}`
+          );
         }
       } else {
         // TODO handle id which is not owned by organization, or does not exist.

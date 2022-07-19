@@ -21,7 +21,6 @@ import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { historyOfSection } from "./public";
 import { db } from "../../db";
-import { aql } from "arangojs";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
