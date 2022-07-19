@@ -59,15 +59,17 @@ export async function insert_input_set(
         const newCs = deepClone(cs);
         delete newCs.id;
         if (isEqualSection(newCs, prevCs)) {
-          // nothing todo, the cross section in db with id cs.id has same content as given cs
+          // the cross section in db with id cs.id has same content as given cs
+          // Make cross sections part of set by adding to IsPartOf collection
+          await insert_edge("IsPartOf", `CrossSection/${cs.id}`, cs_set_id);
         } else {
           const cs_id = await updateSection(
             cs.id,
             newCs,
-            `Indirect draft by editing set ${dataset.name} / ${dataset._key}`,
+            `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
             reference_ids,
-            dataset.contributor
+            organization.id
           );
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -197,12 +199,14 @@ async function updateDraftSet(
         const newCs = deepClone(cs);
         delete newCs.id;
         if (isEqualSection(newCs, prevCs)) {
-          // nothing todo, the cross section in db with id cs.id has same content as given cs
+          // the cross section in db with id cs.id has same content as given cs
+          // Make cross sections part of set by adding to IsPartOf collection
+          await insert_edge("IsPartOf", cs.id, key);
         } else {
           const cs_id = await updateSection(
             cs.id,
             newCs,
-            `Indirect draft by editing set ${dataset.name} / ${dataset._key}`,
+            `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
             reference_ids,
             dataset.contributor

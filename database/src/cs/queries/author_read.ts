@@ -25,12 +25,21 @@ export async function listOwned(email: string) {
 					FOR cs IN CrossSection
 						FILTER cs.organization == o._id
 						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+            LET with_draft = FIRST(
+                FILTER cs.versionInfo.status == 'published'
+                RETURN COUNT(
+                    FOR cs_draft IN INBOUND cs CrossSectionHistory
+                        LIMIT 1
+                        return 1
+                )
+            )
+            FILTER with_draft != 1
 						LET sets = (
 							FOR i IN IsPartOf
 							FILTER i._from == cs._id
 							FOR css IN CrossSectionSet
 								FILTER i._to == css._id
-								RETURN {_key: css.key, name: css.name, id: css.key}
+								RETURN { name: css.name, id: css._key}
 						)
 						LET reaction = FIRST(
 							FOR r in Reaction
@@ -51,7 +60,15 @@ export async function listOwned(email: string) {
 								)
 								RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
 						)
-						RETURN MERGE(cs, {"id": cs._key, organization: o.name, "isPartOf": sets, reaction})
+            LET reference = (
+              FOR rs IN References
+                  FILTER rs._from == cs._id
+                  FOR r IN Reference
+                      FILTER r._id == rs._to
+                      RETURN {id: r._key}
+              )
+            SORT cs.versionInfo.createdOn DESC
+            RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})
 	`);
   return await cursor.all();
 }
@@ -94,7 +111,7 @@ export async function byOwnerAndId(email: string, id: string) {
                               RETURN {state: p2s._key, count: p.count}
                       )
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
-              )
+                )
                 RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
       `);
   return await cursor.next();

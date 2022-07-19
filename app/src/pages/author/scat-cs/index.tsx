@@ -28,6 +28,7 @@ function renderItem(item: CrossSectionItem) {
         )}
         {/* TODO link to preview a draft + create preview page reusing components from public page */}
       </td>
+      {/* TODO link to sets */}
       <td>{item.isPartOf.map((s) => s.name).join(", ")}</td>
       <td>{item.versionInfo.status}</td>
       <td>{item.versionInfo.createdOn}</td>

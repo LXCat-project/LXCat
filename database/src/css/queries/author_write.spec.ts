@@ -349,10 +349,8 @@ describe("given filled ArangoDB container", () => {
         } else {
           throw Error("Could not find state with particle A");
         }
-        console.log(JSON.stringify(cssdraft, undefined, 2))
         keycss2 = await updateSet(keycss1, cssdraft, "First edit");
         const css = await byOwnerAndId("somename@example.com", keycss2);
-        console.log(JSON.stringify(css, undefined, 2))
         if (css !== undefined) {
           css2 = css;
         } else {
