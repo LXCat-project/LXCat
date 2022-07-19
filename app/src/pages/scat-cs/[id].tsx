@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 import { Layout } from "../../shared/Layout";
-import { byId } from "@lxcat/database/dist/cs/queries";
+import { byId } from "@lxcat/database/dist/cs/queries/public";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { Item } from "../../ScatteringCrossSection/Item";
 
