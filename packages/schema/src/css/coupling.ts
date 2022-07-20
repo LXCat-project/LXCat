@@ -80,3 +80,29 @@ export function check_couplings(L1: number, L2: number, S1: number, expected_K: 
         allowed: ls1s
     };
 }
+
+
+/**
+ * For a given shell angular momenta and occupancy, calculate the
+ * maximum total orbital and spin angular momentum.
+ *
+ * @param {number} orbital - orbital angular momentum
+ *
+ * @param {number} occupance - shell occupancy
+ *
+ * @return {[number, number]} Array of L & S
+ */
+export function momenta_from_shell(orbital: number, occupance: number) {
+    let L: number = 0;
+    let S: number = 0;
+    const els = Array(orbital * 2 + 1).fill(0).map((_, idx) => orbital - idx);
+    let unpaired: number;
+    if (occupance > els.length) {
+	unpaired = 4 * orbital + 2 - occupance;
+    } else {
+	unpaired = occupance;
+    }
+    S += Math.abs(unpaired * 0.5);
+    L += els.slice(0, unpaired).reduce((i, res) => Math.abs(i + res));
+    return [L, S];
+}

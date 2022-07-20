@@ -1,9 +1,10 @@
 import { describe, expect, test } from "vitest";
 
 import { momenta_max_min, momenta, momenta_couplings } from "./coupling";
+import { momenta_from_shell } from "./coupling";
 
 // FIXME: try half-integer examples
-describe("momenta", () => {
+describe("momenta from term", () => {
     test("Jmax Jmin", () => {
         var orbital = 2;
         var spin = 1;
@@ -35,5 +36,23 @@ describe("momenta", () => {
 	// overlapping sets of momenta, larger set is w/ spin 2
         spins = [1, 2];
         expect(momenta_couplings(els, spins)).toHaveLength(els.length + 2);
+    });
+});
+
+describe("momenta from shell", () => {
+    test("L and S", () => {
+	let l: number = 1;
+	let expected = [
+	    [1, 1, 0.5], 	// l = 1
+	    [2, 1, 1], 		// l = 1, 0
+	    [3, 0, 1.5], 	// l = 1, 0, -1
+	    [4, 1, 1],		// l = 1, 0, 2x-1
+	    [5, 1, 0.5]		// l = 1, 2x0, 2x-1
+	];
+	for (let [occupance, L_exp, S_exp] of expected) {
+	    let [L, S] = momenta_from_shell(l, occupance);
+	    expect(L).toEqual(L_exp);
+	    expect(S).toEqual(S_exp);
+	}
     });
 });
