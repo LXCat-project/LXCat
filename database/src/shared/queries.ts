@@ -187,13 +187,13 @@ export async function insert_reaction_with_dict(
     type_tags: reaction.type_tags,
   });
 
-  for (const entry of reaction.lhs) {
-    await insert_edge("Consumes", r_id, dict[entry.state], {
+  for (const entry of mappedReaction.lhs) {
+    await insert_edge("Consumes", r_id, entry.state, {
       count: entry.count,
     });
   }
-  for (const entry of reaction.rhs) {
-    await insert_edge("Produces", r_id, dict[entry.state], {
+  for (const entry of mappedReaction.rhs) {
+    await insert_edge("Produces", r_id, entry.state, {
       count: entry.count,
     });
   }

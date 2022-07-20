@@ -4,7 +4,6 @@ import {
   insert_document,
   insert_edge,
   insert_reaction_with_dict,
-  upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
@@ -12,7 +11,6 @@ import { aql } from "arangojs";
 import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
-import { findReactionId } from "../../shared/queries/reaction";
 
 export async function insert_cs_with_dict(
   cs: CrossSection<string, string>,
@@ -173,26 +171,23 @@ async function updateDraftSection(
 
   const { reference, reaction, ...draftSection } = section;
 
-  reaction.lhs.forEach((s) => {
-    s.state = `State/${s.state}`;
-  });
-  reaction.rhs.forEach((s) => {
-    s.state = `State/${s.state}`;
-  });
-  const reactionKey = await findReactionId(reaction);
-  if (reactionKey === undefined) {
-    // TODO handle updated reaction / states
-  }
-
+  const reactionId = await insert_reaction_with_dict(state_dict, reaction);
+  // TODO remove orphaned reaction?
   const doc = {
     ...draftSection,
-    reaction: reactionKey,
+    reaction: reactionId,
     versionInfo,
     organization,
   };
   await db().collection("CrossSection").replace({ _key: key }, doc);
 
-  // TODO handle updated refs
+  // handle updated refs
+  const ref_ids = reference?.map((value: string) => ref_dict[value]);
+  if (ref_ids) {
+    for (const id of ref_ids) {
+      await insert_edge("References", `CrossSection/${key}`, id);
+    }
+  }
 }
 
 export async function deleteSection(key: string, message: string) {

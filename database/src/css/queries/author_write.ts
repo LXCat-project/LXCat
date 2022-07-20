@@ -15,6 +15,7 @@ import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
 import { historyOfSet } from "./public";
 import { ArrayCursor } from "arangojs/cursor";
 import { byOrgAndId } from "../../cs/queries/author_read";
+import { publish as publishSection } from "../../cs/queries/write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { deepClone } from "./deepClone";
@@ -107,6 +108,13 @@ async function updateVersionStatus(key: string, status: Status) {
 
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
+
+  // For each changed/added cross section perform publishing of cross section
+  const draftCrossSectionKeys = await draftSectionsFromSet(key);
+  for (const cskey of draftCrossSectionKeys) {
+    await publishSection(cskey);
+  }
+
   // when key has a published version then that old version should be archived aka Change status of current published section to archived
   const history = await historyOfSet(key);
   const previous_published_key = history
@@ -115,9 +123,18 @@ export async function publish(key: string) {
   if (previous_published_key !== undefined) {
     await updateVersionStatus(previous_published_key._key, "archived");
   }
-  // TODO For each changed/added cross section perform publishing of cross section
+
   // Change status of draft section to published
   await updateVersionStatus(key, "published");
+}
+
+async function draftSectionsFromSet(key: string) {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+    FOR p IN IsPartOf
+      FILTER p._to == ${`CrossSectionSet/${key}`}
+      RETURN PARSE_IDENTIFIER(p._from).key
+  `);
+  return await cursor.all();
 }
 
 export async function updateSet(
@@ -236,9 +253,9 @@ async function updateDraftSet(
         state_ids,
         reference_ids,
         organization.id,
-        'draft',
+        "draft",
         undefined,
-        `Indirect draft by editing set ${dataset.name} / ${key}`,
+        `Indirect draft by editing set ${dataset.name} / ${key}`
       );
       // Make cross sections part of set by adding to IsPartOf collection
       await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);

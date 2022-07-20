@@ -298,11 +298,21 @@ describe("given db with test user and organization", () => {
           throw new Error(`Unable to retrieve draft section ${keycs1}`);
         }
         draft.threshold = 999;
+        // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
+        const lhsStates = draft.reaction.lhs.map((s) => [
+          s.state,
+          `State/${s.state}`,
+        ]);
+        const rhsStates = draft.reaction.rhs.map((s) => [
+          s.state,
+          `State/${s.state}`,
+        ]);
+        const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
         keycs2 = await updateSection(
           keycs1,
           draft,
           "Updated threshold",
-          state_ids,
+          updatedStateIds,
           {},
           "Some organization"
         );
