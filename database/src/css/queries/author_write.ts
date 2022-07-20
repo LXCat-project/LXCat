@@ -7,6 +7,7 @@ import {
   insert_edge,
   insert_reference_dict,
   insert_state_dict,
+  mapReaction,
   upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
@@ -19,6 +20,8 @@ import { publish as publishSection } from "../../cs/queries/write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { deepClone } from "./deepClone";
+import { Dict } from "@lxcat/schema/dist/core/util";
+import { map } from "zod";
 
 // TODO some queries have duplication which could be de-duped
 
@@ -59,7 +62,7 @@ export async function insert_input_set(
       if (prevCs !== undefined) {
         const newCs = deepClone(cs);
         delete newCs.id;
-        if (isEqualSection(newCs, prevCs)) {
+        if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", `CrossSection/${cs.id}`, cs_set_id);
@@ -220,7 +223,7 @@ async function updateDraftSet(
       if (prevCs !== undefined) {
         const newCs = deepClone(cs);
         delete newCs.id;
-        if (isEqualSection(newCs, prevCs)) {
+        if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge(
@@ -299,8 +302,30 @@ export async function deleteSet(key: string, message: string) {
 
 function isEqualSection(
   newCs: CrossSection<string, string, LUT>,
-  prevCs: CrossSection<string, string, LUT>
+  prevCs: CrossSection<string, string, LUT>,
+  stateLookup: Dict<string>,
+  referenceLookup: Dict<string>
 ) {
+  const newMappedCs = {
+    ...newCs,
+    reaction: mapReaction(stateLookup, newCs.reaction),
+    reference: mapReference(referenceLookup, newCs.reference),
+  };
+  const prevMappedCs = {
+    ...prevCs,
+    reaction: mapReaction(stateLookup, prevCs.reaction),
+    reference: prevCs.reference?.map((r) => `Reference/${r}`), // Previous is always has key from db
+  };
   // TODO make order of keys not matter
-  return JSON.stringify(newCs) === JSON.stringify(prevCs);
+  return JSON.stringify(newMappedCs) === JSON.stringify(prevMappedCs);
+}
+
+function mapReference(
+  referenceLookup: Dict<string>,
+  reference: string[] | undefined
+) {
+  if (reference === undefined) {
+    return undefined;
+  }
+  return reference.map((r) => referenceLookup[r]);
 }

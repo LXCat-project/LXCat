@@ -200,7 +200,7 @@ export async function insert_reaction_with_dict(
 
   return r_id;
 }
-function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
+export function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
   const lhs = reaction.lhs.map((s) => ({ ...s, state: dict[s.state] }));
   const rhs = reaction.rhs.map((s) => ({ ...s, state: dict[s.state] }));
   return { ...reaction, lhs, rhs };

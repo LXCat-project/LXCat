@@ -65,7 +65,7 @@ export async function listOwned(email: string) {
                   FILTER rs._from == cs._id
                   FOR r IN Reference
                       FILTER r._id == rs._to
-                      RETURN {id: r._key}
+                      RETURN UNSET(r, ["_key", "_rev", "_id"])
               )
             SORT cs.versionInfo.createdOn DESC
             RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})

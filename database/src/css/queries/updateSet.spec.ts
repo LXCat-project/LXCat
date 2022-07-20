@@ -16,6 +16,7 @@ import { byOwnerAndId } from "./author_read";
 import { listOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
 import { aql } from "arangojs";
+import { CSL } from "@lxcat/schema/dist/core/csl";
 
 const email = "somename@example.com";
 
@@ -906,6 +907,379 @@ describe("given draft cross section set where its cross section state is altered
                 particle: "C",
                 charge: 2,
                 id: "C+",
+              },
+            },
+          ],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: "LUT",
+        versionInfo: {
+          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "draft",
+          version: "1",
+        },
+      },
+    ];
+    expect(list).toEqual(expected);
+  });
+});
+
+describe("given draft cross section set where a reference is added to a cross section", () => {
+  let keycs1: string;
+  let keycs2: string;
+  beforeAll(async () => {
+    keycs1 = await insert_input_set(
+      {
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          a: {
+            particle: "A",
+            charge: 0,
+          },
+          b: {
+            particle: "B",
+            charge: 1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "a" }],
+              rhs: [{ count: 2, state: "b" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          },
+        ],
+      },
+      "draft",
+      "1",
+      "Initial draft"
+    );
+    const draft = await byOwnerAndId(email, keycs1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycs1}`);
+    }
+    const r1: CSL.Data = {
+      type: "article",
+      id: "refid1",
+      title: "Some paper",
+    };
+    draft.references = {
+      r1,
+    };
+    draft.processes[0].reference = ["r1"];
+    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should list 1 section", async () => {
+    const list = await listOwned(email);
+    const expected = [
+      {
+        id: expect.stringMatching(/\d+/),
+        organization: "Some organization",
+        isPartOf: [
+          {
+            id: keycs2,
+            name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
+          },
+        ],
+        data: [[1, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        reference: [
+          {
+            type: "article",
+            id: "refid1",
+            title: "Some paper",
+          },
+        ],
+        reaction: {
+          lhs: [
+            {
+              count: 1,
+              state: {
+                particle: "A",
+                charge: 0,
+                id: "A",
+              },
+            },
+          ],
+          rhs: [
+            {
+              count: 2,
+              state: {
+                particle: "B",
+                charge: 1,
+                id: "B^+",
+              },
+            },
+          ],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: "LUT",
+        versionInfo: {
+          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "draft",
+          version: "1",
+        },
+      },
+    ];
+    expect(list).toEqual(expected);
+  });
+});
+
+describe("given draft cross section set where a reference is replaced in a cross section", () => {
+  let keycs1: string;
+  let keycs2: string;
+  beforeAll(async () => {
+    const r1: CSL.Data = {
+      type: "article",
+      id: "refid1",
+      title: "Some paper",
+    };
+    keycs1 = await insert_input_set(
+      {
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: { r1 },
+        states: {
+          a: {
+            particle: "A",
+            charge: 0,
+          },
+          b: {
+            particle: "B",
+            charge: 1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "a" }],
+              rhs: [{ count: 2, state: "b" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: ["r1"],
+          },
+        ],
+      },
+      "draft",
+      "1",
+      "Initial draft"
+    );
+    const draft = await byOwnerAndId(email, keycs1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycs1}`);
+    }
+    const r2: CSL.Data = {
+      type: "article",
+      id: "refid2",
+      title: "Some other paper",
+    };
+    draft.references.r2 = r2;
+    draft.processes[0].reference = ["r2"];
+    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
+  }, 9999999);
+
+  it("should list 1 section", async () => {
+    const list = await listOwned(email);
+    const expected = [
+      {
+        id: expect.stringMatching(/\d+/),
+        organization: "Some organization",
+        isPartOf: [
+          {
+            id: keycs2,
+            name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
+          },
+        ],
+        data: [[1, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        reference: [
+          {
+            type: "article",
+            id: "refid2",
+            title: "Some other paper",
+          },
+        ],
+        reaction: {
+          lhs: [
+            {
+              count: 1,
+              state: {
+                particle: "A",
+                charge: 0,
+                id: "A",
+              },
+            },
+          ],
+          rhs: [
+            {
+              count: 2,
+              state: {
+                particle: "B",
+                charge: 1,
+                id: "B^+",
+              },
+            },
+          ],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: "LUT",
+        versionInfo: {
+          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "draft",
+          version: "1",
+        },
+      },
+    ];
+    expect(list).toEqual(expected);
+  });
+});
+
+describe("given draft cross section set where a reference is extended in a cross section", () => {
+  let keycs1: string;
+  let keycs2: string;
+  beforeAll(async () => {
+    const r1: CSL.Data = {
+      type: "article",
+      id: "refid1",
+      title: "Some paper",
+    };
+    keycs1 = await insert_input_set(
+      {
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: { r1 },
+        states: {
+          a: {
+            particle: "A",
+            charge: 0,
+          },
+          b: {
+            particle: "B",
+            charge: 1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "a" }],
+              rhs: [{ count: 2, state: "b" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: ["r1"],
+          },
+        ],
+      },
+      "draft",
+      "1",
+      "Initial draft"
+    );
+    const draft = await byOwnerAndId(email, keycs1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycs1}`);
+    }
+    if (draft.processes[0] && draft.processes[0].reference) {
+      const refid = draft.processes[0].reference[0];
+      const ref = draft.references[refid] as CSL.Data;
+      ref.abstract = "Some abstract";
+    } else {
+      throw new Error("Unable to extend ref");
+    }
+    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should list 1 section", async () => {
+    const list = await listOwned(email);
+    const expected = [
+      {
+        id: expect.stringMatching(/\d+/),
+        organization: "Some organization",
+        isPartOf: [
+          {
+            id: keycs2,
+            name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
+          },
+        ],
+        data: [[1, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        reference: [
+          {
+            type: "article",
+            id: "refid1",
+            title: "Some paper",
+            abstract: "Some abstract",
+          },
+        ],
+        reaction: {
+          lhs: [
+            {
+              count: 1,
+              state: {
+                particle: "A",
+                charge: 0,
+                id: "A",
+              },
+            },
+          ],
+          rhs: [
+            {
+              count: 2,
+              state: {
+                particle: "B",
+                charge: 1,
+                id: "B^+",
               },
             },
           ],

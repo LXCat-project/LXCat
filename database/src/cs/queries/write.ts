@@ -187,7 +187,20 @@ async function updateDraftSection(
     for (const id of ref_ids) {
       await insert_edge("References", `CrossSection/${key}`, id);
     }
+    await dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
+    // TODO remove orpaned references?
   }
+}
+
+async function dropReferencesFromExcluding(
+  from: string,
+  excludedTos: string[]
+) {
+  await db().query(aql`
+    FOR r in References
+      FILTER r._from == ${from} AND ${excludedTos} ANY != r._to
+      REMOVE r IN References
+  `);
 }
 
 export async function deleteSection(key: string, message: string) {
