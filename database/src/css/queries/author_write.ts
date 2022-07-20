@@ -87,7 +87,8 @@ export async function insert_input_set(
         cs,
         state_ids,
         reference_ids,
-        organization.id
+        organization.id,
+        status
       );
       // Make cross sections part of set by adding to IsPartOf collection
       await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -234,7 +235,10 @@ async function updateDraftSet(
         cs,
         state_ids,
         reference_ids,
-        organization.id
+        organization.id,
+        'draft',
+        undefined,
+        `Indirect draft by editing set ${dataset.name} / ${key}`,
       );
       // Make cross sections part of set by adding to IsPartOf collection
       await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
