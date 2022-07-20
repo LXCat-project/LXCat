@@ -1,34 +1,23 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
-import { startDbContainer } from "../../testutils";
-import { insert_input_set, publish, updateSet } from "./author_write";
-import {
-  createCsCollections,
-  ISO_8601_UTC,
-  truncateCrossSectionSetCollections,
-} from "./testutils";
+
+import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { byOwnerAndId } from "./author_read";
+import { aql } from "arangojs";
+
 import { listOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
-import { aql } from "arangojs";
-import { CSL } from "@lxcat/schema/dist/core/csl";
+import { byOwnerAndId } from "./author_read";
+import { insert_input_set, publish, updateSet } from "./author_write";
+import { historyOfSet } from "./public";
+import {
+  ISO_8601_UTC,
+  startDbWithUserAndCssCollections,
+  truncateCrossSectionSetCollections,
+} from "./testutils";
 
 const email = "somename@example.com";
 
-beforeAll(async () => {
-  const stopContainer = await startDbContainer();
-  await createAuthCollections();
-  await createCsCollections();
-  const testKeys = await loadTestUserAndOrg();
-  await toggleRole(testKeys.testUserKey, "author");
-
-  return stopContainer;
-});
+beforeAll(startDbWithUserAndCssCollections);
 
 describe("given published cross section set where data of 1 published cross section is altered", () => {
   let keycs1: string;
@@ -261,14 +250,31 @@ describe("given published cross section set where data of 1 published cross sect
       expect(new Map(statuses)).toEqual(expected);
     });
 
-    it("should have history entry for draft cross section", async () => {
+    it("should have history entry for published cross section", async () => {
       const data = await db().collection("CrossSectionHistory").count();
       expect(data.count).toEqual(1);
     });
 
-    it("should have history entry for draft cross section set", async () => {
-      const data = await db().collection("CrossSectionSetHistory").count();
-      expect(data.count).toEqual(1);
+    it("should have history entries for archived and published cross section set", async () => {
+      const history = await historyOfSet(keycs2);
+      const expected = [
+        {
+          _key: keycs2,
+          commitMessage: `Altered data of section A->B`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          name: "Some name",
+          status: "published",
+          version: "2",
+        },
+        {
+          _key: keycs1,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          name: "Some name",
+          status: "archived",
+          version: "1",
+        },
+      ];
+      expect(history).toEqual(expected);
     });
 
     it("should list 2 sections", async () => {

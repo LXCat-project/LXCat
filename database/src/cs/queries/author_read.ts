@@ -117,14 +117,14 @@ export async function byOwnerAndId(email: string, id: string) {
   return await cursor.next();
 }
 
-export async function byOrgAndId(org: string, id: string) {
+export async function byOrgAndId(org: string, key: string) {
   const cursor: ArrayCursor<CrossSection<string, string>> = await db()
     .query(aql`
         FOR o IN Organization
             FILTER o.name == ${org}
             FOR cs IN CrossSection
                 FILTER cs.organization == o._id
-                FILTER cs._key == ${id}
+                FILTER cs._key == ${key}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
                 LET reference = (
                   FOR rs IN References

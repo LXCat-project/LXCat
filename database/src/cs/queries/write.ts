@@ -14,9 +14,9 @@ import { historyOfSection } from "./public";
 
 export async function insert_cs_with_dict(
   cs: CrossSection<string, string>,
-  state_dict: Dict<string>,
-  ref_dict: Dict<string>,
-  organization: string,
+  state_dict: Dict<string>, // key is string used in cs and value is database id eg. State/1234
+  ref_dict: Dict<string>, // key is string used in cs and value is database id eg. Reference/1234
+  organizationId: string,
   status: Status = "published",
   version = "1",
   commitMessage = ""
@@ -37,7 +37,7 @@ export async function insert_cs_with_dict(
     ...cs,
     reaction: r_id,
     versionInfo,
-    organization,
+    organization: organizationId,
   });
 
   if (ref_ids) {

@@ -1,7 +1,19 @@
 import { aql } from "arangojs";
-import { db } from "../../db";
-import { insert_cs_with_dict, updateSection } from "../../cs/queries/write";
+import deepEqual from "deep-equal";
+
+import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { Dict } from "@lxcat/schema/dist/core/util";
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { ArrayCursor } from "arangojs/cursor";
+import { byOrgAndId } from "../../cs/queries/author_read";
+import {
+  insert_cs_with_dict,
+  publish as publishSection,
+  updateSection,
+} from "../../cs/queries/write";
 import { now } from "../../date";
+import { db } from "../../db";
 import {
   insert_document,
   insert_edge,
@@ -11,20 +23,12 @@ import {
   upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
-import { historyOfSet } from "./public";
-import { ArrayCursor } from "arangojs/cursor";
-import { byOrgAndId } from "../../cs/queries/author_read";
-import { publish as publishSection } from "../../cs/queries/write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { deepClone } from "./deepClone";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { map } from "zod";
+import { historyOfSet } from "./public";
 
 // TODO some queries have duplication which could be de-duped
-
+// TODO rename insert_input_set to createSet
 export async function insert_input_set(
   dataset: CrossSectionSetInputOwned,
   status: Status = "published",
@@ -58,6 +62,7 @@ export async function insert_input_set(
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
+      debugger;
       const prevCs = await byOrgAndId(dataset.contributor, cs.id);
       if (prevCs !== undefined) {
         const newCs = deepClone(cs);
@@ -311,13 +316,19 @@ function isEqualSection(
     reaction: mapReaction(stateLookup, newCs.reaction),
     reference: mapReference(referenceLookup, newCs.reference),
   };
+  // Previous is always has key from db
+  const prevStateLookup = Object.fromEntries(
+    ([] as [string, string][]).concat(
+      prevCs.reaction.lhs.map((s) => [s.state, `State/${s.state}`]),
+      prevCs.reaction.rhs.map((s) => [s.state, `State/${s.state}`])
+    )
+  );
   const prevMappedCs = {
     ...prevCs,
-    reaction: mapReaction(stateLookup, prevCs.reaction),
+    reaction: mapReaction(prevStateLookup, prevCs.reaction),
     reference: prevCs.reference?.map((r) => `Reference/${r}`), // Previous is always has key from db
   };
-  // TODO make order of keys not matter
-  return JSON.stringify(newMappedCs) === JSON.stringify(prevMappedCs);
+  return deepEqual(newMappedCs, prevMappedCs);
 }
 
 function mapReference(
