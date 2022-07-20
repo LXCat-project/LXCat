@@ -250,12 +250,5 @@ export async function deleteSection(key: string, message: string) {
 
 ## Publish updated draft cross section
 
-In transaction do:
-1. Find sets with current published section
-  * Update IsPartOf collection to draft section
-  * Create new version of each set (see chapter below)
-2. Change status of current published section to archived.
-  * have check so a crosssection can only be in sets from same organization
-3. Change status of draft section to published
-
+Steps moved to publish()
 */

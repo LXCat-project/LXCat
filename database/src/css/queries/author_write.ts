@@ -117,10 +117,17 @@ async function updateVersionStatus(key: string, status: Status) {
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
 
+  // TODO check so a crosssection can only be in sets from same organization
+
   // For each changed/added cross section perform publishing of cross section
   const draftCrossSectionKeys = await draftSectionsFromSet(key);
   for (const cskey of draftCrossSectionKeys) {
     await publishSection(cskey);
+    // TOOD a cross section can be in multiple cross section sets. During publish we should check this.
+    // if other sets contain this published section then
+    // 1. Create new draft sof those sets (if other set is already draft then skip)
+    // 2. Update IsPartOf collection to point to newly published section 
+    // 3. Also publish those drafts
   }
 
   // when key has a published version then that old version should be archived aka Change status of current published section to archived
