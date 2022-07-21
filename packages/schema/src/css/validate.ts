@@ -1,6 +1,8 @@
 import Ajv, { ErrorObject } from "ajv";
+import { AnyAtom } from "../core/atoms";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
+import { get_states, check_states } from "./quantum_number_validator";
 
 const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
 
@@ -16,6 +18,16 @@ class Validator {
     // foreign labels or
     // particle state physics checks
     return result;
+  }
+
+  // must be called after validate(..)
+  validate_quantum_numbers(data: unknown) {
+    const states: [string, AnyAtom] = get_states(data);
+    if (this.errors == undefined) {
+        this.errors = [];
+    }
+    // FIXME: doesn't return a status code, returns the error objects
+    return check_states(states, this.errors);
   }
 }
 

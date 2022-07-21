@@ -3,6 +3,10 @@ import { describe, expect, test } from "vitest";
 import { Storage } from "../core/enumeration";
 import { validator } from "./validate";
 
+// atom
+import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
+import data_nok from "./data/Ar_C_P_Nobody_LXCat_bad.json";
+
 describe("validate()", () => {
   test("minimal", () => {
     const input = {
@@ -73,4 +77,18 @@ describe("validate()", () => {
     ];
     expect(validator.errors).toEqual(expected);
   });
+});
+
+describe("validate() w/ examples", () => {
+    test("no errors", () => {
+	validator.validate(data_ok);
+	validator.validate_quantum_numbers(data_ok);
+	expect(validator.errors).toHaveLength(0);
+    });
+
+    test("w/ errors", () => {
+	validator.validate(data_nok);
+	validator.validate_quantum_numbers(data_nok);
+	expect(validator.errors).toHaveLength(6);
+    });
 });
