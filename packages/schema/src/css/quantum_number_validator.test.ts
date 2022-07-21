@@ -9,8 +9,8 @@ import { get_states, get_errobj } from "./quantum_number_validator";
 import { ValidateData } from "./quantum_number_validator";
 
 // atom
-import data_ok from "data/Ar_C_P_Nobody_LXCat.json";
-import data_nok from "data/Ar_C_P_Nobody_LXCat_bad.json";
+import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
+import data_nok from "./data/Ar_C_P_Nobody_LXCat_bad.json";
 
 const inputs_ok: [string, AnyAtom][] = get_states(data_ok);
 const inputs_nok: [string, AnyAtom][] = get_states(data_nok);
