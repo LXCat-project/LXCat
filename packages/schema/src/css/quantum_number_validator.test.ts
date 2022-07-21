@@ -85,12 +85,14 @@ describe("validate angular momenta", () => {
         }
     });
 
-    test("coupling - J1L2 w/ error", () => {
+    test("coupling - shell, LS, J1L2 w/ error", () => {
         var err: ErrorObject;
         let validator: ValidateData;
         const bad: Dict = {
             "second": { 0: "core" },
-            "third": { 0: "J" }
+            "third": { 0: "J" },
+	    "carbon": {0: "S"},	// FIXME: also L, don't know how to test both
+	    "phosphorus": {0: "core"}
         };
         let status: boolean;
         for (let [key, atom] of inputs_nok) {

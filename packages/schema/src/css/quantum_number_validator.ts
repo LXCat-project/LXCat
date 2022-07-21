@@ -5,6 +5,7 @@ import { AnyAtom } from "../core/atoms";
 import { ShellEntry } from "../core/shell_entry";
 
 import { check_momenta, check_couplings } from "./coupling";
+import { momenta_from_shell } from "./coupling"
 import { parity, combine_parity } from "./parity";
 
 export type Dict = {
@@ -13,6 +14,33 @@ export type Dict = {
 
 export function shell_parities(config: ShellEntry[]) {
     return config.map((_conf: any) => parity(_conf.l, _conf.occupance));
+}
+
+export function check_momenta_from_shell(entries: ShellEntry[], L_expected, S_expected) {
+    let L: number = 0;
+    let S: number = 0;
+
+    for (const entry of entries) {
+        // l_max = n - 1; num of l = 2*l + 1; max occupancy = 2* num of l
+        if ((entry.l >= entry.n) || (entry.occupance > (4 * entry.l + 2))) {
+            return {
+                result: false,
+                allowed: { L: undefined, S: undefined }
+            };
+        }
+        let _L: number;
+        let _S: number;
+        [_L, _S] = momenta_from_shell(entry.l, entry.occupance);
+        S += _S;
+        L += _L;
+    }
+
+    let _allowed: Dict = {L: L, S: S};
+    let res = {
+	result: (L == L_expected) && (S == S_expected),
+	allowed: _allowed
+    };
+    return res;
 }
 
 export class ValidateData {
@@ -62,14 +90,19 @@ export class ValidateData {
     }
 
     LS() {
-        // FIXME: should we also check config, and calc l -> L?
         let term = this.component.term;
+
+	let res0 = check_momenta_from_shell(this.component.config, term.L, term.S);
+        if (!res0.result) {
+            Object.entries(res0.allowed).forEach(([k, v]) => this.err.params.allowed[k] = v);
+            this.err.message += Object.keys(res0.allowed).reduce((r, i) => `${r}:bad ${i}`, "");
+        }
         let res = check_momenta(term.L, term.S, term.J);
         if (!res.result) {
             this.err.params.allowed.J = res.allowed;
             this.err.message += ":bad J";
         }
-        return res.result
+        return res0.result && res.result;
     }
 
     get_Ls_Ss() {
@@ -78,12 +111,37 @@ export class ValidateData {
         // NOTE: assumes config must have core and excited
         const [L1, L2] = Object.values(config).map((val: any, _: any) => val.term.L);
         const [S1, S2] = Object.values(config).map((val: any, _: any) => val.term.S);
-	return [L1, L2, S1, S2];
+        return [L1, L2, S1, S2];
+    }
+
+    check_shell_config() {
+	let empty: Dict = {};
+	// FIXME: parametrise errors
+        let core = this.component.config.core;
+	let res_c = check_momenta_from_shell(core.config, core.term.L, core.term.S);
+        if (!res_c.result) {
+            // FIXME: overwrites anything set before
+            this.err.params.allowed.core = res_c.allowed;
+            this.err.message += Object.keys(res_c.allowed).reduce((r, i) => `${r}:bad core.${i}`, "");
+        } else {
+            this.err.params.allowed.core = empty;
+	}
+        let excited = this.component.config.excited;
+	let res_e = check_momenta_from_shell(excited.config, excited.term.L, excited.term.S);
+        if (!res_e.result) {
+            this.err.params.allowed.excited = res_e.allowed;
+            this.err.message += Object.keys(res_e.allowed).reduce((r, i) => `${r}:bad excited.${i}`, "");
+        } else {
+            this.err.params.allowed.excited = empty;
+	}
+	return res_c.result && res_e.result;
     }
 
     LS1() {
         let term = this.component.term;
-	const [L1, L2, S1, S2] = this.get_Ls_Ss()
+        const [L1, L2, S1, S2] = this.get_Ls_Ss();
+
+        const res_shell = this.check_shell_config();
 
         let res1 = check_couplings(L1, L2, S1, term.K);
         if (!res1.result) {
@@ -95,17 +153,19 @@ export class ValidateData {
             this.err.params.allowed.J = res2.allowed;
             this.err.message += ":bad J";
         }
-        return res1.result && res2.result;
+        return res_shell && res1.result && res2.result;
     }
 
     J1L2() {
         let term = this.component.term;
-	const [L1, L2, S1, S2] = this.get_Ls_Ss()
+        const [L1, L2, S1, S2] = this.get_Ls_Ss();
         const J1 = this.component.config.core.term.J;
+
+	const res_shell = this.check_shell_config();
 
         let res1 = check_momenta(L1, S1, J1);
         if (!res1.result) {
-            this.err.params.allowed.core = { J: res1.allowed };
+            this.err.params.allowed.core.J = res1.allowed;
             this.err.message += ":bad core.J";
         }
 
@@ -120,24 +180,26 @@ export class ValidateData {
             this.err.params.allowed.J = res3.allowed;
             this.err.message += ":bad J";
         }
-        return res1.result && res2.result && res3.result;
+        return res_shell && res1.result && res2.result && res3.result;
     }
 
     J1J2() {
         let term = this.component.term;
-	const [L1, L2, S1, S2] = this.get_Ls_Ss()
+        const [L1, L2, S1, S2] = this.get_Ls_Ss();
         const J1 = this.component.config.core.term.J;
         const J2 = this.component.config.excited.term.J;
 
+	const res_shell = this.check_shell_config();
+
         let res1 = check_momenta(L1, S1, J1);
         if (!res1.result) {
-            this.err.params.allowed.core = { J: res1.allowed };
+            this.err.params.allowed.core.J = res1.allowed;
             this.err.message += ":bad core.J";
         }
 
         let res2 = check_momenta(L2, S2, J2);
         if (!res2.result) {
-            this.err.params.allowed.excited = { J: res2.allowed };
+            this.err.params.allowed.excited.J = res2.allowed;
             this.err.message += ":bad excited.J";
         }
 
@@ -146,7 +208,7 @@ export class ValidateData {
             this.err.params.allowed.J = res3.allowed;
             this.err.message += ":bad J";
         }
-	return res1.result && res2.result && res2.result;
+        return res_shell && res1.result && res2.result && res2.result;
     }
 }
 
@@ -171,7 +233,7 @@ export function get_errobj(parent: string, component: any) {
         },
         message: ""
     };
-    return err
+    return err;
 }
 
 export function check_quantum_numbers(parent: string, component: any, errors: ErrorObject[]) {
@@ -210,5 +272,5 @@ export function check_states(states: any, errors: ErrorObject[]) {
             check_quantum_numbers(`${key}:${states[key].particle}/electronic`, component, errors);
         }
     }
-    return errors
+    return errors;
 }
