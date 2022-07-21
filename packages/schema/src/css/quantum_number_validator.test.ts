@@ -37,7 +37,7 @@ describe("validate parity data", () => {
         const bad: Dict = {
             "second": { 0: "excited" },
             "third": { 1: "core" },
-	    "carbon": { 0: "P" }
+	    "carbon_p": { 0: "P" }
         };
         for (let [key, atom] of inputs_nok) {
             if (!(bad.hasOwnProperty(key))) continue;

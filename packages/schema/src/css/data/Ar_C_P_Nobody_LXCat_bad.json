@@ -139,6 +139,21 @@
         }
       ]
     },
+    "carbon_p": {
+      "particle": "C",
+      "charge": 0,
+      "type": "AtomLS",
+      "electronic": [
+        {
+	  "scheme": "LS",
+	  "config": [
+	      { "n": 2, "l": 0, "occupance": 1 },
+	      { "n": 2, "l": 1, "occupance": 3 }
+	  ],
+	  "term": { "L": 0, "S": 2, "J": 2, "P": 1 }
+        }
+      ]
+    },
     "phosphorus": {
       "particle": "P",
       "charge": 1,
