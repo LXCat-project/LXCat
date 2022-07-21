@@ -256,6 +256,11 @@ export function check_quantum_numbers(parent: string, component: any, errors: Er
                 errors.push(err);
             }
             break;
+        case CouplingScheme.J1J2:
+            if (!validator.J1J2() || !validator.parity()) {
+                errors.push(err);
+            }
+            break;
         default:
             err.message = `unknown coupling scheme: ${scheme}`;
             errors.push(err);
@@ -264,12 +269,12 @@ export function check_quantum_numbers(parent: string, component: any, errors: Er
 }
 
 export function check_states(states: any, errors: ErrorObject[]) {
-    for (const key in states) {
-        let _type: string = states[key]["type"];
+    for (const [key, atom] of states) {
+        let _type: string = atom["type"];
         if (!(_type && _type.startsWith("Atom"))) continue;
-        for (const component of states[key].electronic) {
+        for (const [idx, component] of atom.electronic.entries()) {
             if (!component.scheme) continue; // some don't have scheme
-            check_quantum_numbers(`${key}:${states[key].particle}/electronic`, component, errors);
+            let err = check_quantum_numbers(`${key}:${atom.particle}/electronic`, component, errors);
         }
     }
     return errors;

@@ -7,6 +7,7 @@ import { AnyAtom } from "../core/atoms";
 import { Dict } from "./quantum_number_validator";
 import { get_states, get_errobj } from "./quantum_number_validator";
 import { ValidateData } from "./quantum_number_validator";
+import { check_quantum_numbers, check_states } from "./quantum_number_validator";
 
 // atom
 import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
@@ -122,5 +123,43 @@ describe("validate angular momenta", () => {
                 expect(err.message).toContain(bad[key][idx.toString()]);
             }
         }
+    });
+});
+
+describe("dispatchers", () => {
+    test("component w/ no errors", () => {
+        for (let [key, atom] of inputs_ok) {
+            for (let [idx, comp] of atom.electronic.entries()) {
+		let errors: ErrorObject[] = check_quantum_numbers(`${key}/electronic/${idx}`, comp, []);
+                // console.log("Error: ", JSON.stringify(errors, null, 2));
+                expect(errors).toHaveLength(0);
+            }
+        }
+    });
+
+    test("component w/ errors", () => {
+        const bad: string[] = ["second", "third", "carbon", "carbon_p", "phosphorus"];
+        for (let [key, atom] of inputs_nok) {
+            if (!(bad.includes(key))) continue;
+            for (let [idx, comp] of atom.electronic.entries()) {
+		let errors: ErrorObject[] = check_quantum_numbers(`${key}/electronic/${idx}`, comp, []);
+                // console.log("Error: ", JSON.stringify(errors, null, 2));
+                expect(errors).toHaveLength(1);
+		// TODO: check error specifics
+            }
+        }
+    });
+
+    test("jsonobject.states w/ no errors", () => {
+	let errors: ErrorObject[] = check_states(inputs_ok, []);
+        // console.log("Error: ", JSON.stringify(errors, null, 2));
+        expect(errors).toHaveLength(0);
+    });
+
+    test("jsonobject.states w/ errors", () => {
+	let errors: ErrorObject[] = check_states(inputs_nok, []);
+        // console.log("Error: ", JSON.stringify(errors, null, 2));
+        expect(errors).toHaveLength(6); // FIXME: double check
+	// TODO: check error specifics
     });
 });
