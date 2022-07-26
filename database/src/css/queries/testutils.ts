@@ -1,3 +1,4 @@
+import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { db } from "../../db";
 import { toggleRole } from "../../auth/queries";
 import {
@@ -5,6 +6,7 @@ import {
   loadTestUserAndOrg,
 } from "../../auth/testutils";
 import { startDbContainer } from "../../testutils";
+import { CrossSectionSetInputOwned } from "./author_read";
 
 export async function loadTestSets() {
   const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
@@ -49,3 +51,59 @@ export async function truncateCrossSectionSetCollections() {
     collections2Truncate.map((c) => db().collection(c).truncate())
   );
 }
+
+export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
+  return {
+    complete: false,
+    contributor: "Some organization",
+    name: "Some name",
+    description: "Some description",
+    references: {},
+    states: {
+      a: {
+        particle: "A",
+        charge: 0,
+      },
+      b: {
+        particle: "B",
+        charge: 1,
+      },
+      c: {
+        particle: "C",
+        charge: 2,
+      },
+    },
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "a" }],
+          rhs: [{ count: 2, state: "b" }],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "a" }],
+          rhs: [{ count: 3, state: "c" }],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 13,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[2, 5.12e-10]],
+        reference: [],
+      },
+    ],
+  };
+}
+
+export const sampleEmail = "somename@example.com";

@@ -10,24 +10,13 @@ import {
   byOwnerAndId,
   CrossSectionSetInputOwned,
   CrossSectionSetOwned,
+  isOwner,
   listOwned,
 } from "./author_read";
-import {
-  deleteSet,
-  createSet,
-  publish,
-  updateSet,
-} from "./author_write";
-import {
-  byId,
-  historyOfSet,
-  KeyedVersionInfo,
-  search,
-  SortOptions,
-} from "./public";
-import { createCsCollections, ISO_8601_UTC } from "./testutils";
+import { createSet, publish, updateSet } from "./author_write";
+import { historyOfSet, KeyedVersionInfo } from "./public";
+import { createCsCollections, ISO_8601_UTC, sampleEmail } from "./testutils";
 import { deepClone } from "./deepClone";
-import { CrossSectionSetItem } from "../public";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
 describe("given filled ArangoDB container", () => {
@@ -80,6 +69,11 @@ describe("given filled ArangoDB container", () => {
         },
       ];
       expect(result).toEqual(expected);
+    });
+
+    it("should be owned", async () => {
+      const owns = await isOwner(keycss1, sampleEmail);
+      expect(owns).toBeTruthy();
     });
 
     describe("given draft is published", () => {
@@ -384,100 +378,5 @@ describe("given filled ArangoDB container", () => {
         expect(keycss2).not.toEqual(keycss1);
       });
     });
-  });
-});
-
-describe("given published set and retracting it", () => {
-  let keycss1: string;
-  beforeAll(async () => {
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    await createCsCollections();
-    const testKeys = await loadTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
-    keycss1 = await createSet(
-      {
-        complete: true,
-        contributor: "Some organization",
-        name: "Some versioned name",
-        description: "Some description",
-        references: {},
-        states: {},
-        processes: [],
-      },
-      "draft",
-      "1",
-      "Initial version"
-    );
-    await publish(keycss1);
-
-    await deleteSet(keycss1, "I forgot to put in cross sections");
-
-    return stopContainer;
-  });
-
-  it("should have status retracted", async () => {
-    const result = await byId(keycss1);
-    const expected: Omit<CrossSectionSetItem, "organization"> = {
-      id: keycss1,
-      complete: true,
-      description: "Some description",
-      name: "Some versioned name",
-      contributor: "Some organization", // TODO should have organization or contributor not both
-      versionInfo: {
-        commitMessage: "Initial version",
-        createdOn: expect.stringMatching(ISO_8601_UTC),
-        status: "retracted",
-        retractMessage: "I forgot to put in cross sections",
-        version: "1",
-      },
-      processes: [],
-    };
-    expect(result).toEqual(expected);
-  });
-
-  it("should not be in public listing", async () => {
-    const filter = { contributor: [], species2: [] };
-    const sort: SortOptions = { field: "name", dir: "DESC" };
-    const paging = { offset: 0, count: 10 };
-    const result = await search(filter, sort, paging);
-    expect(result.some((s) => s.id === keycss1)).toBeFalsy();
-  });
-
-  it("should be in authors listing", async () => {
-    const result = await listOwned("somename@example.com");
-    const expected: CrossSectionSetOwned[] = [
-      {
-        _key: keycss1,
-        complete: true,
-        description: "Some description",
-        name: "Some versioned name",
-        organization: "Some organization",
-        versionInfo: {
-          commitMessage: "Initial version",
-          createdOn: expect.stringMatching(ISO_8601_UTC),
-          status: "retracted",
-          retractMessage: "I forgot to put in cross sections",
-          version: "1",
-        },
-      },
-    ];
-    expect(result).toEqual(expected);
-  });
-
-  it("should have a history of 1 item", async () => {
-    const result = await historyOfSet(keycss1);
-    const expected: KeyedVersionInfo[] = [
-      {
-        _key: keycss1,
-        commitMessage: "Initial version",
-        createdOn: expect.stringMatching(ISO_8601_UTC),
-        name: "Some versioned name",
-        status: "retracted",
-        retractMessage: "I forgot to put in cross sections",
-        version: "1",
-      },
-    ];
-    expect(result).toEqual(expected);
   });
 });

@@ -194,12 +194,7 @@ async function createDraftSet(
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
   // TODO perform createSet+insert_edge inside single transaction
-  const keyOfDraft = await createSet(
-    set,
-    newStatus,
-    newVersion,
-    message
-  );
+  const keyOfDraft = await createSet(set, newStatus, newVersion, message);
   // Add previous version (published )and current version (draft) to CrossSectionSetHistory collection
   await insert_edge(
     "CrossSectionSetHistory",
@@ -294,29 +289,61 @@ export async function deleteSet(key: string, message: string) {
   }
   const { status } = info;
   if (status === "draft") {
-    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
-        FOR css IN CrossSectionSet
-            FILTER css._key == ${key}
-            REMOVE css IN CrossSectionSet
-            RETURN {id: ${key}}
+    // Remove draft cross sections belonging to set, but skip sections which are in another set
+    await db().query(aql`
+      FOR css IN CrossSectionSet
+        FILTER css._key == ${key}
+        FOR p IN IsPartOf
+          FILTER p._to == css._id
+          FOR cs IN CrossSection
+            FILTER cs._id == p._from AND cs.versionInfo.status == 'draft'
+            LET nrOtherSets = LENGTH(
+              FOR p2 IN IsPartOf
+                FILTER cs._id == p2._from AND p2._to != css._id
+                RETURN 1
+            )
+            FILTER nrOtherSets == 0
+            REMOVE cs IN CrossSection
     `);
-    return await cursor.next();
-    // TODO remove orphaned sections, reactions, states, references
+    await db().query(aql`
+      FOR css IN CrossSectionSet
+        FILTER css._key == ${key}
+        FOR p IN IsPartOf
+          FILTER p._to == css._id
+          REMOVE p IN IsPartOf
+    `);
+    await db().query(aql`
+      FOR css IN CrossSectionSet
+        FILTER css._key == ${key}
+        REMOVE css IN CrossSectionSet
+    `);
+    return;
+    // TODO remove orphaned reactions, states, references
   } else if (status === "published") {
     // Change status of published section to retracted
     // and Set retract message
     const newStatus: Status = "retracted";
-    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
+    await db().query(aql`
         FOR css IN CrossSectionSet
             FILTER css._key == ${key}
+            FOR p IN IsPartOf
+              FILTER p._to == css._id
+              FOR cs IN CrossSection
+                FILTER cs._id == p._from
+                LET nrOtherSets = LENGTH(
+                    FOR p2 IN IsPartOf
+                      FILTER cs._id == p2._from AND p2._to != css._id
+                      RETURN 1
+                )
+                FILTER nrOtherSets == 0
+                UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
             UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
-            RETURN {id: css._key}
     `);
-    return await cursor.next();
-    // TODO Retract involved cross sections,
+    // TODO now cross sections which are in another set are skipped, is this OK?
     // TODO any other set which had those involved cross sections should also be altered somehow?
+    return;
   } else {
-    throw Error("Can not delete set due to invalid status");
+    throw new Error("Can not delete set due to invalid status");
   }
 }
 

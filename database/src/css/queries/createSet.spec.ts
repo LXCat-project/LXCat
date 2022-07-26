@@ -5,7 +5,10 @@ import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
 import { db } from "../../db";
 import { createSet } from "./author_write";
-import { startDbWithUserAndCssCollections, truncateCrossSectionSetCollections } from "./testutils";
+import {
+  startDbWithUserAndCssCollections,
+  truncateCrossSectionSetCollections,
+} from "./testutils";
 import {
   insert_reference_dict,
   insert_state_dict,
@@ -226,31 +229,34 @@ describe("giving draft set made with someone else's published cross section", ()
   });
 
   it("should have cross section in set that has different id from someone else's cross section", async () => {
-    const css1 = await byOwnerAndId(email, keycss1)
-    const keycs2 = css1?.processes[0].id
-    expect(keycs1).not.toEqual(keycs2)
-  })
+    const css1 = await byOwnerAndId(email, keycss1);
+    const keycs2 = css1?.processes[0].id;
+    expect(keycs1).not.toEqual(keycs2);
+  });
 
-  it('should have one cross section in published state and one in draft state', async () => {
+  it("should have one cross section in published state and one in draft state", async () => {
     const cursor = await db().query(aql`
       FOR cs IN CrossSection
         COLLECT statusGroup = cs.versionInfo.status WITH COUNT INTO numState
         RETURN [statusGroup, numState]
     `);
     const statuses = await cursor.all();
-    const expected = new Map([["draft", 1], ["published", 1]]);
+    const expected = new Map([
+      ["draft", 1],
+      ["published", 1],
+    ]);
 
     expect(new Map(statuses)).toEqual(expected);
-  })
+  });
 
-  it('should use same reaction id in both cross sections', async () => {
+  it("should use same reaction id in both cross sections", async () => {
     const cursor: ArrayCursor<string> = await db().query(aql`
       FOR cs IN CrossSection
         RETURN cs.reaction
     `);
     const reactionIds = await cursor.all();
 
-    const uniqueReactionIds = new Set(reactionIds)
+    const uniqueReactionIds = new Set(reactionIds);
     expect(uniqueReactionIds.size).toEqual(1);
-  })
+  });
 });
