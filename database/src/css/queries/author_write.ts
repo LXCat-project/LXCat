@@ -8,7 +8,7 @@ import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { ArrayCursor } from "arangojs/cursor";
 import { byOrgAndId } from "../../cs/queries/author_read";
 import {
-  insert_cs_with_dict,
+  createSection,
   publish as publishSection,
   updateSection,
 } from "../../cs/queries/write";
@@ -87,8 +87,8 @@ export async function createSet(
         }
       } else {
         // handle id which is not owned by organization, or does not exist.
-        delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while insert_cs_with_dict does not need it
-        const cs_id = await insert_cs_with_dict(
+        delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
+        const cs_id = await createSection(
           cs,
           state_ids,
           reference_ids,
@@ -99,8 +99,8 @@ export async function createSet(
         await insert_edge("IsPartOf", cs_id, cs_set_id);
       }
     } else {
-      delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while insert_cs_with_dict does not need it
-      const cs_id = await insert_cs_with_dict(
+      delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
+      const cs_id = await createSection(
         cs,
         state_ids,
         reference_ids,
@@ -266,7 +266,7 @@ async function updateDraftSet(
         // TODO handle id which is not owned by organization, or does not exist.
       }
     } else {
-      const cs_id = await insert_cs_with_dict(
+      const cs_id = await createSection(
         cs,
         state_ids,
         reference_ids,

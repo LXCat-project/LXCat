@@ -9,7 +9,7 @@ import {
 import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { deepClone } from "../../css/queries/deepClone";
 import { startDbContainer } from "../../testutils";
-import { insert_cs_with_dict, publish, updateSection } from "./write";
+import { createSection, publish, updateSection } from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
@@ -191,7 +191,7 @@ describe("given db with test user and organization", () => {
           data: [[1, 3.14e-20]],
           reference: [],
         };
-        const idcs1 = await insert_cs_with_dict(
+        const idcs1 = await createSection(
           cs,
           state_ids,
           {},
@@ -249,7 +249,7 @@ describe("given db with test user and organization", () => {
           data: [[1, 3.14e-20]],
           reference: [],
         };
-        const idcs1 = await insert_cs_with_dict(
+        const idcs1 = await createSection(
           cs,
           state_ids,
           {},

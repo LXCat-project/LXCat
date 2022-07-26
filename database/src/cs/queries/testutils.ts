@@ -1,6 +1,6 @@
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { insert_cs_with_dict, updateSection } from "./write";
+import { createSection, updateSection } from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { db } from "../../db";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
@@ -27,7 +27,7 @@ export async function createCrossSection(
     data: [[1, 3.14e-20]],
     reference: [],
   };
-  const idcs1 = await insert_cs_with_dict(
+  const idcs1 = await createSection(
     cs,
     state_ids,
     {},

@@ -13,7 +13,7 @@ import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 
-export async function insert_cs_with_dict(
+export async function createSection(
   cs: CrossSection<string, string>,
   state_dict: Dict<string>, // key is string used in cs and value is database id eg. State/1234
   ref_dict: Dict<string>, // key is string used in cs and value is database id eg. Reference/1234
@@ -112,11 +112,7 @@ export async function updateSection(
 
 async function createDraftSection(
   version: string,
-  section: CrossSection<
-    string,
-    string,
-    LUT
-  >,
+  section: CrossSection<string, string, LUT>,
   message: string,
   /**
    * Key of section that needs to be updated aka create a draft from
@@ -130,7 +126,7 @@ async function createDraftSection(
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
-  const idOfDraft = await insert_cs_with_dict(
+  const idOfDraft = await createSection(
     section,
     state_dict,
     ref_dict,
@@ -147,11 +143,7 @@ async function createDraftSection(
 
 async function updateDraftSection(
   version: string,
-  section: CrossSection<
-    string,
-    string,
-    LUT
-  >,
+  section: CrossSection<string, string, LUT>,
   message: string,
   /**
    * Key of section that needs to be updated

@@ -15,7 +15,7 @@ import {
   upsert_document,
 } from "../../shared/queries";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { insert_cs_with_dict } from "../../cs/queries/write";
+import { createSection } from "../../cs/queries/write";
 import { byOwnerAndId } from "./author_read";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
@@ -51,7 +51,7 @@ describe("giving draft set made with existing draft cross section", () => {
     });
     const stateLookup = await insert_state_dict(states);
     const refLookup = await insert_reference_dict(references);
-    const idcs1 = await insert_cs_with_dict(
+    const idcs1 = await createSection(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
@@ -172,7 +172,7 @@ describe("giving draft set made with someone else's published cross section", ()
     });
     const stateLookup = await insert_state_dict(states);
     const refLookup = await insert_reference_dict(references);
-    const idcs1 = await insert_cs_with_dict(
+    const idcs1 = await createSection(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
