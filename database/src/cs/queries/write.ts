@@ -11,6 +11,7 @@ import { aql } from "arangojs";
 import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
+import { LUT } from "@lxcat/schema/dist/core/data_types";
 
 export async function insert_cs_with_dict(
   cs: CrossSection<string, string>,
@@ -114,7 +115,7 @@ async function createDraftSection(
   section: CrossSection<
     string,
     string,
-    import("@lxcat/schema/dist/core/data_types").LUT
+    LUT
   >,
   message: string,
   /**
@@ -149,7 +150,7 @@ async function updateDraftSection(
   section: CrossSection<
     string,
     string,
-    import("@lxcat/schema/dist/core/data_types").LUT
+    LUT
   >,
   message: string,
   /**
@@ -209,7 +210,10 @@ export async function deleteSection(key: string, message: string) {
   }
   const { status } = info;
   if (status === "draft") {
-    // TODO
+    await db().query(aql`
+      REMOVE {_key: ${key}} IN CrossSection
+    `);
+    // TODO handle when section is in a set, should edges be removed or an error thrown
   } else if (status === "published") {
     // Change status of published section to retracted
     // and Set retract message

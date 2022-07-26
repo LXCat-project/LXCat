@@ -5,11 +5,7 @@ import { publish } from "../../cs/queries/write";
 import { db } from "../../db";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetItem } from "../public";
-import {
-  byOwnerAndId,
-  getVersionInfo,
-  listOwned,
-} from "./author_read";
+import { byOwnerAndId, getVersionInfo, listOwned } from "./author_read";
 import { createSet, deleteSet } from "./author_write";
 import {
   byId,

@@ -8,19 +8,19 @@ import {
 } from "../../auth/testutils";
 import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { deepClone } from "../../css/queries/deepClone";
-import { insert_state_dict } from "../../shared/queries";
 import { startDbContainer } from "../../testutils";
-import {
-  deleteSection,
-  insert_cs_with_dict,
-  publish,
-  updateSection,
-} from "./write";
+import { insert_cs_with_dict, publish, updateSection } from "./write";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { historyOfSection } from "./public";
 import { db } from "../../db";
+import {
+  createDraftFromPublished,
+  createCrossSection,
+  insertSampleStateIds,
+  truncateCrossSectionCollections,
+} from "./testutils";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
@@ -35,25 +35,7 @@ describe("given db with test user and organization", () => {
   describe("given 4 states and zero references exist", () => {
     let state_ids: Dict<string>;
     beforeAll(async () => {
-      const states = {
-        s1: {
-          particle: "A",
-          charge: 0,
-        },
-        s2: {
-          particle: "B",
-          charge: 1,
-        },
-        s3: {
-          particle: "C",
-          charge: 2,
-        },
-        s4: {
-          particle: "D",
-          charge: 3,
-        },
-      };
-      state_ids = await insert_state_dict(states);
+      state_ids = await insertSampleStateIds();
       return async () => {
         console.log("Truncating state collections");
         const collections2Truncate = ["HasDirectSubstate", "State"];
@@ -69,7 +51,7 @@ describe("given db with test user and organization", () => {
       let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ __return, keycs1 } = await createCrossSection(state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
           cs.data = [[1000, 1.2345e-20]];
         }));
@@ -131,7 +113,7 @@ describe("given db with test user and organization", () => {
       let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ __return, keycs1 } = await createCrossSection(state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
           cs.reaction.reversible = true;
         }));
@@ -172,7 +154,7 @@ describe("given db with test user and organization", () => {
       let cs1: CrossSection<string, string, LUT>;
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createPubishedCrossSection(state_ids));
+        ({ __return, keycs1 } = await createCrossSection(state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
           cs.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
         }));
@@ -245,24 +227,6 @@ describe("given db with test user and organization", () => {
             commitMessage: "",
           };
           expect(info).toEqual(expected);
-        });
-
-        describe("given published cross section has been retracted", () => {
-          beforeAll(async () => {
-            await deleteSection(keycs1, "I do not want to talk about it");
-          });
-
-          it("should have restracted status", async () => {
-            const info = await getVersionInfo(keycs1);
-            const expected = {
-              status: "retracted",
-              version: "1",
-              createdOn: expect.stringMatching(ISO_8601_UTC),
-              commitMessage: "",
-              retractMessage: "I do not want to talk about it",
-            };
-            expect(info).toEqual(expected);
-          });
         });
       });
     });
@@ -341,73 +305,3 @@ describe("given db with test user and organization", () => {
     });
   });
 });
-async function createDraftFromPublished(
-  keycs1: string,
-  alter: (cs: CrossSection<string, string, LUT>) => void
-) {
-  const cs = await byOwnerAndId("somename@example.com", keycs1);
-  if (cs === undefined) {
-    throw Error(`Unable to retrieve cross section with id ${keycs1}`);
-  }
-  const cs1 = cs;
-  const draftcs = deepClone(cs1);
-  alter(draftcs);
-  const lhs0 = draftcs.reaction.lhs[0].state;
-  const rhs0 = draftcs.reaction.rhs[0].state;
-  const draftStateIds = {
-    [lhs0]: `State/${lhs0}`,
-    [rhs0]: `State/${rhs0}`,
-  };
-  const idcs2 = await updateSection(
-    keycs1,
-    draftcs,
-    "My first update",
-    draftStateIds,
-    {},
-    "Some organization"
-  );
-  const keycs2 = idcs2.replace("CrossSection/", "");
-  return { cs1, keycs2 };
-}
-
-async function createPubishedCrossSection(state_ids: Dict<string>) {
-  const cs: CrossSection<string, string> = {
-    reaction: {
-      lhs: [{ count: 1, state: "s1" }],
-      rhs: [{ count: 1, state: "s2" }],
-      reversible: false,
-      type_tags: [],
-    },
-    threshold: 42,
-    type: Storage.LUT,
-    labels: ["Energy", "Cross Section"],
-    units: ["eV", "m^2"],
-    data: [[1, 3.14e-20]],
-    reference: [],
-  };
-  const idcs1 = await insert_cs_with_dict(
-    cs,
-    state_ids,
-    {},
-    "Some organization"
-  );
-  const keycs1 = idcs1.replace("CrossSection/", "");
-  return {
-    __return: truncateCrossSectionCollections,
-    keycs1,
-  };
-}
-async function truncateCrossSectionCollections() {
-  const collections2Truncate = [
-    "Consumes",
-    "CrossSection",
-    "CrossSectionHistory",
-    "Reaction",
-    "Produces",
-    "Reference",
-    "References",
-  ];
-  await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate())
-  );
-}
