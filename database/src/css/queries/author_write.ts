@@ -86,7 +86,17 @@ export async function createSet(
           );
         }
       } else {
-        // TODO handle id which is not owned by organization, or does not exist.
+        // handle id which is not owned by organization, or does not exist.
+        delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while insert_cs_with_dict does not need it
+        const cs_id = await insert_cs_with_dict(
+          cs,
+          state_ids,
+          reference_ids,
+          organization.id,
+          status
+        );
+        // Make cross sections part of set by adding to IsPartOf collection
+        await insert_edge("IsPartOf", cs_id, cs_set_id);
       }
     } else {
       delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while insert_cs_with_dict does not need it
