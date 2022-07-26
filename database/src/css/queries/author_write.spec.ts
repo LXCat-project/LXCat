@@ -14,7 +14,7 @@ import {
 } from "./author_read";
 import {
   deleteSet,
-  insert_input_set,
+  createSet,
   publish,
   updateSet,
 } from "./author_write";
@@ -46,7 +46,7 @@ describe("given filled ArangoDB container", () => {
     let keycss1: string;
 
     beforeAll(async () => {
-      keycss1 = await insert_input_set(
+      keycss1 = await createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -222,7 +222,7 @@ describe("given filled ArangoDB container", () => {
     let css1: CrossSectionSetInputOwned;
 
     beforeAll(async () => {
-      keycss1 = await insert_input_set(
+      keycss1 = await createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -395,7 +395,7 @@ describe("given published set and retracting it", () => {
     await createCsCollections();
     const testKeys = await loadTestUserAndOrg();
     await toggleRole(testKeys.testUserKey, "author");
-    keycss1 = await insert_input_set(
+    keycss1 = await createSet(
       {
         complete: true,
         contributor: "Some organization",

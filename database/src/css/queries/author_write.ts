@@ -28,8 +28,7 @@ import { deepClone } from "./deepClone";
 import { historyOfSet } from "./public";
 
 // TODO some queries have duplication which could be de-duped
-// TODO rename insert_input_set to createSet
-export async function insert_input_set(
+export async function createSet(
   dataset: CrossSectionSetInputOwned,
   status: Status = "published",
   version = "1",
@@ -184,8 +183,8 @@ async function createDraftSet(
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
-  // TODO perform insert_input_set+insert_edge inside single transaction
-  const keyOfDraft = await insert_input_set(
+  // TODO perform createSet+insert_edge inside single transaction
+  const keyOfDraft = await createSet(
     set,
     newStatus,
     newVersion,

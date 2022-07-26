@@ -7,7 +7,7 @@ import { aql } from "arangojs";
 import { listOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
 import { byOwnerAndId } from "./author_read";
-import { insert_input_set, publish, updateSet } from "./author_write";
+import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
 import {
   ISO_8601_UTC,
@@ -24,7 +24,7 @@ describe("given published cross section set where data of 1 published cross sect
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set({
+    keycs1 = await createSet({
       complete: false,
       contributor: "Some organization",
       name: "Some name",
@@ -399,7 +399,7 @@ describe("given draft cross section set where its cross section data is altered"
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -539,7 +539,7 @@ describe("given draft cross section set where its cross section data is added la
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -674,7 +674,7 @@ describe("given draft cross section set where its non cross section data is alte
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -817,7 +817,7 @@ describe("given draft cross section set where its cross section state is altered
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -938,7 +938,7 @@ describe("given draft cross section set where a reference is added to a cross se
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -1065,7 +1065,7 @@ describe("given draft cross section set where a reference is replaced in a cross
       id: "refid1",
       title: "Some paper",
     };
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -1190,7 +1190,7 @@ describe("given draft cross section set where a reference is extended in a cross
       id: "refid1",
       title: "Some paper",
     };
-    keycs1 = await insert_input_set(
+    keycs1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",

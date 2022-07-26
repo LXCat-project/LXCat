@@ -4,7 +4,7 @@ import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
 import { db } from "../../db";
-import { insert_input_set } from "./author_write";
+import { createSet } from "./author_write";
 import { startDbWithUserAndCssCollections } from "./testutils";
 import {
   insert_reference_dict,
@@ -68,7 +68,7 @@ describe("giving draft set made with existing draft cross section", () => {
     );
     keycs1 = idcs1.replace("CrossSection/", "");
 
-    keycss1 = await insert_input_set(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
