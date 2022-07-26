@@ -21,11 +21,9 @@ export async function insert_cs_with_dict(
   version = "1",
   commitMessage = ""
 ): Promise<string> {
-  const r_id = await insert_reaction_with_dict(state_dict, cs.reaction);
-  const ref_ids = cs.reference?.map((value: string) => ref_dict[value]);
-
-  delete cs["reference"];
-  delete (cs as any)["reaction"];
+  const { reference, reaction, ...rest } = cs;
+  const r_id = await insert_reaction_with_dict(state_dict, reaction);
+  const ref_ids = reference?.map((value: string) => ref_dict[value]);
 
   const versionInfo: VersionInfo = {
     status,
@@ -34,7 +32,7 @@ export async function insert_cs_with_dict(
     commitMessage,
   };
   const cs_id = await insert_document("CrossSection", {
-    ...cs,
+    ...rest,
     reaction: r_id,
     versionInfo,
     organization: organizationId,

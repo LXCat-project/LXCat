@@ -57,7 +57,7 @@ export async function insert_edge(
 }
 
 export async function insert_state_dict(
-  states: Dict<InState<any>>
+  states: Dict<InState<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
@@ -74,11 +74,11 @@ async function insert_state<T>(
   return upsert_document("State", state);
 }
 
-async function insert_state_tree<T extends AtomicGenerator<E, any>, E>(
+async function insert_state_tree<T extends AtomicGenerator<E, any>, E>( // eslint-disable-line @typescript-eslint/no-explicit-any
   state: InState<T>
 ): Promise<string>;
 async function insert_state_tree<
-  T extends MolecularGenerator<E, V, R, any>,
+  T extends MolecularGenerator<E, V, R, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
   E,
   V,
   R

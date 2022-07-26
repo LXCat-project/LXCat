@@ -14,6 +14,7 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
+import { ArangojsError } from "arangojs/lib/request.node";
 
 const email = "somename@example.com";
 
@@ -870,7 +871,7 @@ describe("given draft cross section set where its cross section state is altered
         "Altered section from A->B to A->C"
       );
     } catch (error) {
-      console.error((error as any).stack); // ArangoError capture stack in own prop
+      console.error((error as ArangojsError).stack); // ArangoError capture stack in own prop
       throw error;
     }
     return truncateCrossSectionSetCollections;

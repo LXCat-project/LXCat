@@ -62,7 +62,6 @@ export async function insert_input_set(
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
-      debugger;
       const prevCs = await byOrgAndId(dataset.contributor, cs.id);
       if (prevCs !== undefined) {
         const newCs = deepClone(cs);
@@ -126,7 +125,7 @@ export async function publish(key: string) {
     // TOOD a cross section can be in multiple cross section sets. During publish we should check this.
     // if other sets contain this published section then
     // 1. Create new draft sof those sets (if other set is already draft then skip)
-    // 2. Update IsPartOf collection to point to newly published section 
+    // 2. Update IsPartOf collection to point to newly published section
     // 3. Also publish those drafts
   }
 

@@ -376,7 +376,7 @@ describe("given filled ArangoDB container", () => {
           expected.states[newStateEntry[0]] = newStateEntry[1];
           reactionEntry.state = newStateEntry[0];
         }
-        expected.processes[0].id = css2.processes[0].id
+        expected.processes[0].id = css2.processes[0].id;
         expect(css2).toEqual(expected);
       });
 
