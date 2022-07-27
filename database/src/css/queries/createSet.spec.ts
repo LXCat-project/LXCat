@@ -12,13 +12,13 @@ import {
 import {
   insert_reference_dict,
   insert_state_dict,
-  upsert_document,
 } from "../../shared/queries";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { createSection } from "../../cs/queries/write";
 import { byOwnerAndId } from "./author_read";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
+import { upsertOrganization } from "../../shared/queries/organization";
 
 const email = "somename@example.com";
 
@@ -46,9 +46,7 @@ describe("giving draft set made with existing draft cross section", () => {
         title: "Some article title",
       },
     };
-    const organization = await upsert_document("Organization", {
-      name: "Some organization",
-    });
+    const organizationId = await upsertOrganization("Some organization")
     const stateLookup = await insert_state_dict(states);
     const refLookup = await insert_reference_dict(references);
     const idcs1 = await createSection(
@@ -68,7 +66,7 @@ describe("giving draft set made with existing draft cross section", () => {
       },
       stateLookup,
       refLookup,
-      organization.id,
+      organizationId,
       "draft"
     );
     keycs1 = idcs1.replace("CrossSection/", "");
@@ -167,9 +165,7 @@ describe("giving draft set made with someone else's published cross section", ()
         title: "Some article title",
       },
     };
-    const organization = await upsert_document("Organization", {
-      name: "Some other organization",
-    });
+    const organizationId = await upsertOrganization("Some other organization");
     const stateLookup = await insert_state_dict(states);
     const refLookup = await insert_reference_dict(references);
     const idcs1 = await createSection(
@@ -189,7 +185,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       stateLookup,
       refLookup,
-      organization.id
+      organizationId
     );
     keycs1 = idcs1.replace("CrossSection/", "");
     keycss1 = await createSet(

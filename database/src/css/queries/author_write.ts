@@ -20,12 +20,12 @@ import {
   insert_reference_dict,
   insert_state_dict,
   mapReaction,
-  upsert_document,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
 import { deepClone } from "./deepClone";
 import { historyOfSet } from "./public";
+import { upsertOrganization } from "../../shared/queries/organization";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
@@ -35,9 +35,7 @@ export async function createSet(
   commitMessage = ""
 ) {
   // Reuse Organization created by cross section drafting
-  const organization = await upsert_document("Organization", {
-    name: dataset.contributor,
-  });
+  const organizationId = await upsertOrganization(dataset.contributor)
   const versionInfo: VersionInfo = {
     status,
     version,
@@ -50,7 +48,7 @@ export async function createSet(
     name: dataset.name,
     description: dataset.description,
     complete: dataset.complete,
-    organization: organization.id,
+    organization: organizationId,
     versionInfo,
   });
 
@@ -76,7 +74,7 @@ export async function createSet(
             `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
             reference_ids,
-            organization.id
+            organizationId
           );
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -88,7 +86,7 @@ export async function createSet(
           cs,
           state_ids,
           reference_ids,
-          organization.id,
+          organizationId,
           status
         );
         // Make cross sections part of set by adding to IsPartOf collection
@@ -100,7 +98,7 @@ export async function createSet(
         cs,
         state_ids,
         reference_ids,
-        organization.id,
+        organizationId,
         status
       );
       // Make cross sections part of set by adding to IsPartOf collection
@@ -221,16 +219,15 @@ async function updateDraftSet(
   versionInfo: VersionInfo,
   message: string
 ) {
-  const organization = await upsert_document("Organization", {
-    name: dataset.contributor,
-  });
+
+  const organizationId = await upsertOrganization(dataset.contributor);
   versionInfo.commitMessage = message;
   versionInfo.createdOn = now();
   const set = {
     name: dataset.name,
     description: dataset.description,
     complete: dataset.complete,
-    organization: organization.id,
+    organization: organizationId,
     versionInfo,
   };
   await db().query(aql`
