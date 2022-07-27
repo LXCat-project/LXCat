@@ -101,6 +101,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
           <span>Update successful, the draft been updated.</span>
         )}
       </form>
+      <span>(Please do not change identifiers, they are used to determine to update or create a nested item.)</span>
       <Link href={`/author/scat-css`}>
         <a>Back</a>
       </Link>
