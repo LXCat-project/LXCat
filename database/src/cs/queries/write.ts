@@ -197,7 +197,7 @@ async function updateDraftSection(
       await insert_edge("References", `CrossSection/${key}`, id);
     }
     await dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
-    // TODO remove orpaned references?
+    // TODO remove orphaned references?
   }
 }
 
@@ -220,11 +220,26 @@ export async function deleteSection(key: string, message: string) {
   }
   const { status } = info;
   if (status === "draft") {
+    const setKeys = await isPartOf(key);
+    if (setKeys.length > 0) {
+      throw new Error(
+        `Can not delete cross section that belongs to set(s) ${setKeys.join(
+          ","
+        )}`
+      );
+    }
     await db().query(aql`
       REMOVE {_key: ${key}} IN CrossSection
     `);
-    // TODO handle when section is in a set, should edges be removed or an error thrown
   } else if (status === "published") {
+    const setKeys = await isPartOf(key);
+    if (setKeys.length > 0) {
+      throw new Error(
+        `Can not retract cross section that belongs to set(s) ${setKeys.join(
+          ","
+        )}`
+      );
+    }
     // Change status of published section to retracted
     // and Set retract message
     const newStatus: Status = "retracted";
@@ -233,10 +248,16 @@ export async function deleteSection(key: string, message: string) {
             FILTER cs._key == ${key}
             UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
     `);
-    // TODO Find sets with current published section give choice or
-    // * remove cross section from set and create new set version
-    // * or retract the whole set
   } else {
     throw Error("Can not delete section due to invalid status");
   }
+}
+
+async function isPartOf(key: string) {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+    FOR i IN IsPartOf
+			FILTER i._from == CONCAT('CrossSection/', ${key})
+      RETURN PARSE_IDENTIFIER(i._to).key
+  `);
+  return await cursor.all();
 }

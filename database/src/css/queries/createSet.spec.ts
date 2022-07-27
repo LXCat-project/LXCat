@@ -9,10 +9,7 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
-import {
-  insert_reference_dict,
-  insert_state_dict,
-} from "../../shared/queries";
+import { insert_reference_dict, insert_state_dict } from "../../shared/queries";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { createSection } from "../../cs/queries/write";
 import { byOwnerAndId } from "./author_read";
@@ -46,7 +43,7 @@ describe("giving draft set made with existing draft cross section", () => {
         title: "Some article title",
       },
     };
-    const organizationId = await upsertOrganization("Some organization")
+    const organizationId = await upsertOrganization("Some organization");
     const stateLookup = await insert_state_dict(states);
     const refLookup = await insert_reference_dict(references);
     const idcs1 = await createSection(

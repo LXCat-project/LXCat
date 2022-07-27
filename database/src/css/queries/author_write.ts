@@ -35,7 +35,7 @@ export async function createSet(
   commitMessage = ""
 ) {
   // Reuse Organization created by cross section drafting
-  const organizationId = await upsertOrganization(dataset.contributor)
+  const organizationId = await upsertOrganization(dataset.contributor);
   const versionInfo: VersionInfo = {
     status,
     version,
@@ -219,7 +219,6 @@ async function updateDraftSet(
   versionInfo: VersionInfo,
   message: string
 ) {
-
   const organizationId = await upsertOrganization(dataset.contributor);
   versionInfo.commitMessage = message;
   versionInfo.createdOn = now();
@@ -241,7 +240,7 @@ async function updateDraftSet(
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
-      const {id: prevCsId, ...newCs} = cs;
+      const { id: prevCsId, ...newCs } = cs;
       const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
@@ -259,7 +258,7 @@ async function updateDraftSet(
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
             reference_ids,
-            organization.id
+            organizationId
           );
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
@@ -270,7 +269,7 @@ async function updateDraftSet(
           newCs,
           state_ids,
           reference_ids,
-          organization.id,
+          organizationId,
           "draft",
           undefined,
           `Indirect draft by editing set ${dataset.name} / ${key}`
@@ -283,7 +282,7 @@ async function updateDraftSet(
         cs,
         state_ids,
         reference_ids,
-        organization.id,
+        organizationId,
         "draft",
         undefined,
         `Indirect draft by editing set ${dataset.name} / ${key}`

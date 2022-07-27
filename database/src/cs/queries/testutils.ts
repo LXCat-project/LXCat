@@ -63,13 +63,12 @@ export async function truncateCrossSectionCollections() {
   );
 }
 
-
 export async function insertSampleStateIds() {
   const states = sampleStates();
   return await insert_state_dict(states);
 }
 
-export function sampleStates():  Dict<InState<AnyAtomJSON | AnyMoleculeJSON>> {
+export function sampleStates(): Dict<InState<AnyAtomJSON | AnyMoleculeJSON>> {
   return {
     s1: {
       particle: "A",
