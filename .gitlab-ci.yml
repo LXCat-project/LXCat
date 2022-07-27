@@ -74,6 +74,7 @@ test-database:
         coverage_format: cobertura
         path: database/coverage/cobertura-coverage.xml
       junit: database/junit.xml
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 test-schema:
   stage: test
@@ -88,6 +89,7 @@ test-schema:
         coverage_format: cobertura
         path: schema/coverage/cobertura-coverage.xml
       junit: schema/junit.xml
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 # docker in docker see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker
 build-prod:
