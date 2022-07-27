@@ -23,7 +23,6 @@ import {
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
-import { deepClone } from "./deepClone";
 import { historyOfSet } from "./public";
 import { upsertOrganization } from "../../shared/queries/organization";
 
@@ -58,10 +57,9 @@ export async function createSet(
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const prevCs = await byOrgAndId(dataset.contributor, cs.id);
+      const {id: prevCsId, ...newCs} = cs
+      const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
-        const newCs = deepClone(cs);
-        delete newCs.id;
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
@@ -80,9 +78,8 @@ export async function createSet(
         }
       } else {
         // handle id which is not owned by organization, or does not exist.
-        delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
         const cs_id = await createSection(
-          cs,
+          newCs,
           state_ids,
           reference_ids,
           organizationId,
