@@ -158,3 +158,9 @@ To run tests with code coverage use
 npm run test -- run --coverage
 xdg-open coverage/index.html
 ```
+
+To debug tests in VS code
+1. Place a breakpoint or `debugger` statement in code
+2. In Debug sidebar select `Debug Current Test File`
+3. Focus on test file
+4. Press F5

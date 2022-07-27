@@ -114,11 +114,11 @@ export const addOrganization = async (org: Organization) => {
         RETURN NEW._key
     `);
   return await cursor.next();
-}
+};
 
 export const dropOrganization = async (orgKey: string) => {
   // TODO check org does not own anything
   await db().query(aql`
       REMOVE {_key: ${orgKey}} IN Organization
-  `); 
-}
+  `);
+};

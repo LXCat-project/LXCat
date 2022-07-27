@@ -8,6 +8,7 @@ import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { DBState, InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { db } from "../db";
+import { findReactionId } from "./queries/reaction";
 
 export async function insert_document(
   collection: string,
@@ -56,7 +57,7 @@ export async function insert_edge(
 }
 
 export async function insert_state_dict(
-  states: Dict<InState<any>>
+  states: Dict<InState<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
@@ -73,11 +74,11 @@ async function insert_state<T>(
   return upsert_document("State", state);
 }
 
-async function insert_state_tree<T extends AtomicGenerator<E, any>, E>(
+async function insert_state_tree<T extends AtomicGenerator<E, any>, E>( // eslint-disable-line @typescript-eslint/no-explicit-any
   state: InState<T>
 ): Promise<string>;
 async function insert_state_tree<
-  T extends MolecularGenerator<E, V, R, any>,
+  T extends MolecularGenerator<E, V, R, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
   E,
   V,
   R
@@ -175,22 +176,32 @@ export async function insert_reaction_with_dict(
   // Insert all states.
   // Insert the reaction and connect all states using 'Consumes'
   // and 'Produces' edges. Annotate them with the count.
-  // FIXME: Check whether a reaction already exists.
+  const mappedReaction = mapReaction(dict, reaction);
+  const reactionIdFromDb = await findReactionId(mappedReaction);
+  if (reactionIdFromDb !== undefined) {
+    return reactionIdFromDb;
+  }
+
   const r_id = await insert_document("Reaction", {
     reversible: reaction.reversible,
     type_tags: reaction.type_tags,
   });
 
-  for (const entry of reaction.lhs) {
-    await insert_edge("Consumes", r_id, dict[entry.state], {
+  for (const entry of mappedReaction.lhs) {
+    await insert_edge("Consumes", r_id, entry.state, {
       count: entry.count,
     });
   }
-  for (const entry of reaction.rhs) {
-    await insert_edge("Produces", r_id, dict[entry.state], {
+  for (const entry of mappedReaction.rhs) {
+    await insert_edge("Produces", r_id, entry.state, {
       count: entry.count,
     });
   }
 
   return r_id;
+}
+export function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
+  const lhs = reaction.lhs.map((s) => ({ ...s, state: dict[s.state] }));
+  const rhs = reaction.rhs.map((s) => ({ ...s, state: dict[s.state] }));
+  return { ...reaction, lhs, rhs };
 }

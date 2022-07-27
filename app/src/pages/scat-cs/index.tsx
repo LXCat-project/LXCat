@@ -5,7 +5,7 @@ import {
   search,
   searchFacets,
   SearchOptions,
-} from "@lxcat/database/dist/cs/queries";
+} from "@lxcat/database/dist/cs/queries/public";
 import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";

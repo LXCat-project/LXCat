@@ -5,7 +5,7 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import { insert_input_set } from "@lxcat/database/dist/css/queries/author_write";
+import { createSet } from "@lxcat/database/dist/css/queries/author_write";
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import {
@@ -22,7 +22,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       const body = JSON.parse(req.body);
       if (validator.validate(body)) {
         // Add to CrossSectionSet with status=='draft' and version=='1'
-        const id = await insert_input_set(body, "draft");
+        const id = await createSet(body, "draft");
         res.json({ id });
       } else {
         const errors = validator.errors;

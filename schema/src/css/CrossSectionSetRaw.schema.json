@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "additionalProperties": false,
   "definitions": {},
-  "description": "Cfsdfsdfnlk",
+  "description": "To add a cross section set to the LXCat application, the set should be valid against this schema.",
   "properties": {
     "complete": {
       "type": "boolean"
@@ -30,6 +30,9 @@
               "type": "array"
             },
             "type": "array"
+          },
+          "id": {
+            "type": "string"
           },
           "labels": {
             "items": {
