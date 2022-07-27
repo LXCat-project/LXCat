@@ -12,6 +12,7 @@ import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { ArrayCursor } from "arangojs/cursor";
 
 export async function createSection(
   cs: CrossSection<string, string>,
@@ -66,7 +67,11 @@ export async function publish(key: string) {
   }
   await updateVersionStatus(key, "published");
 }
-
+/**
+ * Update a draft cross section or create a draft from a published cross section.
+ *
+ * @returns id of CrossSection
+ */
 export async function updateSection(
   /**
    * Key of section that needs to be updated aka create a draft from
@@ -78,10 +83,9 @@ export async function updateSection(
   ref_dict: Dict<string>,
   organization: string
 ) {
-  // TODO check whether a draft already exists
   const info = await getVersionInfo(key);
   if (info === undefined) {
-    throw Error("Can not update set that does not exist");
+    throw Error("Can not update cross section that does not exist");
   }
   const { status, version } = info;
   if (status === "published") {
@@ -104,9 +108,21 @@ export async function updateSection(
       ref_dict,
       organization
     );
-    return key;
+    return `CrossSection/${key}`;
   } else {
-    throw Error("Can not update set due to invalid status");
+    throw Error("Can not update cross section due to invalid status");
+  }
+}
+
+async function isDraftless(key: string) {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+    FOR h IN CrossSectionHistory
+      FILTER h._to == CONCAT('CrossSection/', ${key})
+      RETURN PARSE_IDENTIFIER(h._from).key
+  `);
+  const newerKey = await cursor.next();
+  if (newerKey !== undefined) {
+    throw new Error(`Can not create draft, it already exists as ${newerKey}`);
   }
 }
 
@@ -122,6 +138,8 @@ async function createDraftSection(
   ref_dict: Dict<string>,
   organization: string
 ) {
+  // check whether a draft already exists
+  await isDraftless(key);
   // Add to CrossSection with status=='draft'
   const newStatus: Status = "draft";
   // For draft version = prev version + 1

@@ -300,35 +300,6 @@ describe("given filled ArangoDB container", () => {
       }
     });
 
-    describe("when draft is made with only change to description", () => {
-      let keycss2: string;
-      let css2: CrossSectionSetInputOwned;
-
-      beforeAll(async () => {
-        const cssdraft = deepClone(css1);
-        cssdraft.description = "Some description 1st edit";
-
-        keycss2 = await updateSet(keycss1, cssdraft, "First edit");
-        const css = await byOwnerAndId("somename@example.com", keycss2);
-        if (css !== undefined) {
-          css2 = css;
-        } else {
-          throw Error(`Unable to retrieve ccs with id ${keycss2}`);
-        }
-      });
-
-      it("draft set should have same ids and values for references and states as published set", () => {
-        const expected = deepClone(css1);
-        expected.description = css2.description;
-
-        expect(css2).toEqual(expected);
-      });
-
-      it("draft set should have other id as published set", () => {
-        expect(keycss2).not.toEqual(keycss1);
-      });
-    });
-
     describe("when draft is made with only change to charge of state with particle A", () => {
       let keycss2: string;
       let css2: CrossSectionSetInputOwned;

@@ -79,11 +79,7 @@ export async function createSet(
             organization.id
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge(
-            "IsPartOf",
-            `CrossSection/${cs_id.replace("CrossSection/", "")}`,
-            cs_set_id
-          );
+          await insert_edge("IsPartOf", cs_id, cs_set_id);
         }
       } else {
         // handle id which is not owned by organization, or does not exist.
@@ -170,7 +166,7 @@ export async function updateSet(
 ) {
   const info = await getVersionInfo(key);
   if (info === undefined) {
-    throw Error("Can not update set that does not exist");
+    throw Error("Can not update cross section set that does not exist");
   }
   const { status, version } = info;
   if (status === "draft") {
@@ -179,7 +175,19 @@ export async function updateSet(
   } else if (status === "published") {
     return await createDraftSet(version, set, message, key);
   } else {
-    throw Error("Can not update set due to invalid status");
+    throw Error("Can not update cross section set due to invalid status");
+  }
+}
+
+async function isDraftless(key: string) {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+    FOR h IN CrossSectionSetHistory
+      FILTER h._to == CONCAT('CrossSectionSet/', ${key})
+      RETURN PARSE_IDENTIFIER(h._from).key
+  `);
+  const newerKey = await cursor.next();
+  if (newerKey !== undefined) {
+    throw new Error(`Can not create draft, it already exists as ${newerKey}`);
   }
 }
 
@@ -189,6 +197,8 @@ async function createDraftSet(
   message: string,
   key: string
 ) {
+  // check whether a draft already exists
+  await isDraftless(key);
   // Add to CrossSectionSet with status=='draft'
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
@@ -256,11 +266,7 @@ async function updateDraftSet(
             organization.id
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge(
-            "IsPartOf",
-            `CrossSection/${cs_id}`,
-            `CrossSectionSet/${key}`
-          );
+          await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
         }
       } else {
         // TODO handle id which is not owned by organization, or does not exist.

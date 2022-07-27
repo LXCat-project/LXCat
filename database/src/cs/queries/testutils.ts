@@ -9,11 +9,27 @@ import { insert_state_dict } from "../../shared/queries";
 import { byOwnerAndId } from "./author_read";
 import { Status } from "../../shared/types/version_info";
 
-export async function createCrossSection(
+export async function createSampleCrossSection(
   state_ids: Dict<string>,
   status: Status = "published"
 ) {
-  const cs: CrossSection<string, string> = {
+  const cs: CrossSection<string, string> = sampleCrossSection();
+  const idcs1 = await createSection(
+    cs,
+    state_ids,
+    {},
+    "Some organization",
+    status
+  );
+  const keycs1 = idcs1.replace("CrossSection/", "");
+  return {
+    __return: truncateCrossSectionCollections,
+    keycs1,
+  };
+}
+
+export function sampleCrossSection(): CrossSection<string, string, LUT> {
+  return {
     reaction: {
       lhs: [{ count: 1, state: "s1" }],
       rhs: [{ count: 1, state: "s2" }],
@@ -26,18 +42,6 @@ export async function createCrossSection(
     units: ["eV", "m^2"],
     data: [[1, 3.14e-20]],
     reference: [],
-  };
-  const idcs1 = await createSection(
-    cs,
-    state_ids,
-    {},
-    "Some organization",
-    status
-  );
-  const keycs1 = idcs1.replace("CrossSection/", "");
-  return {
-    __return: truncateCrossSectionCollections,
-    keycs1,
   };
 }
 

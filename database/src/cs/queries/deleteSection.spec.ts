@@ -8,7 +8,7 @@ import {
 import { db } from "../../db";
 import { Status } from "../../shared/types/version_info";
 import { getVersionInfo } from "./author_read";
-import { createCrossSection, insertSampleStateIds } from "./testutils";
+import { createSampleCrossSection, insertSampleStateIds } from "./testutils";
 import { deleteSection } from "./write";
 
 beforeAll(startDbWithUserAndCssCollections);
@@ -17,7 +17,7 @@ describe("given published cross section has been retracted", () => {
   let keycs1: string;
   beforeAll(async () => {
     const state_ids = await insertSampleStateIds();
-    const res = await createCrossSection(state_ids);
+    const res = await createSampleCrossSection(state_ids);
     keycs1 = res.keycs1;
 
     await deleteSection(keycs1, "I do not want to talk about it");
@@ -42,7 +42,7 @@ describe("given draft cross section has been deleted", () => {
   let keycs1: string;
   beforeAll(async () => {
     const state_ids = await insertSampleStateIds();
-    const res = await createCrossSection(state_ids, "draft");
+    const res = await createSampleCrossSection(state_ids, "draft");
     keycs1 = res.keycs1;
 
     await deleteSection(keycs1, "I do not want to talk about it");
@@ -63,7 +63,7 @@ describe.each(invalidDeleteStatuses)(
     let keycs1: string;
     beforeAll(async () => {
       const state_ids = await insertSampleStateIds();
-      const res = await createCrossSection(state_ids, status);
+      const res = await createSampleCrossSection(state_ids, status);
       keycs1 = res.keycs1;
       return truncateCrossSectionSetCollections;
     });

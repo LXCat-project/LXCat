@@ -11,20 +11,23 @@ import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
 import {
   ISO_8601_UTC,
+  sampleCrossSectionSet,
+  sampleEmail,
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
 import { ArangojsError } from "arangojs/lib/request.node";
+import { Status } from "../../shared/types/version_info";
 
 const email = "somename@example.com";
 
 beforeAll(startDbWithUserAndCssCollections);
 
 describe("given published cross section set where data of 1 published cross section is altered", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet({
+    keycss1 = await createSet({
       complete: false,
       contributor: "Some organization",
       name: "Some name",
@@ -75,20 +78,20 @@ describe("given published cross section set where data of 1 published cross sect
         },
       ],
     });
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     draft.processes[0].data = [
       [1, 3.14e-20],
       [2, 3.15e-20],
     ];
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
 
   it("should create a draft for the altered cross section set", async () => {
-    expect(keycs1).not.toEqual(keycs2);
+    expect(keycss1).not.toEqual(keycss2);
   });
 
   it("should have 2 published cross sections and 1 cross section in draft", async () => {
@@ -124,7 +127,7 @@ describe("given published cross section set where data of 1 published cross sect
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "2",
@@ -165,7 +168,7 @@ describe("given published cross section set where data of 1 published cross sect
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "2",
@@ -176,14 +179,14 @@ describe("given published cross section set where data of 1 published cross sect
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs1,
+            id: keycss1,
             name: "Some name",
             versionInfo: {
               version: "1",
             },
           },
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "2",
@@ -233,7 +236,7 @@ describe("given published cross section set where data of 1 published cross sect
 
   describe("publish", () => {
     beforeAll(async () => {
-      await publish(keycs2);
+      await publish(keycss2);
     });
 
     it("should have 2 published cross sections and archived 1 cross section", async () => {
@@ -257,10 +260,10 @@ describe("given published cross section set where data of 1 published cross sect
     });
 
     it("should have history entries for archived and published cross section set", async () => {
-      const history = await historyOfSet(keycs2);
+      const history = await historyOfSet(keycss2);
       const expected = [
         {
-          _key: keycs2,
+          _key: keycss2,
           commitMessage: `Altered data of section A->B`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           name: "Some name",
@@ -268,7 +271,7 @@ describe("given published cross section set where data of 1 published cross sect
           version: "2",
         },
         {
-          _key: keycs1,
+          _key: keycss1,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           name: "Some name",
           status: "archived",
@@ -286,7 +289,7 @@ describe("given published cross section set where data of 1 published cross sect
           organization: "Some organization",
           isPartOf: [
             {
-              id: keycs2,
+              id: keycss2,
               name: "Some name",
               versionInfo: {
                 version: "2",
@@ -327,7 +330,7 @@ describe("given published cross section set where data of 1 published cross sect
           threshold: 42,
           type: "LUT",
           versionInfo: {
-            commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycs2}`,
+            commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
             createdOn: expect.stringMatching(ISO_8601_UTC),
             status: "published",
             version: "2",
@@ -338,14 +341,14 @@ describe("given published cross section set where data of 1 published cross sect
           organization: "Some organization",
           isPartOf: [
             {
-              id: keycs1,
+              id: keycss1,
               name: "Some name",
               versionInfo: {
                 version: "1",
               },
             },
             {
-              id: keycs2,
+              id: keycss2,
               name: "Some name",
               versionInfo: {
                 version: "2",
@@ -396,10 +399,10 @@ describe("given published cross section set where data of 1 published cross sect
 });
 
 describe("given draft cross section set where its cross section data is altered", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -437,20 +440,20 @@ describe("given draft cross section set where its cross section data is altered"
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     draft.processes[0].data = [
       [1, 3.14e-20],
       [2, 3.15e-20],
     ];
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
 
   it("should not create new draft", async () => {
-    expect(keycs1).toEqual(keycs2);
+    expect(keycss1).toEqual(keycss2);
   });
 
   it("should have 1 cross section in draft", async () => {
@@ -483,7 +486,7 @@ describe("given draft cross section set where its cross section data is altered"
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -524,7 +527,7 @@ describe("given draft cross section set where its cross section data is altered"
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -536,10 +539,10 @@ describe("given draft cross section set where its cross section data is altered"
 });
 
 describe("given draft cross section set where its cross section data is added later", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -553,9 +556,9 @@ describe("given draft cross section set where its cross section data is added la
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     draft.states = {
       a: {
@@ -583,12 +586,12 @@ describe("given draft cross section set where its cross section data is added la
         reference: [],
       },
     ];
-    keycs2 = await updateSet(keycs1, draft, "Added section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Added section A->B");
     return truncateCrossSectionSetCollections;
   });
 
   it("should not create new draft", async () => {
-    expect(keycs1).toEqual(keycs2);
+    expect(keycss1).toEqual(keycss2);
   });
 
   it("should have 1 cross section in draft", async () => {
@@ -621,7 +624,7 @@ describe("given draft cross section set where its cross section data is added la
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -659,7 +662,7 @@ describe("given draft cross section set where its cross section data is added la
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -671,10 +674,10 @@ describe("given draft cross section set where its cross section data is added la
 });
 
 describe("given draft cross section set where its non cross section data is altered", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -712,17 +715,17 @@ describe("given draft cross section set where its non cross section data is alte
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     draft.description = "Some altered description";
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
 
   it("should not create new draft", async () => {
-    expect(keycs1).toEqual(keycs2);
+    expect(keycss1).toEqual(keycss2);
   });
 
   it("should have 1 cross section in draft", async () => {
@@ -755,7 +758,7 @@ describe("given draft cross section set where its non cross section data is alte
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -804,7 +807,7 @@ describe("given draft cross section set where its non cross section data is alte
   });
 
   it("should have updated description", async () => {
-    const set = await byOwnerAndId(email, keycs2);
+    const set = await byOwnerAndId(email, keycss2);
     if (set === undefined) {
       throw new Error("Draft should exist");
     }
@@ -814,10 +817,10 @@ describe("given draft cross section set where its non cross section data is alte
 });
 
 describe("given draft cross section set where its cross section state is altered", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -855,9 +858,9 @@ describe("given draft cross section set where its cross section state is altered
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     draft.states.c = {
       particle: "C",
@@ -865,8 +868,8 @@ describe("given draft cross section set where its cross section state is altered
     };
     draft.processes[0].reaction.rhs[0].state = "c";
     try {
-      keycs2 = await updateSet(
-        keycs1,
+      keycss2 = await updateSet(
+        keycss1,
         draft,
         "Altered section from A->B to A->C"
       );
@@ -885,7 +888,7 @@ describe("given draft cross section set where its cross section state is altered
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -923,7 +926,7 @@ describe("given draft cross section set where its cross section state is altered
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -935,10 +938,10 @@ describe("given draft cross section set where its cross section state is altered
 });
 
 describe("given draft cross section set where a reference is added to a cross section", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -976,9 +979,9 @@ describe("given draft cross section set where a reference is added to a cross se
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     const r1: CSL.Data = {
       type: "article",
@@ -989,7 +992,7 @@ describe("given draft cross section set where a reference is added to a cross se
       r1,
     };
     draft.processes[0].reference = ["r1"];
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
 
@@ -1001,7 +1004,7 @@ describe("given draft cross section set where a reference is added to a cross se
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -1045,7 +1048,7 @@ describe("given draft cross section set where a reference is added to a cross se
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -1057,15 +1060,15 @@ describe("given draft cross section set where a reference is added to a cross se
 });
 
 describe("given draft cross section set where a reference is replaced in a cross section", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
     const r1: CSL.Data = {
       type: "article",
       id: "refid1",
       title: "Some paper",
     };
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -1103,9 +1106,9 @@ describe("given draft cross section set where a reference is replaced in a cross
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     const r2: CSL.Data = {
       type: "article",
@@ -1114,7 +1117,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     };
     draft.references.r2 = r2;
     draft.processes[0].reference = ["r2"];
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   }, 9999999);
 
@@ -1126,7 +1129,7 @@ describe("given draft cross section set where a reference is replaced in a cross
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -1170,7 +1173,7 @@ describe("given draft cross section set where a reference is replaced in a cross
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -1182,15 +1185,15 @@ describe("given draft cross section set where a reference is replaced in a cross
 });
 
 describe("given draft cross section set where a reference is extended in a cross section", () => {
-  let keycs1: string;
-  let keycs2: string;
+  let keycss1: string;
+  let keycss2: string;
   beforeAll(async () => {
     const r1: CSL.Data = {
       type: "article",
       id: "refid1",
       title: "Some paper",
     };
-    keycs1 = await createSet(
+    keycss1 = await createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -1228,9 +1231,9 @@ describe("given draft cross section set where a reference is extended in a cross
       "1",
       "Initial draft"
     );
-    const draft = await byOwnerAndId(email, keycs1);
+    const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
-      throw Error(`Failed to find ${keycs1}`);
+      throw Error(`Failed to find ${keycss1}`);
     }
     if (draft.processes[0] && draft.processes[0].reference) {
       const refid = draft.processes[0].reference[0];
@@ -1239,7 +1242,7 @@ describe("given draft cross section set where a reference is extended in a cross
     } else {
       throw new Error("Unable to extend ref");
     }
-    keycs2 = await updateSet(keycs1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
 
@@ -1251,7 +1254,7 @@ describe("given draft cross section set where a reference is extended in a cross
         organization: "Some organization",
         isPartOf: [
           {
-            id: keycs2,
+            id: keycss2,
             name: "Some name",
             versionInfo: {
               version: "1",
@@ -1296,7 +1299,7 @@ describe("given draft cross section set where a reference is extended in a cross
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / ${keycs2}`,
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "1",
@@ -1306,3 +1309,79 @@ describe("given draft cross section set where a reference is extended in a cross
     expect(list).toEqual(expected);
   });
 });
+
+describe("given updating published cross section set which already has draft", () => {
+  let keycss1: string;
+  let keycss2: string;
+  beforeAll(async () => {
+    keycss1 = await createSet({
+      complete: false,
+      contributor: "Some organization",
+      name: "Some name",
+      description: "Some description",
+      references: {},
+      states: {},
+      processes: [],
+    });
+    const draft = await byOwnerAndId(email, keycss1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycss1}`);
+    }
+    draft.description = "Some new description";
+    keycss2 = await updateSet(keycss1, draft, "Altered description");
+    return truncateCrossSectionSetCollections;
+  });
+  it("should give error that published section already has an draft", async () => {
+    // expect.toThrowError() assert did not work with async db queries so use try/catch
+    expect.assertions(1);
+    try {
+      const secondDraft = await byOwnerAndId(sampleEmail, keycss1);
+      if (secondDraft === undefined) {
+        throw Error(`Failed to find ${keycss1}`);
+      }
+      await updateSet(keycss1, secondDraft, "another draft please");
+    } catch (error) {
+      expect(`${error}`).toMatch(
+        `Can not create draft, it already exists as ${keycss2}`
+      );
+    }
+  });
+});
+
+describe("given a key of a non-existing cross section set", () => {
+  it("should throw error", () => {
+    expect(
+      updateSet(
+        "123456789",
+        sampleCrossSectionSet(),
+        "cannot update what does not exist"
+      )
+    ).rejects.toThrowError(
+      "Can not update cross section set that does not exist"
+    );
+  });
+});
+
+const invalidUpdateStatuses: Status[] = ["retracted", "archived"];
+describe.each(invalidUpdateStatuses)(
+  "update a cross section in status %s",
+  (status) => {
+    let keycss1: string;
+    beforeAll(async () => {
+      keycss1 = await createSet(sampleCrossSectionSet(), status);
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should throw an error", () => {
+      expect(
+        updateSet(
+          keycss1,
+          sampleCrossSectionSet(),
+          "cannot update when already archived or retracted"
+        )
+      ).rejects.toThrowError(
+        /Can not update cross section set due to invalid status/
+      );
+    });
+  }
+);
