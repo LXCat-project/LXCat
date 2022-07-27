@@ -1,7 +1,7 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
-import { Status, VersionInfo } from "../../shared/types/version_info";
+import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { CrossSectionSet } from "../collections";
 
@@ -37,8 +37,11 @@ export async function listOwned(email: string) {
   return await cursor.all();
 }
 
+type Process = CrossSectionSetRaw["processes"][0]; // TODO add id of reaction
+
 export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
-  _key: string;
+  _key?: string;
+  processes: (Process & { id?: string })[];
 }
 
 export async function byOwnerAndId(email: string, id: string) {
@@ -121,7 +124,7 @@ export async function byOwnerAndId(email: string, id: string) {
                           )
                           RETURN MERGE(
                               UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                              { reaction, "reference": refs2}
+                              { id: cs._key, reaction, reference: refs2}
                           )
               )
               RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {references: refs, states, processes, contributor: o.name})
@@ -155,38 +158,4 @@ export async function getVersionInfo(key: string) {
         RETURN css.versionInfo
   `);
   return cursor.next();
-}
-
-export async function deleteSet(key: string, message: string) {
-  const info = await getVersionInfo(key);
-  if (info === undefined) {
-    // Set does not exist, nothing to do
-    return;
-  }
-  const { status } = info;
-  if (status === "draft") {
-    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
-        FOR css IN CrossSectionSet
-            FILTER css._key == ${key}
-            REMOVE css IN CrossSectionSet
-            RETURN {id: ${key}}
-    `);
-    return await cursor.next();
-    // TODO remove orphaned sections, reactions, states, references
-  } else if (status === "published") {
-    // Change status of published section to retracted
-    // and Set retract message
-    const newStatus: Status = "retracted";
-    const cursor: ArrayCursor<{ id: string }> = await db().query(aql`
-        FOR css IN CrossSectionSet
-            FILTER css._key == ${key}
-            UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
-            RETURN {id: css._key}
-    `);
-    return await cursor.next();
-    // TODO Retract involved cross sections,
-    // TODO any other set which had those involved cross sections should also be altered somehow?
-  } else {
-    throw Error("Can not delete set due to invalid status");
-  }
 }

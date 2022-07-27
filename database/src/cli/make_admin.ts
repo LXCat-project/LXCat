@@ -5,7 +5,7 @@ import { makeAdmin } from "../auth/queries";
   try {
     const email = process.argv[2];
     await makeAdmin(email);
-    console.log(`${email} now all roles, including admin`);
+    console.log(`${email} now has all roles, including admin`);
   } catch (err) {
     console.error(err);
   }

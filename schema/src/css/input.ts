@@ -5,7 +5,7 @@ import { AnyMoleculeJSON } from "../core/molecules";
 
 export type CrossSectionInput<StateType> = InputDocument<
   StateType,
-  CrossSection<string, string>
+  CrossSection<string, string> & { id?: string }
 > & { complete: boolean };
 
 // TODO should set have own references?

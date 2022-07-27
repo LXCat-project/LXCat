@@ -1,5 +1,5 @@
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { listOwned } from "@lxcat/database/dist/cs/queries";
+import { listOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { mustBeAuthor } from "../../../auth/middleware";
@@ -28,7 +28,19 @@ function renderItem(item: CrossSectionItem) {
         )}
         {/* TODO link to preview a draft + create preview page reusing components from public page */}
       </td>
-      <td>{item.isPartOf.map((s) => s.name).join(", ")}</td>
+      <td>
+        <ul>
+          {item.isPartOf.map((s) => (
+            <li key={s.id}>
+              <Link href={`/author/scat-css/${s.id}/editraw`}>
+                <a title="Click to edit set">
+                  {s.name} ({s.versionInfo.version})
+                </a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </td>
       <td>{item.versionInfo.status}</td>
       <td>{item.versionInfo.createdOn}</td>
       <td>{item.versionInfo.version}</td>
@@ -57,6 +69,9 @@ const Page: NextPage<Props> = ({ items }) => {
         </thead>
         <tbody>{rows}</tbody>
       </table>
+      <Link href="/author">
+        <a>Back</a>
+      </Link>
     </Layout>
   );
 };
