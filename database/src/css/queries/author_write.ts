@@ -205,7 +205,6 @@ async function createDraftSet(
     `CrossSectionSet/${keyOfDraft}`,
     `CrossSectionSet/${key}`
   );
-  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/dist/ScatteringCrossSection/queries.ts.
   return keyOfDraft;
 }
 
@@ -232,11 +231,10 @@ async function updateDraftSet(
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
 
-  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/dist/ScatteringCrossSection/queries.ts.
-  // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
       const { id: prevCsId, ...newCs } = cs;
+      // check so a crosssection can only be in sets from same organization
       const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
@@ -347,8 +345,7 @@ export async function deleteSet(key: string, message: string) {
                 UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
             UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
     `);
-    // TODO now cross sections which are in another set are skipped, is this OK?
-    // TODO any other set which had those involved cross sections should also be altered somehow?
+    // TODO currently cross sections which are in another set are skipped aka not being retracted, is this OK?
     return;
   } else {
     throw new Error("Can not delete set due to invalid status");
