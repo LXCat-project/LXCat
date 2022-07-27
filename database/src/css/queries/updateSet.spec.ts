@@ -6,10 +6,7 @@ import { aql } from "arangojs";
 
 import { byOrgAndId, listOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
-import {
-  byOwnerAndId,
-  CrossSectionSetInputOwned,
-} from "./author_read";
+import { byOwnerAndId, CrossSectionSetInputOwned } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
 import {

@@ -55,10 +55,9 @@ export async function createSet(
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
 
-  // TODO Insert or reuse cross section using `#Create new draft cross section` chapter in /app/dist/ScatteringCrossSection/queries.ts.
-  // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
+      // check so a crosssection can only be in sets from same organization
       const prevCs = await byOrgAndId(dataset.contributor, cs.id);
       if (prevCs !== undefined) {
         const newCs = deepClone(cs);
@@ -119,17 +118,13 @@ async function updateVersionStatus(key: string, status: Status) {
 export async function publish(key: string) {
   // TODO Publishing db calls should be done in a single transaction
 
-  // TODO check so a crosssection can only be in sets from same organization
+  // We cannot have a set pointing to an archived section so perform check before publising drafts
+  await doesPublishingHaveEffectOnOtherSets(key);
 
   // For each changed/added cross section perform publishing of cross section
   const draftCrossSectionKeys = await draftSectionsFromSet(key);
   for (const cskey of draftCrossSectionKeys) {
     await publishSection(cskey);
-    // TOOD a cross section can be in multiple cross section sets. During publish we should check this.
-    // if other sets contain this published section then
-    // 1. Create new draft sof those sets (if other set is already draft then skip)
-    // 2. Update IsPartOf collection to point to newly published section
-    // 3. Also publish those drafts
   }
 
   // when key has a published version then that old version should be archived aka Change status of current published section to archived
@@ -148,7 +143,8 @@ export async function publish(key: string) {
 async function draftSectionsFromSet(key: string) {
   const cursor: ArrayCursor<string> = await db().query(aql`
     FOR p IN IsPartOf
-      FILTER p._to == ${`CrossSectionSet/${key}`}
+      FILTER p._to == CONCAT('CrossSectionSet/', ${key})
+      FILTER DOCUMENT(p._from).versionInfo.status == 'draft'
       RETURN PARSE_IDENTIFIER(p._from).key
   `);
   return await cursor.all();
@@ -393,4 +389,54 @@ function mapReference(
     return undefined;
   }
   return reference.map((r) => referenceLookup[r]);
+}
+
+async function doesPublishingHaveEffectOnOtherSets(key: string) {
+  type R = {
+    _id: string;
+    publishedAs: null | { _id: string; otherSetIds: string[] };
+  };
+  const cursor: ArrayCursor<R> = await db().query(aql`
+    // Exclude self and any previous versions
+    LET lineage = (
+      FOR hs IN 0..999999 OUTBOUND CONCAT('CrossSectionSet/', ${key}) CrossSectionSetHistory
+        RETURN hs._id
+    )
+    FOR p IN IsPartOf
+      FILTER p._to == CONCAT('CrossSectionSet/', ${key})
+      FILTER DOCUMENT(p._from).versionInfo.status == 'draft'
+      LET publishedAs = FIRST(
+          FOR h IN CrossSectionHistory
+            FILTER h._from == p._from
+            // h._to is published version of p._from
+            LET otherSetIds = (
+                  FOR p2 IN IsPartOf
+                    FILTER p2._from == h._to AND lineage ALL != p2._to
+                    RETURN p2._to
+              )
+            RETURN {_id: h._to, otherSetIds }
+      )
+      RETURN {_id: p._from, publishedAs }
+  `);
+  const result = await cursor.all();
+  if (
+    result.some(
+      (r) => r.publishedAs !== null && r.publishedAs.otherSetIds.length > 0
+    )
+  ) {
+    const errors = result.map(
+      (r) =>
+        new Error(
+          `Draft cross section (${r._id}) has published version (${
+            r.publishedAs !== null && r.publishedAs._id
+          }) in other cross section sets (${
+            r.publishedAs !== null && r.publishedAs.otherSetIds.join(",")
+          }).`
+        )
+    );
+    throw new AggregateError(
+      errors,
+      "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set."
+    );
+  }
 }

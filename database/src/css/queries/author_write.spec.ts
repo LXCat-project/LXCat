@@ -30,7 +30,6 @@ describe("given filled ArangoDB container", () => {
     return stopContainer;
   });
 
-  // TODO add set which has sections that have published and draft statuses
   describe("given initial set without references, states or processes", () => {
     let keycss1: string;
 
@@ -116,7 +115,7 @@ describe("given filled ArangoDB container", () => {
 
         it("should have author list with a single draft set", async () => {
           const result = await listOwned("somename@example.com");
-          // TODO listOwned should hide published sets which have drafts
+          // listOwned hides published sets which have drafts
           const expected: CrossSectionSetOwned[] = [
             {
               _key: keycss2,
