@@ -240,27 +240,3 @@ export async function deleteSection(key: string, message: string) {
     throw Error("Can not delete section due to invalid status");
   }
 }
-/*
-
-# TODO Actions
-
-## Create new draft cross section
-
-* [x] Add to CrossSection with status=='draft' and version=='1'
-* Insert into Organization, Reaction, State, Reference collection or reuse existing
-
-## Update existing cross section by creating a draft
-
-* [x] Add to CrossSection with status=='draft'
-* [x] For draft version = prev version + 1
-* Insert into Organization, Reaction, State, Reference collection or reuse existing
-* [x] Add previous version and current version to CrossSectionHistory collection
-
-## Update cross section set draft
-
-* Insert into Organization, Reaction, State, Reference collection or reuse existing
-
-## Publish updated draft cross section
-
-Steps moved to publish()
-*/

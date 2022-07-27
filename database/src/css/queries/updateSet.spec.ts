@@ -4,9 +4,9 @@ import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 
-import { listOwned } from "../../cs/queries/author_read";
+import { byOrgAndId, listOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
-import { byOwnerAndId } from "./author_read";
+import { byOwnerAndId, CrossSectionSetInputOwned, CrossSectionSetOwned } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
 import {
@@ -18,6 +18,10 @@ import {
 } from "./testutils";
 import { ArangojsError } from "arangojs/lib/request.node";
 import { Status } from "../../shared/types/version_info";
+import { createSection } from "../../cs/queries/write";
+import { upsertOrganization } from "../../shared/queries/organization";
+import { insertSampleStateIds, sampleCrossSection, sampleStates } from "../../cs/queries/testutils";
+import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
 
 const email = "somename@example.com";
 
@@ -1119,7 +1123,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     draft.processes[0].reference = ["r2"];
     keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
-  }, 9999999);
+  });
 
   it("should list 1 section", async () => {
     const list = await listOwned(email);
@@ -1385,3 +1389,115 @@ describe.each(invalidUpdateStatuses)(
     });
   }
 );
+
+describe('given draft cross section set where a cross section is added from another organization', () => {
+  let keycss1: string
+  let keycs1: string
+  let css1: CrossSectionSetInputOwned
+  beforeAll(async () => {
+    // Create draft cross section set without cross sections
+    const draft1 = sampleCrossSectionSet()
+    draft1.states = {}
+    draft1.references = {}
+    draft1.processes = []
+    keycss1 = await createSet(draft1, "draft")
+
+    // Create cross section in another organization
+    const orgId = await upsertOrganization('Some other organization')
+    const stateIds = await insertSampleStateIds()
+    const idcs1 = await createSection(
+      sampleCrossSection(),
+      stateIds,
+      {},
+      orgId,
+      'draft'
+    )
+    keycs1 = idcs1.replace('CrossSection/', '')
+    const cs1 = await byOrgAndId('Some other organization', keycs1)
+    if (cs1 === undefined) {
+      expect.fail('Unable to find cross section from another organization')
+    }
+
+    const draft2 = await byOwnerAndId(sampleEmail, keycss1)
+    if (draft2 === undefined) {
+      expect.fail('Unable to find draft')
+    }
+    draft2.processes.push({id: keycs1, ...cs1})
+    // Add states lookup based on state ids in cs1
+    const states = sampleStates()
+
+    function gatherStateLabel(s: ReactionEntry<string>) {
+      // want {label1:state1} but have
+      // dbkey1 {dbid1:label1} and {dbid1:state1} 
+      const stateLabel = Object.entries(stateIds).filter(e => `State/${s.state}` === e[1]).map((e) => e[0])[0]
+      if (draft2 === undefined) {
+        expect.fail('Unable to find draft')
+      }
+      draft2.states[s.state] = states[stateLabel]
+    }
+    cs1.reaction.lhs.forEach(gatherStateLabel)
+    cs1.reaction.rhs.forEach(gatherStateLabel)
+
+    await updateSet(keycss1, draft2, 'draft with cross section from another organization')
+
+    const css = await byOwnerAndId(sampleEmail, keycss1)
+    if (css === undefined) {
+      expect.fail('Unable to retrieve updated draft')
+    }
+    css1 = css
+    return truncateCrossSectionSetCollections
+  })
+
+  it('should not have reused existing cross section', () => {
+    expect(css1.processes[0].id).not.toEqual(keycs1)
+  })
+
+  it.each([
+    {
+      collection: "CrossSectionSet",
+      count: 1, // the draft set
+    },
+    {
+      collection: "CrossSection",
+      count: 2, // the section of draft set and of another org
+    },
+    {
+      collection: "IsPartOf",
+      count: 1, // section of draft set
+    },
+    {
+      collection: "CrossSectionSetHistory",
+      count: 0, // Only drafts where made
+    },
+    {
+      collection: "CrossSectionHistory",
+      count: 0, // Only drafts where made
+    },
+    {
+      collection: "Reaction",
+      count: 1, // shared reaction of section of draft set and of another org
+    },   
+  ])(
+    "should have $count row(s) in $collection collection",
+    async ({ collection, count }) => {
+      const info = await db().collection(collection).count();
+      expect(info.count).toEqual(count);
+    }
+  );
+
+  it('should have very similar cross sections', async () => {
+    const cursor = await db().query(aql`
+      FOR cs IN CrossSection
+        RETURN MERGE(
+          UNSET(cs, ['_key', '_id', '_rev', 'organization']), 
+          { 
+            versionInfo: UNSET(
+              cs.versionInfo, ['createdOn', 'commitMessage']
+            )
+          }
+        )
+    `)
+    const result = await cursor.all()
+    expect(result[0]).toEqual(result[1])
+  })
+})

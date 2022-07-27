@@ -8,6 +8,9 @@ import { deepClone } from "../../css/queries/deepClone";
 import { insert_state_dict } from "../../shared/queries";
 import { byOwnerAndId } from "./author_read";
 import { Status } from "../../shared/types/version_info";
+import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { InState } from "@lxcat/schema/dist/core/state";
 
 export async function createSampleCrossSection(
   state_ids: Dict<string>,
@@ -60,8 +63,14 @@ export async function truncateCrossSectionCollections() {
   );
 }
 
+
 export async function insertSampleStateIds() {
-  const states = {
+  const states = sampleStates();
+  return await insert_state_dict(states);
+}
+
+export function sampleStates():  Dict<InState<AnyAtomJSON | AnyMoleculeJSON>> {
+  return {
     s1: {
       particle: "A",
       charge: 0,
@@ -79,7 +88,6 @@ export async function insertSampleStateIds() {
       charge: 3,
     },
   };
-  return await insert_state_dict(states);
 }
 
 export async function createDraftFromPublished(

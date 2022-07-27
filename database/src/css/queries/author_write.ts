@@ -244,10 +244,9 @@ async function updateDraftSet(
   // TODO check so a crosssection can only be in sets from same organization
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
-      const prevCs = await byOrgAndId(dataset.contributor, cs.id);
+      const {id: prevCsId, ...newCs} = cs;
+      const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
-        const newCs = deepClone(cs);
-        delete newCs.id;
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
@@ -269,7 +268,18 @@ async function updateDraftSet(
           await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
         }
       } else {
-        // TODO handle id which is not owned by organization, or does not exist.
+        // when id is not owned by organization, or does not exist just create it with a new id.
+        const cs_id = await createSection(
+          newCs,
+          state_ids,
+          reference_ids,
+          organization.id,
+          "draft",
+          undefined,
+          `Indirect draft by editing set ${dataset.name} / ${key}`
+        );
+        // Make cross sections part of set by adding to IsPartOf collection
+        await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
       }
     } else {
       const cs_id = await createSection(
