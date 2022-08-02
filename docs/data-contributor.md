@@ -25,6 +25,11 @@ stateDiagram-v2
     published --> draft: update
 ```
 
+* **draft**: Only visible by organization members in author pages after authentication.
+* **published**: Visible on search page.
+* **archived**: Not visible on search page. Details page renders with warning that there is a newer version.
+* **retracted**: Not visible on search page. Details pages renders with warning that it should not be used.
+
 A cross section version or cross section set version can be in any of the statuses depicted above.
 A draft, published, archived version of a cross section are connected using a graph to make a history table of the cross section like
 
@@ -35,5 +40,8 @@ A draft, published, archived version of a cross section are connected using a gr
 | 3333 | 3       | published | 2nd update | 3 Jan 2022 |
 | 4444 | 4       | draft     | 3rd update | 4 Jan 2022 |
 
-A cross section set consists of one or more cross sections. A published cross section set can only have published cross sections. A draft cross section can have draft or published cross sections.
+A cross section set consists of one or more cross sections. 
+A published cross section set can only have published cross sections. 
+A draft cross section set can have draft or published cross sections.
 Two cross section sets can share cross sections.
+An organization has users as members and owns cross sections and cross section sets.
