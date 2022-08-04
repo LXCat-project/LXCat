@@ -1,18 +1,19 @@
 import { readdir, readFile } from "fs/promises";
+import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";
-import remarkEmbedImages from "remark-embed-images";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
-import rehypeSlug from "rehype-slug";
-import remarkToc from "remark-toc";
-import remarkMath from "remark-math";
 import rehypeMathjax from "rehype-mathjax";
-import { SerializeOptions } from "next-mdx-remote/dist/types";
+import rehypeSlug from "rehype-slug";
+import remarkEmbedImages from "remark-embed-images";
+import remarkGfm from 'remark-gfm';
+import remarkMath from "remark-math";
+import remarkToc from "remark-toc";
 
 import { VFile } from "vfile";
 
-import { rehypeMermaid } from "./transformer";
 import { serialize } from "./serialize";
+import { rehypeMermaid } from "./transformer";
 
 const DOC_ROOT = join(__dirname, "../../../../../docs");
 
@@ -54,6 +55,7 @@ export async function md2mdx(slug: string[]) {
         // As workaround use ../docs/bla.png as img src.
         remarkEmbedImages,
         remarkMath,
+        remarkGfm,
       ],
       rehypePlugins: [
         rehypeSlug,
