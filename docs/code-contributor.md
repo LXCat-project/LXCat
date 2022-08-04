@@ -235,3 +235,5 @@ npm run storybook
 ```
 
 This will open a web browser where stories of components can be seen.
+
+The storybook is build during Gitlab CI and can be found by browsing the artifacts.
