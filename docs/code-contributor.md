@@ -236,4 +236,5 @@ npm run storybook
 
 This will open a web browser where stories of components can be seen.
 
-The storybook is build during Gitlab CI and can be found by browsing the artifacts.
+The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing the job artifacts to `app/storybook-static/index.html`.
+This can be useful for other people to test your component without having to install anything.
