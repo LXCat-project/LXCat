@@ -223,7 +223,7 @@ describe("given published cross section set where data of 1 published cross sect
               state: {
                 particle: "C",
                 charge: 2,
-                id: "C+",
+                id: "C^2+",
               },
             },
           ],
@@ -385,7 +385,7 @@ describe("given published cross section set where data of 1 published cross sect
                 state: {
                   particle: "C",
                   charge: 2,
-                  id: "C+",
+                  id: "C^2+",
                 },
               },
             ],
@@ -925,7 +925,7 @@ describe("given draft cross section set where its cross section state is altered
               state: {
                 particle: "C",
                 charge: 2,
-                id: "C+",
+                id: "C^2+",
               },
             },
           ],
@@ -1594,7 +1594,7 @@ describe("given draft cross section set where its charge in cross section is alt
               state: {
                 particle: "A",
                 charge: -2,
-                id: "A+",
+                id: "A^2-",
               },
             },
           ],
@@ -1712,7 +1712,7 @@ describe("given draft cross section set where its charge in cross section is alt
               state: {
                 particle: "A",
                 charge: -12,
-                id: "A+",
+                id: "A^12-",
               },
             },
           ],
@@ -1752,7 +1752,7 @@ describe("given draft cross section set where its charge in cross section is alt
       {
         particle: "A",
         charge: -13,
-        id: 'A+',
+        id: 'A^13-',
       },
       {
         particle: "A",
@@ -1762,7 +1762,7 @@ describe("given draft cross section set where its charge in cross section is alt
       {
         particle: "A",
         charge: -12,
-        id: 'A+'
+        id: 'A^12-'
       },
       {
         particle: "B",
