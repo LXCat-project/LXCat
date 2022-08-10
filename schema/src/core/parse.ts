@@ -45,7 +45,8 @@ export function parse_charge(charge: number): string {
   if (charge == 1) return "^+";
   if (charge == -1) return "^-";
 
-  return "^" + charge + (charge > 1) ? "+" : "-";
+  const sign = charge > 1 ? "+" : "-";
+  return `^${Math.abs(charge)}${sign}`;
 }
 
 // FIXME: This function is in a weird position (it can be part of the central
