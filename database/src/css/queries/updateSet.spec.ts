@@ -26,6 +26,7 @@ import {
   sampleStates,
 } from "../../cs/queries/testutils";
 import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { insert_state_dict } from "../../shared/queries";
 
 const email = "somename@example.com";
 
@@ -1510,4 +1511,265 @@ describe("given draft cross section set where a cross section is added from anot
     const result = await cursor.all();
     expect(result[0]).toEqual(result[1]);
   });
+});
+
+describe("given draft cross section set where its charge in cross section is altered", () => {
+  let keycss1: string;
+  let keycss2: string;
+  beforeAll(async () => {
+    keycss1 = await createSet(
+      {
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          a: {
+            particle: "A",
+            charge: 0,
+          },
+          b: {
+            particle: "B",
+            charge: 1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "a" }],
+              rhs: [{ count: 2, state: "b" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          },
+        ],
+      },
+      "draft",
+      "1",
+      "Initial draft"
+    );
+    const draft = await byOwnerAndId(email, keycss1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycss1}`);
+    }
+    const stateA = Object.values(draft.states).find(s => s.particle === 'A')
+    if (stateA === undefined) {
+      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+    }
+    stateA.charge = -2
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should list 1 section", async () => {
+    const list = await listOwned(email);
+    const expected = [
+      {
+        id: expect.stringMatching(/\d+/),
+        organization: "Some organization",
+        isPartOf: [
+          {
+            id: keycss2,
+            name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
+          },
+        ],
+        data: [[1, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        reference: [],
+        reaction: {
+          lhs: [
+            {
+              count: 1,
+              state: {
+                particle: "A",
+                charge: -2,
+                id: "A+",
+              },
+            },
+          ],
+          rhs: [
+            {
+              count: 2,
+              state: {
+                particle: "B",
+                charge: 1,
+                id: "B^+",
+              },
+            },
+          ],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: "LUT",
+        versionInfo: {
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "draft",
+          version: "1",
+        },
+      },
+    ];
+    expect(list).toEqual(expected);
+  });
+});
+
+describe("given draft cross section set where its charge in cross section is altered and state with same id already exists", () => {
+  let keycss1: string;
+  let keycss2: string;
+  beforeAll(async () => {
+    await insert_state_dict({
+      a0: {
+        particle: "A",
+        charge: -13,
+      },
+    })
+    keycss1 = await createSet(
+      {
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          a: {
+            particle: "A",
+            charge: 0,
+          },
+          b: {
+            particle: "B",
+            charge: 1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "a" }],
+              rhs: [{ count: 2, state: "b" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          },
+        ],
+      },
+      "draft",
+      "1",
+      "Initial draft"
+    );
+    const draft = await byOwnerAndId(email, keycss1);
+    if (draft === undefined) {
+      throw Error(`Failed to find ${keycss1}`);
+    }
+    const stateA = Object.values(draft.states).find(s => s.particle === 'A')
+    if (stateA === undefined) {
+      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+    }
+    stateA.charge = -12
+    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should list 1 section", async () => {
+    const list = await listOwned(email);
+    const expected = [
+      {
+        id: expect.stringMatching(/\d+/),
+        organization: "Some organization",
+        isPartOf: [
+          {
+            id: keycss2,
+            name: "Some name",
+            versionInfo: {
+              version: "1",
+            },
+          },
+        ],
+        data: [[1, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        reference: [],
+        reaction: {
+          lhs: [
+            {
+              count: 1,
+              state: {
+                particle: "A",
+                charge: -12,
+                id: "A+",
+              },
+            },
+          ],
+          rhs: [
+            {
+              count: 2,
+              state: {
+                particle: "B",
+                charge: 1,
+                id: "B^+",
+              },
+            },
+          ],
+          reversible: false,
+          type_tags: [],
+        },
+        threshold: 42,
+        type: "LUT",
+        versionInfo: {
+          commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
+          createdOn: expect.stringMatching(ISO_8601_UTC),
+          status: "draft",
+          version: "1",
+        },
+      },
+    ];
+    expect(list).toEqual(expected);
+  });
+
+  it('should have 4 states: a0, a, a2, b=b2', async () => {
+    const cursor = await db().query(aql`
+      FOR s IN State
+        RETURN UNSET(s, ['_key', '_id' , '_rev'])
+    `)
+    const states = await cursor.all()
+    const expected = [
+      {
+        particle: "A",
+        charge: -13,
+        id: 'A+',
+      },
+      {
+        particle: "A",
+        charge: 0,
+        id: 'A',
+      },
+      {
+        particle: "A",
+        charge: -12,
+        id: 'A+'
+      },
+      {
+        particle: "B",
+        charge: 1,
+        id: 'B^+'
+      }
+    ]
+    expect(new Set(states)).toEqual(new Set(expected))
+  })
 });
