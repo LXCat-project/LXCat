@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parse_charge } from "./core/parse";
+import { parse_charge } from "./parse";
 
 describe('parse_charge()', () => {
     const testCases: Array<[number, string]> = [
