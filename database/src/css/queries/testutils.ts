@@ -46,6 +46,8 @@ export async function truncateCrossSectionSetCollections() {
     "Produces",
     "Reference",
     "References",
+    "State",
+    "HasDirectSubstate",
   ];
   await Promise.all(
     collections2Truncate.map((c) => db().collection(c).truncate())

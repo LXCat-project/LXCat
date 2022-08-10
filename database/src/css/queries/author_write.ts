@@ -224,7 +224,6 @@ async function updateDraftSet(
   await db().query(aql`
     REPLACE { _key: ${key} } WITH ${set} IN CrossSectionSet
   `);
-
   const state_ids = await insert_state_dict(dataset.states);
   const reference_ids = await insert_reference_dict(dataset.references);
 
