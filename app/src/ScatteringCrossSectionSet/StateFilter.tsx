@@ -1,5 +1,14 @@
 import { ChangeEventHandler, useState } from "react";
 
+import type {
+  AtomLS,
+  Electronic,
+  HomonuclearDiatom,
+  ParticleLessStateChoice,
+  StateSelected,
+  Vibrational,
+} from "@lxcat/database/dist/css/queries/filter";
+
 const MultiSelect = ({
   value,
   choices,
@@ -47,13 +56,13 @@ const ChargeFilter = ({
       <label>
         Charge
         <input
-          type='checkbox'
+          type="checkbox"
           checked={value[0] === choices[0]}
           onChange={() => onChange(value[0] === undefined ? [] : [choices[0]])}
         />
         {choices[0]}
       </label>
-    )
+    );
   }
   return (
     <MultiSelect
@@ -237,11 +246,11 @@ const HomonuclearDiatomFilter = ({
 const AtomLSFilter = ({
   value,
   onChange,
-  choices
+  choices,
 }: {
   choices: AtomLS;
   value: AtomLS | undefined;
-  onChange: (newValue: AtomLS | undefined) => void
+  onChange: (newValue: AtomLS | undefined) => void;
 }) => {
   return (
     <div>
@@ -259,7 +268,7 @@ const AtomLSFilter = ({
                       S: [],
                       P: [],
                       J: [],
-                    }
+                    },
                   }
                 : undefined
             )
@@ -279,7 +288,10 @@ const AtomLSFilter = ({
                 choices={choices.term.L.map((v) => v.toString())}
                 value={value.term.L.map((v) => v.toString())}
                 onChange={(newValue: string[]) =>
-                  onChange({ ...value, term: {...value.term, L: newValue.map(parseInt)} })
+                  onChange({
+                    ...value,
+                    term: { ...value.term, L: newValue.map(parseInt) },
+                  })
                 }
               />
             </div>
@@ -289,7 +301,10 @@ const AtomLSFilter = ({
                 choices={choices.term.S.map((v) => v.toString())}
                 value={value.term.S.map((v) => v.toString())}
                 onChange={(newValue: string[]) =>
-                  onChange({ ...value, term: {...value.term, S: newValue.map(parseInt)} })
+                  onChange({
+                    ...value,
+                    term: { ...value.term, S: newValue.map(parseInt) },
+                  })
                 }
               />
             </div>
@@ -300,7 +315,13 @@ const AtomLSFilter = ({
                 choices={choices.term.P.map((v) => v.toString())}
                 value={value.term.P.map((v) => v.toString())}
                 onChange={(newValue: string[]) =>
-                  onChange({ ...value, term: {...value.term, P: newValue.map(parseInt) as Array<1 | -1>} })
+                  onChange({
+                    ...value,
+                    term: {
+                      ...value.term,
+                      P: newValue.map(parseInt) as Array<1 | -1>,
+                    },
+                  })
                 }
               />
             </div>
@@ -311,7 +332,10 @@ const AtomLSFilter = ({
                 choices={choices.term.J.map((v) => v.toString())}
                 value={value.term.J.map((v) => v.toString())}
                 onChange={(newValue: string[]) =>
-                  onChange({ ...value, term: {...value.term, J: newValue.map(parseInt)} })
+                  onChange({
+                    ...value,
+                    term: { ...value.term, J: newValue.map(parseInt) },
+                  })
                 }
               />
             </div>
@@ -319,8 +343,8 @@ const AtomLSFilter = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 const ElectronicTypeFilter = ({
   value,
@@ -331,7 +355,10 @@ const ElectronicTypeFilter = ({
   value: Electronic | undefined;
   onChange: (newValue: Electronic | undefined) => void;
 }) => {
-  if (choices.type === "HomonuclearDiatom" && (value === undefined || value.type === 'HomonuclearDiatom')) {
+  if (
+    choices.type === "HomonuclearDiatom" &&
+    (value === undefined || value.type === "HomonuclearDiatom")
+  ) {
     return (
       <HomonuclearDiatomFilter
         value={value}
@@ -340,14 +367,11 @@ const ElectronicTypeFilter = ({
       />
     );
   }
-  if (choices.type === "AtomLS" && (value === undefined || value.type === 'AtomLS')) {
-    return (
-      <AtomLSFilter
-        value={value}
-        choices={choices}
-        onChange={onChange}
-      />
-    );
+  if (
+    choices.type === "AtomLS" &&
+    (value === undefined || value.type === "AtomLS")
+  ) {
+    return <AtomLSFilter value={value} choices={choices} onChange={onChange} />;
   }
   return <div>Unknown electronic type</div>;
 };
@@ -429,9 +453,9 @@ const ParticleFilter = ({
   choices,
 }: {
   particle: string;
-  selected: undefined | ParticleInnerChoice;
-  choices: ParticleInnerChoice;
-  onChange: (newSelection: ParticleInnerChoice | undefined) => void;
+  selected: undefined | ParticleLessStateChoice;
+  choices: ParticleLessStateChoice;
+  onChange: (newSelection: ParticleLessStateChoice | undefined) => void;
 }) => {
   function onParticleChange() {
     if (selected === undefined) {
@@ -446,9 +470,7 @@ const ParticleFilter = ({
     }
     onChange({ ...selected, charge: newCharges });
   };
-  const onElectronicChange = (
-    newElectronic: Array<Electronic> | undefined
-  ) => {
+  const onElectronicChange = (newElectronic: Array<Electronic> | undefined) => {
     if (selected === undefined) {
       return;
     }
@@ -490,51 +512,10 @@ const ParticleFilter = ({
   );
 };
 
-interface Vibrational {
-  v: number[];
-}
-
-interface HomonuclearDiatom {
-  type: "HomonuclearDiatom";
-  Lambda: number[];
-  S: number[];
-  e: string[];
-  parity: Array<"g" | "u">;
-  reflection: Array<"-" | "+">;
-  vibrational: Array<Vibrational> | undefined;
-}
-
-interface AtomLsTerm {
-  L: number[];
-  S: number[];
-  P: Array<1 | -1>;
-  J: number[];
-}
-
-interface AtomLS {
-  type: 'AtomLS',
-  term: AtomLsTerm
-}
-
-type Electronic = HomonuclearDiatom | AtomLS;
-
-interface ParticleInnerChoice {
-  charge: number[];
-  electronic?: Array<Electronic> | undefined;
-}
-
-interface ParticleChoice extends ParticleInnerChoice {
-  particle: string;
-}
-
-type ParticleSelected = {
-  [key: string]: ParticleInnerChoice;
-};
-
 export interface Props {
-  choices: ParticleChoice[];
-  selected: ParticleSelected;
-  onChange: (newSelection: ParticleSelected) => void;
+  choices: StateChoice[];
+  selected: StateSelected;
+  onChange: (newSelection: StateSelected) => void;
 }
 
 export const StateFilter = ({
@@ -546,9 +527,9 @@ export const StateFilter = ({
 
   function onStateChange(
     particle: string,
-    selection: ParticleInnerChoice | undefined
+    selection: ParticleLessStateChoice | undefined
   ) {
-    let newSelected: ParticleSelected;
+    let newSelected: StateSelected;
     if (selection === undefined) {
       const { [particle]: _particle2drop, ...inner } = selected;
       newSelected = inner;
