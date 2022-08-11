@@ -9,11 +9,11 @@ export const Item = (props: CrossSectionItem) => {
   return (
     <div>
       <h1>Scattering Cross Section</h1>
-      {props.versionInfo.status === 'retracted' && (
+      {props.versionInfo.status === "retracted" && (
         <div style={{ backgroundColor: "red", color: "white", padding: 16 }}>
-        <h2>This cross section has been retracted. Please do not use.</h2>
-        <p>{props.versionInfo.retractMessage}</p>
-      </div>
+          <h2>This cross section has been retracted. Please do not use.</h2>
+          <p>{props.versionInfo.retractMessage}</p>
+        </div>
       )}
       {props.versionInfo.status === "archived" && (
         <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>
