@@ -17,7 +17,7 @@ export type InState<T> = State<T>;
 
 // TODO: This belongs to the database package.
 interface DBIdentifier {
-  id: string;
+  id: string; // TODO rename to summary, having db item with _id and _key props, makes id confusing
 }
 
 export type DBState<StateType> = DBIdentifier & State<StateType>;
