@@ -123,32 +123,31 @@ export async function stateChoices(): Promise<StateChoice[]> {
                             FILTER s._id == c._to
                             FILTER s.particle != 'e' // TODO should e be filtered out?
                             COLLECT particle = s.particle INTO groups
-                            LET electronic = (
-                              FOR type IN SORTED_UNIQUE(groups[*].s.type)
-                                FILTER type != null
-                                // TODO for each type collect the choices
-                                LET c = (
-                                  type == 'HomonuclearDiatom'
-                                  ?
-                                  {
-                                    e: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].e)),
-                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].Lambda)),
-                                    S: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].S)),
+                            LET electronic = UNION(
+                              (
+                              // TODO for each type collect the choices
+                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.type)
+                                RETURN {
+                                    type,
+                                    e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].e)),
+                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].Lambda)),
+                                    S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].S)),
                                     parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
-                                    reflection: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].reflection)),
+                                    reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].reflection)),
                                     // TODO collect vibrational
                                   }
-                                  :
-                                  type == 'AtomLS' ? {
+                              ), (
+                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.type)
+                                RETURN {
+                                    type,
                                     term: {
-                                      L: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].L)),
-                                      S: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].S)),
-                                      P: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].P)),
-                                      J: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].J)),
+                                      L: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.L)),
+                                      S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.S)),
+                                      P: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.P)),
+                                      J: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.J)),
                                     }
-                                  }: {}
-                                )
-                                RETURN MERGE({ type }, c)
+                                }
+                              )
                             )
                             RETURN MERGE({
                               particle,

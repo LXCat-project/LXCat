@@ -1,14 +1,13 @@
-import { ChangeEventHandler, useState } from "react";
-
-import type {
+import { StateChoice } from "@lxcat/database/dist/css/queries/public";
+import {
   AtomLS,
   Electronic,
   HomonuclearDiatom,
   ParticleLessStateChoice,
-  StateChoice,
   StateSelected,
   Vibrational,
-} from "@lxcat/database/dist/css/queries/filter";
+} from "@lxcat/database/dist/shared/queries/state";
+import { ChangeEventHandler, useState } from "react";
 
 const MultiSelect = ({
   value,
