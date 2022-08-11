@@ -24,7 +24,7 @@ if (process.env.GITLAB_CLIENT_ID) {
   providers.push(
     GitlabProvider({
       clientId: process.env.GITLAB_CLIENT_ID,
-      clientSecret: process.env.GITLAB_CLIENT_SECRET,
+      clientSecret: process.env.GITLAB_CLIENT_SECRET || "",
     })
   );
 }
