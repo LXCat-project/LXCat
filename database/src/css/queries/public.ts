@@ -3,10 +3,15 @@ import { ArrayCursor } from "arangojs/cursor";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
 import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
+import {
+  StateSelected,
+  generateStateFilterAql,
+  ParticleLessStateChoice,
+} from "../../shared/queries/state";
 
 export interface FilterOptions {
   contributor: string[];
-  species2: string[];
+  state: StateSelected;
 }
 
 export interface SortOptions {
@@ -28,17 +33,28 @@ export async function search(
   if (filter.contributor.length > 0) {
     contributor_aql = aql`FILTER ${filter.contributor} ANY == contributor`;
   }
-  let species2_aql = aql``;
-  if (filter.species2.length > 0) {
-    // TODO what should this filter do?
-    // Now a set matches when one of reactions has its second consumed species equal to one in given filter
-    species2_aql = aql`
-          LET species2 = (
-              FOR p IN processes
-                  RETURN p.reaction.lhs[1].state.id
-          )
-          FILTER species2 ANY IN ${filter.species2}
-          `;
+  let stateAql = aql``;
+  if (Object.keys(filter.state).length > 0) {
+    const stateFilter = generateStateFilterAql(filter.state);
+    stateAql = aql`
+      LET states = (
+        FOR m IN IsPartOf
+          FILTER m._to == css._id
+          FOR cs IN CrossSection
+            FILTER cs._id == m._from
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              FOR c IN Consumes
+                FILTER c._from == r._id
+                FOR s IN State
+                  FILTER s._id == c._to
+                  FILTER s.particle != 'e'
+                  LET e = s.electronic[0] // TODO is there always 0 or 1 electronic array item?
+                  FILTER ${stateFilter}
+                  RETURN s.id
+      )
+      FILTER LENGTH(states) > 0
+    `;
   }
   let sort_aql = aql``;
   if (sort.field === "name") {
@@ -50,49 +66,34 @@ export async function search(
   const q = aql`
       FOR css IN CrossSectionSet
           FILTER css.versionInfo.status == 'published' // Public API can only search on published sets
-          LET processes = (
-              FOR m IN IsPartOf
-                  FILTER m._to == css._id
-                  FOR cs IN CrossSection
-                      FILTER cs._id == m._from
-                          LET reaction = FIRST(
-                          FOR r in Reaction
-                              FILTER r._id == cs.reaction
-                              LET consumes = (
-                                  FOR c IN Consumes
-                                  FILTER c._from == r._id
-                                      FOR c2s IN State
-                                      FILTER c2s._id == c._to
-                                      RETURN {state: {id: c2s.id}}
-                              )
-                              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes})
-                      )
-                      RETURN {id: cs._key, reaction}
-              )
+          ${stateAql}
           LET contributor = FIRST(
               FOR o IN Organization
                   FILTER o._id == css.organization
                   RETURN o.name
           )
           ${contributor_aql}
-          ${species2_aql}
           ${sort_aql}
           ${limit_aql}
-          RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
+          RETURN MERGE({'id': css._key, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
       `;
   const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
   return await cursor.all();
 }
 
+export interface StateChoice extends ParticleLessStateChoice {
+  particle: string;
+}
+
 export interface Facets {
   contributor: string[];
-  species2: string[];
+  state: StateChoice[];
 }
 
 export async function searchFacets(): Promise<Facets> {
   return {
     contributor: await searchContributors(),
-    species2: await searchSpecies2(),
+    state: await stateChoices(),
   };
 }
 
@@ -106,25 +107,27 @@ async function searchContributors() {
   return await cursor.all();
 }
 
-async function searchSpecies2() {
-  const cursor: ArrayCursor<string> = await db().query(aql`
-      FOR css IN CrossSectionSet
-          FILTER css.versionInfo.status == 'published'
-          FOR m IN IsPartOf
-              FILTER m._to == css._id
-              FOR cs IN CrossSection
-                  FILTER cs._id == m._from
-                  FOR r in Reaction
-                      FILTER r._id == cs.reaction
-                      LET lhs = LAST(
-                          FOR c IN Consumes
-                              FILTER c._from == r._id
-                              FOR c2s IN State
-                                  FILTER c2s._id == c._to
-                                  RETURN c2s.id
-                      )
-                      RETURN DISTINCT lhs
-      `);
+export async function stateChoices(): Promise<StateChoice[]> {
+  const cursor: ArrayCursor<StateChoice> = await db().query(aql`
+    FOR css IN CrossSectionSet
+        FILTER css.versionInfo.status == 'published'
+        FOR p IN IsPartOf
+            FILTER p._to == css._id
+            FOR cs IN CrossSection
+                FILTER cs._id == p._from
+                FOR r in Reaction
+                    FILTER r._id == cs.reaction
+                    FOR c IN Consumes
+                        FILTER c._from == r._id
+                        FOR s IN State
+                            FILTER s._id == c._to
+                            FILTER s.particle != 'e' // TODO should e be filtered out?
+                            COLLECT particle = s.particle INTO groups
+                            RETURN {
+                                particle,
+                                charge: SORTED_UNIQUE(groups[*].s.charge)
+                            }
+    `);
   return await cursor.all();
 }
 

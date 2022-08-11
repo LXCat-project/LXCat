@@ -15,6 +15,10 @@ import {
   SortOptions,
   FilterOptions,
 } from "@lxcat/database/dist/css/queries/public";
+import {
+  stateSelectionFromSearchParam,
+  stateSelectionToSearchParam,
+} from "../../ScatteringCrossSectionSet/StateFilter";
 
 interface Props {
   items: CrossSectionSetHeading[];
@@ -60,8 +64,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 function query2options(query: ParsedUrlQuery): FilterOptions {
+  const state =
+    query.state && !Array.isArray(query.state)
+      ? query.state
+      : stateSelectionToSearchParam({});
   return {
     contributor: query2array(query.contributor),
-    species2: query2array(query.species2),
+    state: stateSelectionFromSearchParam(state),
   };
 }

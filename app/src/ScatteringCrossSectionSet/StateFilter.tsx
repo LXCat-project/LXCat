@@ -5,6 +5,7 @@ import type {
   Electronic,
   HomonuclearDiatom,
   ParticleLessStateChoice,
+  StateChoice,
   StateSelected,
   Vibrational,
 } from "@lxcat/database/dist/css/queries/filter";
@@ -58,7 +59,7 @@ const ChargeFilter = ({
         <input
           type="checkbox"
           checked={value[0] === choices[0]}
-          onChange={() => onChange(value[0] === undefined ? [] : [choices[0]])}
+          onChange={() => onChange(value[0] === undefined ? [choices[0]] : [])}
         />
         {choices[0]}
       </label>
@@ -558,3 +559,13 @@ export const StateFilter = ({
     </ul>
   );
 };
+
+export function stateSelectionToSearchParam(selection: StateSelected) {
+  return btoa(JSON.stringify(selection));
+}
+
+export function stateSelectionFromSearchParam(
+  parameter: string
+): StateSelected {
+  return JSON.parse(atob(parameter));
+}
