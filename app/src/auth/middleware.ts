@@ -1,4 +1,4 @@
-import { getServerSession, Session } from "next-auth";
+import { Session, unstable_getServerSession as getServerSession } from "next-auth";
 import {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -28,7 +28,7 @@ export const hasSessionOrAPIToken: RequestHandler<
   AuthRequest,
   NextApiResponse
 > = async (req, res, next) => {
-  const session = await getServerSession({ req, res }, options);
+  const session = await getServerSession(req, res, options);
   if (session?.user) {
     req.user = session.user;
     next();
@@ -62,7 +62,7 @@ export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (
   res,
   next
 ) => {
-  const session = await getServerSession({ req, res }, options);
+  const session = await getServerSession(req, res, options);
   if (session?.user) {
     req.user = session.user;
     next();
@@ -131,7 +131,7 @@ export const hasAuthorRole: RequestHandler<
 export const mustBeAdmin = async (
   context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>
 ) => {
-  const session = await getServerSession(context, options);
+  const session = await getServerSession(context.req, context.res, options);
   if (!session?.user) {
     context.res.statusCode = 401;
     context.res.setHeader("WWW-Authenticate", "OAuth");
@@ -148,7 +148,7 @@ export const mustBeAdmin = async (
 export const mustBeAuthor = async (
   context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>
 ) => {
-  const session = await getServerSession(context, options);
+  const session = await getServerSession(context.req, context.res, options);
   if (!session?.user) {
     context.res.statusCode = 401;
     context.res.setHeader("WWW-Authenticate", "OAuth");
