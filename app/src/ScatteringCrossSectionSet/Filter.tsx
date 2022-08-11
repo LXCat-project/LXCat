@@ -30,7 +30,9 @@ export const Filter = ({ facets, selection }: Props) => {
     <div>
       <div style={{ display: "flex" }}>
         <fieldset>
-          <legend title='Species of consumed part of reaction of any cross section in set. Excluding electron'>Species</legend>
+          <legend title="Species of consumed part of reaction of any cross section in set. Excluding electron">
+            Species
+          </legend>
           <StateFilter
             choices={facets.state}
             selected={selection.state}
