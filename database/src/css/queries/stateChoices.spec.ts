@@ -7,6 +7,8 @@ import {
   truncateCrossSectionSetCollections,
 } from "./testutils";
 import { stateChoices } from "./public";
+import { AtomLS1, AtomLS1Impl } from "@lxcat/schema/dist/core/atoms/ls1";
+import { AtomLSImpl } from "@lxcat/schema/dist/core/atoms/ls";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -214,4 +216,260 @@ describe("stateChoices()", () => {
       expect(choices).toEqual(expected);
     });
   });
+
+  describe('given 2 sets with single cross section with 2 different 2 particles and electrons', () => {
+    beforeAll(async () => {
+      await createSet({
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          e: {
+            particle: 'e', charge: -1
+          },
+          P: {
+            particle: "P",
+            charge: 0,
+          },
+          Pi: {
+            particle: "P",
+            charge: -1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "e" }, { count: 1, state: "P" }],
+              rhs: [{ count: 1, state: "Pi" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          }
+        ],
+      });
+      await createSet({
+        complete: false,
+        contributor: "Some organization",
+        name: "Some other name",
+        description: "Some description",
+        references: {},
+        states: {
+          e: {
+            particle: 'e', charge: -1
+          },
+          S: {
+            particle: "S",
+            charge: 0,
+          },
+          Si: {
+            particle: "S",
+            charge: -1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "e" }, { count: 1, state: "S" }],
+              rhs: [{ count: 1, state: "Si" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          }
+        ],
+      });
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should return state choice tree without electron", async () => {
+      const choices = await stateChoices();
+      const expected = [
+        {
+          particle: "P",
+          charge: [0],
+        },
+        {
+          particle: 'S',
+          charge: [0]
+        }
+      ];
+      expect(choices).toEqual(expected);
+    });
+  })
+
+  describe('given cross section set with 2 virbrationless HomonuclearDiatom particles', () => {
+    beforeAll(async () => {
+      await createSet({
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          e: {
+            particle: 'e', charge: -1
+          },
+          N2g: {
+            particle: "N2",
+            charge: 0,
+            type: 'HomonuclearDiatom',
+            electronic: [{
+              e: 'Z',
+              Lambda: 0,
+              S: 0,
+              parity: 'g',
+              reflection: '+'
+            }]
+          },
+          N2u: {
+            particle: "N2",
+            charge: 0,
+            type: 'HomonuclearDiatom',
+            electronic: [{
+              e: 'Z',
+              Lambda: 0,
+              S: 0,
+              parity: 'u',
+              reflection: '+'
+            }]
+          },
+          N2c: {
+            particle: "N2",
+            charge: -1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "e" }, { count: 1, state: "N2g" }],
+              rhs: [{ count: 1, state: "N2c" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          },
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "e" }, { count: 1, state: "N2u" }],
+              rhs: [{ count: 1, state: "N2c" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          }
+        ],
+      });
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should return state choice tree", async () => {
+      const choices = await stateChoices();
+      const expected = [
+        {
+          particle: "N2",
+          charge: [0],
+          electronic: [{
+            type: 'HomonuclearDiatom',
+            e: ['Z'],
+            Lambda: [0],
+            S: [0],
+            parity: ['g', 'u'],
+            reflection: ['+']
+          }]
+        },
+      ];
+      expect(choices).toEqual(expected);
+    });
+  })
+
+  describe('given 2 cross section sets with each single virbrationless AtomLS particle', () => {
+    beforeAll(async () => {
+      await createSet({
+        complete: false,
+        contributor: "Some organization",
+        name: "Some name",
+        description: "Some description",
+        references: {},
+        states: {
+          e: {
+            particle: 'e', charge: -1
+          },
+          Arg: {
+            particle: "Ar",
+            charge: 0,
+            type: 'AtomLS',
+            electronic: [{
+              scheme: 'LS',
+              config: [],
+              term: {L: 0, S: 0, P: 1, J: 0}
+            }]
+          },
+          Are: {
+            particle: "Ar",
+            charge: -1,
+          },
+        },
+        processes: [
+          {
+            reaction: {
+              lhs: [{ count: 1, state: "e" }, { count: 1, state: "Arg" }],
+              rhs: [{ count: 1, state: "Are" }],
+              reversible: false,
+              type_tags: [],
+            },
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+          }
+        ],
+      });
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should return state choice tree", async () => {
+      const choices = await stateChoices();
+      const expected = [
+        {
+          particle: "N2",
+          charge: [0],
+          electronic: [{
+            type: 'AtomLS',
+            term: {
+              L: [0], 
+              S: [0], 
+              P: [1], 
+              J: [0]
+            }
+          }]
+        },
+      ];
+      expect(choices).toEqual(expected);
+    });
+  })
 });

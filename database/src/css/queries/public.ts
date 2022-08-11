@@ -123,10 +123,37 @@ export async function stateChoices(): Promise<StateChoice[]> {
                             FILTER s._id == c._to
                             FILTER s.particle != 'e' // TODO should e be filtered out?
                             COLLECT particle = s.particle INTO groups
-                            RETURN {
-                                particle,
-                                charge: SORTED_UNIQUE(groups[*].s.charge)
-                            }
+                            LET electronic = (
+                              FOR type IN SORTED_UNIQUE(groups[*].s.type)
+                                FILTER type != null
+                                // TODO for each type collect the choices
+                                LET c = (
+                                  type == 'HomonuclearDiatom'
+                                  ?
+                                  {
+                                    e: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].e)),
+                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].Lambda)),
+                                    S: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].S)),
+                                    parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
+                                    reflection: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].reflection)),
+                                    // TODO collect vibrational
+                                  }
+                                  :
+                                  type == 'AtomLS' ? {
+                                    term: {
+                                      L: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].L)),
+                                      S: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].S)),
+                                      P: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].P)),
+                                      J: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].J)),
+                                    }
+                                  }: {}
+                                )
+                                RETURN MERGE({ type }, c)
+                            )
+                            RETURN MERGE({
+                              particle,
+                              charge: SORTED_UNIQUE(groups[*].s.charge),
+                            }, LENGTH(electronic) > 0 ? {electronic} : {})
     `);
   return await cursor.all();
 }
