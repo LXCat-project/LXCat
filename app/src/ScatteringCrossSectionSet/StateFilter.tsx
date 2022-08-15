@@ -22,7 +22,7 @@ const MultiSelect = ({
   onChange: (newValue: string[]) => void;
 }) => {
   if (choices.length < 2) {
-    return <></>
+    return <></>;
   }
   const onMyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const newValue = Array.from(
@@ -652,7 +652,6 @@ export const StateFilter = ({
     setSelected(newSelected);
     onChange(newSelected);
   }
-  console.log(choices);
   return (
     <ul>
       {choices.map((s) => {

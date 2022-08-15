@@ -1,4 +1,7 @@
-import { Session, unstable_getServerSession as getServerSession } from "next-auth";
+import {
+  Session,
+  unstable_getServerSession as getServerSession,
+} from "next-auth";
 import {
   GetServerSidePropsContext,
   NextApiRequest,

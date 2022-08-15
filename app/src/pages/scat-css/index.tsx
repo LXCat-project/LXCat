@@ -5,7 +5,7 @@ import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
 import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
-import { query2array } from "../../shared/query2array";
+import { query2array, query2boolean } from "../../shared/query2array";
 import {
   Facets,
   search,
@@ -68,8 +68,15 @@ function query2options(query: ParsedUrlQuery): FilterOptions {
     query.state && !Array.isArray(query.state)
       ? query.state
       : stateSelectionToSearchParam({});
-  return {
+
+  const options: FilterOptions = {
     contributor: query2array(query.contributor),
     state: stateSelectionFromSearchParam(state),
+    tag: query2array(query.tag),
   };
+  const reversible = query2boolean(query.reversible);
+  if (reversible !== undefined) {
+    options.reversible = reversible;
+  }
+  return options;
 }

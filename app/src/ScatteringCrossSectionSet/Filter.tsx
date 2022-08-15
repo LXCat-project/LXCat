@@ -10,6 +10,55 @@ interface Props {
   selection: FilterOptions;
 }
 
+const ReactionDirectionFilter = ({
+  selection,
+  path,
+}: {
+  selection: any;
+  path: string;
+}) => {
+  const reversibleChecked = selection.reversible === true;
+  const irreversibleChecked = selection.reversible === false;
+  const iquery = {
+    ...selection,
+    reversible: irreversibleChecked ? undefined : false,
+  };
+  const rquery = {
+    ...selection,
+    reversible: reversibleChecked ? undefined : true,
+  };
+  return (
+    <div>
+      <Link
+        href={{
+          pathname: path,
+          query: iquery,
+        }}
+      >
+        <a>
+          <label>
+            <input type="checkbox" readOnly checked={irreversibleChecked} />
+            Irreversible
+          </label>
+        </a>
+      </Link>
+      <Link
+        href={{
+          pathname: path,
+          query: rquery,
+        }}
+      >
+        <a>
+          <label>
+            <input type="checkbox" readOnly checked={reversibleChecked} />
+            Reversible
+          </label>
+        </a>
+      </Link>
+    </div>
+  );
+};
+
 export const Filter = ({ facets, selection }: Props) => {
   const router = useRouter();
 
@@ -26,6 +75,10 @@ export const Filter = ({ facets, selection }: Props) => {
       },
     });
   }
+  const selectionAsSearchParam = {
+    ...selection,
+    state: stateSelectionToSearchParam(selection.state),
+  };
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -43,10 +96,7 @@ export const Filter = ({ facets, selection }: Props) => {
           <legend>Contributor</legend>
           <CheckBoxGroup
             facet={facets.contributor}
-            selection={{
-              ...selection,
-              state: stateSelectionToSearchParam(selection.state),
-            }}
+            selection={selectionAsSearchParam}
             selectionKey="contributor"
             path="/scat-css"
           />
@@ -54,14 +104,10 @@ export const Filter = ({ facets, selection }: Props) => {
         <fieldset>
           <legend>Reaction</legend>
           <h4>Direction</h4>
-          <label>
-            <input type="checkbox" name="reversible" />
-            Irreversible
-          </label>
-          <label>
-            <input type="checkbox" name="reversible" />
-            Reversible
-          </label>
+          <ReactionDirectionFilter
+            path="/scat-css"
+            selection={selectionAsSearchParam}
+          />
           <h4>Type tags</h4>
           <CheckBoxGroup
             facet={[
@@ -73,11 +119,7 @@ export const Filter = ({ facets, selection }: Props) => {
               "Attachment",
               "Ionization",
             ]}
-            selection={{
-              ...selection,
-              tag: [],
-              state: stateSelectionToSearchParam(selection.state),
-            }}
+            selection={selectionAsSearchParam}
             selectionKey="tag"
             path="/scat-css"
           />

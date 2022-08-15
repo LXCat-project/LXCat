@@ -27,7 +27,7 @@ export interface AtomLS {
 }
 
 export interface LinearTriatomInversionCenter {
-  type: "LinearTriatomInversionCenter",
+  type: "LinearTriatomInversionCenter";
   e: string[];
   Lambda: number[];
   S: number[];
@@ -35,7 +35,10 @@ export interface LinearTriatomInversionCenter {
   reflection: Array<"-" | "+">; // TODO make optional
 }
 
-export type Electronic = HomonuclearDiatom | AtomLS | LinearTriatomInversionCenter;
+export type Electronic =
+  | HomonuclearDiatom
+  | AtomLS
+  | LinearTriatomInversionCenter;
 
 export interface ParticleLessStateChoice {
   charge: number[];

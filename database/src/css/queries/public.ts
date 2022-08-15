@@ -12,6 +12,8 @@ import {
 export interface FilterOptions {
   contributor: string[];
   state: StateSelected;
+  reversible?: boolean; // Not set or undefined means both reverisble and irreversible reactions should be included
+  tag: string[];
 }
 
 export interface SortOptions {
@@ -31,12 +33,43 @@ export async function search(
 ) {
   let contributor_aql = aql``;
   if (filter.contributor.length > 0) {
-    contributor_aql = aql`FILTER ${filter.contributor} ANY == contributor`;
+    contributor_aql = aql`
+      LET contributor = FIRST(
+        FOR o IN Organization
+          FILTER o._id == css.organization
+          RETURN o.name
+      )
+      FILTER ${filter.contributor} ANY == contributor
+    `;
   }
-  let stateAql = aql``;
-  if (Object.keys(filter.state).length > 0) {
-    const stateFilter = generateStateFilterAql(filter.state);
-    stateAql = aql`
+  const hasFilterOnConsumedStates = Object.keys(filter.state).length > 0;
+  const hasFilterOnReversible = filter.reversible !== undefined;
+  const hasFilterOnTag = filter.tag.length > 0;
+  const hasFilterOnRection =
+    hasFilterOnConsumedStates || hasFilterOnReversible || hasFilterOnTag;
+  let reactionAql = aql``;
+  if (hasFilterOnRection) {
+    const reversibleAql = hasFilterOnReversible
+      ? aql`FILTER r.reversible == ${filter.reversible}`
+      : aql``;
+    const typeTagAql = hasFilterOnTag
+      ? aql`FILTER ${filter.tag} ALL IN r.type_tags`
+      : aql``;
+    let stateAql = aql`RETURN 1`;
+    if (hasFilterOnConsumedStates) {
+      const stateFilter = generateStateFilterAql(filter.state);
+      stateAql = aql`
+        FOR c IN Consumes
+          FILTER c._from == r._id
+          FOR s IN State
+            FILTER s._id == c._to
+            FILTER s.particle != 'e' // TODO should electron always be excluded?
+            LET e = s.electronic[0] // TODO is there always 0 or 1 electronic array item?
+            FILTER ${stateFilter}
+            RETURN s.id
+    `;
+    }
+    reactionAql = aql`
       LET states = (
         FOR m IN IsPartOf
           FILTER m._to == css._id
@@ -44,18 +77,14 @@ export async function search(
             FILTER cs._id == m._from
             FOR r in Reaction
               FILTER r._id == cs.reaction
-              FOR c IN Consumes
-                FILTER c._from == r._id
-                FOR s IN State
-                  FILTER s._id == c._to
-                  FILTER s.particle != 'e'
-                  LET e = s.electronic[0] // TODO is there always 0 or 1 electronic array item?
-                  FILTER ${stateFilter}
-                  RETURN s.id
+              ${reversibleAql}
+              ${typeTagAql}
+              ${stateAql}
       )
       FILTER LENGTH(states) > 0
     `;
   }
+
   let sort_aql = aql``;
   if (sort.field === "name") {
     sort_aql = aql`SORT css.name ${sort.dir}`;
@@ -66,17 +95,15 @@ export async function search(
   const q = aql`
       FOR css IN CrossSectionSet
           FILTER css.versionInfo.status == 'published' // Public API can only search on published sets
-          ${stateAql}
-          LET contributor = FIRST(
-              FOR o IN Organization
-                  FILTER o._id == css.organization
-                  RETURN o.name
-          )
+          ${reactionAql}
           ${contributor_aql}
           ${sort_aql}
           ${limit_aql}
-          RETURN MERGE({'id': css._key, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
+          RETURN MERGE({'id': css._key}, UNSET(css, ["_key", "_rev", "_id"]))
       `;
+
+  // console.log(q.query)
+  // console.log(q.bindVars)
   const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
   return await cursor.all();
 }
@@ -164,7 +191,7 @@ export async function stateChoices(): Promise<StateChoice[]> {
                               charge: SORTED_UNIQUE(groups[*].s.charge),
                             }, LENGTH(electronic) > 0 ? {electronic} : {})
     `);
-    // TODO when there is one choice then there is no choices and choice should be removed
+  // TODO when there is one choice then there is no choices and choice should be removed
   return await cursor.all();
 }
 
