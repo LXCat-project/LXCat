@@ -55,20 +55,24 @@ export interface StateChoice extends ParticleLessStateChoice {
 
 function generateParticleFilter(
   particle: string,
-  selection: ParticleLessStateChoice
+  selection: ParticleLessStateChoice,
+  stateVarName: string
 ) {
-  const filters = [aql`s.particle == ${particle}`];
+  const stateVarAql = aql.literal(stateVarName);
+  const filters = [aql`${stateVarAql}.particle == ${particle}`];
   if (selection.charge.length == 1) {
     // TODO length > 0 with ORs
-    filters.push(aql`s.charge == ${selection.charge[0]}`);
+    filters.push(aql`${stateVarAql}.charge == ${selection.charge[0]}`);
   }
   if (selection.electronic !== undefined) {
     if (selection.electronic.length === 1) {
       const e = selection.electronic[0];
       if (e.type === "HomonuclearDiatom") {
-        filters.push(aql`s.type == 'HomonuclearDiatom'`);
+        filters.push(aql`${stateVarAql}.type == 'HomonuclearDiatom'`);
         if (e.parity.length === 1) {
-          filters.push(aql`electronic.parity == ${e.parity[0]}`);
+          filters.push(
+            aql`${stateVarAql}.electronic[0].parity == ${e.parity[0]}`
+          );
         }
         if (e.vibrational !== undefined) {
           // TODO
@@ -90,19 +94,70 @@ function generateParticleFilter(
 /**
  * Generates partial Aql sub query to filter states
  *
- * Expects following variables
- * * s: State
- * * e: shortcut for s.electronic[0]
+ * Expects aql variable called `s` which is a item from the State collection.
+ * Use `stateVarName` argument to change from `s` to something else.
  *
- * @param selection
- * @returns
  */
-export function generateStateFilterAql(selection: StateSelected) {
+export function generateStateFilterAql(
+  selection: StateSelected,
+  stateVarName = "s"
+) {
   if (Object.keys(selection).length === 0) {
     return aql`true`;
   }
   const particleFilters = Object.entries(selection).map(([p, s]) =>
-    generateParticleFilter(p, s)
+    generateParticleFilter(p, s, stateVarName)
   );
   return aql.join(particleFilters, " OR ");
+}
+
+/**
+ * Group by of all state innards
+ *
+ * Expects aql variable called `s` which is a item from the State collection.
+ */
+export function generateStateChoicesAql() {
+  return aql`
+    COLLECT particle = s.particle INTO groups
+    LET electronic = UNION(
+      (
+      // TODO for each type collect the choices
+      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.type)
+        RETURN {
+            type,
+            e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].e)),
+            Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].Lambda)),
+            S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].S)),
+            parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
+            reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].reflection)),
+            // TODO collect vibrational
+          }
+      ), (
+      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.type)
+        RETURN {
+            type,
+            term: {
+              L: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.L)),
+              S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.S)),
+              P: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.P)),
+              J: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.J)),
+            }
+        }
+      ), (
+      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.type)
+        RETURN {
+            type,
+            e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].e)),
+            Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].Lambda)),
+            S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].S)),
+            parity: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
+            reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
+        }
+      )
+    )
+    RETURN MERGE({
+      particle,
+      charge: SORTED_UNIQUE(groups[*].s.charge),
+    }, LENGTH(electronic) > 0 ? {electronic} : {})
+  `;
 }

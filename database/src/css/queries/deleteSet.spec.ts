@@ -95,7 +95,7 @@ describe("deleting a published cross section with no shared cross sections", () 
   });
 
   it("should not be in public listing", async () => {
-    const filter = { contributor: [], state: {} };
+    const filter = { contributor: [], state: {}, tag: [] };
     const sort: SortOptions = { field: "name", dir: "DESC" };
     const paging = { offset: 0, count: 10 };
     const result = await search(filter, sort, paging);

@@ -670,10 +670,16 @@ export const StateFilter = ({
   );
 };
 
+/**
+ * To pass selected state in a URL search parameter it has to be made URL friendly using this method.
+ */
 export function stateSelectionToSearchParam(selection: StateSelected) {
   return btoa(JSON.stringify(selection));
 }
 
+/**
+ * To understand the selected state in a URL search parameter it has parsed using this method.
+ */
 export function stateSelectionFromSearchParam(
   parameter: string
 ): StateSelected {

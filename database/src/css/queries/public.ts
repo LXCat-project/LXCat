@@ -7,7 +7,9 @@ import {
   StateSelected,
   generateStateFilterAql,
   StateChoice,
+  generateStateChoicesAql,
 } from "../../shared/queries/state";
+import { PagingOptions } from "../../shared/types/search";
 
 export interface FilterOptions {
   contributor: string[];
@@ -19,11 +21,6 @@ export interface FilterOptions {
 export interface SortOptions {
   field: "name" | "contributor";
   dir: "ASC" | "DESC";
-}
-
-export interface PagingOptions {
-  offset: number;
-  count: number;
 }
 
 export async function search(
@@ -129,6 +126,7 @@ async function searchContributors() {
 }
 
 export async function stateChoices(): Promise<StateChoice[]> {
+  const stateAql = generateStateChoicesAql();
   const cursor: ArrayCursor<StateChoice> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
@@ -143,47 +141,7 @@ export async function stateChoices(): Promise<StateChoice[]> {
                         FOR s IN State
                             FILTER s._id == c._to
                             FILTER s.particle != 'e' // TODO should e be filtered out?
-                            COLLECT particle = s.particle INTO groups
-                            LET electronic = UNION(
-                              (
-                              // TODO for each type collect the choices
-                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.type)
-                                RETURN {
-                                    type,
-                                    e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].e)),
-                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].Lambda)),
-                                    S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].S)),
-                                    parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
-                                    reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].reflection)),
-                                    // TODO collect vibrational
-                                  }
-                              ), (
-                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.type)
-                                RETURN {
-                                    type,
-                                    term: {
-                                      L: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.L)),
-                                      S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.S)),
-                                      P: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.P)),
-                                      J: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.J)),
-                                    }
-                                }
-                              ), (
-                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.type)
-                                RETURN {
-                                    type,
-                                    e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].e)),
-                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].Lambda)),
-                                    S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].S)),
-                                    parity: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
-                                    reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
-                                }
-                              )
-                            )
-                            RETURN MERGE({
-                              particle,
-                              charge: SORTED_UNIQUE(groups[*].s.charge),
-                            }, LENGTH(electronic) > 0 ? {electronic} : {})
+                            ${stateAql}
     `);
   // TODO when there is one choice then there is no choices and choice should be removed
   return await cursor.all();
