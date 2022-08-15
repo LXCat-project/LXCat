@@ -1,24 +1,18 @@
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
+
+import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import {
+  Facets, FilterOptions, search,
+  searchFacets, SortOptions
+} from "@lxcat/database/dist/css/queries/public";
+
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
-import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { query2array, query2boolean } from "../../shared/query2array";
-import {
-  Facets,
-  search,
-  searchFacets,
-} from "@lxcat/database/dist/css/queries/public";
-import {
-  SortOptions,
-  FilterOptions,
-} from "@lxcat/database/dist/css/queries/public";
-import {
-  stateSelectionFromSearchParam,
-  stateSelectionToSearchParam,
-} from "../../ScatteringCrossSectionSet/StateFilter";
+import { stateSelectionFromSearchParam, stateSelectionToSearchParam } from "../../shared/StateFilter";
 
 interface Props {
   items: CrossSectionSetHeading[];

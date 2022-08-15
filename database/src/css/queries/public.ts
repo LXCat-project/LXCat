@@ -6,7 +6,7 @@ import { db } from "../../db";
 import {
   StateSelected,
   generateStateFilterAql,
-  ParticleLessStateChoice,
+  StateChoice,
 } from "../../shared/queries/state";
 
 export interface FilterOptions {
@@ -99,17 +99,11 @@ export async function search(
           ${contributor_aql}
           ${sort_aql}
           ${limit_aql}
-          RETURN MERGE({'id': css._key}, UNSET(css, ["_key", "_rev", "_id"]))
+          RETURN {'id': css._key, name: css.name}
       `;
 
-  // console.log(q.query)
-  // console.log(q.bindVars)
   const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
   return await cursor.all();
-}
-
-export interface StateChoice extends ParticleLessStateChoice {
-  particle: string;
 }
 
 export interface Facets {

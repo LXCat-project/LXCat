@@ -49,6 +49,10 @@ export type StateSelected = {
   [key: string]: ParticleLessStateChoice;
 };
 
+export interface StateChoice extends ParticleLessStateChoice {
+  particle: string;
+}
+
 function generateParticleFilter(
   particle: string,
   selection: ParticleLessStateChoice

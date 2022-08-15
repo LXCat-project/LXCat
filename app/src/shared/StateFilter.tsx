@@ -1,10 +1,10 @@
-import { StateChoice } from "@lxcat/database/dist/css/queries/public";
 import {
   AtomLS,
   Electronic,
   HomonuclearDiatom,
   LinearTriatomInversionCenter,
   ParticleLessStateChoice,
+  StateChoice,
   StateSelected,
   Vibrational,
 } from "@lxcat/database/dist/shared/queries/state";

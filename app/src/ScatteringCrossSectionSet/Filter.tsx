@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries/public";
-import { StateFilter, stateSelectionToSearchParam } from "./StateFilter";
 import { StateSelected } from "@lxcat/database/dist/shared/queries/state";
 import { useRouter } from "next/router";
+import { stateSelectionToSearchParam, StateFilter } from "../shared/StateFilter";
 
 interface Props {
   facets: Facets;
