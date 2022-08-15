@@ -147,6 +147,16 @@ export async function stateChoices(): Promise<StateChoice[]> {
                                       J: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.J)),
                                     }
                                 }
+                              ), (
+                              FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.type)
+                                RETURN {
+                                    type,
+                                    e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].e)),
+                                    Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].Lambda)),
+                                    S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].S)),
+                                    parity: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
+                                    reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
+                                }
                               )
                             )
                             RETURN MERGE({
@@ -154,6 +164,7 @@ export async function stateChoices(): Promise<StateChoice[]> {
                               charge: SORTED_UNIQUE(groups[*].s.charge),
                             }, LENGTH(electronic) > 0 ? {electronic} : {})
     `);
+    // TODO when there is one choice then there is no choices and choice should be removed
   return await cursor.all();
 }
 

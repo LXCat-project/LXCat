@@ -51,6 +51,37 @@ export const Filter = ({ facets, selection }: Props) => {
             path="/scat-css"
           />
         </fieldset>
+        <fieldset>
+          <legend>Reaction</legend>
+          <h4>Direction</h4>
+          <label>
+            <input type="checkbox" name="reversible" />
+            Irreversible
+          </label>
+          <label>
+            <input type="checkbox" name="reversible" />
+            Reversible
+          </label>
+          <h4>Type tags</h4>
+          <CheckBoxGroup
+            facet={[
+              "Elastic",
+              "Effective",
+              "Electronic",
+              "Vibrational",
+              "Rotational",
+              "Attachment",
+              "Ionization",
+            ]}
+            selection={{
+              ...selection,
+              tag: [],
+              state: stateSelectionToSearchParam(selection.state),
+            }}
+            selectionKey="tag"
+            path="/scat-css"
+          />
+        </fieldset>
       </div>
       <div>
         <Link

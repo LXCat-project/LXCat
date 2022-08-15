@@ -3,6 +3,7 @@ import {
   AtomLS,
   Electronic,
   HomonuclearDiatom,
+  LinearTriatomInversionCenter,
   ParticleLessStateChoice,
   StateSelected,
   Vibrational,
@@ -20,6 +21,9 @@ const MultiSelect = ({
   choices: string[];
   onChange: (newValue: string[]) => void;
 }) => {
+  if (choices.length < 2) {
+    return <></>
+  }
   const onMyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const newValue = Array.from(
       e.target.selectedOptions,
@@ -346,6 +350,99 @@ const AtomLSFilter = ({
   );
 };
 
+const LinearTriatomInversionCenterFilter = ({
+  value,
+  onChange,
+  choices,
+}: {
+  choices: LinearTriatomInversionCenter;
+  value: LinearTriatomInversionCenter | undefined;
+  onChange: (newValue: LinearTriatomInversionCenter | undefined) => void;
+}) => {
+  return (
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          checked={value !== undefined}
+          onChange={() =>
+            onChange(
+              value === undefined
+                ? {
+                    type: "LinearTriatomInversionCenter",
+                    e: [],
+                    Lambda: [],
+                    S: [],
+                    parity: [],
+                    reflection: [],
+                  }
+                : undefined
+            )
+          }
+        />
+        LinearTriatomInversionCenter
+      </label>
+      {value === undefined ? (
+        <></>
+      ) : (
+        <div>
+          <div style={{ display: "flex" }}>
+            <div>
+              <MultiSelect
+                label="e"
+                choices={choices.e}
+                value={value.e}
+                onChange={(newValue: string[]) =>
+                  onChange({ ...value, e: newValue })
+                }
+              />
+            </div>
+            <div>
+              <MultiSelect
+                label="Lambda"
+                choices={choices.Lambda.map((v) => v.toString())}
+                value={value.Lambda.map((v) => v.toString())}
+                onChange={(newValue: string[]) =>
+                  onChange({
+                    ...value,
+                    Lambda: newValue.map(parseInt),
+                  })
+                }
+              />
+            </div>
+            <div>
+              <MultiSelect
+                label="Parity"
+                choices={choices.parity}
+                value={value.parity}
+                onChange={(newValue: string[]) =>
+                  onChange({
+                    ...value,
+                    parity: newValue as Array<"g" | "u">, // TODO perform check
+                  })
+                }
+              />
+            </div>
+            <div>
+              <MultiSelect
+                label="Reflection"
+                choices={choices.reflection}
+                value={value.reflection}
+                onChange={(newValue: string[]) =>
+                  onChange({
+                    ...value,
+                    reflection: newValue as Array<"+" | "-">, // TODO perform check
+                  })
+                }
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ElectronicTypeFilter = ({
   value,
   onChange,
@@ -373,6 +470,19 @@ const ElectronicTypeFilter = ({
   ) {
     return <AtomLSFilter value={value} choices={choices} onChange={onChange} />;
   }
+  if (
+    choices.type === "LinearTriatomInversionCenter" &&
+    (value === undefined || value.type === "LinearTriatomInversionCenter")
+  ) {
+    return (
+      <LinearTriatomInversionCenterFilter
+        value={value}
+        choices={choices}
+        onChange={onChange}
+      />
+    );
+  }
+
   return <div>Unknown electronic type</div>;
 };
 
@@ -494,11 +604,13 @@ const ParticleFilter = ({
         <></>
       ) : (
         <fieldset>
-          <ChargeFilter
-            choices={choices.charge}
-            value={selected.charge}
-            onChange={onChargeChange}
-          />
+          {choices.charge.length > 1 && (
+            <ChargeFilter
+              choices={choices.charge}
+              value={selected.charge}
+              onChange={onChargeChange}
+            />
+          )}
           {choices.electronic !== undefined && (
             <EletronicFilter
               value={selected.electronic}
@@ -540,7 +652,7 @@ export const StateFilter = ({
     setSelected(newSelected);
     onChange(newSelected);
   }
-
+  console.log(choices);
   return (
     <ul>
       {choices.map((s) => {
