@@ -108,7 +108,7 @@ export interface Facets {
 async function stateChoice(): Promise<StateChoice[]> {
   // TODO return choices for either r.lhs[0] or r.lhs[1]
   const stateAql = generateStateChoicesAql();
-  const cursor: ArrayCursor<StateChoice> = await db().query(aql`
+  const q = aql`
   FOR cs IN CrossSection
     FILTER cs.versionInfo.status == 'published'
     FOR r in Reaction
@@ -118,7 +118,8 @@ async function stateChoice(): Promise<StateChoice[]> {
           FOR s IN State
             FILTER s._id == c._to
             ${stateAql}
-  `);
+  `
+  const cursor: ArrayCursor<StateChoice> = await db().query(q);
   return await cursor.all();
 }
 

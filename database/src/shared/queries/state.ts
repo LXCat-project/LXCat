@@ -74,18 +74,16 @@ function generateParticleFilter(
             aql`${stateVarAql}.electronic[0].parity == ${e.parity[0]}`
           );
         }
-        if (e.vibrational !== undefined) {
-          // TODO
-          // const vFilters = e.vibrational.flatMmap(f => {
-          //   f.
-          //   const f2 = {
-          //     f.
-          //   }
-          //   return aql`electronic.vibrational == ${f2}`
-          // })
-          // filters.push(aql`${vFilters.join(' OR ')}`)
+        if (e.vibrational !== undefined && e.vibrational.length > 0) {
+          // TODO rotational
+          // TODO handle .v as string or 3 number array
+          const vFilters = e.vibrational.flatMap(f => {
+            return aql`${stateVarAql}.electronic[0].vibrational[0].v == ${f.v[0]}`
+          })
+          filters.push(aql.join(vFilters, ' OR '))
         }
       }
+      // TODO other types
     }
   }
   return aql.join(filters, " AND ");
@@ -130,7 +128,17 @@ export function generateStateChoicesAql() {
             S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].S)),
             parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
             reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].reflection)),
-            // TODO collect vibrational
+            vibrational: SORTED_UNIQUE(
+              FOR vib IN FLATTEN(FLATTEN(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[* FILTER CURRENT.vibrational].vibrational))
+                 RETURN {
+                  v: [vib.v],
+                 // rotational: (
+                          //FOR rot IN vib.rotational[*]
+                              //RETURN {J: rot.J}
+                     //)
+                 }
+          )
+            // TODO collect rotational, commented out code above is incomplete as it give duplicate vibrational items
           }
       ), (
       FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.type)
@@ -152,6 +160,8 @@ export function generateStateChoicesAql() {
             S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].S)),
             parity: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
             reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
+            // TODO vibrational
+            // TODO rotational
         }
       )
     )
