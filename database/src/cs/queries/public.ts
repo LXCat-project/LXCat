@@ -103,7 +103,6 @@ export interface Facets {
   set_name: string[];
   species1: StateChoice[];
   species2: StateChoice[];
-  tag: string[];
 }
 
 async function stateChoice(): Promise<StateChoice[]> {
@@ -131,7 +130,6 @@ export async function searchFacets(): Promise<Facets> {
     set_name: [...new Set(all.map((d) => d.isPartOf.name))],
     species1: await stateChoice(),
     species2: await stateChoice(),
-    tag: 
   };
 }
 
