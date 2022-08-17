@@ -32,8 +32,8 @@ const MultiSelect = ({
     onChange(newValue);
   };
   return (
-    <label>
-      {label}
+    <label style={{paddingLeft:5}}>
+      {label}&nbsp;
       <select multiple value={value} onChange={onMyChange}>
         {choices.map((o) => (
           <option key={o}>{o}</option>
