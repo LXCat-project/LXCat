@@ -416,6 +416,7 @@ describe("stateChoices()", () => {
               S: [0],
               parity: ["g", "u"],
               reflection: ["+"],
+              vibrational: [],
             },
           ],
         },

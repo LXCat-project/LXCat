@@ -77,10 +77,10 @@ function generateParticleFilter(
         if (e.vibrational !== undefined && e.vibrational.length > 0) {
           // TODO rotational
           // TODO handle .v as string or 3 number array
-          const vFilters = e.vibrational.flatMap(f => {
-            return aql`${stateVarAql}.electronic[0].vibrational[0].v == ${f.v[0]}`
-          })
-          filters.push(aql.join(vFilters, ' OR '))
+          const vFilters = e.vibrational.flatMap((f) => {
+            return aql`${stateVarAql}.electronic[0].vibrational[0].v == ${f.v[0]}`;
+          });
+          filters.push(aql.join(vFilters, " OR "));
         }
       }
       // TODO other types

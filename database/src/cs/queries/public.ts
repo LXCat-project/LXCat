@@ -118,7 +118,7 @@ async function stateChoice(): Promise<StateChoice[]> {
           FOR s IN State
             FILTER s._id == c._to
             ${stateAql}
-  `
+  `;
   const cursor: ArrayCursor<StateChoice> = await db().query(q);
   return await cursor.all();
 }
