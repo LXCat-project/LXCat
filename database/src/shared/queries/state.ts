@@ -45,6 +45,8 @@ export interface ParticleLessStateChoice {
   electronic?: Array<Electronic> | undefined;
 }
 
+
+
 export type StateSelected = {
   [key: string]: ParticleLessStateChoice;
 };
@@ -116,58 +118,59 @@ export function generateStateFilterAql(
  */
 export function generateStateChoicesAql() {
   return aql`
-    COLLECT particle = s.particle INTO groups
-    LET electronic = UNION(
-      (
-      // TODO for each type collect the choices
-      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.type)
-        RETURN {
-            type,
-            e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].e)),
-            Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].Lambda)),
-            S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].S)),
-            parity: FLATTEN(SORTED_UNIQUE(groups[*].s.electronic[*].parity)),
-            reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[*].reflection)),
-            vibrational: SORTED_UNIQUE(
-              FOR vib IN FLATTEN(FLATTEN(groups[* FILTER CURRENT.s.type == 'HomonuclearDiatom'].s.electronic[* FILTER CURRENT.vibrational].vibrational))
-                 RETURN {
-                  v: [vib.v],
-                 // rotational: (
-                          //FOR rot IN vib.rotational[*]
-                              //RETURN {J: rot.J}
-                     //)
-                 }
-          )
-            // TODO collect rotational, commented out code above is incomplete as it give duplicate vibrational items
-          }
-      ), (
-      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.type)
-        RETURN {
-            type,
-            term: {
-              L: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.L)),
-              S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.S)),
-              P: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.P)),
-              J: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'AtomLS'].s.electronic[*].term.J)),
-            }
-        }
-      ), (
-      FOR type IN SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.type)
-        RETURN {
-            type,
-            e: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].e)),
-            Lambda: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].Lambda)),
-            S: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].S)),
-            parity: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
-            reflection: FLATTEN(SORTED_UNIQUE(groups[* FILTER CURRENT.s.type == 'LinearTriatomInversionCenter'].s.electronic[*].parity)),
-            // TODO vibrational
-            // TODO rotational
-        }
-      )
-    )
-    RETURN MERGE({
+    COLLECT 
+      particle = s.particle, 
+      charge = s.charge, 
+      electronic = s.electronic[*].summary, 
+      vibrational = s.electronic[*].vibrational[*].summary
+    INTO group
+    RETURN { 
       particle,
-      charge: SORTED_UNIQUE(groups[*].s.charge),
-    }, LENGTH(electronic) > 0 ? {electronic} : {})
+      charge: charge,
+      electronic: FLATTEN(electronic),
+      vibrational: FLATTEN(vibrational),
+      rotational: FLATTEN(group[*].s.electronic[*].vibrational[*], 2)[*].rotational[*].summary
+    }
   `;
+}
+
+
+export interface ChoiceRow {
+  particle: string
+  charge: number
+  electronic: string[]
+  vibrational: string[]
+  rotational: string[]
+}
+
+/**
+ * Nested objects with following levels
+ * 1. particle
+ * 2. charge
+ * 3. electronic summary
+ * 4. vibrational summary
+ * 5. rotational summaries
+ * 
+ */
+type StateChoices = Record<string, Record<number, Record<string, Record<string, string[]>>>>
+
+export function groupStateChoices(rows: ChoiceRow[]) {
+  const choices: StateChoices = {}
+  rows.forEach((r) => {
+    if (!(r.particle in choices)) {
+      choices[r.particle] = {}
+    }
+    if (!(r.charge in choices[r.particle])) {
+      choices[r.particle][r.charge] = {}
+    }
+    const electronicSummary = r.electronic.join(',')
+    if (electronicSummary !== '' && !(electronicSummary in choices[r.particle][r.charge])) {
+      choices[r.particle][r.charge][electronicSummary] = {}
+    }
+    const vibrationalSummary = r.vibrational.join(',')
+    if (vibrationalSummary !== '' && !(vibrationalSummary in choices[r.particle][r.charge][electronicSummary])) {
+      choices[r.particle][r.charge][electronicSummary][vibrationalSummary] = r.rotational
+    }
+  })
+  return choices
 }

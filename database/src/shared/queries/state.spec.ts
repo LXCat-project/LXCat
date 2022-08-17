@@ -1,7 +1,7 @@
 import { aql } from "arangojs";
 import { GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
-import { beforeAll, describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect, vi } from "vitest";
 
 import {
   startDbWithUserAndCssCollections,
@@ -9,7 +9,13 @@ import {
 } from "../../css/queries/testutils";
 import { db } from "../../db";
 import { insert_state_dict } from "../queries";
-import { generateStateFilterAql, StateSelected } from "./state";
+import {
+  ChoiceRow,
+  generateStateChoicesAql,
+  generateStateFilterAql,
+  groupStateChoices,
+  StateSelected,
+} from "./state";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -76,4 +82,57 @@ describe("generateStateFilterAql()", () => {
       expect(result).toEqual(expected);
     });
   });
+});
+
+describe("generateStateChoicesAql() + groupStateChoices()", () => {
+  describe("2 simple particles with each 2 different charges", () => {
+    beforeAll(async () => {
+      const states = {
+        H2: {
+          particle: "H2",
+          charge: 0,
+        },
+        H2p: {
+          particle: "H2",
+          charge: 1,
+        },
+        N2: {
+          particle: "N2",
+          charge: 0,
+        },
+        N2p: {
+          particle: "N2",
+          charge: 1,
+        },
+      };
+      await insert_state_dict(states);
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should return nested object", async () => {
+      const choicesAql = generateStateChoicesAql();
+      const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
+        FOR s IN State
+          ${choicesAql}
+      `);
+      const choiceRows = await cursor.all();
+      const choices = groupStateChoices(choiceRows)
+      const expected = {
+        N2: {
+          0: {},
+          1: {},
+        },
+        H2: {
+          0: {},
+          1: {},
+        },
+      };
+      expect(choices).toEqual(expected);
+    });
+  });
+
+  it('', () => {
+    // TODO add complicated use case
+    expect(1).toBeFalsy()
+  })
 });
