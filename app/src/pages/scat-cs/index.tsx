@@ -80,11 +80,11 @@ function query2options(query: ParsedUrlQuery): SearchOptions {
   const species1 =
     query.species1 && !Array.isArray(query.species1)
       ? query.species1
-      : stateSelectionToSearchParam({});
+      : stateSelectionToSearchParam({particle:{}});
   const species2 =
     query.species2 && !Array.isArray(query.species2)
       ? query.species2
-      : stateSelectionToSearchParam({});
+      : stateSelectionToSearchParam({particle:{}});
   return {
     set_name: query2array(query.set_name),
     species1: stateSelectionFromSearchParam(species1),

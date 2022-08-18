@@ -1,7 +1,7 @@
 import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 
-type VibrationalChoices = {
+export type VibrationalChoices = {
   [index: string]: {
     rotational: string[];
   };
@@ -13,11 +13,13 @@ type ElectronicChoices = {
   };
 };
 
-type ParticleChoices = {
+export type ChargeChoices ={
+  electronic: ElectronicChoices;
+};
+
+export type ParticleChoices = {
   charge: {
-    [charge: number]: {
-      electronic: ElectronicChoices;
-    };
+    [charge: number]: ChargeChoices
   };
 };
 export type StateChoices = {

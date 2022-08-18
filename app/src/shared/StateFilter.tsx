@@ -1,687 +1,269 @@
 import {
-  AtomLS,
-  Electronic,
-  HomonuclearDiatom,
-  LinearTriatomInversionCenter,
-  ParticleLessStateChoice,
-  StateChoice,
-  StateSelected,
-  Vibrational,
+  ChargeChoices,
+  ParticleChoices,
+  StateChoices,
+  VibrationalChoices,
 } from "@lxcat/database/dist/shared/queries/state";
-import { ChangeEventHandler, useState } from "react";
-
-const MultiSelect = ({
-  value,
-  choices,
-  onChange,
-  label,
-}: {
-  label: string;
-  value: string[];
-  choices: string[];
-  onChange: (newValue: string[]) => void;
-}) => {
-  if (choices.length < 2) {
-    return <></>;
-  }
-  const onMyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const newValue = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    onChange(newValue);
-  };
-  return (
-    <label style={{ paddingLeft: 5 }}>
-      {label}&nbsp;
-      <select multiple value={value} onChange={onMyChange}>
-        {choices.map((o) => (
-          <option key={o}>{o}</option>
-        ))}
-      </select>
-    </label>
-  );
-};
-
-const ChargeFilter = ({
-  choices,
-  value,
-  onChange,
-}: {
-  choices: number[];
-  value: number[];
-  onChange: (newValue: number[]) => void;
-}) => {
-  const onChargeChange = (newValue: string[]) => {
-    onChange(newValue.map(parseInt));
-  };
-  if (choices.length === 1) {
-    return (
-      <label>
-        Charge
-        <input
-          type="checkbox"
-          checked={value[0] === choices[0]}
-          onChange={() => onChange(value[0] === undefined ? [choices[0]] : [])}
-        />
-        {choices[0]}
-      </label>
-    );
-  }
-  return (
-    <MultiSelect
-      label="Charge"
-      choices={choices.map((o) => o.toString())}
-      value={value.map((o) => o.toString())}
-      onChange={onChargeChange}
-    />
-  );
-};
-
-const VibrationalFilter = ({
-  choices,
-  value,
-  onChange,
-}: {
-  choices: Array<Vibrational> | undefined;
-  value: Array<Vibrational> | undefined;
-  onChange: (newValue: Array<Vibrational> | undefined) => void;
-}) => {
-  function onVibrationalChange(
-    checked: boolean,
-    index: number,
-    newValue: Vibrational
-  ) {
-    if (value === undefined) {
-      return;
-    }
-    if (checked && index === -1) {
-      onChange([...value, newValue]);
-    } else if (!checked && index !== -1) {
-      const newValues = [...value];
-      newValues.splice(index, 1);
-      onChange(newValues);
-    } else {
-      throw new Error("How did you get here?");
-    }
-  }
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={value !== undefined}
-          onChange={() => onChange(value === undefined ? [] : undefined)}
-        />
-        Vibrational
-      </label>
-      {value === undefined || choices === undefined ? (
-        <></>
-      ) : (
-        <fieldset>
-          {choices.map((c) => {
-            const vJoined = c.v.join(", ");
-            const valueIndex = value.findIndex(
-              (d) => d.v.join(", ") === vJoined
-            );
-            return (
-              <label key={vJoined}>
-                <input
-                  type="checkbox"
-                  checked={valueIndex !== -1}
-                  onChange={(e) =>
-                    onVibrationalChange(e.target.checked, valueIndex, c)
-                  }
-                />
-                v = {vJoined}
-              </label>
-            );
-          })}
-        </fieldset>
-      )}
-    </div>
-  );
-};
-
-const HomonuclearDiatomFilter = ({
-  value,
-  onChange,
-  choices,
-}: {
-  choices: HomonuclearDiatom;
-  value: HomonuclearDiatom | undefined;
-  onChange: (newValue: HomonuclearDiatom | undefined) => void;
-}) => {
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={value !== undefined}
-          onChange={() =>
-            onChange(
-              value === undefined
-                ? {
-                    type: "HomonuclearDiatom",
-                    e: [],
-                    Lambda: [],
-                    S: [],
-                    parity: [],
-                    reflection: [],
-                    vibrational: undefined,
-                  }
-                : undefined
-            )
-          }
-        />
-        HomonuclearDiatom
-      </label>
-      {value === undefined ? (
-        <></>
-      ) : (
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>
-              <MultiSelect
-                label="e"
-                choices={choices.e}
-                value={value.e}
-                onChange={(newValue: string[]) =>
-                  onChange({ ...value, e: newValue })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Lambda"
-                choices={choices.Lambda.map((v) => v.toString())}
-                value={value.Lambda.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    Lambda: newValue.map(parseInt),
-                  })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Parity"
-                choices={choices.parity}
-                value={value.parity}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    parity: newValue as Array<"g" | "u">, // TODO perform check
-                  })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Reflection"
-                choices={choices.reflection}
-                value={value.reflection}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    reflection: newValue as Array<"+" | "-">, // TODO perform check
-                  })
-                }
-              />
-            </div>
-          </div>
-          <VibrationalFilter
-            choices={choices.vibrational}
-            value={value.vibrational}
-            onChange={(newValue: Array<Vibrational> | undefined) =>
-              onChange({
-                ...value,
-                vibrational: newValue,
-              })
-            }
-          />
-        </div>
-      )}
-    </div>
-  );
-};
-
-const AtomLSFilter = ({
-  value,
-  onChange,
-  choices,
-}: {
-  choices: AtomLS;
-  value: AtomLS | undefined;
-  onChange: (newValue: AtomLS | undefined) => void;
-}) => {
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={value !== undefined}
-          onChange={() =>
-            onChange(
-              value === undefined
-                ? {
-                    type: "AtomLS",
-                    term: {
-                      L: [],
-                      S: [],
-                      P: [],
-                      J: [],
-                    },
-                  }
-                : undefined
-            )
-          }
-        />
-        AtomLS
-      </label>
-      {value === undefined ? (
-        <></>
-      ) : (
-        <div>
-          <span>Term</span>
-          <div style={{ display: "flex" }}>
-            <div>
-              <MultiSelect
-                label="L"
-                choices={choices.term.L.map((v) => v.toString())}
-                value={value.term.L.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    term: { ...value.term, L: newValue.map(parseInt) },
-                  })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="S"
-                choices={choices.term.S.map((v) => v.toString())}
-                value={value.term.S.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    term: { ...value.term, S: newValue.map(parseInt) },
-                  })
-                }
-              />
-            </div>
-            <div>
-              {/* TODO replace with 2 checkboxes as can only be -1 or 1 */}
-              <MultiSelect
-                label="P"
-                choices={choices.term.P.map((v) => v.toString())}
-                value={value.term.P.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    term: {
-                      ...value.term,
-                      P: newValue.map(parseInt) as Array<1 | -1>,
-                    },
-                  })
-                }
-              />
-            </div>
-            <div>
-              {/* TODO add Total angular specifier as title */}
-              <MultiSelect
-                label="J"
-                choices={choices.term.J.map((v) => v.toString())}
-                value={value.term.J.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    term: { ...value.term, J: newValue.map(parseInt) },
-                  })
-                }
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const LinearTriatomInversionCenterFilter = ({
-  value,
-  onChange,
-  choices,
-}: {
-  choices: LinearTriatomInversionCenter;
-  value: LinearTriatomInversionCenter | undefined;
-  onChange: (newValue: LinearTriatomInversionCenter | undefined) => void;
-}) => {
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={value !== undefined}
-          onChange={() =>
-            onChange(
-              value === undefined
-                ? {
-                    type: "LinearTriatomInversionCenter",
-                    e: [],
-                    Lambda: [],
-                    S: [],
-                    parity: [],
-                    reflection: [],
-                  }
-                : undefined
-            )
-          }
-        />
-        LinearTriatomInversionCenter
-      </label>
-      {value === undefined ? (
-        <></>
-      ) : (
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>
-              <MultiSelect
-                label="e"
-                choices={choices.e}
-                value={value.e}
-                onChange={(newValue: string[]) =>
-                  onChange({ ...value, e: newValue })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Lambda"
-                choices={choices.Lambda.map((v) => v.toString())}
-                value={value.Lambda.map((v) => v.toString())}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    Lambda: newValue.map(parseInt),
-                  })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Parity"
-                choices={choices.parity}
-                value={value.parity}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    parity: newValue as Array<"g" | "u">, // TODO perform check
-                  })
-                }
-              />
-            </div>
-            <div>
-              <MultiSelect
-                label="Reflection"
-                choices={choices.reflection}
-                value={value.reflection}
-                onChange={(newValue: string[]) =>
-                  onChange({
-                    ...value,
-                    reflection: newValue as Array<"+" | "-">, // TODO perform check
-                  })
-                }
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const ElectronicTypeFilter = ({
-  value,
-  onChange,
-  choices,
-}: {
-  choices: Electronic;
-  value: Electronic | undefined;
-  onChange: (newValue: Electronic | undefined) => void;
-}) => {
-  if (
-    choices.type === "HomonuclearDiatom" &&
-    (value === undefined || value.type === "HomonuclearDiatom")
-  ) {
-    return (
-      <HomonuclearDiatomFilter
-        value={value}
-        choices={choices}
-        onChange={onChange}
-      />
-    );
-  }
-  if (
-    choices.type === "AtomLS" &&
-    (value === undefined || value.type === "AtomLS")
-  ) {
-    return <AtomLSFilter value={value} choices={choices} onChange={onChange} />;
-  }
-  if (
-    choices.type === "LinearTriatomInversionCenter" &&
-    (value === undefined || value.type === "LinearTriatomInversionCenter")
-  ) {
-    return (
-      <LinearTriatomInversionCenterFilter
-        value={value}
-        choices={choices}
-        onChange={onChange}
-      />
-    );
-  }
-
-  return <div>Unknown electronic type</div>;
-};
-
-const EletronicFilter = ({
-  value,
-  onChange,
-  choices,
-}: {
-  choices: Array<Electronic> | undefined;
-  value: Array<Electronic> | undefined;
-  onChange: (newValue: Array<Electronic> | undefined) => void;
-}) => {
-  const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e.target.checked) {
-      onChange([]);
-    } else {
-      onChange(undefined);
-    }
-  };
-  function onTypeChange(type: string, newValue: Electronic | undefined) {
-    if (value === undefined) {
-      return;
-    }
-    const eIndex = value.findIndex((v) => v.type === type);
-    if (eIndex === -1) {
-      if (newValue === undefined) {
-        // nothing to do, type already unselected
-      } else {
-        onChange([...value, newValue]);
-      }
-    } else {
-      if (newValue === undefined) {
-        const newValues = [...value];
-        newValues.splice(eIndex, 1);
-        onChange(newValues);
-      } else {
-        const newValues = [...value];
-        newValues[eIndex] = newValue;
-        onChange(newValues);
-      }
-    }
-  }
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={value !== undefined}
-          onChange={onInputChange}
-        />
-        Electronic
-      </label>
-      {value === undefined || choices === undefined ? (
-        <></>
-      ) : (
-        <fieldset>
-          {choices.map((e) => {
-            const esel = value.find((v) => v.type === e.type);
-            return (
-              <ElectronicTypeFilter
-                key={e.type}
-                choices={e}
-                value={esel}
-                onChange={(n) => onTypeChange(e.type, n)}
-              />
-            );
-          })}
-        </fieldset>
-      )}
-    </div>
-  );
-};
-
-const ParticleFilter = ({
-  particle,
-  selected,
-  onChange,
-  choices,
-}: {
-  particle: string;
-  selected: undefined | ParticleLessStateChoice;
-  choices: ParticleLessStateChoice;
-  onChange: (newSelection: ParticleLessStateChoice | undefined) => void;
-}) => {
-  function onParticleChange() {
-    if (selected === undefined) {
-      onChange({ charge: [], electronic: undefined });
-    } else {
-      onChange(undefined);
-    }
-  }
-  const onChargeChange = (newCharges: number[]) => {
-    if (selected === undefined) {
-      return;
-    }
-    onChange({ ...selected, charge: newCharges });
-  };
-  const onElectronicChange = (newElectronic: Array<Electronic> | undefined) => {
-    if (selected === undefined) {
-      return;
-    }
-    if (newElectronic === undefined) {
-      onChange({ ...selected, electronic: undefined });
-    } else {
-      onChange({ ...selected, electronic: newElectronic });
-    }
-  };
-  return (
-    <li>
-      <label>
-        <input
-          type="checkbox"
-          checked={selected !== undefined}
-          onChange={onParticleChange}
-        />
-        {particle}
-      </label>
-      {selected === undefined ? (
-        <></>
-      ) : (
-        <fieldset>
-          {choices.charge.length > 1 && (
-            <ChargeFilter
-              choices={choices.charge}
-              value={selected.charge}
-              onChange={onChargeChange}
-            />
-          )}
-          {choices.electronic !== undefined && (
-            <EletronicFilter
-              value={selected.electronic}
-              choices={choices.electronic}
-              onChange={onElectronicChange}
-            />
-          )}
-        </fieldset>
-      )}
-    </li>
-  );
-};
-
-export interface Props {
-  choices: StateChoice[];
-  selected: StateSelected;
-  onChange: (newSelection: StateSelected) => void;
-}
-
-export const StateFilter = ({
-  choices,
-  selected: initialSelected,
-  onChange,
-}: Props) => {
-  const [selected, setSelected] = useState(initialSelected);
-
-  function onStateChange(
-    particle: string,
-    selection: ParticleLessStateChoice | undefined
-  ) {
-    let newSelected: StateSelected;
-    if (selection === undefined) {
-      const { [particle]: _particle2drop, ...inner } = selected;
-      newSelected = inner;
-    } else {
-      newSelected = { ...selected };
-      newSelected[particle] = selection;
-    }
-    setSelected(newSelected);
-    onChange(newSelected);
-  }
-  return (
-    <ul>
-      {choices.map((s) => {
-        const { particle, ...particleChoices } = s;
-        return (
-          <ParticleFilter
-            key={particle}
-            onChange={(c) => onStateChange(particle, c)}
-            particle={particle}
-            choices={particleChoices}
-            selected={selected[particle]}
-          />
-        );
-      })}
-    </ul>
-  );
-};
+import { useState } from "react";
 
 /**
  * To pass selected state in a URL search parameter it has to be made URL friendly using this method.
  */
-export function stateSelectionToSearchParam(selection: StateSelected) {
+export function stateSelectionToSearchParam(selection: StateChoices) {
   return btoa(JSON.stringify(selection));
 }
 
 /**
  * To understand the selected state in a URL search parameter it has parsed using this method.
  */
-export function stateSelectionFromSearchParam(
-  parameter: string
-): StateSelected {
+export function stateSelectionFromSearchParam(parameter: string): StateChoices {
   return JSON.parse(atob(parameter));
 }
+
+const VibrationalFilter = ({
+  label,
+  selected,
+  choices,
+}: {
+  label: string;
+  selected: { rotational: string[] };
+  choices: { rotational: string[] };
+}) => {
+  const checked = selected !== undefined;
+  const hasRotationalChoices = Object.keys(choices.rotational).length > 0;
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={checked} />
+        {label}
+      </label>
+      {checked && hasRotationalChoices ? (
+        <div>
+          <span>Rotational</span>
+          <ul>
+            {choices.rotational.map((rotationalSummary) => (
+              <label key={`${label}-${rotationalSummary}`}>
+                <input
+                  type="checkbox"
+                  checked={selected.rotational.includes(rotationalSummary)}
+                />
+                {rotationalSummary}
+              </label>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        !hasRotationalChoices && <div>No rotational</div>
+      )}
+    </li>
+  );
+};
+
+const ElectronicFilter = ({
+  label,
+  selected,
+  choices,
+}: {
+  label: string;
+  selected: { vibrational: VibrationalChoices };
+  choices: { vibrational: VibrationalChoices };
+}) => {
+  const checked = selected !== undefined;
+  const hasVibrationalChoices = Object.keys(choices.vibrational).length > 0;
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={checked} />
+        {label}
+      </label>
+      {checked && hasVibrationalChoices ? (
+        <div>
+          <span>Vibrational</span>
+          <ul>
+            {Object.entries(choices.vibrational).map(
+              ([vibrationalSummary, vibrationalChoices]) => (
+                <VibrationalFilter
+                  key={`${label}-${vibrationalSummary}`}
+                  label={vibrationalSummary}
+                  selected={selected.vibrational[vibrationalSummary]}
+                  choices={vibrationalChoices}
+                />
+              )
+            )}
+          </ul>
+        </div>
+      ) : (
+        !hasVibrationalChoices && <div>No vibrational</div>
+      )}
+    </li>
+  );
+};
+
+const ChargeFilter = ({
+  label,
+  selected,
+  choices,
+  onChange,
+}: {
+  label: string;
+  selected: ChargeChoices;
+  choices: ChargeChoices;
+  onChange: (newSelection: ChargeChoices | undefined) => void;
+}) => {
+  const checked = selected !== undefined;
+  const hasElectronicChoices = Object.keys(choices.electronic).length > 0;
+
+  function onCheckboxChange() {
+    debugger;
+    if (checked) {
+      onChange(undefined);
+    } else {
+      onChange({ electronic: {} });
+    }
+  }
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
+        {label}
+      </label>
+      {checked && hasElectronicChoices ? (
+        <div>
+          <span>Electronic</span>
+          <ul>
+            {Object.entries(choices.electronic).map(
+              ([electronicSummary, electronicChoices]) => (
+                <ElectronicFilter
+                  key={`${label}-${electronicSummary}`}
+                  label={electronicSummary}
+                  selected={selected.electronic[electronicSummary]}
+                  choices={electronicChoices}
+                />
+              )
+            )}
+          </ul>
+        </div>
+      ) : (
+        !hasElectronicChoices && <div>No electronic</div>
+      )}
+    </li>
+  );
+};
+
+const ParticleFilter = ({
+  label,
+  selected,
+  choices,
+  onChange,
+}: {
+  label: string;
+  selected: ParticleChoices;
+  choices: ParticleChoices;
+  onChange: (newSelection: ParticleChoices | undefined) => void;
+}) => {
+  const checked = selected !== undefined;
+  const hasChargeChoices = Object.keys(choices.charge).length > 0;
+
+  function onCheckboxChange() {
+    if (checked) {
+      onChange(undefined);
+    } else {
+      onChange({ charge: {} });
+    }
+  }
+
+  function onChargeChange(charge: string, newChargeSelection: ChargeChoices) {
+    const iCharge = parseInt(charge);
+
+    if (charge in selected.charge) {
+      if (newChargeSelection === undefined) {
+        const { [parseInt(charge)]: _charge2drop, ...rest } = selected.charge;
+        const newSelected = { charge: rest };
+        onChange({ charge: newSelected });
+      } else {
+        const newSelection = { ...selected.charge };
+        newSelection[iCharge] = {
+          ...selected.charge[iCharge],
+          ...newChargeSelection,
+        };
+        onChange({ charge: newSelection });
+      }
+    }
+  }
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
+        {label}
+      </label>
+      {checked && hasChargeChoices ? (
+        <div>
+          <span>Charge</span>
+
+          <ul>
+            {Object.entries(choices.charge).map(
+              ([chargeValue, chargeChoices]) => (
+                <ChargeFilter
+                  key={`${label}-${chargeValue}`}
+                  label={chargeValue}
+                  selected={selected.charge[parseInt(chargeValue)]}
+                  choices={chargeChoices}
+                  onChange={(n) => onChargeChange(chargeValue, n)}
+                />
+              )
+            )}
+          </ul>
+        </div>
+      ) : (
+        !hasChargeChoices && <div>No charge</div>
+      )}
+    </li>
+  );
+};
+
+export const StateFilter = ({
+  choices,
+  selected: initialSelected,
+  onChange,
+}: {
+  choices: StateChoices;
+  selected: StateChoices;
+  onChange: (newSelection: StateChoices) => void;
+}) => {
+  const [selected, setSelected] = useState(initialSelected);
+
+  function onParticleChange(
+    name: string,
+    newParticleSelection: ParticleChoices | undefined
+  ) {
+    let newSelected: StateChoices;
+    if (newParticleSelection === undefined) {
+      const { [name]: _particle2drop, ...inner } = selected.particle;
+      newSelected = { particle: inner };
+    } else {
+      newSelected = { particle: { ...selected.particle } };
+      newSelected.particle[name] = newParticleSelection;
+    }
+    setSelected(newSelected);
+    onChange(newSelected);
+  }
+
+  return (
+    <>
+      <span>Particle</span>
+      <ul>
+        {Object.entries(choices.particle).map(
+          ([particleName, chargeChoices]) => (
+            <ParticleFilter
+              key={particleName}
+              label={particleName}
+              selected={selected.particle[particleName]}
+              choices={chargeChoices}
+              onChange={(n) => onParticleChange(particleName, n)}
+            />
+          )
+        )}
+      </ul>
+    </>
+  );
+};

@@ -5,7 +5,7 @@ import {
   StateFilter,
   stateSelectionToSearchParam,
 } from "../shared/StateFilter";
-import { StateSelected } from "@lxcat/database/dist/shared/queries/state";
+import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -21,7 +21,7 @@ export const Filter = ({ facets, selection }: Props) => {
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
-  function onSpecies1Change(newStateSelection: StateSelected) {
+  function onSpecies1Change(newStateSelection: StateChoices) {
     router.push({
       query: {
         ...selection,
@@ -31,7 +31,7 @@ export const Filter = ({ facets, selection }: Props) => {
     });
   }
 
-  function onSpecies2Change(newStateSelection: StateSelected) {
+  function onSpecies2Change(newStateSelection: StateChoices) {
     router.push({
       query: {
         ...selection,

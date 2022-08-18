@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries/public";
-import { StateSelected } from "@lxcat/database/dist/shared/queries/state";
+import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
 import { useRouter } from "next/router";
 import {
   stateSelectionToSearchParam,
@@ -70,7 +70,7 @@ export const Filter = ({ facets, selection }: Props) => {
       (Array.isArray(s) && s.length > 0) ||
       (typeof s === "object" && Object.keys(s).length > 0)
   );
-  function onStateChange(newStateSelection: StateSelected) {
+  function onStateChange(newStateSelection: StateChoices) {
     router.push({
       query: {
         ...selection,

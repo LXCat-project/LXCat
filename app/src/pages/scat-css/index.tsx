@@ -67,7 +67,7 @@ function query2options(query: ParsedUrlQuery): FilterOptions {
   const state =
     query.state && !Array.isArray(query.state)
       ? query.state
-      : stateSelectionToSearchParam({});
+      : stateSelectionToSearchParam({particle:{}});
 
   const options: FilterOptions = {
     contributor: query2array(query.contributor),
