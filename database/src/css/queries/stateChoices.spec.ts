@@ -7,6 +7,7 @@ import {
   truncateCrossSectionSetCollections,
 } from "./testutils";
 import { stateChoices } from "./public";
+import { StateChoices } from "../../shared/queries/state";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -101,12 +102,26 @@ describe("stateChoices()", () => {
 
     it("should return state choice tree", async () => {
       const choices = await stateChoices();
-      const expected = [
-        {
-          particle: "P",
-          charge: [-3, 0, 3, 5],
+      const expected: StateChoices = {
+        particle: {
+          P: {
+            charge: {
+              "-3": {
+                electronic: {},
+              },
+              0: {
+                electronic: {},
+              },
+              3: {
+                electronic: {},
+              },
+              5: {
+                electronic: {},
+              },
+            },
+          },
         },
-      ];
+      };
       expect(choices).toEqual(expected);
     });
   });
@@ -201,16 +216,30 @@ describe("stateChoices()", () => {
 
     it("should return state choice tree", async () => {
       const choices = await stateChoices();
-      const expected = [
-        {
-          particle: "H2",
-          charge: [0, 1],
+      const expected: StateChoices = {
+        particle: {
+          H2: {
+            charge: {
+              0: {
+                electronic: {},
+              },
+              1: {
+                electronic: {},
+              },
+            },
+          },
+          N2: {
+            charge: {
+              0: {
+                electronic: {},
+              },
+              1: {
+                electronic: {},
+              },
+            },
+          },
         },
-        {
-          particle: "N2",
-          charge: [0, 1],
-        },
-      ];
+      };
       expect(choices).toEqual(expected);
     });
   });
@@ -302,16 +331,25 @@ describe("stateChoices()", () => {
 
     it("should return state choice tree without electron", async () => {
       const choices = await stateChoices();
-      const expected = [
-        {
-          particle: "P",
-          charge: [0],
-        },
-        {
-          particle: "S",
-          charge: [0],
-        },
-      ];
+      const expected: StateChoices = {
+        particle: {
+          P: {
+            charge: {
+              0: {
+                electronic: {}
+              }
+            }
+          },
+          S: {
+            charge: {
+              0: {
+                electronic: {}
+              }
+            }
+          }
+
+        }
+      }
       expect(choices).toEqual(expected);
     });
   });
@@ -404,23 +442,24 @@ describe("stateChoices()", () => {
 
     it("should return state choice tree", async () => {
       const choices = await stateChoices();
-      const expected = [
-        {
-          particle: "N2",
-          charge: [0],
-          electronic: [
-            {
-              type: "HomonuclearDiatom",
-              e: ["Z"],
-              Lambda: [0],
-              S: [0],
-              parity: ["g", "u"],
-              reflection: ["+"],
-              vibrational: [],
-            },
-          ],
-        },
-      ];
+      const expected: StateChoices = {
+        particle: {
+          N2: {
+            charge: {
+              0: {
+                electronic: {
+                  'Z^1S_g^+': {
+                    vibrational: {}
+                  },
+                  'Z^1S_u^+': {
+                    vibrational: {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
       expect(choices).toEqual(expected);
     });
   });
@@ -528,23 +567,24 @@ describe("stateChoices()", () => {
 
     it("should return state choice tree", async () => {
       const choices = await stateChoices();
-      const expected = [
-        {
-          particle: "Ar",
-          charge: [0],
-          electronic: [
-            {
-              type: "AtomLS",
-              term: {
-                L: [0, 1],
-                S: [0, 0.5],
-                P: [-1, 1],
-                J: [0, 1.5],
-              },
-            },
-          ],
-        },
-      ];
+      const expected: StateChoices = {
+        particle: {
+          Ar: {
+            charge: {
+              0: {
+                electronic: {
+                  '^1S_0': {
+                    vibrational: {}
+                  },
+                  '^2P^o_3/2': {
+                    vibrational: {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
       expect(choices).toEqual(expected);
     });
   });

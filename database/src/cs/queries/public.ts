@@ -2,10 +2,11 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import {
+  ChoiceRow,
   generateStateChoicesAql,
   generateStateFilterAql,
-  StateChoice,
-  StateSelected,
+  groupStateChoices,
+  StateChoices,
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
@@ -101,11 +102,11 @@ export async function byId(id: string) {
 
 export interface Facets {
   set_name: string[];
-  species1: StateChoice[];
-  species2: StateChoice[];
+  species1: StateChoices;
+  species2: StateChoices;
 }
 
-async function stateChoice(): Promise<StateChoice[]> {
+async function stateChoice(): Promise<StateChoices> {
   // TODO return choices for either r.lhs[0] or r.lhs[1]
   const stateAql = generateStateChoicesAql();
   const q = aql`
@@ -119,8 +120,9 @@ async function stateChoice(): Promise<StateChoice[]> {
             FILTER s._id == c._to
             ${stateAql}
   `;
-  const cursor: ArrayCursor<StateChoice> = await db().query(q);
-  return await cursor.all();
+  const cursor: ArrayCursor<ChoiceRow> = await db().query(q);
+  const rows = await cursor.all();
+  return groupStateChoices(rows)
 }
 
 export async function searchFacets(): Promise<Facets> {
@@ -135,8 +137,8 @@ export async function searchFacets(): Promise<Facets> {
 
 export interface SearchOptions {
   set_name: string[];
-  species1: StateSelected;
-  species2: StateSelected;
+  species1: StateChoices;
+  species2: StateChoices;
 }
 
 export async function search(options: SearchOptions, paging: PagingOptions) {

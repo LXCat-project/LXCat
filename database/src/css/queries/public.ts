@@ -4,16 +4,17 @@ import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
 import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
 import {
-  StateSelected,
   generateStateFilterAql,
-  StateChoice,
+  StateChoices,
   generateStateChoicesAql,
+  groupStateChoices,
+  ChoiceRow,
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 
 export interface FilterOptions {
   contributor: string[];
-  state: StateSelected;
+  state: StateChoices;
   reversible?: boolean; // Not set or undefined means both reverisble and irreversible reactions should be included
   tag: string[];
 }
@@ -105,7 +106,7 @@ export async function search(
 
 export interface Facets {
   contributor: string[];
-  state: StateChoice[];
+  state: StateChoices;
 }
 
 export async function searchFacets(): Promise<Facets> {
@@ -125,9 +126,9 @@ async function searchContributors() {
   return await cursor.all();
 }
 
-export async function stateChoices(): Promise<StateChoice[]> {
+export async function stateChoices(): Promise<StateChoices> {
   const stateAql = generateStateChoicesAql();
-  const cursor: ArrayCursor<StateChoice> = await db().query(aql`
+  const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
         FOR p IN IsPartOf
@@ -144,7 +145,8 @@ export async function stateChoices(): Promise<StateChoice[]> {
                             ${stateAql}
     `);
   // TODO when there is one choice then there is no choices and choice should be removed
-  return await cursor.all();
+  const rows = await cursor.all();
+  return groupStateChoices(rows)
 }
 
 export async function byId(id: string) {
