@@ -1,94 +1,129 @@
 import { aql } from "arangojs";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 
-export interface Vibrational {
-  v: number[];
-}
-
-export interface HomonuclearDiatom {
-  type: "HomonuclearDiatom";
-  Lambda: number[];
-  S: number[];
-  e: string[];
-  parity: Array<"g" | "u">;
-  reflection: Array<"-" | "+">;
-  vibrational: Array<Vibrational> | undefined;
-}
-
-export interface AtomLsTerm {
-  L: number[];
-  S: number[];
-  P: Array<1 | -1>;
-  J: number[];
-}
-
-export interface AtomLS {
-  type: "AtomLS";
-  term: AtomLsTerm;
-}
-
-export interface LinearTriatomInversionCenter {
-  type: "LinearTriatomInversionCenter";
-  e: string[];
-  Lambda: number[];
-  S: number[];
-  parity: Array<"g" | "u">;
-  reflection: Array<"-" | "+">; // TODO make optional
-}
-
-export type Electronic =
-  | HomonuclearDiatom
-  | AtomLS
-  | LinearTriatomInversionCenter;
-
-export interface ParticleLessStateChoice {
-  charge: number[];
-  electronic?: Array<Electronic> | undefined;
-}
-
-
-
-export type StateSelected = {
-  [key: string]: ParticleLessStateChoice;
+type VibrationalChoices = {
+  [index: string]: {
+    rotational: string[];
+  };
 };
 
-export interface StateChoice extends ParticleLessStateChoice {
-  particle: string;
-}
+type ElectronicChoices = {
+  [index: string]: {
+    vibrational: VibrationalChoices;
+  };
+};
+
+type ParticleChoices = {
+  charge: {
+    [charge: number]: {
+      electronic: ElectronicChoices;
+    };
+  };
+};
+export type StateChoices = {
+  particle: {
+    [index: string]: ParticleChoices;
+  };
+};
 
 function generateParticleFilter(
   particle: string,
-  selection: ParticleLessStateChoice,
+  selection: ParticleChoices,
   stateVarName: string
 ) {
   const stateVarAql = aql.literal(stateVarName);
   const filters = [aql`${stateVarAql}.particle == ${particle}`];
-  if (selection.charge.length == 1) {
-    // TODO length > 0 with ORs
-    filters.push(aql`${stateVarAql}.charge == ${selection.charge[0]}`);
-  }
-  if (selection.electronic !== undefined) {
-    if (selection.electronic.length === 1) {
-      const e = selection.electronic[0];
-      if (e.type === "HomonuclearDiatom") {
-        filters.push(aql`${stateVarAql}.type == 'HomonuclearDiatom'`);
-        if (e.parity.length === 1) {
-          filters.push(
-            aql`${stateVarAql}.electronic[0].parity == ${e.parity[0]}`
-          );
-        }
-        if (e.vibrational !== undefined && e.vibrational.length > 0) {
-          // TODO rotational
-          // TODO handle .v as string or 3 number array
-          const vFilters = e.vibrational.flatMap((f) => {
-            return aql`${stateVarAql}.electronic[0].vibrational[0].v == ${f.v[0]}`;
-          });
-          filters.push(aql.join(vFilters, " OR "));
-        }
-      }
-      // TODO other types
+  Object.entries(selection.charge).forEach(([charge, { electronic }]) => {
+    const iCharge = parseInt(charge);
+    filters.push(aql`${stateVarAql}.charge == ${iCharge}`);
+    const electronicFilters = generateElectronicFilter(electronic, stateVarAql);
+    if (electronicFilters.length > 0) {
+      filters.push(aql.join(electronicFilters, " OR "));
     }
-  }
+  });
   return aql.join(filters, " AND ");
+}
+
+function generateElectronicFilter(
+  electronic: ElectronicChoices,
+  stateVarAql: AqlLiteral,
+  electronicVarName = "se"
+) {
+  const electronicVarAql = aql.literal(electronicVarName);
+  return Object.entries(electronic).map(
+    ([electronicSummary, { vibrational }]) => {
+      const electronicIsCompound = electronicSummary.includes("|");
+      // TODO handle compound aka H2{<something>|<something else>}
+
+      const electronicSubFilters = [
+        aql`${electronicVarAql}.summary == ${electronicSummary}`,
+      ];
+
+      const vibrationalFilters = generateVibratonalFilter(
+        vibrational,
+        electronicVarAql
+      );
+      if (vibrationalFilters.length > 0) {
+        electronicSubFilters.push(
+          aql`( ${aql.join(vibrationalFilters, " OR ")} )`
+        );
+      }
+
+      return aql`LENGTH(
+          FILTER NOT_NULL(${stateVarAql}.electronic)
+          FOR ${electronicVarAql} IN ${stateVarAql}.electronic
+            FILTER ${aql.join(electronicSubFilters, " AND ")}
+            RETURN 1
+        ) > 0`;
+    }
+  );
+}
+
+function generateVibratonalFilter(
+  vibrational: VibrationalChoices,
+  electronicVarAql: AqlLiteral,
+  vibrationalVarName = "sv",
+  rotationalVarName = "sr"
+) {
+  const vibrationalVarAql = aql.literal(vibrationalVarName);
+  const rotationalVarAql = aql.literal(rotationalVarName);
+  return Object.entries(vibrational).map(
+    ([vibrationalSummary, { rotational }]) => {
+      const vibrationalIsCompound = vibrationalSummary.includes("|");
+      // TODO handle compound vibrational aka v=1|2
+
+      const vibrationalSubFilters = [
+        aql`${vibrationalVarAql}.summary == ${vibrationalSummary}`,
+      ];
+
+      const rotationalFilters: GeneratedAqlQuery[] = [];
+      rotational.forEach((rotationalSummary) => {
+        const RotationalIsCompound = rotationalSummary.includes("|");
+        // TODO handle compound vibrational aka J=1|2
+
+        rotationalFilters.push(aql`
+                LENGTH(
+                  FILTER NOT_NULL(${vibrationalVarAql}.rotational)
+                  FOR ${rotationalVarAql} IN ${vibrationalVarAql}.rotational
+                    FILTER ${rotationalVarAql}.summary == ${rotationalSummary}
+                    RETURN 1
+                ) > 0
+              `);
+      });
+      if (rotationalFilters.length > 0) {
+        vibrationalSubFilters.push(
+          aql`( ${aql.join(rotationalFilters, " OR ")} )`
+        );
+      }
+
+      return aql`LENGTH(
+            FILTER NOT_NULL(${electronicVarAql}.vibrational)
+            FOR ${vibrationalVarAql} IN ${electronicVarAql}.vibrational
+              FILTER ${aql.join(vibrationalSubFilters, " AND ")}
+              RETURN 1
+          ) > 0`;
+    }
+  );
 }
 
 /**
@@ -97,15 +132,17 @@ function generateParticleFilter(
  * Expects aql variable called `s` which is a item from the State collection.
  * Use `stateVarName` argument to change from `s` to something else.
  *
+ * Internally uses aql variable names: 'se', 'sv', 'sr'.
+ * Do not use those variable names in outer query.
  */
 export function generateStateFilterAql(
-  selection: StateSelected,
+  selection: StateChoices,
   stateVarName = "s"
 ) {
-  if (Object.keys(selection).length === 0) {
+  if (Object.keys(selection.particle).length === 0) {
     return aql`true`;
   }
-  const particleFilters = Object.entries(selection).map(([p, s]) =>
+  const particleFilters = Object.entries(selection.particle).map(([p, s]) =>
     generateParticleFilter(p, s, stateVarName)
   );
   return aql.join(particleFilters, " OR ");
@@ -134,43 +171,42 @@ export function generateStateChoicesAql() {
   `;
 }
 
-
 export interface ChoiceRow {
-  particle: string
-  charge: number
-  electronic: string[]
-  vibrational: string[]
-  rotational: string[]
+  particle: string;
+  charge: number;
+  electronic: string[];
+  vibrational: string[];
+  rotational: string[][];
 }
 
-/**
- * Nested objects with following levels
- * 1. particle
- * 2. charge
- * 3. electronic summary
- * 4. vibrational summary
- * 5. rotational summaries
- * 
- */
-type StateChoices = Record<string, Record<number, Record<string, Record<string, string[]>>>>
-
 export function groupStateChoices(rows: ChoiceRow[]) {
-  const choices: StateChoices = {}
+  const choices: StateChoices = { particle: {} };
+  const pc = choices.particle;
   rows.forEach((r) => {
-    if (!(r.particle in choices)) {
-      choices[r.particle] = {}
+    if (!(r.particle in pc)) {
+      pc[r.particle] = { charge: {} };
     }
-    if (!(r.charge in choices[r.particle])) {
-      choices[r.particle][r.charge] = {}
+    const cc = pc[r.particle].charge;
+    if (!(r.charge in cc)) {
+      cc[r.charge] = { electronic: {} };
     }
-    const electronicSummary = r.electronic.join(',')
-    if (electronicSummary !== '' && !(electronicSummary in choices[r.particle][r.charge])) {
-      choices[r.particle][r.charge][electronicSummary] = {}
+    const ec = cc[r.charge].electronic;
+
+    const electronicSummary = r.electronic.join("|");
+    if (electronicSummary !== "") {
+      if (!(electronicSummary in ec)) {
+        ec[electronicSummary] = { vibrational: {} };
+      }
+
+      const vc = ec[electronicSummary].vibrational;
+      const vibrationalSummary = r.vibrational.join("|");
+      if (vibrationalSummary !== "" && !(vibrationalSummary in vc)) {
+        const rots = r.rotational
+          .filter((d) => d.length > 0)
+          .map((d) => d.join("|"));
+        vc[vibrationalSummary] = { rotational: rots };
+      }
     }
-    const vibrationalSummary = r.vibrational.join(',')
-    if (vibrationalSummary !== '' && !(vibrationalSummary in choices[r.particle][r.charge][electronicSummary])) {
-      choices[r.particle][r.charge][electronicSummary][vibrationalSummary] = r.rotational
-    }
-  })
-  return choices
+  });
+  return choices;
 }
