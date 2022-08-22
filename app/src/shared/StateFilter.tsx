@@ -4,7 +4,7 @@ import {
   StateChoices,
   VibrationalChoices,
 } from "@lxcat/database/dist/shared/queries/state";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * To pass selected state in a URL search parameter it has to be made URL friendly using this method.
@@ -322,6 +322,9 @@ export const StateFilter = ({
   onChange: (newSelection: StateChoices) => void;
 }) => {
   const [selected, setSelected] = useState(initialSelected);
+  useEffect(() => {
+    setSelected(initialSelected)
+  }, [initialSelected])
 
   function onParticleChange(
     name: string,
