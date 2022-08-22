@@ -13,13 +13,13 @@ type ElectronicChoices = {
   };
 };
 
-export type ChargeChoices ={
+export type ChargeChoices = {
   electronic: ElectronicChoices;
 };
 
 export type ParticleChoices = {
   charge: {
-    [charge: number]: ChargeChoices
+    [charge: number]: ChargeChoices;
   };
 };
 export type StateChoices = {

@@ -146,7 +146,7 @@ export async function stateChoices(): Promise<StateChoices> {
     `);
   // TODO when there is one choice then there is no choices and choice should be removed
   const rows = await cursor.all();
-  return groupStateChoices(rows)
+  return groupStateChoices(rows);
 }
 
 export async function byId(id: string) {

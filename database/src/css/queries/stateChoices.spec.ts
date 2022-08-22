@@ -336,20 +336,19 @@ describe("stateChoices()", () => {
           P: {
             charge: {
               0: {
-                electronic: {}
-              }
-            }
+                electronic: {},
+              },
+            },
           },
           S: {
             charge: {
               0: {
-                electronic: {}
-              }
-            }
-          }
-
-        }
-      }
+                electronic: {},
+              },
+            },
+          },
+        },
+      };
       expect(choices).toEqual(expected);
     });
   });
@@ -448,18 +447,18 @@ describe("stateChoices()", () => {
             charge: {
               0: {
                 electronic: {
-                  'Z^1S_g^+': {
-                    vibrational: {}
+                  "Z^1S_g^+": {
+                    vibrational: {},
                   },
-                  'Z^1S_u^+': {
-                    vibrational: {}
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                  "Z^1S_u^+": {
+                    vibrational: {},
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       expect(choices).toEqual(expected);
     });
   });
@@ -573,18 +572,18 @@ describe("stateChoices()", () => {
             charge: {
               0: {
                 electronic: {
-                  '^1S_0': {
-                    vibrational: {}
+                  "^1S_0": {
+                    vibrational: {},
                   },
-                  '^2P^o_3/2': {
-                    vibrational: {}
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                  "^2P^o_3/2": {
+                    vibrational: {},
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
       expect(choices).toEqual(expected);
     });
   });

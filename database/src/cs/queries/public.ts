@@ -122,7 +122,7 @@ async function stateChoice(): Promise<StateChoices> {
   `;
   const cursor: ArrayCursor<ChoiceRow> = await db().query(q);
   const rows = await cursor.all();
-  return groupStateChoices(rows)
+  return groupStateChoices(rows);
 }
 
 export async function searchFacets(): Promise<Facets> {

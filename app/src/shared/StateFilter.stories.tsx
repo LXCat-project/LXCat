@@ -49,7 +49,7 @@ StateWithRotational.args = {
               "I^1P_g": {
                 vibrational: {
                   "0": {
-                    rotational: ["1"],
+                    rotational: ["1", "2"],
                   },
                 },
               },
@@ -95,7 +95,7 @@ SomeIons.args = {
           0: {
             electronic: {},
           },
-          '-2': {
+          "-2": {
             electronic: {},
           },
           2: {
@@ -112,5 +112,4 @@ SomeIons.args = {
     },
   },
 };
-SomeIons.args.selected = SomeIons.args.choices
-
+SomeIons.args.selected = SomeIons.args.choices;

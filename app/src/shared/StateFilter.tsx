@@ -24,17 +24,40 @@ const VibrationalFilter = ({
   label,
   selected,
   choices,
+  onChange,
 }: {
   label: string;
   selected: { rotational: string[] };
   choices: { rotational: string[] };
+  onChange: (newSelection: { rotational: string[] } | undefined) => void;
 }) => {
   const checked = selected !== undefined;
   const hasRotationalChoices = Object.keys(choices.rotational).length > 0;
+
+  function onCheckboxChange() {
+    if (checked) {
+      onChange(undefined);
+    } else {
+      onChange({ rotational: [] });
+    }
+  }
+
+  function onRotationalChange(rotationalSummary: string) {
+    if (selected.rotational.includes(rotationalSummary)) {
+      const index = selected.rotational.indexOf(rotationalSummary);
+      const newSelection = [...selected.rotational];
+      newSelection.splice(index, 1);
+      onChange({ rotational: newSelection });
+    } else {
+      const newSelection = [...selected.rotational, rotationalSummary];
+      onChange({ rotational: newSelection });
+    }
+  }
+
   return (
     <li>
       <label>
-        <input type="checkbox" checked={checked} />
+        <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         {label}
       </label>
       {checked && hasRotationalChoices ? (
@@ -46,6 +69,7 @@ const VibrationalFilter = ({
                 <input
                   type="checkbox"
                   checked={selected.rotational.includes(rotationalSummary)}
+                  onChange={() => onRotationalChange(rotationalSummary)}
                 />
                 {rotationalSummary}
               </label>
@@ -63,17 +87,54 @@ const ElectronicFilter = ({
   label,
   selected,
   choices,
+  onChange,
 }: {
   label: string;
   selected: { vibrational: VibrationalChoices };
   choices: { vibrational: VibrationalChoices };
+  onChange: (
+    newSelection: { vibrational: VibrationalChoices } | undefined
+  ) => void;
 }) => {
   const checked = selected !== undefined;
   const hasVibrationalChoices = Object.keys(choices.vibrational).length > 0;
+
+  function onCheckboxChange() {
+    if (checked) {
+      onChange(undefined);
+    } else {
+      onChange({ vibrational: {} });
+    }
+  }
+
+  function onVibrationalChange(
+    vibrationalSummary: string,
+    newVibratonalSelection: { rotational: string[] } | undefined
+  ) {
+    if (vibrationalSummary in selected.vibrational) {
+      if (newVibratonalSelection === undefined) {
+        const { [vibrationalSummary]: _vibrational2drop, ...newSelection } =
+          selected.vibrational;
+        onChange({ vibrational: newSelection });
+      } else {
+        const newSelection = { ...selected.vibrational };
+        newSelection[vibrationalSummary] = {
+          ...selected.vibrational[vibrationalSummary],
+          ...newVibratonalSelection,
+        };
+        onChange({ vibrational: newSelection });
+      }
+    } else {
+      const newSelection = { ...selected.vibrational };
+      newSelection[vibrationalSummary] = { rotational: [] };
+      onChange({ vibrational: newSelection });
+    }
+  }
+
   return (
     <li>
       <label>
-        <input type="checkbox" checked={checked} />
+        <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         {label}
       </label>
       {checked && hasVibrationalChoices ? (
@@ -87,6 +148,7 @@ const ElectronicFilter = ({
                   label={vibrationalSummary}
                   selected={selected.vibrational[vibrationalSummary]}
                   choices={vibrationalChoices}
+                  onChange={(n) => onVibrationalChange(vibrationalSummary, n)}
                 />
               )
             )}
@@ -114,13 +176,37 @@ const ChargeFilter = ({
   const hasElectronicChoices = Object.keys(choices.electronic).length > 0;
 
   function onCheckboxChange() {
-    debugger;
     if (checked) {
       onChange(undefined);
     } else {
       onChange({ electronic: {} });
     }
   }
+
+  function onElectonicChange(
+    electronicSummary: string,
+    newElectronicSelection: { vibrational: VibrationalChoices } | undefined
+  ) {
+    if (electronicSummary in selected.electronic) {
+      if (newElectronicSelection === undefined) {
+        const { [electronicSummary]: _electronic2drop, ...rest } =
+          selected.electronic;
+        onChange({ electronic: rest });
+      } else {
+        const newSelection = { ...selected.electronic };
+        newSelection[electronicSummary] = {
+          ...selected.electronic[electronicSummary],
+          ...newElectronicSelection,
+        };
+        onChange({ electronic: newSelection });
+      }
+    } else {
+      const newSelection = { ...selected.electronic };
+      newSelection[electronicSummary] = { vibrational: {} };
+      onChange({ electronic: newSelection });
+    }
+  }
+
   return (
     <li>
       <label>
@@ -138,6 +224,7 @@ const ChargeFilter = ({
                   label={electronicSummary}
                   selected={selected.electronic[electronicSummary]}
                   choices={electronicChoices}
+                  onChange={(n) => onElectonicChange(electronicSummary, n)}
                 />
               )
             )}
@@ -175,11 +262,10 @@ const ParticleFilter = ({
   function onChargeChange(charge: string, newChargeSelection: ChargeChoices) {
     const iCharge = parseInt(charge);
 
-    if (charge in selected.charge) {
+    if (iCharge in selected.charge) {
       if (newChargeSelection === undefined) {
         const { [parseInt(charge)]: _charge2drop, ...rest } = selected.charge;
-        const newSelected = { charge: rest };
-        onChange({ charge: newSelected });
+        onChange({ charge: rest });
       } else {
         const newSelection = { ...selected.charge };
         newSelection[iCharge] = {
@@ -188,8 +274,13 @@ const ParticleFilter = ({
         };
         onChange({ charge: newSelection });
       }
+    } else {
+      const newSelection = { ...selected.charge };
+      newSelection[iCharge] = { electronic: {} };
+      onChange({ charge: newSelection });
     }
   }
+  // TODO render positive charge with + character
   return (
     <li>
       <label>
