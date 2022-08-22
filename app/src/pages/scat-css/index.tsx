@@ -14,7 +14,7 @@ import {
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
 import { Layout } from "../../shared/Layout";
-import { query2array, query2boolean } from "../../shared/query2array";
+import { query2array } from "../../shared/query2array";
 import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
