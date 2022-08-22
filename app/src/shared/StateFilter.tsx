@@ -24,7 +24,7 @@ const ulStyle = {
   marginBlockStart: 0,
   marginBlockEnd: 0,
   listStyleType: "none",
-  paddingInlineStart: 20,
+  paddingInlineStart: '1.5rem',
 };
 
 const VibrationalFilter = ({
