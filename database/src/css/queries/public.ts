@@ -15,7 +15,6 @@ import { PagingOptions } from "../../shared/types/search";
 export interface FilterOptions {
   contributor: string[];
   state: StateChoices;
-  reversible?: boolean; // Not set or undefined means both reverisble and irreversible reactions should be included
   tag: string[];
 }
 
@@ -41,15 +40,10 @@ export async function search(
     `;
   }
   const hasFilterOnConsumedStates = Object.keys(filter.state).length > 0;
-  const hasFilterOnReversible = filter.reversible !== undefined;
   const hasFilterOnTag = filter.tag.length > 0;
-  const hasFilterOnRection =
-    hasFilterOnConsumedStates || hasFilterOnReversible || hasFilterOnTag;
+  const hasFilterOnRection = hasFilterOnConsumedStates || hasFilterOnTag;
   let reactionAql = aql``;
   if (hasFilterOnRection) {
-    const reversibleAql = hasFilterOnReversible
-      ? aql`FILTER r.reversible == ${filter.reversible}`
-      : aql``;
     const typeTagAql = hasFilterOnTag
       ? aql`FILTER ${filter.tag} ALL IN r.type_tags`
       : aql``;
@@ -75,7 +69,6 @@ export async function search(
             FILTER cs._id == m._from
             FOR r in Reaction
               FILTER r._id == cs.reaction
-              ${reversibleAql}
               ${typeTagAql}
               ${stateAql}
       )

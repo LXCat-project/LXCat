@@ -259,7 +259,7 @@ const ParticleFilter = ({
     }
   }
 
-  function onChargeChange(charge: string, newChargeSelection: ChargeChoices) {
+  function onChargeChange(charge: string, newChargeSelection: ChargeChoices | undefined) {
     const iCharge = parseInt(charge);
 
     if (iCharge in selected.charge) {
@@ -323,8 +323,8 @@ export const StateFilter = ({
 }) => {
   const [selected, setSelected] = useState(initialSelected);
   useEffect(() => {
-    setSelected(initialSelected)
-  }, [initialSelected])
+    setSelected(initialSelected);
+  }, [initialSelected]);
 
   function onParticleChange(
     name: string,

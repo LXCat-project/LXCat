@@ -74,9 +74,5 @@ function query2options(query: ParsedUrlQuery): FilterOptions {
     state: stateSelectionFromSearchParam(state),
     tag: query2array(query.tag),
   };
-  const reversible = query2boolean(query.reversible);
-  if (reversible !== undefined) {
-    options.reversible = reversible;
-  }
   return options;
 }

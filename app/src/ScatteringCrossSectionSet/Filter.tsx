@@ -7,60 +7,12 @@ import {
   stateSelectionToSearchParam,
   StateFilter,
 } from "../shared/StateFilter";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   facets: Facets;
   selection: FilterOptions;
 }
-
-const ReactionDirectionFilter = ({
-  selection,
-  path,
-}: {
-  selection: any;
-  path: string;
-}) => {
-  const reversibleChecked = selection.reversible === true;
-  const irreversibleChecked = selection.reversible === false;
-  const iquery = {
-    ...selection,
-    reversible: irreversibleChecked ? undefined : false,
-  };
-  const rquery = {
-    ...selection,
-    reversible: reversibleChecked ? undefined : true,
-  };
-  return (
-    <div>
-      <Link
-        href={{
-          pathname: path,
-          query: iquery,
-        }}
-      >
-        <a>
-          <label>
-            <input type="checkbox" readOnly checked={irreversibleChecked} />
-            Irreversible
-          </label>
-        </a>
-      </Link>
-      <Link
-        href={{
-          pathname: path,
-          query: rquery,
-        }}
-      >
-        <a>
-          <label>
-            <input type="checkbox" readOnly checked={reversibleChecked} />
-            Reversible
-          </label>
-        </a>
-      </Link>
-    </div>
-  );
-};
 
 export const Filter = ({ facets, selection }: Props) => {
   const router = useRouter();
@@ -105,23 +57,10 @@ export const Filter = ({ facets, selection }: Props) => {
           />
         </fieldset>
         <fieldset>
-          <legend>Reaction</legend>
-          <h4>Direction</h4>
-          <ReactionDirectionFilter
-            path="/scat-css"
-            selection={selectionAsSearchParam}
-          />
-          <h4>Type tags</h4>
+          <legend>Reaction type</legend>
           <CheckBoxGroup
-            facet={[
-              "Elastic",
-              "Effective",
-              "Electronic",
-              "Vibrational",
-              "Rotational",
-              "Attachment",
-              "Ionization",
-            ]}
+            // TODO order type tags alphabetically?
+            facet={Object.values(ReactionTypeTag)}
             selection={selectionAsSearchParam}
             selectionKey="tag"
             path="/scat-css"
