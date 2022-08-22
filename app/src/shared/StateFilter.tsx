@@ -20,6 +20,13 @@ export function stateSelectionFromSearchParam(parameter: string): StateChoices {
   return JSON.parse(atob(parameter));
 }
 
+const ulStyle = {
+  marginBlockStart: 0,
+  marginBlockEnd: 0,
+  listStyleType: "none",
+  paddingInlineStart: 20,
+};
+
 const VibrationalFilter = ({
   label,
   selected,
@@ -61,24 +68,20 @@ const VibrationalFilter = ({
         {label}
       </label>
       {checked && hasRotationalChoices ? (
-        <div>
-          <span>Rotational</span>
-          <ul>
-            {choices.rotational.map((rotationalSummary) => (
-              <label key={`${label}-${rotationalSummary}`}>
-                <input
-                  type="checkbox"
-                  checked={selected.rotational.includes(rotationalSummary)}
-                  onChange={() => onRotationalChange(rotationalSummary)}
-                />
-                {rotationalSummary}
-              </label>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        !hasRotationalChoices && <div>No rotational</div>
-      )}
+        <ul style={ulStyle}>
+          <li>Rotational</li>
+          {choices.rotational.map((rotationalSummary) => (
+            <label key={`${label}-${rotationalSummary}`}>
+              <input
+                type="checkbox"
+                checked={selected.rotational.includes(rotationalSummary)}
+                onChange={() => onRotationalChange(rotationalSummary)}
+              />
+              {rotationalSummary}
+            </label>
+          ))}
+        </ul>
+      ) : <></>}
     </li>
   );
 };
@@ -138,25 +141,21 @@ const ElectronicFilter = ({
         {label}
       </label>
       {checked && hasVibrationalChoices ? (
-        <div>
-          <span>Vibrational</span>
-          <ul>
-            {Object.entries(choices.vibrational).map(
-              ([vibrationalSummary, vibrationalChoices]) => (
-                <VibrationalFilter
-                  key={`${label}-${vibrationalSummary}`}
-                  label={vibrationalSummary}
-                  selected={selected.vibrational[vibrationalSummary]}
-                  choices={vibrationalChoices}
-                  onChange={(n) => onVibrationalChange(vibrationalSummary, n)}
-                />
-              )
-            )}
-          </ul>
-        </div>
-      ) : (
-        !hasVibrationalChoices && <div>No vibrational</div>
-      )}
+        <ul style={ulStyle}>
+          <li>Vibrational</li>
+          {Object.entries(choices.vibrational).map(
+            ([vibrationalSummary, vibrationalChoices]) => (
+              <VibrationalFilter
+                key={`${label}-${vibrationalSummary}`}
+                label={vibrationalSummary}
+                selected={selected.vibrational[vibrationalSummary]}
+                choices={vibrationalChoices}
+                onChange={(n) => onVibrationalChange(vibrationalSummary, n)}
+              />
+            )
+          )}
+        </ul>
+      ) : <></>}
     </li>
   );
 };
@@ -214,25 +213,21 @@ const ChargeFilter = ({
         {label}
       </label>
       {checked && hasElectronicChoices ? (
-        <div>
-          <span>Electronic</span>
-          <ul>
-            {Object.entries(choices.electronic).map(
-              ([electronicSummary, electronicChoices]) => (
-                <ElectronicFilter
-                  key={`${label}-${electronicSummary}`}
-                  label={electronicSummary}
-                  selected={selected.electronic[electronicSummary]}
-                  choices={electronicChoices}
-                  onChange={(n) => onElectonicChange(electronicSummary, n)}
-                />
-              )
-            )}
-          </ul>
-        </div>
-      ) : (
-        !hasElectronicChoices && <div>No electronic</div>
-      )}
+        <ul style={ulStyle}>
+          <li>Electronic</li>
+          {Object.entries(choices.electronic).map(
+            ([electronicSummary, electronicChoices]) => (
+              <ElectronicFilter
+                key={`${label}-${electronicSummary}`}
+                label={electronicSummary}
+                selected={selected.electronic[electronicSummary]}
+                choices={electronicChoices}
+                onChange={(n) => onElectonicChange(electronicSummary, n)}
+              />
+            )
+          )}
+        </ul>
+      ) : <></>}
     </li>
   );
 };
@@ -291,26 +286,21 @@ const ParticleFilter = ({
         {label}
       </label>
       {checked && hasChargeChoices ? (
-        <div>
-          <span>Charge</span>
-
-          <ul>
-            {Object.entries(choices.charge).map(
-              ([chargeValue, chargeChoices]) => (
-                <ChargeFilter
-                  key={`${label}-${chargeValue}`}
-                  label={chargeValue}
-                  selected={selected.charge[parseInt(chargeValue)]}
-                  choices={chargeChoices}
-                  onChange={(n) => onChargeChange(chargeValue, n)}
-                />
-              )
-            )}
-          </ul>
-        </div>
-      ) : (
-        !hasChargeChoices && <div>No charge</div>
-      )}
+        <ul style={ulStyle}>
+          <li>Charge</li>
+          {Object.entries(choices.charge).map(
+            ([chargeValue, chargeChoices]) => (
+              <ChargeFilter
+                key={`${label}-${chargeValue}`}
+                label={chargeValue}
+                selected={selected.charge[parseInt(chargeValue)]}
+                choices={chargeChoices}
+                onChange={(n) => onChargeChange(chargeValue, n)}
+              />
+            )
+          )}
+        </ul>
+      ) : <></>}
     </li>
   );
 };
@@ -346,21 +336,16 @@ export const StateFilter = ({
   }
 
   return (
-    <>
-      <span>Particle</span>
-      <ul>
-        {Object.entries(choices.particle).map(
-          ([particleName, chargeChoices]) => (
-            <ParticleFilter
-              key={particleName}
-              label={particleName}
-              selected={selected.particle[particleName]}
-              choices={chargeChoices}
-              onChange={(n) => onParticleChange(particleName, n)}
-            />
-          )
-        )}
-      </ul>
-    </>
+    <ul style={{ ...ulStyle, paddingInlineStart: 0 }}>
+      {Object.entries(choices.particle).map(([particleName, chargeChoices]) => (
+        <ParticleFilter
+          key={particleName}
+          label={particleName}
+          selected={selected.particle[particleName]}
+          choices={chargeChoices}
+          onChange={(n) => onParticleChange(particleName, n)}
+        />
+      ))}
+    </ul>
   );
 };

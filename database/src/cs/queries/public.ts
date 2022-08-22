@@ -13,48 +13,6 @@ import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionHeading, CrossSectionItem } from "../public";
 
-export async function list() {
-  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(aql`
-  FOR cs IN CrossSection
-    LET refs = (
-    FOR rs IN References
-      FILTER rs._from == cs._id
-      FOR r IN Reference
-        FILTER r._id == rs._to
-        RETURN UNSET(r, ["_key", "_rev", "_id"])
-    )
-    LET set = (
-    FOR p IN IsPartOf
-      FILTER p._from == cs._id
-      FOR s IN CrossSectionSet
-        FILTER s._id == p._to
-        RETURN MERGE(UNSET(s, ["_key", "_rev", "_id"]), {id: s._key})
-    )
-    LET reaction = (
-      FOR r in Reaction
-        FILTER r._id == cs.reaction
-        LET consumes = (
-          FOR c IN Consumes
-          FILTER c._from == r._id
-            FOR c2s IN State
-            FILTER c2s._id == c._to
-            RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-        )
-        LET produces = (
-          FOR p IN Produces
-          FILTER p._from == r._id
-            FOR p2s IN State
-            FILTER p2s._id == p._to
-            RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-        )
-        RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-    )
-    RETURN { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": FIRST(set)}
-  `);
-
-  return await cursor.all();
-}
-
 export async function byId(id: string) {
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
   FOR cs IN CrossSection
@@ -127,11 +85,25 @@ async function stateChoice(): Promise<StateChoices> {
   return groupStateChoices(rows);
 }
 
+async function setChoices(): Promise<string[]> {
+  // TODO use set._key as value and set.name as label
+  // TODO should have choice for cross sections which are not part of any set?
+  const q = aql`
+    FOR css IN CrossSectionSet
+      SORT css.name
+      RETURN css.name
+  `;
+  const cursor: ArrayCursor<string> = await db().query(q);
+  return await cursor.all();
+}
+
 export async function searchFacets(): Promise<Facets> {
-  // TODO fetch facets from db instead of processing list() return
-  const all = await list();
+  // TODO make facets depend on each other
+  // * species2 should only show species not in species1
+  // TODO make facets depend on current selection
+  // * selecting a set should only show species1 in that set
   return {
-    set_name: [...new Set(all.map((d) => d.isPartOf.name))],
+    set_name: await setChoices(),
     species1: await stateChoice(),
     species2: await stateChoice(),
     tag: Object.values(ReactionTypeTag),
@@ -176,12 +148,12 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 			FILTER r._id == rs._to
 			RETURN UNSET(r, ["_key", "_rev", "_id"])
 	  )
-	  LET set = FIRST(
+	  LET setNames = (
 		FOR p IN IsPartOf
 		  FILTER p._from == cs._id
 		  FOR s IN CrossSectionSet
 			FILTER s._id == p._to
-			RETURN UNSET(s, ["_key", "_rev", "_id"])
+			RETURN s.name
 	  )
 	  LET reaction = FIRST(
 		FOR r in Reaction
@@ -202,12 +174,12 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 		  )
 		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
-	  FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY == set.name
+	  FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY IN setNames
 	  ${species1Filter}
 	  ${species2Filter}
 	  ${typeTagAql}
 	  ${limit_aql}
-	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
+	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
   const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
   return await cursor.all();
