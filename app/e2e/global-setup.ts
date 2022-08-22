@@ -107,12 +107,12 @@ export async function truncateNonUserCollections() {
   }
 }
 
-export async function uploadAndPublishDummySet(browser: Browser) {
+export async function uploadAndPublishDummySet(browser: Browser, file = 'dummy.json', org = "Some organization") {
   const page = await browser.newPage();
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
-    "../database/seeds/test/crosssections/dummy.json",
+    `../database/seeds/test/crosssections/${file}`,
     { encoding: "utf8" }
   );
   await page.locator("textarea").fill(dummySet);
@@ -121,8 +121,8 @@ export async function uploadAndPublishDummySet(browser: Browser) {
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
-  await page.locator("select").selectOption({ label: "Some organization" });
-  await page.waitForSelector('td:has-text("Some organization")');
+  await page.locator("select").selectOption({ label: org });
+  await page.waitForSelector(`td:has-text("${org}")`);
 
   // Publish set
   await page.goto("/author/scat-css");

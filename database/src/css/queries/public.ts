@@ -3,20 +3,24 @@ import { ArrayCursor } from "arangojs/cursor";
 import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
 import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
+import {
+  generateStateFilterAql,
+  StateChoices,
+  generateStateChoicesAql,
+  groupStateChoices,
+  ChoiceRow,
+} from "../../shared/queries/state";
+import { PagingOptions } from "../../shared/types/search";
 
 export interface FilterOptions {
   contributor: string[];
-  species2: string[];
+  state: StateChoices;
+  tag: string[];
 }
 
 export interface SortOptions {
   field: "name" | "contributor";
   dir: "ASC" | "DESC";
-}
-
-export interface PagingOptions {
-  offset: number;
-  count: number;
 }
 
 export async function search(
@@ -26,20 +30,52 @@ export async function search(
 ) {
   let contributor_aql = aql``;
   if (filter.contributor.length > 0) {
-    contributor_aql = aql`FILTER ${filter.contributor} ANY == contributor`;
+    contributor_aql = aql`
+      LET contributor = FIRST(
+        FOR o IN Organization
+          FILTER o._id == css.organization
+          RETURN o.name
+      )
+      FILTER ${filter.contributor} ANY == contributor
+    `;
   }
-  let species2_aql = aql``;
-  if (filter.species2.length > 0) {
-    // TODO what should this filter do?
-    // Now a set matches when one of reactions has its second consumed species equal to one in given filter
-    species2_aql = aql`
-          LET species2 = (
-              FOR p IN processes
-                  RETURN p.reaction.lhs[1].state.id
-          )
-          FILTER species2 ANY IN ${filter.species2}
-          `;
+  const hasFilterOnConsumedStates = Object.keys(filter.state).length > 0;
+  const hasFilterOnTag = filter.tag.length > 0;
+  const hasFilterOnRection = hasFilterOnConsumedStates || hasFilterOnTag;
+  let reactionAql = aql``;
+  if (hasFilterOnRection) {
+    const typeTagAql = hasFilterOnTag
+      ? aql`FILTER ${filter.tag} ALL IN r.type_tags`
+      : aql``;
+    let stateAql = aql`RETURN 1`;
+    if (hasFilterOnConsumedStates) {
+      const stateFilter = generateStateFilterAql(filter.state);
+      stateAql = aql`
+        FOR c IN Consumes
+          FILTER c._from == r._id
+          FOR s IN State
+            FILTER s._id == c._to
+            FILTER s.particle != 'e' // TODO should electron always be excluded?
+            LET e = s.electronic[0] // TODO is there always 0 or 1 electronic array item?
+            FILTER ${stateFilter}
+            RETURN s.id
+    `;
+    }
+    reactionAql = aql`
+      LET states = (
+        FOR m IN IsPartOf
+          FILTER m._to == css._id
+          FOR cs IN CrossSection
+            FILTER cs._id == m._from
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              ${typeTagAql}
+              ${stateAql}
+      )
+      FILTER LENGTH(states) > 0
+    `;
   }
+
   let sort_aql = aql``;
   if (sort.field === "name") {
     sort_aql = aql`SORT css.name ${sort.dir}`;
@@ -50,49 +86,26 @@ export async function search(
   const q = aql`
       FOR css IN CrossSectionSet
           FILTER css.versionInfo.status == 'published' // Public API can only search on published sets
-          LET processes = (
-              FOR m IN IsPartOf
-                  FILTER m._to == css._id
-                  FOR cs IN CrossSection
-                      FILTER cs._id == m._from
-                          LET reaction = FIRST(
-                          FOR r in Reaction
-                              FILTER r._id == cs.reaction
-                              LET consumes = (
-                                  FOR c IN Consumes
-                                  FILTER c._from == r._id
-                                      FOR c2s IN State
-                                      FILTER c2s._id == c._to
-                                      RETURN {state: {id: c2s.id}}
-                              )
-                              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes})
-                      )
-                      RETURN {id: cs._key, reaction}
-              )
-          LET contributor = FIRST(
-              FOR o IN Organization
-                  FILTER o._id == css.organization
-                  RETURN o.name
-          )
+          ${reactionAql}
           ${contributor_aql}
-          ${species2_aql}
           ${sort_aql}
           ${limit_aql}
-          RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id"]))
+          RETURN {'id': css._key, name: css.name}
       `;
+
   const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
   return await cursor.all();
 }
 
 export interface Facets {
   contributor: string[];
-  species2: string[];
+  state: StateChoices;
 }
 
 export async function searchFacets(): Promise<Facets> {
   return {
     contributor: await searchContributors(),
-    species2: await searchSpecies2(),
+    state: await stateChoices(),
   };
 }
 
@@ -106,26 +119,27 @@ async function searchContributors() {
   return await cursor.all();
 }
 
-async function searchSpecies2() {
-  const cursor: ArrayCursor<string> = await db().query(aql`
-      FOR css IN CrossSectionSet
-          FILTER css.versionInfo.status == 'published'
-          FOR m IN IsPartOf
-              FILTER m._to == css._id
-              FOR cs IN CrossSection
-                  FILTER cs._id == m._from
-                  FOR r in Reaction
-                      FILTER r._id == cs.reaction
-                      LET lhs = LAST(
-                          FOR c IN Consumes
-                              FILTER c._from == r._id
-                              FOR c2s IN State
-                                  FILTER c2s._id == c._to
-                                  RETURN c2s.id
-                      )
-                      RETURN DISTINCT lhs
-      `);
-  return await cursor.all();
+export async function stateChoices(): Promise<StateChoices> {
+  const stateAql = generateStateChoicesAql();
+  const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
+    FOR css IN CrossSectionSet
+        FILTER css.versionInfo.status == 'published'
+        FOR p IN IsPartOf
+            FILTER p._to == css._id
+            FOR cs IN CrossSection
+                FILTER cs._id == p._from
+                FOR r in Reaction
+                    FILTER r._id == cs.reaction
+                    FOR c IN Consumes
+                        FILTER c._from == r._id
+                        FOR s IN State
+                            FILTER s._id == c._to
+                            FILTER s.particle != 'e' // TODO should e be filtered out?
+                            ${stateAql}
+    `);
+  // TODO when there is one choice then there is no choices and choice should be removed
+  const rows = await cursor.all();
+  return groupStateChoices(rows);
 }
 
 export async function byId(id: string) {

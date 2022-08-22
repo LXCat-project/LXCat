@@ -1,24 +1,13 @@
 import { Dict } from "arangojs/connection";
 import { beforeAll, describe, expect, it } from "vitest";
-import { toggleRole } from "../../auth/queries";
 import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
-import { createCsCollections } from "../../css/queries/testutils";
-import { startDbContainer } from "../../testutils";
+  startDbWithUserAndCssCollections,
+  truncateCrossSectionSetCollections,
+} from "../../css/queries/testutils";
 import { insert_reaction_with_dict, insert_state_dict } from "../queries";
 
 describe("given db with test user and organization", () => {
-  beforeAll(async () => {
-    // TODO now 2 containers are started, starting container is slow so try to reuse container
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    await createCsCollections();
-    const testKeys = await loadTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
-    return stopContainer;
-  });
+  beforeAll(startDbWithUserAndCssCollections);
 
   describe("given 1 state exist", () => {
     let state_ids: Dict<string>;
@@ -30,6 +19,7 @@ describe("given db with test user and organization", () => {
         },
       };
       state_ids = await insert_state_dict(states);
+      return truncateCrossSectionSetCollections;
     });
 
     describe("given reaction", () => {

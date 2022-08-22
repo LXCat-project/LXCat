@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries/public";
+import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
+import { useRouter } from "next/router";
+import {
+  stateSelectionToSearchParam,
+  StateFilter,
+} from "../shared/StateFilter";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   facets: Facets;
@@ -8,25 +15,54 @@ interface Props {
 }
 
 export const Filter = ({ facets, selection }: Props) => {
-  const hasAnySelection = Object.values(selection).some((s) => s.length > 0);
+  const router = useRouter();
+
+  const hasAnySelection = Object.values(selection).some(
+    (s) =>
+      (Array.isArray(s) && s.length > 0) ||
+      (typeof s === "object" && Object.keys(s).length > 0)
+  );
+  function onStateChange(newStateSelection: StateChoices) {
+    router.push({
+      query: {
+        ...selection,
+        state: stateSelectionToSearchParam(newStateSelection),
+      },
+    });
+  }
+  const selectionAsSearchParam = {
+    ...selection,
+    state: stateSelectionToSearchParam(selection.state),
+  };
   return (
     <div>
       <div style={{ display: "flex" }}>
         <fieldset>
-          <legend>Second species</legend>
-          <CheckBoxGroup
-            facet={facets.species2}
-            selection={selection}
-            selectionKey="species2"
-            path="/scat-css"
+          <legend title="Species of consumed part of reaction of any cross section in set. Excluding electron">
+            Species
+          </legend>
+          <StateFilter
+            choices={facets.state}
+            selected={selection.state}
+            onChange={onStateChange}
           />
         </fieldset>
         <fieldset>
           <legend>Contributor</legend>
           <CheckBoxGroup
             facet={facets.contributor}
-            selection={selection}
+            selection={selectionAsSearchParam}
             selectionKey="contributor"
+            path="/scat-css"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Reaction type</legend>
+          <CheckBoxGroup
+            // TODO order type tags alphabetically?
+            facet={Object.values(ReactionTypeTag)}
+            selection={selectionAsSearchParam}
+            selectionKey="tag"
             path="/scat-css"
           />
         </fieldset>

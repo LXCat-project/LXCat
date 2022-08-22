@@ -26,7 +26,7 @@ describe("given filled ArangoDB container", () => {
       let result: CrossSectionSetHeading[] = [];
 
       beforeAll(async () => {
-        const filter = { contributor: [], species2: [] };
+        const filter = { contributor: [], state: { particle: {} }, tag: [] };
         const sort: SortOptions = { field: "name", dir: "DESC" };
         const paging = { offset: 0, count: 10 };
         result = await search(filter, sort, paging);

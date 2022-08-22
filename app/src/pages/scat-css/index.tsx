@@ -1,20 +1,24 @@
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
+
+import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import {
+  Facets,
+  FilterOptions,
+  search,
+  searchFacets,
+  SortOptions,
+} from "@lxcat/database/dist/css/queries/public";
+
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
-import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { query2array } from "../../shared/query2array";
 import {
-  Facets,
-  search,
-  searchFacets,
-} from "@lxcat/database/dist/css/queries/public";
-import {
-  SortOptions,
-  FilterOptions,
-} from "@lxcat/database/dist/css/queries/public";
+  stateSelectionFromSearchParam,
+  stateSelectionToSearchParam,
+} from "../../shared/StateFilter";
 
 interface Props {
   items: CrossSectionSetHeading[];
@@ -60,8 +64,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 function query2options(query: ParsedUrlQuery): FilterOptions {
-  return {
+  const state =
+    query.state && !Array.isArray(query.state)
+      ? query.state
+      : stateSelectionToSearchParam({ particle: {} });
+
+  const options: FilterOptions = {
     contributor: query2array(query.contributor),
-    species2: query2array(query.species2),
+    state: stateSelectionFromSearchParam(state),
+    tag: query2array(query.tag),
   };
+  return options;
 }
