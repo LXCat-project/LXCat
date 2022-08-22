@@ -1559,11 +1559,11 @@ describe("given draft cross section set where its charge in cross section is alt
     if (draft === undefined) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const stateA = Object.values(draft.states).find(s => s.particle === 'A')
+    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
     if (stateA === undefined) {
       throw Error(`Failed to find state with particle=A in ${keycss1}`);
     }
-    stateA.charge = -2
+    stateA.charge = -2;
     keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
@@ -1634,7 +1634,7 @@ describe("given draft cross section set where its charge in cross section is alt
         particle: "A",
         charge: -13,
       },
-    })
+    });
     keycss1 = await createSet(
       {
         complete: false,
@@ -1677,11 +1677,11 @@ describe("given draft cross section set where its charge in cross section is alt
     if (draft === undefined) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const stateA = Object.values(draft.states).find(s => s.particle === 'A')
+    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
     if (stateA === undefined) {
       throw Error(`Failed to find state with particle=A in ${keycss1}`);
     }
-    stateA.charge = -12
+    stateA.charge = -12;
     keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
@@ -1742,34 +1742,34 @@ describe("given draft cross section set where its charge in cross section is alt
     expect(list).toEqual(expected);
   });
 
-  it('should have 4 states: a0, a, a2, b=b2', async () => {
+  it("should have 4 states: a0, a, a2, b=b2", async () => {
     const cursor = await db().query(aql`
       FOR s IN State
         RETURN UNSET(s, ['_key', '_id' , '_rev'])
-    `)
-    const states = await cursor.all()
+    `);
+    const states = await cursor.all();
     const expected = [
       {
         particle: "A",
         charge: -13,
-        id: 'A^13-',
+        id: "A^13-",
       },
       {
         particle: "A",
         charge: 0,
-        id: 'A',
+        id: "A",
       },
       {
         particle: "A",
         charge: -12,
-        id: 'A^12-'
+        id: "A^12-",
       },
       {
         particle: "B",
         charge: 1,
-        id: 'B^+'
-      }
-    ]
-    expect(new Set(states)).toEqual(new Set(expected))
-  })
+        id: "B^+",
+      },
+    ];
+    expect(new Set(states)).toEqual(new Set(expected));
+  });
 });

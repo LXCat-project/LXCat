@@ -57,7 +57,7 @@ export async function createSet(
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const {id: prevCsId, ...newCs} = cs
+      const { id: prevCsId, ...newCs } = cs;
       const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {

@@ -3,6 +3,13 @@ import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 
 export function ListItem(props: CrossSectionHeading) {
+  let partOf = <></>;
+  if (props.isPartOf.length === 1) {
+    partOf = <div>Part of &quot;{props.isPartOf[0]}&quot; set</div>;
+  } else if (props.isPartOf.length > 1) {
+    const quotedNames = props.isPartOf.map((n) => `&quot;{n}&quot;`).join(", ");
+    partOf = <div>Part of {quotedNames} sets</div>;
+  }
   return (
     <Link href={`/scat-cs/${props.id}`}>
       <a
@@ -13,7 +20,7 @@ export function ListItem(props: CrossSectionHeading) {
         }}
       >
         <ReactionSummary {...props.reaction} />
-        <div>Part of &quot;{props.isPartOf.name}&quot; set</div>
+        {partOf}
       </a>
     </Link>
   );

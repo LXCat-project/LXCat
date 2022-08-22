@@ -44,9 +44,13 @@ test-app:
   script:
     - npx playwright install chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
+    - npm -w app run build-storybook
   artifacts:
     reports:
       junit: app/junit.xml
+    paths:
+      - app/storybook-static/
+
 # TODO cache ~/.cache/ms-playwright
 
 test-database:

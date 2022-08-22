@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import {
+  StateFilter,
+  stateSelectionToSearchParam,
+} from "../shared/StateFilter";
+import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
+import { useRouter } from "next/router";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   facets: Facets;
@@ -8,26 +15,50 @@ interface Props {
 }
 
 export const Filter = ({ facets, selection }: Props) => {
-  const hasAnySelection = Object.values(selection).some((s) => s.length > 0);
+  const router = useRouter();
+  const hasAnySelection = Object.values(selection).some(
+    (s) =>
+      (Array.isArray(s) && s.length > 0) ||
+      (typeof s === "object" && Object.keys(s).length > 0)
+  );
+
+  function onSpecies1Change(newStateSelection: StateChoices) {
+    router.push({
+      query: {
+        ...selection,
+        species1: stateSelectionToSearchParam(newStateSelection),
+        species2: stateSelectionToSearchParam(selection.species2),
+      },
+    });
+  }
+
+  function onSpecies2Change(newStateSelection: StateChoices) {
+    router.push({
+      query: {
+        ...selection,
+        species1: stateSelectionToSearchParam(selection.species1),
+        species2: stateSelectionToSearchParam(newStateSelection),
+      },
+    });
+  }
+
   return (
     <div>
       <div style={{ display: "flex" }}>
         <fieldset>
           <legend>First species</legend>
-          <CheckBoxGroup
-            facet={facets.species1}
-            selection={selection}
-            selectionKey="species1"
-            path="/scat-cs"
+          <StateFilter
+            choices={facets.species1}
+            selected={selection.species1}
+            onChange={onSpecies1Change}
           />
         </fieldset>
         <fieldset>
           <legend>Second species</legend>
-          <CheckBoxGroup
-            facet={facets.species2}
-            selection={selection}
-            selectionKey="species2"
-            path="/scat-cs"
+          <StateFilter
+            choices={facets.species2}
+            selected={selection.species2}
+            onChange={onSpecies2Change}
           />
         </fieldset>
         <fieldset>
@@ -36,6 +67,16 @@ export const Filter = ({ facets, selection }: Props) => {
             facet={facets.set_name}
             selection={selection}
             selectionKey="set_name"
+            path="/scat-cs"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Reaction type</legend>
+          <CheckBoxGroup
+            // TODO order type tags alphabetically?
+            facet={Object.values(ReactionTypeTag)}
+            selection={selection}
+            selectionKey="tag"
             path="/scat-cs"
           />
         </fieldset>

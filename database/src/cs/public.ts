@@ -6,7 +6,7 @@ import { State } from "../shared/types/collections";
 
 export interface CrossSectionHeading {
   id: string;
-  isPartOf: CrossSectionSet;
+  isPartOf: string[]; // Names of set
   reaction: Reaction<State>;
   reference: Reference[];
   // TODO add CrossSection.threshold? Is it useful when searching for a section?

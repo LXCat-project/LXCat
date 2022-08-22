@@ -6,7 +6,7 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeMathjax from "rehype-mathjax";
 import rehypeSlug from "rehype-slug";
 import remarkEmbedImages from "remark-embed-images";
-import remarkGfm from 'remark-gfm';
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
 

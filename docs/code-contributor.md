@@ -220,3 +220,21 @@ erDiagram
 ```
 
 The diagram can be edited on https://mermaid.live/ by copying the code block text.
+
+## React component development
+
+The React components can be developed in isolation with [storybook](https://storybook.js.org/).
+
+By writing a story as `app/src/<Component>.stories.tsx` according to [docs](https://storybook.js.org/docs/react/writing-stories/introduction).
+
+The storybook can be run with
+
+```shell
+cd app
+npm run storybook
+```
+
+This will open a web browser where stories of components can be seen.
+
+The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing the job artifacts to `app/storybook-static/index.html`.
+This can be useful for other people to test your component without having to install anything.

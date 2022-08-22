@@ -1,10 +1,9 @@
-import { CrossSectionHeading, CrossSectionItem } from "../cs/public";
+import { CrossSectionItem } from "../cs/public";
 import { CrossSectionSet } from "./collections";
 
-export interface CrossSectionSetHeading extends CrossSectionSet {
+export interface CrossSectionSetHeading {
   id: string;
-  processes: Omit<CrossSectionHeading, "isPartOf">[];
-  contributor: string;
+  name: string;
 }
 
 export type OrphanedCrossSectionItem = Omit<CrossSectionItem, "isPartOf">;
