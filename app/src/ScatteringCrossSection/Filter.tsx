@@ -7,6 +7,7 @@ import {
 } from "../shared/StateFilter";
 import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
 import { useRouter } from "next/router";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   facets: Facets;
@@ -66,6 +67,16 @@ export const Filter = ({ facets, selection }: Props) => {
             facet={facets.set_name}
             selection={selection}
             selectionKey="set_name"
+            path="/scat-cs"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Reaction type</legend>
+          <CheckBoxGroup
+            // TODO order type tags alphabetically?
+            facet={Object.values(ReactionTypeTag)}
+            selection={selection}
+            selectionKey="tag"
             path="/scat-cs"
           />
         </fieldset>

@@ -1,3 +1,4 @@
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -104,6 +105,7 @@ export interface Facets {
   set_name: string[];
   species1: StateChoices;
   species2: StateChoices;
+  tag: string[];
 }
 
 async function stateChoice(): Promise<StateChoices> {
@@ -132,6 +134,7 @@ export async function searchFacets(): Promise<Facets> {
     set_name: [...new Set(all.map((d) => d.isPartOf.name))],
     species1: await stateChoice(),
     species2: await stateChoice(),
+    tag: Object.values(ReactionTypeTag),
   };
 }
 
@@ -139,6 +142,7 @@ export interface SearchOptions {
   set_name: string[];
   species1: StateChoices;
   species2: StateChoices;
+  tag: string[];
 }
 
 export async function search(options: SearchOptions, paging: PagingOptions) {
@@ -158,6 +162,10 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 		FILTER ${state2aql}
 	`;
   }
+  const hasFilterOnTag = options.tag.length > 0;
+  const typeTagAql = hasFilterOnTag
+    ? aql`FILTER ${options.tag} ALL IN reaction.type_tags`
+    : aql``;
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
 	FOR cs IN CrossSection
@@ -192,11 +200,12 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 			  FILTER p2s._id == p._to
 			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
 		  )
-		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
 	  FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY == set.name
 	  ${species1Filter}
 	  ${species2Filter}
+	  ${typeTagAql}
 	  ${limit_aql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": set}
 	`;

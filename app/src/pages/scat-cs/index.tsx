@@ -89,5 +89,6 @@ function query2options(query: ParsedUrlQuery): SearchOptions {
     set_name: query2array(query.set_name),
     species1: stateSelectionFromSearchParam(species1),
     species2: stateSelectionFromSearchParam(species2),
+    tag: query2array(query.tag),
   };
 }

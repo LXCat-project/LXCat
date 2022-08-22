@@ -259,7 +259,10 @@ const ParticleFilter = ({
     }
   }
 
-  function onChargeChange(charge: string, newChargeSelection: ChargeChoices | undefined) {
+  function onChargeChange(
+    charge: string,
+    newChargeSelection: ChargeChoices | undefined
+  ) {
     const iCharge = parseInt(charge);
 
     if (iCharge in selected.charge) {
