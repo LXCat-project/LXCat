@@ -80,9 +80,12 @@ async function species1Choices(options: Omit<SearchOptions, "species1">) {
       FILTER ${species2Aql}
     `
     : aql``;
+  const hasSetNameOption = options.set_name.length > 0
+  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
   const q = aql`
       FOR cs IN CrossSection
         FILTER cs.versionInfo.status == 'published'
+        ${setNameFilter}
         FOR r in Reaction
           FILTER r._id == cs.reaction
           ${typeTagAql}
@@ -116,9 +119,12 @@ async function species2Choices(options: Omit<SearchOptions, "species2">) {
     `
     : aql``;
   const stateAql = generateStateChoicesAql();
+  const hasSetNameOption = options.set_name.length > 0
+  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
   const q = aql`
     FOR cs IN CrossSection
       FILTER cs.versionInfo.status == 'published'
+      ${setNameFilter}
       FOR r in Reaction
         FILTER r._id == cs.reaction
         ${typeTagAql}
@@ -183,9 +189,12 @@ async function tagChoices(
   options: Omit<SearchOptions, "tag">
 ): Promise<ReactionTypeTag[]> {
   const speciesAql = generateSpeciesFilterForChoices(options);
+  const hasSetNameOption = options.set_name.length > 0
+  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
   const q = aql`
     FOR cs IN CrossSection
       FILTER cs.versionInfo.status == 'published'
+      ${setNameFilter}
       FOR r in Reaction
         FILTER r._id == cs.reaction
         ${speciesAql}
@@ -260,6 +269,19 @@ export interface SearchOptions {
   tag: string[];
 }
 
+function setNamesFilterAql(set_names: string[]) {
+  return aql`
+   LET setNames = (
+		FOR p IN IsPartOf
+		  FILTER p._from == cs._id
+		  FOR s IN CrossSectionSet
+			FILTER s._id == p._to
+			RETURN s.name
+	  )
+    FILTER LENGTH(${set_names}) == 0 OR ${set_names} ANY IN setNames
+  `
+}
+
 export async function search(options: SearchOptions, paging: PagingOptions) {
   let species1Filter = aql``;
   if (Object.keys(options.species1).length > 0) {
@@ -291,13 +313,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 			FILTER r._id == rs._to
 			RETURN UNSET(r, ["_key", "_rev", "_id"])
 	  )
-	  LET setNames = (
-		FOR p IN IsPartOf
-		  FILTER p._from == cs._id
-		  FOR s IN CrossSectionSet
-			FILTER s._id == p._to
-			RETURN s.name
-	  )
+	  ${setNamesFilterAql(options.set_name)}
 	  LET reaction = FIRST(
 		FOR r in Reaction
 		  FILTER r._id == cs.reaction
@@ -317,7 +333,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 		  )
 		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
-	  FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY IN setNames
+	  
 	  ${species1Filter}
 	  ${species2Filter}
 	  ${typeTagAql}

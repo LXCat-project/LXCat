@@ -4,49 +4,21 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { insert_state_dict } from "../../shared/queries";
-import { createSection } from "./write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Dict } from "@lxcat/schema/dist/core/util";
 import { Facets, searchFacets, SearchOptions } from "./public";
 import { StateChoices } from "../../shared/queries/state";
+import { createSet } from "../../css/queries/author_write";
+import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { State } from "@lxcat/schema/dist/core/state";
 
 beforeAll(startDbWithUserAndCssCollections);
-
-async function createDummyCs(
-  species1: string,
-  species2: string,
-  stateIds: Dict<string>,
-  tags: ReactionTypeTag[],
-  org: string
-) {
-  const cs: CrossSection<string, string, LUT> = {
-    reaction: {
-      lhs: [
-        { count: 1, state: species1 },
-        { count: 1, state: species2 },
-      ],
-      rhs: [],
-      reversible: false,
-      type_tags: tags,
-    },
-    threshold: 42,
-    type: Storage.LUT,
-    labels: ["Energy", "Cross Section"],
-    units: ["eV", "m^2"],
-    data: [[1, 3.14e-20]],
-    reference: [],
-  };
-  await createSection(cs, stateIds, {}, org);
-}
 
 const emptySelection: Readonly<SearchOptions> = {
   set_name: [],
   tag: [],
-  species1: {particle: {}},
-  species2: {particle: {}}
-}
+  species1: { particle: {} },
+  species2: { particle: {} },
+};
 
 describe("searchFacets()", () => {
   describe("given cross sections which consume e+H2, e+N2, Ar++Ar", () => {
@@ -73,25 +45,24 @@ describe("searchFacets()", () => {
           charge: 0,
         },
       };
-      const stateIds = await insert_state_dict(states);
-      await createDummyCs(
-        "e",
-        "H2",
-        stateIds,
+      await createTestSet(
+        "H2 set",
+        states.e,
+        states.H2,
         [ReactionTypeTag.Effective],
         "Some organization"
       );
-      await createDummyCs(
-        "e",
-        "N2",
-        stateIds,
+      await createTestSet(
+        "N2 set",
+        states.e,
+        states.N2,
         [ReactionTypeTag.Effective],
         "Some organization"
       );
-      await createDummyCs(
-        "Arp",
-        "Ar",
-        stateIds,
+      await createTestSet(
+        "Ar set",
+        states.Arp,
+        states.Ar,
         [ReactionTypeTag.Ionization],
         "Some organization"
       );
@@ -157,32 +128,29 @@ describe("searchFacets()", () => {
       });
 
       it("should have Effective and Ionization reaction type tags", () => {
-        const expected = [
-          "Effective",
-          "Ionization",
-        ];
+        const expected = ["Effective", "Ionization"];
         expect(facets.tag).toEqual(expected);
       });
 
-      it("should have zero set names", () => {
-        expect(facets.set_name).toEqual([]);
+      it("should have 3 set names", () => {
+        const expected = ["Ar set", "H2 set", "N2 set"];
+        expect(facets.set_name).toEqual(expected);
       });
     });
 
-    describe('with species2=N2 selected', () => {
+    describe("with species2=N2 selected", () => {
       let facets: Facets;
       beforeAll(async () => {
-        
         const selection: SearchOptions = {
           ...emptySelection,
           species2: {
             particle: {
               N2: {
-                charge: {}
-              }
-            }
-          }
-        }
+                charge: {},
+              },
+            },
+          },
+        };
         facets = await searchFacets(selection);
       });
 
@@ -231,26 +199,29 @@ describe("searchFacets()", () => {
       });
 
       it("should have Effective reaction type tag", () => {
-        const expected = [
-          "Effective",
-        ];
+        const expected = ["Effective"];
         expect(facets.tag).toEqual(expected);
       });
-    })
 
-    describe('with species1=Arp selected', () => {
+      it("should have N2 set name", () => {
+        const expected = ["N2 set"];
+        expect(facets.set_name).toEqual(expected);
+      });
+    });
+
+    describe("with species1=Arp selected", () => {
       let facets: Facets;
-      beforeAll(async () => {      
+      beforeAll(async () => {
         const selection: SearchOptions = {
           ...emptySelection,
           species1: {
             particle: {
               Ar: {
-                charge: {}
-              }
-            }
-          }
-        }
+                charge: {},
+              },
+            },
+          },
+        };
         facets = await searchFacets(selection);
       });
 
@@ -292,21 +263,23 @@ describe("searchFacets()", () => {
       });
 
       it("should have Ionization reaction type tag", () => {
-        const expected = [
-          "Ionization",
-        ];
+        const expected = ["Ionization"];
         expect(facets.tag).toEqual(expected);
       });
-    })
 
-    describe('with tag=Ionization', () => {
+      it("should have Ar set name", () => {
+        const expected = ["Ar set"];
+        expect(facets.set_name).toEqual(expected);
+      });
+    });
+
+    describe("with tag=Ionization", () => {
       let facets: Facets;
       beforeAll(async () => {
-        
         const selection: SearchOptions = {
           ...emptySelection,
-          tag: [ReactionTypeTag.Ionization]
-        }
+          tag: [ReactionTypeTag.Ionization],
+        };
         facets = await searchFacets(selection);
       });
 
@@ -341,12 +314,105 @@ describe("searchFacets()", () => {
       });
 
       it("should have Effective and Ionization reaction type tags", () => {
-        const expected = [
-          "Effective",
-          "Ionization",
-        ];
+        const expected = ["Effective", "Ionization"];
         expect(facets.tag).toEqual(expected);
+      });
+
+      it("should have Ar set name", () => {
+        const expected = ["Ar set"];
+        expect(facets.set_name).toEqual(expected);
+      });
+    });
+
+
+    describe('with set=N2 selected', () => {
+      let facets: Facets;
+      beforeAll(async () => {
+        const selection: SearchOptions = {
+          ...emptySelection,
+          set_name: ['Ar set']
+        };
+        facets = await searchFacets(selection);
+      });
+
+      it("should have Arp for species1", () => {
+        const expected: StateChoices = {
+          particle: {
+            Ar: {
+              charge: {
+                1: {
+                  electronic: {},
+                },
+              },
+            },
+          },
+        };
+        expect(facets.species1).toEqual(expected);
+      });
+
+      it("should have Ar for species2", () => {
+        const expected: StateChoices = {
+          particle: {
+            Ar: {
+              charge: {
+                0: {
+                  electronic: {},
+                },
+              },
+            },
+          },
+        };
+        expect(facets.species2).toEqual(expected);
+      });
+
+      it("should have Ionization reaction type tag", () => {
+        const expected = ["Ionization"];
+        expect(facets.tag).toEqual(expected);
+      });
+
+      it("should have 3 set names", () => {
+        const expected = ["Ar set", "H2 set", "N2 set"];
+        expect(facets.set_name).toEqual(expected);
       });
     })
   });
 });
+
+async function createTestSet(
+  name: string,
+  c1: State<AnyAtomJSON | AnyMoleculeJSON>,
+  c2: State<AnyAtomJSON | AnyMoleculeJSON>,
+  type_tags: ReactionTypeTag[],
+  contributor: string
+) {
+  await createSet({
+    complete: false,
+    contributor,
+    name,
+    description: "Some description",
+    references: {},
+    states: {
+      c1,
+      c2,
+    },
+    processes: [
+      {
+        reaction: {
+          lhs: [
+            { count: 1, state: "c1" },
+            { count: 1, state: "c2" },
+          ],
+          rhs: [],
+          reversible: false,
+          type_tags,
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+    ],
+  });
+}
