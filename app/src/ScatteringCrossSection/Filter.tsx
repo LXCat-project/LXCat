@@ -21,12 +21,17 @@ export const Filter = ({ facets, selection }: Props) => {
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
+  const selectionAsSearchParam = {
+    ...selection,
+    species1: stateSelectionToSearchParam(selection.species1),
+    species2: stateSelectionToSearchParam(selection.species2),
+  };
+
   function onSpecies1Change(newStateSelection: StateChoices) {
     router.push({
       query: {
-        ...selection,
+        ...selectionAsSearchParam,
         species1: stateSelectionToSearchParam(newStateSelection),
-        species2: stateSelectionToSearchParam(selection.species2),
       },
     });
   }
@@ -34,12 +39,12 @@ export const Filter = ({ facets, selection }: Props) => {
   function onSpecies2Change(newStateSelection: StateChoices) {
     router.push({
       query: {
-        ...selection,
-        species1: stateSelectionToSearchParam(selection.species1),
+        ...selectionAsSearchParam,
         species2: stateSelectionToSearchParam(newStateSelection),
       },
     });
   }
+
 
   return (
     <div>
@@ -64,7 +69,7 @@ export const Filter = ({ facets, selection }: Props) => {
           <legend>Set</legend>
           <CheckBoxGroup
             facet={facets.set_name}
-            selection={selection}
+            selection={selectionAsSearchParam}
             selectionKey="set_name"
             path="/scat-cs"
           />
@@ -74,7 +79,7 @@ export const Filter = ({ facets, selection }: Props) => {
           <CheckBoxGroup
             // TODO order type tags alphabetically?
             facet={facets.tag}
-            selection={selection}
+            selection={selectionAsSearchParam}
             selectionKey="tag"
             path="/scat-cs"
           />
