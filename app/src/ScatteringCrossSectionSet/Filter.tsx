@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
-import { Facets, FilterOptions } from "@lxcat/database/dist/css/queries/public";
+import { FilterOptions } from "@lxcat/database/dist/css/queries/public";
 import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
 import { useRouter } from "next/router";
 import {
@@ -10,7 +10,7 @@ import {
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
-  facets: Facets;
+  facets: FilterOptions;
   selection: FilterOptions;
 }
 
@@ -59,8 +59,7 @@ export const Filter = ({ facets, selection }: Props) => {
         <fieldset>
           <legend>Reaction type</legend>
           <CheckBoxGroup
-            // TODO order type tags alphabetically?
-            facet={Object.values(ReactionTypeTag)}
+            facet={facets.tag}
             selection={selectionAsSearchParam}
             selectionKey="tag"
             path="/scat-css"

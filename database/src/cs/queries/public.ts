@@ -256,7 +256,7 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
   // * species2 should only show species not in species1
   // TODO make facets depend on current selection
   // * selecting a set should only show species1 in that set
-  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key*/
+  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
   const { set_name: _s, ...nonSetOptions } = options;
   const { species1: _1, ...nonSpecies1Options } = options;
   const { species2: _2, ...nonSpecies2Options } = options;
