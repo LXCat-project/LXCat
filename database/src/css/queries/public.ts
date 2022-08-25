@@ -106,6 +106,7 @@ export async function searchFacets(): Promise<Facets> {
   return {
     contributor: await searchContributors(),
     state: await stateChoices(),
+    // TODO add dynamic reaction type tag choices
   };
 }
 
