@@ -3,18 +3,13 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { StateChoices } from "../../shared/queries/state";
 import { FilterOptions, searchFacets } from "./public";
 import {
+  emptySelection,
   sampleSets4Search,
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
 
 beforeAll(startDbWithUserAndCssCollections);
-
-const emptySelection: Readonly<FilterOptions> = {
-  state: { particle: {} },
-  contributor: [],
-  tag: [],
-};
 
 describe("searchFacets()", () => {
   describe("given cross sections which consume e+H2, e+N2, Ar++Ar", () => {

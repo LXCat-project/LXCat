@@ -12,6 +12,7 @@ import { createSet } from "../../css/queries/author_write";
 import { db } from "../../db";
 import { startDbContainer } from "../../testutils";
 import { CrossSectionSetInputOwned } from "./author_read";
+import { FilterOptions } from "./public";
 
 export async function loadTestSets() {
   const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
@@ -199,3 +200,9 @@ async function createTestSet(
     ],
   });
 }
+
+export const emptySelection: Readonly<FilterOptions> = {
+  state: { particle: {} },
+  contributor: [],
+  tag: [],
+};
