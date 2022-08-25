@@ -6,7 +6,7 @@ import { State } from "@lxcat/schema/dist/core/state";
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
-  loadTestUserAndOrg
+  loadTestUserAndOrg,
 } from "../../auth/testutils";
 import { createSet } from "../../css/queries/author_write";
 import { db } from "../../db";
@@ -159,7 +159,7 @@ export const sampleSets4Search = async () => {
     [ReactionTypeTag.Ionization],
     "Some organization"
   );
-}
+};
 
 async function createTestSet(
   name: string,

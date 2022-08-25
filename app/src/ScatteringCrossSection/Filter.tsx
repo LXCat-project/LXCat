@@ -45,7 +45,6 @@ export const Filter = ({ facets, selection }: Props) => {
     });
   }
 
-
   return (
     <div>
       <div style={{ display: "flex" }}>

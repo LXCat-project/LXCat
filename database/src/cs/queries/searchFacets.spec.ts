@@ -8,7 +8,6 @@ import {
 import { Facets, searchFacets, SearchOptions } from "./public";
 import { StateChoices } from "../../shared/queries/state";
 
-
 beforeAll(startDbWithUserAndCssCollections);
 
 const emptySelection: Readonly<SearchOptions> = {
@@ -21,7 +20,7 @@ const emptySelection: Readonly<SearchOptions> = {
 describe("searchFacets()", () => {
   describe("given cross sections which consume e+H2, e+N2, Ar++Ar", () => {
     beforeAll(async () => {
-      await sampleSets4Search()
+      await sampleSets4Search();
 
       return truncateCrossSectionSetCollections;
     });
@@ -332,4 +331,3 @@ describe("searchFacets()", () => {
     });
   });
 });
-
