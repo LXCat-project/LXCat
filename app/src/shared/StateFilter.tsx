@@ -24,7 +24,7 @@ const ulStyle = {
   marginBlockStart: 0,
   marginBlockEnd: 0,
   listStyleType: "none",
-  paddingInlineStart: '1.5rem',
+  paddingInlineStart: "1.5rem",
 };
 
 const VibrationalFilter = ({
@@ -81,7 +81,9 @@ const VibrationalFilter = ({
             </label>
           ))}
         </ul>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
     </li>
   );
 };
@@ -155,7 +157,9 @@ const ElectronicFilter = ({
             )
           )}
         </ul>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
     </li>
   );
 };
@@ -227,7 +231,9 @@ const ChargeFilter = ({
             )
           )}
         </ul>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
     </li>
   );
 };
@@ -300,7 +306,9 @@ const ParticleFilter = ({
             )
           )}
         </ul>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
     </li>
   );
 };

@@ -11,11 +11,12 @@ import {
   ChoiceRow,
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 export interface FilterOptions {
   contributor: string[];
   state: StateChoices;
-  tag: string[];
+  tag: ReactionTypeTag[];
 }
 
 export interface SortOptions {
@@ -97,39 +98,103 @@ export async function search(
   return await cursor.all();
 }
 
-export interface Facets {
-  contributor: string[];
-  state: StateChoices;
-}
-
-export async function searchFacets(): Promise<Facets> {
+export async function searchFacets(
+  selection: FilterOptions
+): Promise<FilterOptions> {
+  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
+  const { contributor: _c, ...nonContributorSelection } = selection;
+  const { state: _s, ...nonStateSelection } = selection;
+  const { tag: _t, ...nonTagSelection } = selection;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
-    contributor: await searchContributors(),
-    state: await stateChoices(),
+    contributor: await searchContributors(nonContributorSelection),
+    state: await stateChoices(nonStateSelection),
+    tag: await tagChoices(nonTagSelection),
   };
 }
 
-async function searchContributors() {
-  const cursor: ArrayCursor<string> = await db().query(aql`
-      FOR css IN CrossSectionSet
-          FOR o IN Organization
-              FILTER o._id == css.organization
-              RETURN DISTINCT o.name
-      `);
+async function searchContributors(
+  selection: Omit<FilterOptions, "contributor">
+) {
+  const hasTagSelection = selection.tag.length > 0;
+  const hasStateSelection = Object.keys(selection.state).length > 0;
+  let csFilter = aql``;
+  if (hasTagSelection || hasStateSelection) {
+    const tagFilter = hasTagSelection
+      ? aql`FILTER ${selection.tag} ALL IN r.type_tags`
+      : aql``;
+    const stateFilter = generateStateChoiceFilter(selection.state);
+    csFilter = aql`
+      LET filteredCs = (
+        FOR p IN IsPartOf
+          FILTER p._to == css._id
+          FOR cs IN CrossSection
+            FILTER cs._id == p._from
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              ${tagFilter}
+              ${stateFilter}
+              RETURN 1
+      )  
+      FILTER LENGTH(filteredCs) > 0
+    `;
+  }
+  const q = aql`
+    FOR css IN CrossSectionSet
+      FILTER css.versionInfo.status == 'published'
+      ${csFilter}
+      FOR o IN Organization
+        FILTER o._id == css.organization
+        COLLECT on = o.name
+        SORT on
+        RETURN on
+  `;
+  const cursor: ArrayCursor<string> = await db().query(q);
   return await cursor.all();
 }
 
-export async function stateChoices(): Promise<StateChoices> {
+function generateStateChoiceFilter(state: StateChoices) {
+  const statefilterAql = generateStateFilterAql(state, "s");
+  const stateFilter = aql`
+      LET stateMatches = (
+        FOR c IN Consumes
+          FILTER c._from == r._id
+          FOR s IN State
+            FILTER s._id == c._to
+            FILTER ${statefilterAql}
+            RETURN 1
+      )
+      FILTER LENGTH(stateMatches) > 0
+    `;
+  return stateFilter;
+}
+
+export async function stateChoices(
+  selection: Omit<FilterOptions, "state">
+): Promise<StateChoices> {
+  const hasTagSelection = selection.tag.length > 0;
   const stateAql = generateStateChoicesAql();
+  const tagFilter = hasTagSelection
+    ? aql`FILTER ${selection.tag} ALL IN r.type_tags`
+    : aql``;
+  const hasContributorSelection = selection.contributor.length > 0;
+  const contributorFilter = hasContributorSelection
+    ? aql`
+    LET org = DOCUMENT('Organization', css.organization)
+    FILTER org != null AND ${selection.contributor} ANY == org.name
+  `
+    : aql``;
   const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
+        ${contributorFilter}
         FOR p IN IsPartOf
             FILTER p._to == css._id
             FOR cs IN CrossSection
                 FILTER cs._id == p._from
                 FOR r in Reaction
                     FILTER r._id == cs.reaction
+                    ${tagFilter}
                     FOR c IN Consumes
                         FILTER c._from == r._id
                         FOR s IN State
@@ -137,9 +202,40 @@ export async function stateChoices(): Promise<StateChoices> {
                             FILTER s.particle != 'e' // TODO should e be filtered out?
                             ${stateAql}
     `);
-  // TODO when there is one choice then there is no choices and choice should be removed
+  // TODO when there is one choice then there is no choices and choice should be removed or selected?
   const rows = await cursor.all();
   return groupStateChoices(rows);
+}
+
+async function tagChoices(
+  selection: Omit<FilterOptions, "tag">
+): Promise<ReactionTypeTag[]> {
+  const hasContributorSelection = selection.contributor.length > 0;
+  const contributorFilter = hasContributorSelection
+    ? aql`
+    LET org = DOCUMENT('Organization', css.organization)
+    FILTER org != null AND ${selection.contributor} ANY == org.name
+  `
+    : aql``;
+  const stateFilter = generateStateChoiceFilter(selection.state);
+  const q = aql`
+    FOR css IN CrossSectionSet
+      FILTER css.versionInfo.status == 'published'
+      ${contributorFilter}
+      FOR p IN IsPartOf
+        FILTER p._to == css._id
+        FOR cs IN CrossSection
+          FILTER cs._id == p._from
+          FOR r in Reaction
+            FILTER r._id == cs.reaction
+            ${stateFilter}
+            FOR t IN r.type_tags
+              COLLECT tt = t
+              SORT tt
+              RETURN tt
+  `;
+  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(q);
+  return await cursor.all();
 }
 
 export async function byId(id: string) {

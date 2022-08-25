@@ -66,30 +66,122 @@ export interface Facets {
   tag: string[];
 }
 
-async function stateChoice(): Promise<StateChoices> {
-  // TODO return choices for either r.lhs[0] or r.lhs[1]
+async function species1Choices(options: Omit<SearchOptions, "species1">) {
+  const hasSpecies2Option = Object.keys(options.species2.particle).length > 0;
+  const hasFilterOnTag = options.tag.length > 0;
+  const typeTagAql = hasFilterOnTag
+    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    : aql``;
   const stateAql = generateStateChoicesAql();
+  const species2Aql = generateStateFilterAql(options.species2, "s2");
+  const species2Filter = hasSpecies2Option
+    ? aql`
+      LET s2 = consumes[1]
+      FILTER ${species2Aql}
+    `
+    : aql``;
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
   const q = aql`
-  FOR cs IN CrossSection
-    FILTER cs.versionInfo.status == 'published'
-    FOR r in Reaction
-      FILTER r._id == cs.reaction
-        FOR c IN Consumes
-          FILTER c._from == r._id
-          FOR s IN State
-            FILTER s._id == c._to
-            ${stateAql}
+      FOR cs IN CrossSection
+        FILTER cs.versionInfo.status == 'published'
+        ${setNameFilter}
+        FOR r in Reaction
+          FILTER r._id == cs.reaction
+          ${typeTagAql}
+          LET consumes = (
+            FOR c IN Consumes
+              FILTER c._from == r._id
+              FOR s IN State
+                FILTER s._id == c._to
+                RETURN s
+          )
+          ${species2Filter}
+          LET s = consumes[0]
+          ${stateAql}
+    `;
+  const cursor: ArrayCursor<ChoiceRow> = await db().query(q);
+  const rows = await cursor.all();
+  return groupStateChoices(rows);
+}
+
+async function species2Choices(options: Omit<SearchOptions, "species2">) {
+  const hasSpecies1Option = Object.keys(options.species1.particle).length > 0;
+  const hasFilterOnTag = options.tag.length > 0;
+  const typeTagAql = hasFilterOnTag
+    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    : aql``;
+  const species1Aql = generateStateFilterAql(options.species1, "s1");
+  const species1Filter = hasSpecies1Option
+    ? aql`
+      LET s1 = consumes[0]
+      FILTER ${species1Aql}
+    `
+    : aql``;
+  const stateAql = generateStateChoicesAql();
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
+  const q = aql`
+    FOR cs IN CrossSection
+      FILTER cs.versionInfo.status == 'published'
+      ${setNameFilter}
+      FOR r in Reaction
+        FILTER r._id == cs.reaction
+        ${typeTagAql}
+        LET consumes = (
+          FOR c IN Consumes
+            FILTER c._from == r._id
+            FOR s IN State
+              FILTER s._id == c._to
+              RETURN s
+        )
+        ${species1Filter}
+        LET s = consumes[1]
+        ${stateAql}
   `;
   const cursor: ArrayCursor<ChoiceRow> = await db().query(q);
   const rows = await cursor.all();
   return groupStateChoices(rows);
 }
 
-async function setChoices(): Promise<string[]> {
+async function setChoices(
+  options: Omit<SearchOptions, "set_name">
+): Promise<string[]> {
   // TODO use set._key as value and set.name as label
   // TODO should have choice for cross sections which are not part of any set?
+
+  const hasFilterOnTag = options.tag.length > 0;
+  const typeTagAql = hasFilterOnTag
+    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    : aql``;
+  const speciesAql = generateSpeciesFilterForChoices(options);
+  const hasSpeciesOption = Object.keys(speciesAql.bindVars).length > 0;
+  let reactionAql = aql``;
+  if (hasSpeciesOption || typeTagAql) {
+    reactionAql = aql`
+      LET rf = (
+      FOR p IN IsPartOf
+      FILTER css._id == p._to
+      FOR cs IN CrossSection
+        FILTER cs._id == p._from
+        FOR r IN Reaction
+          FILTER r._id == cs.reaction
+          ${typeTagAql}
+          ${speciesAql}
+          RETURN 1
+      )
+      FILTER LENGTH(rf) > 0
+    `;
+  }
+
   const q = aql`
     FOR css IN CrossSectionSet
+      FILTER css.versionInfo.status == 'published'
+      ${reactionAql}
       SORT css.name
       RETURN css.name
   `;
@@ -97,16 +189,84 @@ async function setChoices(): Promise<string[]> {
   return await cursor.all();
 }
 
-export async function searchFacets(): Promise<Facets> {
+async function tagChoices(
+  options: Omit<SearchOptions, "tag">
+): Promise<ReactionTypeTag[]> {
+  const speciesAql = generateSpeciesFilterForChoices(options);
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
+  const q = aql`
+    FOR cs IN CrossSection
+      FILTER cs.versionInfo.status == 'published'
+      ${setNameFilter}
+      FOR r in Reaction
+        FILTER r._id == cs.reaction
+        ${speciesAql}
+        FOR t IN r.type_tags
+          COLLECT tt = t
+          RETURN tt
+  `;
+  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(q);
+  return await cursor.all();
+}
+
+function generateSpeciesFilterForChoices(
+  options: Pick<SearchOptions, "species1" | "species2">
+) {
+  const hasSpecies1Option = Object.keys(options.species1.particle).length > 0;
+  const hasSpecies2Option = Object.keys(options.species2.particle).length > 0;
+
+  let speciesAql = aql``;
+  if (hasSpecies1Option || hasSpecies2Option) {
+    let species1aql = aql``;
+    if (hasSpecies1Option) {
+      const species1filter = generateStateFilterAql(options.species1, "s1");
+      species1aql = aql`
+        LET s1 = consumes[0]
+        FILTER ${species1filter}
+      `;
+    }
+    let species2aql = aql``;
+    if (hasSpecies2Option) {
+      const species2filter = generateStateFilterAql(options.species2, "s2");
+      species2aql = aql`
+        LET s2 = consumes[1]
+        FILTER ${species2filter}
+      `;
+    }
+    speciesAql = aql`
+      LET consumes = (
+        FOR c IN Consumes
+          FILTER c._from == r._id
+          FOR s IN State
+            FILTER s._id == c._to
+            RETURN s
+      )
+      ${species1aql}
+      ${species2aql}
+    `;
+  }
+  return speciesAql;
+}
+
+export async function searchFacets(options: SearchOptions): Promise<Facets> {
   // TODO make facets depend on each other
   // * species2 should only show species not in species1
   // TODO make facets depend on current selection
   // * selecting a set should only show species1 in that set
+  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
+  const { set_name: _s, ...nonSetOptions } = options;
+  const { species1: _1, ...nonSpecies1Options } = options;
+  const { species2: _2, ...nonSpecies2Options } = options;
+  const { tag: _t, ...nonTagOptions } = options;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
-    set_name: await setChoices(),
-    species1: await stateChoice(),
-    species2: await stateChoice(),
-    tag: Object.values(ReactionTypeTag),
+    set_name: await setChoices(nonSetOptions),
+    species1: await species1Choices(nonSpecies1Options),
+    species2: await species2Choices(nonSpecies2Options),
+    tag: await tagChoices(nonTagOptions),
   };
 }
 
@@ -115,6 +275,19 @@ export interface SearchOptions {
   species1: StateChoices;
   species2: StateChoices;
   tag: string[];
+}
+
+function setNamesFilterAql(set_names: string[]) {
+  return aql`
+   LET setNames = (
+		FOR p IN IsPartOf
+		  FILTER p._from == cs._id
+		  FOR s IN CrossSectionSet
+        FILTER s._id == p._to
+        RETURN s.name
+	  )
+    FILTER LENGTH(${set_names}) == 0 OR ${set_names} ANY IN setNames
+  `;
 }
 
 export async function search(options: SearchOptions, paging: PagingOptions) {
@@ -148,13 +321,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 			FILTER r._id == rs._to
 			RETURN UNSET(r, ["_key", "_rev", "_id"])
 	  )
-	  LET setNames = (
-		FOR p IN IsPartOf
-		  FILTER p._from == cs._id
-		  FOR s IN CrossSectionSet
-			FILTER s._id == p._to
-			RETURN s.name
-	  )
+	  ${setNamesFilterAql(options.set_name)}
 	  LET reaction = FIRST(
 		FOR r in Reaction
 		  FILTER r._id == cs.reaction
@@ -174,7 +341,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 		  )
 		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
-	  FILTER LENGTH(${options.set_name}) == 0 OR ${options.set_name} ANY IN setNames
+	  
 	  ${species1Filter}
 	  ${species2Filter}
 	  ${typeTagAql}

@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps<
   return {
     props: {
       items,
-      facets: await searchFacets(),
+      facets: await searchFacets(filter),
       paging,
     },
   };

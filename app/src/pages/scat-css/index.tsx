@@ -4,7 +4,6 @@ import { ParsedUrlQuery } from "querystring";
 
 import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import {
-  Facets,
   FilterOptions,
   search,
   searchFacets,
@@ -19,10 +18,11 @@ import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
 } from "../../shared/StateFilter";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   items: CrossSectionSetHeading[];
-  facets: Facets;
+  facets: FilterOptions;
 }
 
 const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items, facets }) => {
@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     count: Number.MAX_SAFE_INTEGER,
   };
   const items = await search(filter, sort, paging);
-  const facets = await searchFacets();
+  const facets = await searchFacets(filter);
   return {
     props: {
       items,
@@ -72,7 +72,7 @@ function query2options(query: ParsedUrlQuery): FilterOptions {
   const options: FilterOptions = {
     contributor: query2array(query.contributor),
     state: stateSelectionFromSearchParam(state),
-    tag: query2array(query.tag),
+    tag: query2array(query.tag) as ReactionTypeTag[],
   };
   return options;
 }

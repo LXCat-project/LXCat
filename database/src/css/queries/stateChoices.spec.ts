@@ -3,6 +3,7 @@ import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
 import { createSet } from "./author_write";
 import {
+  emptySelection,
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
@@ -101,7 +102,7 @@ describe("stateChoices()", () => {
     });
 
     it("should return state choice tree", async () => {
-      const choices = await stateChoices();
+      const choices = await stateChoices(emptySelection);
       const expected: StateChoices = {
         particle: {
           P: {
@@ -215,7 +216,7 @@ describe("stateChoices()", () => {
     });
 
     it("should return state choice tree", async () => {
-      const choices = await stateChoices();
+      const choices = await stateChoices(emptySelection);
       const expected: StateChoices = {
         particle: {
           H2: {
@@ -330,7 +331,7 @@ describe("stateChoices()", () => {
     });
 
     it("should return state choice tree without electron", async () => {
-      const choices = await stateChoices();
+      const choices = await stateChoices(emptySelection);
       const expected: StateChoices = {
         particle: {
           P: {
@@ -440,7 +441,7 @@ describe("stateChoices()", () => {
     });
 
     it("should return state choice tree", async () => {
-      const choices = await stateChoices();
+      const choices = await stateChoices(emptySelection);
       const expected: StateChoices = {
         particle: {
           N2: {
@@ -565,7 +566,7 @@ describe("stateChoices()", () => {
     });
 
     it("should return state choice tree", async () => {
-      const choices = await stateChoices();
+      const choices = await stateChoices(emptySelection);
       const expected: StateChoices = {
         particle: {
           Ar: {
