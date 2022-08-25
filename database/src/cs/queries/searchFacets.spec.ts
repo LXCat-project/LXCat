@@ -324,13 +324,12 @@ describe("searchFacets()", () => {
       });
     });
 
-
-    describe('with set=N2 selected', () => {
+    describe("with set=N2 selected", () => {
       let facets: Facets;
       beforeAll(async () => {
         const selection: SearchOptions = {
           ...emptySelection,
-          set_name: ['Ar set']
+          set_name: ["Ar set"],
         };
         facets = await searchFacets(selection);
       });
@@ -374,7 +373,7 @@ describe("searchFacets()", () => {
         const expected = ["Ar set", "H2 set", "N2 set"];
         expect(facets.set_name).toEqual(expected);
       });
-    })
+    });
   });
 });
 

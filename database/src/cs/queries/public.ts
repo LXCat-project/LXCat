@@ -80,8 +80,10 @@ async function species1Choices(options: Omit<SearchOptions, "species1">) {
       FILTER ${species2Aql}
     `
     : aql``;
-  const hasSetNameOption = options.set_name.length > 0
-  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
   const q = aql`
       FOR cs IN CrossSection
         FILTER cs.versionInfo.status == 'published'
@@ -119,8 +121,10 @@ async function species2Choices(options: Omit<SearchOptions, "species2">) {
     `
     : aql``;
   const stateAql = generateStateChoicesAql();
-  const hasSetNameOption = options.set_name.length > 0
-  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
   const q = aql`
     FOR cs IN CrossSection
       FILTER cs.versionInfo.status == 'published'
@@ -189,8 +193,10 @@ async function tagChoices(
   options: Omit<SearchOptions, "tag">
 ): Promise<ReactionTypeTag[]> {
   const speciesAql = generateSpeciesFilterForChoices(options);
-  const hasSetNameOption = options.set_name.length > 0
-  const setNameFilter = hasSetNameOption ? setNamesFilterAql(options.set_name) : aql``
+  const hasSetNameOption = options.set_name.length > 0;
+  const setNameFilter = hasSetNameOption
+    ? setNamesFilterAql(options.set_name)
+    : aql``;
   const q = aql`
     FOR cs IN CrossSection
       FILTER cs.versionInfo.status == 'published'
@@ -250,10 +256,12 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
   // * species2 should only show species not in species1
   // TODO make facets depend on current selection
   // * selecting a set should only show species1 in that set
+  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key*/
   const { set_name: _s, ...nonSetOptions } = options;
   const { species1: _1, ...nonSpecies1Options } = options;
   const { species2: _2, ...nonSpecies2Options } = options;
   const { tag: _t, ...nonTagOptions } = options;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
     set_name: await setChoices(nonSetOptions),
     species1: await species1Choices(nonSpecies1Options),
@@ -275,11 +283,11 @@ function setNamesFilterAql(set_names: string[]) {
 		FOR p IN IsPartOf
 		  FILTER p._from == cs._id
 		  FOR s IN CrossSectionSet
-			FILTER s._id == p._to
-			RETURN s.name
+        FILTER s._id == p._to
+        RETURN s.name
 	  )
     FILTER LENGTH(${set_names}) == 0 OR ${set_names} ANY IN setNames
-  `
+  `;
 }
 
 export async function search(options: SearchOptions, paging: PagingOptions) {
