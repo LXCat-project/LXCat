@@ -1,12 +1,18 @@
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { db } from "../../db";
+import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
+import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { State } from "@lxcat/schema/dist/core/state";
+
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
   loadTestUserAndOrg,
 } from "../../auth/testutils";
+import { createSet } from "../../css/queries/author_write";
+import { db } from "../../db";
 import { startDbContainer } from "../../testutils";
 import { CrossSectionSetInputOwned } from "./author_read";
+import { FilterOptions } from "./public";
 
 export async function loadTestSets() {
   const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
@@ -109,3 +115,94 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
 }
 
 export const sampleEmail = "somename@example.com";
+
+export const sampleSets4Search = async () => {
+  const states = {
+    e: {
+      particle: "e",
+      charge: -1,
+    },
+    H2: {
+      particle: "H2",
+      charge: 0,
+    },
+    N2: {
+      particle: "N2",
+      charge: 0,
+    },
+    Arp: {
+      particle: "Ar",
+      charge: 1,
+    },
+    Ar: {
+      particle: "Ar",
+      charge: 0,
+    },
+  };
+  await createTestSet(
+    "H2 set",
+    states.e,
+    states.H2,
+    [ReactionTypeTag.Effective],
+    "Some organization"
+  );
+  await createTestSet(
+    "N2 set",
+    states.e,
+    states.N2,
+    [ReactionTypeTag.Effective],
+    "Some other organization"
+  );
+  await createTestSet(
+    "Ar set",
+    states.Arp,
+    states.Ar,
+    [ReactionTypeTag.Ionization],
+    "Some organization"
+  );
+};
+
+async function createTestSet(
+  name: string,
+  c1: State<AnyAtomJSON | AnyMoleculeJSON>,
+  c2: State<AnyAtomJSON | AnyMoleculeJSON>,
+  type_tags: ReactionTypeTag[],
+  contributor: string
+) {
+  await createSet({
+    complete: false,
+    contributor,
+    name,
+    description: "Some description",
+    references: {},
+    states: {
+      c1,
+      c2,
+    },
+    processes: [
+      {
+        reaction: {
+          lhs: [
+            { count: 1, state: "c1" },
+            { count: 1, state: "c2" },
+          ],
+          rhs: [],
+          reversible: false,
+          type_tags,
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+    ],
+  });
+}
+
+export const emptySelection: Readonly<FilterOptions> = {
+  state: { particle: {} },
+  contributor: [],
+  tag: [],
+};
