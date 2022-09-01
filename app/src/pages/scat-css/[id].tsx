@@ -5,13 +5,28 @@ import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 import { Reference } from "../../shared/Reference";
+import { useMemo } from "react";
 
 interface Props {
   set: CrossSectionSetItem;
 }
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
-  const references = set.processes.flatMap((p) => p.reference);
+  // TODO dont uniqueify references of each process here, but get references for set from db
+
+  const references = useMemo(() => {
+    const uniqrefids = new Set<string>();
+    return set.processes.flatMap((p) =>
+      p.reference.filter((r) => {
+        if (uniqrefids.has(r.id)) {
+          return false; // skip duplicate
+        } else {
+          uniqrefids.add(r.id);
+          return true;
+        }
+      })
+    );
+  }, [set.processes]);
   return (
     <Layout title={`Scattering Cross Section set - ${set.name}`}>
       <h1>{set.name}</h1>
@@ -53,7 +68,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
           </a>
         </li>
       </ul>
-      <h2>Reference</h2>
+      <h2>References</h2>
       <ul>
         {references.map((r, i) => (
           <li key={i}>
