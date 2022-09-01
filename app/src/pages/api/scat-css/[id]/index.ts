@@ -8,19 +8,46 @@ import {
 } from "../../../../auth/middleware";
 import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
 import { validator } from "@lxcat/schema/dist/css/validate";
-import { byId } from "@lxcat/database/dist/css/queries/public";
+import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import {
   deleteSet,
   updateSet,
 } from "@lxcat/database/dist/css/queries/author_write";
+import Cite from "citation-js";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperRole)
   .get(async (req, res) => {
-    const { id } = req.query;
+    const { id, refstyle = "csl" } = req.query;
     if (typeof id === "string") {
-      const data = await byId(id);
+      const data = await byIdJSON(id);
+
+      if (data === undefined) {
+        res.status(404).end("Not found");
+        return;
+      }
+
+      if (refstyle === "csl") {
+      } else if (refstyle === "bibtex") {
+        (data as any).references = Object.fromEntries(
+          Object.entries(data.references).map(([key, value]) => {
+            const cite = new Cite(value);
+            return [key, cite.format("bibtex")];
+          })
+        );
+      } else if (refstyle === "apa") {
+        (data as any).references = Object.fromEntries(
+          Object.entries(data.references).map(([key, value]) => {
+            const cite = new Cite(value);
+            return [key, cite.format("bibliography")];
+          })
+        );
+      } else {
+        res.send(
+          `Incorrect reference style found: ${refstyle}. Expected csl or bibtex.`
+        );
+      }
       res.json(data);
     }
   })

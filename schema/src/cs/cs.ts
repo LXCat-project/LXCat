@@ -1,5 +1,5 @@
-import { CSL } from "../core/csl";
 import { Reaction } from "../core/reaction";
+import { Reference } from "../core/reference";
 import { CSStorage } from "./data_types";
 
 export interface CSParameters {
@@ -9,7 +9,7 @@ export interface CSParameters {
 
 export type CrossSection<
   StateType,
-  ReferenceType = string | CSL.Data,
+  ReferenceType = Reference,
   StorageType = CSStorage
 > = {
   reaction: Reaction<StateType>;

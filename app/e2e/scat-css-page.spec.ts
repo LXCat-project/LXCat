@@ -19,7 +19,7 @@ test.describe("cross section set page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-css");
     await page.locator("text=Some name").click();
-    await page.waitForSelector('h2:has-text("Processes")')
+    await page.waitForSelector('h2:has-text("Processes")');
   });
 
   test("should have single process listed", async ({ page }) => {
@@ -55,13 +55,15 @@ test.describe("cross section set page", () => {
     // TODO check multiple sections are drawn
   });
 
-  test.describe('when all checkboxes are unchecked', () => {
-    test.beforeEach(async ({page}) => {
-      page.locator("input[type=checkbox]").uncheck()
-    })
+  test.describe("when all checkboxes are unchecked", () => {
+    test.beforeEach(async ({ page }) => {
+      page.locator("input[type=checkbox]").uncheck();
+    });
 
-    test('should show no plot', async ({page}) => {
-      await expect(page.locator('text=Nothing to plot, because zero sections are selected')).toBeVisible()
-    })
-  })
+    test("should show no plot", async ({ page }) => {
+      await expect(
+        page.locator("text=Nothing to plot, because zero sections are selected")
+      ).toBeVisible();
+    });
+  });
 });

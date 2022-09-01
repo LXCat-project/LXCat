@@ -107,7 +107,11 @@ export async function truncateNonUserCollections() {
   }
 }
 
-export async function uploadAndPublishDummySet(browser: Browser, file = 'dummy.json', org = "Some organization") {
+export async function uploadAndPublishDummySet(
+  browser: Browser,
+  file = "dummy.json",
+  org = "Some organization"
+) {
   const page = await browser.newPage();
   // Add a set
   await page.goto("/author/scat-css/addraw");
