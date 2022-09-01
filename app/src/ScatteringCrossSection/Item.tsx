@@ -61,7 +61,7 @@ export const Item = (props: CrossSectionItem) => {
         <summary>Data as table</summary>
         <LutTable data={props.data} labels={props.labels} units={props.units} />
       </details>
-      <h2>Reference</h2>
+      <h2>References</h2>
       <ul>
         {props.reference.map((r, i) => (
           <li key={i}>

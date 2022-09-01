@@ -4,12 +4,29 @@ import { byId } from "@lxcat/database/dist/css/queries/public";
 import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
+import { Reference } from "../../shared/Reference";
+import { useMemo } from "react";
 
 interface Props {
   set: CrossSectionSetItem;
 }
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
+  // TODO dont uniqueify references of each process here, but get references for set from db
+
+  const references = useMemo(() => {
+    const uniqrefids = new Set<string>();
+    return set.processes.flatMap((p) =>
+      p.reference.filter((r) => {
+        if (uniqrefids.has(r.id)) {
+          return false; // skip duplicate
+        } else {
+          uniqrefids.add(r.id);
+          return true;
+        }
+      })
+    );
+  }, [set.processes]);
   return (
     <Layout title={`Scattering Cross Section set - ${set.name}`}>
       <h1>{set.name}</h1>
@@ -43,13 +60,21 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
         {/* TODO implement API endpoint for Bolsig+ format download */}
         <li>
           <a
-            href="/api/scat-css/${set.id}.txt"
+            href={`/api/scat-css/${set.id}.txt`}
             target="_blank"
             rel="noreferrer"
           >
             Download Bolsig+ format
           </a>
         </li>
+      </ul>
+      <h2>References</h2>
+      <ul>
+        {references.map((r, i) => (
+          <li key={i}>
+            <Reference {...r} />
+          </li>
+        ))}
       </ul>
       <h2>Processes</h2>
       <ProcessList processes={set.processes} />
