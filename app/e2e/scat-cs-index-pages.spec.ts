@@ -8,7 +8,11 @@ test.use({ storageState: "adminStorageState.json" });
 
 test.beforeAll(async ({ browser }) => {
   await uploadAndPublishDummySet(browser);
-  await uploadAndPublishDummySet(browser, 'dummy2.json', 'Some other organization');
+  await uploadAndPublishDummySet(
+    browser,
+    "dummy2.json",
+    "Some other organization"
+  );
 });
 
 test.afterAll(async () => {
@@ -20,23 +24,27 @@ test.describe("cross section index page", () => {
     await page.goto("/scat-cs");
   });
 
-  test('should have 2 items listed', async ({page}) => {
-    const section1 = page.locator('text=13 e + Uo → Uo^42-')
-    const section2 = page.locator('text=e + Uo{X^1S_g{v=1}} → e + Uo{B^1S_u{v=2}}')
+  test("should have 2 items listed", async ({ page }) => {
+    const section1 = page.locator("text=13 e + Uo → Uo^42-");
+    const section2 = page.locator(
+      "text=e + Uo{X^1S_g{v=1}} → e + Uo{B^1S_u{v=2}}"
+    );
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
-  })
+  });
 
-  test.describe('when filtered on set name', () => {
-    test.beforeEach(async ({page}) => {
-      await page.locator('label:has-text("Some other name")').click()
-    })
+  test.describe("when filtered on set name", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.locator('label:has-text("Some other name")').click();
+    });
 
-    test('should list single section', async ({page}) => {
-      const section2 = page.locator('text=e + Uo{X^1S_g{v=1}} → e + Uo{B^1S_u{v=2}}')
+    test("should list single section", async ({ page }) => {
+      const section2 = page.locator(
+        "text=e + Uo{X^1S_g{v=1}} → e + Uo{B^1S_u{v=2}}"
+      );
       await expect(section2).toBeVisible();
-    })
-  })
+    });
+  });
 });
 
 test.describe("cross section set index page", () => {
@@ -44,21 +52,21 @@ test.describe("cross section set index page", () => {
     await page.goto("/scat-css");
   });
 
-  test('should have 2 items listed', async ({page}) => {
-    const section1 = page.locator('text=Some organization')
-    const section2 = page.locator('text=Some other organization')
+  test("should have 2 items listed", async ({ page }) => {
+    const section1 = page.locator("text=Some organization");
+    const section2 = page.locator("text=Some other organization");
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
-  })
+  });
 
-  test.describe('when filtered on electronic reaction type tag', () => {
-    test.beforeEach(async ({page}) => {
-      await page.locator('label:has-text("Electronic")').click()
-    })
+  test.describe("when filtered on electronic reaction type tag", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.locator('label:has-text("Electronic")').click();
+    });
 
-    test('should list single section', async ({page}) => {
-      const section2 = page.locator('text=Some other organization')
+    test("should list single section", async ({ page }) => {
+      const section2 = page.locator("text=Some other organization");
       await expect(section2).toBeVisible();
-    })
-  })
+    });
+  });
 });
