@@ -17,6 +17,7 @@ export async function byId(id: string) {
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
   FOR cs IN CrossSection
     FILTER cs._key == ${id}
+    FILTER cs.versionInfo.status != 'draft'
     LET refs = (
     FOR rs IN References
       FILTER rs._from == cs._id
@@ -29,6 +30,7 @@ export async function byId(id: string) {
       FILTER p._from == cs._id
       FOR s IN CrossSectionSet
         FILTER s._id == p._to
+        FILTER ['published' ,'retracted'] ANY == s.versionInfo.status
         RETURN MERGE(UNSET(s, ["_key", "_rev", "_id"]), {id: s._key})
     )
     LET reaction = (
@@ -284,6 +286,7 @@ function setNamesFilterAql(set_names: string[]) {
 		  FILTER p._from == cs._id
 		  FOR s IN CrossSectionSet
         FILTER s._id == p._to
+        FILTER s.versionInfo.status == 'published'
         RETURN s.name
 	  )
     FILTER LENGTH(${set_names}) == 0 OR ${set_names} ANY IN setNames
@@ -314,6 +317,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
 	FOR cs IN CrossSection
+    FILTER cs.versionInfo.status == 'published'
 	  LET refs = (
 		FOR rs IN References
 		  FILTER rs._from == cs._id
