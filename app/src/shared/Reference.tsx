@@ -2,9 +2,6 @@ import Cite from "citation-js";
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 export const Reference = (r: ReferenceRecord) => {
-  if ("string" in r) {
-    return <cite>{r}</cite>;
-  }
   const cite = new Cite(r);
   // Format CSL into APA style bibliography
   const bibliography = cite.format("bibliography");
