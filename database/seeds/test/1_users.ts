@@ -15,6 +15,7 @@ export default async function () {
   const newUser = await users.save(user, {
     returnNew: true,
   });
+  // TODO hide logs of seed behind a flag
   console.log(`Test user added with _key = ${newUser._key}`);
 
   const organizations = db().collection<Organization>("Organization");
