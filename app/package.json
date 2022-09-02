@@ -13,6 +13,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@lxcat/converter": "*",
     "@lxcat/database": "*",
     "@lxcat/schema": "*",
     "@next/bundle-analyzer": "^12.2.5",
@@ -60,6 +61,7 @@
     "babel-loader": "^8.2.5",
     "eslint": "^8.21.0",
     "eslint-config-next": "12.1.0",
+    "node-loader": "^2.0.0",
     "oidc-provider": "^7.11.3",
     "prettier": "^2.6.2",
     "testcontainers": "^8.11.0",
