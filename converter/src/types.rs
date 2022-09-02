@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use std::{collections::HashMap, ops::Deref};
+use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct StateEntry<StateType> {

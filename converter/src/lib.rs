@@ -6,7 +6,7 @@ use std::{collections::HashMap, error::Error};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
-use types::{Document, Parameters, Process, Reaction, State, StateEntry};
+use types::{Document, Parameters, Reaction, State, StateEntry};
 
 fn get_particles<'a>(
     reaction: &'a Reaction<String>,
@@ -106,92 +106,11 @@ fn get_mass_ratio(parameters: &Option<Parameters>) -> Option<f64> {
 }
 
 const STARS: &str = "************************************************************************************************************************";
-const HASHES: &str = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-
-// impl CSItem {
-//     pub fn as_legacy(mut self) -> std::result::Result<String, Box<dyn Error>> {
-//         let mut legacy = String::new();
-
-//         let tag = parse_tag(&self.reaction.type_tags).to_uppercase();
-//         let tag = parse_tag(&self.reaction.type_tags);
-
-//         write!(legacy, "\n{}", tag.to_uppercase())?;
-//         write!(legacy, "\n{}", get_species(&self.reaction).unwrap())?;
-//         write!(
-//             legacy,
-//             "\n {:.6e}",
-//             match tag.to_uppercase().as_str() {
-//                 "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&self.parameters)
-//                     .ok_or_else(|| ParserError::MissingMassRatio(self.id))?,
-//                 _ => self.threshold,
-//             }
-//         )?;
-//         // TODO: Write single cross section version.
-//         // write!(
-//         //     legacy,
-//         //     "\nSPECIES: {}",
-//         //     get_particles(&self.reaction, &self.states).join(" / ")
-//         // )?;
-//         write!(
-//             legacy,
-//             "\nPROCESS: {} {}-> {}, {}",
-//             parse_entries(&self.reaction.lhs),
-//             match self.reaction.reversible {
-//                 true => "<",
-//                 false => "",
-//             },
-//             parse_entries(&self.reaction.rhs),
-//             tag
-//         )?;
-
-//         match tag {
-//             "Effective" | "Elastic" => {
-//                 write!(legacy, "\nPARAM.:  m/M = {}", get_mass_ratio(process)?,)
-//             }
-//             _ => {
-//                 write!(
-//                     legacy,
-//                     "\nPARAM.:  E = {} {}",
-//                     process.threshold, process.units.0
-//                 )
-//             }
-//         }?;
-
-//         // TODO: It seems that supplying a statistical weight ratio is optional for
-//         // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
-//         // the dataset be perceived as faulty?
-//         if process.reaction.reversible {
-//             if let Some(params) = &process.parameters {
-//                 if let Some(sw_ratio) = params.statistical_weight_ratio {
-//                     write!(legacy, ", g1/g0 = {}", sw_ratio)?;
-//                 }
-//             }
-//         }
-//         if self.complete {
-//             write!(legacy, ", complete set")?;
-//         }
-//         for reference in &process.reference {
-//             write!(legacy, "\nCOMMENT: {}", self.references[reference].as_str())?;
-//         }
-//         write!(
-//             legacy,
-//             "\nCOLUMNS: {} ({}) | {} ({})",
-//             process.labels.0, process.units.0, process.labels.1, process.units.1
-//         )?;
-//         write!(legacy, "\n-----------------------------")?;
-//         for (x, y) in process.data.iter() {
-//             write!(legacy, "\n {:+.6e}\t{:.6e}", x, y)?;
-//         }
-//         writeln!(legacy, "\n-----------------------------")?;
-
-//         "".to_string()
-//     }
-// }
+const END: &str = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 #[derive(Debug)]
 enum ParserError {
     MissingMassRatio(String),
-    ZeroSpecies,
 }
 
 impl std::fmt::Display for ParserError {
@@ -204,9 +123,6 @@ impl std::fmt::Display for ParserError {
                     id
                 )
             }
-            ParserError::ZeroSpecies => {
-                write!(f, "Zero species found in reaction.")
-            }
         }
     }
 }
@@ -217,7 +133,6 @@ impl Document {
     pub fn into_legacy(mut self) -> std::result::Result<String, Box<dyn Error>> {
         let mut legacy = String::new();
 
-        // legacy += format!("{}\n\nCOMMENT: {}\n\n{}\n", STARS, self.description, STARS).as_str();
         write!(
             legacy,
             "{}\n\nCOMMENT: {}\n\n{}\n",
@@ -301,7 +216,7 @@ impl Document {
             writeln!(legacy, "\n-----------------------------")?;
         }
 
-        write!(legacy, "{}", HASHES)?;
+        write!(legacy, "{}", END)?;
 
         Ok(legacy)
     }
