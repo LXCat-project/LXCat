@@ -28,11 +28,9 @@ function parse_shell_entry(entry: ShellEntry): string {
     return "";
   }
 
-  return (
-    entry.n.toString() +
-    electronic_orbital[entry.l] +
-    (entry.occupance > 1 ? "^" + entry.occupance.toString() : "")
-  );
+  return `${entry.n}${electronic_orbital[entry.l]}${
+    entry.occupance > 1 ? `^{${entry.occupance}}` : ""
+  }`;
 }
 
 function parse_shell_config(config: Array<ShellEntry>): string {
@@ -47,16 +45,13 @@ function parse_shell_config(config: Array<ShellEntry>): string {
 
 // TODO: Move type specific parsers to their dedicated files (in this folder).
 function parse_LS_term_impl(term: LSTermImpl): string {
-  return (
-    "^" +
-    (2 * term.S + 1).toString() +
-    net_orbital[term.L] +
-    (term.P == -1 ? "^o" : "")
-  );
+  return `^{${2 * term.S + 1}}${net_orbital[term.L]}${
+    term.P == -1 ? "^o" : ""
+  }`;
 }
 
 function parse_LS_term(term: LSTerm): string {
-  return parse_LS_term_impl(term) + "_" + parse_div_two(term.J);
+  return `${parse_LS_term_impl(term)}_{${parse_div_two(term.J)}}`;
 }
 
 export function parse_LS(e: PUA<AtomLSImpl>): string {
@@ -66,27 +61,20 @@ export function parse_LS(e: PUA<AtomLSImpl>): string {
 
   const config = parse_shell_config(e.config);
 
-  return config + (config != "" ? ":" : "") + parse_LS_term(e.term);
+  return `${config}${config != "" ? ":" : ""}${parse_LS_term(e.term)}`;
 }
 
 function parse_div_two(n: number): string {
   if (Number.isInteger(n)) return n.toString();
-  if (Number.isInteger(n * 2)) return (n * 2).toString() + "/2";
+  if (Number.isInteger(n * 2)) return `${n * 2}/2`;
 
-  throw "Number " + n.toString() + " is not an integer or a half integer.";
+  throw new Error(`Number ${n} is not an integer or a half integer.`);
 }
 
 function parse_J1L2_term(term: J1L2Term): string {
-  return (
-    "^" +
-    (2 * term.S + 1).toString() +
-    "[" +
-    parse_div_two(term.K) +
-    "]" +
-    (term.P == -1 ? "^o" : "") +
-    "_" +
-    parse_div_two(term.J)
-  );
+  return `^${2 * term.S + 1}[${parse_div_two(term.K)}]${
+    term.P == -1 ? "^o" : ""
+  }_${parse_div_two(term.J)}}`;
 }
 
 export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
