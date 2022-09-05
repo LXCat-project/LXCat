@@ -79,7 +79,7 @@ export function parse_state<
     return ostate;
   }
 
-  ostate.id = state.particle + parse_charge(state.charge) + "{";
+  ostate.id = state.particle + parse_charge(state.charge) + "(";
 
   if (get_particle_type[ostate.type] === ParticleType.Molecule) {
     const parser = parsers[ostate.type] as ParseMolecule<IT>;
@@ -89,24 +89,24 @@ export function parse_state<
       ostate.id += e.summary;
 
       if (e.vibrational) {
-        ostate.id += "{v=";
+        ostate.id += "(v=";
         for (const v of e.vibrational) {
           v.summary = parser.v(v as ExtractV<IT>);
           ostate.id += v.summary;
 
           if (v.rotational) {
-            ostate.id += "{J=";
+            ostate.id += "(J=";
             for (const r of v.rotational) {
               r.summary = parser.r(r as ExtractR<IT>);
               ostate.id += r.summary + "|";
             }
             ostate.id = ostate.id.slice(0, ostate.id.length - 1);
-            ostate.id += "}";
+            ostate.id += ")";
           }
           ostate.id += "|";
         }
         ostate.id = ostate.id.slice(0, ostate.id.length - 1);
-        ostate.id += "}";
+        ostate.id += ")";
       }
       ostate.id += "|";
     }
@@ -119,6 +119,6 @@ export function parse_state<
       ostate.id += e.summary + "|";
     }
   }
-  ostate.id = ostate.id.slice(0, ostate.id.length - 1) + "}";
+  ostate.id = ostate.id.slice(0, ostate.id.length - 1) + ")";
   return ostate;
 }

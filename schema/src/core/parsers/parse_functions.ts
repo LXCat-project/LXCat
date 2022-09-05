@@ -9,8 +9,9 @@ import { RotationalImpl } from "../molecules/components/rotational";
 import { DiatomicVibrationalImpl } from "../molecules/components/vibrational/diatomic";
 import { LinearTriatomVibrationalImpl } from "../molecules/components/vibrational/linear_triatomic";
 
-const net_orbital = ["S", "P", "D", "F", "G", "H"];
 const electronic_orbital = ["s", "p", "d", "f", "g", "h"];
+const atomic_orbital = ["S", "P", "D", "F", "G", "H"];
+const molecular_orbital = ["\\Sigma", "\\Pi", "\\Delta"];
 
 // TODO: Parsing function could possibly also perform physical checks on data.
 
@@ -45,7 +46,7 @@ function parse_shell_config(config: Array<ShellEntry>): string {
 
 // TODO: Move type specific parsers to their dedicated files (in this folder).
 function parse_LS_term_impl(term: LSTermImpl): string {
-  return `^{${2 * term.S + 1}}${net_orbital[term.L]}${
+  return `^{${2 * term.S + 1}}${atomic_orbital[term.L]}${
     term.P == -1 ? "^o" : ""
   }`;
 }
@@ -72,9 +73,9 @@ function parse_div_two(n: number): string {
 }
 
 function parse_J1L2_term(term: J1L2Term): string {
-  return `^${2 * term.S + 1}[${parse_div_two(term.K)}]${
+  return `^{${2 * term.S + 1}}[${parse_div_two(term.K)}]${
     term.P == -1 ? "^o" : ""
-  }_${parse_div_two(term.J)}}`;
+  }_{${parse_div_two(term.J)}}`;
 }
 
 export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
@@ -90,23 +91,15 @@ export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
     parse_shell_config(e.config.excited.config) +
     "(" +
     parse_LS_term_impl(e.config.excited.term) +
-    "):";
+    ")";
 
   return config + parse_J1L2_term(e.term);
 }
 
 function parse_LS1_term(term: LS1Term): string {
-  return (
-    net_orbital[term.L] +
-    " ^" +
-    (2 * term.S + 1).toString() +
-    "[" +
-    parse_div_two(term.K) +
-    "]" +
-    (term.P == -1 ? "^o" : "") +
-    "_" +
-    parse_div_two(term.J)
-  );
+  return `${atomic_orbital[term.L]}^{${2 * term.S + 1}}[${parse_div_two(
+    term.K
+  )}]${term.P == -1 ? "^o" : ""}_{${parse_div_two(term.J)}}`;
 }
 
 export function parse_LS1(e: PUA<AtomLS1Impl>): string {
@@ -122,7 +115,7 @@ export function parse_LS1(e: PUA<AtomLS1Impl>): string {
     parse_shell_config(e.config.excited.config) +
     "(" +
     parse_LS_term_impl(e.config.excited.term) +
-    "):";
+    ")";
 
   return config + parse_LS1_term(e.term);
 }
@@ -138,7 +131,7 @@ export function parse_e_me(e: PUE<LinearElectronicImpl>): string {
     ref_s = "^" + e.reflection;
   }
 
-  return e.e + "^" + (2 * e.S + 1) + net_orbital[e.Lambda] + ref_s;
+  return `${e.e}^{${2 * e.S + 1}}${molecular_orbital[e.Lambda]}${ref_s}`;
 }
 
 export function parse_e_lice(
@@ -154,9 +147,9 @@ export function parse_e_lice(
     ref_s = "^" + e.reflection;
   }
 
-  return (
-    e.e + "^" + (2 * e.S + 1) + net_orbital[e.Lambda] + "_" + e.parity + ref_s
-  );
+  return `${e.e}^{${2 * e.S + 1}}${molecular_orbital[e.Lambda]}_{${
+    e.parity
+  }}${ref_s}`;
 }
 
 export function parse_v_hdv(v: PUV<DiatomicVibrationalImpl>): string {
