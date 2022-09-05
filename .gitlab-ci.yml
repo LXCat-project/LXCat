@@ -12,6 +12,8 @@ build-dev:
     paths:
       - .npm/
   script:
+    - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
+    - source "$HOME/.cargo/env"
     - npm ci --cache .npm --prefer-offline
     - npm run build
     - npm run lint
@@ -22,6 +24,7 @@ build-dev:
       - node_modules
       - schema/dist
       - database/dist
+      - converter/dist
   #     - app/.next
 
 test-app:
