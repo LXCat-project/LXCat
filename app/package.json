@@ -15,6 +15,7 @@
   "dependencies": {
     "@lxcat/database": "*",
     "@lxcat/schema": "*",
+    "@next/bundle-analyzer": "^12.2.5",
     "arangojs": "^7.7.0",
     "citation-js": "^0.5.7",
     "mermaid": "^9.1.1",

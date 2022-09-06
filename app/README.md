@@ -208,3 +208,13 @@ The `app/e2e/global-setup.ts` file is used as playwrights global setup to spinup
 
 The `app/e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
 a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars. 
+
+## Optimizations
+
+To see which modules are loaded by web browser use
+
+```shell
+ANALYZE=true npm run build
+```
+
+Command writes `.next/analyze/client.html`.
