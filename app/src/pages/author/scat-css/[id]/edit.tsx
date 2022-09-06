@@ -10,11 +10,13 @@ import {
 } from "@lxcat/database/dist/css/queries/author_read";
 import Link from "next/link";
 import { EditForm } from "../../../../ScatteringCrossSectionSet/EditForm";
+import { listOrganizations, OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 
 interface Props {
   set: CrossSectionSetInputOwned;
   setKey: string;
   commitMessage: string;
+  organizations: OrganizationFromDB[];
 }
 
 const EditRawCrossSectionSetPage: NextPage<Props> = ({
@@ -91,6 +93,7 @@ export const getServerSideProps: GetServerSideProps<
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
   const set = await byOwnerAndId(me.email, id);
+  const organizations = await listOrganizations(); // TODO filter to only orgs the logged in user is a member of
   const info = await getVersionInfo(id);
   const commitMessage =
     info !== undefined && info.commitMessage ? info.commitMessage : "";
@@ -107,6 +110,7 @@ export const getServerSideProps: GetServerSideProps<
       set,
       setKey: id,
       commitMessage,
+      organizations,
     },
   };
 };
