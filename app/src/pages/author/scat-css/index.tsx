@@ -64,9 +64,14 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
               <td>
                 {item.versionInfo.status === "draft" && (
                   <>
-                    <Link href={`/author/scat-css/${item._key}/editraw`}>
+                    <Link href={`/author/scat-css/${item._key}/edit`}>
                       <a>
                         <button>Edit</button>
+                      </a>
+                    </Link>
+                    <Link href={`/author/scat-css/${item._key}/editraw`}>
+                      <a>
+                        <button>Edit JSON</button>
                       </a>
                     </Link>
                     <button
@@ -89,9 +94,14 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
                 )}
                 {item.versionInfo.status === "published" && (
                   <>
-                    <Link href={`/author/scat-css/${item._key}/editraw`}>
+                    <Link href={`/author/scat-css/${item._key}/edit`}>
                       <a>
                         <button>Edit</button>
+                      </a>
+                    </Link>
+                    <Link href={`/author/scat-css/${item._key}/editraw`}>
+                      <a>
+                        <button>Edit JSON</button>
                       </a>
                     </Link>
                     <button
