@@ -1,0 +1,20 @@
+************************************************************************************************************************
+
+COMMENT: CO2 attachment cross section test.
+
+************************************************************************************************************************
+
+ATTACHMENT
+CO2(X^{1}\Sigma_{g}^+(v=0,0,0)) -> CO(X^{1}\Sigma^+) + O^-(^{2}P^o_{3/2})
+ 4.000000e0
+SPECIES: e / CO2 / CO / O
+PROCESS: e + CO2(X^{1}\Sigma_{g}^+(v=0,0,0)) -> CO(X^{1}\Sigma^+) + O^-(^{2}P^o_{3/2}), Attachment
+PARAM.:  E = 4 eV
+COMMENT: Test reference
+COLUMNS: Energy (eV) | Cross section (m^2)
+-----------------------------
+ +3.900000e0	0.000000e0
+ +4.000000e0	1.000000e-23
+ +4.500000e0	1.500000e-23
+-----------------------------
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

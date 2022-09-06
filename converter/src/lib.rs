@@ -28,36 +28,53 @@ fn get_particles<'a>(
     particles
 }
 
-fn get_species(reaction: &Reaction<String>) -> Result<String> {
-    let mut species: Vec<&str> = Vec::new();
-
-    reaction
-        .lhs
+fn get_species(entries: &Vec<StateEntry<String>>) -> Vec<&str> {
+    entries
         .iter()
-        .chain(reaction.rhs.iter())
-        .filter(|&entry| entry.state != "e")
-        .for_each(|entry| {
-            if !species.contains(&entry.state.as_str()) {
-                species.push(&entry.state);
+        .filter_map(|entry| {
+            if entry.state != "e" {
+                Some(entry.state.as_str())
+            } else {
+                None
             }
-        });
+        })
+        .collect()
+}
 
-    match species.len() {
-        0 => Err(napi::Error::new(
+fn get_reaction_summary(reaction: &Reaction<String>) -> Result<String> {
+    let lhs_species = get_species(&reaction.lhs);
+
+    if reaction
+        .type_tags
+        .iter()
+        .any(|tag| tag == "Elastic" || tag == "Effective")
+    {
+        return Ok(lhs_species[0].to_string());
+    }
+
+    let rhs_species = get_species(&reaction.rhs);
+
+    if lhs_species.len() == 0 {}
+
+    match (lhs_species.len(), rhs_species.len()) {
+        (0, _) => Err(napi::Error::new(
             napi::Status::Unknown,
             format!(
-                "Zero significant species found in reaction: {:?}.",
+                "Zero significant species found on lhs of reaction: {:?}.",
                 reaction
             ),
         )),
-        1 => Ok(species[0].to_string()),
-        2 => Ok(format!("{} -> {}", species[0], species[1])),
-        _ => Err(napi::Error::new(
+        (_, 0) => Err(napi::Error::new(
             napi::Status::Unknown,
             format!(
-                "More than two significant species found in reaction: {:?}.",
-                reaction,
+                "Zero significant species found on rhs of reaction: {:?}.",
+                reaction
             ),
+        )),
+        _ => Ok(format!(
+            "{} -> {}",
+            lhs_species.join(" + "),
+            rhs_species.join(" + ")
         )),
     }
 }
@@ -143,7 +160,11 @@ impl Document {
             let tag = parse_tag(&process.reaction.type_tags);
 
             write!(legacy, "\n{}", tag.to_uppercase())?;
-            write!(legacy, "\n{}", get_species(&process.reaction).unwrap())?;
+            write!(
+                legacy,
+                "\n{}",
+                get_reaction_summary(&process.reaction).unwrap()
+            )?;
             write!(
                 legacy,
                 "\n {:.6e}",
