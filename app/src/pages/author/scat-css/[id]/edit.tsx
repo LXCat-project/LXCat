@@ -26,6 +26,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
   set,
   setKey,
   commitMessage,
+  organizations
 }) => {
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
@@ -61,6 +62,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
         setKey={setKey}
         commitMessage={commitMessage}
         onSubmit={onSubmit}
+        organizations={organizations}
       />
       {errors.length > 0 && (
         <div>
