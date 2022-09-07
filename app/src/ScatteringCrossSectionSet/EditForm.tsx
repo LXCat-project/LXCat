@@ -1,17 +1,14 @@
+import { useRef } from "react";
 import {
-  useForm,
-  useFieldArray,
-  UseFormRegister,
-  useWatch,
-  Control,
-  UseFormSetValue,
+  Control, useFieldArray, useForm, UseFormRegister,
+  useWatch
 } from "react-hook-form";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
+import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { useEffect, useRef, useState } from "react";
 import { Pair } from "@lxcat/schema/dist/core/util";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 
 interface Props {
   set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
@@ -53,9 +50,7 @@ const ReactionEntryForm = ({
         style={{ width: "2rem" }}
         {...register(
           `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`,
-          { required: true, min: 1, 
-            valueAsNumber: true,
-           }
+          { required: true, min: 1, valueAsNumber: true }
         )}
       />
       <select
@@ -103,13 +98,12 @@ const ReactionForm = ({
     <div>
       <h4>Reaction</h4>
       <div style={{ display: "flex" }}>
-        <div style={{border: '1px solid #333', padding:2}}>
+        <div style={{ border: "1px solid #333", padding: 2 }}>
           {lhsField.fields.map((field, index) => {
             const isNotLast = lhsField.fields.length - 1 !== index;
             return (
               <div key={field.id}>
                 <ReactionEntryForm
-                  
                   side={"lhs"}
                   processIndex={processIndex}
                   index={index}
@@ -129,8 +123,8 @@ const ReactionForm = ({
             +
           </button>
         </div>
-        <div>{reversible ? "⇋" : "→"}</div>
-        <div style={{border: '1px solid #333', padding:2}}>
+        <div>{reversible ? "⇋" : "➙"}</div>
+        <div style={{ border: "1px solid #333", padding: 2 }}>
           {rhsField.fields.map((field, index) => {
             const isNotLast = rhsField.fields.length - 1 !== index;
             return (
@@ -236,7 +230,7 @@ const LUTForm = ({
     control,
     name: `set.processes.${index}.data`,
   });
-  const tableStyle = {border: '1px solid #333'}
+  const tableStyle = { border: "1px solid #333" };
   return (
     <div>
       <h4>Data</h4>
@@ -275,40 +269,52 @@ const LUTForm = ({
               />
               )
             </th>
-            <th><button title="Add" type="button" onClick={() => dataRows.append([0, 0])}>+</button></th>
+            <th>
+              <button
+                title="Add"
+                type="button"
+                onClick={() => dataRows.append([0, 0])}
+              >
+                +
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
           {dataRows.fields.map((r, i) => (
             <tr key={i}>
               <td>
-              <input
-                style={{ width: "10rem" }}
-                type="number"
-                {...register(`set.processes.${index}.data.${i}.0`, {
-                  required: true,
-                  valueAsNumber: true
-                })}
-              />
+                <input
+                  style={{ width: "10rem" }}
+                  {...register(`set.processes.${index}.data.${i}.0`, {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                />
               </td>
               <td>
-              <input
-                style={{ width: "10rem" }}
-                type="number"
-                {...register(`set.processes.${index}.data.${i}.1`, {
-                  required: true,
-                  valueAsNumber: true
-                })}
-              />
+                <input
+                  style={{ width: "10rem" }}
+                  {...register(`set.processes.${index}.data.${i}.1`, {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                />
               </td>
               <td>
-              <button title="Remove" type="button" onClick={() => dataRows.remove(i)}>&minus;</button>
+                <button
+                  title="Remove"
+                  type="button"
+                  onClick={() => dataRows.remove(i)}
+                >
+                  &minus;
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div>        
+      <div>
         <CSDataUploadButton onSubmit={(newData) => dataRows.replace(newData)} />
       </div>
     </div>
@@ -328,7 +334,7 @@ const ProcessForm = ({
 }) => {
   const [references, type] = useWatch({
     control,
-    name: ["set.references", `set.processes.${index}.type`]
+    name: ["set.references", `set.processes.${index}.type`],
   });
 
   return (
@@ -350,7 +356,6 @@ const ProcessForm = ({
         <label>
           Threshold
           <input
-            type="number"
             {...register(`set.processes.${index}.threshold`, {
               required: true,
               valueAsNumber: true,
@@ -358,11 +363,9 @@ const ProcessForm = ({
           />
         </label>
       </div>
-      {type === Storage.LUT && <LUTForm
-        index={index}
-        register={register}
-        control={control}
-      />}
+      {type === Storage.LUT && (
+        <LUTForm index={index} register={register} control={control} />
+      )}
       <ReactionForm index={index} register={register} control={control} />
       <div>
         <h4>Parameters</h4>
@@ -370,9 +373,9 @@ const ProcessForm = ({
           <label>
             Mass ratio
             <input
-              type="number"
               {...register(`set.processes.${index}.parameters.mass_ratio`, {
-                valueAsNumber: true})}
+                valueAsNumber: true,
+              })}
             />
           </label>
         </div>
@@ -380,10 +383,11 @@ const ProcessForm = ({
           <label>
             Statistical weight ratio
             <input
-              type="number"
               {...register(
-                `set.processes.${index}.parameters.statistical_weight_ratio`, {
-                  valueAsNumber: true}
+                `set.processes.${index}.parameters.statistical_weight_ratio`,
+                {
+                  valueAsNumber: true,
+                }
               )}
             />
           </label>
@@ -392,7 +396,7 @@ const ProcessForm = ({
       <button type="button" title="Remove" onClick={onRemove}>
         &minus;
       </button>
-      <hr/>
+      <hr />
     </div>
   );
 };
@@ -410,12 +414,10 @@ export const EditForm = ({
     },
   });
   const processesField = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "set.processes", // unique name for your Field Array
+    control,
+    name: "set.processes",
   });
   const onLocalSubmit = (data: FieldValues) => {
-    console.log(data.set.processes[0].reaction.lhs)
-    console.log(data.set.processes[0].reaction.rhs)
     onSubmit(data.set, data.commitMessage);
   };
 
@@ -478,10 +480,13 @@ export const EditForm = ({
           +
         </button>
       </fieldset>
-      <label>
-        Message
-        <input {...register("commitMessage")} />
-      </label>
+      <div>
+        <input
+          style={{ width: "50rem" }}
+          placeholder="Optionally describe which changes have been made."
+          {...register("commitMessage")}
+        />
+      </div>
       <input type="submit" />
     </form>
   );

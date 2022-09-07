@@ -93,7 +93,7 @@ export const getServerSideProps: GetServerSideProps<
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
   const set = await byOwnerAndId(me.email, id);
-  const organizations = await listOrganizations(); // TODO filter to only orgs the logged in user is a member of
+  const organizations = await listOrganizations(); // TODO return orgs the current user is a member of
   const info = await getVersionInfo(id);
   const commitMessage =
     info !== undefined && info.commitMessage ? info.commitMessage : "";
