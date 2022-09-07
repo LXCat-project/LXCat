@@ -1,14 +1,22 @@
-import { useRef } from "react";
+import Cite from "citation-js";
+import { useRef, useState } from "react";
 import {
-  Control, useFieldArray, useForm, UseFormRegister,
-  useWatch
+  Control,
+  useFieldArray,
+  useForm,
+  UseFormRegister,
+  useWatch,
 } from "react-hook-form";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { Pair } from "@lxcat/schema/dist/core/util";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Dict, Pair } from "@lxcat/schema/dist/core/util";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { Dialog } from "../shared/Dialog";
+
+import { Reference } from "../shared/Reference";
 
 interface Props {
   set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
@@ -401,22 +409,119 @@ const ProcessForm = ({
   );
 };
 
+const ReferenceForm = ({
+  label,
+  onRemove,
+  control,
+}: {
+  label: string;
+  control: Control<FieldValues, any>;
+  onRemove: () => void;
+}) => {
+  const reference = useWatch({
+    control,
+    name: `set.references.${label}`,
+  });
+  return (
+    <li>
+      {label}:
+      <Reference {...reference} />
+      <button type="button" title="Remove reference" onClick={onRemove}>
+        &minus;
+      </button>
+    </li>
+  );
+};
+
+const ImportDOIButton = ({
+  onAdd,
+}: {
+  onAdd: (newLabel: string, newReference: ReferenceRecord) => void;
+}) => {
+  const [doi, setDoi] = useState("");
+  const [open, setOpen] = useState(false);
+  async function onSubmit(value: string) {
+    if (value !== "cancel") {
+      const refs = await Cite.inputAsync(doi, {
+        forceType: "@doi/id",
+      });
+      const ref = refs[0];
+      // TODO handle fetch/parse errors
+      const cite = new Cite(ref, {
+        forceType: "@csl/object",
+      });
+      const labels = cite.format("label");
+      if (typeof labels === "string") {
+        return;
+      }
+      const label = Object.values(labels)[0];
+      onAdd(label, ref);
+    }
+    setOpen(false);
+  }
+  return (
+    <div>
+      <button type="button" onClick={() => setOpen(true)}>
+        Import from DOI
+      </button>
+      <Dialog isOpened={open} onSubmit={onSubmit}>
+        <b>Import reference based on DOI</b>
+        {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
+        <form method="dialog">
+          <div>
+            <input
+              value={doi}
+              style={{ width: "12rem" }}
+              onChange={(e) => setDoi(e.target.value)}
+              placeholder="Enter DOI like 10.5284/1015681"
+              // DOI pattern from https://www.crossref.org/blog/dois-and-matching-regular-expressions/
+              // Does not work for `10.1103/PhysRev.97.1671`
+              // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
+            />
+          </div>
+          <button value="cancel">Cancel</button>
+          <button value="default" type="submit">
+            Import
+          </button>
+        </form>
+      </Dialog>
+    </div>
+  );
+};
+
 export const EditForm = ({
   set,
   commitMessage,
   onSubmit,
   organizations,
 }: Props) => {
-  const { control, register, handleSubmit } = useForm<FieldValues>({
-    defaultValues: {
-      set,
-      commitMessage,
-    },
-  });
+  const { control, register, handleSubmit, setValue, watch } =
+    useForm<FieldValues>({
+      defaultValues: {
+        set,
+        commitMessage,
+      },
+    });
   const processesField = useFieldArray({
     control,
     name: "set.processes",
   });
+  const references = watch("set.references");
+  const setReferences = (newReferences: Dict<ReferenceRecord>) =>
+    setValue("set.references", newReferences);
+  const addReference = (newLabel: string, newReference: ReferenceRecord) => {
+    const newReferences = {
+      ...references,
+      [newLabel]: newReference,
+    };
+    setReferences(newReferences);
+  };
+  const removeReference = (label: string) => {
+    const { [label]: _todrop, ...newReferences } = references;
+    setReferences(newReferences);
+    // TODO remove reference from `set.processes.[*].reference` array
+  };
+
   const onLocalSubmit = (data: FieldValues) => {
     onSubmit(data.set, data.commitMessage);
   };
@@ -460,6 +565,17 @@ export const EditForm = ({
       </fieldset>
       <fieldset>
         <legend>References</legend>
+        <ul>
+          {Object.keys(references).map((refLabel) => (
+            <ReferenceForm
+              key={refLabel}
+              label={refLabel}
+              control={control}
+              onRemove={() => removeReference(refLabel)}
+            />
+          ))}
+        </ul>
+        <ImportDOIButton onAdd={addReference} />
       </fieldset>
       <fieldset>
         <legend>Processes</legend>

@@ -16,7 +16,7 @@
     "@lxcat/database": "*",
     "@lxcat/schema": "*",
     "arangojs": "^7.7.0",
-    "citation-js": "^0.5.7",
+    "citation-js": "^0.6.4",
     "mermaid": "^9.1.1",
     "next": "^12.1.4",
     "next-auth": "^4.3.1",
