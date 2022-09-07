@@ -10,7 +10,10 @@ import {
 } from "@lxcat/database/dist/css/queries/author_read";
 import Link from "next/link";
 import { EditForm } from "../../../../ScatteringCrossSectionSet/EditForm";
-import { listOrganizations, OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
+import {
+  listOrganizations,
+  OrganizationFromDB,
+} from "@lxcat/database/dist/auth/queries";
 
 interface Props {
   set: CrossSectionSetInputOwned;
@@ -27,7 +30,10 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
 
-  async function onSubmit(newSet: CrossSectionSetInputOwned, newMessage: string) {
+  async function onSubmit(
+    newSet: CrossSectionSetInputOwned,
+    newMessage: string
+  ) {
     const url = `/api/scat-css/${setKey}`;
     const body = JSON.stringify({
       doc: newSet,
@@ -50,33 +56,31 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
   return (
     <Layout>
       <h1>Edit scattering cross section set</h1>
-      <EditForm 
+      <EditForm
         set={set}
         setKey={setKey}
         commitMessage={commitMessage}
         onSubmit={onSubmit}
       />
-              {errors.length > 0 && (
-          <div>
-            <span>Error(s) during upload</span>
-            <ul>
-              {errors.map((e, i) => (
-                <li key={i}>
-                  {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
-                  {e.instancePath && `@ ${e.instancePath}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {id && id === set._key && (
-          <span>
-            Update successful, a draft has been created with id is {id}
-          </span>
-        )}
-        {id && id !== set._key && (
-          <span>Update successful, the draft been updated.</span>
-        )}
+      {errors.length > 0 && (
+        <div>
+          <span>Error(s) during upload</span>
+          <ul>
+            {errors.map((e, i) => (
+              <li key={i}>
+                {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
+                {e.instancePath && `@ ${e.instancePath}`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {id && id === set._key && (
+        <span>Update successful, a draft has been created with id is {id}</span>
+      )}
+      {id && id !== set._key && (
+        <span>Update successful, the draft been updated.</span>
+      )}
       <Link href={`/author/scat-css`}>
         <a>Back</a>
       </Link>

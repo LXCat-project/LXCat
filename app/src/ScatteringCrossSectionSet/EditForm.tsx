@@ -1,5 +1,5 @@
 import Cite from "citation-js";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Control,
   useFieldArray,
@@ -17,6 +17,10 @@ import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { Dialog } from "../shared/Dialog";
 
 import { Reference } from "../shared/Reference";
+import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { InState } from "@lxcat/schema/dist/core/state";
+import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 interface Props {
   set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
@@ -409,6 +413,187 @@ const ProcessForm = ({
   );
 };
 
+const SimpleParticleForm = ({
+  label,
+  register,
+}: {
+  label: string;
+  register: UseFormRegister<FieldValues>;
+}) => {
+  return (
+    <div>
+      <div>
+        <label>
+          Particle
+          <input
+            {...register(`set.states.${label}.particle`, {
+              required: true,
+            })}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Charge
+          <input
+            type="number"
+            {...register(`set.states.${label}.charge`, {
+              required: true,
+              valueAsNumber: true,
+            })}
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
+
+const AtomLSForm = ({
+  label,
+  control,
+  register,
+}: {
+  label: string;
+  control: Control<FieldValues, any>;
+  register: UseFormRegister<FieldValues>;
+}) => {
+  const scheme = useWatch({
+    control,
+    name: `set.states.${label}.electronic.0.scheme`,
+  });
+  return (
+    <div>
+      <h4>Electronic</h4>
+      <div>
+        <label>
+          Type
+          <select
+            {...register(`set.states.${label}.electronic.0.scheme`, {
+              setValueAs: (v) => (v === "" ? undefined : v),
+            })}
+          >
+            <option value="">Simple</option>
+            <option value="LS">LS</option>
+          </select>
+        </label>
+      </div>
+      {scheme === undefined ? (
+        <div>
+          <label>
+            e
+            <input
+              // TODO electronic.1
+              {...register(`set.states.${label}.electronic.0.e`)}
+            />
+          </label>
+        </div>
+      ) : (
+        <div>
+          <h5>Term</h5>
+          <div>
+            <label>
+              L
+              <input
+                type="number"
+                // TODO electronic.1
+                {...register(`set.states.${label}.electronic.0.term.L`, {
+                  valueAsNumber: true,
+                })}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              S
+              <input
+                type="number"
+                {...register(`set.states.${label}.electronic.0.term.S`, {
+                  valueAsNumber: true,
+                })}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              P
+              <select
+                {...register(`set.states.${label}.electronic.0.term.P`, {
+                  valueAsNumber: true,
+                })}
+              >
+                <option value={-1}>-1</option>
+                <option value={1}>1</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label>
+              J
+              <input
+                type="number"
+                {...register(`set.states.${label}.electronic.0.term.J`, {
+                  valueAsNumber: true,
+                })}
+              />
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StateForm = ({
+  label: initialLabel,
+  onRemove,
+  register,
+  control,
+}: {
+  label: string;
+  control: Control<FieldValues, any>;
+  register: UseFormRegister<FieldValues>;
+  onRemove: () => void;
+}) => {
+  const [label, setLabel] = useState(initialLabel);
+  const state = useWatch({
+    control,
+    name: `set.states.${label}`,
+  });
+  console.log(state);
+  // TODO label update based on whole state tricky as existing label needs to be removed
+  // useEffect(() => {
+  //   const newLabel = parse_state(state as InState<any>);
+  //   setLabel(newLabel.id);
+  // }, [state]);
+  return (
+    <div>
+      <h3>{label}</h3>
+      <div>
+        <label>
+          Type
+          <select
+            {...register(`set.states.${label}.type`, {
+              setValueAs: (v) => (v === "" ? undefined : v),
+            })}
+          >
+            <option value="">Simple particle</option>
+            <option value="AtomLS">AtomLS</option>
+          </select>
+        </label>
+      </div>
+      <SimpleParticleForm label={label} register={register} />
+      {state.type === "AtomLS" && (
+        <AtomLSForm label={label} register={register} control={control} />
+      )}
+      {/* // TODO other state types */}
+      <button type="button" title="Remove state" onClick={onRemove}>
+        &minus;
+      </button>
+      <hr />
+    </div>
+  );
+};
+
 const ReferenceForm = ({
   label,
   onRemove,
@@ -502,10 +687,32 @@ export const EditForm = ({
         commitMessage,
       },
     });
-  const processesField = useFieldArray({
-    control,
-    name: "set.processes",
-  });
+  const onLocalSubmit = (data: FieldValues) => {
+    onSubmit(data.set, data.commitMessage);
+  };
+
+  // States
+  const states = watch("set.states");
+  const setStates = (newStates: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>) =>
+    setValue("set.states", newStates);
+  const addState = () => {
+    const newLabel = `s${Object.keys(states).length}`;
+    const newStates = {
+      ...states,
+      [newLabel]: {
+        particle: "",
+        charge: 0,
+      },
+    };
+    setStates(newStates);
+  };
+  const removeState = (label: string) => {
+    const { [label]: _todrop, ...newStates } = states;
+    setStates(newStates);
+    // TODO remove state from `set.processes.[*].reaction...state` array
+  };
+
+  // References
   const references = watch("set.references");
   const setReferences = (newReferences: Dict<ReferenceRecord>) =>
     setValue("set.references", newReferences);
@@ -522,9 +729,11 @@ export const EditForm = ({
     // TODO remove reference from `set.processes.[*].reference` array
   };
 
-  const onLocalSubmit = (data: FieldValues) => {
-    onSubmit(data.set, data.commitMessage);
-  };
+  // Processes
+  const processesField = useFieldArray({
+    control,
+    name: "set.processes",
+  });
 
   return (
     <form onSubmit={handleSubmit(onLocalSubmit)}>
@@ -562,16 +771,28 @@ export const EditForm = ({
       </fieldset>
       <fieldset>
         <legend>States</legend>
+        {Object.keys(states).map((label) => (
+          <StateForm
+            key={label}
+            label={label}
+            register={register}
+            control={control}
+            onRemove={() => removeState(label)}
+          />
+        ))}
+        <button type="button" title="Add a state" onClick={addState}>
+          +
+        </button>
       </fieldset>
       <fieldset>
         <legend>References</legend>
         <ul>
-          {Object.keys(references).map((refLabel) => (
+          {Object.keys(references).map((label) => (
             <ReferenceForm
-              key={refLabel}
-              label={refLabel}
+              key={label}
+              label={label}
               control={control}
-              onRemove={() => removeReference(refLabel)}
+              onRemove={() => removeReference(label)}
             />
           ))}
         </ul>
