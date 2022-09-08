@@ -46,6 +46,10 @@ test-app:
     DOCKER_DRIVER: overlay2
   script:
     - npx playwright install chromium
+    - node --version
+    - npx ts-node --version
+    - which node
+    - npm list ts-node
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
     - npm -w app run build-storybook
   artifacts:
@@ -57,6 +61,8 @@ test-app:
 # TODO cache ~/.cache/ms-playwright
 
 test-database:
+  rules:
+    - when: never
   stage: test
   dependencies:
     - build-dev
@@ -84,6 +90,8 @@ test-database:
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 test-schema:
+  rules:
+    - when: never
   stage: test
   dependencies:
     - build-dev
@@ -100,6 +108,8 @@ test-schema:
 
 # docker in docker see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker
 build-prod:
+  rules:
+    - when: never
   image: docker:20.10.16
   variables:
     DOCKER_TLS_CERTDIR: ""
