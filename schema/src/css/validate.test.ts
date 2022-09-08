@@ -1,4 +1,6 @@
 import { describe, expect, test } from "vitest";
+
+import { Storage } from "../core/enumeration";
 import { validator } from "./validate";
 
 describe("validate()", () => {
@@ -10,7 +12,22 @@ describe("validate()", () => {
       description: "Some description",
       references: {},
       states: {},
-      processes: [],
+      processes: [
+        {
+          reaction: {
+            lhs: [],
+            rhs: [],
+            reversible: false,
+            type_tags: [],
+          },
+          threshold: 42,
+          type: Storage.LUT,
+          labels: ["Energy", "Cross Section"],
+          units: ["eV", "m^2"],
+          data: [[1, 3.14e-20]],
+          reference: [],
+        },
+      ],
     };
     const isValid = validator.validate(input);
     expect(isValid).toBeTruthy();
@@ -24,7 +41,22 @@ describe("validate()", () => {
       description: "Some description",
       references: {},
       states: {},
-      processes: [],
+      processes: [
+        {
+          reaction: {
+            lhs: [],
+            rhs: [],
+            reversible: false,
+            type_tags: [],
+          },
+          threshold: 42,
+          type: Storage.LUT,
+          labels: ["Energy", "Cross Section"],
+          units: ["eV", "m^2"],
+          data: [[1, 3.14e-20]],
+          reference: [],
+        },
+      ],
     };
     const isValid = validator.validate(input);
     expect(isValid).toBeFalsy();
