@@ -50,6 +50,9 @@ test-app:
     - npx ts-node --version
     - which node
     - npm list ts-node
+    - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
+    - source "$HOME/.cargo/env"
+    - npm install || true
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
     - npm -w app run build-storybook
   artifacts:
