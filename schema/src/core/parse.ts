@@ -9,6 +9,7 @@ import {
 } from "./generators";
 import { AnyMolecule } from "./molecules";
 import { get_particle_type, parsers } from "./parsers";
+import { ComponentParser, PUA, PUE, PUR, PUV } from "./parsers/common";
 import { State, DBState } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
@@ -16,15 +17,13 @@ export interface ParseMolecule<
   M extends MolecularGenerator<unknown, unknown, unknown, string>
 > {
   // particle_type: ParticleType.Molecule;
-  e(state: ExtractE<M>): string;
-  v(state: ExtractV<M>): string;
-  r(state: ExtractR<M>): string;
+  e: ComponentParser<PUE<ExtractE<M>>>;
+  v: ComponentParser<PUV<ExtractV<M>>>;
+  r: ComponentParser<PUR<ExtractR<M>>>;
 }
 
-export interface ParseAtom<A extends AtomicGenerator<unknown, string>> {
-  // particle_type: ParticleType.Atom;
-  e(state: ExtractAtomic<A>): string;
-}
+export type ParseAtom<A extends AtomicGenerator<unknown, string>> =
+  ComponentParser<PUA<ExtractAtomic<A>>>;
 
 type AtomParserDict<T extends AtomicGenerator<unknown, string>> = {
   [key in T["type"]]: ParseAtom<T>;
@@ -56,69 +55,89 @@ export function parse_charge(charge: number): string {
 // function 'e' has to be explicitly cast as 'ExtractE<IT>' whereas its type
 // should implicitly be equal. Find where this discrepancy is introduced and
 // fix it.
-export function parse_state<
+function parse_state<
   IT extends AtomicGenerator<A, S>,
   OT extends AtomicDBGenerator<A, S>,
   A,
   S extends keyof StateParserDict<AnyAtom, AnyMolecule>
->(state: State<IT>): DBState<OT>;
-export function parse_state<
+>(state: State<IT>, options: ParserOptions): DBState<OT>;
+function parse_state<
   IT extends MolecularGenerator<E, V, R, S>,
   OT extends MolecularDBGenerator<E, V, R, S>,
   E,
   V,
   R,
   S extends keyof StateParserDict<AnyAtom, AnyMolecule>
->(state: State<IT>): DBState<OT> {
+>(state: State<IT>, options: ParserOptions): DBState<OT> {
   const ostate = state as DBState<OT>;
+  const o = options;
+
+  const [topLevelProperty, levelProperty]: [
+    "id" | "latex",
+    "summary" | "latex"
+  ] = o.parserType === "id" ? ["id", "summary"] : ["latex", "latex"];
+
+  let top_level = "";
 
   if (!ostate.electronic) {
-    ostate.id = state.particle;
-    if (ostate.particle !== "e") ostate.id += parse_charge(state.charge);
+    top_level = state.particle;
+    if (ostate.particle !== "e") top_level += parse_charge(state.charge);
 
     return ostate;
   }
 
-  ostate.id = state.particle + parse_charge(state.charge) + "(";
+  top_level = `${state.particle}${parse_charge(state.charge)}${
+    o.levelBrackets.left
+  }`;
 
   if (get_particle_type[ostate.type] === ParticleType.Molecule) {
     const parser = parsers[ostate.type] as ParseMolecule<IT>;
 
     for (const e of ostate.electronic) {
-      e.summary = parser.e(e as ExtractE<IT>);
-      ostate.id += e.summary;
+      e[levelProperty] = parser.e[o.parserType](e as ExtractE<IT>);
+      top_level += e[levelProperty];
 
       if (e.vibrational) {
-        ostate.id += "(v=";
+        top_level += `${o.levelBrackets.left}v=`;
+
         for (const v of e.vibrational) {
-          v.summary = parser.v(v as ExtractV<IT>);
-          ostate.id += v.summary;
+          v[levelProperty] = parser.v[o.parserType](v as ExtractV<IT>);
+          top_level += v[levelProperty];
 
           if (v.rotational) {
-            ostate.id += "(J=";
+            top_level += `${o.levelBrackets.left}J=`;
+
             for (const r of v.rotational) {
-              r.summary = parser.r(r as ExtractR<IT>);
-              ostate.id += r.summary + "|";
+              r[levelProperty] = parser.r[o.parserType](r as ExtractR<IT>);
+              top_level += r[levelProperty] + o.compoundSeparator;
             }
-            ostate.id = ostate.id.slice(0, ostate.id.length - 1);
-            ostate.id += ")";
+            top_level = top_level.slice(0, top_level.length - 1);
+            top_level += o.levelBrackets.right;
           }
-          ostate.id += "|";
+          top_level += o.compoundSeparator;
         }
-        ostate.id = ostate.id.slice(0, ostate.id.length - 1);
-        ostate.id += ")";
+        top_level = top_level.slice(0, top_level.length - 1);
+        top_level += o.levelBrackets.right;
       }
-      ostate.id += "|";
+      top_level += o.compoundSeparator;
     }
+
+    ostate[topLevelProperty] = top_level;
   } else {
     // get_particle_type[ostate.type] == ParticleType.Atom
     const parser = parsers[ostate.type] as ParseAtom<IT>;
 
     for (const e of ostate.electronic) {
-      e.summary = parser.e(e as ExtractAtomic<IT>);
-      ostate.id += e.summary + "|";
+      e[levelProperty] = parser[o.parserType](e as ExtractAtomic<IT>);
+      top_level += e.summary + o.compoundSeparator;
     }
   }
-  ostate.id = ostate.id.slice(0, ostate.id.length - 1) + ")";
+  top_level = top_level.slice(0, top_level.length - 1) + o.levelBrackets.right;
   return ostate;
+}
+
+interface ParserOptions {
+  levelBrackets: { left: string; right: string };
+  compoundSeparator: string;
+  parserType: "id" | "latex";
 }

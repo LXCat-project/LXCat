@@ -132,10 +132,19 @@ export type MolecularGenerator<E, V, R, M extends string> = TypeString<M> &
   MolecularGenericGenerator<E, V, R>;
 
 /**
- * Helper type that defines a `summary` property that is used to store a string summary of a state component.
+ * Helper type that defines a `summary` property that is used to store a string
+ * summary of a state component.
  */
 interface LevelSummary {
   summary: string;
+}
+
+/**
+ * Helper type that defines a `latex` property that is used to store a latex
+ * representation of a state component.
+ */
+interface LatexString {
+  latex: string;
 }
 
 // Generators to be used for output types.
@@ -145,7 +154,8 @@ interface LevelSummary {
  * @template A The string identifier of the generated atomic type.
  */
 export type AtomicDBGenerator<E, A extends string> = TypeString<A> &
-  AtomicGenericGenerator<E, LevelSummary>;
+  LatexString &
+  AtomicGenericGenerator<E, LevelSummary & LatexString>;
 
 /**
  * Molecular generator type used to generate the correct structure of molecular state types on output. The difference between this type and [[MolecularGenerator]] is that each component entry now includes a `summary` field as stated in [[LevelSummary]].
@@ -155,4 +165,5 @@ export type AtomicDBGenerator<E, A extends string> = TypeString<A> &
  * @template M The string identifier of the generated molecular type.
  */
 export type MolecularDBGenerator<E, V, R, M extends string> = TypeString<M> &
-  MolecularGenericGenerator<E, V, R, LevelSummary>;
+  LatexString &
+  MolecularGenericGenerator<E, V, R, LevelSummary & LatexString>;
