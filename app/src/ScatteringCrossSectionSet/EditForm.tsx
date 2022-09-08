@@ -333,7 +333,7 @@ const LUTForm = ({ index }: { index: number }) => {
               <button
                 title="Add"
                 type="button"
-                onClick={() => dataRows.append([0, 0])}
+                onClick={() => dataRows.append([[0, 0]])}
               >
                 +
               </button>
