@@ -139,14 +139,14 @@ AtomLSGround.args = {
   ],
 };
 
-export const AtomLSGExited = Template.bind({});
-const state4AtomLSGExited: InState<AtomLSState> = {
+export const AtomLSExited = Template.bind({});
+const state4AtomLSExited: InState<AtomLSState> = {
   particle: "Ukn",
   charge: 5,
   type: "AtomLS",
   electronic: [{ e: "*" }],
 };
-AtomLSGExited.args = {
+AtomLSExited.args = {
   set: {
     name: "Some set name",
     description: "Some set description",
@@ -169,7 +169,7 @@ AtomLSGExited.args = {
       },
     ],
     states: {
-      Ar: state4AtomLSGExited,
+      Ar: state4AtomLSExited,
     },
     references: {
       ref1: {

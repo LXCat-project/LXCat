@@ -22,11 +22,11 @@ interface Props {
   organizations: OrganizationFromDB[];
 }
 
-const EditRawCrossSectionSetPage: NextPage<Props> = ({
+const EditCrossSectionSetPage: NextPage<Props> = ({
   set,
   setKey,
   commitMessage,
-  organizations
+  organizations,
 }) => {
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
@@ -90,7 +90,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
   );
 };
 
-export default EditRawCrossSectionSetPage;
+export default EditCrossSectionSetPage;
 
 export const getServerSideProps: GetServerSideProps<
   Props,
