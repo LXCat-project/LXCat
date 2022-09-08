@@ -3,9 +3,14 @@ import { InputDocument } from "../core/document";
 import { AnyAtomJSON } from "../core/atoms";
 import { AnyMoleculeJSON } from "../core/molecules";
 
+/**
+ * @minLength 1
+ */
+type LookupString = string;
+
 export type CrossSectionInput<StateType> = InputDocument<
   StateType,
-  CrossSection<string, string> & { id?: string }
+  CrossSection<LookupString, LookupString> & { id?: string }
 > & { complete: boolean };
 
 // TODO should set have own references?
