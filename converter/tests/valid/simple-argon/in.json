@@ -1,0 +1,110 @@
+{
+  "contributor": "test",
+  "name": "simple-argon",
+  "id": "test-id",
+  "description": "An example cross section set.",
+  "complete": true,
+  "references": {
+    "main": "Test reference"
+  },
+  "states": {
+    "e": { "particle": "e", "charge": -1 },
+    "Ar{1S0}": {
+      "particle": "Ar",
+      "charge": 0,
+      "type": "AtomLS",
+      "electronic": [
+        {
+          "scheme": "LS",
+          "config": [],
+          "term": { "L": 0, "S": 0, "P": 1, "J": 0 }
+        }
+      ]
+    },
+    "Ar{*}": {
+      "particle": "Ar",
+      "charge": 0,
+      "type": "AtomLS",
+      "electronic": [{ "e": "*" }]
+    },
+    "Ar^+": { "particle": "Ar", "charge": 1 }
+  },
+  "processes": [
+    {
+      "id": "process-elastic",
+      "reaction": {
+        "lhs": [
+          { "count": 1, "state": "e" },
+          { "count": 1, "state": "Ar{1S0}" }
+        ],
+        "rhs": [
+          { "count": 1, "state": "e" },
+          { "count": 1, "state": "Ar{1S0}" }
+        ],
+        "reversible": false,
+        "type_tags": ["Effective"]
+      },
+      "reference": ["main"],
+      "type": "LUT",
+      "labels": ["Energy", "Cross section"],
+      "units": ["eV", "m^2"],
+      "parameters": { "mass_ratio": 0.0000136 },
+      "threshold": 0,
+      "data": [
+        [0, 1e-21],
+        [1, 2e-21],
+        [2, 3e-21]
+      ]
+    },
+    {
+      "id": "process-excitation",
+      "reaction": {
+        "lhs": [
+          { "count": 1, "state": "e" },
+          { "count": 1, "state": "Ar{1S0}" }
+        ],
+        "rhs": [
+          { "count": 1, "state": "e" },
+          { "count": 1, "state": "Ar{*}" }
+        ],
+        "reversible": false,
+        "type_tags": ["Electronic"]
+      },
+      "reference": ["main"],
+      "type": "LUT",
+      "labels": ["Energy", "Cross section"],
+      "units": ["eV", "m^2"],
+      "threshold": 5,
+      "data": [
+        [0, 0],
+        [5, 2e-21],
+        [10, 3e-21]
+      ]
+    },
+    {
+      "id": "process-ionization",
+      "reaction": {
+        "lhs": [
+          { "count": 1, "state": "e" },
+          { "count": 1, "state": "Ar{1S0}" }
+        ],
+        "rhs": [
+          { "count": 2, "state": "e" },
+          { "count": 1, "state": "Ar^+" }
+        ],
+        "reversible": false,
+        "type_tags": ["Ionization"]
+      },
+      "reference": ["main"],
+      "type": "LUT",
+      "labels": ["Energy", "Cross section"],
+      "units": ["eV", "m^2"],
+      "threshold": 10,
+      "data": [
+        [0, 0],
+        [10, 2e-21],
+        [20, 3e-21]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "complete": false,
+  "description": "CO2 attachment cross section test.",
+  "name": "CO2",
+  "states": {
+    "CO2(X^{1}\\Sigma_{g}^+(v=0,0,0))": {
+      "charge": 0,
+      "electronic": [
+        {
+          "e": "X",
+          "Lambda": 0,
+          "S": 0,
+          "parity": "g",
+          "reflection": "+",
+          "summary": "X^{1}\\Sigma_{g}^+",
+          "vibrational": [{ "v": [0, 0, 0], "summary": "0,0,0" }]
+        }
+      ],
+      "particle": "CO2",
+      "type": "LinearTriatomInversionCenter"
+    },
+    "e": { "charge": -1, "particle": "e" },
+    "O^-(^{2}P^o_{3/2})": {
+      "charge": -1,
+      "electronic": [
+        {
+          "scheme": "LS",
+          "config": [],
+          "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 },
+          "summary": "^{2}P^o_{3/2}"
+        }
+      ],
+      "particle": "O",
+      "type": "AtomLS"
+    },
+    "CO(X^{1}\\Sigma^+)": {
+      "charge": 0,
+      "electronic": [
+        {
+          "e": "X",
+          "S": 0,
+          "Lambda": 0,
+          "reflection": "+",
+          "summary": "X^{1}\\Sigma^+"
+        }
+      ],
+      "particle": "CO",
+      "type": "HeteronuclearDiatom"
+    }
+  },
+  "references": {
+    "1358469": "Test reference"
+  },
+  "processes": [
+    {
+      "data": [
+        [3.9, 0],
+        [4.0, 1e-23],
+        [4.5, 1.5e-23]
+      ],
+      "labels": ["Energy", "Cross section"],
+      "reaction": {
+        "lhs": [
+          { "state": "e", "count": 1 },
+          { "state": "CO2(X^{1}\\Sigma_{g}^+(v=0,0,0))", "count": 1 }
+        ],
+        "reversible": false,
+        "type_tags": ["Attachment"],
+        "rhs": [
+          { "state": "CO(X^{1}\\Sigma^+)", "count": 1 },
+          { "state": "O^-(^{2}P^o_{3/2})", "count": 1 }
+        ]
+      },
+      "threshold": 4.0,
+      "type": "LUT",
+      "units": ["eV", "m^2"],
+      "reference": ["1358469"],
+      "id": "1358623"
+    }
+  ],
+  "contributor": "IST-Lisbon"
+}

@@ -4,6 +4,18 @@ const nextConfig = {
   // experimental: {
   //   outputStandalone: true,
   // },
+  webpack: (config, { nextRuntime }) => {
+    if (nextRuntime === "nodejs") {
+      config.module.rules = [
+        ...config.module.rules,
+        {
+          test: /\.node$/,
+          loader: "node-loader",
+        },
+      ];
+    }
+    return config;
+  },
   images: {
     domains: ["s.gravatar.com", "secure.gravatar.com"],
   },
