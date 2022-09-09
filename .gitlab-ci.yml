@@ -118,6 +118,21 @@ test-schema:
       junit: schema/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
+test-converter:
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  stage: test
+  dependencies:
+    - build-dev
+  image: node:lts-bullseye
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npm run test -w converter
+
 # docker in docker see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker
 build-prod:
   image: docker:20.10.16
