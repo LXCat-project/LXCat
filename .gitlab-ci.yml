@@ -21,7 +21,6 @@ build-dev:
   # TODO reuse artifacts in workspace specific ci tasks like tests
   artifacts:
     paths:
-      - node_modules
       - schema/dist
       - database/dist
       - converter/dist
@@ -44,7 +43,14 @@ test-app:
     DOCKER_TLS_CERTDIR: ""
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/    
   script:
+    - npm ci --cache .npm --prefer-offline
     - npx playwright install chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
     - npm -w app run build-storybook
@@ -57,6 +63,12 @@ test-app:
 # TODO cache ~/.cache/ms-playwright
 
 test-database:
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/    
   stage: test
   dependencies:
     - build-dev
@@ -74,6 +86,7 @@ test-database:
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
   script:
+    - npm ci --cache .npm --prefer-offline
     - npm run test -w database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
@@ -84,11 +97,18 @@ test-database:
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 test-schema:
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/    
   stage: test
   dependencies:
     - build-dev
   image: node:lts-bullseye
   script:
+    - npm ci --cache .npm --prefer-offline
     - npm run test -w schema -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
