@@ -2,12 +2,9 @@ import Cite from "citation-js";
 import { useRef, useState } from "react";
 import {
   FormProvider,
-  FormState,
   useFieldArray,
   useForm,
   useFormContext,
-  UseFormRegister,
-  useWatch,
 } from "react-hook-form";
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
 import { ajvResolver } from "@hookform/resolvers/ajv";
@@ -25,7 +22,6 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
-import { UnwrapPromise } from "next/dist/lib/coalesced-function";
 
 interface Props {
   set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
@@ -44,7 +40,7 @@ const ErrorMessage = (props: any) => (
   <PlainErrorMessage
     {...props}
     render={
-      ({ messages, message }) =>
+      ({ messages }) =>
         messages ? (
           Object.entries(messages).map(([type, message]) => (
             <p key={type} style={{ color: "#a94442" }}>
@@ -71,13 +67,10 @@ const ReactionEntryForm = ({
 }) => {
   const {
     register,
-    control,
+    watch,
     formState: { errors },
   } = useFormContext();
-  const states = useWatch({
-    control,
-    name: `set.states`,
-  });
+  const states = watch(`set.states`);
   return (
     <div style={{ display: "flex" }}>
       <input
@@ -125,13 +118,11 @@ const ReactionEntryForm = ({
 const ReactionForm = ({ index: processIndex }: { index: number }) => {
   const {
     register,
+    watch,
     control,
     formState: { errors },
   } = useFormContext();
-  const reversible = useWatch({
-    control,
-    name: `set.processes.${processIndex}.reaction.reversible`,
-  });
+  const reversible = watch(`set.processes.${processIndex}.reaction.reversible`);
   const lhsField = useFieldArray({
     control,
     name: `set.processes.${processIndex}.reaction.lhs`,
@@ -400,14 +391,13 @@ const ProcessForm = ({
 }) => {
   const {
     register,
-    control,
+    watch,
     formState: { errors },
   } = useFormContext();
-  const [references, type] = useWatch({
-    control,
-    name: ["set.references", `set.processes.${index}.type`],
-  });
-
+  const [references, type] = watch([
+    "set.references",
+    `set.processes.${index}.type`,
+  ]);
   return (
     <div>
       <div>
@@ -516,35 +506,38 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
   );
 };
 
-const AtomLSForm = ({ label }: { label: string }) => {
+const AtomLSElectronicForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
   const {
     register,
-    control,
+    watch,
     formState: { errors },
   } = useFormContext();
-  const scheme = useWatch({
-    control,
-    name: `set.states.${label}.electronic.0.scheme`,
-  });
+  const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
   return (
-    <div>
-      <h4>Electronic</h4>
+    <>
       <div>
         <label>
           Type
           <select
-            {...register(`set.states.${label}.electronic.0.scheme`, {
+            {...register(`set.states.${label}.electronic.${eindex}.scheme`, {
               setValueAs: (v) => (v === "" ? undefined : v),
               // TODO switching type should clear previous
             })}
           >
+            {/* TODO find simple type in @lxcat/schema */}
             <option value="">Simple</option>
             <option value="LS">LS</option>
           </select>
         </label>
         <ErrorMessage
           errors={errors}
-          name={`set.states.${label}.electronic.0.scheme`}
+          name={`set.states.${label}.electronic.${eindex}.scheme`}
         />
       </div>
       {scheme === undefined ? (
@@ -552,13 +545,12 @@ const AtomLSForm = ({ label }: { label: string }) => {
           <label>
             e
             <input
-              // TODO electronic.1
-              {...register(`set.states.${label}.electronic.0.e`)}
+              {...register(`set.states.${label}.electronic.${eindex}.e`)}
             />
           </label>
           <ErrorMessage
             errors={errors}
-            name={`set.states.${label}.electronic.0.e`}
+            name={`set.states.${label}.electronic.${eindex}.e`}
           />
         </div>
       ) : (
@@ -568,38 +560,46 @@ const AtomLSForm = ({ label }: { label: string }) => {
             <label>
               L
               <input
-                // TODO electronic.1
-                {...register(`set.states.${label}.electronic.0.term.L`, {
-                  valueAsNumber: true,
-                })}
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.term.L`,
+                  {
+                    valueAsNumber: true,
+                  }
+                )}
               />
             </label>
             <ErrorMessage
               errors={errors}
-              name={`set.states.${label}.electronic.0.term.L`}
+              name={`set.states.${label}.electronic.${eindex}.term.L`}
             />
           </div>
           <div>
             <label>
               S
               <input
-                {...register(`set.states.${label}.electronic.0.term.S`, {
-                  valueAsNumber: true,
-                })}
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.term.S`,
+                  {
+                    valueAsNumber: true,
+                  }
+                )}
               />
             </label>
             <ErrorMessage
               errors={errors}
-              name={`set.states.${label}.electronic.0.term.S`}
+              name={`set.states.${label}.electronic.${eindex}.term.S`}
             />
           </div>
           <div>
             <label>
               P
               <select
-                {...register(`set.states.${label}.electronic.0.term.P`, {
-                  valueAsNumber: true,
-                })}
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.term.P`,
+                  {
+                    valueAsNumber: true,
+                  }
+                )}
               >
                 <option value={-1}>-1</option>
                 <option value={1}>1</option>
@@ -607,40 +607,362 @@ const AtomLSForm = ({ label }: { label: string }) => {
             </label>
             <ErrorMessage
               errors={errors}
-              name={`set.states.${label}.electronic.0.term.P`}
+              name={`set.states.${label}.electronic.${eindex}.term.P`}
             />
           </div>
           <div>
             <label>
               J
               <input
-                {...register(`set.states.${label}.electronic.0.term.J`, {
-                  valueAsNumber: true,
-                })}
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.term.J`,
+                  {
+                    valueAsNumber: true,
+                  }
+                )}
               />
             </label>
             <ErrorMessage
               errors={errors}
-              name={`set.states.${label}.electronic.0.term.J`}
+              name={`set.states.${label}.electronic.${eindex}.term.J`}
             />
           </div>
         </div>
       )}
+    </>
+  );
+};
+
+const AtomLSForm = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={{ e: "" }}
+      item={(label, eindex) => (
+        <AtomLSElectronicForm label={label} eindex={eindex} />
+      )}
+    />
+  );
+};
+
+const initialValue4AtomJ1L2Config = () => ({ n: 0, l: 0, occupance: 0 });
+const AtomJ1L2ConfigArray = ({
+  label,
+  eindex,
+  side,
+}: {
+  label: string;
+  eindex: number;
+  side: "core" | "excited";
+}) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const array = useFieldArray({
+    control,
+    name: `set.states.${label}.electronic.${eindex}.config.${side}.config`,
+  });
+  return (
+    <div>
+      <ol>
+        {array.fields.map((_field, index) => (
+          <ArrayItem
+            key={index}
+            removeTitle="Remove config"
+            onRemove={() => array.remove(index)}
+          >
+            <div style={{ display: "flex" }}>
+              <div>
+                <label>
+                  n
+                  <input
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`,
+                      {
+                        valueAsNumber: true,
+                      }
+                    )}
+                  />
+                </label>
+                <ErrorMessage
+                  errors={errors}
+                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`}
+                />
+              </div>
+              <div>
+                <label>
+                  l
+                  <input
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`,
+                      {
+                        valueAsNumber: true,
+                      }
+                    )}
+                  />
+                </label>
+                <ErrorMessage
+                  errors={errors}
+                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`}
+                />
+              </div>
+              <div>
+                <label>
+                  Occupance
+                  <input
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`,
+                      {
+                        valueAsNumber: true,
+                      }
+                    )}
+                  />
+                </label>
+                <ErrorMessage
+                  errors={errors}
+                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`}
+                />
+              </div>
+            </div>
+          </ArrayItem>
+        ))}
+      </ol>
+      <button
+        type="button"
+        title="Add config part"
+        onClick={() => array.append(initialValue4AtomJ1L2Config())}
+      >
+        +
+      </button>
+      <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
     </div>
+  );
+};
+
+const LSTermConfigForm = ({
+  label,
+  eindex,
+  side,
+}: {
+  label: string;
+  eindex: number;
+  side: "core" | "excited";
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <>
+      <h6>Config</h6>
+      <AtomJ1L2ConfigArray label={label} eindex={eindex} side={side} />
+      <h6>Term</h6>
+      <div>
+        <div>
+          <label>
+            L
+            <input
+              {...register(
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.L`,
+                {
+                  valueAsNumber: true,
+                }
+              )}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.config.${side}.term.L`}
+          />
+        </div>
+        <div>
+          <label>
+            S
+            <input
+              {...register(
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.S`,
+                {
+                  valueAsNumber: true,
+                }
+              )}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.config.${side}.term.S`}
+          />
+        </div>
+        <div>
+          <label>
+            P
+            <select
+              {...register(
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.P`,
+                {
+                  valueAsNumber: true,
+                }
+              )}
+            >
+              <option value={-1}>-1</option>
+              <option value={1}>1</option>
+            </select>
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.config.${side}.term.P`}
+          />
+        </div>
+        {side === "core" && (
+          <div>
+            <label>
+              J
+              <input
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.config.${side}.term.J`,
+                  {
+                    valueAsNumber: true,
+                  }
+                )}
+              />
+            </label>
+            <ErrorMessage
+              errors={errors}
+              name={`set.states.${label}.electronic.${eindex}.config.${side}.term.J`}
+            />
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+const AtomJ1L2FormElectronicForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <>
+      <h5>Core</h5>
+      <LSTermConfigForm label={label} eindex={eindex} side="core" />
+      <h5>Excited</h5>
+      <LSTermConfigForm label={label} eindex={eindex} side="excited" />
+      <h5>Term</h5>
+      <div>
+        <div>
+          <label>
+            L
+            <input
+              {...register(`set.states.${label}.electronic.${eindex}.term.K`, {
+                valueAsNumber: true,
+              })}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.term.K`}
+          />
+        </div>
+        <div>
+          <label>
+            S
+            <input
+              {...register(`set.states.${label}.electronic.${eindex}.term.S`, {
+                valueAsNumber: true,
+              })}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.term.S`}
+          />
+        </div>
+        <div>
+          <label>
+            P{/* TODO is P also parity here, if so render as select 1 | -1 */}
+            <input
+              {...register(`set.states.${label}.electronic.${eindex}.term.P`, {
+                valueAsNumber: true,
+              })}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.term.P`}
+          />
+        </div>
+        <div>
+          <label>
+            J
+            <input
+              {...register(`set.states.${label}.electronic.${eindex}.term.J`, {
+                valueAsNumber: true,
+              })}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.term.J`}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const initialValue4AtomJIL2 = () => ({
+  scheme: "J1L2",
+  config: {
+    core: {
+      scheme: "LS",
+      config: [{ n: 0, l: 0, occupance: 0 }],
+      term: { L: 0, S: 0, P: 1, J: 0 },
+    },
+    excited: {
+      scheme: "LS",
+      config: [{ n: 0, l: 0, occupance: 0 }],
+      term: { L: 0, S: 0, P: 1, J: 0 },
+    },
+  },
+  term: {
+    K: 0,
+    S: 0,
+    P: 0,
+    J: 0,
+  },
+});
+
+const AtomJ1L2Form = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={initialValue4AtomJIL2()}
+      item={(label, eindex) => (
+        <AtomJ1L2FormElectronicForm label={label} eindex={eindex} />
+      )}
+    />
   );
 };
 
 const MolecularParityField = ({
   label,
   eindex,
-  register,
-  errors,
 }: {
   label: string;
   eindex: number;
-  register: UseFormRegister<FieldValues>;
-  errors: FormState<FieldValues>["errors"];
 }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FieldValues>();
   return (
     <div>
       <label>
@@ -664,12 +986,10 @@ const LinearTriatomVibrationalFieldItem = ({
   label,
   eindex,
   vindex,
-  onRemove,
 }: {
   label: string;
   eindex: number;
   vindex: number;
-  onRemove: () => void;
 }) => {
   const {
     register,
@@ -677,14 +997,13 @@ const LinearTriatomVibrationalFieldItem = ({
     formState: { errors },
   } = useFormContext();
   return (
-    <li>
+    <>
       <label>v</label>
       <div style={{ display: "flex" }}>
         <div>
           {/* // TODO in example data sets array could also be `n,0,0` string */}
           <input
-            title="Count"
-            type="number"
+            title="v0"
             min={1}
             style={{ width: "2rem" }}
             {...register(
@@ -702,8 +1021,7 @@ const LinearTriatomVibrationalFieldItem = ({
         </div>
         <div>
           <input
-            title="Count"
-            type="number"
+            title="v1"
             min={1}
             style={{ width: "2rem" }}
             {...register(
@@ -720,8 +1038,7 @@ const LinearTriatomVibrationalFieldItem = ({
         </div>
         <div>
           <input
-            title="Count"
-            type="number"
+            title="v2"
             min={1}
             style={{ width: "2rem" }}
             {...register(
@@ -737,10 +1054,7 @@ const LinearTriatomVibrationalFieldItem = ({
           />
         </div>
       </div>
-      <button type="button" title="Remove vibrational" onClick={onRemove}>
-        &minus;
-      </button>
-    </li>
+    </>
   );
 };
 
@@ -751,12 +1065,182 @@ const LinearTriatomVibrationalField = ({
   label: string;
   eindex: number;
 }) => {
+  return (
+    <VibrationalArray
+      label={label}
+      eindex={eindex}
+      initialValue={{ v: 0 }}
+      item={(label, eindex, vindex) => (
+        <LinearTriatomVibrationalFieldItem
+          key={vindex}
+          label={label}
+          eindex={0}
+          vindex={vindex}
+        />
+      )}
+    />
+  );
+};
+
+const LinearElectronicForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
   const {
     register,
+    formState: { errors },
+  } = useFormContext<FieldValues>();
+  return (
+    <div>
+      <div>
+        <label>
+          e
+          <input {...register(`set.states.${label}.electronic.${eindex}.e`)} />
+        </label>
+        <ErrorMessage
+          errors={errors}
+          name={`set.states.${label}.electronic.${eindex}.e`}
+        />
+      </div>
+      <div>
+        <label>
+          Lambda
+          <input
+            {...register(`set.states.${label}.electronic.${eindex}.Lambda`)}
+          />
+        </label>
+        <ErrorMessage
+          errors={errors}
+          name={`set.states.${label}.electronic.${eindex}.Lambda`}
+        />
+      </div>
+      <div>
+        <label>
+          S
+          <input {...register(`set.states.${label}.electronic.${eindex}.S`)} />
+        </label>
+        <ErrorMessage
+          errors={errors}
+          name={`set.states.${label}.electronic.${eindex}.S`}
+        />
+      </div>
+      <div>
+        <label>
+          Reflection
+          <select
+            {...register(`set.states.${label}.electronic.${eindex}.reflection`)}
+          >
+            <option value=""></option>
+            <option value="-">&minus;</option>
+            <option value="+">+</option>
+          </select>
+        </label>
+        <ErrorMessage
+          errors={errors}
+          name={`set.states.${label}.electronic.${eindex}.reflection`}
+        />
+      </div>
+    </div>
+  );
+};
+
+const ElectronicArray = ({
+  label,
+  item,
+  initialValue,
+}: {
+  label: string;
+  item: (label: string, eindex: number) => React.ReactNode;
+  initialValue: any; // TODO add generic type
+}) => {
+  const {
     control,
     formState: { errors },
   } = useFormContext();
-  const vibrationalField = useFieldArray({
+  const array = useFieldArray({
+    control,
+    name: `set.states.${label}.electronic`,
+  });
+  return (
+    <div>
+      <h4>Electronic</h4>
+      <ol>
+        {array.fields.map((_field, index) => (
+          <ArrayItem
+            key={index}
+            removeTitle="Remove electronic part"
+            onRemove={() => array.remove(index)}
+          >
+            {item(label, index)}
+          </ArrayItem>
+        ))}
+        <button
+          type="button"
+          title="Add electronic part"
+          onClick={() => array.append(initialValue)}
+        >
+          +
+        </button>
+      </ol>
+      <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
+    </div>
+  );
+};
+
+const ArrayItem = ({
+  removeTitle,
+  onRemove,
+  children,
+}: {
+  removeTitle: string;
+  onRemove: () => void;
+  children: React.ReactNode;
+}) => {
+  return (
+    <li>
+      {children}
+      <button type="button" title={removeTitle} onClick={onRemove}>
+        &minus;
+      </button>
+    </li>
+  );
+};
+
+const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={{ e: "X", Lambda: 0, S: 0, parity: "g" }}
+      item={(label, eindex) => (
+        <>
+          <LinearElectronicForm label={label} eindex={eindex} />
+          <MolecularParityField label={label} eindex={eindex} />
+          <LinearTriatomVibrationalField label={label} eindex={eindex} />
+        </>
+      )}
+    />
+  );
+};
+
+const VibrationalArray = ({
+  label,
+  eindex,
+  item,
+  initialValue,
+}: {
+  label: string;
+  eindex: number;
+  item: (label: string, eindex: number, vindex: number) => React.ReactNode;
+  initialValue: any;
+}) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const array = useFieldArray({
     control,
     name: `set.states.${label}.electronic.${eindex}.vibrational`,
   });
@@ -764,23 +1248,24 @@ const LinearTriatomVibrationalField = ({
     <div>
       <h5>Vibrational</h5>
       <ol>
-        {vibrationalField.fields.map((field, index) => (
-          <LinearTriatomVibrationalFieldItem
+        {array.fields.map((field, index) => (
+          <ArrayItem
+            removeTitle="Remove vibrational part"
             key={index}
-            label={label}
-            eindex={0}
-            vindex={index}
-            onRemove={() => vibrationalField.remove(index)}
-          />
+            onRemove={() => array.remove(index)}
+          >
+            {item(label, eindex, index)}
+          </ArrayItem>
         ))}
+        <button
+          type="button"
+          title="Add vibrational"
+          onClick={() => array.append([initialValue])}
+        >
+          +
+        </button>
       </ol>
-      <button
-        type="button"
-        title="Add vibrational"
-        onClick={() => vibrationalField.append([[0, 0, 0]])}
-      >
-        +
-      </button>
+
       <ErrorMessage
         errors={errors}
         name={`set.states.${label}.electronic.${eindex}.vibrational`}
@@ -789,74 +1274,133 @@ const LinearTriatomVibrationalField = ({
   );
 };
 
-const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
+const RotationalArray = ({
+  label,
+  eindex,
+  vindex,
+}: {
+  label: string;
+  eindex: number;
+  vindex: number;
+}) => {
   const {
-    register,
     control,
+    register,
     formState: { errors },
-  } = useFormContext<FieldValues>();
+  } = useFormContext();
+  const array = useFieldArray({
+    control,
+    name: `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
+  });
   return (
     <div>
-      <h4>Electronic</h4>
-      <div>
-        <div>
+      <h5>Rotational</h5>
+      <ol>
+        {array.fields.map((field, index) => (
+          <ArrayItem
+            removeTitle="Remove rotational part"
+            key={index}
+            onRemove={() => array.remove(index)}
+          >
+            <label>
+              J
+              <input
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                )}
+              />
+            </label>
+            <ErrorMessage
+              errors={errors}
+              name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`}
+            />
+          </ArrayItem>
+        ))}
+        <button
+          type="button"
+          title="Add rotational"
+          onClick={() => array.append({ J: 0 })}
+        >
+          +
+        </button>
+      </ol>
+
+      <ErrorMessage
+        errors={errors}
+        name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`}
+      />
+    </div>
+  );
+};
+
+const DiatomicVibrationalForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <VibrationalArray
+      label={label}
+      eindex={eindex}
+      initialValue={{ v: 0 }}
+      item={(label, eindex, vindex) => (
+        <>
           <label>
-            e
+            v
             <input
-              // TODO electronic.1
-              {...register(`set.states.${label}.electronic.0.e`)}
+              {...register(
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
+                {
+                  valueAsNumber: true,
+                }
+              )}
             />
           </label>
           <ErrorMessage
             errors={errors}
-            name={`set.states.${label}.electronic.0.e`}
+            name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`}
           />
-        </div>
-        <div>
-          <label>
-            Lambda
-            <input {...register(`set.states.${label}.electronic.0.Lambda`)} />
-          </label>
-          <ErrorMessage
-            errors={errors}
-            name={`set.states.${label}.electronic.0.Lambda`}
-          />
-        </div>
-        <div>
-          <label>
-            S
-            <input {...register(`set.states.${label}.electronic.0.S`)} />
-          </label>
-          <ErrorMessage
-            errors={errors}
-            name={`set.states.${label}.electronic.0.S`}
-          />
-        </div>
-        <div>
-          <label>
-            Reflection
-            <select
-              {...register(`set.states.${label}.electronic.0.reflection`)}
-            >
-              <option value=""></option>
-              <option value="-">&minus;</option>
-              <option value="+">+</option>
-            </select>
-          </label>
-          <ErrorMessage
-            errors={errors}
-            name={`set.states.${label}.electronic.0.reflection`}
-          />
-        </div>
-        <MolecularParityField
-          label={label}
-          eindex={0}
-          register={register}
-          errors={errors}
-        />
-      </div>
-      <LinearTriatomVibrationalField label={label} eindex={0} />
-    </div>
+          <RotationalArray label={label} eindex={eindex} vindex={vindex} />
+        </>
+      )}
+    />
+  );
+};
+
+const HeteronuclearDiatomForm = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={{ e: "", Lambda: 0, S: 0 }}
+      item={(label, eindex) => (
+        <>
+          <LinearElectronicForm label={label} eindex={eindex} />
+          <DiatomicVibrationalForm label={label} eindex={eindex} />
+        </>
+      )}
+    />
+  );
+};
+
+const HomonuclearDiatomForm = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={{ e: "", Lambda: 0, S: 0, parity: "g" }}
+      item={(label, eindex) => (
+        <>
+          <LinearElectronicForm label={label} eindex={eindex} />
+          <MolecularParityField label={label} eindex={eindex} />
+          <DiatomicVibrationalForm label={label} eindex={eindex} />
+        </>
+      )}
+    />
   );
 };
 
@@ -870,13 +1414,11 @@ const StateForm = ({
   const {
     register,
     control,
+    watch,
     formState: { errors },
   } = useFormContext();
   const [label, setLabel] = useState(initialLabel);
-  const state = useWatch({
-    control,
-    name: `set.states.${label}`,
-  });
+  const state = watch(`set.states.${label}`);
   // TODO label update based on whole state tricky as existing label needs to be removed
   // useEffect(() => {
   //   const newLabel = parse_state(state as InState<any>);
@@ -894,9 +1436,12 @@ const StateForm = ({
             })}
           >
             <option value="">Simple particle</option>
-            <option value="AtomLS">AtomLS</option>
+            <option value="AtomLS">Atom LS</option>
+            <option value="AtomJ1L2">Atom J1L2</option>
+            <option value="HeteronuclearDiatom">Heteronuclear Diatom</option>
+            <option value="HomonuclearDiatom">Homonuclear Diatom</option>
             <option value="LinearTriatomInversionCenter">
-              LinearTriatomInversionCenter
+              Linear Triatom Inversion Center
             </option>
           </select>
         </label>
@@ -904,10 +1449,17 @@ const StateForm = ({
       </div>
       <SimpleParticleForm label={label} />
       {state.type === "AtomLS" && <AtomLSForm label={label} />}
+      {state.type === "AtomJ1L2" && <AtomJ1L2Form label={label} />}
+      {state.type === "HeteronuclearDiatom" && (
+        <HeteronuclearDiatomForm label={label} />
+      )}
+      {state.type === "HomonuclearDiatom" && (
+        <HomonuclearDiatomForm label={label} />
+      )}
       {state.type === "LinearTriatomInversionCenter" && (
         <LinearTriatomInversionCenterForm label={label} />
       )}
-      {/* // TODO other state types */}
+      {/* // TODO atomls1 */}
       <button type="button" title="Remove state" onClick={onRemove}>
         &minus;
       </button>
@@ -923,11 +1475,8 @@ const ReferenceForm = ({
   label: string;
   onRemove: () => void;
 }) => {
-  const { control } = useFormContext();
-  const reference = useWatch({
-    control,
-    name: `set.references.${label}`,
-  });
+  const { watch } = useFormContext();
+  const reference = watch(`set.references.${label}`);
   return (
     <li>
       {label}:
@@ -1018,7 +1567,6 @@ export const EditForm = ({
       set,
       commitMessage,
     },
-    // TODO validate against JSON schema
     resolver: ajvResolver(schema4form as any),
     reValidateMode: "onBlur", // Default onChange felt too slow
     criteriaMode: "all",

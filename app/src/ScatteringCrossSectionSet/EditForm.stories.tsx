@@ -1,10 +1,14 @@
-import { EditForm } from "./EditForm";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { InState } from "@lxcat/schema/dist/core/state";
-import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
-import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } from "@lxcat/schema/dist/core/molecules/triatom_linear_inversion_center";
 import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
+import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
+import { AtomJ1L2 as AtomJ1L2State } from "@lxcat/schema/dist/core/atoms/j1l2";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
+import { HeteronuclearDiatom as HeteronuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_heteronuclear";
+import { HomonuclearDiatom as HomonuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_homonuclear";
+import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } from "@lxcat/schema/dist/core/molecules/triatom_linear_inversion_center";
+import { InState } from "@lxcat/schema/dist/core/state";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+
+import { EditForm } from "./EditForm";
 
 const meta = {
   component: EditForm,
@@ -122,7 +126,59 @@ AtomLSGround.args = {
       },
     ],
     states: {
-      Ar: state4AtomLSGround,
+      Ukn: state4AtomLSGround,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const AtomLSExcited = Template.bind({});
+const state4AtomLSExcited: InState<AtomLSState> = {
+  particle: "Ukn",
+  charge: 5,
+  type: "AtomLS",
+  electronic: [
+    {
+      e: "*",
+    },
+  ],
+};
+AtomLSExcited.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "Ar" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      Ukn: state4AtomLSExcited,
     },
     references: {
       ref1: {
@@ -181,6 +237,301 @@ LinearTriatomInversionCenter.args = {
     ],
     states: {
       CO2: state4LinearTriatomInversionCenter,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const HeteronuclearDiatom = Template.bind({});
+const state4HeteronuclearDiatom: InState<HeteronuclearDiatomState> = {
+  particle: "CO",
+  charge: 0,
+  type: "HeteronuclearDiatom",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 0,
+      S: 0,
+      reflection: "+",
+    },
+  ],
+};
+HeteronuclearDiatom.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "CO" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      CO: state4HeteronuclearDiatom,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const HomonuclearDiatomNoVibNoRot = Template.bind({});
+const state4HomonuclearDiatomNoVibNoRot: InState<HomonuclearDiatomState> = {
+  particle: "N2",
+  charge: 0,
+  type: "HomonuclearDiatom",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 0,
+      S: 0,
+      parity: "g",
+      reflection: "+",
+    },
+  ],
+};
+HomonuclearDiatomNoVibNoRot.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "N2" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      N2: state4HomonuclearDiatomNoVibNoRot,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const HomonuclearDiatomWithRot = Template.bind({});
+const state4HomonuclearDiatomWithRot: InState<HomonuclearDiatomState> = {
+  particle: "N2",
+  charge: 0,
+  type: "HomonuclearDiatom",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 0,
+      S: 0,
+      parity: "g",
+      reflection: "+",
+      vibrational: [{ v: 0, rotational: [{ J: 2 }] }],
+    },
+  ],
+};
+HomonuclearDiatomWithRot.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "N2" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      N2: state4HomonuclearDiatomWithRot,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const HomonuclearDiatomWithMultiVib = Template.bind({});
+const state4HomonuclearDiatomWithMultiVib: InState<HomonuclearDiatomState> = {
+  particle: "N2",
+  charge: 0,
+  type: "HomonuclearDiatom",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 0,
+      S: 0,
+      parity: "g",
+      reflection: "+",
+      vibrational: [{ v: 9 }, { v: 10 }],
+    },
+  ],
+};
+HomonuclearDiatomWithMultiVib.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "N2" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      N2: state4HomonuclearDiatomWithMultiVib,
+    },
+    references: {
+      ref1: {
+        id: "ref1",
+        type: "article",
+        title: "First article",
+      },
+    },
+  },
+  setKey: "1234",
+  commitMessage: "",
+  organizations: [
+    { _key: "1", name: "Some organization" },
+    { _key: "2", name: "Some other organization" },
+  ],
+};
+
+export const AtomJ1L2 = Template.bind({});
+const state4AtomJ1L2: InState<AtomJ1L2State> = {
+  particle: "Ukn",
+  charge: 5,
+  type: "AtomJ1L2",
+  electronic: [
+    {
+      scheme: CouplingScheme.J1L2,
+      config: {
+        core: {
+          scheme: CouplingScheme.LS,
+          config: [{ n: 2, l: 2, occupance: 6 }],
+          term: { S: 0.5, L: 1, P: -1, J: 1.5 },
+        },
+        excited: {
+          scheme: CouplingScheme.LS,
+          config: [{ n: 4, l: 3, occupance: 1 }],
+          term: { S: 1.5, L: 2, P: 1 },
+        },
+      },
+      term: {
+        K: 0.5,
+        S: 1.5,
+        P: -1,
+        J: 4,
+      },
+    },
+  ],
+};
+AtomJ1L2.args = {
+  set: {
+    name: "Some set name",
+    description: "Some set description",
+    complete: false,
+    contributor: "Some organization",
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "Ar" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: ["ref1"],
+      },
+    ],
+    states: {
+      Ukn: state4AtomJ1L2,
     },
     references: {
       ref1: {
