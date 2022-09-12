@@ -1,6 +1,7 @@
 {
   "workspaces": [
     "app",
+    "converter",
     "database",
     "schema"
   ],

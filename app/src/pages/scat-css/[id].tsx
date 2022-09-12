@@ -60,7 +60,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
         {/* TODO implement API endpoint for Bolsig+ format download */}
         <li>
           <a
-            href={`/api/scat-css/${set.id}.txt`}
+            href={`/api/scat-css/${set.id}/legacy`}
             target="_blank"
             rel="noreferrer"
           >
