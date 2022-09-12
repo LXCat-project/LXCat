@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { InState } from "@lxcat/schema/dist/core/state";
 import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
+import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } from "@lxcat/schema/dist/core/molecules/triatom_linear_inversion_center";
 import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
 
 const meta = {
@@ -139,14 +140,24 @@ AtomLSGround.args = {
   ],
 };
 
-export const AtomLSExited = Template.bind({});
-const state4AtomLSExited: InState<AtomLSState> = {
-  particle: "Ukn",
-  charge: 5,
-  type: "AtomLS",
-  electronic: [{ e: "*" }],
-};
-AtomLSExited.args = {
+export const LinearTriatomInversionCenter = Template.bind({});
+const state4LinearTriatomInversionCenter: InState<LinearTriatomInversionCenterState> =
+  {
+    particle: "CO2",
+    charge: 0,
+    type: "LinearTriatomInversionCenter",
+    electronic: [
+      {
+        e: "X",
+        Lambda: 0,
+        S: 0,
+        parity: "g",
+        reflection: "+",
+        vibrational: [{ v: [0, 0, 0] }],
+      },
+    ],
+  };
+LinearTriatomInversionCenter.args = {
   set: {
     name: "Some set name",
     description: "Some set description",
@@ -155,7 +166,7 @@ AtomLSExited.args = {
     processes: [
       {
         reaction: {
-          lhs: [{ count: 1, state: "Ar" }],
+          lhs: [{ count: 1, state: "CO2" }],
           rhs: [],
           reversible: false,
           type_tags: [ReactionTypeTag.Ionization],
@@ -169,7 +180,7 @@ AtomLSExited.args = {
       },
     ],
     states: {
-      Ar: state4AtomLSExited,
+      CO2: state4LinearTriatomInversionCenter,
     },
     references: {
       ref1: {

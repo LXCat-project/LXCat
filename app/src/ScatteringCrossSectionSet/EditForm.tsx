@@ -2,9 +2,11 @@ import Cite from "citation-js";
 import { useRef, useState } from "react";
 import {
   FormProvider,
+  FormState,
   useFieldArray,
   useForm,
   useFormContext,
+  UseFormRegister,
   useWatch,
 } from "react-hook-form";
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
@@ -23,6 +25,7 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
+import { UnwrapPromise } from "next/dist/lib/coalesced-function";
 
 interface Props {
   set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
@@ -627,6 +630,236 @@ const AtomLSForm = ({ label }: { label: string }) => {
   );
 };
 
+const MolecularParityField = ({
+  label,
+  eindex,
+  register,
+  errors,
+}: {
+  label: string;
+  eindex: number;
+  register: UseFormRegister<FieldValues>;
+  errors: FormState<FieldValues>["errors"];
+}) => {
+  return (
+    <div>
+      <label>
+        Parity
+        <select
+          {...register(`set.states.${label}.electronic.${eindex}.parity`)}
+        >
+          <option value="g">g</option>
+          <option value="u">u</option>
+        </select>
+      </label>
+      <ErrorMessage
+        errors={errors}
+        name={`set.states.${label}.electronic.${eindex}.parity`}
+      />
+    </div>
+  );
+};
+
+const LinearTriatomVibrationalFieldItem = ({
+  label,
+  eindex,
+  vindex,
+  onRemove,
+}: {
+  label: string;
+  eindex: number;
+  vindex: number;
+  onRemove: () => void;
+}) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <li>
+      <label>v</label>
+      <div style={{ display: "flex" }}>
+        <div>
+          {/* // TODO in example data sets array could also be `n,0,0` string */}
+          <input
+            title="Count"
+            type="number"
+            min={1}
+            style={{ width: "2rem" }}
+            {...register(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`,
+              {
+                // TODO in example data sets could also be `n`
+                valueAsNumber: true,
+              }
+            )}
+          />
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`}
+          />
+        </div>
+        <div>
+          <input
+            title="Count"
+            type="number"
+            min={1}
+            style={{ width: "2rem" }}
+            {...register(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.1`,
+              {
+                valueAsNumber: true,
+              }
+            )}
+          />
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.1`}
+          />
+        </div>
+        <div>
+          <input
+            title="Count"
+            type="number"
+            min={1}
+            style={{ width: "2rem" }}
+            {...register(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.2`,
+              {
+                valueAsNumber: true,
+              }
+            )}
+          />
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.2`}
+          />
+        </div>
+      </div>
+      <button type="button" title="Remove vibrational" onClick={onRemove}>
+        &minus;
+      </button>
+    </li>
+  );
+};
+
+const LinearTriatomVibrationalField = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const vibrationalField = useFieldArray({
+    control,
+    name: `set.states.${label}.electronic.${eindex}.vibrational`,
+  });
+  return (
+    <div>
+      <h5>Vibrational</h5>
+      <ol>
+        {vibrationalField.fields.map((field, index) => (
+          <LinearTriatomVibrationalFieldItem
+            key={index}
+            label={label}
+            eindex={0}
+            vindex={index}
+            onRemove={() => vibrationalField.remove(index)}
+          />
+        ))}
+      </ol>
+      <button
+        type="button"
+        title="Add vibrational"
+        onClick={() => vibrationalField.append([[0, 0, 0]])}
+      >
+        +
+      </button>
+      <ErrorMessage
+        errors={errors}
+        name={`set.states.${label}.electronic.${eindex}.vibrational`}
+      />
+    </div>
+  );
+};
+
+const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<FieldValues>();
+  return (
+    <div>
+      <h4>Electronic</h4>
+      <div>
+        <div>
+          <label>
+            e
+            <input
+              // TODO electronic.1
+              {...register(`set.states.${label}.electronic.0.e`)}
+            />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.0.e`}
+          />
+        </div>
+        <div>
+          <label>
+            Lambda
+            <input {...register(`set.states.${label}.electronic.0.Lambda`)} />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.0.Lambda`}
+          />
+        </div>
+        <div>
+          <label>
+            S
+            <input {...register(`set.states.${label}.electronic.0.S`)} />
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.0.S`}
+          />
+        </div>
+        <div>
+          <label>
+            Reflection
+            <select
+              {...register(`set.states.${label}.electronic.0.reflection`)}
+            >
+              <option value=""></option>
+              <option value="-">&minus;</option>
+              <option value="+">+</option>
+            </select>
+          </label>
+          <ErrorMessage
+            errors={errors}
+            name={`set.states.${label}.electronic.0.reflection`}
+          />
+        </div>
+        <MolecularParityField
+          label={label}
+          eindex={0}
+          register={register}
+          errors={errors}
+        />
+      </div>
+      <LinearTriatomVibrationalField label={label} eindex={0} />
+    </div>
+  );
+};
+
 const StateForm = ({
   label: initialLabel,
   onRemove,
@@ -662,12 +895,18 @@ const StateForm = ({
           >
             <option value="">Simple particle</option>
             <option value="AtomLS">AtomLS</option>
+            <option value="LinearTriatomInversionCenter">
+              LinearTriatomInversionCenter
+            </option>
           </select>
         </label>
         <ErrorMessage errors={errors} name={`set.states.${label}.type`} />
       </div>
       <SimpleParticleForm label={label} />
       {state.type === "AtomLS" && <AtomLSForm label={label} />}
+      {state.type === "LinearTriatomInversionCenter" && (
+        <LinearTriatomInversionCenterForm label={label} />
+      )}
       {/* // TODO other state types */}
       <button type="button" title="Remove state" onClick={onRemove}>
         &minus;
