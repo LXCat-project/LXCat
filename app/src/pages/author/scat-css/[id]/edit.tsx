@@ -59,7 +59,6 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
       <h1>Edit scattering cross section set</h1>
       <EditForm
         set={set}
-        setKey={setKey}
         commitMessage={commitMessage}
         onSubmit={onSubmit}
         organizations={organizations}
