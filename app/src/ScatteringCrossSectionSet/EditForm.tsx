@@ -23,14 +23,6 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
 
-interface Props {
-  set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
-  setKey: string;
-  commitMessage: string;
-  onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
-  organizations: OrganizationFromDB[];
-}
-
 interface FieldValues {
   set: CrossSectionSetRaw;
   commitMessage: string;
@@ -1555,6 +1547,13 @@ const schema4form = {
   required: ["set", "commitMessage"],
   additionalProperties: false,
 };
+
+interface Props {
+  set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
+  commitMessage: string;
+  onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
+  organizations: OrganizationFromDB[];
+}
 
 export const EditForm = ({
   set,

@@ -32,7 +32,6 @@ Minimal.args = {
     states: {},
     references: {},
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -77,7 +76,6 @@ Single.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -136,7 +134,6 @@ AtomLSGround.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -188,7 +185,6 @@ AtomLSExcited.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -246,7 +242,6 @@ LinearTriatomInversionCenter.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -301,7 +296,6 @@ HeteronuclearDiatom.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -357,7 +351,6 @@ HomonuclearDiatomNoVibNoRot.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -414,7 +407,6 @@ HomonuclearDiatomWithRot.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -471,7 +463,6 @@ HomonuclearDiatomWithMultiVib.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },
@@ -541,7 +532,6 @@ AtomJ1L2.args = {
       },
     },
   },
-  setKey: "1234",
   commitMessage: "",
   organizations: [
     { _key: "1", name: "Some organization" },

@@ -120,9 +120,14 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
         </tbody>
       </table>
 
-      <Link href="/author/scat-css/addraw">
+      <Link href="/author/scat-css/add">
         <a>
           <button>Add</button>
+        </a>
+      </Link>
+      <Link href="/author/scat-css/addraw">
+        <a>
+          <button>Add as JSON document</button>
         </a>
       </Link>
       <Link href="/author">
