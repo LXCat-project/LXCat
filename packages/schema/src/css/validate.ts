@@ -21,8 +21,8 @@ class Validator {
   }
 
   // must be called after validate(..)
-  validate_quantum_numbers(data: unknown) {
-    const states: [string, AnyAtom] = get_states(data);
+  validate_quantum_numbers(data: CrossSectionSetRaw) {
+    const states = get_states(data);
     if (this.errors == undefined) {
       this.errors = [];
     }

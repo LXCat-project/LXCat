@@ -50,7 +50,7 @@ export function momenta(orbital: number, spin: number) {
  */
 export function momenta_couplings(els: number[], spin: number | number[]) {
   let spins: number[];
-  if (spin.length == undefined) {
+  if (typeof spin === 'number') {
     spins = [spin];
   } else {
     spins = spin;

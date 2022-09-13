@@ -1,9 +1,12 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
+
+import { readFileSync } from "fs";
 
 import { ErrorObject } from "ajv";
 
 import { CouplingScheme } from "../core/atoms/coupling_scheme";
 import { AnyAtom } from "../core/atoms";
+import { InState } from "../core/state";
 import { Dict } from "./quantum_number_validator";
 import { get_states, get_errobj } from "./quantum_number_validator";
 import { ValidateData } from "./quantum_number_validator";
@@ -12,12 +15,24 @@ import {
   check_states,
 } from "./quantum_number_validator";
 
-// atom
-import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
-import data_nok from "./data/Ar_C_P_Nobody_LXCat_bad.json";
+import { CrossSectionSetRaw } from "./input";
+import { AnyMolecule } from "../core/molecules";
 
-const inputs_ok: [string, AnyAtom][] = get_states(data_ok);
-const inputs_nok: [string, AnyAtom][] = get_states(data_nok);
+let inputs_ok: [string, InState<AnyAtom | AnyMolecule>][]; // FIXME: type w/o AnyMolecule not supported
+let inputs_nok: [string, InState<AnyAtom | AnyMolecule>][];
+
+function readExample(fn: string) {
+  const content = readFileSync(fn, { encoding: "utf8" });
+  const body = JSON.parse(content);
+  return body;
+}
+
+beforeAll(() => {
+  const data_ok = readExample("./data/Ar_C_P_Nobody_LXCat.json")
+  const data_nok = readExample("./data/Ar_C_P_Nobody_LXCat_bad.json")
+  inputs_ok = get_states(data_ok);
+  inputs_nok = get_states(data_nok as CrossSectionSetRaw);
+})
 
 describe("validate parity data", () => {
   test("core & excited", () => {
@@ -25,7 +40,7 @@ describe("validate parity data", () => {
     let validator: ValidateData;
     // NOTE: always returns true for: comp["type"] == "AtomLS"; element 0
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         err = get_errobj(`${key}/electronic/${idx}`, comp);
         validator = new ValidateData(comp, err);
         const status: boolean = validator.parity();
@@ -45,7 +60,7 @@ describe("validate parity data", () => {
     };
     for (const [key, atom] of inputs_nok) {
       if (!bad.hasOwnProperty(key)) continue;
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         if (!bad[key].hasOwnProperty(idx.toString())) continue;
         err = get_errobj(`${key}/electronic/${idx}`, comp);
         validator = new ValidateData(comp, err);
@@ -68,7 +83,7 @@ describe("validate angular momenta", () => {
     let validator: ValidateData;
     let status: boolean;
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         err = get_errobj(`${key}/electronic/${idx}`, comp);
         validator = new ValidateData(comp, err);
         switch (comp.scheme) {
@@ -102,7 +117,7 @@ describe("validate angular momenta", () => {
     let status: boolean;
     for (const [key, atom] of inputs_nok) {
       if (!bad.hasOwnProperty(key)) continue;
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         if (!bad[key].hasOwnProperty(idx.toString())) continue;
         err = get_errobj(`${key}/electronic/${idx}`, comp);
         validator = new ValidateData(comp, err);
@@ -133,7 +148,7 @@ describe("validate angular momenta", () => {
 describe("dispatchers", () => {
   test("component w/ no errors", () => {
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         const errors: ErrorObject[] = check_quantum_numbers(
           `${key}/electronic/${idx}`,
           comp,
@@ -155,7 +170,7 @@ describe("dispatchers", () => {
     ];
     for (const [key, atom] of inputs_nok) {
       if (!bad.includes(key)) continue;
-      for (const [idx, comp] of atom.electronic.entries()) {
+      for (const [idx, comp] of atom.electronic!.entries()) {
         const errors: ErrorObject[] = check_quantum_numbers(
           `${key}/electronic/${idx}`,
           comp,

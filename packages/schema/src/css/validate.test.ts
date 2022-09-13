@@ -81,14 +81,16 @@ describe("validate()", () => {
 
 describe("validate() w/ examples", () => {
   test("no errors", () => {
-    validator.validate(data_ok);
-    validator.validate_quantum_numbers(data_ok);
+    if (validator.validate(data_ok)) {
+	validator.validate_quantum_numbers(data_ok);
+    }
     expect(validator.errors).toHaveLength(0);
   });
 
   test("w/ errors", () => {
-    validator.validate(data_nok);
-    validator.validate_quantum_numbers(data_nok);
-    expect(validator.errors).toHaveLength(6);
+      if (validator.validate(data_nok)) {
+	  validator.validate_quantum_numbers(data_nok);
+      }
+      expect(validator.errors).toHaveLength(6);
   });
 });

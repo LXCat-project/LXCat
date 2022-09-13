@@ -3,17 +3,23 @@ import { ErrorObject } from "ajv";
 import { CouplingScheme } from "../core/atoms/coupling_scheme";
 import { AnyAtom } from "../core/atoms";
 import { ShellEntry } from "../core/shell_entry";
+import { InState } from "../core/state";
+import { CrossSectionSetRaw } from "../css/input";
 
 import { check_momenta, check_couplings } from "./coupling";
 import { momenta_from_shell } from "./coupling";
 import { parity, combine_parity } from "./parity";
+import { AtomLS1Impl } from "../core/atoms/ls1";
+import { AtomJ1L2Impl } from "../core/atoms/j1l2";
+import { UAtomic } from "../core/generators";
+import { AtomLSImpl } from "../core/atoms/ls";
 
 export type Dict = {
   [x: string]: string | number | Dict;
 };
 
 export function shell_parities(config: ShellEntry[]) {
-  return config.map((_conf: any) => parity(_conf.l, _conf.occupance));
+  return config.map((configItem) => parity(configItem.l, configItem.occupance));
 }
 
 export function check_momenta_from_shell(
@@ -48,10 +54,10 @@ export function check_momenta_from_shell(
 }
 
 export class ValidateData {
-  component: any;
-  err: any;
+  component: AnyAtomElectronic;
+  err: ErrorObject;
 
-  constructor(component: any, err: any) {
+  constructor(component: AnyAtomElectronic, err: ErrorObject) {
     this.component = component;
     this.err = err;
   }
@@ -59,8 +65,9 @@ export class ValidateData {
   parity() {
     const config = this.component.config;
 
+    if (config === undefined) return true;
     if (this.component.scheme == "LS") {
-      if (config.length < 1) return true; // nothing to check
+      if (!Array.isArray(config)) return true; // nothing to check
 
       const _P: number = combine_parity(shell_parities(config));
       if (this.component.term.P != _P) {
@@ -70,7 +77,7 @@ export class ValidateData {
       }
       return true;
     } else {
-      if (Object.keys(config).length < 1) return true; // nothing to check
+      if (!("core" in config)) return true; // nothing to check
 
       const _Ps: number[] = [];
       let status = true;
@@ -94,10 +101,11 @@ export class ValidateData {
   }
 
   LS() {
-    const term = this.component.term;
+    const term = this.component.term!;
 
+    if (!("L" in term) || "core" in this.component.config!) return false; // never true
     const res0 = check_momenta_from_shell(
-      this.component.config,
+      this.component.config!,
       term.L,
       term.S
     );
@@ -119,8 +127,10 @@ export class ValidateData {
   }
 
   get_Ls_Ss() {
-    const config = this.component.config;
-    const term = this.component.term;
+    const config = this.component.config!;
+    const term = this.component.term!;
+
+    if (!("L" in term) || "core" in config) return [0, 0, 0, 0]; // never true
     // NOTE: assumes config must have core and excited
     const [L1, L2] = Object.values(config).map(
       (val: any, _: any) => val.term.L
@@ -134,6 +144,7 @@ export class ValidateData {
   check_shell_config() {
     const empty: Dict = {};
     // FIXME: parametrise errors
+    if (this.component.config === undefined || !("core" in this.component.config)) return false; // never true
     const core = this.component.config.core;
     const res_c = check_momenta_from_shell(
       core.config,
@@ -169,7 +180,8 @@ export class ValidateData {
   }
 
   LS1() {
-    const term = this.component.term;
+    const term = this.component.term!;
+    if (!("K" in term)) return false; // never true
     const [L1, L2, S1, S2] = this.get_Ls_Ss();
 
     const res_shell = this.check_shell_config();
@@ -188,9 +200,10 @@ export class ValidateData {
   }
 
   J1L2() {
-    const term = this.component.term;
+    const term = this.component.term!;
     const [L1, L2, S1, S2] = this.get_Ls_Ss();
-    const J1 = this.component.config.core.term.J;
+    if (Array.isArray(this.component.config) || !("J" in this.component.config!.core.term) || !("K" in term)) return false; // never true
+    const J1 = this.component.config!.core.term.J!;
 
     const res_shell = this.check_shell_config();
 
@@ -214,11 +227,13 @@ export class ValidateData {
     return res_shell && res1.result && res2.result && res3.result;
   }
 
+  /*
   J1J2() {
     const term = this.component.term;
     const [L1, L2, S1, S2] = this.get_Ls_Ss();
-    const J1 = this.component.config.core.term.J;
-    const J2 = this.component.config.excited.term.J;
+    if (Array.isArray(this.component.config!) || !("J" in this.component.config!.core.term) || !("J" in this.component.config!.excited.term)) return false; // never true
+    const J1 = this.component.config!.core.term.J;
+    const J2 = this.component.config!.excited.term.J;
 
     const res_shell = this.check_shell_config();
 
@@ -241,16 +256,21 @@ export class ValidateData {
     }
     return res_shell && res1.result && res2.result && res2.result;
   }
+  */
 }
 
-export function get_states(jsonobj: any) {
-  const states: [string, AnyAtom][] = Object.entries(jsonobj.states).filter(
-    (s) => s[1]["type"] && s[1]["type"].startsWith("Atom")
+export function get_states(jsonobj: CrossSectionSetRaw) {
+  // retain keys for error message later
+  const atomTypes = new Set(["AtomLS", "AtomLS1", "AtomJ1L2"]);
+  const states = Object.entries(jsonobj.states).filter(
+    ([_k, v]) => v.type && atomTypes.has(v.type)
   );
   return states;
 }
 
-export function get_errobj(parent: string, component: any) {
+type AnyAtomElectronic = (Record<string, unknown> & (AtomLSImpl | UAtomic<AtomLSImpl>)) | (Record<string, unknown> & (AtomLS1Impl | UAtomic<AtomLS1Impl>)) | (Record<string, unknown> & (AtomJ1L2Impl | UAtomic<AtomJ1L2Impl>));
+
+export function get_errobj(parent: string, component: AnyAtomElectronic) {
   const _allowed: Dict = {};
   const err: ErrorObject = {
     keyword: `${component.scheme} coupling`,
@@ -269,10 +289,10 @@ export function get_errobj(parent: string, component: any) {
 
 export function check_quantum_numbers(
   parent: string,
-  component: any,
+  component: AnyAtomElectronic,
   errors: ErrorObject[]
 ) {
-  const scheme: string = component.scheme;
+  const scheme = component.scheme;
   const err = get_errobj(parent, component);
   const validator = new ValidateData(component, err);
   switch (scheme) {
@@ -291,11 +311,12 @@ export function check_quantum_numbers(
         errors.push(err);
       }
       break;
-    case CouplingScheme.J1J2:
-      if (!validator.J1J2() || !validator.parity()) {
-        errors.push(err);
-      }
-      break;
+    // FIXME: uncomment, when the J1J2 coupling scheme is defined
+    // case CouplingScheme.J1J2:
+    //   if (!validator.J1J2() || !validator.parity()) {
+    //     errors.push(err);
+    //   }
+    //   break;
     default:
       err.message = `unknown coupling scheme: ${scheme}`;
       errors.push(err);
@@ -303,14 +324,14 @@ export function check_quantum_numbers(
   return errors;
 }
 
-export function check_states(states: any, errors: ErrorObject[]) {
+export function check_states(states: [string, InState<AnyAtom>][], errors: ErrorObject[]) {
   for (const [key, atom] of states) {
-    const _type: string = atom["type"];
+    const _type = atom["type"];
     if (!(_type && _type.startsWith("Atom"))) continue;
     for (const [idx, component] of atom.electronic.entries()) {
       if (!component.scheme) continue; // some don't have scheme
       const err = check_quantum_numbers(
-        `${key}:${atom.particle}/electronic`,
+        `${key}:${atom.particle}/electronic[${idx}]`,
         component,
         errors
       );
