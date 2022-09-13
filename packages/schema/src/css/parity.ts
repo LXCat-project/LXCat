@@ -8,9 +8,8 @@
  * @return {number} parity
  */
 export function parity(orbital: number, occupance: number) {
-    return (-1) ** (orbital * occupance);
+  return (-1) ** (orbital * occupance);
 }
-
 
 /**
  * Combine various parity terms
@@ -20,5 +19,5 @@ export function parity(orbital: number, occupance: number) {
  * @return {number} parity
  */
 export function combine_parity(parities: number[]) {
-    return parities.reduce((prev, next) => prev * next, 1);
+  return parities.reduce((prev, next) => prev * next, 1);
 }

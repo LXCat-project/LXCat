@@ -7,7 +7,10 @@ import { AnyAtom } from "../core/atoms";
 import { Dict } from "./quantum_number_validator";
 import { get_states, get_errobj } from "./quantum_number_validator";
 import { ValidateData } from "./quantum_number_validator";
-import { check_quantum_numbers, check_states } from "./quantum_number_validator";
+import {
+  check_quantum_numbers,
+  check_states,
+} from "./quantum_number_validator";
 
 // atom
 import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
@@ -17,149 +20,164 @@ const inputs_ok: [string, AnyAtom][] = get_states(data_ok);
 const inputs_nok: [string, AnyAtom][] = get_states(data_nok);
 
 describe("validate parity data", () => {
-    test("core & excited", () => {
-        var err: ErrorObject;
-        let validator: ValidateData;
-        // NOTE: always returns true for: comp["type"] == "AtomLS"; element 0
-        for (let [key, atom] of inputs_ok) {
-            for (let [idx, comp] of atom.electronic.entries()) {
-                err = get_errobj(`${key}/electronic/${idx}`, comp);
-                validator = new ValidateData(comp, err);
-                const status: boolean = validator.parity();
-                // console.log("Error: ", JSON.stringify(validator.err, null, 2));
-                expect(status).toEqual(true);
-            }
-        }
-    });
+  test("core & excited", () => {
+    let err: ErrorObject;
+    let validator: ValidateData;
+    // NOTE: always returns true for: comp["type"] == "AtomLS"; element 0
+    for (const [key, atom] of inputs_ok) {
+      for (const [idx, comp] of atom.electronic.entries()) {
+        err = get_errobj(`${key}/electronic/${idx}`, comp);
+        validator = new ValidateData(comp, err);
+        const status: boolean = validator.parity();
+        // console.log("Error: ", JSON.stringify(validator.err, null, 2));
+        expect(status).toEqual(true);
+      }
+    }
+  });
 
-    test("core & excited w/ error", () => {
-        var err: ErrorObject;
-        let validator: ValidateData;
-        const bad: Dict = {
-            "second": { 0: "excited" },
-            "third": { 1: "core" },
-	    "carbon_p": { 0: "P" }
-        };
-        for (let [key, atom] of inputs_nok) {
-            if (!(bad.hasOwnProperty(key))) continue;
-            for (let [idx, comp] of atom.electronic.entries()) {
-                if (!(bad[key].hasOwnProperty(idx.toString()))) continue;
-                err = get_errobj(`${key}/electronic/${idx}`, comp);
-                validator = new ValidateData(comp, err);
-                const status: boolean = validator.parity();
-                // console.log("Error: ", JSON.stringify(validator.err, null, 2));
-                expect(status).toEqual(false);
-                expect(err.instancePath).toEqual(`${key}/electronic/${idx}`);
-                expect(err.params.scheme).toEqual(comp.scheme);
-                expect(err.params.allowed[bad[key][idx.toString()]]).toBeDefined();
-                expect(err.message).toContain(bad[key][idx.toString()]);
-            }
-        }
-    });
+  test("core & excited w/ error", () => {
+    let err: ErrorObject;
+    let validator: ValidateData;
+    const bad: Dict = {
+      second: { 0: "excited" },
+      third: { 1: "core" },
+      carbon_p: { 0: "P" },
+    };
+    for (const [key, atom] of inputs_nok) {
+      if (!bad.hasOwnProperty(key)) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
+        if (!bad[key].hasOwnProperty(idx.toString())) continue;
+        err = get_errobj(`${key}/electronic/${idx}`, comp);
+        validator = new ValidateData(comp, err);
+        const status: boolean = validator.parity();
+        // console.log("Error: ", JSON.stringify(validator.err, null, 2));
+        expect(status).toEqual(false);
+        expect(err.instancePath).toEqual(`${key}/electronic/${idx}`);
+        expect(err.params.scheme).toEqual(comp.scheme);
+        expect(err.params.allowed[bad[key][idx.toString()]]).toBeDefined();
+        expect(err.message).toContain(bad[key][idx.toString()]);
+      }
+    }
+  });
 });
 
 describe("validate angular momenta", () => {
-    test("coupling - LS, LS1, J1L2", () => { // FIXME: add LS1 example
-        var err: ErrorObject;
-        let validator: ValidateData;
-        let status: boolean;
-        for (let [key, atom] of inputs_ok) {
-            for (let [idx, comp] of atom.electronic.entries()) {
-                err = get_errobj(`${key}/electronic/${idx}`, comp);
-                validator = new ValidateData(comp, err);
-                switch (comp.scheme) {
-                    case CouplingScheme.LS:
-                        status = validator.LS();
-                        break;
-                    case CouplingScheme.LS1:
-                        status = validator.LS1();
-                        break;
-                    case CouplingScheme.J1L2:
-                        status = validator.J1L2();
-                        break;
-                    default:
-                        status = false; // why am I here!?
-                }
-                // console.log("Error: ", JSON.stringify(validator.err, null, 2));
-                expect(status).toEqual(true);
-            }
+  test("coupling - LS, LS1, J1L2", () => {
+    // FIXME: add LS1 example
+    let err: ErrorObject;
+    let validator: ValidateData;
+    let status: boolean;
+    for (const [key, atom] of inputs_ok) {
+      for (const [idx, comp] of atom.electronic.entries()) {
+        err = get_errobj(`${key}/electronic/${idx}`, comp);
+        validator = new ValidateData(comp, err);
+        switch (comp.scheme) {
+          case CouplingScheme.LS:
+            status = validator.LS();
+            break;
+          case CouplingScheme.LS1:
+            status = validator.LS1();
+            break;
+          case CouplingScheme.J1L2:
+            status = validator.J1L2();
+            break;
+          default:
+            status = false; // why am I here!?
         }
-    });
+        // console.log("Error: ", JSON.stringify(validator.err, null, 2));
+        expect(status).toEqual(true);
+      }
+    }
+  });
 
-    test("coupling - shell, LS, J1L2 w/ error", () => {
-        var err: ErrorObject;
-        let validator: ValidateData;
-        const bad: Dict = {
-            "second": { 0: "core" },
-            "third": { 0: "J" },
-	    "carbon": {0: "S"},	// FIXME: also L, don't know how to test both
-	    "phosphorus": {0: "core"}
-        };
-        let status: boolean;
-        for (let [key, atom] of inputs_nok) {
-            if (!(bad.hasOwnProperty(key))) continue;
-            for (let [idx, comp] of atom.electronic.entries()) {
-                if (!(bad[key].hasOwnProperty(idx.toString()))) continue;
-                err = get_errobj(`${key}/electronic/${idx}`, comp);
-                validator = new ValidateData(comp, err);
-                switch (comp.scheme) {
-                    case CouplingScheme.LS:
-                        status = validator.LS();
-                        break;
-                    case CouplingScheme.LS1:
-                        status = validator.LS1();
-                        break;
-                    case CouplingScheme.J1L2:
-                        status = validator.J1L2();
-                        break;
-                    default:
-                        status = false; // why am I here!?
-                }
-                // console.log("Error: ", JSON.stringify(validator.err, null, 2));
-                expect(status).toEqual(false);
-                expect(err.instancePath).toEqual(`${key}/electronic/${idx}`);
-                expect(err.params.scheme).toEqual(comp.scheme);
-                expect(err.params.allowed[bad[key][idx.toString()]]).toBeDefined();
-                expect(err.message).toContain(bad[key][idx.toString()]);
-            }
+  test("coupling - shell, LS, J1L2 w/ error", () => {
+    let err: ErrorObject;
+    let validator: ValidateData;
+    const bad: Dict = {
+      second: { 0: "core" },
+      third: { 0: "J" },
+      carbon: { 0: "S" }, // FIXME: also L, don't know how to test both
+      phosphorus: { 0: "core" },
+    };
+    let status: boolean;
+    for (const [key, atom] of inputs_nok) {
+      if (!bad.hasOwnProperty(key)) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
+        if (!bad[key].hasOwnProperty(idx.toString())) continue;
+        err = get_errobj(`${key}/electronic/${idx}`, comp);
+        validator = new ValidateData(comp, err);
+        switch (comp.scheme) {
+          case CouplingScheme.LS:
+            status = validator.LS();
+            break;
+          case CouplingScheme.LS1:
+            status = validator.LS1();
+            break;
+          case CouplingScheme.J1L2:
+            status = validator.J1L2();
+            break;
+          default:
+            status = false; // why am I here!?
         }
-    });
+        // console.log("Error: ", JSON.stringify(validator.err, null, 2));
+        expect(status).toEqual(false);
+        expect(err.instancePath).toEqual(`${key}/electronic/${idx}`);
+        expect(err.params.scheme).toEqual(comp.scheme);
+        expect(err.params.allowed[bad[key][idx.toString()]]).toBeDefined();
+        expect(err.message).toContain(bad[key][idx.toString()]);
+      }
+    }
+  });
 });
 
 describe("dispatchers", () => {
-    test("component w/ no errors", () => {
-        for (let [key, atom] of inputs_ok) {
-            for (let [idx, comp] of atom.electronic.entries()) {
-		let errors: ErrorObject[] = check_quantum_numbers(`${key}/electronic/${idx}`, comp, []);
-                // console.log("Error: ", JSON.stringify(errors, null, 2));
-                expect(errors).toHaveLength(0);
-            }
-        }
-    });
-
-    test("component w/ errors", () => {
-        const bad: string[] = ["second", "third", "carbon", "carbon_p", "phosphorus"];
-        for (let [key, atom] of inputs_nok) {
-            if (!(bad.includes(key))) continue;
-            for (let [idx, comp] of atom.electronic.entries()) {
-		let errors: ErrorObject[] = check_quantum_numbers(`${key}/electronic/${idx}`, comp, []);
-                // console.log("Error: ", JSON.stringify(errors, null, 2));
-                expect(errors).toHaveLength(1);
-		// TODO: check error specifics
-            }
-        }
-    });
-
-    test("jsonobject.states w/ no errors", () => {
-	let errors: ErrorObject[] = check_states(inputs_ok, []);
+  test("component w/ no errors", () => {
+    for (const [key, atom] of inputs_ok) {
+      for (const [idx, comp] of atom.electronic.entries()) {
+        const errors: ErrorObject[] = check_quantum_numbers(
+          `${key}/electronic/${idx}`,
+          comp,
+          []
+        );
         // console.log("Error: ", JSON.stringify(errors, null, 2));
         expect(errors).toHaveLength(0);
-    });
+      }
+    }
+  });
 
-    test("jsonobject.states w/ errors", () => {
-	let errors: ErrorObject[] = check_states(inputs_nok, []);
+  test("component w/ errors", () => {
+    const bad: string[] = [
+      "second",
+      "third",
+      "carbon",
+      "carbon_p",
+      "phosphorus",
+    ];
+    for (const [key, atom] of inputs_nok) {
+      if (!bad.includes(key)) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
+        const errors: ErrorObject[] = check_quantum_numbers(
+          `${key}/electronic/${idx}`,
+          comp,
+          []
+        );
         // console.log("Error: ", JSON.stringify(errors, null, 2));
-        expect(errors).toHaveLength(6); // FIXME: double check
-	// TODO: check error specifics
-    });
+        expect(errors).toHaveLength(1);
+        // TODO: check error specifics
+      }
+    }
+  });
+
+  test("jsonobject.states w/ no errors", () => {
+    const errors: ErrorObject[] = check_states(inputs_ok, []);
+    // console.log("Error: ", JSON.stringify(errors, null, 2));
+    expect(errors).toHaveLength(0);
+  });
+
+  test("jsonobject.states w/ errors", () => {
+    const errors: ErrorObject[] = check_states(inputs_nok, []);
+    // console.log("Error: ", JSON.stringify(errors, null, 2));
+    expect(errors).toHaveLength(6); // FIXME: double check
+    // TODO: check error specifics
+  });
 });

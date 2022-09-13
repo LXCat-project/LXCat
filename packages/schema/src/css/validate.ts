@@ -24,7 +24,7 @@ class Validator {
   validate_quantum_numbers(data: unknown) {
     const states: [string, AnyAtom] = get_states(data);
     if (this.errors == undefined) {
-        this.errors = [];
+      this.errors = [];
     }
     // FIXME: doesn't return a status code, returns the error objects
     return check_states(states, this.errors);

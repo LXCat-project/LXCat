@@ -130,12 +130,12 @@
       "type": "AtomLS",
       "electronic": [
         {
-	  "scheme": "LS",
-	  "config": [
-	      { "n": 2, "l": 0, "occupance": 1 },
-	      { "n": 2, "l": 1, "occupance": 4 }
-	  ],
-	  "term": { "L": 0, "S": 2, "J": 1, "P": 1 }
+          "scheme": "LS",
+          "config": [
+            { "n": 2, "l": 0, "occupance": 1 },
+            { "n": 2, "l": 1, "occupance": 4 }
+          ],
+          "term": { "L": 0, "S": 2, "J": 1, "P": 1 }
         }
       ]
     },
@@ -145,12 +145,12 @@
       "type": "AtomLS",
       "electronic": [
         {
-	  "scheme": "LS",
-	  "config": [
-	      { "n": 2, "l": 0, "occupance": 1 },
-	      { "n": 2, "l": 1, "occupance": 3 }
-	  ],
-	  "term": { "L": 0, "S": 2, "J": 2, "P": 1 }
+          "scheme": "LS",
+          "config": [
+            { "n": 2, "l": 0, "occupance": 1 },
+            { "n": 2, "l": 1, "occupance": 3 }
+          ],
+          "term": { "L": 0, "S": 2, "J": 2, "P": 1 }
         }
       ]
     },
