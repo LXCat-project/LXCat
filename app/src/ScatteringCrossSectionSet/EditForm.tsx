@@ -22,6 +22,7 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
+import { CSL } from "@lxcat/schema/dist/core/csl";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -1489,6 +1490,7 @@ const ImportDOIButton = ({
   const [open, setOpen] = useState(false);
   async function onSubmit(value: string) {
     if (value !== "cancel") {
+      // TODO resolving doi can take long time and timeout, should notify user when fetch fails
       const refs = await Cite.inputAsync(doi, {
         forceType: "@doi/id",
       });
@@ -1522,8 +1524,79 @@ const ImportDOIButton = ({
               onChange={(e) => setDoi(e.target.value)}
               placeholder="Enter DOI like 10.5284/1015681"
               // DOI pattern from https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-              // Does not work for `10.1103/PhysRev.97.1671`
+              // Does not work for `10.3390/atoms9010016`
               // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
+            />
+          </div>
+          <button value="cancel">Cancel</button>
+          <button value="default" type="submit">
+            Import
+          </button>
+        </form>
+      </Dialog>
+    </div>
+  );
+};
+
+const ImportBibTeXDOIButton = ({
+  onAdd,
+}: {
+  onAdd: (refs: Record<string, ReferenceRecord>) => void;
+}) => {
+  const [bibtex, setBibtex] = useState("");
+  const [open, setOpen] = useState(false);
+  async function onSubmit(value: string) {
+    if (value !== "cancel") {
+      // TODO resolving doi can take long time and timeout, should notify user when fetch fails
+      const refs = await Cite.inputAsync(bibtex, {
+        forceType: "@bibtex/text",
+      });
+      const labelRefs = Object.fromEntries(
+        refs.map((r) => {
+          const cite = new Cite(r, {
+            forceType: "@csl/object",
+          });
+          const labels = cite.format("label");
+          if (typeof labels === "string") {
+            throw new Error("Unexpected type for citation label");
+          }
+          const label = Object.values(labels)[0];
+          return [label, r];
+        })
+      );
+
+      onAdd(labelRefs);
+    }
+    setOpen(false);
+  }
+  const placeholder = `Enter BibTeX like:
+@Article{atoms9010016,
+  AUTHOR = {Carbone, Emile and Graef, Wouter and Hagelaar, Gerjan and Boer, Daan and Hopkins, Matthew M. and Stephens, Jacob C. and Yee, Benjamin T. and Pancheshnyi, Sergey and van Dijk, Jan and Pitchford, Leanne},
+  TITLE = {Data Needs for Modeling Low-Temperature Non-Equilibrium Plasmas: The LXCat Project, History, Perspectives and a Tutorial},
+  JOURNAL = {Atoms},
+  VOLUME = {9},
+  YEAR = {2021},
+  NUMBER = {1},
+  ARTICLE-NUMBER = {16},
+  URL = {https://www.mdpi.com/2218-2004/9/1/16},
+  ISSN = {2218-2004},
+  DOI = {10.3390/atoms9010016}
+}`;
+  return (
+    <div>
+      <button type="button" onClick={() => setOpen(true)}>
+        Import from BibTeX
+      </button>
+      <Dialog isOpened={open} onSubmit={onSubmit}>
+        <b>Import references based on BibTeX</b>
+        {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
+        <form method="dialog">
+          <div>
+            <textarea
+              value={bibtex}
+              style={{ width: "60rem", height: "16rem" }}
+              placeholder={placeholder}
+              onChange={(e) => setBibtex(e.target.value)}
             />
           </div>
           <button value="cancel">Cancel</button>
@@ -1616,6 +1689,11 @@ export const EditForm = ({
     };
     setReferences(newReferences);
   };
+  const addReferences = (references2add: Record<string, ReferenceRecord>) => {
+    const newReferences = { ...references };
+    Object.entries(references2add).forEach(([k, v]) => (newReferences[k] = v));
+    setReferences(newReferences);
+  };
   const removeReference = (label: string) => {
     const { [label]: _todrop, ...newReferences } = references;
     setReferences(newReferences);
@@ -1692,7 +1770,10 @@ export const EditForm = ({
               />
             ))}
           </ul>
-          <ImportDOIButton onAdd={addReference} />
+          <div style={{ display: "flex" }}>
+            <ImportDOIButton onAdd={addReference} />
+            <ImportBibTeXDOIButton onAdd={addReferences} />
+          </div>
           <ErrorMessage errors={errors} name="set.references" />
         </fieldset>
         <fieldset>

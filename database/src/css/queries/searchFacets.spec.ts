@@ -202,6 +202,4 @@ describe("searchFacets()", () => {
       });
     });
   });
-
-  
 });
