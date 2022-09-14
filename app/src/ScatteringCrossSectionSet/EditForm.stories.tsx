@@ -9,6 +9,7 @@ import { InState } from "@lxcat/schema/dist/core/state";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { EditForm } from "./EditForm";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 
 const meta = {
   component: EditForm,
@@ -21,31 +22,33 @@ const Template: ComponentStory<typeof EditForm> = (args) => (
   <EditForm {...args} />
 );
 
+const setTemplate: CrossSectionSetRaw = {
+  name: "Some set name",
+  description: "Some set description",
+  complete: false,
+  contributor: "Some organization",
+  processes: [],
+  states: {},
+  references: {},
+}
+const organizations = [
+  { _key: "1", name: "Some organization" },
+  { _key: "2", name: "Some other organization" },
+]
+
 export const Minimal = Template.bind({});
 Minimal.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
-    processes: [],
-    states: {},
-    references: {},
+    ...setTemplate
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const Single = Template.bind({});
 Single.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -77,10 +80,7 @@ Single.args = {
     },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const AtomLSGround = Template.bind({});
@@ -103,10 +103,7 @@ const state4AtomLSGround: InState<AtomLSState> = {
 };
 AtomLSGround.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -120,25 +117,15 @@ AtomLSGround.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       Ukn: state4AtomLSGround,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const AtomLSExcited = Template.bind({});
@@ -154,10 +141,7 @@ const state4AtomLSExcited: InState<AtomLSState> = {
 };
 AtomLSExcited.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -171,25 +155,16 @@ AtomLSExcited.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       Ukn: state4AtomLSExcited,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
+    
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const LinearTriatomInversionCenter = Template.bind({});
@@ -211,10 +186,7 @@ const state4LinearTriatomInversionCenter: InState<LinearTriatomInversionCenterSt
   };
 LinearTriatomInversionCenter.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -228,25 +200,15 @@ LinearTriatomInversionCenter.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       CO2: state4LinearTriatomInversionCenter,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const HeteronuclearDiatom = Template.bind({});
@@ -265,10 +227,7 @@ const state4HeteronuclearDiatom: InState<HeteronuclearDiatomState> = {
 };
 HeteronuclearDiatom.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -282,25 +241,15 @@ HeteronuclearDiatom.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       CO: state4HeteronuclearDiatom,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const HomonuclearDiatomNoVibNoRot = Template.bind({});
@@ -320,10 +269,7 @@ const state4HomonuclearDiatomNoVibNoRot: InState<HomonuclearDiatomState> = {
 };
 HomonuclearDiatomNoVibNoRot.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -337,25 +283,15 @@ HomonuclearDiatomNoVibNoRot.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       N2: state4HomonuclearDiatomNoVibNoRot,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const HomonuclearDiatomWithRot = Template.bind({});
@@ -376,10 +312,7 @@ const state4HomonuclearDiatomWithRot: InState<HomonuclearDiatomState> = {
 };
 HomonuclearDiatomWithRot.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -393,25 +326,15 @@ HomonuclearDiatomWithRot.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       N2: state4HomonuclearDiatomWithRot,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const HomonuclearDiatomWithMultiVib = Template.bind({});
@@ -432,10 +355,7 @@ const state4HomonuclearDiatomWithMultiVib: InState<HomonuclearDiatomState> = {
 };
 HomonuclearDiatomWithMultiVib.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -449,25 +369,15 @@ HomonuclearDiatomWithMultiVib.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       N2: state4HomonuclearDiatomWithMultiVib,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
 
 export const AtomJ1L2 = Template.bind({});
@@ -501,10 +411,7 @@ const state4AtomJ1L2: InState<AtomJ1L2State> = {
 };
 AtomJ1L2.args = {
   set: {
-    name: "Some set name",
-    description: "Some set description",
-    complete: false,
-    contributor: "Some organization",
+    ...setTemplate,
     processes: [
       {
         reaction: {
@@ -518,23 +425,13 @@ AtomJ1L2.args = {
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         data: [[1, 3.14e-20]],
-        reference: ["ref1"],
+        reference: [],
       },
     ],
     states: {
       Ukn: state4AtomJ1L2,
     },
-    references: {
-      ref1: {
-        id: "ref1",
-        type: "article",
-        title: "First article",
-      },
-    },
   },
   commitMessage: "",
-  organizations: [
-    { _key: "1", name: "Some organization" },
-    { _key: "2", name: "Some other organization" },
-  ],
+  organizations
 };
