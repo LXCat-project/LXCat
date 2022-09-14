@@ -1,5 +1,5 @@
 import Cite from "citation-js";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FormProvider,
   useFieldArray,
@@ -19,10 +19,11 @@ import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { InState } from "@lxcat/schema/dist/core/state";
 import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
+import { parse_state } from '@lxcat/schema/dist/core/parse'
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
-import { CSL } from "@lxcat/schema/dist/core/csl";
+
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -1398,7 +1399,7 @@ const HomonuclearDiatomForm = ({ label }: { label: string }) => {
 };
 
 const StateForm = ({
-  label: initialLabel,
+  label,
   onRemove,
 }: {
   label: string;
@@ -1406,20 +1407,19 @@ const StateForm = ({
 }) => {
   const {
     register,
-    control,
     watch,
     formState: { errors },
   } = useFormContext();
-  const [label, setLabel] = useState(initialLabel);
+  const [id, setId] = useState('');
   const state = watch(`set.states.${label}`);
-  // TODO label update based on whole state tricky as existing label needs to be removed
-  // useEffect(() => {
-  //   const newLabel = parse_state(state as InState<any>);
-  //   setLabel(newLabel.id);
-  // }, [state]);
+  // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
+  useEffect(() => {
+    const parsed = parse_state(state as InState<any>);
+    setId(parsed.id);
+  }, [state]);
   return (
     <div>
-      <h3>{label}</h3>
+      <h3>{label}: {id}</h3>
       <div>
         <label>
           Type
