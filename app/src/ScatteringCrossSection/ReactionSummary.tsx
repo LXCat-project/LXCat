@@ -7,9 +7,9 @@ import { InlineMath } from "react-katex";
 
 function stateEntry(entry: ReactionEntry<State>) {
   if (entry.count === 1) {
-    return entry.state.id;
+    return entry.state.latex;
   }
-  return entry.count + " " + entry.state.id;
+  return `${entry.count}${entry.state.latex}`;
 }
 
 export const ReactionSummary = (props: Reaction<State>) => {
