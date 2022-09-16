@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parse_charge } from "./parse";
+import { parseCharge } from "./parse";
 
 describe("parse_charge()", () => {
   const testCases: Array<[number, string]> = [
@@ -10,7 +10,7 @@ describe("parse_charge()", () => {
     [-2, "^2-"],
   ];
   it.each(testCases)("given %d should render %s", (input, expected) => {
-    const result = parse_charge(input);
+    const result = parseCharge(input);
     expect(result).toEqual(expected);
   });
 });

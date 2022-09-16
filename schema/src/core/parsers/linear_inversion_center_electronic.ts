@@ -35,9 +35,9 @@ function parse_e_lice_latex(
     ref_s = "^" + e.reflection;
   }
 
-  return `${e.e}^{${2 * e.S + 1}}${molecular_orbital_latex[e.Lambda]}_{${
-    e.parity
-  }}${ref_s}`;
+  return `\\mathrm{${e.e}}^{${2 * e.S + 1}}${
+    molecular_orbital_latex[e.Lambda]
+  }_\\mathrm{${e.parity}}${ref_s}`;
 }
 
 export const linearInversionCenterElectronicParser: ComponentParser<

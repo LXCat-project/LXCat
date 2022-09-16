@@ -1,7 +1,12 @@
-import { ParseAtom } from "../parse";
+import { AtomParser } from "../parse";
 import { AtomJ1L2, AtomJ1L2Impl, J1L2Term } from "../atoms/j1l2";
 import { parse_div_two, parse_shell_config, PUA } from "./common";
-import { parse_LS_term, parse_LS_term_impl, parse_LS_term_impl_latex, parse_LS_term_latex } from "./ls";
+import {
+  parse_LS_term,
+  parse_LS_term_impl,
+  parse_LS_term_impl_latex,
+  parse_LS_term_latex,
+} from "./ls";
 
 // ID parsing functions
 function parse_J1L2_term(term: J1L2Term): string {
@@ -53,7 +58,7 @@ export function parse_J1L2_latex(e: PUA<AtomJ1L2Impl>): string {
   );
 }
 
-export const j1l2_parser: ParseAtom<AtomJ1L2> = {
+export const j1l2_parser: AtomParser<AtomJ1L2> = {
   // particle_type: ParticleType.Atom,
   id: parse_J1L2,
   latex: parse_J1L2_latex,

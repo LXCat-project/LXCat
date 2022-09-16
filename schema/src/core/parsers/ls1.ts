@@ -1,4 +1,4 @@
-import { ParseAtom } from "../parse";
+import { AtomParser } from "../parse";
 import { AtomLS1, AtomLS1Impl, LS1Term } from "../atoms/ls1";
 import {
   atomic_orbital,
@@ -58,7 +58,7 @@ export function parse_LS1_latex(e: PUA<AtomLS1Impl>): string {
   );
 }
 
-export const ls1_parser: ParseAtom<AtomLS1> = {
+export const ls1_parser: AtomParser<AtomLS1> = {
   // particle_type: ParticleType.Atom,
   id: parse_LS1,
   latex: parse_LS1_latex,

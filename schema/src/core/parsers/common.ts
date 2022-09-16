@@ -1,9 +1,5 @@
 import { ShellEntry } from "../shell_entry";
 import { UE, UV, UR, UAtomic } from "../generators";
-import { LinearElectronicImpl } from "../molecules/components/electronic/linear";
-import { LinearInversionCenterElectronicImpl } from "../molecules/components/electronic/linear_inversion_center";
-import { RotationalImpl } from "../molecules/components/rotational";
-import { LinearTriatomVibrationalImpl } from "../molecules/components/vibrational/linear_triatomic";
 
 export const electronic_orbital = ["s", "p", "d", "f", "g", "h"];
 export const atomic_orbital = ["S", "P", "D", "F", "G", "H"];
