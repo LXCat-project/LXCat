@@ -10,10 +10,19 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { EditForm } from "./EditForm";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { theme } from "../theme";
+import { MantineProvider } from "@mantine/core";
 
 const meta = {
   component: EditForm,
   argTypes: { onSubmit: { action: "submitted" } },
+  decorators: [
+    (Story) => (
+      <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+        <Story />
+      </MantineProvider>
+    ),
+  ],
 } as ComponentMeta<typeof EditForm>;
 
 export default meta;
@@ -30,19 +39,19 @@ const setTemplate: CrossSectionSetRaw = {
   processes: [],
   states: {},
   references: {},
-}
+};
 const organizations = [
   { _key: "1", name: "Some organization" },
   { _key: "2", name: "Some other organization" },
-]
+];
 
 export const Minimal = Template.bind({});
 Minimal.args = {
   set: {
-    ...setTemplate
+    ...setTemplate,
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const Single = Template.bind({});
@@ -80,7 +89,7 @@ Single.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const AtomLSGround = Template.bind({});
@@ -125,7 +134,7 @@ AtomLSGround.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const AtomLSExcited = Template.bind({});
@@ -161,10 +170,9 @@ AtomLSExcited.args = {
     states: {
       Ukn: state4AtomLSExcited,
     },
-    
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const LinearTriatomInversionCenter = Template.bind({});
@@ -208,7 +216,7 @@ LinearTriatomInversionCenter.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const HeteronuclearDiatom = Template.bind({});
@@ -249,7 +257,7 @@ HeteronuclearDiatom.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const HomonuclearDiatomNoVibNoRot = Template.bind({});
@@ -291,7 +299,7 @@ HomonuclearDiatomNoVibNoRot.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const HomonuclearDiatomWithRot = Template.bind({});
@@ -334,7 +342,7 @@ HomonuclearDiatomWithRot.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const HomonuclearDiatomWithMultiVib = Template.bind({});
@@ -377,7 +385,7 @@ HomonuclearDiatomWithMultiVib.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
 
 export const AtomJ1L2 = Template.bind({});
@@ -433,5 +441,6 @@ AtomJ1L2.args = {
     },
   },
   commitMessage: "",
-  organizations
+  organizations,
 };
+
