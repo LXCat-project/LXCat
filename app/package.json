@@ -13,11 +13,16 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/server": "^11.10.0",
     "@hookform/error-message": "^2.0.0",
     "@hookform/resolvers": "^2.9.7",
     "@lxcat/converter": "*",
     "@lxcat/database": "*",
     "@lxcat/schema": "*",
+    "@mantine/core": "^5.3.2",
+    "@mantine/hooks": "^5.3.2",
+    "@mantine/next": "^5.3.2",
     "@next/bundle-analyzer": "^12.2.5",
     "arangojs": "^7.7.0",
     "citation-js": "^0.6.4",

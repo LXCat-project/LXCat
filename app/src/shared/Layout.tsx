@@ -18,6 +18,7 @@ export const Layout = ({ children, title = "" }: Props) => {
           content="An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections, swarm parameters (mobility, diffusion coefficient, etc.), reaction rates, energy distribution functions, etc. and other data required for modeling low temperature plasmas."
         />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <NavBar />
       <main style={{ padding: 10 }}>{children}</main>

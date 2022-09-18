@@ -1,7 +1,26 @@
+import {
+  Accordion,
+  Button,
+  Checkbox,
+  Group,
+  NativeSelect,
+  NumberInput,
+  Radio,
+  Select,
+  Tabs,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import Cite from "citation-js";
 import { useEffect, useRef, useState } from "react";
 import {
+  Controller,
+  FieldError,
+  FieldErrors,
+  FieldErrorsImpl,
+  FieldPath,
   FormProvider,
+  get,
   useFieldArray,
   useForm,
   useFormContext,
@@ -19,11 +38,11 @@ import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { InState } from "@lxcat/schema/dist/core/state";
 import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
-import { parse_state } from '@lxcat/schema/dist/core/parse'
+import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
-
+import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -48,6 +67,19 @@ const ErrorMessage = (props: any) => (
   />
 );
 
+const errorMsg = (
+  errors: FieldErrors<FieldValues>,
+  name: FieldPath<FieldValues>
+) => {
+  const error: FieldError | undefined = get(errors, name);
+
+  if (!error) {
+    return false;
+  }
+
+  return error.message;
+};
+
 const ReactionEntryForm = ({
   index: entryIndex,
   processIndex,
@@ -67,22 +99,22 @@ const ReactionEntryForm = ({
   const states = watch(`set.states`);
   return (
     <div style={{ display: "flex" }}>
-      <input
-        title="Count"
-        type="number"
-        min={1}
-        style={{ width: "2rem" }}
-        {...register(
-          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`,
-          {
-            valueAsNumber: true,
-          }
-        )}
-      />
-      <ErrorMessage
-        errors={errors}
-        name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`}
-      />
+      <div>
+        <TextInput
+          label="Count"
+          withAsterisk
+          error={errorMsg(
+            errors,
+            `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`
+          )}
+          {...register(
+            `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`,
+            {
+              valueAsNumber: true,
+            }
+          )}
+        />
+      </div>
       <select
         title="State"
         {...register(
@@ -102,9 +134,9 @@ const ReactionEntryForm = ({
         errors={errors}
         name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
       />
-      <button type="button" title="Remove process" onClick={onRemove}>
+      <Button type="button" title="Remove process" onClick={onRemove}>
         &minus;
-      </button>
+      </Button>
     </div>
   );
 };
@@ -144,13 +176,13 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
               </div>
             );
           })}
-          <button
+          <Button
             type="button"
             title="Add consumed reaction entry"
             onClick={() => lhsField.append({ count: 1, state: "" })}
           >
             +
-          </button>
+          </Button>
         </div>
         <ErrorMessage
           errors={errors}
@@ -173,13 +205,13 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
               </div>
             );
           })}
-          <button
+          <Button
             type="button"
             title="Add produced reaction entry"
             onClick={() => rhsField.append({ count: 1, state: "" })}
           >
             +
-          </button>
+          </Button>
         </div>
         <ErrorMessage
           errors={errors}
@@ -243,9 +275,9 @@ const CSDataUploadButton = ({
   }
 
   return (
-    <button
+    <Button
       type="button"
-      className="btn btn-light"
+      variant="light"
       onClick={() => uploadRef.current?.click()}
     >
       Upload JSON like `[[1,2]]`
@@ -256,7 +288,7 @@ const CSDataUploadButton = ({
         ref={uploadRef}
         style={{ opacity: 0, width: 0, height: 0 }}
       />
-    </button>
+    </Button>
   );
 };
 
@@ -278,53 +310,41 @@ const LUTForm = ({ index }: { index: number }) => {
         <thead>
           <tr>
             <th>
-              <input
-                style={{ width: "6rem" }}
-                {...register(`set.processes.${index}.labels.0`)}
-              />{" "}
-              (
-              <input
-                style={{ width: "3rem" }}
-                {...register(`set.processes.${index}.units.0`)}
-              />
-              )
-              <ErrorMessage
-                errors={errors}
-                name={`set.processes.${index}.labels.0`}
-              />
-              <ErrorMessage
-                errors={errors}
-                name={`set.processes.${index}.units.0`}
-              />
+              <Group>
+                <TextInput
+                  style={{ width: "6rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.labels.0`)}
+                  {...register(`set.processes.${index}.labels.0`)}
+                />{" "}
+                <TextInput
+                  style={{ width: "4rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.units.0`)}
+                  {...register(`set.processes.${index}.units.0`)}
+                />
+              </Group>
             </th>
             <th>
-              <input
-                style={{ width: "6rem" }}
-                {...register(`set.processes.${index}.labels.1`)}
-              />{" "}
-              (
-              <input
-                style={{ width: "3rem" }}
-                {...register(`set.processes.${index}.units.1`)}
-              />
-              )
-              <ErrorMessage
-                errors={errors}
-                name={`set.processes.${index}.labels.1`}
-              />
-              <ErrorMessage
-                errors={errors}
-                name={`set.processes.${index}.units.1`}
-              />
+              <Group>
+                <TextInput
+                  style={{ width: "6rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.labels.1`)}
+                  {...register(`set.processes.${index}.labels.1`)}
+                />{" "}
+                <TextInput
+                  style={{ width: "4rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.units.1`)}
+                  {...register(`set.processes.${index}.units.1`)}
+                />
+              </Group>
             </th>
             <th>
-              <button
+              <Button
                 title="Add"
                 type="button"
                 onClick={() => dataRows.append([[0, 0]])}
               >
                 +
-              </button>
+              </Button>
             </th>
           </tr>
         </thead>
@@ -332,37 +352,27 @@ const LUTForm = ({ index }: { index: number }) => {
           {dataRows.fields.map((r, i) => (
             <tr key={i}>
               <td>
-                <input
-                  style={{ width: "10rem" }}
-                  {...register(`set.processes.${index}.data.${i}.0`, {
-                    valueAsNumber: true,
-                  })}
-                />
-                <ErrorMessage
-                  errors={errors}
-                  name={`set.processes.${index}.data.${i}.0`}
+                <TextInput
+                  style={{ width: "11rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.data.${i}.0`)}
+                  {...register(`set.processes.${index}.data.${i}.0`)}
                 />
               </td>
               <td>
-                <input
-                  style={{ width: "10rem" }}
-                  {...register(`set.processes.${index}.data.${i}.1`, {
-                    valueAsNumber: true,
-                  })}
-                />
-                <ErrorMessage
-                  errors={errors}
-                  name={`set.processes.${index}.data.${i}.1`}
+                <TextInput
+                  style={{ width: "11rem" }}
+                  error={errorMsg(errors, `set.processes.${index}.data.${i}.1`)}
+                  {...register(`set.processes.${index}.data.${i}.1`)}
                 />
               </td>
               <td>
-                <button
+                <Button
                   title="Remove"
                   type="button"
                   onClick={() => dataRows.remove(i)}
                 >
                   &minus;
-                </button>
+                </Button>
               </td>
             </tr>
           ))}
@@ -417,17 +427,12 @@ const ProcessForm = ({
       </div>
 
       <div>
-        <label>
-          Threshold
-          <input
-            {...register(`set.processes.${index}.threshold`, {
-              valueAsNumber: true,
-            })}
-          />
-        </label>
-        <ErrorMessage
-          errors={errors}
-          name={`set.processes.${index}.threshold`}
+        <TextInput
+          label="Threshold"
+          error={errorMsg(errors, `set.processes.${index}.threshold`)}
+          {...register(`set.processes.${index}.threshold`, {
+            valueAsNumber: true,
+          })}
         />
       </div>
       {type === Storage.LUT && <LUTForm index={index} />}
@@ -466,9 +471,9 @@ const ProcessForm = ({
           />
         </div>
       </div>
-      <button type="button" title="Remove" onClick={onRemove}>
+      <Button type="button" title="Remove" onClick={onRemove}>
         &minus;
-      </button>
+      </Button>
       <ErrorMessage errors={errors} name={`set.processes.${index}`} />
       <hr />
     </div>
@@ -481,22 +486,20 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
     formState: { errors },
   } = useFormContext();
   return (
-    <div>
-      <div>
-        <label>
-          Particle
-          <input {...register(`set.states.${label}.particle`)} />
-        </label>
-        <ErrorMessage errors={errors} name={`set.states.${label}.particle`} />
-      </div>
-      <div>
-        <label>
-          Charge
-          <input type="number" {...register(`set.states.${label}.charge`)} />
-        </label>
-        <ErrorMessage errors={errors} name={`set.states.${label}.charge`} />
-      </div>
-    </div>
+    <Group>
+      <TextInput
+        label="Particle"
+        withAsterisk
+        error={errorMsg(errors, `set.states.${label}.particle`)}
+        {...register(`set.states.${label}.particle`)}
+      />
+      {/* TODO change to number input */}
+      <TextInput
+        label="Charge"
+        error={errorMsg(errors, `set.states.${label}.charge`)}
+        {...register(`set.states.${label}.charge`, { valueAsNumber: true })}
+      />
+    </Group>
   );
 };
 
@@ -510,31 +513,34 @@ const AtomLSElectronicForm = ({
   const {
     register,
     watch,
+    control,
     formState: { errors },
   } = useFormContext();
   const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
   return (
     <>
       <div>
-        <label>
-          Type
-          <select
-            {...register(`set.states.${label}.electronic.${eindex}.scheme`, {
-              setValueAs: (v) => (v === "" ? undefined : v),
-              // TODO switching type should clear previous
-            })}
-          >
-            {/* TODO find simple type in @lxcat/schema */}
-            <option value="">Simple</option>
-            <option value="LS">LS</option>
-          </select>
-        </label>
-        <ErrorMessage
-          errors={errors}
+        <Controller
+          control={control}
           name={`set.states.${label}.electronic.${eindex}.scheme`}
+          render={({ field: { onChange, value } }) => (
+            <Radio.Group
+              label="Scheme"
+              // TODO drop scheme key when simple scheme is selected
+              onChange={onChange}
+              value={value}
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.scheme`
+              )}
+            >
+              <Radio value="" label="Simple" />
+              <Radio value="LS" label="LS" />
+            </Radio.Group>
+          )}
         />
       </div>
-      {scheme === undefined ? (
+      {scheme !== "LS" ? (
         <div>
           <label>
             e
@@ -550,77 +556,64 @@ const AtomLSElectronicForm = ({
       ) : (
         <div>
           <h5>Term</h5>
+          <Group>
           <div>
-            <label>
-              L
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.L`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </label>
-            <ErrorMessage
-              errors={errors}
-              name={`set.states.${label}.electronic.${eindex}.term.L`}
+            <TextInput
+              label="L"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.term.L`
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.term.L`, {
+                valueAsNumber: true,
+              })}
             />
           </div>
           <div>
-            <label>
-              S
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.S`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </label>
-            <ErrorMessage
-              errors={errors}
-              name={`set.states.${label}.electronic.${eindex}.term.S`}
+            <TextInput
+              label="S"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.term.S`
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.term.S`, {
+                valueAsNumber: true,
+              })}
             />
           </div>
           <div>
-            <label>
-              P
-              <select
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.P`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              >
-                <option value={-1}>-1</option>
-                <option value={1}>1</option>
-              </select>
-            </label>
-            <ErrorMessage
-              errors={errors}
+            <Controller
+              control={control}
               name={`set.states.${label}.electronic.${eindex}.term.P`}
+              render={({ field: { onChange, value } }) => (
+                <Radio.Group
+                  label="P"
+                  onChange={(v) => onChange(parseInt(v))}
+                  value={value.toString()}
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.term.P`
+                  )}
+                >
+                  <Radio value="-1" label="-1" />
+                  <Radio value="1" label="1" />
+                </Radio.Group>
+              )}
             />
           </div>
           <div>
-            <label>
-              J
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.J`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </label>
-            <ErrorMessage
-              errors={errors}
-              name={`set.states.${label}.electronic.${eindex}.term.J`}
+            <TextInput
+              label="J"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.term.J`
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.term.J`, {
+                valueAsNumber: true,
+              })}
             />
           </div>
+          </Group>
         </div>
       )}
     </>
@@ -667,69 +660,63 @@ const AtomJ1L2ConfigArray = ({
             removeTitle="Remove config"
             onRemove={() => array.remove(index)}
           >
-            <div style={{ display: "flex" }}>
+            <Group>
               <div>
-                <label>
-                  n
-                  <input
-                    {...register(
-                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`,
-                      {
-                        valueAsNumber: true,
-                      }
-                    )}
-                  />
-                </label>
-                <ErrorMessage
-                  errors={errors}
-                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`}
+                <TextInput
+                  label="n"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
                 />
               </div>
               <div>
-                <label>
-                  l
-                  <input
-                    {...register(
-                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`,
-                      {
-                        valueAsNumber: true,
-                      }
-                    )}
-                  />
-                </label>
-                <ErrorMessage
-                  errors={errors}
-                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`}
+                <TextInput
+                  label="l"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
                 />
               </div>
               <div>
-                <label>
-                  Occupance
-                  <input
-                    {...register(
-                      `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`,
-                      {
-                        valueAsNumber: true,
-                      }
-                    )}
-                  />
-                </label>
-                <ErrorMessage
-                  errors={errors}
-                  name={`set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`}
+                <TextInput
+                  label="Occupance"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
                 />
               </div>
-            </div>
+            </Group>
           </ArrayItem>
         ))}
       </ol>
-      <button
+      <Button
         type="button"
         title="Add config part"
         onClick={() => array.append(initialValue4AtomJ1L2Config())}
       >
         +
-      </button>
+      </Button>
       <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
     </div>
   );
@@ -746,6 +733,7 @@ const LSTermConfigForm = ({
 }) => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext();
   return (
@@ -755,75 +743,72 @@ const LSTermConfigForm = ({
       <h6>Term</h6>
       <div>
         <div>
-          <label>
-            L
-            <input
-              {...register(
-                `set.states.${label}.electronic.${eindex}.config.${side}.term.L`,
-                {
-                  valueAsNumber: true,
-                }
-              )}
-            />
-          </label>
-          <ErrorMessage
-            errors={errors}
-            name={`set.states.${label}.electronic.${eindex}.config.${side}.term.L`}
+          <TextInput
+            label="L"
+            withAsterisk
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.L`
+            )}
+            {...register(
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.L`,
+              {
+                valueAsNumber: true,
+              }
+            )}
           />
         </div>
         <div>
-          <label>
-            S
-            <input
-              {...register(
-                `set.states.${label}.electronic.${eindex}.config.${side}.term.S`,
-                {
-                  valueAsNumber: true,
-                }
-              )}
-            />
-          </label>
-          <ErrorMessage
-            errors={errors}
-            name={`set.states.${label}.electronic.${eindex}.config.${side}.term.S`}
+          <TextInput
+            label="S"
+            withAsterisk
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.S`
+            )}
+            {...register(
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.S`,
+              {
+                valueAsNumber: true,
+              }
+            )}
           />
         </div>
         <div>
-          <label>
-            P
-            <select
-              {...register(
-                `set.states.${label}.electronic.${eindex}.config.${side}.term.P`,
-                {
-                  valueAsNumber: true,
-                }
-              )}
-            >
-              <option value={-1}>-1</option>
-              <option value={1}>1</option>
-            </select>
-          </label>
-          <ErrorMessage
-            errors={errors}
+          <Controller
+            control={control}
             name={`set.states.${label}.electronic.${eindex}.config.${side}.term.P`}
+            render={({ field: { onChange, value } }) => (
+              <Radio.Group
+                label="P"
+                onChange={(v) => onChange(parseInt(v))}
+                value={value.toString()}
+                error={errorMsg(
+                  errors,
+                  `set.states.${label}.electronic.${eindex}.config.${side}.term.P`
+                )}
+              >
+                <Radio value="-1" label="-1" />
+                <Radio value="1" label="1" />
+              </Radio.Group>
+            )}
           />
         </div>
         {side === "core" && (
           <div>
-            <label>
-              J
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.config.${side}.term.J`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </label>
-            <ErrorMessage
-              errors={errors}
-              name={`set.states.${label}.electronic.${eindex}.config.${side}.term.J`}
+            <TextInput
+              label="J"
+              withAsterisk
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.J`
+              )}
+              {...register(
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.J`,
+                {
+                  valueAsNumber: true,
+                }
+              )}
             />
           </div>
         )}
@@ -853,7 +838,7 @@ const AtomJ1L2FormElectronicForm = ({
       <div>
         <div>
           <label>
-            L
+            K
             <input
               {...register(`set.states.${label}.electronic.${eindex}.term.K`, {
                 valueAsNumber: true,
@@ -1171,13 +1156,13 @@ const ElectronicArray = ({
             {item(label, index)}
           </ArrayItem>
         ))}
-        <button
+        <Button
           type="button"
           title="Add electronic part"
           onClick={() => array.append(initialValue)}
         >
           +
-        </button>
+        </Button>
       </ol>
       <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
     </div>
@@ -1196,9 +1181,9 @@ const ArrayItem = ({
   return (
     <li>
       {children}
-      <button type="button" title={removeTitle} onClick={onRemove}>
+      <Button type="button" title={removeTitle} onClick={onRemove}>
         &minus;
-      </button>
+      </Button>
     </li>
   );
 };
@@ -1251,13 +1236,13 @@ const VibrationalArray = ({
             {item(label, eindex, index)}
           </ArrayItem>
         ))}
-        <button
+        <Button
           type="button"
           title="Add vibrational"
           onClick={() => array.append([initialValue])}
         >
           +
-        </button>
+        </Button>
       </ol>
 
       <ErrorMessage
@@ -1310,13 +1295,13 @@ const RotationalArray = ({
             />
           </ArrayItem>
         ))}
-        <button
+        <Button
           type="button"
           title="Add rotational"
           onClick={() => array.append({ J: 0 })}
         >
           +
-        </button>
+        </Button>
       </ol>
 
       <ErrorMessage
@@ -1406,58 +1391,70 @@ const StateForm = ({
   onRemove: () => void;
 }) => {
   const {
-    register,
     watch,
+    control,
     formState: { errors },
   } = useFormContext();
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
   const state = watch(`set.states.${label}`);
   // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
   useEffect(() => {
     const parsed = parse_state(state as InState<any>);
     setId(parsed.id);
   }, [state]);
+
   return (
-    <div>
-      <h3>{label}: {id}</h3>
-      <div>
-        <label>
-          Type
-          <select
-            {...register(`set.states.${label}.type`, {
-              setValueAs: (v) => (v === "" ? undefined : v),
-            })}
-          >
-            <option value="">Simple particle</option>
-            <option value="AtomLS">Atom LS</option>
-            <option value="AtomJ1L2">Atom J1L2</option>
-            <option value="HeteronuclearDiatom">Heteronuclear Diatom</option>
-            <option value="HomonuclearDiatom">Homonuclear Diatom</option>
-            <option value="LinearTriatomInversionCenter">
-              Linear Triatom Inversion Center
-            </option>
-          </select>
-        </label>
-        <ErrorMessage errors={errors} name={`set.states.${label}.type`} />
-      </div>
-      <SimpleParticleForm label={label} />
-      {state.type === "AtomLS" && <AtomLSForm label={label} />}
-      {state.type === "AtomJ1L2" && <AtomJ1L2Form label={label} />}
-      {state.type === "HeteronuclearDiatom" && (
-        <HeteronuclearDiatomForm label={label} />
-      )}
-      {state.type === "HomonuclearDiatom" && (
-        <HomonuclearDiatomForm label={label} />
-      )}
-      {state.type === "LinearTriatomInversionCenter" && (
-        <LinearTriatomInversionCenterForm label={label} />
-      )}
-      {/* // TODO atomls1 */}
-      <button type="button" title="Remove state" onClick={onRemove}>
-        &minus;
-      </button>
-      <hr />
-    </div>
+    <Accordion.Item key={label} value={label}>
+      <Accordion.Control>
+        {label}: {id}
+      </Accordion.Control>
+      <Accordion.Panel>
+        <div>
+          <Controller
+            control={control}
+            name={`set.states.${label}.type`}
+            render={({ field: { onChange, value } }) => (
+              <Radio.Group
+                label="Type"
+                onChange={(v) => v === "" ? onChange(undefined) : onChange(v) }
+                value={value}
+                error={errorMsg(errors, `set.states.${label}.type`)}
+              >
+                <Radio value="" label="Simple particle" />
+                <Radio value="AtomLS" label="Atom LS" />
+                <Radio value="AtomJ1L2" label="Atom J1L2" />
+                <Radio
+                  value="HeteronuclearDiatom"
+                  label="Heteronuclear Diatom"
+                />
+                <Radio value="HomonuclearDiatom" label="Homonuclear Diatom" />
+                <Radio
+                  value="LinearTriatomInversionCenter"
+                  label="Linear Triatom Inversion Center"
+                />
+              </Radio.Group>
+            )}
+          />
+        </div>
+        <SimpleParticleForm label={label} />
+        {state.type === "AtomLS" && <AtomLSForm label={label} />}
+        {state.type === "AtomJ1L2" && <AtomJ1L2Form label={label} />}
+        {state.type === "HeteronuclearDiatom" && (
+          <HeteronuclearDiatomForm label={label} />
+        )}
+        {state.type === "HomonuclearDiatom" && (
+          <HomonuclearDiatomForm label={label} />
+        )}
+        {state.type === "LinearTriatomInversionCenter" && (
+          <LinearTriatomInversionCenterForm label={label} />
+        )}
+        {/* // TODO atomls1 */}
+        <Button type="button" title="Remove state" onClick={onRemove}>
+          &minus;
+        </Button>
+        <hr />
+      </Accordion.Panel>
+    </Accordion.Item>
   );
 };
 
@@ -1474,9 +1471,9 @@ const ReferenceForm = ({
     <li>
       {label}:
       <Reference {...reference} />
-      <button type="button" title="Remove reference" onClick={onRemove}>
+      <Button type="button" title="Remove reference" onClick={onRemove}>
         &minus;
-      </button>
+      </Button>
     </li>
   );
 };
@@ -1510,9 +1507,9 @@ const ImportDOIButton = ({
   }
   return (
     <div>
-      <button type="button" onClick={() => setOpen(true)}>
+      <Button type="button" variant="light" onClick={() => setOpen(true)}>
         Import from DOI
-      </button>
+      </Button>
       <Dialog isOpened={open} onSubmit={onSubmit}>
         <b>Import reference based on DOI</b>
         {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
@@ -1528,10 +1525,10 @@ const ImportDOIButton = ({
               // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
             />
           </div>
-          <button value="cancel">Cancel</button>
-          <button value="default" type="submit">
+          <Button value="cancel">Cancel</Button>
+          <Button value="default" type="submit">
             Import
-          </button>
+          </Button>
         </form>
       </Dialog>
     </div>
@@ -1584,9 +1581,9 @@ const ImportBibTeXDOIButton = ({
 }`;
   return (
     <div>
-      <button type="button" onClick={() => setOpen(true)}>
+      <Button type="button" variant="light" onClick={() => setOpen(true)}>
         Import from BibTeX
-      </button>
+      </Button>
       <Dialog isOpened={open} onSubmit={onSubmit}>
         <b>Import references based on BibTeX</b>
         {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
@@ -1599,10 +1596,10 @@ const ImportBibTeXDOIButton = ({
               onChange={(e) => setBibtex(e.target.value)}
             />
           </div>
-          <button value="cancel">Cancel</button>
-          <button value="default" type="submit">
+          <Button value="cancel">Cancel</Button>
+          <Button value="default" type="submit">
             Import
-          </button>
+          </Button>
         </form>
       </Dialog>
     </div>
@@ -1650,6 +1647,7 @@ export const EditForm = ({
     handleSubmit,
     setValue,
     watch,
+    getValues,
     formState: { errors },
   } = methods;
 
@@ -1708,101 +1706,112 @@ export const EditForm = ({
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onLocalSubmit)}>
-        <fieldset>
-          <div>
-            <label>
-              Name
-              <input {...register("set.name")} />
-            </label>
-            <ErrorMessage errors={errors} name="set.name" />
-          </div>
-          <div>
-            <label>
-              Description
-              <textarea rows={6} cols={80} {...register("set.description")} />
-            </label>
-            <ErrorMessage errors={errors} name="set.description" />
-          </div>
-          <div>
-            <label>
-              Complete
-              <input type="checkbox" {...register("set.complete")} />
-            </label>
-            <ErrorMessage errors={errors} name="set.complete" />
-          </div>
-          <div>
-            <label>
-              Contributor
-              <select {...register("set.contributor")}>
-                {organizations.map((o) => (
-                  <option key={o._key} value={o.name}>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <ErrorMessage errors={errors} name="set.contributor" />
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>States</legend>
-          {Object.keys(states).map((label) => (
-            <StateForm
-              key={label}
-              label={label}
-              onRemove={() => removeState(label)}
-            />
-          ))}
-          <button type="button" title="Add a state" onClick={addState}>
-            +
-          </button>
-          <ErrorMessage errors={errors} name="set.states" />
-        </fieldset>
-        <fieldset>
-          <legend>References</legend>
-          <ul>
-            {Object.keys(references).map((label) => (
-              <ReferenceForm
-                key={label}
-                label={label}
-                onRemove={() => removeReference(label)}
+      <form
+        onSubmit={handleSubmit(onLocalSubmit, (err) => {
+          console.error(err);
+          console.info(getValues());
+        })}
+      >
+        <Tabs defaultValue="general">
+          <Tabs.List>
+            <Tabs.Tab value="general">General</Tabs.Tab>
+            <Tabs.Tab value="states">States</Tabs.Tab>
+            <Tabs.Tab value="references">References</Tabs.Tab>
+            <Tabs.Tab value="processes">Processes</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="general">
+            <div>
+              <TextInput
+                label="Name"
+                withAsterisk
+                error={errorMsg(errors, "set.name")}
+                {...register("set.name")}
               />
-            ))}
-          </ul>
-          <div style={{ display: "flex" }}>
-            <ImportDOIButton onAdd={addReference} />
-            <ImportBibTeXDOIButton onAdd={addReferences} />
-          </div>
-          <ErrorMessage errors={errors} name="set.references" />
-        </fieldset>
-        <fieldset>
-          <legend>Processes</legend>
-          {processesField.fields.map((field, index) => (
-            <ProcessForm
-              key={field.id}
-              index={index}
-              onRemove={() => processesField.remove(index)}
-            />
-          ))}
-          <button
-            type="button"
-            title="Add process"
-            onClick={() => processesField.append(initialProcess())}
-          >
-            +
-          </button>
-          <ErrorMessage errors={errors} name="set.processes" />
-        </fieldset>
+            </div>
+            <div>
+              <Textarea
+                label="Description"
+                withAsterisk
+                error={errorMsg(errors, "set.description")}
+                minRows={10}
+                {...register("set.description")}
+              />
+            </div>
+            <div>
+              <Checkbox label="Complete" {...register("set.complete")} />
+            </div>
+            <div>
+              <NativeSelect
+                label="Contributor"
+                data={organizations.map((o) => o.name)}
+                error={errorMsg(errors, "set.contributor")}
+                {...register("set.contributor")}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="states">
+            <Accordion multiple>
+              {Object.keys(states).map((label) => (
+                <StateForm
+                  key={label}
+                  label={label}
+                  onRemove={() => removeState(label)}
+                />
+              ))}
+            </Accordion>
+            <Button type="button" title="Add a state" onClick={addState}>
+              +
+            </Button>
+            <ErrorMessage errors={errors} name="set.states" />
+          </Tabs.Panel>
+          <Tabs.Panel value="references">
+            <ul>
+              {Object.keys(references).map((label) => (
+                <ReferenceForm
+                  key={label}
+                  label={label}
+                  onRemove={() => removeReference(label)}
+                />
+              ))}
+            </ul>
+            <div style={{ display: "flex" }}>
+              <ImportDOIButton onAdd={addReference} />
+              <ImportBibTeXDOIButton onAdd={addReferences} />
+            </div>
+            <ErrorMessage errors={errors} name="set.references" />
+          </Tabs.Panel>
+          <Tabs.Panel value="processes">
+            <Accordion multiple>
+              {processesField.fields.map((field, index) => (
+                <Accordion.Item key={field.id} value={field.id}>
+                  <Accordion.Control>Reaction {field.id}</Accordion.Control>
+                  <Accordion.Panel>
+                    <ProcessForm
+                      index={index}
+                      onRemove={() => processesField.remove(index)}
+                    />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+            <Button
+              type="button"
+              title="Add process"
+              onClick={() => processesField.append(initialProcess())}
+            >
+              +
+            </Button>
+            <ErrorMessage errors={errors} name="set.processes" />
+          </Tabs.Panel>
+        </Tabs>
         <div>
-          <input
-            style={{ width: "50rem" }}
+          <TextInput
             placeholder="Optionally describe which changes have been made."
+            error={errorMsg(errors, "commitMessage")}
             {...register("commitMessage")}
           />
-          <ErrorMessage errors={errors} name="commitMessage" />
         </div>
-        <input type="submit" />
+        <Button type="submit">Submit</Button>
       </form>
     </FormProvider>
   );
