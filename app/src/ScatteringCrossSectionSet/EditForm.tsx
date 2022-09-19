@@ -485,6 +485,7 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
       {/* TODO change to number input */}
       <TextInput
         label="Charge"
+        withAsterisk
         error={errorMsg(errors, `set.states.${label}.charge`)}
         {...register(`set.states.${label}.charge`, { valueAsNumber: true })}
       />
@@ -544,6 +545,8 @@ const AtomLSElectronicForm = ({
         </div>
       ) : (
         <div>
+          <h5>Config</h5>
+          <AtomLSConfigArray label={label} eindex={eindex} side="" />
           <h5>Term</h5>
           <Group>
             <div>
@@ -630,24 +633,28 @@ const AtomLSForm = ({ label }: { label: string }) => {
   );
 };
 
-const initialValue4AtomJ1L2Config = () => ({ n: 0, l: 0, occupance: 0 });
-const AtomJ1L2ConfigArray = ({
+const initialValue4AtomLSConfig = () => ({ n: 0, l: 0, occupance: 0 });
+const AtomLSConfigArray = ({
   label,
   eindex,
   side,
 }: {
   label: string;
   eindex: number;
-  side: "core" | "excited";
+  side: "" | "core" | "excited";
 }) => {
   const {
     register,
     control,
     formState: { errors },
   } = useFormContext();
+  const prefix: FieldPath<FieldValues> =
+    side === ""
+      ? `set.states.${label}.electronic.${eindex}.config`
+      : `set.states.${label}.electronic.${eindex}.config.${side}.config`;
   const array = useFieldArray({
     control,
-    name: `set.states.${label}.electronic.${eindex}.config.${side}.config`,
+    name: prefix,
   });
   return (
     <div>
@@ -662,46 +669,28 @@ const AtomJ1L2ConfigArray = ({
               <div>
                 <TextInput
                   label="n"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`
-                  )}
-                  {...register(
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.n`,
-                    {
-                      valueAsNumber: true,
-                    }
-                  )}
+                  error={errorMsg(errors, `${prefix}.${index}.n`)}
+                  {...register(`${prefix}.${index}.n`, {
+                    valueAsNumber: true,
+                  })}
                 />
               </div>
               <div>
                 <TextInput
                   label="l"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`
-                  )}
-                  {...register(
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.l`,
-                    {
-                      valueAsNumber: true,
-                    }
-                  )}
+                  error={errorMsg(errors, `${prefix}.${index}.l`)}
+                  {...register(`${prefix}.${index}.l`, {
+                    valueAsNumber: true,
+                  })}
                 />
               </div>
               <div>
                 <TextInput
                   label="Occupance"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`
-                  )}
-                  {...register(
-                    `set.states.${label}.electronic.${eindex}.config.${side}.config.${index}.occupance`,
-                    {
-                      valueAsNumber: true,
-                    }
-                  )}
+                  error={errorMsg(errors, `${prefix}.${index}.occupance`)}
+                  {...register(`${prefix}.${index}.occupance`, {
+                    valueAsNumber: true,
+                  })}
                 />
               </div>
             </Group>
@@ -711,11 +700,11 @@ const AtomJ1L2ConfigArray = ({
       <Button
         type="button"
         title="Add config part"
-        onClick={() => array.append(initialValue4AtomJ1L2Config())}
+        onClick={() => array.append(initialValue4AtomLSConfig())}
       >
         +
       </Button>
-      <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
+      <ErrorMessage errors={errors} name={`${prefix}`} />
     </div>
   );
 };
@@ -724,10 +713,12 @@ const LSTermConfigForm = ({
   label,
   eindex,
   side,
+  isLS1,
 }: {
   label: string;
   eindex: number;
   side: "core" | "excited";
+  isLS1: boolean;
 }) => {
   const {
     register,
@@ -737,7 +728,7 @@ const LSTermConfigForm = ({
   return (
     <>
       <h6>Config</h6>
-      <AtomJ1L2ConfigArray label={label} eindex={eindex} side={side} />
+      <AtomLSConfigArray label={label} eindex={eindex} side={side} />
       <h6>Term</h6>
       <Group>
         <div>
@@ -780,7 +771,7 @@ const LSTermConfigForm = ({
               <Radio.Group
                 label="P"
                 onChange={(v) => onChange(parseInt(v))}
-                value={value.toString()}
+                value={value === undefined ? undefined : value.toString()}
                 error={errorMsg(
                   errors,
                   `set.states.${label}.electronic.${eindex}.config.${side}.term.P`
@@ -792,7 +783,8 @@ const LSTermConfigForm = ({
             )}
           />
         </div>
-        {side === "core" && (
+        {/* LS1 does not have J in core, but J1L2 does */}
+        {side === "core" && !isLS1 && (
           <div>
             <TextInput
               label="J"
@@ -830,11 +822,21 @@ const AtomJ1L2FormElectronicForm = ({
     <>
       <fieldset>
         <legend>Core</legend>
-        <LSTermConfigForm label={label} eindex={eindex} side="core" />
+        <LSTermConfigForm
+          label={label}
+          eindex={eindex}
+          side="core"
+          isLS1={false}
+        />
       </fieldset>
       <fieldset>
         <legend>Excited</legend>
-        <LSTermConfigForm label={label} eindex={eindex} side="excited" />
+        <LSTermConfigForm
+          label={label}
+          eindex={eindex}
+          side="excited"
+          isLS1={false}
+        />
       </fieldset>
       <h5>Term</h5>
       <Group>
@@ -903,13 +905,13 @@ const initialValue4AtomJIL2 = () => ({
     excited: {
       scheme: "LS",
       config: [{ n: 0, l: 0, occupance: 0 }],
-      term: { L: 0, S: 0, P: 1, J: 0 },
+      term: { L: 0, S: 0, P: 1 },
     },
   },
   term: {
     K: 0,
     S: 0,
-    P: 0,
+    P: 1,
     J: 0,
   },
 });
@@ -921,6 +923,215 @@ const AtomJ1L2Form = ({ label }: { label: string }) => {
       initialValue={initialValue4AtomJIL2()}
       item={(label, eindex) => (
         <AtomJ1L2FormElectronicForm label={label} eindex={eindex} />
+      )}
+    />
+  );
+};
+
+// TODO implement
+const AtomLS1FormElectronicForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    watch,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
+  return (
+    <>
+      <div>
+        <Controller
+          control={control}
+          name={`set.states.${label}.electronic.${eindex}.scheme`}
+          render={({ field: { onChange, value } }) => (
+            <Radio.Group
+              label="Scheme"
+              // TODO drop scheme key when simple scheme is selected
+              onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
+              value={value}
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.scheme`
+              )}
+            >
+              <Radio value="" label="Simple" />
+              <Radio value="LS1" label="LS1" />
+            </Radio.Group>
+          )}
+        />
+      </div>
+      {scheme === "LS1" ? (
+        <>
+          <div>
+            <fieldset>
+              <legend>Core</legend>
+              <input
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.config.core.scheme`,
+                  {
+                    value: "LS",
+                  }
+                )}
+                type="hidden"
+              />
+              <LSTermConfigForm
+                label={label}
+                eindex={eindex}
+                side="core"
+                isLS1={true}
+              />
+            </fieldset>
+            <fieldset>
+              <legend>Excited</legend>
+              <input
+                {...register(
+                  `set.states.${label}.electronic.${eindex}.config.excited.scheme`,
+                  {
+                    value: "LS",
+                  }
+                )}
+                type="hidden"
+              />
+              <LSTermConfigForm
+                label={label}
+                eindex={eindex}
+                side="excited"
+                isLS1={true}
+              />
+            </fieldset>
+          </div>
+          <div>
+            <h4>Term</h4>
+            <Group>
+              <div>
+                <TextInput
+                  label="L"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.term.L`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.term.L`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
+                />
+              </div>
+              <div>
+                <TextInput
+                  label="K"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.term.K`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.term.K`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
+                />
+              </div>
+              <div>
+                <TextInput
+                  label="S"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.term.S`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.term.S`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
+                />
+              </div>
+              <div>
+                <Controller
+                  control={control}
+                  name={`set.states.${label}.electronic.${eindex}.term.P`}
+                  render={({ field: { onChange, value } }) => (
+                    <Radio.Group
+                      label="P"
+                      onChange={(v) => onChange(parseInt(v))}
+                      value={value === undefined ? 1 : value.toString()}
+                      error={errorMsg(
+                        errors,
+                        `set.states.${label}.electronic.${eindex}.term.P`
+                      )}
+                    >
+                      <Radio value="-1" label="-1" />
+                      <Radio value="1" label="1" />
+                    </Radio.Group>
+                  )}
+                />
+              </div>
+              <div>
+                <TextInput
+                  label="J"
+                  error={errorMsg(
+                    errors,
+                    `set.states.${label}.electronic.${eindex}.term.J`
+                  )}
+                  {...register(
+                    `set.states.${label}.electronic.${eindex}.term.J`,
+                    {
+                      valueAsNumber: true,
+                    }
+                  )}
+                />
+              </div>
+            </Group>
+          </div>
+        </>
+      ) : (
+        <TextInput
+          label="e"
+          error={errorMsg(errors, `set.states.${label}.electronic.${eindex}.e`)}
+          {...register(`set.states.${label}.electronic.${eindex}.e`)}
+        />
+      )}
+    </>
+  );
+};
+
+const initialValue4AtomLS1 = () => ({
+  scheme: "LS1",
+  config: {
+    core: {
+      scheme: "LS",
+      config: [{ n: 0, l: 0, occupance: 0 }],
+      term: { L: 0, S: 0, P: 1 },
+    },
+    excited: {
+      scheme: "LS",
+      config: [{ n: 0, l: 0, occupance: 0 }],
+      term: { L: 0, S: 0, P: 1 },
+    },
+  },
+  term: {
+    L: 0,
+    K: 0,
+    S: 0,
+    P: 1,
+    J: 0,
+  },
+});
+const AtomLS1Form = ({ label }: { label: string }) => {
+  return (
+    <ElectronicArray
+      label={label}
+      initialValue={initialValue4AtomLS1()}
+      item={(label, eindex) => (
+        <AtomLS1FormElectronicForm label={label} eindex={eindex} />
       )}
     />
   );
@@ -1313,6 +1524,8 @@ const RotationalArray = ({
   );
 };
 
+type IScheme = "simple" | "detailed";
+
 const SimpleVibrational = ({
   label,
   eindex,
@@ -1332,7 +1545,6 @@ const SimpleVibrational = ({
   const v = watch(
     `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
-  type IScheme = "simple" | "detailed";
   const initialScheme = typeof v === "string" ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
   return (
@@ -1476,12 +1688,13 @@ const StateForm = ({
             render={({ field: { onChange, value } }) => (
               <Radio.Group
                 label="Type"
-                onChange={(v) => (v === "" ? onChange(undefined) : onChange(v))}
-                value={value}
+                onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
+                value={value === null ? "" : value}
                 error={errorMsg(errors, `set.states.${label}.type`)}
               >
                 <Radio value="" label="Simple particle" />
                 <Radio value="AtomLS" label="Atom LS" />
+                <Radio value="AtomLS1" label="Atom LS1" />
                 <Radio value="AtomJ1L2" label="Atom J1L2" />
                 <Radio
                   value="HeteronuclearDiatom"
@@ -1508,6 +1721,7 @@ const StateForm = ({
         {state.type === "LinearTriatomInversionCenter" && (
           <LinearTriatomInversionCenterForm label={label} />
         )}
+        {state.type === "AtomLS1" && <AtomLS1Form label={label} />}
         {/* // TODO atomls1 */}
         <Button type="button" title="Remove state" onClick={onRemove}>
           &minus;
@@ -1656,6 +1870,7 @@ const ImportBibTeXDOIButton = ({
               onChange={(e) => setBibtex(e.target.value)}
             />
           </div>
+          {/* TODO cancel does not work */}
           <Button value="cancel">Cancel</Button>
           <Button value="default" type="submit">
             Import
