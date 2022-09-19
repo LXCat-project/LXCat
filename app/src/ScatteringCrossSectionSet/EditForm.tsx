@@ -4,6 +4,7 @@ import {
   Checkbox,
   FileButton,
   Group,
+  MultiSelect,
   NativeSelect,
   Radio,
   Space,
@@ -137,12 +138,9 @@ const ReactionEntryForm = ({
 
 const ReactionForm = ({ index: processIndex }: { index: number }) => {
   const {
-    register,
-    watch,
     control,
     formState: { errors },
   } = useFormContext();
-  const reversible = watch(`set.processes.${processIndex}.reaction.reversible`);
   const lhsField = useFieldArray({
     control,
     name: `set.processes.${processIndex}.reaction.lhs`,
@@ -166,7 +164,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
                   index={index}
                   onRemove={() => lhsField.remove(index)}
                 />
-                {isNotLast && <span>+</span>}
+                {isNotLast && <Text sx={{ fontSize: "2em" }}>+</Text>}
               </div>
             );
           })}
@@ -182,7 +180,31 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           errors={errors}
           name={`set.processes.${processIndex}.reaction.rhs`}
         />
-        <Text sx={{ fontSize: "4em" }}>{reversible ? "⇋" : "➙"}</Text>
+        <Controller
+          control={control}
+          name={`set.processes.${processIndex}.reaction.reversible`}
+          render={({ field: { onChange, value } }) => (
+            <Radio.Group
+              orientation="vertical"
+              onChange={(v) => onChange(v !== "")}
+              value={value ? "reversible" : ""}
+              error={errorMsg(
+                errors,
+                `set.processes.${processIndex}.reaction.reversible`
+              )}
+            >
+              <Radio
+                value=""
+                label={<Text style={{ fontSize: "2em" }}>➞</Text>}
+              />
+              <Radio
+                value="reversible"
+                title="Reversible"
+                label={<Text style={{ fontSize: "2em" }}>⇄</Text>}
+              />
+            </Radio.Group>
+          )}
+        />
         <div style={{ border: "1px solid #333", padding: 2 }}>
           {rhsField.fields.map((field, index) => {
             const isNotLast = rhsField.fields.length - 1 !== index;
@@ -195,7 +217,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
                   index={index}
                   onRemove={() => rhsField.remove(index)}
                 />
-                {isNotLast && <span>+</span>}
+                {isNotLast && <Text sx={{ fontSize: "2em" }}>+</Text>}
               </div>
             );
           })}
@@ -213,29 +235,24 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
         />{" "}
       </div>
       <div>
-        <Checkbox
-          label="Reversible"
-          {...register(`set.processes.${processIndex}.reaction.reversible`)}
-        />
-      </div>
-      <div>
-        <label>
-          Type tags
-          {/* TODO change to group of checkboxes */}
-          <select
-            multiple
-            {...register(`set.processes.${processIndex}.reaction.type_tags`)}
-          >
-            {Object.keys(ReactionTypeTag).map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
-        <ErrorMessage
-          errors={errors}
+        <Controller
+          control={control}
           name={`set.processes.${processIndex}.reaction.type_tags`}
+          render={({ field: { onChange, value } }) => (
+            <MultiSelect
+              label="Type tags"
+              onChange={onChange}
+              value={value}
+              data={Object.keys(ReactionTypeTag).map((t) => ({
+                label: t,
+                value: t,
+              }))}
+              error={errorMsg(
+                errors,
+                `set.processes.${processIndex}.reaction.type_tags`
+              )}
+            />
+          )}
         />
       </div>
     </div>
@@ -371,6 +388,7 @@ const ProcessForm = ({
   const {
     register,
     watch,
+    control,
     formState: { errors },
   } = useFormContext();
   const [references, type] = watch([
@@ -380,24 +398,24 @@ const ProcessForm = ({
   return (
     <div>
       <div>
-        <label>
-          References
-          <select
-            multiple
-            {...register(`set.processes.${index}.reference`, {
-              deps: ["set.references"],
-            })}
-          >
-            {Object.keys(references).map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </label>
-        <ErrorMessage
-          errors={errors}
+        <Controller
+          control={control}
           name={`set.processes.${index}.reference`}
+          rules={{
+            deps: ["set.references"],
+          }}
+          render={({ field: { onChange, value } }) => (
+            <MultiSelect
+              label="References"
+              onChange={onChange}
+              value={value}
+              data={Object.keys(references).map((r) => ({
+                label: r,
+                value: r,
+              }))}
+              error={errorMsg(errors, `set.processes.${index}.reference`)}
+            />
+          )}
         />
       </div>
 
@@ -422,7 +440,7 @@ const ProcessForm = ({
               `set.processes.${index}.parameters.mass_ratio`
             )}
             {...register(`set.processes.${index}.parameters.mass_ratio`, {
-              valueAsNumber: true,
+              setValueAs: (v) => (v ? Number(v) : undefined),
             })}
           />
         </div>
@@ -436,7 +454,7 @@ const ProcessForm = ({
             {...register(
               `set.processes.${index}.parameters.statistical_weight_ratio`,
               {
-                valueAsNumber: true,
+                setValueAs: (v) => (v ? Number(v) : undefined),
               }
             )}
           />
@@ -811,12 +829,12 @@ const AtomJ1L2FormElectronicForm = ({
   return (
     <>
       <fieldset>
-      <legend>Core</legend>
-      <LSTermConfigForm label={label} eindex={eindex} side="core" />
+        <legend>Core</legend>
+        <LSTermConfigForm label={label} eindex={eindex} side="core" />
       </fieldset>
       <fieldset>
-      <legend>Excited</legend>
-      <LSTermConfigForm label={label} eindex={eindex} side="excited" />
+        <legend>Excited</legend>
+        <LSTermConfigForm label={label} eindex={eindex} side="excited" />
       </fieldset>
       <h5>Term</h5>
       <Group>
