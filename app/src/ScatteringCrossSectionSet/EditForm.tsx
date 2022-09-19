@@ -3,24 +3,21 @@ import {
   Button,
   Checkbox,
   FileButton,
-  FileInput,
   Group,
   NativeSelect,
-  NumberInput,
   Radio,
-  Select,
   Space,
   Tabs,
+  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Controller,
   FieldError,
   FieldErrors,
-  FieldErrorsImpl,
   FieldPath,
   FormProvider,
   get,
@@ -45,7 +42,6 @@ import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
-import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -105,7 +101,7 @@ const ReactionEntryForm = ({
       <div>
         <TextInput
           label="Count"
-          withAsterisk
+          style={{ width: "4rem" }}
           error={errorMsg(
             errors,
             `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`
@@ -118,24 +114,19 @@ const ReactionEntryForm = ({
           )}
         />
       </div>
-      <select
-        title="State"
+      <NativeSelect
+        label="State"
+        data={Object.keys(states)}
+        error={errorMsg(
+          errors,
+          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
+        )}
         {...register(
           `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`,
           {
             deps: ["set.states"],
           }
         )}
-      >
-        {Object.keys(states).map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
-      <ErrorMessage
-        errors={errors}
-        name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
       />
       <Button type="button" title="Remove process" onClick={onRemove}>
         &minus;
@@ -191,7 +182,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           errors={errors}
           name={`set.processes.${processIndex}.reaction.rhs`}
         />
-        <div>{reversible ? "⇋" : "➙"}</div>
+        <Text sx={{ fontSize: "4em" }}>{reversible ? "⇋" : "➙"}</Text>
         <div style={{ border: "1px solid #333", padding: 2 }}>
           {rhsField.fields.map((field, index) => {
             const isNotLast = rhsField.fields.length - 1 !== index;
@@ -730,7 +721,7 @@ const LSTermConfigForm = ({
       <h6>Config</h6>
       <AtomJ1L2ConfigArray label={label} eindex={eindex} side={side} />
       <h6>Term</h6>
-      <div>
+      <Group>
         <div>
           <TextInput
             label="L"
@@ -801,7 +792,7 @@ const LSTermConfigForm = ({
             />
           </div>
         )}
-      </div>
+      </Group>
     </>
   );
 };
@@ -819,12 +810,16 @@ const AtomJ1L2FormElectronicForm = ({
   } = useFormContext();
   return (
     <>
-      <h5>Core</h5>
+      <fieldset>
+      <legend>Core</legend>
       <LSTermConfigForm label={label} eindex={eindex} side="core" />
-      <h5>Excited</h5>
+      </fieldset>
+      <fieldset>
+      <legend>Excited</legend>
       <LSTermConfigForm label={label} eindex={eindex} side="excited" />
+      </fieldset>
       <h5>Term</h5>
-      <div>
+      <Group>
         <div>
           <TextInput
             label="K"
@@ -874,7 +869,7 @@ const AtomJ1L2FormElectronicForm = ({
             })}
           />
         </div>
-      </div>
+      </Group>
     </>
   );
 };
@@ -921,23 +916,28 @@ const MolecularParityField = ({
   eindex: number;
 }) => {
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext<FieldValues>();
   return (
     <div>
-      <label>
-        Parity
-        <select
-          {...register(`set.states.${label}.electronic.${eindex}.parity`)}
-        >
-          <option value="g">g</option>
-          <option value="u">u</option>
-        </select>
-      </label>
-      <ErrorMessage
-        errors={errors}
+      <Controller
+        control={control}
         name={`set.states.${label}.electronic.${eindex}.parity`}
+        render={({ field: { onChange, value } }) => (
+          <Radio.Group
+            label="Reflection"
+            onChange={onChange}
+            value={value as string}
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.parity`
+            )}
+          >
+            <Radio value="g" label="Gerade" />
+            <Radio value="u" label="Ungerade" />
+          </Radio.Group>
+        )}
       />
     </div>
   );
@@ -1048,10 +1048,11 @@ const LinearElectronicForm = ({
 }) => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<FieldValues>();
   return (
-    <div>
+    <>
       <div>
         <TextInput
           label="e"
@@ -1083,22 +1084,26 @@ const LinearElectronicForm = ({
         />
       </div>
       <div>
-        <label>
-          Reflection
-          <select
-            {...register(`set.states.${label}.electronic.${eindex}.reflection`)}
-          >
-            <option value=""></option>
-            <option value="-">&minus;</option>
-            <option value="+">+</option>
-          </select>
-        </label>
-        <ErrorMessage
-          errors={errors}
+        <Controller
+          control={control}
           name={`set.states.${label}.electronic.${eindex}.reflection`}
+          render={({ field: { onChange, value } }) => (
+            <Radio.Group
+              label="Reflection"
+              onChange={onChange}
+              value={value as string}
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.reflection`
+              )}
+            >
+              <Radio value="-" label="&minus;" />
+              <Radio value="+" label="+" />
+            </Radio.Group>
+          )}
         />
       </div>
-    </div>
+    </>
   );
 };
 
@@ -1120,8 +1125,8 @@ const ElectronicArray = ({
     name: `set.states.${label}.electronic`,
   });
   return (
-    <fieldset>
-      <legend>Electronic</legend>
+    <div>
+      <h4>Electronic</h4>
       <ol>
         {array.fields.map((_field, index) => (
           <ArrayItem
@@ -1141,7 +1146,7 @@ const ElectronicArray = ({
         </Button>
       </ol>
       <ErrorMessage errors={errors} name={`set.states.${label}.electronic`} />
-    </fieldset>
+    </div>
   );
 };
 
@@ -1156,10 +1161,12 @@ const ArrayItem = ({
 }) => {
   return (
     <li>
-      {children}
-      <Button type="button" title={removeTitle} onClick={onRemove}>
-        &minus;
-      </Button>
+      <fieldset>
+        {children}
+        <Button type="button" title={removeTitle} onClick={onRemove}>
+          &minus;
+        </Button>
+      </fieldset>
     </li>
   );
 };
@@ -1171,8 +1178,10 @@ const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
       initialValue={{ e: "X", Lambda: 0, S: 0, parity: "g" }}
       item={(label, eindex) => (
         <>
-          <LinearElectronicForm label={label} eindex={eindex} />
-          <MolecularParityField label={label} eindex={eindex} />
+          <Group>
+            <LinearElectronicForm label={label} eindex={eindex} />
+            <MolecularParityField label={label} eindex={eindex} />
+          </Group>
           <LinearTriatomVibrationalField label={label} eindex={eindex} />
         </>
       )}
@@ -1388,7 +1397,9 @@ const HeteronuclearDiatomForm = ({ label }: { label: string }) => {
       initialValue={{ e: "", Lambda: 0, S: 0 }}
       item={(label, eindex) => (
         <>
-          <LinearElectronicForm label={label} eindex={eindex} />
+          <Group>
+            <LinearElectronicForm label={label} eindex={eindex} />
+          </Group>
           <DiatomicVibrationalForm label={label} eindex={eindex} />
         </>
       )}
@@ -1403,8 +1414,10 @@ const HomonuclearDiatomForm = ({ label }: { label: string }) => {
       initialValue={{ e: "", Lambda: 0, S: 0, parity: "g" }}
       item={(label, eindex) => (
         <>
-          <LinearElectronicForm label={label} eindex={eindex} />
-          <MolecularParityField label={label} eindex={eindex} />
+          <Group>
+            <LinearElectronicForm label={label} eindex={eindex} />
+            <MolecularParityField label={label} eindex={eindex} />
+          </Group>
           <DiatomicVibrationalForm label={label} eindex={eindex} />
         </>
       )}
@@ -1751,6 +1764,7 @@ export const EditForm = ({
             <Tabs.Tab value="states">States</Tabs.Tab>
             <Tabs.Tab value="references">References</Tabs.Tab>
             <Tabs.Tab value="processes">Processes</Tabs.Tab>
+            <Tabs.Tab value="json">JSON</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="general">
             <div>
@@ -1855,6 +1869,13 @@ export const EditForm = ({
               +
             </Button>
             <ErrorMessage errors={errors} name="set.processes" />
+          </Tabs.Panel>
+          <Tabs.Panel value="json">
+            {/* TODO add upload JSON button? */}
+            <pre>
+              {/* TODO use code highlight with https://mantine.dev/others/prism/ */}
+              {JSON.stringify(getValues("set"), undefined, 2)}
+            </pre>
           </Tabs.Panel>
         </Tabs>
         <div>
