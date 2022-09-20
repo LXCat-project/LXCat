@@ -1,6 +1,7 @@
 import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
-import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
 import { AtomJ1L2 as AtomJ1L2State } from "@lxcat/schema/dist/core/atoms/j1l2";
+import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
+import { AtomLS1 as AtomLS1State } from "@lxcat/schema/dist/core/atoms/ls1";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { HeteronuclearDiatom as HeteronuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_heteronuclear";
 import { HomonuclearDiatom as HomonuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_homonuclear";
@@ -8,10 +9,10 @@ import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } fro
 import { InState } from "@lxcat/schema/dist/core/state";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { EditForm } from "./EditForm";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
-import { theme } from "../theme";
 import { MantineProvider } from "@mantine/core";
+import { theme } from "../theme";
+import { EditForm } from "./EditForm";
 
 const meta = {
   component: EditForm,
@@ -423,7 +424,7 @@ AtomJ1L2.args = {
     processes: [
       {
         reaction: {
-          lhs: [{ count: 1, state: "Ar" }],
+          lhs: [{ count: 1, state: "Ukn" }],
           rhs: [],
           reversible: false,
           type_tags: [ReactionTypeTag.Ionization],
@@ -444,3 +445,59 @@ AtomJ1L2.args = {
   organizations,
 };
 
+export const AtomLS1 = Template.bind({})
+const state4AtomLS1: InState<AtomLS1State> = {
+  particle: "Ukn",
+  charge: 5,
+  type: "AtomLS1",
+  electronic: [
+    {
+      scheme: CouplingScheme.LS1,
+      config: {
+        core: {
+          scheme: CouplingScheme.LS,
+          config: [{ n: 2, l: 2, occupance: 6 }],
+          term: { S: 0.5, L: 1, P: -1 },
+        },
+        excited: {
+          scheme: CouplingScheme.LS,
+          config: [{ n: 4, l: 3, occupance: 1 }],
+          term: { S: 1.5, L: 2, P: 1 },
+        },
+      },
+      term: {
+        L: 42,
+        K: 0.5,
+        S: 1.5,
+        P: -1,
+        J: 4,
+      },
+    },
+  ],
+}
+AtomLS1.args = {
+  set: {
+    ...setTemplate,
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "Ukn" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+    ],
+    states: {
+      Ukn: state4AtomLS1,
+    },
+  },
+  commitMessage: "",
+  organizations,
+};
