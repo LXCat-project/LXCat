@@ -72,7 +72,7 @@ async function species1Choices(options: Omit<SearchOptions, "species1">) {
   const hasSpecies2Option = Object.keys(options.species2.particle).length > 0;
   const hasFilterOnTag = options.tag.length > 0;
   const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    ? aql`FILTER ${options.tag} ANY IN r.type_tags`
     : aql``;
   const stateAql = generateStateChoicesAql();
   const species2Aql = generateStateFilterAql(options.species2, "s2");
@@ -113,7 +113,7 @@ async function species2Choices(options: Omit<SearchOptions, "species2">) {
   const hasSpecies1Option = Object.keys(options.species1.particle).length > 0;
   const hasFilterOnTag = options.tag.length > 0;
   const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    ? aql`FILTER ${options.tag} ANY IN r.type_tags`
     : aql``;
   const species1Aql = generateStateFilterAql(options.species1, "s1");
   const species1Filter = hasSpecies1Option
@@ -158,7 +158,7 @@ async function setChoices(
 
   const hasFilterOnTag = options.tag.length > 0;
   const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ALL IN r.type_tags`
+    ? aql`FILTER ${options.tag} ANY IN r.type_tags`
     : aql``;
   const speciesAql = generateSpeciesFilterForChoices(options);
   const hasSpeciesOption = Object.keys(speciesAql.bindVars).length > 0;
@@ -312,7 +312,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
   }
   const hasFilterOnTag = options.tag.length > 0;
   const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ALL IN reaction.type_tags`
+    ? aql`FILTER ${options.tag} ANY IN reaction.type_tags`
     : aql``;
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
