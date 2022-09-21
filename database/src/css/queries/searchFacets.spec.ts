@@ -162,7 +162,7 @@ describe("searchFacets()", () => {
         expect(facets.state).toEqual(expected);
       });
 
-      it('should have all 3 sets', () => {
+      it('should have all 3 sets in search results', () => {
         expect(searchResults.length).toEqual(3)
       })
     });
