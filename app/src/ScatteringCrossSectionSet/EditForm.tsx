@@ -22,6 +22,7 @@ import {
   FieldPath,
   FormProvider,
   get,
+  Resolver,
   useFieldArray,
   useForm,
   useFormContext,
@@ -1699,8 +1700,8 @@ const StateForm = ({
               <Radio.Group
                 label="Type"
                 onBlur={onBlur}
-                onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
-                value={value === null ? "" : value}
+                onChange={(v) => (v === "" ? onChange(undefined) : onChange(v))}
+                value={value === undefined ? "" : value}
                 error={errorMsg(errors, `set.states.${label}.type`)}
               >
                 <Radio value="" label="Simple particle" />
@@ -1911,6 +1912,28 @@ interface Props {
   organizations: OrganizationFromDB[];
 }
 
+const myResolver = () => {
+  const fn = ajvResolver(schema4form as any, { allowUnionTypes: true})
+  return async (values: FieldValues, context: any, options: any) => {
+    // TODO get rid of keys which have undefined value in recursive way
+    // for now just set.state['...'].type
+    const newValues = {...values}
+    newValues.set.states = Object.fromEntries(
+      Object.entries(newValues.set.states).map((s) => {
+        // TODO use schema where id is allowed
+        delete((s[1] as any).id)
+        if (s[1].type === undefined) {
+          const {type, ...newState} = s[1]
+          return [s[0], newState]
+        }
+        return s
+      })
+    )
+    console.warn(JSON.stringify(newValues))
+    return fn(newValues, context, options)
+  }
+}
+
 export const EditForm = ({
   set,
   commitMessage,
@@ -1922,7 +1945,7 @@ export const EditForm = ({
       set,
       commitMessage,
     },
-    resolver: ajvResolver(schema4form as any),
+    resolver: myResolver(),
     reValidateMode: "onBlur", // Default onChange felt too slow
     criteriaMode: "all",
   });
@@ -1999,7 +2022,7 @@ export const EditForm = ({
       <form
         onSubmit={handleSubmit(onLocalSubmit, (err) => {
           console.error(err);
-          console.info(getValues());
+          console.info(getValues('set'));
         })}
       >
         <Tabs defaultValue="general">
