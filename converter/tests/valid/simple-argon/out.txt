@@ -1,0 +1,48 @@
+************************************************************************************************************************
+
+COMMENT: An example cross section set.
+
+************************************************************************************************************************
+
+EFFECTIVE
+Ar{1S0}
+ 1.360000e-5
+SPECIES: e / Ar
+PROCESS: e + Ar{1S0} -> e + Ar{1S0}, Effective
+PARAM.:  m/M = 0.0000136, complete set
+COMMENT: Test reference
+COLUMNS: Energy (eV) | Cross section (m^2)
+-----------------------------
+ +0.000000e0	1.000000e-21
+ +1.000000e0	2.000000e-21
+ +2.000000e0	3.000000e-21
+-----------------------------
+
+EXCITATION
+Ar{1S0} -> Ar{*}
+ 5.000000e0
+SPECIES: e / Ar
+PROCESS: e + Ar{1S0} -> e + Ar{*}, Excitation
+PARAM.:  E = 5 eV, complete set
+COMMENT: Test reference
+COLUMNS: Energy (eV) | Cross section (m^2)
+-----------------------------
+ +0.000000e0	0.000000e0
+ +5.000000e0	2.000000e-21
+ +1.000000e1	3.000000e-21
+-----------------------------
+
+IONIZATION
+Ar{1S0} -> Ar^+
+ 1.000000e1
+SPECIES: e / Ar
+PROCESS: e + Ar{1S0} -> e + e + Ar^+, Ionization
+PARAM.:  E = 10 eV, complete set
+COMMENT: Test reference
+COLUMNS: Energy (eV) | Cross section (m^2)
+-----------------------------
+ +0.000000e0	0.000000e0
+ +1.000000e1	2.000000e-21
+ +2.000000e1	3.000000e-21
+-----------------------------
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
