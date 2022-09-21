@@ -183,11 +183,12 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
         <Controller
           control={control}
           name={`set.processes.${processIndex}.reaction.reversible`}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               orientation="vertical"
               onChange={(v) => onChange(v !== "")}
               value={value ? "reversible" : ""}
+              onBlur={onBlur}
               error={errorMsg(
                 errors,
                 `set.processes.${processIndex}.reaction.reversible`
@@ -238,10 +239,11 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
         <Controller
           control={control}
           name={`set.processes.${processIndex}.reaction.type_tags`}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <MultiSelect
               label="Type tags"
               onChange={onChange}
+              onBlur={onBlur}
               value={value}
               data={Object.keys(ReactionTypeTag).map((t) => ({
                 label: t,
@@ -404,10 +406,11 @@ const ProcessForm = ({
           rules={{
             deps: ["set.references"],
           }}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <MultiSelect
               label="References"
               onChange={onChange}
+              onBlur={onBlur}
               value={value}
               data={Object.keys(references).map((r) => ({
                 label: r,
@@ -513,11 +516,12 @@ const AtomLSElectronicForm = ({
         <Controller
           control={control}
           name={`set.states.${label}.electronic.${eindex}.scheme`}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               label="Scheme"
               // TODO drop scheme key when simple scheme is selected
               onChange={onChange}
+              onBlur={onBlur}
               value={value}
               error={errorMsg(
                 errors,
@@ -583,10 +587,11 @@ const AtomLSElectronicForm = ({
               <Controller
                 control={control}
                 name={`set.states.${label}.electronic.${eindex}.term.P`}
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onBlur, onChange, value } }) => (
                   <Radio.Group
                     label="P"
                     onChange={(v) => onChange(parseInt(v))}
+                    onBlur={onBlur}
                     value={value === undefined ? 1 : value.toString()}
                     error={errorMsg(
                       errors,
@@ -767,10 +772,11 @@ const LSTermConfigForm = ({
           <Controller
             control={control}
             name={`set.states.${label}.electronic.${eindex}.config.${side}.term.P`}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onBlur, onChange, value } }) => (
               <Radio.Group
                 label="P"
                 onChange={(v) => onChange(parseInt(v))}
+                onBlur={onBlur}
                 value={value === undefined ? undefined : value.toString()}
                 error={errorMsg(
                   errors,
@@ -949,9 +955,10 @@ const AtomLS1FormElectronicForm = ({
         <Controller
           control={control}
           name={`set.states.${label}.electronic.${eindex}.scheme`}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               label="Scheme"
+              onBlur={onBlur}
               // TODO drop scheme key when simple scheme is selected
               onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
               value={value}
@@ -1058,9 +1065,10 @@ const AtomLS1FormElectronicForm = ({
                 <Controller
                   control={control}
                   name={`set.states.${label}.electronic.${eindex}.term.P`}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onBlur, onChange, value } }) => (
                     <Radio.Group
                       label="P"
+                      onBlur={onBlur}
                       onChange={(v) => onChange(parseInt(v))}
                       value={value === undefined ? 1 : value.toString()}
                       error={errorMsg(
@@ -1153,9 +1161,10 @@ const MolecularParityField = ({
       <Controller
         control={control}
         name={`set.states.${label}.electronic.${eindex}.parity`}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onBlur, onChange, value } }) => (
           <Radio.Group
             label="Reflection"
+            onBlur={onBlur}
             onChange={onChange}
             value={value as string}
             error={errorMsg(
@@ -1316,9 +1325,10 @@ const LinearElectronicForm = ({
         <Controller
           control={control}
           name={`set.states.${label}.electronic.${eindex}.reflection`}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               label="Reflection"
+              onBlur={onBlur}
               onChange={onChange}
               value={value as string}
               error={errorMsg(
@@ -1685,9 +1695,10 @@ const StateForm = ({
           <Controller
             control={control}
             name={`set.states.${label}.type`}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onBlur, onChange, value } }) => (
               <Radio.Group
                 label="Type"
+                onBlur={onBlur}
                 onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
                 value={value === null ? "" : value}
                 error={errorMsg(errors, `set.states.${label}.type`)}
