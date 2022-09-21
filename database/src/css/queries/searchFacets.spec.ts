@@ -1,7 +1,8 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { beforeAll, describe, expect, it } from "vitest";
 import { StateChoices } from "../../shared/queries/state";
-import { FilterOptions, searchFacets } from "./public";
+import { CrossSectionSetHeading } from "../public";
+import { FilterOptions, search, searchFacets } from "./public";
 import {
   emptySelection,
   sampleSets4Search,
@@ -109,12 +110,14 @@ describe("searchFacets()", () => {
 
     describe("with tag=Effective or Ionization", () => {
       let facets: FilterOptions;
+      let searchResults: CrossSectionSetHeading[] 
       beforeAll(async () => {
         const selection: FilterOptions = {
           ...emptySelection,
           tag: [ReactionTypeTag.Effective, ReactionTypeTag.Ionization],
         };
         facets = await searchFacets(selection);
+        searchResults = await search(selection, {dir: 'ASC', field: 'name'}, { count: 100, offset:0 })
       });
 
       it("should have 2 contributors", () => {
@@ -158,6 +161,10 @@ describe("searchFacets()", () => {
         };
         expect(facets.state).toEqual(expected);
       });
+
+      it('should have all 3 sets', () => {
+        expect(searchResults.length).toEqual(3)
+      })
     });
 
     describe("with org=other", () => {

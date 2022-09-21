@@ -47,7 +47,7 @@ export async function search(
   let reactionAql = aql``;
   if (hasFilterOnRection) {
     const typeTagAql = hasFilterOnTag
-      ? aql`FILTER ${filter.tag} ALL IN r.type_tags`
+      ? aql`FILTER ${filter.tag} ANY IN r.type_tags`
       : aql``;
     let stateAql = aql`RETURN 1`;
     if (hasFilterOnConsumedStates) {
@@ -122,7 +122,7 @@ async function searchContributors(
   let csFilter = aql``;
   if (hasTagSelection || hasStateSelection) {
     const tagFilter = hasTagSelection
-      ? aql`FILTER ${selection.tag} ALL IN r.type_tags`
+      ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
       : aql``;
     const stateFilter = generateStateChoiceFilter(selection.state);
     csFilter = aql`
@@ -176,7 +176,7 @@ export async function stateChoices(
   const hasTagSelection = selection.tag.length > 0;
   const stateAql = generateStateChoicesAql();
   const tagFilter = hasTagSelection
-    ? aql`FILTER ${selection.tag} ALL IN r.type_tags`
+    ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
     : aql``;
   const hasContributorSelection = selection.contributor.length > 0;
   const contributorFilter = hasContributorSelection
