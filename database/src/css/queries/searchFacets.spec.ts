@@ -110,14 +110,18 @@ describe("searchFacets()", () => {
 
     describe("with tag=Effective or Ionization", () => {
       let facets: FilterOptions;
-      let searchResults: CrossSectionSetHeading[] 
+      let searchResults: CrossSectionSetHeading[];
       beforeAll(async () => {
         const selection: FilterOptions = {
           ...emptySelection,
           tag: [ReactionTypeTag.Effective, ReactionTypeTag.Ionization],
         };
         facets = await searchFacets(selection);
-        searchResults = await search(selection, {dir: 'ASC', field: 'name'}, { count: 100, offset:0 })
+        searchResults = await search(
+          selection,
+          { dir: "ASC", field: "name" },
+          { count: 100, offset: 0 }
+        );
       });
 
       it("should have 2 contributors", () => {
@@ -162,9 +166,9 @@ describe("searchFacets()", () => {
         expect(facets.state).toEqual(expected);
       });
 
-      it('should have all 3 sets in search() results', () => {
-        expect(searchResults.length).toEqual(3)
-      })
+      it("should have all 3 sets in search() results", () => {
+        expect(searchResults.length).toEqual(3);
+      });
     });
 
     describe("with org=other", () => {
@@ -262,6 +266,4 @@ describe("searchFacets()", () => {
       });
     });
   });
-
-  
 });

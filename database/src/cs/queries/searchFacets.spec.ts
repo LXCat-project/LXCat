@@ -333,7 +333,7 @@ describe("searchFacets()", () => {
 
     describe("with tag=Ionization or Effective", () => {
       let facets: Facets;
-      let searchResults: CrossSectionHeading[]
+      let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
         const selection: SearchOptions = {
@@ -341,7 +341,7 @@ describe("searchFacets()", () => {
           tag: [ReactionTypeTag.Effective, ReactionTypeTag.Ionization],
         };
         facets = await searchFacets(selection);
-        searchResults = await search(selection, { count: 100, offset:0 })
+        searchResults = await search(selection, { count: 100, offset: 0 });
       });
 
       it("should have e and Arp for species1", () => {
@@ -405,9 +405,9 @@ describe("searchFacets()", () => {
         expect(facets.set_name).toEqual(expected);
       });
 
-      it('should have all 3 cross sections in search() results', () => {
-        expect(searchResults.length).toEqual(3)
-      })
+      it("should have all 3 cross sections in search() results", () => {
+        expect(searchResults.length).toEqual(3);
+      });
     });
 
     describe("with set=N2 selected", () => {
