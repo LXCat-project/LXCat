@@ -32,63 +32,62 @@ describe("given cross sections in different version states", () => {
       },
     },
     {
-        name: "s1=e",
-        selection: {
-          species1: {
-            particle: {
-                e: {charge:{}}
-            },
+      name: "s1=e",
+      selection: {
+        species1: {
+          particle: {
+            e: { charge: {} },
           },
-          species2: {
-            particle: {},
-          },
-          set_name: [],
-          tag: [],
         },
-      },
-      {
-        name: "s2=H2",
-        selection: {
-          species1: {
-            particle: {},
-          },
-          species2: {
-            particle: {
-                H2: {charge:{}}
-            },
-          },
-          set_name: [],
-          tag: [],
+        species2: {
+          particle: {},
         },
+        set_name: [],
+        tag: [],
       },
-      {
-        name: "set",
-        selection: {
-          species1: {
-            particle: {},
-          },
-          species2: {
-            particle: {},
-          },
-          set_name: ['H2 set'],
-          tag: [],
+    },
+    {
+      name: "s2=H2",
+      selection: {
+        species1: {
+          particle: {},
         },
-      },
-      {
-        name: "tag=effective",
-        selection: {
-          species1: {
-            particle: {},
+        species2: {
+          particle: {
+            H2: { charge: {} },
           },
-          species2: {
-            particle: {},
-          },
-          set_name: [],
-          tag: [ReactionTypeTag.Effective],
         },
+        set_name: [],
+        tag: [],
       },
-  
-    ];
+    },
+    {
+      name: "set",
+      selection: {
+        species1: {
+          particle: {},
+        },
+        species2: {
+          particle: {},
+        },
+        set_name: ["H2 set"],
+        tag: [],
+      },
+    },
+    {
+      name: "tag=effective",
+      selection: {
+        species1: {
+          particle: {},
+        },
+        species2: {
+          particle: {},
+        },
+        set_name: [],
+        tag: [ReactionTypeTag.Effective],
+      },
+    },
+  ];
   describe.each(cases)("with $name selection", ({ selection }) => {
     describe("searchFactets()", () => {
       let facets: Facets;
@@ -101,7 +100,7 @@ describe("given cross sections in different version states", () => {
             particle: {
               e: {
                 charge: {
-                '-1': {
+                  "-1": {
                     electronic: {},
                   },
                 },
@@ -133,8 +132,8 @@ describe("given cross sections in different version states", () => {
       });
 
       it("should return only published sets", () => {
-        expect(results.length).toEqual(1)
-        expect(results[0].isPartOf).toEqual(['H2 set']);
+        expect(results.length).toEqual(1);
+        expect(results[0].isPartOf).toEqual(["H2 set"]);
       });
     });
   });

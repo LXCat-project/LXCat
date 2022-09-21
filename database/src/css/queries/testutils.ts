@@ -10,7 +10,6 @@ import {
 } from "../../auth/testutils";
 import { createSet, deleteSet } from "../../css/queries/author_write";
 import { db } from "../../db";
-import { Status } from "../../shared/types/version_info";
 import { startDbContainer } from "../../testutils";
 import { CrossSectionSetInputOwned } from "./author_read";
 import { FilterOptions } from "./public";
@@ -140,27 +139,33 @@ export const sampleSets4Search = async () => {
       charge: 0,
     },
   };
-  await createSet(setFrom(
-    "H2 set",
-    states.e,
-    states.H2,
-    [ReactionTypeTag.Effective],
-    "Some organization"
-  ));
-  await createSet(setFrom(
-    "N2 set",
-    states.e,
-    states.N2,
-    [ReactionTypeTag.Effective],
-    "Some other organization"
-  ));
-  await createSet(setFrom(
-    "Ar set",
-    states.Arp,
-    states.Ar,
-    [ReactionTypeTag.Ionization],
-    "Some organization"
-  ));
+  await createSet(
+    setFrom(
+      "H2 set",
+      states.e,
+      states.H2,
+      [ReactionTypeTag.Effective],
+      "Some organization"
+    )
+  );
+  await createSet(
+    setFrom(
+      "N2 set",
+      states.e,
+      states.N2,
+      [ReactionTypeTag.Effective],
+      "Some other organization"
+    )
+  );
+  await createSet(
+    setFrom(
+      "Ar set",
+      states.Arp,
+      states.Ar,
+      [ReactionTypeTag.Ionization],
+      "Some organization"
+    )
+  );
 };
 
 /**
@@ -197,43 +202,55 @@ export const sampleSets4SearchWithVersions = async () => {
       charge: 0,
     },
   };
-  await createSet(setFrom(
-    "H2 set",
-    states.e,
-    states.H2,
-    [ReactionTypeTag.Effective],
-    "Some published organization"
-  ), 'published');
-  await createSet(setFrom(
-    "N2 set",
-    states.e,
-    states.N2,
-    [ReactionTypeTag.Attachment],
-    "Some draft organization"
-  ), 'draft');
-  const id2retract = await createSet(setFrom(
-    "Ar set",
-    states.Arp,
-    states.Ar,
-    [ReactionTypeTag.Ionization],
-    "Some retracted organization"
-  ), 'published');
-  await deleteSet(id2retract, 'Oops');
-  await createSet(setFrom(
-    "CO2 set",
-    states.e,
-    states.CO2,
-    [ReactionTypeTag.Electronic],
-    "Some archived organization"
-  ), 'archived'); 
-}
+  await createSet(
+    setFrom(
+      "H2 set",
+      states.e,
+      states.H2,
+      [ReactionTypeTag.Effective],
+      "Some published organization"
+    ),
+    "published"
+  );
+  await createSet(
+    setFrom(
+      "N2 set",
+      states.e,
+      states.N2,
+      [ReactionTypeTag.Attachment],
+      "Some draft organization"
+    ),
+    "draft"
+  );
+  const id2retract = await createSet(
+    setFrom(
+      "Ar set",
+      states.Arp,
+      states.Ar,
+      [ReactionTypeTag.Ionization],
+      "Some retracted organization"
+    ),
+    "published"
+  );
+  await deleteSet(id2retract, "Oops");
+  await createSet(
+    setFrom(
+      "CO2 set",
+      states.e,
+      states.CO2,
+      [ReactionTypeTag.Electronic],
+      "Some archived organization"
+    ),
+    "archived"
+  );
+};
 
 function setFrom(
   name: string,
   c1: State<AnyAtomJSON | AnyMoleculeJSON>,
   c2: State<AnyAtomJSON | AnyMoleculeJSON>,
   type_tags: ReactionTypeTag[],
-  contributor: string,
+  contributor: string
 ): CrossSectionSetInputOwned {
   return {
     complete: false,
@@ -264,7 +281,7 @@ function setFrom(
         reference: [],
       },
     ],
-  }
+  };
 }
 
 export const emptySelection: Readonly<FilterOptions> = {
