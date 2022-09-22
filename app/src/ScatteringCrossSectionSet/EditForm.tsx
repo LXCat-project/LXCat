@@ -46,6 +46,8 @@ import { parse_state } from "@lxcat/schema/dist/core/parse";
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
+import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
+import { Reaction } from "@lxcat/schema/dist/core/reaction";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -526,6 +528,7 @@ const AtomLSElectronicForm = ({
             <Radio.Group
               label="Scheme"
               // TODO drop scheme key when simple scheme is selected
+              // now removed in form resolver, but is not nice
               onChange={onChange}
               onBlur={onBlur}
               value={value}
@@ -940,7 +943,6 @@ const AtomJ1L2Form = ({ label }: { label: string }) => {
   );
 };
 
-// TODO implement
 const AtomLS1FormElectronicForm = ({
   label,
   eindex,
@@ -966,6 +968,7 @@ const AtomLS1FormElectronicForm = ({
               label="Scheme"
               onBlur={onBlur}
               // TODO drop scheme key when simple scheme is selected
+              // now deleted in form resolver
               onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
               value={value}
               error={errorMsg(
@@ -1568,6 +1571,7 @@ const SimpleVibrational = ({
       <Radio.Group
         label="Scheme"
         value={scheme}
+        // TODO when switching should clear child values
         onChange={(v: IScheme) => setScheme(v)}
       >
         <Radio value="simple" label="Simple" />
@@ -1929,7 +1933,14 @@ const myResolver = () => {
     const newValues = { ...values };
     newValues.set.states = Object.fromEntries(
       Object.entries(newValues.set.states).map((s) => {
-        // TODO use schema where id is allowed
+        if (s[1].electronic) {
+          s[1].electronic.forEach(e => {
+            if (e.scheme === '') {
+              delete e.scheme
+            }
+          })
+        }
+        // TODO use ts type/schema where id is allowed
         delete (s[1] as any).id;
         if (s[1].type === undefined) {
           const { type, ...newState } = s[1];
@@ -2115,7 +2126,7 @@ export const EditForm = ({
             >
               {processesField.fields.map((field, index) => (
                 <Accordion.Item key={field.id} value={index.toString()}>
-                  <Accordion.Control>Reaction {field.id}</Accordion.Control>
+                  <Accordion.Control><ReactionSummary {...mapStateToReaction(states, field.reaction)}/></Accordion.Control>
                   <Accordion.Panel>
                     <ProcessForm
                       index={index}
@@ -2178,3 +2189,21 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
     data: [],
   };
 }
+
+function mapStateToReaction(states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>, reaction: Reaction<string>): Reaction<State> {
+  const newReaction = {
+    ...reaction,
+    lhs: reaction.lhs.map(e => {
+      // TODO parse_state adds id and summary props, should not be needed here
+      const state = parse_state(states[e.state] as any);
+      return ({ count: e.count, state})
+    }),
+    rhs: reaction.rhs.map(e => {
+      // TODO parse_state adds id and summary props, should not be needed here
+      const state = parse_state(states[e.state] as any);
+      return ({ count: e.count, state})
+    }),
+  }
+  return newReaction as Reaction<State>
+}
+

@@ -9,8 +9,8 @@ import { Organization } from "@lxcat/database/dist/auth/schema";
 import { addOrganization } from "@lxcat/database/dist/auth/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
-  //   .use(hasSession)
-  //   .use(hasAdminRole)
+  .use(hasSession)
+  .use(hasAdminRole)
   .post(async (req, res) => {
     const org = Organization.parse(req.body);
     const _key = await addOrganization(org);

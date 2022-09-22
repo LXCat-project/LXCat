@@ -6,10 +6,11 @@ import {
   listUsers,
   toggleRole,
   makeMemberless,
-  makeMember,
+  setMembers,
   listOrganizations,
   addOrganization,
   dropOrganization,
+  userMemberships,
 } from "./queries";
 import {
   TestKeys,
@@ -32,7 +33,7 @@ describe("given filled ArangoDB container", () => {
       _key: testKeys.testUserKey,
       email: "somename@example.com",
       name: "somename",
-      organization: "Some organization",
+      organizations: ["Some organization"],
       roles: [],
     };
     expect(result).toEqual([expected]);
@@ -46,6 +47,15 @@ describe("given filled ArangoDB container", () => {
     };
     expect(result).toEqual([expected]);
   });
+
+  it('should list organization in users memberships', async () => {
+    const result = await userMemberships("somename@example.com")
+    const expected = {
+      _key: testKeys.testOrgKey,
+      name: "Some organization",
+    };
+    expect(result).toEqual([expected]);
+  })
 
   describe("toggleRole()", () => {
     describe("given no roles", () => {
@@ -73,7 +83,7 @@ describe("given filled ArangoDB container", () => {
       });
 
       afterAll(async () => {
-        await makeMember(testKeys.testUserKey, testKeys.testOrgKey);
+        await setMembers(testKeys.testUserKey, [testKeys.testOrgKey]);
       });
 
       it("should have no org", async () => {
@@ -82,7 +92,7 @@ describe("given filled ArangoDB container", () => {
           _key: testKeys.testUserKey,
           email: "somename@example.com",
           name: "somename",
-          organization: null,
+          organizations: [],
           roles: [],
         };
         expect(users).toEqual([expected]);

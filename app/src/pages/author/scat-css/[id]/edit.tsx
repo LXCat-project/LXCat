@@ -13,6 +13,7 @@ import { EditForm } from "../../../../ScatteringCrossSectionSet/EditForm";
 import {
   listOrganizations,
   OrganizationFromDB,
+  userMemberships,
 } from "@lxcat/database/dist/auth/queries";
 
 interface Props {
@@ -98,7 +99,7 @@ export const getServerSideProps: GetServerSideProps<
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
   const set = await byOwnerAndId(me.email, id);
-  const organizations = await listOrganizations(); // TODO return orgs the current user is a member of
+  const organizations = await userMemberships(me.email);
   const info = await getVersionInfo(id);
   const commitMessage =
     info !== undefined && info.commitMessage ? info.commitMessage : "";

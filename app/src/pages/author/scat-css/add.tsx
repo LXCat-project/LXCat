@@ -8,6 +8,7 @@ import Link from "next/link";
 import {
   listOrganizations,
   OrganizationFromDB,
+  userMemberships,
 } from "@lxcat/database/dist/auth/queries";
 import { AddForm } from "../../../ScatteringCrossSectionSet/AddForm";
 
@@ -77,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
 
-  const organizations = await listOrganizations(); // TODO return orgs the current user is a member of
+  const organizations = await userMemberships(me.email);
   return {
     props: {
       organizations,

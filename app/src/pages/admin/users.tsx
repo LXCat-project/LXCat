@@ -9,6 +9,7 @@ import {
   UserFromDB,
 } from "@lxcat/database/dist/auth/queries";
 import { mustBeAdmin } from "../../auth/middleware";
+import { Button, MultiSelect } from "@mantine/core";
 
 interface Props {
   users: UserFromDB[];
@@ -45,23 +46,24 @@ const AdminUsers: NextPage<Props> = ({
   };
   const updateOrganization = async (
     user: UserFromDB,
-    organizationKey?: string
+    organizationKeys: string[]
   ) => {
-    if (organizationKey) {
-      const url = `/api/users/${user._key}/organizations/${organizationKey}`;
-      const res = await fetch(url, {
-        method: "POST",
-      });
-      const newOrganization = await res.json();
-      const newUser = { ...user, organization: newOrganization };
-      const newUsers = users.map((u) => (u.email === user.email ? newUser : u));
-      setUsers(newUsers);
-    } else {
-      const url = `/api/users/${user._key}/organizations`;
-      await fetch(url, {
-        method: "DELETE",
-      });
-      const { organization, ...newUser } = user;
+    const url = `/api/users/${user._key}/organizations`;
+    const body = JSON.stringify(organizationKeys);
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const res = await fetch(url, {
+      method: "POST",
+      body,
+      headers,
+    });
+    if (res.ok) {
+      const organizationNames = organizationKeys.map(m => {
+        const o = organizations.find((o) => o._key === m);
+        return o?.name ?? "";
+      })
+      const newUser = { ...user, organizations: organizationNames };
       const newUsers = users.map((u) => (u.email === user.email ? newUser : u));
       setUsers(newUsers);
     }
@@ -82,9 +84,10 @@ const AdminUsers: NextPage<Props> = ({
         </thead>
         <tbody>
           {users.map((u) => {
-            const memberOf = organizations.find(
-              (o) => u.organization === o.name
-            );
+            const memberOf = u.organizations.map((m) => {
+              const o = organizations.find((o) => o.name === m);
+              return o?._key ?? "";
+            });
             return (
               <tr key={u.email}>
                 <td>{u.name}</td>
@@ -102,28 +105,23 @@ const AdminUsers: NextPage<Props> = ({
                   ))}
                 </td>
                 <td>
-                  <select
-                    onChange={(event) =>
-                      updateOrganization(u, event.target.value)
-                    }
-                    value={memberOf?._key}
-                  >
-                    <option></option>
-                    {organizations.map((o) => (
-                      <option key={o._key} value={o._key}>
-                        {o.name}
-                      </option>
-                    ))}
-                  </select>
+                  <MultiSelect
+                    onChange={(selection) => updateOrganization(u, selection)}
+                    value={memberOf}
+                    data={organizations.map((o) => ({
+                      value: o._key,
+                      label: o.name,
+                    }))}
+                  />
                 </td>
                 <td>
-                  <button
+                  <Button
                     title="Delete"
                     onClick={() => deleteUser(u)}
                     disabled={me.email === u.email}
                   >
                     X
-                  </button>
+                  </Button>
                 </td>
               </tr>
             );
