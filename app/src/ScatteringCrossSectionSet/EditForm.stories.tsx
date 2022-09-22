@@ -117,7 +117,7 @@ AtomLSGround.args = {
     processes: [
       {
         reaction: {
-          lhs: [{ count: 1, state: "Ar" }],
+          lhs: [{ count: 1, state: "Ukn" }],
           rhs: [],
           reversible: false,
           type_tags: [ReactionTypeTag.Ionization],
@@ -155,7 +155,7 @@ AtomLSExcited.args = {
     processes: [
       {
         reaction: {
-          lhs: [{ count: 1, state: "Ar" }],
+          lhs: [{ count: 1, state: "Ukn" }],
           rhs: [],
           reversible: false,
           type_tags: [ReactionTypeTag.Ionization],
@@ -445,7 +445,7 @@ AtomJ1L2.args = {
   organizations,
 };
 
-export const AtomLS1 = Template.bind({})
+export const AtomLS1 = Template.bind({});
 const state4AtomLS1: InState<AtomLS1State> = {
   particle: "Ukn",
   charge: 5,
@@ -474,7 +474,7 @@ const state4AtomLS1: InState<AtomLS1State> = {
       },
     },
   ],
-}
+};
 AtomLS1.args = {
   set: {
     ...setTemplate,

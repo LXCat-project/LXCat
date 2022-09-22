@@ -26,6 +26,7 @@ import {
   useFieldArray,
   useForm,
   useFormContext,
+  useWatch,
 } from "react-hook-form";
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
 import { ajvResolver } from "@hookform/resolvers/ajv";
@@ -44,6 +45,7 @@ import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
+import { State } from "@lxcat/database/dist/shared/types/collections";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -94,10 +96,9 @@ const ReactionEntryForm = ({
 }) => {
   const {
     register,
-    watch,
     formState: { errors },
   } = useFormContext();
-  const states = watch(`set.states`);
+  const states: Record<string, State> = useWatch({ name: `set.states` });
   return (
     <div style={{ display: "flex" }}>
       <div>
@@ -118,7 +119,11 @@ const ReactionEntryForm = ({
       </div>
       <NativeSelect
         label="State"
-        data={Object.keys(states)}
+        data={Object.entries(states).map(([value, s]) => {
+          // TODO render latex instead of id
+          const label = s.id === undefined ? value : s.id;
+          return { value, label };
+        })}
         error={errorMsg(
           errors,
           `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
@@ -1674,16 +1679,20 @@ const StateForm = ({
   onRemove: () => void;
 }) => {
   const {
-    watch,
     control,
     formState: { errors },
   } = useFormContext();
   const [id, setId] = useState("");
-  const state = watch(`set.states.${label}`);
+  const state = useWatch({ name: `set.states.${label}` });
   // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
   useEffect(() => {
-    const parsed = parse_state(state as InState<any>);
-    setId(parsed.id);
+    try {
+      const parsed = parse_state(state as InState<any>);
+      // TODO also calculate latex string
+      setId(parsed.id);
+    } catch (error) {
+      // incomplete state, ignore error and dont update id
+    }
   }, [state]);
 
   return (
@@ -1913,26 +1922,25 @@ interface Props {
 }
 
 const myResolver = () => {
-  const fn = ajvResolver(schema4form as any, { allowUnionTypes: true})
+  const fn = ajvResolver(schema4form as any, { allowUnionTypes: true });
   return async (values: FieldValues, context: any, options: any) => {
     // TODO get rid of keys which have undefined value in recursive way
     // for now just set.state['...'].type
-    const newValues = {...values}
+    const newValues = { ...values };
     newValues.set.states = Object.fromEntries(
       Object.entries(newValues.set.states).map((s) => {
         // TODO use schema where id is allowed
-        delete((s[1] as any).id)
+        delete (s[1] as any).id;
         if (s[1].type === undefined) {
-          const {type, ...newState} = s[1]
-          return [s[0], newState]
+          const { type, ...newState } = s[1];
+          return [s[0], newState];
         }
-        return s
+        return s;
       })
-    )
-    console.warn(JSON.stringify(newValues))
-    return fn(newValues, context, options)
-  }
-}
+    );
+    return fn(newValues, context, options);
+  };
+};
 
 export const EditForm = ({
   set,
@@ -2022,7 +2030,7 @@ export const EditForm = ({
       <form
         onSubmit={handleSubmit(onLocalSubmit, (err) => {
           console.error(err);
-          console.info(getValues('set'));
+          console.info(getValues("set"));
         })}
       >
         <Tabs defaultValue="general">
