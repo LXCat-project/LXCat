@@ -12,11 +12,14 @@ import {
 } from "../../css/queries/testutils";
 import { db } from "../../db";
 import { insert_state_dict } from "../queries";
+import { State } from "../types/collections";
 import {
   ChoiceRow,
   generateStateChoicesAql,
   generateStateFilterAql,
   groupStateChoices,
+  listStateChoices,
+  listStates,
   StateChoices,
 } from "./state";
 
@@ -24,27 +27,31 @@ type InputState = Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>;
 
 beforeAll(startDbWithUserAndCssCollections);
 
+function sample2partciles2charges() {
+  return {
+    H2: {
+      particle: "H2",
+      charge: 0,
+    },
+    H2p: {
+      particle: "H2",
+      charge: 1,
+    },
+    N2: {
+      particle: "N2",
+      charge: 0,
+    },
+    N2p: {
+      particle: "N2",
+      charge: 1,
+    },
+  };
+}
+
 describe("generateStateFilterAql()", () => {
   describe("2 particles with each 2 different charges", () => {
     beforeAll(async () => {
-      const states: InputState = {
-        H2: {
-          particle: "H2",
-          charge: 0,
-        },
-        H2p: {
-          particle: "H2",
-          charge: 1,
-        },
-        N2: {
-          particle: "N2",
-          charge: 0,
-        },
-        N2p: {
-          particle: "N2",
-          charge: 1,
-        },
-      };
+      const states: InputState = sample2partciles2charges();
       await insert_state_dict(states);
       return truncateCrossSectionSetCollections;
     });
@@ -935,3 +942,112 @@ async function searchState(
 
   expect(result).toEqual(expected);
 }
+
+describe.only("listStates()", () => {
+  describe("empty database", () => {
+    describe("given empty selection", () => {
+      it("should return empty result", async () => {
+        const emptySelection = { particle: {} };
+        const result = await listStates(emptySelection);
+        const expected = {};
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe("2 simple particles with 2 different charges", () => {
+    beforeAll(async () => {
+      const states: InputState = sample2partciles2charges();
+      await insert_state_dict(states);
+      return truncateCrossSectionSetCollections;
+    });
+
+    const testCases: Array<[string, StateChoices, State[]]> = [
+      ["given empty selection should return no data", { particle: {} }, []],
+      [
+        "given uncharged H2 selected should return H2 uncharged state",
+        { particle: { H2: { charge: { "0": { electronic: {} } } } } },
+        [
+          {
+            particle: "H2",
+            id: "H2",
+            charge: 0,
+          },
+        ],
+      ],
+      [
+        "given H2 selected should return H2 states",
+        { particle: { H2: { charge: {} } } },
+        [
+          {
+            particle: "H2",
+            id: "H2",
+            charge: 0,
+          },
+          {
+            particle: "H2",
+            id: "H2^+",
+            charge: 1,
+          },
+        ],
+      ],
+      [
+        "given H2 and N2 selected should return all states",
+        { particle: { H2: { charge: {} }, N2: { charge: {} } } },
+        [
+          {
+            particle: "H2",
+            id: "H2",
+            charge: 0,
+          },
+          {
+            particle: "H2",
+            id: "H2^+",
+            charge: 1,
+          },
+          {
+            particle: "N2",
+            id: "N2",
+            charge: 0,
+          },
+          {
+            particle: "N2",
+            id: "N2^+",
+            charge: 1,
+          },
+        ],
+      ],
+    ];
+    it.each(testCases)("%s", async (_description, selection, expected) => {
+      const result = await listStates(selection);
+      expect(Object.values(result)).toEqual(expected);
+    });
+
+    describe("listStateChoices()", () => {
+      it("should return 4 choices", async () => {
+        const result = await listStateChoices();
+        const expected = {
+          particle: {
+            H2: {
+              charge: {
+                0: { electronic: {} },
+                1: { electronic: {} },
+              },
+            },
+            N2: {
+              charge: {
+                0: {
+                  electronic: {},
+                },
+                1: {
+                  electronic: {},
+                },
+              },
+            },
+          },
+        };
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+});

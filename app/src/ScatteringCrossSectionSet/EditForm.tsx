@@ -48,6 +48,7 @@ import { Reference } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { StatePickerModal } from "./StatePickeModal";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -1934,11 +1935,11 @@ const myResolver = () => {
     newValues.set.states = Object.fromEntries(
       Object.entries(newValues.set.states).map((s) => {
         if (s[1].electronic) {
-          s[1].electronic.forEach(e => {
-            if (e.scheme === '') {
-              delete e.scheme
+          s[1].electronic.forEach((e) => {
+            if (e.scheme === "") {
+              delete e.scheme;
             }
-          })
+          });
         }
         // TODO use ts type/schema where id is allowed
         delete (s[1] as any).id;
@@ -2097,9 +2098,12 @@ export const EditForm = ({
                 />
               ))}
             </Accordion>
-            <Button type="button" title="Add a state" onClick={addState}>
-              +
-            </Button>
+            <Button.Group>
+              <Button type="button" title="Add a state" onClick={addState}>
+                +
+              </Button>
+              <StatePickerModal onSubmit={console.error} />
+            </Button.Group>
             <ErrorMessage errors={errors} name="set.states" />
           </Tabs.Panel>
           <Tabs.Panel value="references">
@@ -2126,7 +2130,11 @@ export const EditForm = ({
             >
               {processesField.fields.map((field, index) => (
                 <Accordion.Item key={field.id} value={index.toString()}>
-                  <Accordion.Control><ReactionSummary {...mapStateToReaction(states, field.reaction)}/></Accordion.Control>
+                  <Accordion.Control>
+                    <ReactionSummary
+                      {...mapStateToReaction(states, field.reaction)}
+                    />
+                  </Accordion.Control>
                   <Accordion.Panel>
                     <ProcessForm
                       index={index}
@@ -2190,20 +2198,22 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
   };
 }
 
-function mapStateToReaction(states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>, reaction: Reaction<string>): Reaction<State> {
+function mapStateToReaction(
+  states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>,
+  reaction: Reaction<string>
+): Reaction<State> {
   const newReaction = {
     ...reaction,
-    lhs: reaction.lhs.map(e => {
+    lhs: reaction.lhs.map((e) => {
       // TODO parse_state adds id and summary props, should not be needed here
       const state = parse_state(states[e.state] as any);
-      return ({ count: e.count, state})
+      return { count: e.count, state };
     }),
-    rhs: reaction.rhs.map(e => {
+    rhs: reaction.rhs.map((e) => {
       // TODO parse_state adds id and summary props, should not be needed here
       const state = parse_state(states[e.state] as any);
-      return ({ count: e.count, state})
+      return { count: e.count, state };
     }),
-  }
-  return newReaction as Reaction<State>
+  };
+  return newReaction as Reaction<State>;
 }
-

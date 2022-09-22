@@ -48,14 +48,14 @@ describe("given filled ArangoDB container", () => {
     expect(result).toEqual([expected]);
   });
 
-  it('should list organization in users memberships', async () => {
-    const result = await userMemberships("somename@example.com")
+  it("should list organization in users memberships", async () => {
+    const result = await userMemberships("somename@example.com");
     const expected = {
       _key: testKeys.testOrgKey,
       name: "Some organization",
     };
     expect(result).toEqual([expected]);
-  })
+  });
 
   describe("toggleRole()", () => {
     describe("given no roles", () => {

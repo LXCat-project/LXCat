@@ -59,10 +59,10 @@ const AdminUsers: NextPage<Props> = ({
       headers,
     });
     if (res.ok) {
-      const organizationNames = organizationKeys.map(m => {
+      const organizationNames = organizationKeys.map((m) => {
         const o = organizations.find((o) => o._key === m);
         return o?.name ?? "";
-      })
+      });
       const newUser = { ...user, organizations: organizationNames };
       const newUsers = users.map((u) => (u.email === user.email ? newUser : u));
       setUsers(newUsers);

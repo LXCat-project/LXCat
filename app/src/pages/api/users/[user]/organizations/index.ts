@@ -15,7 +15,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
   .post(async (req, res) => {
     const { user: userKey } = req.query;
     const OrganizationIds = z.array(z.string());
-    const orgKeys = OrganizationIds.parse(req.body)
+    const orgKeys = OrganizationIds.parse(req.body);
     if (typeof userKey === "string") {
       await setMembers(userKey, orgKeys);
       res.status(201).send("");
