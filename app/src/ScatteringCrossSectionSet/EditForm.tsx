@@ -49,6 +49,7 @@ import { State } from "@lxcat/database/dist/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { StatePickerModal } from "./StatePickeModal";
+import { StateDict } from "@lxcat/database/dist/shared/queries/state";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -1679,9 +1680,11 @@ const HomonuclearDiatomForm = ({ label }: { label: string }) => {
 const StateForm = ({
   label,
   onRemove,
+  expanded,
 }: {
   label: string;
   onRemove: () => void;
+  expanded: boolean;
 }) => {
   const {
     control,
@@ -1706,53 +1709,62 @@ const StateForm = ({
         {label}: {id}
       </Accordion.Control>
       <Accordion.Panel>
-        <div>
-          <Controller
-            control={control}
-            name={`set.states.${label}.type`}
-            render={({ field: { onBlur, onChange, value } }) => (
-              <Radio.Group
-                label="Type"
-                onBlur={onBlur}
-                onChange={(v) => (v === "" ? onChange(undefined) : onChange(v))}
-                value={value === undefined ? "" : value}
-                error={errorMsg(errors, `set.states.${label}.type`)}
-              >
-                <Radio value="" label="Simple particle" />
-                <Radio value="AtomLS" label="Atom LS" />
-                <Radio value="AtomLS1" label="Atom LS1" />
-                <Radio value="AtomJ1L2" label="Atom J1L2" />
-                <Radio
-                  value="HeteronuclearDiatom"
-                  label="Heteronuclear Diatom"
-                />
-                <Radio value="HomonuclearDiatom" label="Homonuclear Diatom" />
-                <Radio
-                  value="LinearTriatomInversionCenter"
-                  label="Linear Triatom Inversion Center"
-                />
-              </Radio.Group>
+        {expanded && (
+          <>
+            <div>
+              <Controller
+                control={control}
+                name={`set.states.${label}.type`}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Radio.Group
+                    label="Type"
+                    onBlur={onBlur}
+                    onChange={(v) =>
+                      v === "" ? onChange(undefined) : onChange(v)
+                    }
+                    value={value === undefined ? "" : value}
+                    error={errorMsg(errors, `set.states.${label}.type`)}
+                  >
+                    <Radio value="" label="Simple particle" />
+                    <Radio value="AtomLS" label="Atom LS" />
+                    <Radio value="AtomLS1" label="Atom LS1" />
+                    <Radio value="AtomJ1L2" label="Atom J1L2" />
+                    <Radio
+                      value="HeteronuclearDiatom"
+                      label="Heteronuclear Diatom"
+                    />
+                    <Radio
+                      value="HomonuclearDiatom"
+                      label="Homonuclear Diatom"
+                    />
+                    <Radio
+                      value="LinearTriatomInversionCenter"
+                      label="Linear Triatom Inversion Center"
+                    />
+                  </Radio.Group>
+                )}
+              />
+            </div>
+            <SimpleParticleForm label={label} />
+            {state.type === "AtomLS" && <AtomLSForm label={label} />}
+            {state.type === "AtomJ1L2" && <AtomJ1L2Form label={label} />}
+            {state.type === "HeteronuclearDiatom" && (
+              <HeteronuclearDiatomForm label={label} />
             )}
-          />
-        </div>
-        <SimpleParticleForm label={label} />
-        {state.type === "AtomLS" && <AtomLSForm label={label} />}
-        {state.type === "AtomJ1L2" && <AtomJ1L2Form label={label} />}
-        {state.type === "HeteronuclearDiatom" && (
-          <HeteronuclearDiatomForm label={label} />
+            {state.type === "HomonuclearDiatom" && (
+              <HomonuclearDiatomForm label={label} />
+            )}
+            {state.type === "LinearTriatomInversionCenter" && (
+              <LinearTriatomInversionCenterForm label={label} />
+            )}
+            {state.type === "AtomLS1" && <AtomLS1Form label={label} />}
+            {/* // TODO atomls1 */}
+            <Button type="button" title="Remove state" onClick={onRemove}>
+              &minus;
+            </Button>
+            <hr />
+          </>
         )}
-        {state.type === "HomonuclearDiatom" && (
-          <HomonuclearDiatomForm label={label} />
-        )}
-        {state.type === "LinearTriatomInversionCenter" && (
-          <LinearTriatomInversionCenterForm label={label} />
-        )}
-        {state.type === "AtomLS1" && <AtomLS1Form label={label} />}
-        {/* // TODO atomls1 */}
-        <Button type="button" title="Remove state" onClick={onRemove}>
-          &minus;
-        </Button>
-        <hr />
       </Accordion.Panel>
     </Accordion.Item>
   );
@@ -2001,6 +2013,14 @@ export const EditForm = ({
     setStates(newStates);
     setExpandedStates((expanded) => [...expanded, newLabel]);
   };
+  const addStates = (newStates: StateDict) => {
+    const newNewStates = {
+      ...states,
+      ...newStates
+    }
+    setStates(newNewStates as any);
+    setExpandedStates((expanded) => [...expanded, ...Object.keys(newStates)]);
+  }
   const removeState = (label: string) => {
     const { [label]: _todrop, ...newStates } = states;
     setExpandedStates((expanded) => expanded.filter((l) => l !== label));
@@ -2037,6 +2057,7 @@ export const EditForm = ({
     name: "set.processes",
   });
 
+  const [activeTab, setActiveTab] = useState<string | null>("general");
   return (
     <FormProvider {...methods}>
       <form
@@ -2045,7 +2066,11 @@ export const EditForm = ({
           console.info(getValues("set"));
         })}
       >
-        <Tabs defaultValue="general">
+        <Tabs
+          defaultValue="general"
+          value={activeTab}
+          onTabChange={setActiveTab}
+        >
           <Tabs.List>
             <Tabs.Tab value="general">General</Tabs.Tab>
             <Tabs.Tab value="states">States</Tabs.Tab>
@@ -2094,6 +2119,7 @@ export const EditForm = ({
                 <StateForm
                   key={label}
                   label={label}
+                  expanded={expandedStates.includes(label)}
                   onRemove={() => removeState(label)}
                 />
               ))}
@@ -2102,25 +2128,29 @@ export const EditForm = ({
               <Button type="button" title="Add a state" onClick={addState}>
                 +
               </Button>
-              <StatePickerModal onSubmit={console.error} />
+              <StatePickerModal onSubmit={addStates} />
             </Button.Group>
             <ErrorMessage errors={errors} name="set.states" />
           </Tabs.Panel>
           <Tabs.Panel value="references">
-            <ul>
-              {Object.keys(references).map((label) => (
-                <ReferenceForm
-                  key={label}
-                  label={label}
-                  onRemove={() => removeReference(label)}
-                />
-              ))}
-            </ul>
-            <div style={{ display: "flex" }}>
-              <ImportDOIButton onAdd={addReference} />
-              <ImportBibTeXDOIButton onAdd={addReferences} />
-            </div>
-            <ErrorMessage errors={errors} name="set.references" />
+            {activeTab === "references" && (
+              <>
+                <ul>
+                  {Object.keys(references).map((label) => (
+                    <ReferenceForm
+                      key={label}
+                      label={label}
+                      onRemove={() => removeReference(label)}
+                    />
+                  ))}
+                </ul>
+                <div style={{ display: "flex" }}>
+                  <ImportDOIButton onAdd={addReference} />
+                  <ImportBibTeXDOIButton onAdd={addReferences} />
+                </div>
+                <ErrorMessage errors={errors} name="set.references" />
+              </>
+            )}
           </Tabs.Panel>
           <Tabs.Panel value="processes">
             <Accordion
@@ -2136,15 +2166,17 @@ export const EditForm = ({
                     />
                   </Accordion.Control>
                   <Accordion.Panel>
-                    <ProcessForm
-                      index={index}
-                      onRemove={() => {
-                        setExpandedProcesses((expanded) =>
-                          expanded.filter((e) => e !== index.toString())
-                        );
-                        processesField.remove(index);
-                      }}
-                    />
+                    {expandedProcesses.includes(index.toString()) && (
+                      <ProcessForm
+                        index={index}
+                        onRemove={() => {
+                          setExpandedProcesses((expanded) =>
+                            expanded.filter((e) => e !== index.toString())
+                          );
+                          processesField.remove(index);
+                        }}
+                      />
+                    )}
                   </Accordion.Panel>
                 </Accordion.Item>
               ))}
