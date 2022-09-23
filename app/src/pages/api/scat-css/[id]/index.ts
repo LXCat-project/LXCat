@@ -7,10 +7,12 @@ import {
 } from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import Cite from "citation-js";
+import { applyCORS } from "../../../../shared/cors";
 
 const handler = nc<AuthRequest, NextApiResponse>()
-  .use(hasSessionOrAPIToken)
-  .use(hasDeveloperRole)
+  .use(applyCORS)
+  // .use(hasSessionOrAPIToken)
+  // .use(hasDeveloperRole)
   .get(async (req, res) => {
     const { id, refstyle = "csl" } = req.query;
     if (typeof id === "string") {
