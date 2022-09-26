@@ -1,3 +1,6 @@
+import { ShellEntry } from "../core/shell_entry";
+import { Dict } from "./common";
+
 /**
  * Given two angular momenta, return the maximum & minimum
  *
@@ -7,9 +10,9 @@
  * @param {number} spin - spin angular momentum, but as `orbital`, it can
  *                        be any kind of angular momentum
  *
- * @return {number[]} [maximum, minimum] angular momentum
+ * @return {[number, number]} [maximum, minimum] angular momentum
  */
-export function momenta_max_min(orbital: number, spin: number) {
+export function momenta_max_min(orbital: number, spin: number): [number, number] {
   return [orbital + spin, Math.abs(orbital - spin)];
 }
 
@@ -27,7 +30,7 @@ export function momenta_max_min(orbital: number, spin: number) {
  * @return {number[]} Array of all possible values of angular momenta:
  *                    [max, max-1, max-2, ..., min]
  */
-export function momenta(orbital: number, spin: number) {
+export function momenta(orbital: number, spin: number): number[] {
   const [jmax, jmin] = momenta_max_min(orbital, spin);
   return Array(jmax - jmin + 1)
     .fill(0)
@@ -48,9 +51,9 @@ export function momenta(orbital: number, spin: number) {
  * @return {number[]} Array of all possible values of angular momenta:
  *                    [max, max-1, max-2, ..., min]
  */
-export function momenta_couplings(els: number[], spin: number | number[]) {
+export function momenta_couplings(els: number[], spin: number | number[]): number[] {
   let spins: number[];
-  if (typeof spin === 'number') {
+  if (typeof spin === "number") {
     spins = [spin];
   } else {
     spins = spin;
@@ -100,7 +103,7 @@ export function check_couplings(
  *
  * @return {[number, number]} Array of L & S
  */
-export function momenta_from_shell(orbital: number, occupance: number) {
+export function momenta_from_shell(orbital: number, occupance: number): [number, number] {
   let L = 0;
   let S = 0;
   const els = Array(orbital * 2 + 1)
@@ -115,4 +118,31 @@ export function momenta_from_shell(orbital: number, occupance: number) {
   S += Math.abs(unpaired * 0.5);
   L += els.slice(0, unpaired).reduce((i, res) => Math.abs(i + res));
   return [L, S];
+}
+
+export function check_momenta_from_shell(
+  entries: ShellEntry[],
+  L_expected: number,
+  S_expected: number
+) {
+  let L = 0;
+  let S = 0;
+
+  for (const entry of entries) {
+    // l_max = n - 1; num of l = 2*l + 1; max occupancy = 2* num of l
+    if (entry.l >= entry.n || entry.occupance > 4 * entry.l + 2) {
+      return {
+        result: false,
+        allowed: {}
+      };
+    }
+    let _L: number;
+    let _S: number;
+    [_L, _S] = momenta_from_shell(entry.l, entry.occupance);
+    S += _S;
+    L += _L;
+  }
+
+  const allowed: Dict = { L: L, S: S };
+  return { result: L === L_expected && S === S_expected, allowed };
 }

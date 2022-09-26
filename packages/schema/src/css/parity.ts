@@ -1,3 +1,5 @@
+import { ShellEntry } from "../core/shell_entry";
+
 /**
  * Given the orbital angular momentum, and shell occupance, calculate parity
  *
@@ -7,7 +9,7 @@
  *
  * @return {number} parity
  */
-export function parity(orbital: number, occupance: number) {
+export function parity(orbital: number, occupance: number): number {
   return (-1) ** (orbital * occupance);
 }
 
@@ -18,6 +20,10 @@ export function parity(orbital: number, occupance: number) {
  *
  * @return {number} parity
  */
-export function combine_parity(parities: number[]) {
+export function combine_parity(parities: number[]): number {
   return parities.reduce((prev, next) => prev * next, 1);
+}
+
+export function shell_parities(config: ShellEntry[]) {
+  return config.map((configItem) => parity(configItem.l, configItem.occupance));
 }
