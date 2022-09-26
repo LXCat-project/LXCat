@@ -72,7 +72,7 @@ function query2options(query: ParsedUrlQuery): FilterOptions {
   const options: FilterOptions = {
     contributor: query2array(query.contributor),
     state: stateSelectionFromSearchParam(state),
-    tag: query2array(query.tag) as ReactionTypeTag[],
+    tag: query2array(query.tag).filter((v): v is ReactionTypeTag => v in ReactionTypeTag),
   };
   return options;
 }

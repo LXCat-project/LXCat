@@ -35,7 +35,7 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
     newSet: CrossSectionSetInputOwned,
     newMessage: string
   ) {
-    const url = `/api/scat-css/${setKey}`;
+    const url = `/api/author/scat-css/${setKey}`;
     const body = JSON.stringify({
       doc: newSet,
       message: newMessage,
