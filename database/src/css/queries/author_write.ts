@@ -307,6 +307,8 @@ export async function deleteSet(key: string, message: string) {
             FILTER nrOtherSets == 0
             REMOVE cs IN CrossSection
     `);
+    // TODO also remove history of draft cross sections belonging to set,
+    // but skip sections which are in another set
     await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
@@ -323,7 +325,7 @@ export async function deleteSet(key: string, message: string) {
       FOR css IN CrossSectionSetHistory
         FILTER css._from == ${key}
         REMOVE css IN CrossSectionSetHistory
-    `)
+    `);
     return;
     // TODO remove orphaned reactions, states, references
   } else if (status === "published") {

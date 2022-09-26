@@ -20,8 +20,8 @@ const handler = nc<AuthRequest, NextApiResponse>()
   .post(async (req, res) => {
     try {
       let body = req.body;
-      if (typeof body === 'string') {
-        body = JSON.parse(body)
+      if (typeof body === "string") {
+        body = JSON.parse(body);
       }
       if (validator.validate(body)) {
         // Add to CrossSectionSet with status=='draft' and version=='1'

@@ -77,10 +77,10 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
         </div>
       )}
       {id && id === set._key && (
-        <span>Update successful, a draft has been created with id is {id}</span>
+        <div>Update successful, a draft has been created with id is {id}</div>
       )}
       {id && id !== set._key && (
-        <span>Update successful, the draft been updated.</span>
+        <div>Update successful, the draft been updated.</div>
       )}
       <Link href={`/author/scat-css`}>
         <a>Back</a>

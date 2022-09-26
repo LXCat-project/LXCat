@@ -943,7 +943,7 @@ async function searchState(
   expect(result).toEqual(expected);
 }
 
-describe.only("listStates()", () => {
+describe("listStates()", () => {
   describe("empty database", () => {
     describe("given empty selection", () => {
       it("should return empty result", async () => {

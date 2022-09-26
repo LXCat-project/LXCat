@@ -362,14 +362,18 @@ const LUTForm = ({ index }: { index: number }) => {
                 <TextInput
                   style={{ width: "11rem" }}
                   error={errorMsg(errors, `set.processes.${index}.data.${i}.0`)}
-                  {...register(`set.processes.${index}.data.${i}.0`)}
+                  {...register(`set.processes.${index}.data.${i}.0`, {
+                    valueAsNumber: true,
+                  })}
                 />
               </td>
               <td>
                 <TextInput
                   style={{ width: "11rem" }}
                   error={errorMsg(errors, `set.processes.${index}.data.${i}.1`)}
-                  {...register(`set.processes.${index}.data.${i}.1`)}
+                  {...register(`set.processes.${index}.data.${i}.1`, {
+                    valueAsNumber: true,
+                  })}
                 />
               </td>
               <td>
