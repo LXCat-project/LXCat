@@ -319,6 +319,11 @@ export async function deleteSet(key: string, message: string) {
         FILTER css._key == ${key}
         REMOVE css IN CrossSectionSet
     `);
+    await db().query(aql`
+      FOR css IN CrossSectionSetHistory
+        FILTER css._from == ${key}
+        REMOVE css IN CrossSectionSetHistory
+    `)
     return;
     // TODO remove orphaned reactions, states, references
   } else if (status === "published") {
