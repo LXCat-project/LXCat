@@ -21,13 +21,9 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
 
   async function onSubmit(
     newSet: CrossSectionSetInputOwned,
-    newMessage: string
   ) {
     const url = `/api/scat-css`;
-    const body = JSON.stringify({
-      doc: newSet,
-      message: newMessage,
-    });
+    const body = JSON.stringify(newSet);
     const headers = new Headers({
       Accept: "application/json",
       "Content-Type": "application/json",

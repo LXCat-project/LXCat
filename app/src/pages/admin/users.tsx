@@ -106,6 +106,7 @@ const AdminUsers: NextPage<Props> = ({
                 </td>
                 <td>
                   <MultiSelect
+                    aria-label={`Memberships of ${u.email}`}
                     onChange={(selection) => updateOrganization(u, selection)}
                     value={memberOf}
                     data={organizations.map((o) => ({
