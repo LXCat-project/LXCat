@@ -134,7 +134,6 @@ export async function uploadAndPublishDummySet(
   await page.goto("/author/scat-css");
   await page.reload(); // TODO sometimes no set is listed, use reload to give server some time as workaround
   await page.waitForSelector('td:has-text("draft")');
-  await page.pause()
   await page.locator('tbody button:has-text("Publish")').click();
   // Press publish in dialog
   await page.locator('dialog >> button:has-text("Publish")').click();

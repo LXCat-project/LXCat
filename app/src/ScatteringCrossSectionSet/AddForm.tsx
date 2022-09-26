@@ -15,7 +15,7 @@ export const AddForm = ({ onSubmit, organizations }: Props) => {
       name: "",
       description: "",
       complete: false,
-      contributor: organizations ? organizations[0].name : "",
+      contributor: organizations.length > 0 ? organizations[0].name : "",
       processes: [],
       states: {},
       references: {},

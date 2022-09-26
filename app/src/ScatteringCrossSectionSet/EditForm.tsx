@@ -184,6 +184,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           <Button
             type="button"
             title="Add consumed reaction entry"
+            aria-label="Add consumed reaction entry"
             onClick={() => lhsField.append({ count: 1, state: "" })}
           >
             +
@@ -238,6 +239,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           <Button
             type="button"
             title="Add produced reaction entry"
+            aria-label="Add produced reaction entry"
             onClick={() => rhsField.append({ count: 1, state: "" })}
           >
             +
@@ -348,6 +350,7 @@ const LUTForm = ({ index }: { index: number }) => {
               <Button
                 title="Add"
                 type="button"
+                aria-label="Add data row to process"
                 onClick={() => dataRows.append([[0, 0]])}
               >
                 +
@@ -1975,7 +1978,7 @@ export const EditForm = ({
 
   // States
   const [expandedStates, setExpandedStates] = useState<string[]>([]);
-  const states = watch("set.states");
+  const states = useWatch({name:"set.states", control});
   const setStates = (newStates: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>) =>
     setValue("set.states", newStates);
   const addState = () => {
@@ -2142,7 +2145,7 @@ export const EditForm = ({
               ))}
             </Accordion>
             <Button.Group>
-              <Button type="button" title="Add a state" onClick={addState}>
+              <Button type="button" title="Add a state" aria-label="Add a state" onClick={addState}>
                 +
               </Button>
               <StatePickerModal onSubmit={addStates} />
@@ -2202,6 +2205,7 @@ export const EditForm = ({
               <Button
                 type="button"
                 title="Add process"
+                aria-label="Add process"
                 onClick={() => {
                   processesField.append(initialProcess());
                   setExpandedProcesses((expanded) => [
@@ -2307,12 +2311,12 @@ function mapStateToReaction(
 ): Reaction<State> {
   const newReaction = {
     ...reaction,
-    lhs: reaction.lhs.map((e) => {
+    lhs: reaction.lhs.filter(e => e.state !== '').map((e) => {
       // TODO parse_state adds id and summary props, should not be needed here
       const state = parse_state(states[e.state] as any);
       return { count: e.count, state };
     }),
-    rhs: reaction.rhs.map((e) => {
+    rhs: reaction.rhs.filter(e => e.state !== '').map((e) => {
       // TODO parse_state adds id and summary props, should not be needed here
       const state = parse_state(states[e.state] as any);
       return { count: e.count, state };

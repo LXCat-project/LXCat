@@ -11,7 +11,7 @@ export function ListItem(props: CrossSectionHeading) {
     partOf = <div>Part of {quotedNames} sets</div>;
   }
   return (
-    <Link href={`/scat-cs/${props.id}`}>
+    <Link href={`/scat-cs/${props.id}`} role="listitem">
       <a
         style={{
           boxShadow: "3px 5px 2px gray",
