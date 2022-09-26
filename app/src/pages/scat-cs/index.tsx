@@ -10,14 +10,10 @@ import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
-import { query2array } from "../../shared/query2array";
-import {
-  stateSelectionFromSearchParam,
-  stateSelectionToSearchParam,
-} from "../../shared/StateFilter";
+import { stateSelectionToSearchParam } from "../../shared/StateFilter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Paging } from "../../ScatteringCrossSection/Paging";
+import { query2options } from "../../ScatteringCrossSection/query2options";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -75,20 +71,3 @@ export const getServerSideProps: GetServerSideProps<
     },
   };
 };
-
-function query2options(query: ParsedUrlQuery): SearchOptions {
-  const species1 =
-    query.species1 && !Array.isArray(query.species1)
-      ? query.species1
-      : stateSelectionToSearchParam({ particle: {} });
-  const species2 =
-    query.species2 && !Array.isArray(query.species2)
-      ? query.species2
-      : stateSelectionToSearchParam({ particle: {} });
-  return {
-    set_name: query2array(query.set_name),
-    species1: stateSelectionFromSearchParam(species1),
-    species2: stateSelectionFromSearchParam(species2),
-    tag: query2array(query.tag),
-  };
-}

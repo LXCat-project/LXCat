@@ -16,7 +16,7 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
     setErrors([]);
     setId("");
     const url = `/api/scat-css`;
-    const body = JSON.stringify(doc);
+    const body = JSON.stringify({ doc });
     const headers = new Headers({
       Accept: "application/json",
       "Content-Type": "application/json",

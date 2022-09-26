@@ -12,10 +12,10 @@ interface Props {
 export const AddForm = ({ onSubmit, organizations }: Props) => {
   const newSet: CrossSectionSetRaw = useMemo(() => {
     return {
-      name: "Some set name",
-      description: "Some set description",
+      name: "",
+      description: "",
       complete: false,
-      contributor: "Some organization",
+      contributor: organizations ? organizations[0].name : "",
       processes: [],
       states: {},
       references: {},

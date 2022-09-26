@@ -6,7 +6,6 @@ import { mustBeAuthor } from "../../../auth/middleware";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
 import Link from "next/link";
 import {
-  listOrganizations,
   OrganizationFromDB,
   userMemberships,
 } from "@lxcat/database/dist/auth/queries";
@@ -45,7 +44,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
 
   return (
     <Layout>
-      <h1>Edit scattering cross section set</h1>
+      <h1>Add scattering cross section set</h1>
       <AddForm onSubmit={onSubmit} organizations={organizations} />
       {errors.length > 0 && (
         <div>
@@ -61,7 +60,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
         </div>
       )}
       {id && (
-        <span>Update successful, a draft has been created with id is {id}</span>
+        <div>Update successful, a draft has been created with id is {id}</div>
       )}
       <Link href={`/author/scat-css`}>
         <a>Back</a>

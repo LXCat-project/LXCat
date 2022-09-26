@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../../../shared/Layout";
 import type { ErrorObject } from "ajv";
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 import { mustBeAuthor } from "../../../../auth/middleware";
 import {
   CrossSectionSetInputOwned,
@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import { EditForm } from "../../../../ScatteringCrossSectionSet/EditForm";
 import {
-  listOrganizations,
   OrganizationFromDB,
   userMemberships,
 } from "@lxcat/database/dist/auth/queries";

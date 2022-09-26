@@ -58,7 +58,9 @@ function generateElectronicFilter(
   return Object.entries(electronic).map(
     ([electronicSummary, { vibrational }]) => {
       const electronicIsCompound = electronicSummary.includes("|");
-      // TODO handle compound aka H2{<something>|<something else>}
+      if (electronicIsCompound) {
+        // TODO handle compound aka H2{<something>|<something else>}
+      }
 
       const electronicSubFilters = [
         aql`${electronicVarAql}.summary == ${electronicSummary}`,
@@ -95,7 +97,9 @@ function generateVibratonalFilter(
   return Object.entries(vibrational).map(
     ([vibrationalSummary, { rotational }]) => {
       const vibrationalIsCompound = vibrationalSummary.includes("|");
-      // TODO handle compound vibrational aka v=1|2
+      if (vibrationalIsCompound) {
+        // TODO handle compound vibrational aka v=1|2
+      }
 
       const vibrationalSubFilters = [
         aql`${vibrationalVarAql}.summary == ${vibrationalSummary}`,
@@ -103,8 +107,10 @@ function generateVibratonalFilter(
 
       const rotationalFilters: GeneratedAqlQuery[] = [];
       rotational.forEach((rotationalSummary) => {
-        const RotationalIsCompound = rotationalSummary.includes("|");
-        // TODO handle compound vibrational aka J=1|2
+        const rotationalIsCompound = rotationalSummary.includes("|");
+        if (rotationalIsCompound) {
+          // TODO handle compound vibrational aka J=1|2
+        }
 
         rotationalFilters.push(aql`
                 LENGTH(

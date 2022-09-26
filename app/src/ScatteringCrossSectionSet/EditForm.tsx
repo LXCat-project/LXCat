@@ -22,7 +22,6 @@ import {
   FieldPath,
   FormProvider,
   get,
-  Resolver,
   useFieldArray,
   useForm,
   useFormContext,
@@ -50,6 +49,10 @@ import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { StatePickerModal } from "./StatePickeModal";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
+import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
+import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
+import { CSL } from "@lxcat/schema/dist/core/csl";
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -1306,9 +1309,7 @@ const LinearElectronicForm = ({
         <TextInput
           label="e"
           error={errorMsg(errors, `set.states.${label}.electronic.${eindex}.e`)}
-          {...register(`set.states.${label}.electronic.${eindex}.e`, {
-            valueAsNumber: true,
-          })}
+          {...register(`set.states.${label}.electronic.${eindex}.e`)}
         />
       </div>
       <div>
@@ -1695,9 +1696,7 @@ const StateForm = ({
   // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
   useEffect(() => {
     try {
-      const parsed = parse_state(state as InState<any>);
-      // TODO also calculate latex string
-      setId(parsed.id);
+      setId(getStateId(state));
     } catch (error) {
       // incomplete state, ignore error and dont update id
     }
@@ -1862,14 +1861,7 @@ const ImportBibTeXDOIButton = ({
       });
       const labelRefs = Object.fromEntries(
         refs.map((r) => {
-          const cite = new Cite(r, {
-            forceType: "@csl/object",
-          });
-          const labels = cite.format("label");
-          if (typeof labels === "string") {
-            throw new Error("Unexpected type for citation label");
-          }
-          const label = Object.values(labels)[0];
+          const label = getReferenceLabel(r);
           return [label, r];
         })
       );
@@ -1941,27 +1933,7 @@ interface Props {
 const myResolver = () => {
   const fn = ajvResolver(schema4form as any, { allowUnionTypes: true });
   return async (values: FieldValues, context: any, options: any) => {
-    // TODO get rid of keys which have undefined value in recursive way
-    // for now just set.state['...'].type
-    const newValues = { ...values };
-    newValues.set.states = Object.fromEntries(
-      Object.entries(newValues.set.states).map((s) => {
-        if (s[1].electronic) {
-          s[1].electronic.forEach((e) => {
-            if (e.scheme === "") {
-              delete e.scheme;
-            }
-          });
-        }
-        // TODO use ts type/schema where id is allowed
-        delete (s[1] as any).id;
-        if (s[1].type === undefined) {
-          const { type, ...newState } = s[1];
-          return [s[0], newState];
-        }
-        return s;
-      })
-    );
+    const newValues = pruneSet(values);
     return fn(newValues, context, options);
   };
 };
@@ -1993,7 +1965,8 @@ export const EditForm = ({
   } = methods;
 
   const onLocalSubmit = (data: FieldValues) => {
-    onSubmit(data.set, data.commitMessage);
+    const pruned = pruneSet(data);
+    onSubmit(pruned.set, pruned.commitMessage);
   };
 
   // States
@@ -2016,11 +1989,11 @@ export const EditForm = ({
   const addStates = (newStates: StateDict) => {
     const newNewStates = {
       ...states,
-      ...newStates
-    }
+      ...newStates,
+    };
     setStates(newNewStates as any);
     setExpandedStates((expanded) => [...expanded, ...Object.keys(newStates)]);
-  }
+  };
   const removeState = (label: string) => {
     const { [label]: _todrop, ...newStates } = states;
     setExpandedStates((expanded) => expanded.filter((l) => l !== label));
@@ -2056,6 +2029,45 @@ export const EditForm = ({
     control,
     name: "set.processes",
   });
+  const addProcesses = (processes2add: PickedCrossSections) => {
+    // copy references belonging to picked cross sections to current set.
+    // TODO added reference should not exist before and be unique
+    const newReferences = Object.fromEntries(
+      processes2add
+        .flatMap((p) => p.reference)
+        .map((r) => {
+          return [getReferenceLabel(r), r];
+        })
+    );
+    addReferences(newReferences);
+
+    // copy states belonging to picked cross sections to current set
+    // TODO added states should not exist before and be unique
+    const newStates = Object.fromEntries(
+      processes2add
+        .flatMap((p) => {
+          return [
+            ...p.reaction.lhs.map((e) => e.state),
+            ...p.reaction.rhs.map((e) => e.state),
+          ];
+        })
+        .map((s) => {
+          return [getStateId(s), s];
+        })
+    );
+    addStates(newStates);
+
+    // copy cross sections to current set
+    // processesField.append(processes2add);
+    // TODO added processes should not exist before and be unique
+    const newProcesses = processes2add.map(flattenCrossSection);
+    const currentMaxIndex = processesField.fields.length;
+    processesField.append(newProcesses);
+    setExpandedProcesses((expanded) => [
+      ...expanded,
+      ...newProcesses.map((d, i) => (i + currentMaxIndex).toString()),
+    ]);
+  };
 
   const [activeTab, setActiveTab] = useState<string | null>("general");
   return (
@@ -2064,6 +2076,7 @@ export const EditForm = ({
         onSubmit={handleSubmit(onLocalSubmit, (err) => {
           console.error(err);
           console.info(getValues("set"));
+          console.info(JSON.stringify(getValues("set")));
         })}
       >
         <Tabs
@@ -2181,19 +2194,22 @@ export const EditForm = ({
                 </Accordion.Item>
               ))}
             </Accordion>
-            <Button
-              type="button"
-              title="Add process"
-              onClick={() => {
-                processesField.append(initialProcess());
-                setExpandedProcesses((expanded) => [
-                  ...expanded,
-                  processesField.fields.length.toString(),
-                ]);
-              }}
-            >
-              +
-            </Button>
+            <Button.Group>
+              <Button
+                type="button"
+                title="Add process"
+                onClick={() => {
+                  processesField.append(initialProcess());
+                  setExpandedProcesses((expanded) => [
+                    ...expanded,
+                    processesField.fields.length.toString(),
+                  ]);
+                }}
+              >
+                +
+              </Button>
+              <CrossSectionPickerModal onSubmit={addProcesses} />
+            </Button.Group>
             <ErrorMessage errors={errors} name="set.processes" />
           </Tabs.Panel>
           <Tabs.Panel value="json">
@@ -2219,6 +2235,55 @@ export const EditForm = ({
   );
 };
 
+function pruneSet(values: FieldValues) {
+  // TODO get rid of keys which have undefined value in recursive way
+  // for now just set.states
+  const newValues = { ...values };
+  newValues.set.states = Object.fromEntries(
+    Object.entries(newValues.set.states).map(([k, v]) => {
+      const newState = pruneState(v);
+      return [k, newState];
+    })
+  );
+  return newValues;
+}
+
+function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
+  const newState = { ...state }; // TODO make better clone
+  if (newState.electronic) {
+    newState.electronic.forEach((e) => {
+      if (e.scheme === "") {
+        delete e.scheme;
+      }
+      if (Array.isArray(e.vibrational)) {
+        if (e.vibrational.length > 0) {
+          e.vibrational.forEach((v) => {
+            delete v.summary;
+            if (Array.isArray(v.rotational)) {
+              if (v.rotational.length > 0) {
+                v.rotational.forEach((r: Record<string, any>) => {
+                  delete r.summary;
+                });
+              } else {
+                delete v.rotational;
+              }
+            }
+          });
+        } else {
+          delete e.vibrational;
+        }
+      }
+    });
+  }
+  // TODO use type|schema where id is allowed
+  delete (newState as any).id;
+  if (newState.type === undefined) {
+    // Simple particle does not have type
+    delete newState.type;
+  }
+  return newState;
+}
+
 function initialProcess(): CrossSectionSetRaw["processes"][0] {
   return {
     reaction: { lhs: [], rhs: [], reversible: false, type_tags: [] },
@@ -2229,6 +2294,8 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
     data: [],
   };
 }
+
+// TODO move utility functions to own file and reuse else where
 
 function mapStateToReaction(
   states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>,
@@ -2248,4 +2315,45 @@ function mapStateToReaction(
     }),
   };
   return newReaction as Reaction<State>;
+}
+
+function flattenCrossSection(
+  cs: CrossSectionItem
+): CrossSectionSetRaw["processes"][0] {
+  // drop some keys from cs as they are not required for the set
+  // in which this cs will be placed in
+  const { isPartOf, organization, versionInfo, ...rest } = cs;
+  return {
+    ...rest,
+    reference: cs.reference.map((r) => getReferenceLabel(r)),
+    reaction: {
+      ...cs.reaction,
+      lhs: cs.reaction.lhs.map((e) => ({
+        count: e.count,
+        state: getStateId(e.state),
+      })),
+      rhs: cs.reaction.rhs.map((e) => ({
+        count: e.count,
+        state: getStateId(e.state),
+      })),
+    },
+  };
+}
+
+function getStateId(state: InState<any>): string {
+  const parsed = parse_state(state as InState<any>);
+  // TODO also calculate latex string
+  return parsed.id;
+}
+
+function getReferenceLabel(reference: CSL.Data): string {
+  const cite = new Cite(reference, {
+    forceType: "@csl/object",
+  });
+  const labels = cite.format("label");
+  if (typeof labels === "string") {
+    throw new Error("Unexpected type for citation label");
+  }
+  const label = Object.values(labels)[0];
+  return label;
 }
