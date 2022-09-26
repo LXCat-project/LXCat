@@ -5,5 +5,5 @@
 To retrieve metadata for all cross sections in JSON format use:
 
 ```shell
-curl http://localhost:3000/api/scat-cs
+curl http://localhost:3000/api/scat-css
 ```

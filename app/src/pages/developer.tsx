@@ -15,7 +15,7 @@ const DeveloperPage = () => {
       <div>
         <h2>API tokens</h2>
         <p>Some API endpoints require authentication.</p>
-        <p> Use `Authentication: Bearer &lt;token&gt;` as header in request.</p>
+        <p> Use `Authorization: Bearer &lt;token&gt;` as header in request.</p>
         <button onClick={generateToken}>Generate token</button>
         {token && (
           <div>
