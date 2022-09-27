@@ -32,6 +32,9 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
     if (res.ok) {
       setId(data.id);
     } else {
+      // TODO dont list errors under form, but each error should be near input field
+      // form uses `set.` prefix in path to field,
+      // so it should be prepended to data.errors[*].instancePath
       setErrors(data.errors);
     }
   }
@@ -41,7 +44,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
       <h1>Add scattering cross section set</h1>
       <AddForm onSubmit={onSubmit} organizations={organizations} />
       {errors.length > 0 && (
-        <div>
+        <div className="status">
           <span>Error(s) during upload</span>
           <ul>
             {errors.map((e, i) => (
@@ -54,7 +57,9 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
         </div>
       )}
       {id && (
-        <div>Update successful, a draft has been created with id is {id}</div>
+        <div className="status">
+          Adding successful, a draft has been created with id is {id}
+        </div>
       )}
       <Link href={`/author/scat-css`}>
         <a>Back</a>

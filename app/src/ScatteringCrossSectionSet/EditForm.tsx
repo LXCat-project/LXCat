@@ -1978,7 +1978,7 @@ export const EditForm = ({
 
   // States
   const [expandedStates, setExpandedStates] = useState<string[]>([]);
-  const states = useWatch({name:"set.states", control});
+  const states = useWatch({ name: "set.states", control });
   const setStates = (newStates: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>) =>
     setValue("set.states", newStates);
   const addState = () => {
@@ -2145,7 +2145,12 @@ export const EditForm = ({
               ))}
             </Accordion>
             <Button.Group>
-              <Button type="button" title="Add a state" aria-label="Add a state" onClick={addState}>
+              <Button
+                type="button"
+                title="Add a state"
+                aria-label="Add a state"
+                onClick={addState}
+              >
                 +
               </Button>
               <StatePickerModal onSubmit={addStates} />
@@ -2311,16 +2316,20 @@ function mapStateToReaction(
 ): Reaction<State> {
   const newReaction = {
     ...reaction,
-    lhs: reaction.lhs.filter(e => e.state !== '').map((e) => {
-      // TODO parse_state adds id and summary props, should not be needed here
-      const state = parse_state(states[e.state] as any);
-      return { count: e.count, state };
-    }),
-    rhs: reaction.rhs.filter(e => e.state !== '').map((e) => {
-      // TODO parse_state adds id and summary props, should not be needed here
-      const state = parse_state(states[e.state] as any);
-      return { count: e.count, state };
-    }),
+    lhs: reaction.lhs
+      .filter((e) => e.state !== "")
+      .map((e) => {
+        // TODO parse_state adds id and summary props, should not be needed here
+        const state = parse_state(states[e.state] as any);
+        return { count: e.count, state };
+      }),
+    rhs: reaction.rhs
+      .filter((e) => e.state !== "")
+      .map((e) => {
+        // TODO parse_state adds id and summary props, should not be needed here
+        const state = parse_state(states[e.state] as any);
+        return { count: e.count, state };
+      }),
   };
   return newReaction as Reaction<State>;
 }

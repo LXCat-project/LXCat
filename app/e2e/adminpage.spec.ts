@@ -68,27 +68,36 @@ test.describe("/author/scat-css/add", () => {
     await page.locator(`text=${name}`).click();
   }
 
+  async function fillAddSetForm(page: Page) {
+    await page.goto("/author/scat-css/add");
+    // General
+    await page.locator('input[name="set\\.name"]').fill("My name");
+    await page.locator('select[name="set\\.contributor"]').selectOption("MyOrg");
+    // States
+    await page.locator('button[role="tab"]:has-text("States")').click();
+    await page.locator('[aria-label="Add a state"]').click();
+    await page
+      .locator('input[name="set\\.states\\.s0\\.particle"]')
+      .fill("Ar");
+    await page.locator('input[name="set\\.states\\.s0\\.charge"]').fill("0");
+    // Processes
+    await page.locator('button[role="tab"]:has-text("Processes")').click();
+    await page.locator('[aria-label="Add process"]').click();
+    await page.locator('[aria-label="Add data row to process"]').click();
+    await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.0"]').fill('1.2');
+    await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.1"]').fill('3.4e-5');
+    await page.locator('[aria-label="Add consumed reaction entry"]').click();
+    await page.locator('select[name="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]').selectOption('s0');
+  }
+
   test.describe("given minimal set", () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeAll(async ({browser}) => {
+      const page = await browser.newPage()
       await addOrganization("MyOrg", page);
-      await page.goto("/author/scat-css/add");
-      // General
-      await page.locator('input[name="set\\.name"]').fill("My name");
-      // States
-      await page.locator('button[role="tab"]:has-text("States")').click();
-      await page.locator('[aria-label="Add a state"]').click();
-      await page
-        .locator('input[name="set\\.states\\.s0\\.particle"]')
-        .fill("Ar");
-      await page.locator('input[name="set\\.states\\.s0\\.charge"]').fill("0");
-      // Processes
-      await page.locator('button[role="tab"]:has-text("Processes")').click();
-      await page.locator('[aria-label="Add process"]').click();
-      await page.locator('[aria-label="Add data row to process"]').click();
-      await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.0"]').fill('1.2');
-      await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.1"]').fill('3.4e-5');
-      await page.locator('[aria-label="Add consumed reaction entry"]').click();
-      await page.locator('select[name="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]').selectOption('s0');
+    })
+
+    test.beforeEach(async ({ page }) => {
+      await fillAddSetForm(page)
     });
 
     test("should have json document", async ({ page }) => {
@@ -98,7 +107,7 @@ test.describe("/author/scat-css/add", () => {
         "name": "My name",
         "description": "",
         "complete": false,
-        "contributor": "", // TODO should be set to first org of user
+        "contributor": "MyOrg",
         "processes": [
           {
             "reaction": {
@@ -139,6 +148,10 @@ test.describe("/author/scat-css/add", () => {
       expect(JSON.parse(json)).toEqual(expected)
     });
 
+    test('after submit should have success message', async ({page}) => {
+      await page.locator('button:has-text("Submit")').click();
 
+      await expect(page.locator('.status')).toContainText('Adding successful')
+    })
   });
 });

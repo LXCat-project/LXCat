@@ -44,10 +44,10 @@ const handler = nc<AuthRequest, NextApiResponse>()
     }
   })
   .get(async (req, res) => {
-      const user = req.user;
-      const items = await listOwned(user.email);
-      res.json({ items });
-      return;
+    const user = req.user;
+    const items = await listOwned(user.email);
+    res.json({ items });
+    return;
   });
 
 export default handler;
