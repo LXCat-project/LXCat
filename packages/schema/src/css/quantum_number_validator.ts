@@ -37,8 +37,8 @@ export function get_errobj(
     instancePath: parent,
     schemaPath: "",
     params: { ...component, allowed },
-    message
-  }
+    message,
+  };
   return err;
 }
 
@@ -49,7 +49,7 @@ export function check_parity(
 ) {
   const config = component.config;
   function message(_config: any, _parity: number) {
-    const strobj = JSON.stringify(_config, null).replaceAll("\"", "");
+    const strobj = JSON.stringify(_config, null).replaceAll('"', "");
     return `term incosistent with config: for ${strobj}, parity should be ${_parity}`;
   }
 
@@ -72,7 +72,12 @@ export function check_parity(
     for (const [key, comp] of Object.entries(config)) {
       const __P = combine_parity(shell_parities(comp.config));
       if (comp.term.P != __P) {
-        let err = get_errobj(`${parent}/config/${key}`, component.config[key], { P: __P }, message(comp, __P));
+        let err = get_errobj(
+          `${parent}/config/${key}`,
+          component.config[key],
+          { P: __P },
+          message(comp, __P)
+        );
         errors.push(err);
         status = status && false;
       }
@@ -89,37 +94,68 @@ export function check_parity(
   }
 }
 
-function check_shell_config(parent: string, component: AtomLSImpl, term: LSTerm, errors: ErrorObject[]) {
+function check_shell_config(
+  parent: string,
+  component: AtomLSImpl,
+  term: LSTerm,
+  errors: ErrorObject[]
+) {
   const res0 = check_momenta_from_shell(component.config!, term.L, term.S);
   if (!res0.result) {
     let err: ErrorObject;
     if (Object.keys(res0.allowed).length === 0) {
-      err = get_errobj(parent, component, {}, `bad shell config: ${component.config}`);
+      err = get_errobj(
+        parent,
+        component,
+        {},
+        `bad shell config: ${component.config}`
+      );
     } else {
-      err = get_errobj(parent, component, res0.allowed, `term inconsistent with config: for ${component.config}, L should be one of ${res0.allowed.L}, and S=${res0.allowed.S}`);
+      err = get_errobj(
+        parent,
+        component,
+        res0.allowed,
+        `term inconsistent with config: for ${component.config}, L should be one of ${res0.allowed.L}, and S=${res0.allowed.S}`
+      );
     }
     errors.push(err);
   }
   return res0.result;
 }
 
-function check_term_J(parent: string, component: AtomLSImpl, term: LSTerm, errors: ErrorObject[]) {
+function check_term_J(
+  parent: string,
+  component: AtomLSImpl,
+  term: LSTerm,
+  errors: ErrorObject[]
+) {
   const res1 = check_momenta(term.L, term.S, term.J);
   if (!res1.result) {
-    let err: ErrorObject = get_errobj(parent, component, { J: res1.allowed }, `term inconsistent: for L=${term.L}, S=${term.S}, J should be one of ${res1.allowed}`);
+    let err: ErrorObject = get_errobj(
+      parent,
+      component,
+      { J: res1.allowed },
+      `term inconsistent: for L=${term.L}, S=${term.S}, J should be one of ${res1.allowed}`
+    );
     errors.push(err);
   }
   return res1.result;
 }
 
-export function check_LS(parent: string, component: AtomLSImpl, errors: ErrorObject[]): boolean {
+export function check_LS(
+  parent: string,
+  component: AtomLSImpl,
+  errors: ErrorObject[]
+): boolean {
   /* NOTE: assumes for LS coupling, config never has core & excited */
   const res0 = check_shell_config(parent, component, component.term!, errors);
   const res1 = check_term_J(parent, component, component.term!, errors);
   return res0 && res1;
 }
 
-function get_term_momenta(component: AtomLS1Impl | AtomJ1L2Impl): [number, number, number, number] {
+function get_term_momenta(
+  component: AtomLS1Impl | AtomJ1L2Impl
+): [number, number, number, number] {
   // NOTE: assumes config must have core and excited
   const [L1, L2] = Object.values(component.config).map(
     (val: any, _: any) => val.term.L
@@ -130,14 +166,37 @@ function get_term_momenta(component: AtomLS1Impl | AtomJ1L2Impl): [number, numbe
   return [L1, L2, S1, S2];
 }
 
-function check_shell_config_core_excited(parent: string, component: AtomLS1Impl | AtomJ1L2Impl, errors: ErrorObject[]): boolean {
-  const res_c = check_shell_config(`${parent}/config/core`, component.config.core, component.config.core.term, errors);
-  const res_J = check_term_J(`${parent}/config/core`, component.config.core, component.config.core.term!, errors)
-  const res_e = check_shell_config(`${parent}/config/excited`, component.config.excited, component.config.excited.term, errors);
+function check_shell_config_core_excited(
+  parent: string,
+  component: AtomLS1Impl | AtomJ1L2Impl,
+  errors: ErrorObject[]
+): boolean {
+  const res_c = check_shell_config(
+    `${parent}/config/core`,
+    component.config.core,
+    component.config.core.term,
+    errors
+  );
+  const res_J = check_term_J(
+    `${parent}/config/core`,
+    component.config.core,
+    component.config.core.term!,
+    errors
+  );
+  const res_e = check_shell_config(
+    `${parent}/config/excited`,
+    component.config.excited,
+    component.config.excited.term,
+    errors
+  );
   return res_c && res_J && res_e;
 }
 
-export function check_LS1(parent: string, component: AtomLS1Impl, errors: ErrorObject[]): boolean {
+export function check_LS1(
+  parent: string,
+  component: AtomLS1Impl,
+  errors: ErrorObject[]
+): boolean {
   const term = component.term!;
   const [L1, L2, S1, S2] = get_term_momenta(component);
 
@@ -145,25 +204,44 @@ export function check_LS1(parent: string, component: AtomLS1Impl, errors: ErrorO
 
   const res1 = check_momenta(L1, L2, term.L);
   if (!res1.result) {
-    let err = get_errobj(parent, component, { L: res1.allowed }, `term inconsistent with config: with L1=${L1}, L2=${L2}, L should be one of ${res1.allowed}`);
+    let err = get_errobj(
+      parent,
+      component,
+      { L: res1.allowed },
+      `term inconsistent with config: with L1=${L1}, L2=${L2}, L should be one of ${res1.allowed}`
+    );
     errors.push(err);
   }
 
   const res2 = check_momenta(term.L, S1, term.K);
   if (!res2.result) {
-    let err = get_errobj(parent, component, { K: res2.allowed }, `term inconsistent with config: with L=${term.L}, S1=${S1}, K should be one of ${res2.allowed}`);
+    let err = get_errobj(
+      parent,
+      component,
+      { K: res2.allowed },
+      `term inconsistent with config: with L=${term.L}, S1=${S1}, K should be one of ${res2.allowed}`
+    );
     errors.push(err);
   }
 
   const res3 = check_momenta(term.K, S2, term.J);
   if (!res3.result) {
-    let err = get_errobj(parent, component, { J: res3.allowed }, `term inconsistent: with K=${term.K}, S2=${S2}, J should be one of ${res3.allowed}`);
+    let err = get_errobj(
+      parent,
+      component,
+      { J: res3.allowed },
+      `term inconsistent: with K=${term.K}, S2=${S2}, J should be one of ${res3.allowed}`
+    );
     errors.push(err);
   }
   return res_shell && res1.result && res2.result && res3.result;
 }
 
-export function check_J1L2(parent: string, component: AtomJ1L2Impl, errors: ErrorObject[]): boolean {
+export function check_J1L2(
+  parent: string,
+  component: AtomJ1L2Impl,
+  errors: ErrorObject[]
+): boolean {
   const term = component.term!;
   const [L1, L2, S1, S2] = get_term_momenta(component);
   const J1 = component.config!.core.term.J!;
@@ -172,19 +250,34 @@ export function check_J1L2(parent: string, component: AtomJ1L2Impl, errors: Erro
 
   const res1 = check_momenta(L1, S1, J1);
   if (!res1.result) {
-    let err = get_errobj(`${parent}/config/core`, component.config.core, { J: res1.allowed }, `term inconsistent: with L1=${L1}, S1=${S1}, J1 should be one of ${res1.allowed}`);
+    let err = get_errobj(
+      `${parent}/config/core`,
+      component.config.core,
+      { J: res1.allowed },
+      `term inconsistent: with L1=${L1}, S1=${S1}, J1 should be one of ${res1.allowed}`
+    );
     errors.push(err);
   }
 
   const res2 = check_momenta(J1, L2, term.K);
   if (!res2.result) {
-    let err = get_errobj(parent, component, { K: res2.allowed }, `term inconsistent: with J1=${J1}, L2=${L2}, K should be one of ${res2.allowed}`);
+    let err = get_errobj(
+      parent,
+      component,
+      { K: res2.allowed },
+      `term inconsistent: with J1=${J1}, L2=${L2}, K should be one of ${res2.allowed}`
+    );
     errors.push(err);
   }
 
   const res3 = check_momenta(term.K, S2, term.J);
   if (!res3.result) {
-    let err = get_errobj(parent, component, { J: res3.allowed }, `term inconsistent: with K=${term.K}, S2=${S2}, J should be one of ${res3.allowed}`);
+    let err = get_errobj(
+      parent,
+      component,
+      { J: res3.allowed },
+      `term inconsistent: with K=${term.K}, S2=${S2}, J should be one of ${res3.allowed}`
+    );
     errors.push(err);
   }
   return res_shell && res1.result && res2.result && res3.result;
@@ -224,7 +317,8 @@ export function get_states(jsonobj: CrossSectionSetRaw) {
   // retain keys for error message later
   const atomTypes = new Set(["AtomLS", "AtomLS1", "AtomJ1L2"]);
   const states = Object.entries(jsonobj.states).filter(
-    (e): e is [string, InState<AnyAtom>] => e[1].type !== undefined && atomTypes.has(e[1].type)
+    (e): e is [string, InState<AnyAtom>] =>
+      e[1].type !== undefined && atomTypes.has(e[1].type)
   );
   return states;
 }
@@ -237,27 +331,44 @@ export function check_quantum_numbers(
   let status: boolean = true;
   switch (component.scheme) {
     case CouplingScheme.LS:
-      status = status && check_parity(parent, component, errors) && check_LS(parent, component, errors);
+      status =
+        status &&
+        check_parity(parent, component, errors) &&
+        check_LS(parent, component, errors);
       break;
     case CouplingScheme.LS1:
-      status = status && check_parity(parent, component, errors) && check_LS1(parent, component, errors);
+      status =
+        status &&
+        check_parity(parent, component, errors) &&
+        check_LS1(parent, component, errors);
       break;
     case CouplingScheme.J1L2:
-      status = status && check_parity(parent, component, errors) && check_J1L2(parent, component, errors);
+      status =
+        status &&
+        check_parity(parent, component, errors) &&
+        check_J1L2(parent, component, errors);
       break;
     // FIXME: uncomment, when the J1J2 coupling scheme is defined
     // case CouplingScheme.J1J2:
     //   status = status && check_parity(parent, component, errors) && check_J1J2(parent, component, errors);
     //   break;
     default:
-      let err = get_errobj(parent, component, {}, `unknown coupling scheme: ${component.scheme}`);
+      let err = get_errobj(
+        parent,
+        component,
+        {},
+        `unknown coupling scheme: ${component.scheme}`
+      );
       errors.push(err);
       status = false;
   }
   return status;
 }
 
-export function check_states(states: [string, InState<AnyAtom>][], errors: ErrorObject[]) {
+export function check_states(
+  states: [string, InState<AnyAtom>][],
+  errors: ErrorObject[]
+) {
   for (const [key, atom] of states) {
     const _type = atom["type"];
     if (!(_type && _type.startsWith("Atom"))) continue;

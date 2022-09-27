@@ -12,7 +12,10 @@ import { Dict } from "./common";
  *
  * @return {[number, number]} [maximum, minimum] angular momentum
  */
-export function momenta_max_min(orbital: number, spin: number): [number, number] {
+export function momenta_max_min(
+  orbital: number,
+  spin: number
+): [number, number] {
   return [orbital + spin, Math.abs(orbital - spin)];
 }
 
@@ -51,7 +54,10 @@ export function momenta(orbital: number, spin: number): number[] {
  * @return {number[]} Array of all possible values of angular momenta:
  *                    [max, max-1, max-2, ..., min]
  */
-export function momenta_couplings(els: number[], spin: number | number[]): number[] {
+export function momenta_couplings(
+  els: number[],
+  spin: number | number[]
+): number[] {
   let spins: number[];
   if (typeof spin === "number") {
     spins = [spin];
@@ -103,7 +109,10 @@ export function check_couplings(
  *
  * @return {[number, number]} Array of L & S
  */
-export function momenta_from_shell(orbital: number, occupance: number): [number, number] {
+export function momenta_from_shell(
+  orbital: number,
+  occupance: number
+): [number, number] {
   let L = 0;
   let S = 0;
   const els = Array(orbital * 2 + 1)
@@ -133,7 +142,7 @@ export function check_momenta_from_shell(
     if (entry.l >= entry.n || entry.occupance > 4 * entry.l + 2) {
       return {
         result: false,
-        allowed: {}
+        allowed: {},
       };
     }
     let _L: number;

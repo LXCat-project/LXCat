@@ -1,3 +1,3 @@
 export type Dict = {
-    [x: string]: string | number | number[] | Dict;
+  [x: string]: string | number | number[] | Dict;
 };

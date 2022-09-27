@@ -9,7 +9,12 @@ import { AnyAtom } from "../core/atoms";
 import { InState } from "../core/state";
 import { Dict } from "./common";
 import { get_states, get_errobj } from "./quantum_number_validator";
-import { check_parity, check_LS, check_LS1, check_J1L2 } from "./quantum_number_validator";
+import {
+  check_parity,
+  check_LS,
+  check_LS1,
+  check_J1L2,
+} from "./quantum_number_validator";
 import {
   check_quantum_numbers,
   check_states,
@@ -28,13 +33,17 @@ function readExample(fn: string) {
 }
 
 function not_empty(bad: Dict) {
-  return (Object.keys(bad).length !== 0);
+  return Object.keys(bad).length !== 0;
 }
 
 beforeAll(() => {
   const data_ok = readExample("src/css/data/Ar_C_P_Nobody_LXCat.json");
-  const data_parity_nok = readExample("src/css/data/Ar_C_P_Nobody_LXCat_bad_parity.json");
-  const data_momenta_nok = readExample("src/css/data/Ar_C_P_Nobody_LXCat_bad_momenta.json");
+  const data_parity_nok = readExample(
+    "src/css/data/Ar_C_P_Nobody_LXCat_bad_parity.json"
+  );
+  const data_momenta_nok = readExample(
+    "src/css/data/Ar_C_P_Nobody_LXCat_bad_momenta.json"
+  );
   inputs_ok = get_states(data_ok);
   inputs_parity_nok = get_states(data_parity_nok);
   inputs_momenta_nok = get_states(data_momenta_nok);
@@ -45,7 +54,11 @@ describe("validate parity data", () => {
     let errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        const status: boolean = check_parity(`${key}/electronic/${idx}`, comp, errors);
+        const status: boolean = check_parity(
+          `${key}/electronic/${idx}`,
+          comp,
+          errors
+        );
         expect(status).toEqual(true);
       }
     }
@@ -61,8 +74,15 @@ describe("validate parity data", () => {
     };
     for (const [key, atom] of inputs_parity_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        const status: boolean = check_parity(`${key}/electronic/${idx}`, comp, errors);
-        if (bad.hasOwnProperty(key) && bad[key].hasOwnProperty(idx.toString())) {
+        const status: boolean = check_parity(
+          `${key}/electronic/${idx}`,
+          comp,
+          errors
+        );
+        if (
+          bad.hasOwnProperty(key) &&
+          bad[key].hasOwnProperty(idx.toString())
+        ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
           expect(err.instancePath).toContain(`${key}/electronic/${idx}`);
@@ -132,7 +152,10 @@ describe("validate angular momenta", () => {
           default:
             status = false; // why am I here!?
         }
-        if (bad.hasOwnProperty(key) && bad[key].hasOwnProperty(idx.toString())) {
+        if (
+          bad.hasOwnProperty(key) &&
+          bad[key].hasOwnProperty(idx.toString())
+        ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
           expect(err.instancePath).toContain(`${key}/electronic/${idx}`);
@@ -154,7 +177,11 @@ describe("dispatchers", () => {
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
         let errors: ErrorObject[] = [];
-        const status = check_quantum_numbers(`${key}/electronic/${idx}`, comp, errors);
+        const status = check_quantum_numbers(
+          `${key}/electronic/${idx}`,
+          comp,
+          errors
+        );
         // console.log("Error: ", JSON.stringify(errors, null, 2));
         expect(errors).toHaveLength(0);
       }
@@ -170,15 +197,24 @@ describe("dispatchers", () => {
     let errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_parity_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        const status = check_quantum_numbers(`${key}/electronic/${idx}`, comp, errors);
-        if (bad.hasOwnProperty(key) && bad[key].hasOwnProperty(idx.toString())) {
+        const status = check_quantum_numbers(
+          `${key}/electronic/${idx}`,
+          comp,
+          errors
+        );
+        if (
+          bad.hasOwnProperty(key) &&
+          bad[key].hasOwnProperty(idx.toString())
+        ) {
           expect(status).toEqual(false);
         } else {
           expect(status).toEqual(true);
         }
       }
     }
-    expect(check_quantum_numbers("foo", { scheme: "not-defined" }, errors)).toEqual(false);
+    expect(
+      check_quantum_numbers("foo", { scheme: "not-defined" }, errors)
+    ).toEqual(false);
     expect(errors).toHaveLength(5);
   });
 
