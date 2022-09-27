@@ -168,7 +168,7 @@ describe("validate angular momenta", () => {
       }
     }
     // console.log("Error: ", JSON.stringify(errors, null, 2));
-    expect(errors.length).toEqual(7);
+    expect(errors.length).toEqual(6);
   });
 });
 

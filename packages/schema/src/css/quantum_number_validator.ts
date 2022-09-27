@@ -111,35 +111,17 @@ function check_shell_config(
         `bad shell config: ${component.config}`
       );
     } else {
+      const strobj = JSON.stringify(component.config, null).replaceAll('"', "");
       err = get_errobj(
         parent,
         component,
         res0.allowed,
-        `term inconsistent with config: for ${component.config}, L should be one of ${res0.allowed.L}, and S=${res0.allowed.S}`
+        `term inconsistent with config: for ${strobj}, L should be one of ${res0.allowed.L}, and S=${res0.allowed.S}`
       );
     }
     errors.push(err);
   }
   return res0.result;
-}
-
-function check_term_J(
-  parent: string,
-  component: AtomLSImpl,
-  term: LSTerm,
-  errors: ErrorObject[]
-) {
-  const res1 = check_momenta(term.L, term.S, term.J);
-  if (!res1.result) {
-    let err: ErrorObject = get_errobj(
-      parent,
-      component,
-      { J: res1.allowed },
-      `term inconsistent: for L=${term.L}, S=${term.S}, J should be one of ${res1.allowed}`
-    );
-    errors.push(err);
-  }
-  return res1.result;
 }
 
 export function check_LS(
@@ -149,8 +131,7 @@ export function check_LS(
 ): boolean {
   /* NOTE: assumes for LS coupling, config never has core & excited */
   const res0 = check_shell_config(parent, component, component.term!, errors);
-  const res1 = check_term_J(parent, component, component.term!, errors);
-  return res0 && res1;
+  return res0;
 }
 
 function get_term_momenta(
@@ -177,19 +158,13 @@ function check_shell_config_core_excited(
     component.config.core.term,
     errors
   );
-  const res_J = check_term_J(
-    `${parent}/config/core`,
-    component.config.core,
-    component.config.core.term!,
-    errors
-  );
   const res_e = check_shell_config(
     `${parent}/config/excited`,
     component.config.excited,
     component.config.excited.term,
     errors
   );
-  return res_c && res_J && res_e;
+  return res_c && res_e;
 }
 
 export function check_LS1(
