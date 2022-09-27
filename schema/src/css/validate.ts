@@ -17,6 +17,27 @@ class Validator {
     // particle state physics checks
     return result;
   }
+
+  validateLookups(data: CrossSectionSetRaw) {
+    const errors: ErrorObject[] = []
+    const remoteStateLabels = new Set(Object.keys(data.states))
+    data.processes.forEach((process, pid) => {
+      process.reaction.lhs.forEach((entry, eid) => {
+        if (!remoteStateLabels.has(entry.state)) {
+          errors.push({
+            keyword: 'lookup',
+            instancePath: `processes/${pid}/reaction/lhs/${eid}`,
+            params: {
+              state: entry.state
+            },
+            schemaPath: '',
+            message: `State with label ${entry.state} not found.`
+          })
+        }
+      })
+    })
+    return errors
+  }
 }
 
 export const validator = new Validator();
