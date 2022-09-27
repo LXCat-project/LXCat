@@ -160,8 +160,8 @@ describe("validate angular momenta", () => {
           expect(status).toEqual(false);
           expect(err.instancePath).toContain(`${key}/electronic/${idx}`);
           // expect(err.params.scheme).toEqual(comp.scheme);  // fails on multipart
-          // expect(err.params.allowed.P).toBeDefined();
-          // expect(err.message).toContain("parity");
+          // expect(err.params.allowed).toBeDefined();  // what's defined depends on the failed test
+          // expect(err.message).toContain("");  // message varies depends on failed test
         } else {
           expect(status).toEqual(true);
         }
