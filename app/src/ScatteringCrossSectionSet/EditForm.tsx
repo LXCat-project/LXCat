@@ -2037,6 +2037,21 @@ const ImportBibTeXDOIButton = ({
   );
 };
 
+const JSONTabPanel = ({ set }: { set: CrossSectionSetRaw }) => {
+  const [jsonString, setJsonString] = useState("");
+  useEffect(() => {
+    setJsonString(JSON.stringify(pruneSet(set), undefined, 2));
+  }, [set]);
+  // TODO add upload JSON button?
+  // TODO make JSON editable? Would replace raw edit/add pages
+  return (
+    <pre>
+      {/* TODO use code highlight with https://mantine.dev/others/prism/ */}
+      {jsonString}
+    </pre>
+  );
+};
+
 const schema4form = {
   type: "object",
   properties: {
@@ -2059,7 +2074,7 @@ interface Props {
 const myResolver = () => {
   const fn = ajvResolver(schema4form as any, { allowUnionTypes: true });
   return async (values: FieldValues, context: any, options: any) => {
-    const newValues = pruneSet(values);
+    const newValues = pruneFieldValues(values);
     return fn(newValues, context, options);
   };
 };
@@ -2091,7 +2106,7 @@ export const EditForm = ({
   } = methods;
 
   const onLocalSubmit = (data: FieldValues) => {
-    const pruned = pruneSet(data);
+    const pruned = pruneFieldValues(data);
     onSubmit(pruned.set, pruned.commitMessage);
   };
 
@@ -2345,11 +2360,7 @@ export const EditForm = ({
             <ErrorMessage errors={errors} name="set.processes" />
           </Tabs.Panel>
           <Tabs.Panel value="json">
-            {/* TODO add upload JSON button? */}
-            <pre>
-              {/* TODO use code highlight with https://mantine.dev/others/prism/ */}
-              {JSON.stringify(getValues("set"), undefined, 2)}
-            </pre>
+            {activeTab === "json" && <JSONTabPanel set={getValues("set")} />}
           </Tabs.Panel>
         </Tabs>
         <div>
@@ -2367,17 +2378,21 @@ export const EditForm = ({
   );
 };
 
-function pruneSet(values: FieldValues) {
+function pruneFieldValues(values: FieldValues) {
+  return { commitMessage: values.commitMessage, set: pruneSet(values.set) };
+}
+
+function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
   // TODO get rid of keys which have undefined value in recursive way
   // for now just set.states
-  const newValues = { ...values };
-  newValues.set.states = Object.fromEntries(
-    Object.entries(newValues.set.states).map(([k, v]) => {
+  const newSet = { ...set };
+  newSet.states = Object.fromEntries(
+    Object.entries(newSet.states).map(([k, v]) => {
       const newState = pruneState(v);
       return [k, newState];
     })
   );
-  return newValues;
+  return newSet;
 }
 
 function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
