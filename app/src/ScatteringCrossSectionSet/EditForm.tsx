@@ -14,7 +14,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -43,7 +43,7 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 import { Dialog } from "../shared/Dialog";
-import { Reference } from "../shared/Reference";
+import { Reference, ref2bibliography } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
@@ -417,6 +417,12 @@ const ProcessForm = ({
     "set.references",
     `set.processes.${index}.type`,
   ]);
+  const bibliopgraphies = useMemo(() => {
+    return Object.keys(references).map((r) => ({
+      label: ref2bibliography(references[r]),
+      value: r,
+    }))
+  }, [references])
   return (
     <div>
       <div>
@@ -432,10 +438,7 @@ const ProcessForm = ({
               onChange={onChange}
               onBlur={onBlur}
               value={value}
-              data={Object.keys(references).map((r) => ({
-                label: r,
-                value: r,
-              }))}
+              data={bibliopgraphies}
               error={errorMsg(errors, `set.processes.${index}.reference`)}
             />
           )}
@@ -2038,9 +2041,8 @@ const ImportBibTeXDOIButton = ({
 };
 
 const JSONTabPanel = ({ set }: { set: CrossSectionSetRaw }) => {
-  const [jsonString, setJsonString] = useState("");
-  useEffect(() => {
-    setJsonString(JSON.stringify(pruneSet(set), undefined, 2));
+  const jsonString = useMemo(() => {
+    return JSON.stringify(pruneSet(set), undefined, 2);
   }, [set]);
   // TODO add upload JSON button?
   // TODO make JSON editable? Would replace raw edit/add pages
@@ -2287,6 +2289,7 @@ export const EditForm = ({
               >
                 +
               </Button>
+              {/* TODO exclude states from picker already present on this form */}
               <StatePickerModal onSubmit={addStates} />
             </Button.Group>
             <ErrorMessage errors={errors} name="set.states" />
@@ -2355,6 +2358,7 @@ export const EditForm = ({
               >
                 +
               </Button>
+              {/* TODO exclude processes from picker already present on this form */}
               <CrossSectionPickerModal onSubmit={addProcesses} />
             </Button.Group>
             <ErrorMessage errors={errors} name="set.processes" />
