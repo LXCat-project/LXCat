@@ -276,7 +276,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
   );
 };
 
-const CSDataUploadButton = ({
+const CSDataJSONUploadButton = ({
   onSubmit,
 }: {
   onSubmit: (newData: Pair<number>[]) => void;
@@ -293,8 +293,40 @@ const CSDataUploadButton = ({
   return (
     <FileButton accept="application/json,.json" onChange={mungeBlob}>
       {(props) => (
-        <Button variant="light" {...props}>
-          Upload JSON like `[[1,2]]`e
+        <Button title="For example `[[1,2]]`" variant="light" {...props}>
+          Upload JSON
+        </Button>
+      )}
+    </FileButton>
+  );
+};
+
+const CSDataCsvUploadButton = ({
+  onSubmit,
+}: {
+  onSubmit: (newData: Pair<number>[]) => void;
+}) => {
+  async function mungeBlob(file: File | null): Promise<void> {
+    if (file === null) {
+      return;
+    }
+    const body = await file.text();
+    const newData = body.split(/\r?\n/).map((r): Pair<number> => {
+      const cols = r.split(",").map(Number);
+      return [cols[0], cols[1]];
+    });
+    onSubmit(newData);
+  }
+
+  return (
+    <FileButton accept="text/csv,.csv,text/plain,.txt" onChange={mungeBlob}>
+      {(props) => (
+        <Button
+          title="For example `1,2\n3,4.5e-6\n`"
+          variant="light"
+          {...props}
+        >
+          Upload CSV
         </Button>
       )}
     </FileButton>
@@ -393,9 +425,14 @@ const LUTForm = ({ index }: { index: number }) => {
         </tbody>
       </table>
       <ErrorMessage errors={errors} name={`set.processes.${index}.data`} />
-      <div>
-        <CSDataUploadButton onSubmit={(newData) => dataRows.replace(newData)} />
-      </div>
+      <Button.Group>
+        <CSDataJSONUploadButton
+          onSubmit={(newData) => dataRows.replace(newData)}
+        />
+        <CSDataCsvUploadButton
+          onSubmit={(newData) => dataRows.replace(newData)}
+        />
+      </Button.Group>
     </div>
   );
 };
@@ -517,12 +554,12 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
   );
 };
 
-const initialSimpleElectronic = () => ({e: ""})
+const initialSimpleElectronic = () => ({ e: "" });
 const initialAtomLSElectronic = () => ({
-    scheme: "LS",
-    config: [],
-    term: { L: 0, S: 0, P: 1, J: 0 },
-})
+  scheme: "LS",
+  config: [],
+  term: { L: 0, S: 0, P: 1, J: 0 },
+});
 
 const AtomLSElectronicForm = ({
   label,
@@ -551,9 +588,15 @@ const AtomLSElectronicForm = ({
               onChange={(v) => {
                 onChange(v);
                 if (v === "LS") {
-                  setValue(`set.states.${label}.electronic.${eindex}`, initialAtomLSElectronic());
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialAtomLSElectronic()
+                  );
                 } else {
-                  setValue(`set.states.${label}.electronic.${eindex}`, initialSimpleElectronic());
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialSimpleElectronic()
+                  );
                 }
               }}
               onBlur={onBlur}
@@ -1060,9 +1103,15 @@ const AtomLS1FormElectronicForm = ({
               onChange={(v) => {
                 onChange(v);
                 if (v === "LS1") {
-                  setValue(`set.states.${label}.electronic.${eindex}`, initialValue4AtomLS1());
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialValue4AtomLS1()
+                  );
                 } else {
-                  setValue(`set.states.${label}.electronic.${eindex}`, initialSimpleElectronic());
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialSimpleElectronic()
+                  );
                 }
               }}
               value={value}
@@ -1294,16 +1343,152 @@ const LinearTriatomVibrationalFieldItem = ({
   eindex: number;
   vindex: number;
 }) => {
+  const { watch } = useFormContext();
+  const v = watch(
+    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`
+  );
+  const initialScheme = typeof v === "string" ? "simple" : "detailed";
+  const [scheme, setScheme] = useState<IScheme>(initialScheme);
+  return (
+    <div>
+      <Radio.Group
+        label="Scheme"
+        value={scheme}
+        // TODO when switching should clear child values
+        onChange={(v: IScheme) => setScheme(v)}
+      >
+        <Radio value="simple" label="Simple" />
+        <Radio value="detailed" label="Detailed" />
+      </Radio.Group>
+      {scheme === "simple" ? (
+        <LinearTriatomVibrationalSimpleFieldItem
+          label={label}
+          eindex={eindex}
+          vindex={vindex}
+        />
+      ) : (
+        <LinearTriatomVibrationalDetailedFieldItem
+          label={label}
+          eindex={eindex}
+          vindex={vindex}
+        />
+      )}
+    </div>
+  );
+};
+
+const LinearTriatomVibrationalSimpleFieldItem = ({
+  label,
+  eindex,
+  vindex,
+}: {
+  label: string;
+  eindex: number;
+  vindex: number;
+}) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
+  return (
+    <>
+      <label>v</label>
+      <div>
+        <TextInput
+          title="v"
+          style={{ width: "4rem" }}
+          error={errorMsg(
+            errors,
+            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+          )}
+          {...register(
+            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+          )}
+        />
+      </div>
+    </>
+  );
+};
+
+const LinearTriatomRotationalArray = ({
+  label,
+  eindex,
+  vindex,
+}: {
+  label: string;
+  eindex: number;
+  vindex: number;
+}) => {
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const array = useFieldArray({
+    control,
+    name: `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
+  });
+  return (
+    <fieldset>
+      <legend>Rotational</legend>
+      <ol>
+        {array.fields.map((field, index) => (
+          <ArrayItem
+            removeTitle="Remove rotational part"
+            key={index}
+            onRemove={() => array.remove(index)}
+          >
+            <TextInput
+              label="J"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+              )}
+              {...register(
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                // TODO J is always string, while it should also be able to be a number
+                // should add 'simple' | 'detailed' aka 'string' | 'number' radio group
+              )}
+            />
+          </ArrayItem>
+        ))}
+        <Button
+          type="button"
+          title="Add rotational"
+          onClick={() => array.append({ J: 0 })}
+        >
+          +
+        </Button>
+      </ol>
+
+      <ErrorMessage
+        errors={errors}
+        name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`}
+      />
+    </fieldset>
+  );
+};
+
+const LinearTriatomVibrationalDetailedFieldItem = ({
+  label,
+  eindex,
+  vindex,
+}: {
+  label: string;
+  eindex: number;
+  vindex: number;
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
   return (
     <>
       <label>v</label>
       <Group>
         <div>
-          {/* // TODO in example data sets array could also be `n,0,0` string */}
           <TextInput
             title="v0"
             style={{ width: "4rem" }}
@@ -1353,6 +1538,11 @@ const LinearTriatomVibrationalFieldItem = ({
           />
         </div>
       </Group>
+      <LinearTriatomRotationalArray
+        label={label}
+        eindex={eindex}
+        vindex={vindex}
+      />
     </>
   );
 };
@@ -1373,7 +1563,7 @@ const LinearTriatomVibrationalField = ({
         <LinearTriatomVibrationalFieldItem
           key={vindex}
           label={label}
-          eindex={0}
+          eindex={eindex}
           vindex={vindex}
         />
       )}
@@ -1659,6 +1849,7 @@ const SimpleVibrational = ({
   const v = watch(
     `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
+  // if detailed v would be an array
   const initialScheme = typeof v === "string" ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
   return (
@@ -1864,20 +2055,21 @@ const StateForm = ({
                   <Radio.Group
                     label="Type"
                     onBlur={onBlur}
-                    onChange={
-                      (v) => {
-                        if (v === '') {
-                          onChange('')
-                          const {particle, charge} = getValues(`set.states.${label}`)
-                          setValue(`set.states.${label}`, {
-                            particle, charge
-                          })
-                        } else {
-                          onChange(v)
-                          setValue(`set.states.${label}.electronic`, [])
-                        }
+                    onChange={(v) => {
+                      onChange(v);
+                      if (v === "") {
+                        // unset .type and .electronic
+                        const { particle, charge } = getValues(
+                          `set.states.${label}`
+                        );
+                        setValue(`set.states.${label}`, {
+                          particle,
+                          charge,
+                        });
+                      } else {
+                        setValue(`set.states.${label}.electronic`, []);
                       }
-                    }
+                    }}
                     value={value === undefined ? "" : value}
                     error={errorMsg(errors, `set.states.${label}.type`)}
                   >
@@ -2242,9 +2434,9 @@ export const EditForm = ({
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onLocalSubmit, (err) => {
+          // TODO report error back to user
           console.error(err);
           console.info(getValues("set"));
-          console.info(JSON.stringify(getValues("set")));
         })}
       >
         <Tabs
@@ -2410,8 +2602,6 @@ export const EditForm = ({
     </FormProvider>
   );
 };
-
-
 
 function pruneFieldValues(values: FieldValues) {
   return { commitMessage: values.commitMessage, set: pruneSet(values.set) };

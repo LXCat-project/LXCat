@@ -64,9 +64,7 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
         onSubmit={onSubmit}
         organizations={organizations}
       />
-      {errors.length > 0 && (
-        <ErrorList errors={errors}/>
-      )}
+      {errors.length > 0 && <ErrorList errors={errors} />}
       {id && id === set._key && (
         <div>Update successful, a draft has been created with id is {id}</div>
       )}

@@ -44,9 +44,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
     <Layout>
       <h1>Add scattering cross section set</h1>
       <AddForm onSubmit={onSubmit} organizations={organizations} />
-      {errors.length > 0 && (
-        <ErrorList errors={errors}/>
-      )}
+      {errors.length > 0 && <ErrorList errors={errors} />}
       {id && (
         <div className="status">
           Adding successful, a draft has been created with id is {id}
