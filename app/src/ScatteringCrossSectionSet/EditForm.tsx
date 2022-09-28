@@ -43,7 +43,7 @@ import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { parse_state } from "@lxcat/schema/dist/core/parse";
 
 import { Dialog } from "../shared/Dialog";
-import { Reference, ref2bibliography } from "../shared/Reference";
+import { Reference } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
@@ -51,8 +51,8 @@ import { StatePickerModal } from "./StatePickeModal";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
 import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
-import { CSL } from "@lxcat/schema/dist/core/csl";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { getReferenceLabel, reference2bibliography } from "../shared/cite";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -419,7 +419,7 @@ const ProcessForm = ({
   ]);
   const bibliopgraphies = useMemo(() => {
     return Object.keys(references).map((r) => ({
-      label: ref2bibliography(references[r]),
+      label: reference2bibliography(references[r]),
       value: r,
     }))
   }, [references])
@@ -1933,14 +1933,7 @@ const ImportDOIButton = ({
       });
       const ref = refs[0];
       // TODO handle fetch/parse errors
-      const cite = new Cite(ref, {
-        forceType: "@csl/object",
-      });
-      const labels = cite.format("label");
-      if (typeof labels === "string") {
-        return;
-      }
-      const label = Object.values(labels)[0];
+      const label = getReferenceLabel(ref)
       onAdd(label, ref);
     }
     setOpen(false);
@@ -2499,16 +2492,4 @@ function getStateId(state: InState<any>): string {
   const parsed = parse_state(state as InState<any>);
   // TODO also calculate latex string
   return parsed.id;
-}
-
-function getReferenceLabel(reference: CSL.Data): string {
-  const cite = new Cite(reference, {
-    forceType: "@csl/object",
-  });
-  const labels = cite.format("label");
-  if (typeof labels === "string") {
-    throw new Error("Unexpected type for citation label");
-  }
-  const label = Object.values(labels)[0];
-  return label;
 }
