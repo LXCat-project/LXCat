@@ -80,7 +80,7 @@ describe("validate()", () => {
 });
 
 describe("validate() w/ examples", () => {
-  test("no errors", () => {
+  test.only("no errors", () => {
     if (validator.validate(data_ok)) {
       validator.validate_quantum_numbers(data_ok);
     }

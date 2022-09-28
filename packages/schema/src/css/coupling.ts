@@ -145,9 +145,7 @@ export function check_momenta_from_shell(
         allowed: {},
       };
     }
-    let _L: number;
-    let _S: number;
-    [_L, _S] = momenta_from_shell(entry.l, entry.occupance);
+    const [_L, _S] = momenta_from_shell(entry.l, entry.occupance);
     S += _S;
     L += _L;
   }

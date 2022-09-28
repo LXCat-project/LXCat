@@ -10,7 +10,7 @@ import { Dict } from "./common";
 import { shell_parities, combine_parity } from "./parity";
 import { AtomLS1Impl } from "../core/atoms/ls1";
 import { AtomJ1L2Impl } from "../core/atoms/j1l2";
-import { AtomLSImpl, LSTerm, LSTermImpl } from "../core/atoms/ls";
+import { AtomLSImpl, LSTermImpl } from "../core/atoms/ls";
 
 export function get_errobj(
   parent: string,
@@ -34,7 +34,7 @@ export function check_parity(
   errors: ErrorObject[]
 ) {
   const config = component.config;
-  function message(_config: any, _parity: number) {
+  function message(_config, _parity: number) {
     const strobj = JSON.stringify(_config, null).replaceAll('"', "");
     return `term incosistent with config: for ${strobj}, parity should be ${_parity}`;
   }
@@ -45,7 +45,7 @@ export function check_parity(
 
     const _P: number = combine_parity(shell_parities(config));
     if (component.term.P != _P) {
-      let err = get_errobj(parent, component, { P: _P }, message(config, _P));
+      const err = get_errobj(parent, component, { P: _P }, message(config, _P));
       errors.push(err);
       return false;
     }
@@ -58,9 +58,9 @@ export function check_parity(
     for (const [key, comp] of Object.entries(config)) {
       const __P = combine_parity(shell_parities(comp.config));
       if (comp.term.P != __P) {
-        let err = get_errobj(
+        const err = get_errobj(
           `${parent}/config/${key}`,
-          component.config[key],
+          comp,
           { P: __P },
           message(comp, __P)
         );
@@ -72,7 +72,7 @@ export function check_parity(
 
     const _P: number = combine_parity(_Ps);
     if (component.term.P != _P) {
-      let err = get_errobj(parent, component, { P: _P }, message(config, _P));
+      const err = get_errobj(parent, component, { P: _P }, message(config, _P));
       errors.push(err);
       status = status && false;
     }
@@ -83,7 +83,7 @@ export function check_parity(
 function check_shell_config(
   parent: string,
   component: AtomLSImpl,
-  term: LSTerm,
+  term: LSTermImpl,
   errors: ErrorObject[]
 ) {
   const res0 = check_momenta_from_shell(component.config!, term.L, term.S);
@@ -125,10 +125,10 @@ function get_term_momenta(
 ): [number, number, number, number] {
   // NOTE: assumes config must have core and excited
   const [L1, L2] = Object.values(component.config).map(
-    (val: any, _: any) => val.term.L
+    (val) => val.term.L
   );
   const [S1, S2] = Object.values(component.config).map(
-    (val: any, _: any) => val.term.S
+    (val) => val.term.S
   );
   return [L1, L2, S1, S2];
 }
@@ -165,7 +165,7 @@ export function check_LS1(
 
   const res1 = check_momenta(L1, L2, term.L);
   if (!res1.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       parent,
       component,
       { L: res1.allowed },
@@ -176,7 +176,7 @@ export function check_LS1(
 
   const res2 = check_momenta(term.L, S1, term.K);
   if (!res2.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       parent,
       component,
       { K: res2.allowed },
@@ -187,7 +187,7 @@ export function check_LS1(
 
   const res3 = check_momenta(term.K, S2, term.J);
   if (!res3.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       parent,
       component,
       { J: res3.allowed },
@@ -211,7 +211,7 @@ export function check_J1L2(
 
   const res1 = check_momenta(L1, S1, J1);
   if (!res1.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       `${parent}/config/core`,
       component.config.core,
       { J: res1.allowed },
@@ -222,7 +222,7 @@ export function check_J1L2(
 
   const res2 = check_momenta(J1, L2, term.K);
   if (!res2.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       parent,
       component,
       { K: res2.allowed },
@@ -233,7 +233,7 @@ export function check_J1L2(
 
   const res3 = check_momenta(term.K, S2, term.J);
   if (!res3.result) {
-    let err = get_errobj(
+    const err = get_errobj(
       parent,
       component,
       { J: res3.allowed },
@@ -289,7 +289,7 @@ export function check_quantum_numbers(
   component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ) {
-  let status: boolean = true;
+  let status = true;
   switch (component.scheme) {
     case CouplingScheme.LS:
       status =
@@ -313,8 +313,8 @@ export function check_quantum_numbers(
     // case CouplingScheme.J1J2:
     //   status = status && check_parity(parent, component, errors) && check_J1J2(parent, component, errors);
     //   break;
-    default:
-      let err = get_errobj(
+    default: {
+      const err = get_errobj(
         parent,
         component,
         {},
@@ -322,6 +322,7 @@ export function check_quantum_numbers(
       );
       errors.push(err);
       status = false;
+    }
   }
   return status;
 }

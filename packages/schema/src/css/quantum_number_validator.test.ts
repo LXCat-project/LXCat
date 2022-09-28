@@ -8,12 +8,12 @@ import { CouplingScheme } from "../core/atoms/coupling_scheme";
 import { AnyAtom } from "../core/atoms";
 import { InState } from "../core/state";
 import { Dict } from "./common";
-import { get_states, get_errobj } from "./quantum_number_validator";
 import {
   check_parity,
   check_LS,
   check_LS1,
   check_J1L2,
+  get_states
 } from "./quantum_number_validator";
 import {
   check_quantum_numbers,
@@ -47,7 +47,7 @@ beforeAll(() => {
 
 describe("validate parity data", () => {
   test("core & excited", () => {
-    let errors: ErrorObject[] = [];
+    const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
         const status: boolean = check_parity(
@@ -62,7 +62,7 @@ describe("validate parity data", () => {
   });
 
   test("core & excited w/ errors", () => {
-    let errors: ErrorObject[] = [];
+    const errors: ErrorObject[] = [];
     const bad: Dict = {
       second: { 0: "excited" },
       third: { 1: "core" },
@@ -76,8 +76,8 @@ describe("validate parity data", () => {
           errors
         );
         if (
-          bad.hasOwnProperty(key) &&
-          bad[key].hasOwnProperty(idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key) &&
+          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
@@ -99,11 +99,11 @@ describe("validate parity data", () => {
 describe("validate angular momenta", () => {
   test("coupling - LS, LS1, J1L2", () => {
     // FIXME: add LS1 example
-    let errors: ErrorObject[] = [];
+    const errors: ErrorObject[] = [];
     let status: boolean;
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        let parent: string = `${key}/electronic/${idx}`;
+        const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
             status = check_LS(parent, comp, errors);
@@ -125,7 +125,7 @@ describe("validate angular momenta", () => {
   });
 
   test("coupling - shell, LS, J1L2 w/ error", () => {
-    let errors: ErrorObject[] = [];
+    const errors: ErrorObject[] = [];
     const bad: Dict = {
       second: { 0: "core" },
       third: { 0: "J", 1: "K" },
@@ -134,7 +134,7 @@ describe("validate angular momenta", () => {
     let status: boolean;
     for (const [key, atom] of inputs_momenta_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        let parent: string = `${key}/electronic/${idx}`;
+        const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
             status = check_LS(parent, comp, errors);
@@ -149,8 +149,8 @@ describe("validate angular momenta", () => {
             status = false; // why am I here!?
         }
         if (
-          bad.hasOwnProperty(key) &&
-          bad[key].hasOwnProperty(idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key) &&
+          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
@@ -172,13 +172,14 @@ describe("dispatchers", () => {
   test("component w/ no errors", () => {
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
-        let errors: ErrorObject[] = [];
+        const errors: ErrorObject[] = [];
         const status = check_quantum_numbers(
           `${key}/electronic/${idx}`,
           comp,
           errors
         );
         // console.log("Error: ", JSON.stringify(errors, null, 2));
+        expect(status).toEqual(true);
         expect(errors).toHaveLength(0);
       }
     }
@@ -190,7 +191,7 @@ describe("dispatchers", () => {
       third: { 1: "core" },
       carbon: { 0: "P" },
     };
-    let errors: ErrorObject[] = [];
+    const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_parity_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
         const status = check_quantum_numbers(
@@ -199,8 +200,8 @@ describe("dispatchers", () => {
           errors
         );
         if (
-          bad.hasOwnProperty(key) &&
-          bad[key].hasOwnProperty(idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key) &&
+          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           expect(status).toEqual(false);
         } else {
