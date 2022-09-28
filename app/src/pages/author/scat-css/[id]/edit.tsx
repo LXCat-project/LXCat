@@ -14,6 +14,7 @@ import {
   OrganizationFromDB,
   userMemberships,
 } from "@lxcat/database/dist/auth/queries";
+import { ErrorList } from "../../../../shared/ErrorList";
 
 interface Props {
   set: CrossSectionSetInputOwned;
@@ -64,17 +65,7 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
         organizations={organizations}
       />
       {errors.length > 0 && (
-        <div>
-          <span>Error(s) during upload</span>
-          <ul>
-            {errors.map((e, i) => (
-              <li key={i}>
-                {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
-                {e.instancePath && `@ ${e.instancePath}`}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ErrorList errors={errors}/>
       )}
       {id && id === set._key && (
         <div>Update successful, a draft has been created with id is {id}</div>

@@ -10,6 +10,7 @@ import {
   userMemberships,
 } from "@lxcat/database/dist/auth/queries";
 import { AddForm } from "../../../ScatteringCrossSectionSet/AddForm";
+import { ErrorList } from "../../../shared/ErrorList";
 
 interface Props {
   organizations: OrganizationFromDB[];
@@ -44,17 +45,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
       <h1>Add scattering cross section set</h1>
       <AddForm onSubmit={onSubmit} organizations={organizations} />
       {errors.length > 0 && (
-        <div className="status">
-          <span>Error(s) during upload</span>
-          <ul>
-            {errors.map((e, i) => (
-              <li key={i}>
-                {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
-                {e.instancePath && `@ ${e.instancePath}`}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ErrorList errors={errors}/>
       )}
       {id && (
         <div className="status">

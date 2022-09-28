@@ -32,7 +32,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
             res.json({
               errors: [
                 {
-                  keyword: "",
+                  keyword: "server",
                   dataPath: "",
                   schemaPath: "",
                   params: {},
