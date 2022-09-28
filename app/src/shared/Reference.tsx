@@ -6,7 +6,7 @@ import { reference2bibliography } from "./cite";
 
 export const Reference = (r: ReferenceRecord) => {
   const bibliography = useMemo(() => {
-    return reference2bibliography(r)
+    return reference2bibliography(r);
   }, [r]);
   return (
     <cite>

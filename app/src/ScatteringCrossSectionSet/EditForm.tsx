@@ -421,8 +421,8 @@ const ProcessForm = ({
     return Object.keys(references).map((r) => ({
       label: reference2bibliography(references[r]),
       value: r,
-    }))
-  }, [references])
+    }));
+  }, [references]);
   return (
     <div>
       <div>
@@ -458,7 +458,7 @@ const ProcessForm = ({
       <ReactionForm index={index} />
       <div>
         <h4>Parameters</h4>
-        <div>
+        <Group>
           <TextInput
             label="Mass ratio"
             error={errorMsg(
@@ -469,8 +469,6 @@ const ProcessForm = ({
               setValueAs: (v) => (v ? Number(v) : undefined),
             })}
           />
-        </div>
-        <div>
           <TextInput
             label="Statistical weight ratio"
             error={errorMsg(
@@ -484,7 +482,7 @@ const ProcessForm = ({
               }
             )}
           />
-        </div>
+        </Group>
       </div>
       <Button type="button" title="Remove" onClick={onRemove}>
         &minus;
@@ -1933,7 +1931,7 @@ const ImportDOIButton = ({
       });
       const ref = refs[0];
       // TODO handle fetch/parse errors
-      const label = getReferenceLabel(ref)
+      const label = getReferenceLabel(ref);
       onAdd(label, ref);
     }
     setOpen(false);
@@ -1958,10 +1956,12 @@ const ImportDOIButton = ({
               // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
             />
           </div>
-          <Button value="cancel">Cancel</Button>
-          <Button value="default" type="submit">
-            Import
-          </Button>
+          <Button.Group>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button value="default" type="submit">
+              Import
+            </Button>
+          </Button.Group>
         </form>
       </Dialog>
     </div>
@@ -2023,10 +2023,12 @@ const ImportBibTeXDOIButton = ({
             />
           </div>
           {/* TODO cancel does not work */}
-          <Button value="cancel">Cancel</Button>
-          <Button value="default" type="submit">
-            Import
-          </Button>
+          <Button.Group>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button value="default" type="submit">
+              Import
+            </Button>
+          </Button.Group>
         </form>
       </Dialog>
     </div>
