@@ -517,6 +517,13 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
   );
 };
 
+const initialSimpleElectronic = () => ({e: ""})
+const initialAtomLSElectronic = () => ({
+    scheme: "LS",
+    config: [],
+    term: { L: 0, S: 0, P: 1, J: 0 },
+})
+
 const AtomLSElectronicForm = ({
   label,
   eindex,
@@ -529,6 +536,7 @@ const AtomLSElectronicForm = ({
     watch,
     control,
     formState: { errors },
+    setValue,
   } = useFormContext();
   const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
   return (
@@ -540,9 +548,14 @@ const AtomLSElectronicForm = ({
           render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               label="Scheme"
-              // TODO drop scheme key when simple scheme is selected
-              // now removed in form resolver, but is not nice
-              onChange={onChange}
+              onChange={(v) => {
+                onChange(v);
+                if (v === "LS") {
+                  setValue(`set.states.${label}.electronic.${eindex}`, initialAtomLSElectronic());
+                } else {
+                  setValue(`set.states.${label}.electronic.${eindex}`, initialSimpleElectronic());
+                }
+              }}
               onBlur={onBlur}
               value={value}
               error={errorMsg(
@@ -658,7 +671,7 @@ const AtomLSForm = ({ label }: { label: string }) => {
   return (
     <ElectronicArray
       label={label}
-      initialValue={{ e: "" }}
+      initialValue={initialSimpleElectronic()}
       item={(label, eindex) => (
         <AtomLSElectronicForm label={label} eindex={eindex} />
       )}
@@ -1030,6 +1043,7 @@ const AtomLS1FormElectronicForm = ({
     register,
     watch,
     control,
+    setValue,
     formState: { errors },
   } = useFormContext();
   const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
@@ -1043,9 +1057,14 @@ const AtomLS1FormElectronicForm = ({
             <Radio.Group
               label="Scheme"
               onBlur={onBlur}
-              // TODO drop scheme key when simple scheme is selected
-              // now deleted in form resolver
-              onChange={(v) => (v === "" ? onChange(null) : onChange(v))}
+              onChange={(v) => {
+                onChange(v);
+                if (v === "LS1") {
+                  setValue(`set.states.${label}.electronic.${eindex}`, initialValue4AtomLS1());
+                } else {
+                  setValue(`set.states.${label}.electronic.${eindex}`, initialSimpleElectronic());
+                }
+              }}
               value={value}
               error={errorMsg(
                 errors,
@@ -1814,6 +1833,8 @@ const StateForm = ({
 }) => {
   const {
     control,
+    setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
   const [id, setId] = useState("");
@@ -1844,9 +1865,18 @@ const StateForm = ({
                     label="Type"
                     onBlur={onBlur}
                     onChange={
-                      (v) => (v === "" ? onChange(undefined) : onChange(v))
-                      // TODO to prevent lingering fields,
-                      // switching type should clear electronic value
+                      (v) => {
+                        if (v === '') {
+                          onChange('')
+                          const {particle, charge} = getValues(`set.states.${label}`)
+                          setValue(`set.states.${label}`, {
+                            particle, charge
+                          })
+                        } else {
+                          onChange(v)
+                          setValue(`set.states.${label}.electronic`, [])
+                        }
+                      }
                     }
                     value={value === undefined ? "" : value}
                     error={errorMsg(errors, `set.states.${label}.type`)}
@@ -2286,6 +2316,8 @@ export const EditForm = ({
               </Button>
               {/* TODO exclude states from picker already present on this form */}
               <StatePickerModal onSubmit={addStates} />
+              {/* TODO add button to clone a state? */}
+              {/* TODO add buttons to collapse or expand all accordion items? */}
             </Button.Group>
             <ErrorMessage errors={errors} name="set.states" />
           </Tabs.Panel>
@@ -2301,10 +2333,10 @@ export const EditForm = ({
                     />
                   ))}
                 </ul>
-                <div style={{ display: "flex" }}>
+                <Button.Group>
                   <ImportDOIButton onAdd={addReference} />
                   <ImportBibTeXDOIButton onAdd={addReferences} />
-                </div>
+                </Button.Group>
                 <ErrorMessage errors={errors} name="set.references" />
               </>
             )}
@@ -2355,6 +2387,8 @@ export const EditForm = ({
               </Button>
               {/* TODO exclude processes from picker already present on this form */}
               <CrossSectionPickerModal onSubmit={addProcesses} />
+              {/* TODO add button to clone a process? */}
+              {/* TODO add buttons to collapse or expand all accordion items? */}
             </Button.Group>
             <ErrorMessage errors={errors} name="set.processes" />
           </Tabs.Panel>
@@ -2376,6 +2410,8 @@ export const EditForm = ({
     </FormProvider>
   );
 };
+
+
 
 function pruneFieldValues(values: FieldValues) {
   return { commitMessage: values.commitMessage, set: pruneSet(values.set) };
