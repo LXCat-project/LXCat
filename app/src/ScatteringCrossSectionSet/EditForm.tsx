@@ -14,7 +14,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -128,7 +128,7 @@ const ReactionEntryForm = ({
         label="State"
         data={Object.entries(states).map(([value, s]) => {
           // TODO render latex instead of id
-          const label = s.id === undefined ? value : s.id;
+          const label = s.id === undefined ? getStateId(s) : s.id;
           return { value, label };
         })}
         error={errorMsg(
@@ -563,87 +563,93 @@ const AtomLSElectronicForm = ({
               errors,
               `set.states.${label}.electronic.${eindex}.e`
             )}
-            {...register(`set.states.${label}.electronic.${eindex}.e`, {
+            {...register(`set.states.${label}.electronic.${eindex}.e`)}
+          />
+        </div>
+      ) : (
+        <AtomLSElectronicDetailedForm label={label} eindex={eindex} />
+      )}
+    </>
+  );
+};
+
+const AtomLSElectronicDetailedForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <div>
+      <h5>Config</h5>
+      <AtomLSConfigArray label={label} eindex={eindex} side="" />
+      <h5>Term</h5>
+      <Group>
+        <div>
+          <TextInput
+            label="L"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.term.L`
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.term.L`, {
               valueAsNumber: true,
             })}
           />
         </div>
-      ) : (
         <div>
-          <h5>Config</h5>
-          <AtomLSConfigArray label={label} eindex={eindex} side="" />
-          <h5>Term</h5>
-          <Group>
-            <div>
-              <TextInput
-                label="L"
-                error={errorMsg(
-                  errors,
-                  `set.states.${label}.electronic.${eindex}.term.L`
-                )}
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.L`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </div>
-            <div>
-              <TextInput
-                label="S"
-                error={errorMsg(
-                  errors,
-                  `set.states.${label}.electronic.${eindex}.term.S`
-                )}
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.S`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </div>
-            <div>
-              <Controller
-                control={control}
-                name={`set.states.${label}.electronic.${eindex}.term.P`}
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <Radio.Group
-                    label="P"
-                    onChange={(v) => onChange(parseInt(v))}
-                    onBlur={onBlur}
-                    value={value === undefined ? 1 : value.toString()}
-                    error={errorMsg(
-                      errors,
-                      `set.states.${label}.electronic.${eindex}.term.P`
-                    )}
-                  >
-                    <Radio value="-1" label="-1" />
-                    <Radio value="1" label="1" />
-                  </Radio.Group>
-                )}
-              />
-            </div>
-            <div>
-              <TextInput
-                label="J"
-                error={errorMsg(
-                  errors,
-                  `set.states.${label}.electronic.${eindex}.term.J`
-                )}
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.term.J`,
-                  {
-                    valueAsNumber: true,
-                  }
-                )}
-              />
-            </div>
-          </Group>
+          <TextInput
+            label="S"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.term.S`
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.term.S`, {
+              valueAsNumber: true,
+            })}
+          />
         </div>
-      )}
-    </>
+        <div>
+          <Controller
+            control={control}
+            name={`set.states.${label}.electronic.${eindex}.term.P`}
+            render={({ field: { onBlur, onChange, value } }) => (
+              <Radio.Group
+                label="P"
+                onChange={(v) => onChange(parseInt(v))}
+                onBlur={onBlur}
+                value={value === undefined ? 1 : value.toString()}
+                error={errorMsg(
+                  errors,
+                  `set.states.${label}.electronic.${eindex}.term.P`
+                )}
+              >
+                <Radio value="-1" label="-1" />
+                <Radio value="1" label="1" />
+              </Radio.Group>
+            )}
+          />
+        </div>
+        <div>
+          <TextInput
+            label="J"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.term.J`
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.term.J`, {
+              valueAsNumber: true,
+            })}
+          />
+        </div>
+      </Group>
+    </div>
   );
 };
 
@@ -835,6 +841,63 @@ const LSTermConfigForm = ({
 };
 
 const AtomJ1L2FormElectronicForm = ({
+  label,
+  eindex,
+}: {
+  label: string;
+  eindex: number;
+}) => {
+  const {
+    register,
+    watch,
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
+  return (
+    <>
+      <div>
+        <Controller
+          control={control}
+          name={`set.states.${label}.electronic.${eindex}.scheme`}
+          render={({ field: { onBlur, onChange, value } }) => (
+            <Radio.Group
+              label="Scheme"
+              // TODO drop scheme key when simple scheme is selected
+              // now removed in form resolver, but is not nice
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.scheme`
+              )}
+            >
+              <Radio value="" label="Simple" />
+              <Radio value="J1L2" label="J1L2" />
+            </Radio.Group>
+          )}
+        />
+      </div>
+      {scheme !== "J1L2" ? (
+        <div>
+          <TextInput
+            label="e"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.e`
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.e`)}
+          />
+        </div>
+      ) : (
+        <AtomJ1L2FormElectronicDetailedForm label={label} eindex={eindex} />
+      )}
+    </>
+  );
+};
+
+const AtomJ1L2FormElectronicDetailedForm = ({
   label,
   eindex,
 }: {
@@ -1371,7 +1434,7 @@ const ElectronicArray = ({
   initialValue,
 }: {
   label: string;
-  item: (label: string, eindex: number) => React.ReactNode;
+  item: (label: string, eindex: number) => ReactNode;
   initialValue: any; // TODO add generic type
 }) => {
   const {
@@ -1415,7 +1478,7 @@ const ArrayItem = ({
 }: {
   removeTitle: string;
   onRemove: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   return (
     <li>
@@ -1435,13 +1498,13 @@ const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
       label={label}
       initialValue={{ e: "X", Lambda: 0, S: 0, parity: "g" }}
       item={(label, eindex) => (
-        <>
+        <SimpleElectronic label={label} eindex={eindex}>
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
             <MolecularParityField label={label} eindex={eindex} />
           </Group>
           <LinearTriatomVibrationalField label={label} eindex={eindex} />
-        </>
+        </SimpleElectronic>
       )}
     />
   );
@@ -1455,7 +1518,7 @@ const VibrationalArray = ({
 }: {
   label: string;
   eindex: number;
-  item: (label: string, eindex: number, vindex: number) => React.ReactNode;
+  item: (label: string, eindex: number, vindex: number) => ReactNode;
   initialValue: any;
 }) => {
   const {
@@ -1532,6 +1595,8 @@ const RotationalArray = ({
               )}
               {...register(
                 `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                // TODO J is always string, while it should also be able to be a number
+                // should add 'simple' | 'detailed' aka 'string' | 'number' radio group
               )}
             />
           </ArrayItem>
@@ -1564,7 +1629,7 @@ const SimpleVibrational = ({
   label: string;
   eindex: number;
   vindex: number;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const {
     register,
@@ -1650,18 +1715,70 @@ const DiatomicVibrationalForm = ({
   );
 };
 
+const SimpleElectronic = ({
+  label,
+  eindex,
+  children,
+}: {
+  label: string;
+  eindex: number;
+  children: ReactNode;
+}) => {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<FieldValues>();
+  const electronicValue = useWatch({
+    control,
+    name: `set.states.${label}.electronic.${eindex}`,
+  });
+  const initialScheme =
+    "e" in electronicValue && Object.keys(electronicValue).length <= 1
+      ? "simple"
+      : "detailed";
+  const [scheme, setScheme] = useState<IScheme>(initialScheme);
+  return (
+    <>
+      <Radio.Group
+        label="Scheme"
+        value={scheme}
+        // TODO when switching should clear child values
+        onChange={(v: IScheme) => setScheme(v)}
+      >
+        <Radio value="simple" label="Simple" />
+        <Radio value="detailed" label="Detailed" />
+      </Radio.Group>
+      {scheme === "simple" ? (
+        <div>
+          <TextInput
+            label="e"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.e`
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.e`)}
+          />
+        </div>
+      ) : (
+        children
+      )}
+    </>
+  );
+};
+
 const HeteronuclearDiatomForm = ({ label }: { label: string }) => {
   return (
     <ElectronicArray
       label={label}
       initialValue={{ e: "", Lambda: 0, S: 0 }}
       item={(label, eindex) => (
-        <>
+        <SimpleElectronic label={label} eindex={eindex}>
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
           </Group>
           <DiatomicVibrationalForm label={label} eindex={eindex} />
-        </>
+        </SimpleElectronic>
       )}
     />
   );
@@ -1673,13 +1790,13 @@ const HomonuclearDiatomForm = ({ label }: { label: string }) => {
       label={label}
       initialValue={{ e: "", Lambda: 0, S: 0, parity: "g" }}
       item={(label, eindex) => (
-        <>
+        <SimpleElectronic label={label} eindex={eindex}>
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
             <MolecularParityField label={label} eindex={eindex} />
           </Group>
           <DiatomicVibrationalForm label={label} eindex={eindex} />
-        </>
+        </SimpleElectronic>
       )}
     />
   );
@@ -1725,8 +1842,10 @@ const StateForm = ({
                   <Radio.Group
                     label="Type"
                     onBlur={onBlur}
-                    onChange={(v) =>
-                      v === "" ? onChange(undefined) : onChange(v)
+                    onChange={
+                      (v) => (v === "" ? onChange(undefined) : onChange(v))
+                      // TODO to prevent lingering fields,
+                      // switching type should clear electronic value
                     }
                     value={value === undefined ? "" : value}
                     error={errorMsg(errors, `set.states.${label}.type`)}
