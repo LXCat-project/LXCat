@@ -12,20 +12,6 @@ import { AtomLS1Impl } from "../core/atoms/ls1";
 import { AtomJ1L2Impl } from "../core/atoms/j1l2";
 import { AtomLSImpl, LSTerm, LSTermImpl } from "../core/atoms/ls";
 
-function set_allowed(key: string, err: ErrorObject, allowed: Dict) {
-  if (key.length === 0) {
-    err.params.allowed.term = {};
-    Object.entries(allowed).forEach(
-      ([k, v]) => (err.params.allowed.term[k] = v)
-    );
-  } else {
-    err.params.allowed[key] = { term: {} };
-    Object.entries(allowed).forEach(
-      ([k, v]) => (err.params.allowed[key].term[k] = v)
-    );
-  }
-}
-
 export function get_errobj(
   parent: string,
   component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,

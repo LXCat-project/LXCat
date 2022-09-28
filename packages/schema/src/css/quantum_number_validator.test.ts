@@ -32,10 +32,6 @@ function readExample(fn: string) {
   return body;
 }
 
-function not_empty(bad: Dict) {
-  return Object.keys(bad).length !== 0;
-}
-
 beforeAll(() => {
   const data_ok = readExample("src/css/data/Ar_C_P_Nobody_LXCat.json");
   const data_parity_nok = readExample(
