@@ -1890,6 +1890,7 @@ const SimpleVibrational = ({
         onChange={(v: IScheme) => {
           setScheme(v);
           if (v === "simple") {
+            // TODO v is set to NaN and not set-able to another string
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
               { v: "" }
