@@ -908,6 +908,7 @@ const AtomJ1L2FormElectronicForm = ({
     register,
     watch,
     control,
+    setValue,
     formState: { errors },
   } = useFormContext();
   const scheme = watch(`set.states.${label}.electronic.${eindex}.scheme`);
@@ -920,9 +921,20 @@ const AtomJ1L2FormElectronicForm = ({
           render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
               label="Scheme"
-              // TODO drop scheme key when simple scheme is selected
-              // now removed in form resolver, but is not nice
-              onChange={onChange}
+              onChange={(v) => {
+                onChange(v);
+                if (v === "J1L2") {
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialValue4AtomJIL2()
+                  );
+                } else {
+                  setValue(
+                    `set.states.${label}.electronic.${eindex}`,
+                    initialSimpleElectronic()
+                  );
+                }
+              }}
               onBlur={onBlur}
               value={value}
               error={errorMsg(
@@ -1343,9 +1355,9 @@ const LinearTriatomVibrationalFieldItem = ({
   eindex: number;
   vindex: number;
 }) => {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
   const v = watch(
-    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`
+    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
   const initialScheme = typeof v === "string" ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
@@ -1354,8 +1366,20 @@ const LinearTriatomVibrationalFieldItem = ({
       <Radio.Group
         label="Scheme"
         value={scheme}
-        // TODO when switching should clear child values
-        onChange={(v: IScheme) => setScheme(v)}
+        onChange={(v: IScheme) => {
+          setScheme(v);
+          if (v === "simple") {
+            setValue(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
+              { v: "" }
+            );
+          } else {
+            setValue(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
+              { v: [0, 0, 0], rotational: [] }
+            );
+          }
+        }}
       >
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
@@ -1703,12 +1727,17 @@ const ArrayItem = ({
 };
 
 const LinearTriatomInversionCenterForm = ({ label }: { label: string }) => {
+  const initialValue = { e: "X", Lambda: 0, S: 0, parity: "g" };
   return (
     <ElectronicArray
       label={label}
-      initialValue={{ e: "X", Lambda: 0, S: 0, parity: "g" }}
+      initialValue={initialValue}
       item={(label, eindex) => (
-        <SimpleElectronic label={label} eindex={eindex}>
+        <SimpleElectronic
+          label={label}
+          eindex={eindex}
+          initialDetailedValue={initialValue}
+        >
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
             <MolecularParityField label={label} eindex={eindex} />
@@ -1844,12 +1873,13 @@ const SimpleVibrational = ({
   const {
     register,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
   const v = watch(
     `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
-  // if detailed v would be an array
+  // if detailed v would be an number
   const initialScheme = typeof v === "string" ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
   return (
@@ -1857,8 +1887,20 @@ const SimpleVibrational = ({
       <Radio.Group
         label="Scheme"
         value={scheme}
-        // TODO when switching should clear child values
-        onChange={(v: IScheme) => setScheme(v)}
+        onChange={(v: IScheme) => {
+          setScheme(v);
+          if (v === "simple") {
+            setValue(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
+              { v: "" }
+            );
+          } else {
+            setValue(
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
+              { v: 0, rotational: [] }
+            );
+          }
+        }}
       >
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
@@ -1929,14 +1971,17 @@ const DiatomicVibrationalForm = ({
 const SimpleElectronic = ({
   label,
   eindex,
+  initialDetailedValue,
   children,
 }: {
   label: string;
   eindex: number;
+  initialDetailedValue: any; // TODO add generic type
   children: ReactNode;
 }) => {
   const {
     register,
+    setValue,
     control,
     formState: { errors },
   } = useFormContext<FieldValues>();
@@ -1954,8 +1999,20 @@ const SimpleElectronic = ({
       <Radio.Group
         label="Scheme"
         value={scheme}
-        // TODO when switching should clear child values
-        onChange={(v: IScheme) => setScheme(v)}
+        onChange={(v: IScheme) => {
+          setScheme(v);
+          if (v === "simple") {
+            setValue(
+              `set.states.${label}.electronic.${eindex}`,
+              initialSimpleElectronic()
+            );
+          } else {
+            setValue(
+              `set.states.${label}.electronic.${eindex}`,
+              initialDetailedValue
+            );
+          }
+        }}
       >
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
@@ -1979,12 +2036,17 @@ const SimpleElectronic = ({
 };
 
 const HeteronuclearDiatomForm = ({ label }: { label: string }) => {
+  const initialValue = { e: "", Lambda: 0, S: 0 };
   return (
     <ElectronicArray
       label={label}
-      initialValue={{ e: "", Lambda: 0, S: 0 }}
+      initialValue={initialValue}
       item={(label, eindex) => (
-        <SimpleElectronic label={label} eindex={eindex}>
+        <SimpleElectronic
+          label={label}
+          eindex={eindex}
+          initialDetailedValue={initialValue}
+        >
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
           </Group>
@@ -1996,12 +2058,17 @@ const HeteronuclearDiatomForm = ({ label }: { label: string }) => {
 };
 
 const HomonuclearDiatomForm = ({ label }: { label: string }) => {
+  const initialValue = { e: "", Lambda: 0, S: 0, parity: "g" };
   return (
     <ElectronicArray
       label={label}
-      initialValue={{ e: "", Lambda: 0, S: 0, parity: "g" }}
+      initialValue={initialValue}
       item={(label, eindex) => (
-        <SimpleElectronic label={label} eindex={eindex}>
+        <SimpleElectronic
+          label={label}
+          eindex={eindex}
+          initialDetailedValue={initialValue}
+        >
           <Group>
             <LinearElectronicForm label={label} eindex={eindex} />
             <MolecularParityField label={label} eindex={eindex} />
@@ -2106,7 +2173,6 @@ const StateForm = ({
               <LinearTriatomInversionCenterForm label={label} />
             )}
             {state.type === "AtomLS1" && <AtomLS1Form label={label} />}
-            {/* // TODO atomls1 */}
             <Button type="button" title="Remove state" onClick={onRemove}>
               &minus;
             </Button>
@@ -2244,7 +2310,6 @@ const ImportBibTeXDOIButton = ({
               onChange={(e) => setBibtex(e.target.value)}
             />
           </div>
-          {/* TODO cancel does not work */}
           <Button.Group>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button value="default" type="submit">
