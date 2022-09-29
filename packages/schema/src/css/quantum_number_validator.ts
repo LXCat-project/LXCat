@@ -35,7 +35,7 @@ export function check_parity(
 ) {
   const config = component.config;
   function message(_config, _parity: number) {
-    const strobj = JSON.stringify(_config, null).replaceAll('"', "");
+    const strobj = JSON.stringify(_config, null).replace(/"/g, "");
     return `term incosistent with config: for ${strobj}, parity should be ${_parity}`;
   }
 
@@ -97,7 +97,7 @@ function check_shell_config(
         `bad shell config: ${component.config}`
       );
     } else {
-      const strobj = JSON.stringify(component.config, null).replaceAll('"', "");
+      const strobj = JSON.stringify(component.config, null).replace(/"/g, "");
       err = get_errobj(
         parent,
         component,
