@@ -2215,6 +2215,7 @@ const ImportDOIButton = ({
   async function onSubmit(value: string) {
     if (value !== "cancel") {
       // TODO resolving doi can take long time and timeout, should notify user when fetch fails
+      // TODO use mailto param to improve speed, see https://github.com/CrossRef/rest-api-doc#good-manners--more-reliable-service
       const refs = await Cite.inputAsync(doi, {
         forceType: "@doi/id",
       });
