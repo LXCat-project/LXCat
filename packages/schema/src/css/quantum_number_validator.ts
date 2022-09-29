@@ -290,7 +290,8 @@ export function check_quantum_numbers(
   errors: ErrorObject[]
 ) {
   let status = true;
-  switch (component.scheme) {
+  const scheme = component.scheme;
+  switch (scheme) {
     case CouplingScheme.LS:
       status =
         status &&
@@ -318,7 +319,7 @@ export function check_quantum_numbers(
         parent,
         component,
         {},
-        `unknown coupling scheme: ${component.scheme}`
+        `unknown coupling scheme: ${scheme}`
       );
       errors.push(err);
       status = false;
