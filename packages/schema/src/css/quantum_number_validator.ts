@@ -34,7 +34,7 @@ export function check_parity(
   errors: ErrorObject[]
 ) {
   const config = component.config;
-  function message(_config, _parity: number) {
+  function message(_config: any, _parity: number) {
     const strobj = JSON.stringify(_config, null).replace(/"/g, "");
     return `term incosistent with config: for ${strobj}, parity should be ${_parity}`;
   }
@@ -62,7 +62,7 @@ export function check_parity(
           `${parent}/config/${key}`,
           comp,
           { P: __P },
-          message(comp, __P)
+          message(comp.config, __P)
         );
         errors.push(err);
         status = status && false;
