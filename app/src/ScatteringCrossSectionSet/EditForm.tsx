@@ -1346,6 +1346,7 @@ const MolecularParityField = ({
   );
 };
 
+// TODO Use SimpleVibrational here, as it is almost same as this component
 const LinearTriatomVibrationalFieldItem = ({
   label,
   eindex,
@@ -1385,7 +1386,7 @@ const LinearTriatomVibrationalFieldItem = ({
         <Radio value="detailed" label="Detailed" />
       </Radio.Group>
       {scheme === "simple" ? (
-        <LinearTriatomVibrationalSimpleFieldItem
+        <VibrationalSimpleFieldItem
           label={label}
           eindex={eindex}
           vindex={vindex}
@@ -1401,7 +1402,7 @@ const LinearTriatomVibrationalFieldItem = ({
   );
 };
 
-const LinearTriatomVibrationalSimpleFieldItem = ({
+const VibrationalSimpleFieldItem = ({
   label,
   eindex,
   vindex,
@@ -1411,27 +1412,28 @@ const LinearTriatomVibrationalSimpleFieldItem = ({
   vindex: number;
 }) => {
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext();
 
   return (
-    <>
-      <label>v</label>
-      <div>
+    <Controller
+      control={control}
+      name={`set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`}
+      render={({ field: { onBlur, onChange, value } }) => (
         <TextInput
-          title="v"
+          label="v"
           style={{ width: "4rem" }}
+          onChange={onChange}
+          value={value}
+          onBlur={onBlur}
           error={errorMsg(
             errors,
             `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
           )}
-          {...register(
-            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
-          )}
         />
-      </div>
-    </>
+      )}
+    />
   );
 };
 
@@ -1870,17 +1872,12 @@ const SimpleVibrational = ({
   vindex: number;
   children: ReactNode;
 }) => {
-  const {
-    register,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useFormContext();
-  const v = watch(
+  const { control, getValues, setValue } = useFormContext();
+  const av = getValues(
     `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
-  // if detailed v would be an number
-  const initialScheme = typeof v === "string" ? "simple" : "detailed";
+  const initialScheme =
+    typeof av === "string" || Number.isNaN(av) ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
   return (
     <div>
@@ -1890,7 +1887,6 @@ const SimpleVibrational = ({
         onChange={(v: IScheme) => {
           setScheme(v);
           if (v === "simple") {
-            // TODO v is set to NaN and not set-able to another string
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
               { v: "" }
@@ -1907,15 +1903,10 @@ const SimpleVibrational = ({
         <Radio value="detailed" label="Detailed" />
       </Radio.Group>
       {scheme === "simple" ? (
-        <TextInput
-          label="v"
-          error={errorMsg(
-            errors,
-            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
-          )}
-          {...register(
-            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
-          )}
+        <VibrationalSimpleFieldItem
+          label={label}
+          eindex={eindex}
+          vindex={vindex}
         />
       ) : (
         children

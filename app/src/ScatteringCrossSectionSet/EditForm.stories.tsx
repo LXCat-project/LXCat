@@ -220,6 +220,50 @@ LinearTriatomInversionCenter.args = {
   organizations,
 };
 
+export const LinearTriatomInversionCenterSimpleVib = Template.bind({});
+const state4LinearTriatomInversionCenterSimpleVib: InState<LinearTriatomInversionCenterState> =
+  {
+    particle: "CO2",
+    charge: 0,
+    type: "LinearTriatomInversionCenter",
+    electronic: [
+      {
+        e: "X",
+        Lambda: 1,
+        S: 2,
+        parity: "g",
+        reflection: "+",
+        vibrational: [{ v: "n,0,n" }],
+      },
+    ],
+  };
+LinearTriatomInversionCenterSimpleVib.args = {
+  set: {
+    ...setTemplate,
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "CO2" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+    ],
+    states: {
+      CO2: state4LinearTriatomInversionCenterSimpleVib,
+    },
+  },
+  commitMessage: "",
+  organizations,
+};
+
 export const HeteronuclearDiatom = Template.bind({});
 const state4HeteronuclearDiatom: InState<HeteronuclearDiatomState> = {
   particle: "CO",
@@ -255,6 +299,52 @@ HeteronuclearDiatom.args = {
     ],
     states: {
       CO: state4HeteronuclearDiatom,
+    },
+  },
+  commitMessage: "",
+  organizations,
+};
+
+export const HeteronuclearDiatomSimpleVib = Template.bind({});
+const state4HeteronuclearDiatomSimpleVib: InState<HeteronuclearDiatomState> = {
+  particle: "CO",
+  charge: 0,
+  type: "HeteronuclearDiatom",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 0,
+      S: 0,
+      reflection: "+",
+      vibrational: [
+        {
+          v: "*",
+        },
+      ],
+    },
+  ],
+};
+HeteronuclearDiatomSimpleVib.args = {
+  set: {
+    ...setTemplate,
+    processes: [
+      {
+        reaction: {
+          lhs: [{ count: 1, state: "CO" }],
+          rhs: [],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Ionization],
+        },
+        threshold: 42,
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        data: [[1, 3.14e-20]],
+        reference: [],
+      },
+    ],
+    states: {
+      CO: state4HeteronuclearDiatomSimpleVib,
     },
   },
   commitMessage: "",
