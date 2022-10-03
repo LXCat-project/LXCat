@@ -17,7 +17,6 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       : stateSelectionToSearchParam({ particle: {} });
 
   const selection = stateSelectionFromSearchParam(q);
-  console.log(selection);
   const result = await listStates(selection);
   res.json(result);
 });
