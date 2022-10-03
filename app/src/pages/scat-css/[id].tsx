@@ -6,9 +6,66 @@ import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 import { Reference } from "../../shared/Reference";
 import { useMemo } from "react";
+import Head from "next/head";
+import { Dataset, WithContext } from "schema-dts";
+import { jsonLdScriptProps } from "react-schemaorg";
+import { CSL } from "@lxcat/schema/dist/core/csl";
+import { reference2bibliography } from "../../shared/cite";
 
 interface Props {
   set: CrossSectionSetItem;
+}
+
+function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
+  const ld: WithContext<Dataset> = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    identifier: `/scat-css/${set.id}`,
+    url: `/scat-css/${set.id}`, // TODO make URL absolute
+    name: `Scattering Cross Section set - ${set.name}`,
+    alternateName: set.name,
+    description: set.description,
+    creator: {
+      "@type": "Organization",
+      name: set.contributor,
+    },
+    keywords: [
+      "cross section",
+      "scattering cross section set",
+      "Boltzmann equation solver",
+      // TODO add more keywords?
+    ].join(", "),
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: `/api/scat-css/${set.id}`,
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/plain",
+        contentUrl: `/api/scat-css/${set.id}/legacy`,
+      },
+    ],
+    isAccessibleForFree: true,
+    creativeWorkStatus: set.versionInfo.status,
+    dateModified: set.versionInfo.createdOn,
+    version: set.versionInfo.version,
+    includedInDataCatalog: {
+      "@type": "DataCatalog",
+      name: "lxcat",
+      url: "/",
+    },
+    // TODO add variableMeasured
+    // TODO add license
+    // TODO has part aka the cross sections
+    // TODO add sameAs for archived section
+  };
+  if (reference !== undefined) {
+    // TODO instead of using first reference, pick better representative reference for set
+    ld.citation = reference2bibliography(reference);
+  }
+  return ld;
 }
 
 const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
@@ -27,8 +84,15 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
       })
     );
   }, [set.processes]);
+
   return (
     <Layout title={`Scattering Cross Section set - ${set.name}`}>
+      <Head>
+        <script
+          key="jsonld"
+          {...jsonLdScriptProps(toJSONLD(set, references[0]))}
+        />
+      </Head>
       <h1>{set.name}</h1>
       {set.versionInfo.status === "retracted" && (
         <div style={{ backgroundColor: "red", color: "white", padding: 16 }}>
