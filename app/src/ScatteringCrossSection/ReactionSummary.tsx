@@ -16,7 +16,7 @@ export const ReactionSummary = (props: Reaction<State>) => {
 export function reactionLabel(props: Reaction<State>) {
   const lhs = props.lhs.map(stateEntry).join(" + ");
   const rhs = props.rhs.map(stateEntry).join(" + ");
-  const arrow = props.reversible ? "⇋" : "→";
+  const arrow = props.reversible ? "⇋" : "➙";
   const label = `${lhs} ${arrow} ${rhs}`;
   return label;
 }

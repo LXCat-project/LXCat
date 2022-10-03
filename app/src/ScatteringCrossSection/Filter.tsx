@@ -1,12 +1,7 @@
-import Link from "next/link";
-import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import {
-  StateFilter,
-  stateSelectionToSearchParam,
-} from "../shared/StateFilter";
-import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
+import { stateSelectionToSearchParam } from "../shared/StateFilter";
 import { useRouter } from "next/router";
+import { FilterComponent } from "./FilterComponent";
 
 interface Props {
   facets: Facets;
@@ -15,85 +10,22 @@ interface Props {
 
 export const Filter = ({ facets, selection }: Props) => {
   const router = useRouter();
-  const hasAnySelection = Object.values(selection).some(
-    (s) =>
-      (Array.isArray(s) && s.length > 0) ||
-      (typeof s === "object" && Object.keys(s).length > 0)
-  );
 
-  const selectionAsSearchParam = {
-    ...selection,
-    species1: stateSelectionToSearchParam(selection.species1),
-    species2: stateSelectionToSearchParam(selection.species2),
-  };
-
-  function onSpecies1Change(newStateSelection: StateChoices) {
+  function onChange(newSelection: SearchOptions) {
     router.push({
       query: {
-        ...selectionAsSearchParam,
-        species1: stateSelectionToSearchParam(newStateSelection),
-      },
-    });
-  }
-
-  function onSpecies2Change(newStateSelection: StateChoices) {
-    router.push({
-      query: {
-        ...selectionAsSearchParam,
-        species2: stateSelectionToSearchParam(newStateSelection),
+        ...newSelection,
+        species1: stateSelectionToSearchParam(newSelection.species1),
+        species2: stateSelectionToSearchParam(newSelection.species2),
       },
     });
   }
 
   return (
-    <div>
-      <div style={{ display: "flex" }}>
-        <fieldset>
-          <legend>First species</legend>
-          <StateFilter
-            choices={facets.species1}
-            selected={selection.species1}
-            onChange={onSpecies1Change}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Second species</legend>
-          <StateFilter
-            choices={facets.species2}
-            selected={selection.species2}
-            onChange={onSpecies2Change}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Set</legend>
-          <CheckBoxGroup
-            facet={facets.set_name}
-            selection={selectionAsSearchParam}
-            selectionKey="set_name"
-            path="/scat-cs"
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Reaction type</legend>
-          <CheckBoxGroup
-            // TODO order type tags alphabetically?
-            facet={facets.tag}
-            selection={selectionAsSearchParam}
-            selectionKey="tag"
-            path="/scat-cs"
-          />
-        </fieldset>
-      </div>
-      <div>
-        <Link
-          href={{
-            pathname: "/scat-cs",
-          }}
-          passHref
-        >
-          <button disabled={!hasAnySelection}>Clear selection</button>
-        </Link>
-      </div>
-    </div>
+    <FilterComponent
+      facets={facets}
+      selection={selection}
+      onChange={onChange}
+    />
   );
 };

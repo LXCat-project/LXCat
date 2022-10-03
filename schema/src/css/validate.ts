@@ -2,7 +2,7 @@ import Ajv, { ErrorObject } from "ajv";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
 
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
 
 export const validateJSONSchema = ajv.compile<CrossSectionSetRaw>(schema);
 

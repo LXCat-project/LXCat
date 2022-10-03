@@ -10,7 +10,7 @@ const headers = new Headers({
 });
 
 export async function deleteSet(key: string, message?: string) {
-  const url = `/api/scat-css/${key}`;
+  const url = `/api/author/scat-css/${key}`;
   const body = JSON.stringify({ message: message });
   const init = { method: "DELETE", body, headers };
   const res = await fetch(url, init);
@@ -19,7 +19,7 @@ export async function deleteSet(key: string, message?: string) {
 }
 
 export async function publishSet(selectedSetId: string) {
-  const url = `/api/scat-css/${selectedSetId}/publish`;
+  const url = `/api/author/scat-css/${selectedSetId}/publish`;
   const init = { method: "POST", headers };
   const res = await fetch(url, init);
   const data = await res.json();
@@ -27,7 +27,7 @@ export async function publishSet(selectedSetId: string) {
 }
 
 export async function listSetsOfOwner(): Promise<CrossSectionSetOwned[]> {
-  const url = "/api/scat-css?private=true";
+  const url = "/api/author/scat-css";
   const init = { headers };
   const res = await fetch(url, init);
   const data = await res.json();

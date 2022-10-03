@@ -1,7 +1,13 @@
 import { NOT } from "./util";
 
 export interface SimpleParticle {
+  /**
+   * @minLength 1
+   */
   particle: string;
+  /**
+   * @asType integer
+   */
   charge: number;
 }
 

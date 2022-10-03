@@ -285,6 +285,14 @@ describe("deleting a draft cross section with one shared cross section", () => {
       collection: "IsPartOf",
       count: 1, // section of second set
     },
+    {
+      collection: "CrossSectionSetHistory",
+      count: 0,
+    },
+    {
+      collection: "CrossSectionHistory",
+      count: 0,
+    },
   ])(
     "should have $count row(s) in $collection collection",
     async ({ collection, count }) => {
@@ -323,6 +331,14 @@ describe("deleting a draft cross section with one published cross section", () =
     },
     {
       collection: "IsPartOf",
+      count: 0,
+    },
+    {
+      collection: "CrossSectionSetHistory",
+      count: 0,
+    },
+    {
+      collection: "CrossSectionHistory",
       count: 0,
     },
   ])(

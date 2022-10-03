@@ -15,7 +15,7 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
     event.preventDefault();
     setErrors([]);
     setId("");
-    const url = `/api/scat-css`;
+    const url = `/api/author/scat-css`;
     const body = JSON.stringify(doc);
     const headers = new Headers({
       Accept: "application/json",

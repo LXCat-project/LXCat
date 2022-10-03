@@ -14,7 +14,6 @@ export const Paging = ({
     {paging.offset > 0 && (
       <Link
         href={{
-          pathname: "/scat-cs",
           query: {
             ...query,
             offset: paging.offset - paging.count,
@@ -30,7 +29,6 @@ export const Paging = ({
     {nrOnPage >= paging.count && (
       <Link
         href={{
-          pathname: "/scat-cs",
           query: {
             ...query,
             offset: paging.offset + paging.count,

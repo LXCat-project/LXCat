@@ -4,7 +4,7 @@ import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 
-import { byOrgAndId, listOwned } from "../../cs/queries/author_read";
+import { byOrgAndId, searchOwned } from "../../cs/queries/author_read";
 import { db } from "../../db";
 import { byOwnerAndId, CrossSectionSetInputOwned } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
@@ -129,7 +129,7 @@ describe("given published cross section set where data of 1 published cross sect
   });
 
   it("should list 2 sections", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -291,7 +291,7 @@ describe("given published cross section set where data of 1 published cross sect
     });
 
     it("should list 2 sections", async () => {
-      const list = await listOwned(email);
+      const list = await searchOwned(email);
       const expected = [
         {
           id: expect.stringMatching(/\d+/),
@@ -488,7 +488,7 @@ describe("given draft cross section set where its cross section data is altered"
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -626,7 +626,7 @@ describe("given draft cross section set where its cross section data is added la
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -760,7 +760,7 @@ describe("given draft cross section set where its non cross section data is alte
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -890,7 +890,7 @@ describe("given draft cross section set where its cross section state is altered
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -1006,7 +1006,7 @@ describe("given draft cross section set where a reference is added to a cross se
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -1131,7 +1131,7 @@ describe("given draft cross section set where a reference is replaced in a cross
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -1256,7 +1256,7 @@ describe("given draft cross section set where a reference is extended in a cross
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -1569,7 +1569,7 @@ describe("given draft cross section set where its charge in cross section is alt
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),
@@ -1687,7 +1687,7 @@ describe("given draft cross section set where its charge in cross section is alt
   });
 
   it("should list 1 section", async () => {
-    const list = await listOwned(email);
+    const list = await searchOwned(email);
     const expected = [
       {
         id: expect.stringMatching(/\d+/),

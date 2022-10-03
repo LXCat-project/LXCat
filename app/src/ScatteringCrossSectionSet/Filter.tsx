@@ -7,7 +7,6 @@ import {
   stateSelectionToSearchParam,
   StateFilter,
 } from "../shared/StateFilter";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Props {
   facets: FilterOptions;

@@ -7,7 +7,7 @@ interface Props {
 
 export function List({ items }: Props) {
   return (
-    <div style={{ display: "flex", gap: "1em", flexWrap: "wrap" }}>
+    <div style={{ display: "flex", gap: "1em", flexWrap: "wrap" }} role="list">
       {items.map((d) => (
         <ListItem key={d.id} {...d} />
       ))}
