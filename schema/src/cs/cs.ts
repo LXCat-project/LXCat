@@ -14,6 +14,9 @@ export type CrossSection<
 > = {
   reaction: Reaction<StateType>;
   parameters?: CSParameters;
+  /**
+   * @uniqueItems true
+   */
   reference?: Array<ReferenceType>;
   threshold: number;
 } & StorageType;

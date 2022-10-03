@@ -37,7 +37,7 @@ export const dropUser = async (userId: string) => {
 
 export interface UserFromDB extends UserInDb {
   _key: string;
-  organization?: string;
+  organizations: string[];
 }
 
 export const getUserByKey = async (key: string) => {
@@ -52,14 +52,14 @@ export const getUserByKey = async (key: string) => {
 export const listUsers = async () => {
   const cursor: ArrayCursor<UserFromDB> = await db().query(aql`
     FOR u IN users
-        LET organization = FIRST(
+        LET organizations = (
             FOR m IN MemberOf
                 FILTER m._from == u._id
                 FOR o IN Organization
                     FILTER o._id == m._to
                     RETURN o.name
         )
-    RETURN MERGE(UNSET(u, ["_id", "_rev", "accounts", "sessions"]), {organization})
+    RETURN MERGE(UNSET(u, ["_id", "_rev", "accounts", "sessions"]), {organizations})
   `);
   return await cursor.all();
 };
@@ -76,24 +76,42 @@ export const listOrganizations = async () => {
   return await cursor.all();
 };
 
-export const makeMember = async (userKey: string, orgKey: string) => {
+export const userMemberships = async (email: string) => {
+  const cursor: ArrayCursor<OrganizationFromDB> = await db().query(aql`
+    FOR u IN users
+      FILTER u.email == ${email}
+      FOR m IN MemberOf
+        FILTER m._from == u._id
+          FOR o IN Organization
+            FILTER o._id == m._to
+            RETURN UNSET(o, ["_id", "_rev"])
+  `);
+  return await cursor.all();
+};
+
+export const setMembers = async (userKey: string, orgKeys: string[]) => {
   // For now user can only be member of single org
   // create edge if user was memberless or update edge _to when already member
   const userId = "users/" + userKey;
-  const orgId = "Organization/" + orgKey;
-  const cursor: ArrayCursor<OrganizationFromDB> = await db().query(aql`
+  await db().query(aql`
+    FOR o IN Organization
+      FILTER ${orgKeys} ANY == o._key
         UPSERT
-            { _from: ${userId}}
+          { _from: ${userId}, _to: o._id}
         INSERT
-            { _from: ${userId}, _to: ${orgId}}
+          { _from: ${userId}, _to: o._id}
         REPLACE
-            { _from: ${userId}, _to: ${orgId}}
+          { _from: ${userId}, _to: o._id}
         IN MemberOf
-        FOR o IN Organization
-            FILTER o._key == ${orgKey}
-            RETURN UNSET(o, ["_id", "_rev"])
-    `);
-  return await cursor.next();
+  `);
+  // Drop any membership to all orgs not in orgKeys
+  await db().query(aql`
+    FOR o IN Organization
+    FILTER ${orgKeys} ALL != o._key
+      FOR m IN MemberOf
+        FILTER m._to == o._id AND m._from == ${userId}
+        REMOVE m IN MemberOf
+  `);
 };
 
 export const makeMemberless = async (userKey: string) => {

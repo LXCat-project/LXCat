@@ -125,16 +125,17 @@ export async function uploadAndPublishDummySet(
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
-  await page.locator("select").selectOption({ label: org });
-  await page.waitForSelector(`td:has-text("${org}")`);
+  // Mantine multiselect is hard to test as it changes its dom tree based on selection
+  await page.locator('div[role="combobox"]').click();
+  await page.locator(`text=${org}`).click();
+  await page.waitForSelector(`div:has-text("${org}")`);
 
   // Publish set
   await page.goto("/author/scat-css");
   await page.reload(); // TODO sometimes no set is listed, use reload to give server some time as workaround
   await page.waitForSelector('td:has-text("draft")');
-  // await page.pause()
-  await page.locator("tbody >> text=Publish").click();
+  await page.locator('tbody button:has-text("Publish")').click();
   // Press publish in dialog
-  await page.locator("text=Publish").nth(3).click();
+  await page.locator('dialog >> button:has-text("Publish")').click();
   await page.waitForSelector('td:has-text("published")');
 }

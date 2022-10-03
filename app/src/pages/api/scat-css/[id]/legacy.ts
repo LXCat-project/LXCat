@@ -17,12 +17,19 @@ const handler = nc<AuthRequest, NextApiResponse>()
     if (typeof id === "string") {
       const data = await byIdJSON(id);
       if (data) {
-        const references = Object.entries(data.references).reduce(
-          (map: Dict<string>, [key, reference]) => ({
-            ...map,
-            [key]: new Cite(reference).format("bibliography").slice(0, -1),
-          }),
-          {}
+        const references = Object.fromEntries(
+          Object.entries(data.references).map(([key, reference]) => {
+            const bib = new Cite(reference, {
+              forceType: "@csl/object",
+            }).format("bibliography", {
+              format: "text",
+              template: "apa",
+            });
+            if (typeof bib === "string") {
+              return [key, bib];
+            }
+            return [key, Object.values(bib).pop()];
+          })
         );
         const { convertDocument } = await import("@lxcat/converter");
         res.setHeader("Content-Type", "text/plain");

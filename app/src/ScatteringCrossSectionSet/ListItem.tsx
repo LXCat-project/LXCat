@@ -3,7 +3,7 @@ import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 
 export const ListItem = (props: CrossSectionSetHeading) => {
   return (
-    <div>
+    <div role="listitem">
       <Link href={`/scat-css/${props.id}`}>
         <a
           style={{

@@ -1,5 +1,8 @@
 import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
+import { ArrayCursor } from "arangojs/cursor";
+import { db } from "../../db";
+import { State } from "../types/collections";
 
 export type VibrationalChoices = {
   [index: string]: {
@@ -55,7 +58,9 @@ function generateElectronicFilter(
   return Object.entries(electronic).map(
     ([electronicSummary, { vibrational }]) => {
       const electronicIsCompound = electronicSummary.includes("|");
-      // TODO handle compound aka H2{<something>|<something else>}
+      if (electronicIsCompound) {
+        // TODO handle compound aka H2{<something>|<something else>}
+      }
 
       const electronicSubFilters = [
         aql`${electronicVarAql}.summary == ${electronicSummary}`,
@@ -92,7 +97,9 @@ function generateVibratonalFilter(
   return Object.entries(vibrational).map(
     ([vibrationalSummary, { rotational }]) => {
       const vibrationalIsCompound = vibrationalSummary.includes("|");
-      // TODO handle compound vibrational aka v=1|2
+      if (vibrationalIsCompound) {
+        // TODO handle compound vibrational aka v=1|2
+      }
 
       const vibrationalSubFilters = [
         aql`${vibrationalVarAql}.summary == ${vibrationalSummary}`,
@@ -100,8 +107,10 @@ function generateVibratonalFilter(
 
       const rotationalFilters: GeneratedAqlQuery[] = [];
       rotational.forEach((rotationalSummary) => {
-        const RotationalIsCompound = rotationalSummary.includes("|");
-        // TODO handle compound vibrational aka J=1|2
+        const rotationalIsCompound = rotationalSummary.includes("|");
+        if (rotationalIsCompound) {
+          // TODO handle compound vibrational aka J=1|2
+        }
 
         rotationalFilters.push(aql`
                 LENGTH(
@@ -211,4 +220,35 @@ export function groupStateChoices(rows: ChoiceRow[]) {
     }
   });
   return choices;
+}
+
+export type StateDict = Record<string, State>;
+
+// TODO add paging, instead of always returning first 100
+export async function listStates(selection: StateChoices): Promise<StateDict> {
+  if (Object.keys(selection.particle).length === 0) {
+    // No need to talk to db when selection is empty
+    return {};
+  }
+  const filter = generateStateFilterAql(selection);
+  console.log(filter.query);
+  console.log(filter.bindVars);
+  const cursor: ArrayCursor<[string, State]> = await db().query(aql`
+  FOR s in State
+    FILTER ${filter}
+    LIMIT 100
+    RETURN [s._key, UNSET(s, ["_key", "_rev", "_id"])]
+`);
+  const result = await cursor.all();
+  return Object.fromEntries(result);
+}
+
+export async function listStateChoices(): Promise<StateChoices> {
+  const subquery = generateStateChoicesAql();
+  const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
+    FOR s in State
+      ${subquery}
+  `);
+  const rawChoices = await cursor.all();
+  return groupStateChoices(rawChoices);
 }

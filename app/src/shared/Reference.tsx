@@ -1,10 +1,13 @@
-import Cite from "citation-js";
+import { useMemo } from "react";
+
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
+import { reference2bibliography } from "./cite";
+
 export const Reference = (r: ReferenceRecord) => {
-  const cite = new Cite(r);
-  // Format CSL into APA style bibliography
-  const bibliography = cite.format("bibliography");
+  const bibliography = useMemo(() => {
+    return reference2bibliography(r);
+  }, [r]);
   return (
     <cite>
       {r.URL ? (

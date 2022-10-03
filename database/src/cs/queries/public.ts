@@ -279,7 +279,16 @@ export interface SearchOptions {
   tag: string[];
 }
 
-function setNamesFilterAql(set_names: string[]) {
+export function defaultSearchOptions(): SearchOptions {
+  return {
+    set_name: [],
+    species1: { particle: {} },
+    species2: { particle: {} },
+    tag: [],
+  };
+}
+
+export function setNamesFilterAql(set_names: string[]) {
   return aql`
    LET setNames = (
 		FOR p IN IsPartOf
@@ -314,7 +323,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
   const typeTagAql = hasFilterOnTag
     ? aql`FILTER ${options.tag} ANY IN reaction.type_tags`
     : aql``;
-  const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
+  const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
 	FOR cs IN CrossSection
     FILTER cs.versionInfo.status == 'published'
@@ -349,7 +358,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 	  ${species1Filter}
 	  ${species2Filter}
 	  ${typeTagAql}
-	  ${limit_aql}
+	  ${limitAql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
   const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);

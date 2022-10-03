@@ -6,7 +6,7 @@ import {
   AuthRequest,
   hasAuthorRole,
   hasSessionOrAPIToken,
-} from "../../../../auth/middleware";
+} from "../../../../../auth/middleware";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

@@ -1,13 +1,19 @@
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { listOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
+
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+
+import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { mustBeAuthor } from "../../../auth/middleware";
 import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";
 import { Layout } from "../../../shared/Layout";
+import { defaultSearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+import { Paging } from "../../../ScatteringCrossSection/Paging";
 
 interface Props {
   items: CrossSectionItem[];
+  paging: PagingOptions;
 }
 
 function renderItem(item: CrossSectionItem) {
@@ -32,7 +38,7 @@ function renderItem(item: CrossSectionItem) {
         <ul>
           {item.isPartOf.map((s) => (
             <li key={s.id}>
-              <Link href={`/author/scat-css/${s.id}/editraw`}>
+              <Link href={`/author/scat-css/${s.id}/edit`}>
                 <a title="Click to edit set">
                   {s.name} ({s.versionInfo.version})
                 </a>
@@ -49,12 +55,16 @@ function renderItem(item: CrossSectionItem) {
   );
 }
 
-const Page: NextPage<Props> = ({ items }) => {
+const Page: NextPage<Props> = ({ items, paging }) => {
   const rows = items.map(renderItem);
+  const nrItems = items.length;
+  const query = {
+    offset: paging.offset + paging.count,
+  };
   return (
     <Layout>
       <h1>Author scattering cross sections</h1>
-
+      {/* TODO add filter */}
       <table style={{ width: "100%" }}>
         <thead>
           <tr>
@@ -69,6 +79,7 @@ const Page: NextPage<Props> = ({ items }) => {
         </thead>
         <tbody>{rows}</tbody>
       </table>
+      <Paging paging={paging} nrOnPage={nrItems} query={query} />
       <Link href="/author">
         <a>Back</a>
       </Link>
@@ -80,10 +91,19 @@ export default Page;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const me = await mustBeAuthor(context);
-  const items = await listOwned(me.email);
+  const filter = defaultSearchOptions();
+  const paging = {
+    offset:
+      context.query.offset && !Array.isArray(context.query.offset)
+        ? parseInt(context.query.offset)
+        : 0,
+    count: 100,
+  };
+  const items = await searchOwned(me.email, filter, paging);
   return {
     props: {
       items,
+      paging,
     },
   };
 };

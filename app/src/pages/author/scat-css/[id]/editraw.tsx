@@ -29,7 +29,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
     event.preventDefault();
     setErrors([]);
     setId("");
-    const url = `/api/scat-css/${setKey}`;
+    const url = `/api/author/scat-css/${setKey}`;
     const body = JSON.stringify({
       doc: JSON.parse(doc),
       message,

@@ -20,7 +20,7 @@ interface JwtPayload {
 }
 
 export interface AuthRequest extends NextApiRequest {
-  user?: Session["user"] | JwtPayload;
+  user: Session["user"] | JwtPayload;
 }
 
 /**
