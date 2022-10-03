@@ -4,6 +4,7 @@ import {
   Checkbox,
   FileButton,
   Group,
+  Modal,
   MultiSelect,
   NativeSelect,
   Radio,
@@ -42,7 +43,6 @@ import { InState } from "@lxcat/schema/dist/core/state";
 import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { parse_state } from "@lxcat/schema/dist/core/parse";
 
-import { Dialog } from "../shared/Dialog";
 import { Reference } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
@@ -1525,7 +1525,6 @@ const LinearTriatomVibrationalDetailedFieldItem = ({
             {...register(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`,
               {
-                // TODO in example data sets could also be `n`
                 valueAsNumber: true,
               }
             )}
@@ -1872,7 +1871,7 @@ const SimpleVibrational = ({
   vindex: number;
   children: ReactNode;
 }) => {
-  const { control, getValues, setValue } = useFormContext();
+  const { getValues, setValue } = useFormContext();
   const av = getValues(
     `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
   );
@@ -2203,18 +2202,16 @@ const ImportDOIButton = ({
 }) => {
   const [doi, setDoi] = useState("");
   const [open, setOpen] = useState(false);
-  async function onSubmit(value: string) {
-    if (value !== "cancel") {
-      // TODO resolving doi can take long time and timeout, should notify user when fetch fails
-      // TODO use mailto param to improve speed, see https://github.com/CrossRef/rest-api-doc#good-manners--more-reliable-service
-      const refs = await Cite.inputAsync(doi, {
-        forceType: "@doi/id",
-      });
-      const ref = refs[0];
-      // TODO handle fetch/parse errors
-      const label = getReferenceLabel(ref);
-      onAdd(label, ref);
-    }
+  async function onSubmit() {
+    // TODO resolving doi can take long time and timeout, should notify user when fetch fails
+    // TODO use mailto param to improve speed, see https://github.com/CrossRef/rest-api-doc#good-manners--more-reliable-service
+    const refs = await Cite.inputAsync(doi, {
+      forceType: "@doi/id",
+    });
+    const ref = refs[0];
+    // TODO handle fetch/parse errors
+    const label = getReferenceLabel(ref);
+    onAdd(label, ref);
     setOpen(false);
   }
   return (
@@ -2222,29 +2219,26 @@ const ImportDOIButton = ({
       <Button type="button" variant="light" onClick={() => setOpen(true)}>
         Import from DOI
       </Button>
-      <Dialog isOpened={open} onSubmit={onSubmit}>
-        <b>Import reference based on DOI</b>
-        {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
-        <form method="dialog">
-          <div>
-            <TextInput
-              value={doi}
-              style={{ width: "12rem" }}
-              onChange={(e) => setDoi(e.target.value)}
-              placeholder="Enter DOI like 10.5284/1015681"
-              // DOI pattern from https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-              // Does not work for `10.3390/atoms9010016`
-              // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
-            />
-          </div>
-          <Button.Group>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button value="default" type="submit">
-              Import
-            </Button>
-          </Button.Group>
-        </form>
-      </Dialog>
+      <Modal
+        size="auto"
+        centered
+        opened={open}
+        onClose={() => setOpen(false)}
+        title="Import reference based on DOI"
+      >
+        <TextInput
+          value={doi}
+          style={{ width: "16rem" }}
+          onChange={(e) => setDoi(e.target.value)}
+          placeholder="Enter DOI like 10.5284/1015681"
+          // DOI pattern from https://www.crossref.org/blog/dois-and-matching-regular-expressions/
+          // Does not work for `10.3390/atoms9010016`
+          // pattern="^10.\d{4,9}/[-._;()/:A-Z0-9]+$"
+        />
+        <Group mt="xl">
+          <Button onClick={onSubmit}>Import</Button>
+        </Group>
+      </Modal>
     </div>
   );
 };
@@ -2256,21 +2250,19 @@ const ImportBibTeXDOIButton = ({
 }) => {
   const [bibtex, setBibtex] = useState("");
   const [open, setOpen] = useState(false);
-  async function onSubmit(value: string) {
-    if (value !== "cancel") {
-      // TODO resolving doi can take long time and timeout, should notify user when fetch fails
-      const refs = await Cite.inputAsync(bibtex, {
-        forceType: "@bibtex/text",
-      });
-      const labelRefs = Object.fromEntries(
-        refs.map((r) => {
-          const label = getReferenceLabel(r);
-          return [label, r];
-        })
-      );
+  async function onSubmit() {
+    // TODO resolving doi can take long time and timeout, should notify user when fetch fails
+    const refs = await Cite.inputAsync(bibtex, {
+      forceType: "@bibtex/text",
+    });
+    const labelRefs = Object.fromEntries(
+      refs.map((r) => {
+        const label = getReferenceLabel(r);
+        return [label, r];
+      })
+    );
 
-      onAdd(labelRefs);
-    }
+    onAdd(labelRefs);
     setOpen(false);
   }
   const placeholder = `Enter BibTeX like:
@@ -2291,26 +2283,23 @@ const ImportBibTeXDOIButton = ({
       <Button type="button" variant="light" onClick={() => setOpen(true)}>
         Import from BibTeX
       </Button>
-      <Dialog isOpened={open} onSubmit={onSubmit}>
-        <b>Import references based on BibTeX</b>
-        {/* TODO get rid of `<form> cannot appear as a descendant of <form>` warning */}
-        <form method="dialog">
-          <div>
-            <textarea
-              value={bibtex}
-              style={{ width: "60rem", height: "16rem" }}
-              placeholder={placeholder}
-              onChange={(e) => setBibtex(e.target.value)}
-            />
-          </div>
-          <Button.Group>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button value="default" type="submit">
-              Import
-            </Button>
-          </Button.Group>
-        </form>
-      </Dialog>
+      <Modal
+        size="auto"
+        centered
+        opened={open}
+        onClose={() => setOpen(false)}
+        title="Import references based on BibTeX"
+      >
+        <textarea
+          value={bibtex}
+          style={{ width: "60rem", height: "20rem" }}
+          placeholder={placeholder}
+          onChange={(e) => setBibtex(e.target.value)}
+        />
+        <Button.Group mt="xl">
+          <Button onClick={onSubmit}>Import</Button>
+        </Button.Group>
+      </Modal>
     </div>
   );
 };
