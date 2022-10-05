@@ -1,4 +1,4 @@
-import { parse_state } from "@lxcat/schema/dist/core/parse";
+import { parseState } from "@lxcat/schema/dist/core/parse";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import {
   AtomicGenerator,
@@ -96,7 +96,7 @@ async function insert_state_tree<
   delete tmp_state.electronic;
 
   // FIXME: Link top level states to particle.
-  const t_ret = await insert_state(parse_state(tmp_state));
+  const t_ret = await insert_state(parseState(tmp_state));
   ret_id = t_ret.id;
 
   if (state.electronic) {
@@ -107,7 +107,7 @@ async function insert_state_tree<
       delete tmp_state.electronic[0].vibrational;
 
       /* console.log(state_to_string(tmp_state)); */
-      const e_ret = await insert_state(parse_state(tmp_state));
+      const e_ret = await insert_state(parseState(tmp_state));
       if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
 
       if (elec.vibrational) {
@@ -116,7 +116,7 @@ async function insert_state_tree<
           delete tmp_state.electronic[0].vibrational[0].rotational;
 
           /* console.log(state_to_string(tmp_state)); */
-          const v_ret = await insert_state(parse_state(tmp_state));
+          const v_ret = await insert_state(parseState(tmp_state));
           if (v_ret.new)
             await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
 
@@ -124,7 +124,7 @@ async function insert_state_tree<
             for (const rot of vib.rotational) {
               tmp_state.electronic[0].vibrational[0].rotational = [{ ...rot }];
               /* console.log(state_to_string(tmp_state)); */
-              const r_ret = await insert_state(parse_state(tmp_state));
+              const r_ret = await insert_state(parseState(tmp_state));
               if (r_ret.new)
                 await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
 
@@ -143,7 +143,7 @@ async function insert_state_tree<
     }
 
     if (in_compound.length > 1) {
-      const c_ret = await insert_state(parse_state(state));
+      const c_ret = await insert_state(parseState(state));
       if (c_ret.new) {
         for (const sub_id of in_compound) {
           await insert_edge("InCompound", sub_id, c_ret.id);
