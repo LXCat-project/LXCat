@@ -231,8 +231,6 @@ export async function listStates(selection: StateChoices): Promise<StateDict> {
     return {};
   }
   const filter = generateStateFilterAql(selection);
-  console.log(filter.query);
-  console.log(filter.bindVars);
   const cursor: ArrayCursor<[string, State]> = await db().query(aql`
   FOR s in State
     FILTER ${filter}
