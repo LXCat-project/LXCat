@@ -47,7 +47,7 @@ export type AtomicGenericGenerator<
   AT = unknown,
   SE extends string = "electronic"
 > = {
-  [key in SE]: ArrayMinOne<AT & (UAtomic<E> | E)>;
+  [key in SE]?: ArrayMinOne<AT & (UAtomic<E> | E)>;
 };
 
 // Generators to be used for input types.

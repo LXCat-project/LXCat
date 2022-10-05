@@ -12,10 +12,12 @@
         "minItems": 2,
         "type": "array"
       },
+      "minItems": 1,
       "type": "array"
     },
     "labels": {
       "items": {
+        "minLength": 1,
         "type": "string"
       },
       "maxItems": 2,
@@ -49,6 +51,7 @@
     },
     "units": {
       "items": {
+        "minLength": 1,
         "type": "string"
       },
       "maxItems": 2,
@@ -69,14 +72,23 @@
         },
         "status": {
           "description": "Valid transitions:\n* published\n* draft -> published + published -> archived (draft of published set gets published and published set gets archived)\n* published -> retracted",
-          "enum": ["draft", "published", "archived", "retracted"],
+          "enum": [
+            "draft",
+            "published",
+            "archived",
+            "retracted"
+          ],
           "type": "string"
         },
         "version": {
           "type": "string"
         }
       },
-      "required": ["status", "version", "createdOn"],
+      "required": [
+        "status",
+        "version",
+        "createdOn"
+      ],
       "type": "object"
     }
   },

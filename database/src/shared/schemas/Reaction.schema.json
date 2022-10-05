@@ -22,6 +22,9 @@
       "type": "array"
     }
   },
-  "required": ["reversible", "type_tags"],
+  "required": [
+    "reversible",
+    "type_tags"
+  ],
   "type": "object"
 }
