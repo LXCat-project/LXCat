@@ -1,9 +1,9 @@
 // https://npmjs.org/package/citation-js does not ship with Typescript declaration
 // so define it minimally here
 
-declare module "citation-js" {
+declare module "@citation-js/core" {
   import { Reference } from "@lxcat/schema/dist/core/reference";
-  declare class Cite {
+  export declare class Cite {
     constructor(csl: Reference, { forceType: string }?);
     format(
       format: string,
@@ -14,5 +14,4 @@ declare module "citation-js" {
       { forceType: string }?
     ) => Promise<Reference[]>;
   }
-  export default Cite;
 }

@@ -14,7 +14,9 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import Cite from "citation-js";
+import {Cite} from '@citation-js/core'
+import '@citation-js/plugin-bibtex'
+import '@citation-js/plugin-doi'
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   Controller,

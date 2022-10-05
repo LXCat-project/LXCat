@@ -6,7 +6,8 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
-import Cite from "citation-js";
+import {Cite} from '@citation-js/core'
+import '@citation-js/plugin-bibtex'
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
@@ -38,7 +39,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         );
       } else {
         res.send(
-          `Incorrect reference style found: ${refstyle}. Expected csl or bibtex.`
+          `Incorrect reference style found: ${refstyle}. Expected csl or apa or bibtex.`
         );
       }
       res.json(data);

@@ -1,5 +1,7 @@
 // TODO replace with @citation-js/core + @citation-js/plugin-csl + ... for smaller bundle because those are treeshakeable
-import Cite from "citation-js";
+import {Cite} from '@citation-js/core'
+import '@citation-js/plugin-csl'
+
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 export function reference2bibliography(

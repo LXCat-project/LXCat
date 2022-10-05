@@ -6,8 +6,8 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import Cite from "citation-js";
+import {Cite} from '@citation-js/core'
+import '@citation-js/plugin-bibtex'
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
