@@ -150,8 +150,8 @@ function parseMolecule<
         latex += v.latex;
 
         if (v.rotational) {
-          id += `${ID_RIGHT}J=`;
-          latex += `${LATEX_RIGHT}J=`;
+          id += `${ID_LEFT}J=`;
+          latex += `${LATEX_LEFT}J=`;
 
           for (const r of v.rotational) {
             r.summary = parser.r.id(r as ExtractRotational<Input>);
