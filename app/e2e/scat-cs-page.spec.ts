@@ -19,7 +19,7 @@ test.describe("section page", () => {
   test.beforeEach(async ({ page }) => {
     // goto a section page
     await page.goto("/scat-cs");
-    await page.locator("text=13 e + Uo ➙ Uo^42-").click();
+    await page.locator("text=13e+Uo→Uo42−13\\mathrm{e} + \\mathrm{Uo} \\rightarrow \\mathrm{Uo^42-}13e+Uo→Uo42−Pa").click();
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();

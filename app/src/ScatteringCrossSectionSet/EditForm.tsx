@@ -2674,14 +2674,17 @@ function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
       if (e.scheme === "") {
         delete e.scheme;
       }
+      delete e.latex;
       if (Array.isArray(e.vibrational)) {
         if (e.vibrational.length > 0) {
           e.vibrational.forEach((v: any) => {
             delete v.summary;
+            delete v.latex;
             if (Array.isArray(v.rotational)) {
               if (v.rotational.length > 0) {
                 v.rotational.forEach((r: Record<string, any>) => {
                   delete r.summary;
+                  delete r.latex;
                 });
               } else {
                 delete v.rotational;
@@ -2696,6 +2699,7 @@ function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
   }
   // TODO use type|schema where id is allowed
   delete (newState as any).id;
+  delete (newState as any).latex;
   if (newState.type === undefined) {
     // Simple particle does not have type
     delete newState.type;
