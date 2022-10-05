@@ -4,8 +4,14 @@ import { UE, UV, UR, UAtomic } from "../generators";
 export const electronic_orbital = ["s", "p", "d", "f", "g", "h"];
 export const atomic_orbital = ["S", "P", "D", "F", "G", "H"];
 
-export const molecular_orbital = ["S", "P", "D"];
-export const molecular_orbital_latex = ["\\Sigma", "\\Pi", "\\Delta"];
+export const molecular_orbital = ["S", "P", "D", "F", "G"];
+export const molecular_orbital_latex = [
+  "\\Sigma",
+  "\\Pi",
+  "\\Delta",
+  "\\Phi",
+  "\\Gamma",
+];
 
 export interface ComponentParser<Component> {
   id(state: Component): string;
