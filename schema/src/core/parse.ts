@@ -52,6 +52,15 @@ export function parseCharge(charge: number): string {
   return `^${Math.abs(charge)}${sign}`;
 }
 
+function parseChargeLatex(charge: number): string {
+  if (charge == 0) return "";
+  if (charge == 1) return "^+";
+  if (charge == -1) return "^-";
+
+  const sign = charge > 1 ? "+" : "-";
+  return `^{${Math.abs(charge)}${sign}}`;
+}
+
 const ID_LEFT = "{";
 const ID_RIGHT = "}";
 
@@ -72,16 +81,19 @@ function parseAtom<
 
   if (!outputState.electronic) {
     id = outputState.particle;
-    if (outputState.particle !== "e") id += parseCharge(outputState.charge);
+    if (outputState.particle !== "e") {
+      latex = id + parseChargeLatex(outputState.charge);
+      id += parseCharge(outputState.charge);
+    }
 
     outputState.id = id;
-    outputState.latex = `\\mathrm{${id}}`;
+    outputState.latex = `\\mathrm{${latex}}`;
 
     return outputState;
   }
 
   id = `${state.particle}${parseCharge(state.charge)}${ID_LEFT}`;
-  latex = `\\mathrm{${state.particle}}${parseCharge(
+  latex = `\\mathrm{${state.particle}}${parseChargeLatex(
     state.charge
   )}${LATEX_LEFT}`;
 
@@ -116,16 +128,19 @@ function parseMolecule<
 
   if (!outputState.electronic) {
     id = state.particle;
-    if (state.particle !== "e") id += parseCharge(state.charge);
+    if (state.particle !== "e") {
+      latex = id + parseChargeLatex(outputState.charge);
+      id += parseCharge(outputState.charge);
+    }
 
     outputState.id = id;
-    outputState.latex = `\\mathrm{${id}}`;
+    outputState.latex = `\\mathrm{${latex}}`;
 
     return outputState;
   }
 
   id = `${state.particle}${parseCharge(state.charge)}${ID_LEFT}`;
-  latex = `\\mathrm{${state.particle}}${parseCharge(
+  latex = `\\mathrm{${state.particle}}${parseChargeLatex(
     state.charge
   )}${LATEX_LEFT}`;
 
@@ -187,10 +202,15 @@ function parseSimpleParticle(
   const outputState = <SimpleParticle & LatexString & DBIdentifier>state;
 
   let id = state.particle;
-  if (state.particle !== "e") id += parseCharge(state.charge);
+  let latex = "";
+
+  if (state.particle !== "e") {
+    latex = id + parseChargeLatex(outputState.charge);
+    id += parseCharge(outputState.charge);
+  }
 
   outputState.id = id;
-  outputState.latex = `\\mathrm{${id}}`;
+  outputState.latex = `\\mathrm{${latex}}`;
 
   return outputState;
 }
