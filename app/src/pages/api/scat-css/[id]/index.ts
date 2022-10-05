@@ -2,8 +2,8 @@ import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
   AuthRequest,
-  hasDeveloperRole,
-  hasSessionOrAPIToken,
+  // hasDeveloperRole,
+  // hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import Cite from "citation-js";
@@ -11,6 +11,7 @@ import { applyCORS } from "../../../../shared/cors";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)
+  // TODO: Fix api auth once issue #10 is resolved.
   // .use(hasSessionOrAPIToken)
   // .use(hasDeveloperRole)
   .get(async (req, res) => {
