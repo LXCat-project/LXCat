@@ -63,6 +63,10 @@ test-app:
       junit: app/junit.xml
     paths:
       - app/storybook-static/
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
 
 # TODO cache ~/.cache/ms-playwright
 
@@ -99,6 +103,10 @@ test-database:
         path: database/coverage/cobertura-coverage.xml
       junit: database/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
 
 test-schema:
   cache:
@@ -121,6 +129,10 @@ test-schema:
         path: schema/coverage/cobertura-coverage.xml
       junit: schema/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
 
 test-converter:
   cache:
@@ -136,6 +148,10 @@ test-converter:
   script:
     - npm ci --cache .npm --prefer-offline
     - npm run test -w converter
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
 
 # docker in docker see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker
 build-prod:
@@ -150,3 +166,7 @@ build-prod:
     - touch .env
     - docker-compose build
     # TODO do stuff with build images
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
