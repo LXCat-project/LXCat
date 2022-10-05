@@ -25,7 +25,7 @@ test.describe("cross section index page", () => {
   });
 
   test("should have 2 items listed", async ({ page }) => {
-    const section1 = page.locator("text=13e+Uo→Uo42−13\\mathrm{e} + \\mathrm{Uo} \\rightarrow \\mathrm{Uo^42-}13e+Uo→Uo42−Pa");
+    const section1 = page.locator('text=/.*Part of "Some name" set.*/');
     const section2 = page.locator(
       'text=/.*Part of "Some other name" set.*/'
     );

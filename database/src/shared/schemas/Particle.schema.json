@@ -19,9 +19,6 @@
       "type": "string"
     }
   },
-  "required": [
-    "name",
-    "charge"
-  ],
+  "required": ["name", "charge"],
   "type": "object"
 }

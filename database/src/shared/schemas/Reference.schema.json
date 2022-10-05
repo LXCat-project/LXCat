@@ -36,10 +36,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -82,9 +79,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -97,10 +92,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -142,9 +134,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -157,10 +147,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -202,9 +189,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -246,10 +231,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -257,9 +239,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -285,10 +265,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -296,9 +273,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -312,10 +287,7 @@
       "type": "string"
     },
     "chapter-number": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "citation-label": {
       "type": "string"
@@ -348,10 +320,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -359,9 +328,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -387,10 +354,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -398,9 +362,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -408,10 +370,7 @@
       "type": "array"
     },
     "collection-number": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "collection-title": {
       "type": "string"
@@ -441,10 +400,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -452,9 +408,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -480,10 +434,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -491,9 +442,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -512,10 +461,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -558,9 +504,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -573,10 +517,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -618,9 +559,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -633,10 +572,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -678,9 +614,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -710,10 +644,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -721,9 +652,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -749,10 +678,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -760,9 +686,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -803,10 +727,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -814,9 +735,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -842,10 +761,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -853,9 +769,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -863,10 +777,7 @@
       "type": "array"
     },
     "edition": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "editor": {
       "items": {
@@ -893,10 +804,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -904,9 +812,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -932,10 +838,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -943,9 +846,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -977,10 +878,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -988,9 +886,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -1016,10 +912,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1027,9 +920,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -1051,10 +942,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1097,9 +985,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -1112,10 +998,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1157,9 +1040,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -1172,10 +1053,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1217,9 +1095,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -1261,10 +1137,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1272,9 +1145,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -1300,10 +1171,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1311,9 +1179,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -1345,10 +1211,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1356,9 +1219,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -1384,10 +1245,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1395,9 +1253,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -1405,10 +1261,7 @@
       "type": "array"
     },
     "issue": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "issued": {
       "anyOf": [
@@ -1422,10 +1275,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1468,9 +1318,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -1483,10 +1331,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1528,9 +1373,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -1543,10 +1386,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1588,9 +1428,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -1620,16 +1458,10 @@
       "type": "string"
     },
     "number-of-pages": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "number-of-volumes": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "original-author": {
       "items": {
@@ -1656,10 +1488,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1667,9 +1496,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -1695,10 +1522,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1706,9 +1530,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -1727,10 +1549,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1773,9 +1592,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -1788,10 +1605,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1833,9 +1647,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -1848,10 +1660,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -1893,9 +1702,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -1946,10 +1753,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1957,9 +1761,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -1985,10 +1787,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -1996,9 +1795,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -2033,10 +1830,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -2044,9 +1838,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -2072,10 +1864,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -2083,9 +1872,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -2122,10 +1909,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -2168,9 +1952,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "date-parts"
-          ],
+          "required": ["date-parts"],
           "type": "object"
         },
         {
@@ -2183,10 +1965,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -2228,9 +2007,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "raw"
-          ],
+          "required": ["raw"],
           "type": "object"
         },
         {
@@ -2243,10 +2020,7 @@
             "date-parts": {
               "items": {
                 "items": {
-                  "type": [
-                    "string",
-                    "number"
-                  ]
+                  "type": ["string", "number"]
                 },
                 "maxItems": 3,
                 "minItems": 1,
@@ -2288,9 +2062,7 @@
               "description": "Three variants:      1.  1,   2,   3,   4  => spring, summer, fall, winter      2. \"1\", \"2\", \"3\", \"4\" => spring, summer, fall, winter      3.            string  => any literal string Spring, Summer, Fall, Winter"
             }
           },
-          "required": [
-            "literal"
-          ],
+          "required": ["literal"],
           "type": "object"
         }
       ]
@@ -2326,10 +2098,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -2337,9 +2106,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "family"
-            ],
+            "required": ["family"],
             "type": "object"
           },
           {
@@ -2365,10 +2132,7 @@
                 "type": "string"
               },
               "sequence": {
-                "enum": [
-                  "first",
-                  "additional"
-                ],
+                "enum": ["first", "additional"],
                 "type": "string"
               },
               "suffix": {
@@ -2376,9 +2140,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "literal"
-            ],
+            "required": ["literal"],
             "type": "object"
           }
         ]
@@ -2429,18 +2191,12 @@
       "type": "string"
     },
     "volume": {
-      "type": [
-        "string",
-        "number"
-      ]
+      "type": ["string", "number"]
     },
     "year-suffix": {
       "type": "string"
     }
   },
-  "required": [
-    "id",
-    "type"
-  ],
+  "required": ["id", "type"],
   "type": "object"
 }
