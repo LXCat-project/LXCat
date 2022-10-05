@@ -1,10 +1,12 @@
-import { ParseMolecule } from "../parse";
+import { MoleculeParser } from "../parse";
 import { HeteronuclearDiatom } from "../molecules/diatom_heteronuclear";
-import { parse_e_me, parse_r_mr, parse_v_hdv } from "./parse_functions";
+import { linearElectronicParser } from "./linear_electronic";
+import { diatomicVibrationalParser } from "./diatomic_vibrational";
+import { rotationalParser } from "./rotational";
 
-export const ht_parser: ParseMolecule<HeteronuclearDiatom> = {
+export const ht_parser: MoleculeParser<HeteronuclearDiatom> = {
   // particle_type: ParticleType.Molecule,
-  e: parse_e_me,
-  v: parse_v_hdv,
-  r: parse_r_mr,
+  e: linearElectronicParser,
+  v: diatomicVibrationalParser,
+  r: rotationalParser,
 };

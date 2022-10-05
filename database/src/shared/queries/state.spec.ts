@@ -971,6 +971,7 @@ describe("listStates()", () => {
           {
             particle: "H2",
             id: "H2",
+            latex: "\\mathrm{H2}",
             charge: 0,
           },
         ],
@@ -982,11 +983,13 @@ describe("listStates()", () => {
           {
             particle: "H2",
             id: "H2",
+            latex: "\\mathrm{H2}",
             charge: 0,
           },
           {
             particle: "H2",
             id: "H2^+",
+            latex: "\\mathrm{H2^+}",
             charge: 1,
           },
         ],
@@ -998,21 +1001,25 @@ describe("listStates()", () => {
           {
             particle: "H2",
             id: "H2",
+            latex: "\\mathrm{H2}",
             charge: 0,
           },
           {
             particle: "H2",
             id: "H2^+",
+            latex: "\\mathrm{H2^+}",
             charge: 1,
           },
           {
             particle: "N2",
             id: "N2",
+            latex: "\\mathrm{N2}",
             charge: 0,
           },
           {
             particle: "N2",
             id: "N2^+",
+            latex: "\\mathrm{N2^+}",
             charge: 1,
           },
         ],
