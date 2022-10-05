@@ -15,7 +15,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -30,6 +30,8 @@ import {
 } from "react-hook-form";
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
 import { ajvResolver } from "@hookform/resolvers/ajv";
+import "katex/dist/katex.min.css";
+import { InlineMath } from "react-katex";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
@@ -2086,21 +2088,21 @@ const StateForm = ({
     getValues,
     formState: { errors },
   } = useFormContext();
-  const [id, setId] = useState("");
   const state = useWatch({ name: `set.states.${label}` });
   // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
-  useEffect(() => {
+  const latex = useMemo(() => {
     try {
-      setId(getStateId(state));
+      return getStateLatex(state);
     } catch (error) {
       // incomplete state, ignore error and dont update id
+      return ''
     }
-  }, [state]);
+  }, [state])
 
   return (
     <Accordion.Item key={label} value={label}>
       <Accordion.Control>
-        {label}: {id}
+        {label}: <InlineMath>{latex}</InlineMath>
       </Accordion.Control>
       <Accordion.Panel>
         {expanded && (
@@ -2767,8 +2769,16 @@ function flattenCrossSection(
   };
 }
 
-function getStateId(state: InState<any>): string {
+function hashState(state: InState<any>): [string, string] {
   const parsed = parseState(state as InState<any>);
   // TODO also calculate latex string
-  return parsed.id;
+  return [parsed.id, parsed.latex];
+}
+
+function getStateId(state: InState<any>): string {
+  return hashState(state)[0]
+}
+
+function getStateLatex(state: InState<any>): string {
+  return hashState(state)[1]
 }
