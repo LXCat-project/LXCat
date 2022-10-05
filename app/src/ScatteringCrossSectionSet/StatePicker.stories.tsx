@@ -44,16 +44,19 @@ Minimal.args = {
   choices: {
     "1": {
       id: "e",
+      latex: "\\mathrm{e}",
       particle: "e",
       charge: -1,
     },
     "2": {
       id: "Ar",
+      latex: "\\mathrm{Ar}",
       particle: "Ar",
       charge: 0,
     },
     "3": {
       id: "Ar^1",
+      latex: "\\mathrm{Ar}^+",
       particle: "Ar",
       charge: 1,
     },
