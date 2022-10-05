@@ -27,6 +27,7 @@ describe("parseState()", () => {
       },
       "\\mathrm{Uo^{42-}}",
     ],
+    [{ particle: "e", charge: -1 }, "\\mathrm{e}"],
   ];
   it.each(testCases)("given %d should render %s", (input, expected) => {
     const result = parseState(input);
