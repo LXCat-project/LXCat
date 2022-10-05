@@ -1,3 +1,4 @@
+import { LatexString } from "./generators";
 import { NOT } from "./util";
 
 export interface SimpleParticle {
@@ -22,8 +23,8 @@ export type State<T> = SimpleParticle & (T | NOT<keyof T>);
 export type InState<T> = State<T>;
 
 // TODO: This belongs to the database package.
-interface DBIdentifier {
+export interface DBIdentifier {
   id: string; // TODO rename to summary, having db item with _id and _key props, makes id confusing
 }
 
-export type DBState<StateType> = DBIdentifier & State<StateType>;
+export type DBState<StateType> = DBIdentifier & LatexString & State<StateType>;

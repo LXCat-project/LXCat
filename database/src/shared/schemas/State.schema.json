@@ -5,7 +5,7 @@
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -20,6 +20,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "scheme": {
                     "not": {}
                   },
@@ -30,7 +33,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -54,6 +57,9 @@
                       "type": "object"
                     },
                     "type": "array"
+                  },
+                  "latex": {
+                    "type": "string"
                   },
                   "scheme": {
                     "const": "LS",
@@ -83,7 +89,7 @@
                     "type": "object"
                   }
                 },
-                "required": ["config", "scheme", "summary", "term"],
+                "required": ["config", "latex", "scheme", "summary", "term"],
                 "type": "object"
               }
             ]
@@ -94,7 +100,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -102,14 +112,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -124,6 +134,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "scheme": {
                     "not": {}
                   },
@@ -134,7 +147,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -244,6 +257,9 @@
                     "required": ["core", "excited"],
                     "type": "object"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "scheme": {
                     "const": "J1L2",
                     "type": "string"
@@ -271,7 +287,7 @@
                     "type": "object"
                   }
                 },
-                "required": ["config", "scheme", "summary", "term"],
+                "required": ["config", "latex", "scheme", "summary", "term"],
                 "type": "object"
               }
             ]
@@ -282,7 +298,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -290,14 +310,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -312,6 +332,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "scheme": {
                     "not": {}
                   },
@@ -322,7 +345,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -429,6 +452,9 @@
                     "required": ["core", "excited"],
                     "type": "object"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "scheme": {
                     "const": "LS1",
                     "type": "string"
@@ -460,7 +486,7 @@
                     "type": "object"
                   }
                 },
-                "required": ["config", "scheme", "summary", "term"],
+                "required": ["config", "latex", "scheme", "summary", "term"],
                 "type": "object"
               }
             ]
@@ -471,7 +497,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -479,14 +509,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -504,6 +534,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "parity": {
                     "not": {}
                   },
@@ -517,7 +550,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -530,6 +563,9 @@
                     "type": "number"
                   },
                   "e": {
+                    "type": "string"
+                  },
+                  "latex": {
                     "type": "string"
                   },
                   "parity": {
@@ -550,6 +586,9 @@
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "not": {}
                             },
@@ -560,12 +599,15 @@
                               "type": "string"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         },
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "description": "Helper type for defining an array with minimum size one.",
                               "items": {
@@ -576,11 +618,14 @@
                                       "J": {
                                         "type": "string"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   },
                                   {
@@ -589,11 +634,14 @@
                                       "J": {
                                         "type": "number"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   }
                                 ]
@@ -608,7 +656,7 @@
                               "type": "number"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         }
                       ]
@@ -617,7 +665,7 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "parity", "summary"],
+                "required": ["Lambda", "S", "e", "latex", "parity", "summary"],
                 "type": "object"
               }
             ]
@@ -628,7 +676,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -636,14 +688,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -661,6 +713,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "reflection": {
                     "not": {}
                   },
@@ -671,7 +726,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -684,6 +739,9 @@
                     "type": "number"
                   },
                   "e": {
+                    "type": "string"
+                  },
+                  "latex": {
                     "type": "string"
                   },
                   "reflection": {
@@ -700,6 +758,9 @@
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "not": {}
                             },
@@ -710,12 +771,15 @@
                               "type": "string"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         },
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "description": "Helper type for defining an array with minimum size one.",
                               "items": {
@@ -726,11 +790,14 @@
                                       "J": {
                                         "type": "string"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   },
                                   {
@@ -739,11 +806,14 @@
                                       "J": {
                                         "type": "number"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   }
                                 ]
@@ -758,7 +828,7 @@
                               "type": "number"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         }
                       ]
@@ -767,7 +837,7 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "summary"],
+                "required": ["Lambda", "S", "e", "latex", "summary"],
                 "type": "object"
               }
             ]
@@ -778,7 +848,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -786,14 +860,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "description": "Helper type for defining an array with minimum size one.",
@@ -811,6 +885,9 @@
                   "e": {
                     "type": "string"
                   },
+                  "latex": {
+                    "type": "string"
+                  },
                   "parity": {
                     "not": {}
                   },
@@ -824,7 +901,7 @@
                     "not": {}
                   }
                 },
-                "required": ["e", "summary"],
+                "required": ["e", "latex", "summary"],
                 "type": "object"
               },
               {
@@ -837,6 +914,9 @@
                     "type": "number"
                   },
                   "e": {
+                    "type": "string"
+                  },
+                  "latex": {
                     "type": "string"
                   },
                   "parity": {
@@ -857,6 +937,9 @@
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "not": {}
                             },
@@ -867,12 +950,15 @@
                               "type": "string"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         },
                         {
                           "additionalProperties": false,
                           "properties": {
+                            "latex": {
+                              "type": "string"
+                            },
                             "rotational": {
                               "description": "Helper type for defining an array with minimum size one.",
                               "items": {
@@ -883,11 +969,14 @@
                                       "J": {
                                         "type": "string"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   },
                                   {
@@ -896,11 +985,14 @@
                                       "J": {
                                         "type": "number"
                                       },
+                                      "latex": {
+                                        "type": "string"
+                                      },
                                       "summary": {
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "summary"],
+                                    "required": ["J", "latex", "summary"],
                                     "type": "object"
                                   }
                                 ]
@@ -918,7 +1010,7 @@
                               "type": "array"
                             }
                           },
-                          "required": ["summary", "v"],
+                          "required": ["latex", "summary", "v"],
                           "type": "object"
                         }
                       ]
@@ -927,7 +1019,7 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "parity", "summary"],
+                "required": ["Lambda", "S", "e", "latex", "parity", "summary"],
                 "type": "object"
               }
             ]
@@ -938,7 +1030,11 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
@@ -946,14 +1042,14 @@
           "type": "string"
         }
       },
-      "required": ["charge", "electronic", "id", "particle", "type"],
+      "required": ["charge", "id", "latex", "particle", "type"],
       "type": "object"
     },
     {
       "additionalProperties": false,
       "properties": {
         "charge": {
-          "type": "number"
+          "type": "integer"
         },
         "electronic": {
           "not": {}
@@ -961,14 +1057,18 @@
         "id": {
           "type": "string"
         },
+        "latex": {
+          "type": "string"
+        },
         "particle": {
+          "minLength": 1,
           "type": "string"
         },
         "type": {
           "not": {}
         }
       },
-      "required": ["charge", "id", "particle"],
+      "required": ["charge", "id", "latex", "particle"],
       "type": "object"
     }
   ],
