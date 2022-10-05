@@ -80,9 +80,9 @@ function parseAtom<
   let latex = "";
 
   if (!outputState.electronic) {
-    id = outputState.particle;
+    latex = id = outputState.particle;
     if (outputState.particle !== "e") {
-      latex = id + parseChargeLatex(outputState.charge);
+      latex += parseChargeLatex(outputState.charge);
       id += parseCharge(outputState.charge);
     }
 
@@ -127,9 +127,9 @@ function parseMolecule<
   let latex = "";
 
   if (!outputState.electronic) {
-    id = state.particle;
+    latex = id = state.particle;
     if (state.particle !== "e") {
-      latex = id + parseChargeLatex(outputState.charge);
+      latex += parseChargeLatex(outputState.charge);
       id += parseCharge(outputState.charge);
     }
 
@@ -202,10 +202,10 @@ function parseSimpleParticle(
   const outputState = <SimpleParticle & LatexString & DBIdentifier>state;
 
   let id = state.particle;
-  let latex = "";
+  let latex = id;
 
   if (state.particle !== "e") {
-    latex = id + parseChargeLatex(outputState.charge);
+    latex += parseChargeLatex(outputState.charge);
     id += parseCharge(outputState.charge);
   }
 
