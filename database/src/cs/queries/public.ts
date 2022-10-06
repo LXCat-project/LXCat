@@ -1,5 +1,6 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import {
@@ -383,5 +384,64 @@ export async function historyOfSection(key: string) {
     SORT h.versionInfo.version DESC
     RETURN MERGE({_key: h._key}, h.versionInfo)
   `);
+  return await cursor.all();
+}
+
+export interface NestedStateArray {
+  id: string;
+  latex: string;
+  children?: Array<NestedStateArray>;
+}
+
+function getStateFilter(consumedState: AqlLiteral, reactions: Array<string>) {
+  return aql`
+    FOR reaction IN INBOUND ${consumedState} Consumes
+      ${reactions.length > 0 ? aql`FILTER reaction._id IN ${reactions}` : aql``}
+      LIMIT 1
+      RETURN reaction
+  `;
+}
+
+function getStateChildren(reactions: Array<string>, depth = 0) {
+  const levels = ["particle", "electronic", "vibrational", "rotational"];
+
+  const parent = aql.literal(levels[depth]);
+  const child = aql.literal(levels[depth + 1]);
+
+  const includeParent = aql.literal(`${levels[depth]}InReaction`);
+  const children = aql.literal(`${levels[depth]}Children`);
+
+  const latexProperty = aql.literal(
+    depth == 0
+      ? `${levels[depth]}.latex`
+      : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`
+  );
+
+  const aqlFilterReturn: GeneratedAqlQuery =
+    depth < 3
+      ? aql`
+        LET ${children} = (
+          FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
+            ${getStateChildren(reactions, depth + 1)}
+        )
+        FILTER ${includeParent} > 0 OR LENGTH(${children}) > 0
+        RETURN {id: ${parent}._id, latex: ${latexProperty}, children: ${children}}`
+      : aql`
+        FILTER ${includeParent} > 0
+        RETURN {id: ${parent}._id, latex: ${latexProperty}}`;
+
+  return aql`
+    LET ${includeParent} = 
+      COUNT(${getStateFilter(parent, reactions)})
+    ${aqlFilterReturn}
+  `;
+}
+
+export async function getStateSelection(reactions: Array<string>) {
+  const q = aql`
+    FOR particle IN State
+      FILTER NOT HAS(particle, "electronic")
+      ${getStateChildren(reactions)}`;
+  const cursor: ArrayCursor<NestedStateArray> = await db().query(q);
   return await cursor.all();
 }
