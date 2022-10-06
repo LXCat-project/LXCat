@@ -1,0 +1,51 @@
+import { Menu, Button, Group } from "@mantine/core";
+// @ts-ignore
+import { ChevronIcon } from "@mantine/core/esm/Select/SelectRightSection/ChevronIcon";
+import React from "react";
+import { Latex } from "./Latex";
+
+interface SelectProps {
+  choices: Record<string, string>;
+  value?: string;
+  onChange: (newValue: string) => void;
+}
+
+export const LatexSelect = ({ choices, value, onChange }: SelectProps) => {
+  return (
+    <Menu>
+      <Menu.Target>
+        <Button variant="default">
+          <Group position="apart">
+            <Latex>{value ? choices[value] : ""}</Latex>
+            <ChevronIcon />
+          </Group>
+        </Button>
+      </Menu.Target>
+
+      <Menu.Dropdown style={{ overflowY: "auto", maxHeight: "15rem" }}>
+        {Object.entries(choices).map(([choiceValue, label]) => (
+          <Menu.Item
+            component="button"
+            onClick={() => {
+              onChange(choiceValue);
+            }}
+            key={choiceValue}
+            disabled={choiceValue === value}
+            sx={(theme) =>
+              choiceValue === value
+                ? {
+                    backgroundColor: theme.colors.brand[5],
+                    ":disabled": {
+                      color: "white",
+                    },
+                  }
+                : {}
+            }
+          >
+            <Latex>{label}</Latex>
+          </Menu.Item>
+        ))}
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
