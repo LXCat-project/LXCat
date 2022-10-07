@@ -1,7 +1,7 @@
 import { Menu, Button, Group } from "@mantine/core";
-// @ts-ignore
-import { ChevronIcon } from "@mantine/core/esm/Select/SelectRightSection/ChevronIcon";
+import { IconSelector } from "@tabler/icons";
 import React from "react";
+
 import { Latex } from "./Latex";
 
 interface SelectProps {
@@ -14,10 +14,13 @@ export const LatexSelect = ({ choices, value, onChange }: SelectProps) => {
   return (
     <Menu>
       <Menu.Target>
-        <Button variant="default">
-          <Group position="apart">
+        <Button
+          variant="default"
+          sx={() => ({ paddingLeft: 10, paddingRight: 10 })}
+        >
+          <Group position="apart" spacing="sm">
             <Latex>{value ? choices[value] : ""}</Latex>
-            <ChevronIcon />
+            <IconSelector size={16} color="gray" />
           </Group>
         </Button>
       </Menu.Target>
