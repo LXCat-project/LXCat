@@ -1,9 +1,9 @@
 import { MantineProvider } from "@mantine/core";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { theme } from "../theme";
+import { useState } from "react";
 
-// import { useState } from "react";
-import { StateSelect } from "./StateSelect";
+import { theme } from "../theme";
+import { StateSelect, StateSelection } from "./StateSelect";
 
 const meta = {
   component: StateSelect,
@@ -22,31 +22,41 @@ const meta = {
 export default meta;
 
 const Template: ComponentStory<typeof StateSelect> = (args) => {
-  return <StateSelect {...args} />;
+  const [selected, setSelected] = useState<StateSelection>({});
+  return (
+    <StateSelect
+      {...args}
+      selected={selected}
+      onChange={(newSelected) => {
+        setSelected(newSelected);
+        args.onChange(newSelected);
+      }}
+    />
+  );
 };
 
 export const Minimal = Template.bind({});
 Minimal.args = {
   data: {
-    e: { latex: "\\mathrm{e}" },
-    Ar: {
+    "State/1": { latex: "\\mathrm{e}" },
+    "State/2": {
       latex: "\\mathrm{Ar}",
       children: {
-        "1S0": { latex: "{}^1\\mathrm{S}_0" },
-        "State/2017131": {
+        "State/3": { latex: "{}^1\\mathrm{S}_0" },
+        "State/4": {
           latex:
             "3p^{5}({}^{2}\\mathrm{P}^o_{3/2})4s({}^{2}\\mathrm{S}){}^{2}[3/2]^o_{2}",
         },
       },
     },
-    N2: {
+    "State/5": {
       latex: "\\mathrm{N_2}",
       children: {
-        X: {
+        "State/6": {
           latex: "{}^1\\Sigma^+_\\mathrm{g}",
           children: {
-            0: { latex: "0", children: { 0: { latex: "0" } } },
-            1: { latex: "1" },
+            "State/7": { latex: "0", children: { "State/8": { latex: "0" } } },
+            "State/9": { latex: "1" },
           },
         },
       },

@@ -1,13 +1,9 @@
 import { Button } from "@mantine/core";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { LatexSelect } from "./LatexSelect";
 
 export type StateSummary = { latex: string; children?: StateTree };
 export type StateTree = Record<string, StateSummary>;
-
-interface StateSelectProps {
-  data: StateTree;
-}
 
 function mapObject<T, R>(
   obj: Record<string, T>,
@@ -20,26 +16,36 @@ function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
 }
 
-export const StateSelect = ({ data }: StateSelectProps) => {
-  const [particle, setParticle] = useState<string>();
-  const [electronic, setElectronic] = useState<string>();
-  const [vibrational, setVibrational] = useState<string>();
-  const [rotational, setRotational] = useState<string>();
+export interface StateSelection {
+  particle?: string;
+  electronic?: string;
+  vibrational?: string;
+  rotational?: string;
+}
+interface StateSelectStaticProps {
+  data: StateTree;
+  selected: StateSelection;
+  onChange: (selected: StateSelection) => void;
+  inGroup?: boolean;
+}
 
+export const StateSelect = ({
+  data,
+  selected: { particle, electronic, vibrational, rotational },
+  onChange,
+  inGroup,
+}: StateSelectStaticProps) => {
   const particleChange = (newParticle: string) => {
-    setParticle(newParticle);
-    setElectronic(undefined);
-    setVibrational(undefined);
-    setRotational(undefined);
+    onChange({ particle: newParticle });
   };
   const electronicChange = (newElectronic: string) => {
-    setElectronic(newElectronic);
-    setVibrational(undefined);
-    setRotational(undefined);
+    onChange({ particle, electronic: newElectronic });
   };
   const vibrationalChange = (newVibrational: string) => {
-    setVibrational(newVibrational);
-    setRotational(undefined);
+    onChange({ particle, electronic, vibrational: newVibrational });
+  };
+  const rotationalChange = (newRotational: string) => {
+    onChange({ particle, electronic, vibrational, rotational: newRotational });
   };
 
   const electronicEntries = particle ? data[particle].children : undefined;
@@ -52,8 +58,8 @@ export const StateSelect = ({ data }: StateSelectProps) => {
       ? vibrationalEntries[vibrational].children
       : undefined;
 
-  return (
-    <Button.Group>
+  const component = (
+    <Fragment>
       <LatexSelect
         choices={mapObject(data, omitChildren)}
         value={particle}
@@ -77,15 +83,23 @@ export const StateSelect = ({ data }: StateSelectProps) => {
       ) : (
         <Fragment />
       )}
-      {rotationalEntries &&Object.keys(rotationalEntries).length > 0? (
+      {rotationalEntries && Object.keys(rotationalEntries).length > 0 ? (
         <LatexSelect
           choices={mapObject(rotationalEntries, omitChildren)}
           value={rotational}
-          onChange={setRotational}
+          onChange={rotationalChange}
         />
       ) : (
         <Fragment />
       )}
-    </Button.Group>
+    </Fragment>
+  );
+
+  return (inGroup ?? true) &&
+    electronicEntries &&
+    Object.keys(electronicEntries).length > 0 ? (
+    <Button.Group>{component}</Button.Group>
+  ) : (
+    component
   );
 };
