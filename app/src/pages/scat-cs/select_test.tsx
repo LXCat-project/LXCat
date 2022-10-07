@@ -3,7 +3,8 @@ import {
   NestedStateArray,
 } from "@lxcat/database/dist/cs/queries/public";
 import { GetServerSideProps, NextPage } from "next";
-import { StateSelect, StateSummary, StateTree } from "../../shared/StateSelect";
+import { StateList } from "../../shared/StateList";
+import { StateSummary, StateTree } from "../../shared/StateSelect";
 
 interface Props {
   nestedStates: Array<NestedStateArray>;
@@ -30,7 +31,13 @@ function stateArrayToTree(
 const ScatteringCrossSectionsPage: NextPage<Props> = ({ nestedStates }) => {
   console.log(nestedStates);
   console.log(stateArrayToTree(nestedStates));
-  return <StateSelect data={stateArrayToTree(nestedStates) ?? {}} />;
+  return (
+    <StateList
+      name={"entries"}
+      data={stateArrayToTree(nestedStates) ?? {}}
+      onChange={(stateIds) => console.log(stateIds)}
+    />
+  );
 };
 
 export default ScatteringCrossSectionsPage;
