@@ -393,16 +393,29 @@ export interface NestedStateArray {
   children?: Array<NestedStateArray>;
 }
 
-function getStateFilter(consumedState: AqlLiteral, reactions: Array<string>) {
+export enum StateProcess {
+  Consumed = "Consumes",
+  Produced = "Produces",
+}
+
+function getStateFilter(
+  consumedState: AqlLiteral,
+  process: StateProcess,
+  reactions: Array<string>
+) {
   return aql`
-    FOR reaction IN INBOUND ${consumedState} Consumes
+    FOR reaction IN INBOUND ${consumedState} ${aql.literal(process)}
       ${reactions.length > 0 ? aql`FILTER reaction._id IN ${reactions}` : aql``}
       LIMIT 1
       RETURN reaction
   `;
 }
 
-function getStateChildren(reactions: Array<string>, depth = 0) {
+function getStateChildren(
+  process: StateProcess,
+  reactions: Array<string>,
+  depth = 0
+) {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
 
   const parent = aql.literal(levels[depth]);
@@ -422,7 +435,7 @@ function getStateChildren(reactions: Array<string>, depth = 0) {
       ? aql`
         LET ${children} = (
           FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
-            ${getStateChildren(reactions, depth + 1)}
+            ${getStateChildren(process, reactions, depth + 1)}
         )
         FILTER ${includeParent} > 0 OR LENGTH(${children}) > 0
         RETURN {id: ${parent}._id, latex: ${latexProperty}, children: ${children}}`
@@ -432,16 +445,44 @@ function getStateChildren(reactions: Array<string>, depth = 0) {
 
   return aql`
     LET ${includeParent} = 
-      COUNT(${getStateFilter(parent, reactions)})
+      COUNT(${getStateFilter(parent, process, reactions)})
     ${aqlFilterReturn}
   `;
 }
 
-export async function getStateSelection(reactions: Array<string>) {
+export async function getStateSelection(
+  process: StateProcess,
+  reactions: Array<string>
+) {
   const q = aql`
     FOR particle IN State
       FILTER NOT HAS(particle, "electronic")
-      ${getStateChildren(reactions)}`;
+      ${getStateChildren(process, reactions)}`;
   const cursor: ArrayCursor<NestedStateArray> = await db().query(q);
+  return await cursor.all();
+}
+
+export async function getReactions(
+  consumes: Array<string>,
+  produces: Array<string>
+) {
+  let query = aql`
+    FOR reaction IN Reaction
+      LET consumed = (
+        FOR state IN OUTBOUND reaction Consumes
+          RETURN state._id
+      )
+      
+      FILTER ${consumes} ALL IN consumed
+      
+      LET produced = (
+        FOR state IN OUTBOUND reaction Produces
+          RETURN state._id
+      )
+      
+      FILTER ${produces} ALL IN produced
+      
+      return reaction._id`;
+  const cursor: ArrayCursor<string> = await db().query(query);
   return await cursor.all();
 }
