@@ -72,31 +72,37 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
 
   useEffect(() => {
     const updateReactions = async () => {
-      setReactions(await getReactions(lhsSelected, rhsSelected));
+      // setReactions(await getReactions(lhsSelected, rhsSelected));
+      await fetch(
+        `/api/reactions?${new URLSearchParams({
+          consumes: JSON.stringify(lhsSelected),
+          produces: JSON.stringify(rhsSelected),
+        })}`
+      );
     };
     updateReactions().catch(console.error);
   }, [lhsSelected, rhsSelected]);
 
-  useEffect(() => {
-    lhsFieldArray.fields.forEach(async (field, index) => {
-      lhsFieldArray.update(index, {
-        selected: field.selected,
-        data:
-          stateArrayToTree(
-            await getStateSelection(StateProcess.Consumed, reactions)
-          ) ?? {},
-      });
-    });
-    rhsFieldArray.fields.forEach(async (field, index) => {
-      rhsFieldArray.update(index, {
-        selected: field.selected,
-        data:
-          stateArrayToTree(
-            await getStateSelection(StateProcess.Produced, reactions)
-          ) ?? {},
-      });
-    });
-  }, [reactions]);
+  // useEffect(() => {
+  //   lhsFieldArray.fields.forEach(async (field, index) => {
+  //     lhsFieldArray.update(index, {
+  //       selected: field.selected,
+  //       data:
+  //         stateArrayToTree(
+  //           await getStateSelection(StateProcess.Consumed, reactions)
+  //         ) ?? {},
+  //     });
+  //   });
+  //   rhsFieldArray.fields.forEach(async (field, index) => {
+  //     rhsFieldArray.update(index, {
+  //       selected: field.selected,
+  //       data:
+  //         stateArrayToTree(
+  //           await getStateSelection(StateProcess.Produced, reactions)
+  //         ) ?? {},
+  //     });
+  //   });
+  // }, [reactions]);
 
   return (
     <ReactionPicker
