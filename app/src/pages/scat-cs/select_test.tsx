@@ -1,32 +1,11 @@
-import {
-  getReactions,
-  getStateSelection,
-  NestedStateArray,
-  StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+import { StateProcess } from "@lxcat/database/dist/cs/queries/public";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "../../shared/ReactionPicker";
-import {
-  StateSelection,
-  StateSummary,
-  StateTree,
-} from "../../shared/StateSelect";
+import { StateSelection, StateTree } from "../../shared/StateSelect";
 
 interface Props {}
-
-export function stateArrayToObject(
-  array: NestedStateArray
-): [string, StateSummary] {
-  return [
-    array.id,
-    {
-      latex: array.latex,
-      children: stateArrayToTree(array.children),
-    },
-  ];
-}
 
 interface StateEntryProps {
   data: StateTree;
@@ -46,73 +25,105 @@ const getSelectedStates = (entries: Array<StateEntryProps>): Array<string> =>
     .map(({ selected }) => getSelectedState(selected))
     .filter((id): id is string => id !== undefined);
 
-export function stateArrayToTree(
-  array?: Array<NestedStateArray>
-): StateTree | undefined {
-  return array ? Object.fromEntries(array.map(stateArrayToObject)) : undefined;
-}
-
 interface ListValues {
-  entries: Array<StateEntryProps>;
+  lhs: Array<StateEntryProps>;
+  rhs: Array<StateEntryProps>;
 }
 
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const { control } = useForm<ListValues>();
-  const lhsFieldArray = useFieldArray({ name: "entries", control });
-  const rhsFieldArray = useFieldArray({ name: "entries", control });
+  const lhsFieldArray = useFieldArray({ name: "lhs", control });
+  const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
   const [reactions, setReactions] = useState<Array<string>>([]);
   const [lhsSelected, setLhsSelected] = useState<Array<string>>([]);
   const [rhsSelected, setRhsSelected] = useState<Array<string>>([]);
 
   useEffect(() => {
-    setLhsSelected(getSelectedStates(lhsFieldArray.fields));
-    setRhsSelected(getSelectedStates(rhsFieldArray.fields));
+    const newLhs = getSelectedStates(lhsFieldArray.fields);
+    if (
+      newLhs.length !== lhsSelected.length ||
+      !lhsSelected.every((id, index) => id === newLhs[index])
+    ) {
+      setLhsSelected(newLhs);
+    }
+    const newRhs = getSelectedStates(rhsFieldArray.fields);
+    if (
+      newRhs.length !== rhsSelected.length ||
+      !rhsSelected.every((id, index) => id === newRhs[index])
+    ) {
+      setRhsSelected(newRhs);
+    }
   }, [lhsFieldArray.fields, rhsFieldArray.fields]);
 
   useEffect(() => {
     const updateReactions = async () => {
-      // setReactions(await getReactions(lhsSelected, rhsSelected));
-      await fetch(
+      const response = await fetch(
         `/api/reactions?${new URLSearchParams({
           consumes: JSON.stringify(lhsSelected),
           produces: JSON.stringify(rhsSelected),
         })}`
       );
+      const reactions = await response.json();
+      console.log(reactions);
+      setReactions(reactions);
     };
     updateReactions().catch(console.error);
   }, [lhsSelected, rhsSelected]);
 
-  // useEffect(() => {
-  //   lhsFieldArray.fields.forEach(async (field, index) => {
-  //     lhsFieldArray.update(index, {
-  //       selected: field.selected,
-  //       data:
-  //         stateArrayToTree(
-  //           await getStateSelection(StateProcess.Consumed, reactions)
-  //         ) ?? {},
-  //     });
-  //   });
-  //   rhsFieldArray.fields.forEach(async (field, index) => {
-  //     rhsFieldArray.update(index, {
-  //       selected: field.selected,
-  //       data:
-  //         stateArrayToTree(
-  //           await getStateSelection(StateProcess.Produced, reactions)
-  //         ) ?? {},
-  //     });
-  //   });
-  // }, [reactions]);
+  useEffect(() => {
+    const updateLhs = async () => {
+      const response = await fetch(
+        `/api/states/in_reaction?${new URLSearchParams({
+          stateProcess: StateProcess.Consumed,
+          reactions: JSON.stringify(reactions),
+        })}`
+      );
+      const data = await response.json();
+      lhsFieldArray.fields.forEach(async (field, index) => {
+        lhsFieldArray.update(index, {
+          selected: field.selected,
+          data,
+        });
+      });
+    };
+    const updateRhs = async () => {
+      const response = await fetch(
+        `/api/states/in_reaction?${new URLSearchParams({
+          stateProcess: StateProcess.Produced,
+          reactions: JSON.stringify(reactions),
+        })}`
+      );
+      const data = await response.json();
+      rhsFieldArray.fields.forEach(async (field, index) => {
+        rhsFieldArray.update(index, {
+          selected: field.selected,
+          data,
+        });
+      });
+    };
+
+    updateLhs().catch(console.error);
+    updateRhs().catch(console.error);
+  }, [reactions]);
 
   return (
     <ReactionPicker
       consumes={{
         entries: lhsFieldArray.fields,
         onAppend() {
-          // TODO: Compute data.
-          lhsFieldArray.append({ data: {}, selected: {} });
+          const doAppend = async () => {
+            const response = await fetch(
+              `/api/states/in_reaction?${new URLSearchParams({
+                stateProcess: StateProcess.Consumed,
+                reactions: JSON.stringify(reactions),
+              })}`
+            );
+            const data = await response.json();
+            lhsFieldArray.append({ data, selected: {} });
+          };
+          doAppend().catch(console.error);
         },
-        // TODO: Recompute data and reactions.
         onRemove: lhsFieldArray.remove,
         onUpdate(index, selected) {
           lhsFieldArray.update(index, {
@@ -124,7 +135,17 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
       produces={{
         entries: rhsFieldArray.fields,
         onAppend() {
-          rhsFieldArray.append({ data: {}, selected: {} });
+          const doAppend = async () => {
+            const response = await fetch(
+              `/api/states/in_reaction?${new URLSearchParams({
+                stateProcess: StateProcess.Produced,
+                reactions: JSON.stringify(reactions),
+              })}`
+            );
+            const data = await response.json();
+            rhsFieldArray.append({ data, selected: {} });
+          };
+          doAppend().catch(console.error);
         },
         onRemove: rhsFieldArray.remove,
         onUpdate(index, selected) {
