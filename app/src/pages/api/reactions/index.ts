@@ -28,7 +28,6 @@ const handler = nc<AuthRequest, NextApiResponse>()
     } else {
       res.json([]);
     }
-    throw Error("Unable to handle request");
   });
 
 export default handler;
