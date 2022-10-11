@@ -115,7 +115,7 @@ const ReactionEntryForm = ({
   return (
     <div style={{ display: "flex" }}>
       <Stack>
-      <Input.Label>State</Input.Label>
+      <Input.Label>Count</Input.Label>
         <TextInput
           style={{ width: "4rem" }}
           error={errorMsg(
