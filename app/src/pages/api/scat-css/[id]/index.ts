@@ -5,6 +5,7 @@ import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import { applyCORS } from "../../../../shared/cors";
+import { reference2bibliography } from "../../../../shared/cite";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)
@@ -32,8 +33,8 @@ const handler = nc<AuthRequest, NextApiResponse>()
       } else if (refstyle === "apa") {
         (data as any).references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
-            const cite = new Cite(value);
-            return [key, cite.format("bibliography")];
+            const bib = reference2bibliography(value);
+            return [key, bib];
           })
         );
       } else {
