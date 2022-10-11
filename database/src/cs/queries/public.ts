@@ -401,11 +401,15 @@ export enum StateProcess {
 function getStateFilter(
   consumedState: AqlLiteral,
   process: StateProcess,
-  reactions: Array<string>
+  reactions: Array<string> | AqlLiteral
 ) {
   return aql`
     FOR reaction IN INBOUND ${consumedState} ${aql.literal(process)}
-      ${reactions.length > 0 ? aql`FILTER reaction._id IN ${reactions}` : aql``}
+      ${
+        !Array.isArray(reactions) || reactions.length > 0
+          ? aql`FILTER reaction._id IN ${reactions}`
+          : aql``
+      }
       LIMIT 1
       RETURN reaction
   `;
@@ -413,7 +417,7 @@ function getStateFilter(
 
 function getStateChildren(
   process: StateProcess,
-  reactions: Array<string>,
+  reactions: Array<string> | AqlLiteral,
   depth = 0
 ) {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
@@ -450,39 +454,64 @@ function getStateChildren(
   `;
 }
 
-export async function getStateSelection(
+function getStateSelectionAQL(
   process: StateProcess,
-  reactions: Array<string>
+  reactions: Array<string> | AqlLiteral
 ) {
-  const q = aql`
+  return aql`
     FOR particle IN State
       FILTER NOT HAS(particle, "electronic")
       ${getStateChildren(process, reactions)}`;
-  const cursor: ArrayCursor<NestedStateArray> = await db().query(q);
+}
+
+export async function getStateSelection(
+  process: StateProcess,
+  reactions: Array<string> | AqlLiteral
+) {
+  const cursor: ArrayCursor<NestedStateArray> = await db().query(
+    getStateSelectionAQL(process, reactions)
+  );
   return await cursor.all();
+}
+
+export async function getPartakingStateSelection(
+  process: StateProcess,
+  consumed: Array<string>,
+  produced: Array<string>
+) {
+  const query = aql`
+    LET reactions = (${getReactionsAQL(consumed, produced)})
+    ${getStateSelectionAQL(process, aql.literal("reactions"))}`;
+  const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
+  return await cursor.all();
+}
+
+function getReactionsAQL(consumes: Array<string>, produces: Array<string>) {
+  return aql`
+      FOR reaction IN Reaction
+        LET consumed = (
+          FOR state IN OUTBOUND reaction Consumes
+            RETURN state._id
+        )
+        
+        FILTER ${consumes} ALL IN consumed
+        
+        LET produced = (
+          FOR state IN OUTBOUND reaction Produces
+            RETURN state._id
+        )
+        
+        FILTER ${produces} ALL IN produced
+        
+        return reaction._id`;
 }
 
 export async function getReactions(
   consumes: Array<string>,
   produces: Array<string>
 ) {
-  let query = aql`
-    FOR reaction IN Reaction
-      LET consumed = (
-        FOR state IN OUTBOUND reaction Consumes
-          RETURN state._id
-      )
-      
-      FILTER ${consumes} ALL IN consumed
-      
-      LET produced = (
-        FOR state IN OUTBOUND reaction Produces
-          RETURN state._id
-      )
-      
-      FILTER ${produces} ALL IN produced
-      
-      return reaction._id`;
-  const cursor: ArrayCursor<string> = await db().query(query);
+  const cursor: ArrayCursor<string> = await db().query(
+    getReactionsAQL(consumes, produces)
+  );
   return await cursor.all();
 }
