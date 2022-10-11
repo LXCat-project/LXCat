@@ -32,8 +32,6 @@ import {
 } from "react-hook-form";
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
 import { ajvResolver } from "@hookform/resolvers/ajv";
-import "katex/dist/katex.min.css";
-import { InlineMath } from "react-katex";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
@@ -58,6 +56,7 @@ import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker"
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
 import { LatexSelect } from "../shared/LatexSelect";
+import { Latex } from "../shared/Latex";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -2106,7 +2105,7 @@ const StateForm = ({
   return (
     <Accordion.Item key={label} value={label}>
       <Accordion.Control>
-        {label}: <InlineMath>{latex}</InlineMath>
+        {label}: <Latex>{latex}</Latex>
       </Accordion.Control>
       <Accordion.Panel>
         {expanded && (
