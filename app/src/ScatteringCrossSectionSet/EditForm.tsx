@@ -2105,7 +2105,7 @@ const StateForm = ({
   return (
     <Accordion.Item key={label} value={label}>
       <Accordion.Control>
-        {label}: <Latex>{latex}</Latex>
+        <Latex>{latex}</Latex>
       </Accordion.Control>
       <Accordion.Panel>
         {expanded && (
@@ -2191,9 +2191,8 @@ const ReferenceForm = ({
   const reference = watch(`set.references.${label}`);
   return (
     <li>
-      {label}:
       <Reference {...reference} />
-      <Button type="button" title="Remove reference" onClick={onRemove}>
+      <Button type="button" title="Remove reference" variant="light" onClick={onRemove}>
         &minus;
       </Button>
     </li>
