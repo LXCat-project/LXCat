@@ -9,9 +9,9 @@ declare module "@citation-js/core" {
       format: string,
       { format: string, template: string }?
     ): string | Record<string, string>;
-    static inputAsync: (
+    static async: (
       value: string,
       { forceType: string }?
-    ) => Promise<Reference[]>;
+    ) => Promise<{ data: Reference[] }>;
   }
 }

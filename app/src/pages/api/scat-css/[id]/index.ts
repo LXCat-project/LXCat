@@ -1,13 +1,9 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import {
-  AuthRequest,
-  // hasDeveloperRole,
-  // hasSessionOrAPIToken,
-} from "../../../../auth/middleware";
+import { AuthRequest } from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
-import {Cite} from '@citation-js/core'
-import '@citation-js/plugin-bibtex'
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-bibtex";
 import { applyCORS } from "../../../../shared/cors";
 
 const handler = nc<AuthRequest, NextApiResponse>()
