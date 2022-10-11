@@ -8,16 +8,16 @@ import {
   MultiSelect,
   NativeSelect,
   Radio,
-  Select,
   Space,
   Tabs,
   Text,
   Textarea,
   TextInput,
   Stack,
+  Input,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { forwardRef, ReactNode, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -57,6 +57,7 @@ import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSectio
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
+import { LatexSelect } from "../shared/LatexSelect";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -94,21 +95,6 @@ const errorMsg = (
   return error.message;
 };
 
-interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
-  value: string;
-  latex: string;
-}
-
-const StateItemComponent = forwardRef<HTMLDivElement, ItemProps>(
-  function inline({ latex, ...others }: ItemProps, ref) {
-    return (
-      <div ref={ref} {...others}>
-        <InlineMath>{latex}</InlineMath>
-      </div>
-    );
-  }
-);
-
 const ReactionEntryForm = ({
   index: entryIndex,
   processIndex,
@@ -128,9 +114,9 @@ const ReactionEntryForm = ({
   const states: Record<string, State> = useWatch({ name: `set.states` });
   return (
     <div style={{ display: "flex" }}>
-      <div>
+      <Stack>
+      <Input.Label>State</Input.Label>
         <TextInput
-          label="Count"
           style={{ width: "4rem" }}
           error={errorMsg(
             errors,
@@ -143,31 +129,22 @@ const ReactionEntryForm = ({
             }
           )}
         />
-      </div>
+      </Stack>
       <Controller
         control={control}
         name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
-        render={({ field: { onBlur, onChange, value } }) => (
+        render={({ field: { onChange, value } }) => (
           <Stack>
-            <Select
-              label="State"
-              itemComponent={StateItemComponent}
-              data={Object.entries(states).map(([value, s]) => {
-                return { value, latex: s.latex };
-              })}
-              value={value}
-              error={errorMsg(
-                errors,
-                `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
+            <Input.Label>State</Input.Label>
+            <LatexSelect
+              choices={Object.fromEntries(
+                Object.entries(states).map(([value, s]) => {
+                  return [value, s.latex];
+                })
               )}
-              onBlur={onBlur}
+              value={value}
               onChange={onChange}
             />
-            {/* 
-            TODO render latex inside select box instead of under it 
-            Tried icon and righSection props, but width is too small
-          */}
-            {value && <InlineMath>{states[value].latex}</InlineMath>}
           </Stack>
         )}
       />
