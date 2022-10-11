@@ -39,9 +39,6 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       ? (JSON.parse(query.reactions) as Array<string>)
       : undefined;
 
-  console.log(stateProcess);
-  console.log(reactions);
-
   if (stateProcess && reactions) {
     const stateArray = await getStateSelection(stateProcess, reactions);
     res.json(stateArrayToTree(stateArray) ?? {});
