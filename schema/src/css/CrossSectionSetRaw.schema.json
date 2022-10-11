@@ -2733,7 +2733,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],
@@ -2961,7 +2960,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],
@@ -3193,7 +3191,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],
@@ -3339,7 +3336,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],
@@ -3496,7 +3492,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],
@@ -3656,7 +3651,6 @@
             },
             "required": [
               "charge",
-              "electronic",
               "particle",
               "type"
             ],

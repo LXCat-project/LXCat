@@ -43,7 +43,7 @@ import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { InState } from "@lxcat/schema/dist/core/state";
 import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
-import { parse_state } from "@lxcat/schema/dist/core/parse";
+import { parseState } from "@lxcat/schema/dist/core/parse";
 
 import { Reference } from "../shared/Reference";
 import { State } from "@lxcat/database/dist/shared/types/collections";
@@ -2672,18 +2672,21 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
 function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
   const newState = { ...state }; // TODO make better clone
   if (newState.electronic) {
-    newState.electronic.forEach((e) => {
+    newState.electronic.forEach((e: any) => {
       if (e.scheme === "") {
         delete e.scheme;
       }
+      delete e.latex;
       if (Array.isArray(e.vibrational)) {
         if (e.vibrational.length > 0) {
-          e.vibrational.forEach((v) => {
+          e.vibrational.forEach((v: any) => {
             delete v.summary;
+            delete v.latex;
             if (Array.isArray(v.rotational)) {
               if (v.rotational.length > 0) {
                 v.rotational.forEach((r: Record<string, any>) => {
                   delete r.summary;
+                  delete r.latex;
                 });
               } else {
                 delete v.rotational;
@@ -2698,6 +2701,7 @@ function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
   }
   // TODO use type|schema where id is allowed
   delete (newState as any).id;
+  delete (newState as any).latex;
   if (newState.type === undefined) {
     // Simple particle does not have type
     delete newState.type;
@@ -2728,14 +2732,14 @@ function mapStateToReaction(
       .filter((e) => e.state !== "")
       .map((e) => {
         // TODO parse_state adds id and summary props, should not be needed here
-        const state = parse_state(states[e.state] as any);
+        const state = parseState(states[e.state] as any);
         return { count: e.count, state };
       }),
     rhs: reaction.rhs
       .filter((e) => e.state !== "")
       .map((e) => {
         // TODO parse_state adds id and summary props, should not be needed here
-        const state = parse_state(states[e.state] as any);
+        const state = parseState(states[e.state] as any);
         return { count: e.count, state };
       }),
   };
@@ -2766,7 +2770,7 @@ function flattenCrossSection(
 }
 
 function getStateId(state: InState<any>): string {
-  const parsed = parse_state(state as InState<any>);
+  const parsed = parseState(state as InState<any>);
   // TODO also calculate latex string
   return parsed.id;
 }

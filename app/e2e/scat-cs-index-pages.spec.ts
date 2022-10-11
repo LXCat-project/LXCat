@@ -25,9 +25,9 @@ test.describe("cross section index page", () => {
   });
 
   test("should have 2 items listed", async ({ page }) => {
-    const section1 = page.locator("text=13 e + Uo ➙ Uo^42-");
+    const section1 = page.locator('text=/.*Part of "Some name" set.*/');
     const section2 = page.locator(
-      "text=e + Uo{X^1S_g{v=1}} ➙ e + Uo{B^1S_u{v=2}}"
+      'text=/.*Part of "Some other name" set.*/'
     );
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
@@ -40,7 +40,7 @@ test.describe("cross section index page", () => {
 
     test("should list single section", async ({ page }) => {
       const section2 = page.locator(
-        "text=e + Uo{X^1S_g{v=1}} ➙ e + Uo{B^1S_u{v=2}}"
+        'text=/.*Part of "Some other name" set.*/'
       );
       await expect(section2).toBeVisible();
     });

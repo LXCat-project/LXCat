@@ -1,10 +1,12 @@
-import { ParseMolecule } from "../parse";
+import { MoleculeParser } from "../parse";
 import { LinearTriatomInversionCenter } from "../molecules/triatom_linear_inversion_center";
-import { parse_e_lice, parse_r_mr, parse_v_ltv } from "./parse_functions";
+import { linearInversionCenterElectronicParser } from "./linear_inversion_center_electronic";
+import { linearTriatomVibrationalParser } from "./triatom_linear_vibrational";
+import { rotationalParser } from "./rotational";
 
-export const ltic_parser: ParseMolecule<LinearTriatomInversionCenter> = {
+export const ltic_parser: MoleculeParser<LinearTriatomInversionCenter> = {
   // particle_type: ParticleType.Molecule,
-  e: parse_e_lice,
-  v: parse_v_ltv,
-  r: parse_r_mr,
+  e: linearInversionCenterElectronicParser,
+  v: linearTriatomVibrationalParser,
+  r: rotationalParser,
 };

@@ -6,6 +6,10 @@ import {
 } from "@lxcat/database/dist/shared/queries/state";
 import { useEffect, useState } from "react";
 
+import "katex/dist/katex.min.css";
+// @ts-ignore
+import { InlineMath } from "react-katex";
+
 /**
  * To pass selected state in a URL search parameter it has to be made URL friendly using this method.
  */
@@ -140,7 +144,7 @@ const ElectronicFilter = ({
     <li>
       <label>
         <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
-        {label}
+        <InlineMath>{label}</InlineMath>
       </label>
       {checked && hasVibrationalChoices ? (
         <ul style={ulStyle}>
