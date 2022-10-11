@@ -30,6 +30,15 @@ interface ListValues {
   rhs: Array<StateEntryProps>;
 }
 
+/* Strategy
+ *
+ * On state select update:
+ *  - Detect which entry has been updated.
+ *  - Compute new reactions and display new reactions (as this is immediately
+ *  visible to the user).
+ *  - Update the selection data of the other selection boxes.
+ */
+
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const { control } = useForm<ListValues>();
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
@@ -38,6 +47,105 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const [reactions, setReactions] = useState<Array<string>>([]);
   const [lhsSelected, setLhsSelected] = useState<Array<string>>([]);
   const [rhsSelected, setRhsSelected] = useState<Array<string>>([]);
+
+  const initData = async (side: "lhs" | "rhs") => {
+    const consumed = lhsFieldArray.fields
+      .map(({ selected }) => getSelectedState(selected))
+      .filter((state): state is string => state !== undefined);
+    const produced = rhsFieldArray.fields
+      .map(({ selected }) => getSelectedState(selected))
+      .filter((state): state is string => state !== undefined);
+    const response = await fetch(
+      `/api/states/partaking?${new URLSearchParams({
+        stateProcess:
+          side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
+        consumes: JSON.stringify(consumed),
+        produces: JSON.stringify(produced),
+      })}`
+    );
+    return await response.json();
+  };
+
+  const updateData = (
+    updatedIndex: number,
+    side: "lhs" | "rhs",
+    newSelected: StateSelection
+  ) => {
+    lhsFieldArray.fields.forEach(async ({ selected }, index) => {
+      if (!(side === "lhs" && index === updatedIndex)) {
+        // Get selected states based on other boxes.
+        const consumed = lhsFieldArray.fields
+          .filter((_, i) => i !== index)
+          .map((field, i) =>
+            getSelectedState(
+              side === "lhs" && i === updatedIndex
+                ? newSelected
+                : field.selected
+            )
+          )
+          .filter((selected) => selected !== undefined);
+        const produced = rhsFieldArray.fields
+          .map((field, i) =>
+            getSelectedState(
+              side === "rhs" && i === updatedIndex
+                ? newSelected
+                : field.selected
+            )
+          )
+          .filter((selected) => selected !== undefined);
+
+        const response = await fetch(
+          `/api/states/partaking?${new URLSearchParams({
+            stateProcess: StateProcess.Consumed,
+            consumes: JSON.stringify(consumed),
+            produces: JSON.stringify(produced),
+          })}`
+        );
+
+        lhsFieldArray.update(index, {
+          data: await response.json(),
+          selected,
+        });
+      }
+    });
+    rhsFieldArray.fields.forEach(async ({ selected }, index) => {
+      if (!(side === "rhs" && index === updatedIndex)) {
+        // Get selected states based on other boxes.
+        const consumed = lhsFieldArray.fields
+          .map((field, i) =>
+            getSelectedState(
+              side === "lhs" && i === updatedIndex
+                ? newSelected
+                : field.selected
+            )
+          )
+          .filter((selected) => selected !== undefined);
+        const produced = rhsFieldArray.fields
+          .filter((_, i) => i !== index)
+          .map((field, i) =>
+            getSelectedState(
+              side === "rhs" && i === updatedIndex
+                ? newSelected
+                : field.selected
+            )
+          )
+          .filter((selected) => selected !== undefined);
+
+        const response = await fetch(
+          `/api/states/partaking?${new URLSearchParams({
+            stateProcess: StateProcess.Produced,
+            consumes: JSON.stringify(consumed),
+            produces: JSON.stringify(produced),
+          })}`
+        );
+
+        rhsFieldArray.update(index, {
+          data: await response.json(),
+          selected,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     const newLhs = getSelectedStates(lhsFieldArray.fields);
@@ -54,7 +162,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     ) {
       setRhsSelected(newRhs);
     }
-  }, [lhsFieldArray.fields, rhsFieldArray.fields]);
+  }, [lhsFieldArray.fields, rhsFieldArray.fields, lhsSelected, rhsSelected]);
 
   useEffect(() => {
     const updateReactions = async () => {
@@ -65,47 +173,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
         })}`
       );
       const reactions = await response.json();
-      console.log(reactions);
       setReactions(reactions);
     };
     updateReactions().catch(console.error);
   }, [lhsSelected, rhsSelected]);
-
-  useEffect(() => {
-    const updateLhs = async () => {
-      const response = await fetch(
-        `/api/states/in_reaction?${new URLSearchParams({
-          stateProcess: StateProcess.Consumed,
-          reactions: JSON.stringify(reactions),
-        })}`
-      );
-      const data = await response.json();
-      lhsFieldArray.fields.forEach(async (field, index) => {
-        lhsFieldArray.update(index, {
-          selected: field.selected,
-          data,
-        });
-      });
-    };
-    const updateRhs = async () => {
-      const response = await fetch(
-        `/api/states/in_reaction?${new URLSearchParams({
-          stateProcess: StateProcess.Produced,
-          reactions: JSON.stringify(reactions),
-        })}`
-      );
-      const data = await response.json();
-      rhsFieldArray.fields.forEach(async (field, index) => {
-        rhsFieldArray.update(index, {
-          selected: field.selected,
-          data,
-        });
-      });
-    };
-
-    updateLhs().catch(console.error);
-    updateRhs().catch(console.error);
-  }, [reactions]);
 
   return (
     <ReactionPicker
@@ -113,46 +184,42 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
         entries: lhsFieldArray.fields,
         onAppend() {
           const doAppend = async () => {
-            const response = await fetch(
-              `/api/states/in_reaction?${new URLSearchParams({
-                stateProcess: StateProcess.Consumed,
-                reactions: JSON.stringify(reactions),
-              })}`
-            );
-            const data = await response.json();
+            const data = await initData("lhs");
             lhsFieldArray.append({ data, selected: {} });
           };
           doAppend().catch(console.error);
         },
-        onRemove: lhsFieldArray.remove,
+        onRemove: (index) => {
+          updateData(index, "lhs", {});
+          lhsFieldArray.remove(index);
+        },
         onUpdate(index, selected) {
           lhsFieldArray.update(index, {
             selected,
             data: lhsFieldArray.fields[index].data,
           });
+          updateData(index, "lhs", selected);
         },
       }}
       produces={{
         entries: rhsFieldArray.fields,
         onAppend() {
           const doAppend = async () => {
-            const response = await fetch(
-              `/api/states/in_reaction?${new URLSearchParams({
-                stateProcess: StateProcess.Produced,
-                reactions: JSON.stringify(reactions),
-              })}`
-            );
-            const data = await response.json();
+            const data = await initData("rhs");
             rhsFieldArray.append({ data, selected: {} });
           };
           doAppend().catch(console.error);
         },
-        onRemove: rhsFieldArray.remove,
+        onRemove: (index) => {
+          updateData(index, "rhs", {});
+          rhsFieldArray.remove(index);
+        },
         onUpdate(index, selected) {
           rhsFieldArray.update(index, {
             selected,
             data: rhsFieldArray.fields[index].data,
           });
+          updateData(index, "rhs", selected);
         },
       }}
     />
