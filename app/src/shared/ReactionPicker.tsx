@@ -1,17 +1,17 @@
 import { Fragment } from "react";
-import { StateListStatic, StateListStaticProps } from "./StateList";
+import { StateList, StateListProps } from "./StateList";
 
 interface ReactionPickerProps {
-  consumes: StateListStaticProps;
-  produces: StateListStaticProps;
+  consumes: StateListProps;
+  produces: StateListProps;
 }
 
 export const ReactionPicker = ({ consumes, produces }: ReactionPickerProps) => {
   return (
     // TODO: Properly group components.
     <Fragment>
-      <StateListStatic {...consumes} />
-      <StateListStatic {...produces} />
+      <StateList {...consumes} />
+      <StateList {...produces} />
     </Fragment>
   );
 };
