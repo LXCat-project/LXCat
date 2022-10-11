@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-import { byId } from "@lxcat/database/dist/css/queries/public";
+import { activeSetOfArchivedSet, byId } from "@lxcat/database/dist/css/queries/public";
 import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
@@ -14,6 +14,7 @@ import { reference2bibliography } from "../../shared/cite";
 
 interface Props {
   set: CrossSectionSetItem;
+  canonicalId: string;
 }
 
 function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
@@ -68,7 +69,7 @@ function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
   return ld;
 }
 
-const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
+const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
   // TODO dont uniqueify references of each process here, but get references for set from db
 
   const references = useMemo(() => {
@@ -92,6 +93,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set }) => {
           key="jsonld"
           {...jsonLdScriptProps(toJSONLD(set, references[0]))}
         />
+        <link rel="canonical" href={`/scat-css/${canonicalId}`} />
       </Head>
       <h1>{set.name}</h1>
       {set.versionInfo.status === "retracted" && (
@@ -166,13 +168,22 @@ export const getServerSideProps: GetServerSideProps<
   { id: string }
 > = async (context) => {
   const id = context.params?.id!;
-  const set = await byId(id);
+  const set = await byId(id); 
   if (set === undefined) {
     return {
       notFound: true,
     };
   }
+  let canonicalId = id
+  if (set.versionInfo.status === 'archived') {
+    // For archived set use the published or retracted version as the canonical version
+    // As that is the most representative page for that set
+    const active = await activeSetOfArchivedSet(id)
+    if (active) {
+      canonicalId = active._key
+    }
+  }
   return {
-    props: { set },
+    props: { set, canonicalId },
   };
 };

@@ -4,7 +4,7 @@ import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 import { Layout } from "../../shared/Layout";
-import { byId } from "@lxcat/database/dist/cs/queries/public";
+import { byId, historyOfSection } from "@lxcat/database/dist/cs/queries/public";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { Item } from "../../ScatteringCrossSection/Item";
 import { reference2bibliography } from "../../shared/cite";
@@ -12,6 +12,7 @@ import { reactionLabel } from "../../ScatteringCrossSection/ReactionSummary";
 
 interface Props {
   section: CrossSectionItem;
+  canonicalId: string;
 }
 
 function toJSONLD(section: CrossSectionItem) {
@@ -62,11 +63,12 @@ function toJSONLD(section: CrossSectionItem) {
   return ld;
 }
 
-const ScatteringCrossSectionPage: NextPage<Props> = ({ section }) => {
+const ScatteringCrossSectionPage: NextPage<Props> = ({ section, canonicalId }) => {
   return (
     <Layout title={`Scattering Cross Section of TODO`}>
       <Head>
         <script key="jsonld" {...jsonLdScriptProps(toJSONLD(section))} />
+        <link rel="canonical" href={`/scat-cs/${canonicalId}`} />
       </Head>
       <TermsOfUseCheck references={section.reference} />
       <Item {...section}></Item>
@@ -87,7 +89,16 @@ export const getServerSideProps: GetServerSideProps<
       notFound: true,
     };
   }
+  let canonicalId = id
+  if (section.versionInfo.status === 'archived') {
+    // For archived section use the published or retracted version as the canonical version
+    // As that is the most representative page for that section
+    const history = await historyOfSection(id)
+    if (history) {
+      canonicalId = history[0]._key
+    }
+  }
   return {
-    props: { section },
+    props: { section, canonicalId },
   };
 };
