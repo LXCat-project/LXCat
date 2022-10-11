@@ -8,14 +8,16 @@ import {
   MultiSelect,
   NativeSelect,
   Radio,
+  Select,
   Space,
   Tabs,
   Text,
   Textarea,
   TextInput,
+  Stack,
 } from "@mantine/core";
 import Cite from "citation-js";
-import { ReactNode, useMemo, useState } from "react";
+import { forwardRef, ReactNode, useMemo, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -92,6 +94,21 @@ const errorMsg = (
   return error.message;
 };
 
+interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
+  value: string;
+  latex: string;
+}
+
+const StateItemComponent = forwardRef<HTMLDivElement, ItemProps>(
+  function inline({ latex, ...others }: ItemProps, ref) {
+    return (
+      <div ref={ref} {...others}>
+        <InlineMath>{latex}</InlineMath>
+      </div>
+    );
+  }
+);
+
 const ReactionEntryForm = ({
   index: entryIndex,
   processIndex,
@@ -105,6 +122,7 @@ const ReactionEntryForm = ({
 }) => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext();
   const states: Record<string, State> = useWatch({ name: `set.states` });
@@ -126,22 +144,31 @@ const ReactionEntryForm = ({
           )}
         />
       </div>
-      <NativeSelect
-        label="State"
-        data={Object.entries(states).map(([value, s]) => {
-          // TODO render latex instead of id
-          const label = s.id === undefined ? getStateId(s) : s.id;
-          return { value, label };
-        })}
-        error={errorMsg(
-          errors,
-          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
-        )}
-        {...register(
-          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`,
-          {
-            deps: ["set.states"],
-          }
+      <Controller
+        control={control}
+        name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
+        render={({ field: { onBlur, onChange, value } }) => (
+          <Stack>
+            <Select
+              label="State"
+              itemComponent={StateItemComponent}
+              data={Object.entries(states).map(([value, s]) => {
+                return { value, latex: s.latex };
+              })}
+              value={value}
+              error={errorMsg(
+                errors,
+                `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
+              )}
+              onBlur={onBlur}
+              onChange={onChange}
+            />
+            {/* 
+            TODO render latex inside select box instead of under it 
+            Tried icon and righSection props, but width is too small
+          */}
+            {value && <InlineMath>{states[value].latex}</InlineMath>}
+          </Stack>
         )}
       />
       <Button type="button" title="Remove process" onClick={onRemove}>
@@ -2095,9 +2122,9 @@ const StateForm = ({
       return getStateLatex(state);
     } catch (error) {
       // incomplete state, ignore error and dont update id
-      return ''
+      return "";
     }
-  }, [state])
+  }, [state]);
 
   return (
     <Accordion.Item key={label} value={label}>
@@ -2776,9 +2803,9 @@ function hashState(state: InState<any>): [string, string] {
 }
 
 function getStateId(state: InState<any>): string {
-  return hashState(state)[0]
+  return hashState(state)[0];
 }
 
 function getStateLatex(state: InState<any>): string {
-  return hashState(state)[1]
+  return hashState(state)[1];
 }
