@@ -8,12 +8,19 @@ import { LutPlots } from "./LutPlots";
 
 interface ProcessProps {
   id: string;
+  color: string;
   reaction: Reaction<State>;
   toggleInPlot: () => void;
   inPlot: boolean;
 }
 
-const Process = ({ id, reaction, toggleInPlot, inPlot }: ProcessProps) => {
+const Process = ({
+  id,
+  reaction,
+  toggleInPlot,
+  inPlot,
+  color,
+}: ProcessProps) => {
   return (
     <li>
       <Link href={`/scat-cs/${id}`}>
@@ -23,9 +30,9 @@ const Process = ({ id, reaction, toggleInPlot, inPlot }: ProcessProps) => {
       </Link>
       <div>{reaction.type_tags.join(", ")}</div>
       <div>
-        <label>
-          Plot?
+        <label style={{ color }}>
           <input type="checkbox" onChange={toggleInPlot} checked={inPlot} />
+          &nbsp; ⭘
         </label>
       </div>
     </li>
@@ -36,7 +43,31 @@ interface Props {
   processes: OrphanedCrossSectionItem[];
 }
 
-const INITIAL_PROCESSES2PLOT = 4;
+const INITIAL_PROCESSES2PLOT = 5;
+
+// Copy of category20 color scheme from https://vega.github.io/vega/docs/schemes/
+export const colorScheme = [
+  "#1f77b4",
+  "#aec7e8",
+  "#ff7f0e",
+  "#ffbb78",
+  "#2ca02c",
+  "#98df8a",
+  "#d62728",
+  "#ff9896",
+  "#9467bd",
+  "#c5b0d5",
+  "#8c564b",
+  "#c49c94",
+  "#e377c2",
+  "#f7b6d2",
+  "#7f7f7f",
+  "#c7c7c7",
+  "#bcbd22",
+  "#dbdb8d",
+  "#17becf",
+  "#9edae5",
+];
 
 export const ProcessList = ({ processes }: Props) => {
   const [inPlot, setInPlot] = useState(
@@ -50,6 +81,7 @@ export const ProcessList = ({ processes }: Props) => {
           <Process
             {...p}
             key={p.id}
+            color={inPlot[i] ? colorScheme[i % colorScheme.length] : "#f7f6f6"}
             inPlot={inPlot[i]}
             toggleInPlot={() => {
               const newInPlot = [...inPlot];
@@ -59,7 +91,12 @@ export const ProcessList = ({ processes }: Props) => {
           />
         ))}
       </ol>
-      <LutPlots processes={processes.filter((_p, i) => inPlot[i])} />
+      <LutPlots
+        processes={processes.filter((_p, i) => inPlot[i])}
+        colors={processes
+          .map((_, i) => colorScheme[i % colorScheme.length])
+          .filter((_p, i) => inPlot[i])}
+      />
     </div>
   );
 };

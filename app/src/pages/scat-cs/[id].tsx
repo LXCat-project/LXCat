@@ -8,7 +8,7 @@ import { byId, historyOfSection } from "@lxcat/database/dist/cs/queries/public";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { Item } from "../../ScatteringCrossSection/Item";
 import { reference2bibliography } from "../../shared/cite";
-import { reactionLabel } from "../../ScatteringCrossSection/ReactionSummary";
+import { reactionAsText } from "../../ScatteringCrossSection/reaction";
 
 interface Props {
   section: CrossSectionItem;
@@ -21,7 +21,7 @@ function toJSONLD(section: CrossSectionItem) {
     "@type": "Dataset",
     identifier: `/scat-cs/${section.id}`,
     url: `/scat-cs/${section.id}`, // TODO make URL absolute
-    name: `Scattering Cross Section of ${reactionLabel(section.reaction)}`, // TODO add reaction as text
+    name: `Scattering Cross Section of ${reactionAsText(section.reaction)}`,
     keywords: [
       "cross section",
       ...section.reaction.type_tags,
@@ -63,9 +63,14 @@ function toJSONLD(section: CrossSectionItem) {
   return ld;
 }
 
-const ScatteringCrossSectionPage: NextPage<Props> = ({ section, canonicalId }) => {
+const ScatteringCrossSectionPage: NextPage<Props> = ({
+  section,
+  canonicalId,
+}) => {
   return (
-    <Layout title={`Scattering Cross Section of TODO`}>
+    <Layout
+      title={`Scattering Cross Section of ${reactionAsText(section.reaction)}`}
+    >
       <Head>
         <script key="jsonld" {...jsonLdScriptProps(toJSONLD(section))} />
         <link rel="canonical" href={`/scat-cs/${canonicalId}`} />
@@ -89,13 +94,13 @@ export const getServerSideProps: GetServerSideProps<
       notFound: true,
     };
   }
-  let canonicalId = id
-  if (section.versionInfo.status === 'archived') {
+  let canonicalId = id;
+  if (section.versionInfo.status === "archived") {
     // For archived section use the published or retracted version as the canonical version
     // As that is the most representative page for that section
-    const history = await historyOfSection(id)
+    const history = await historyOfSection(id);
     if (history) {
-      canonicalId = history[0]._key
+      canonicalId = history[0]._key;
     }
   }
   return {

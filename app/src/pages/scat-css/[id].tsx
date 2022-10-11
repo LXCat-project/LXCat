@@ -1,6 +1,9 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-import { activeSetOfArchivedSet, byId } from "@lxcat/database/dist/css/queries/public";
+import {
+  activeSetOfArchivedSet,
+  byId,
+} from "@lxcat/database/dist/css/queries/public";
 import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
@@ -168,19 +171,19 @@ export const getServerSideProps: GetServerSideProps<
   { id: string }
 > = async (context) => {
   const id = context.params?.id!;
-  const set = await byId(id); 
+  const set = await byId(id);
   if (set === undefined) {
     return {
       notFound: true,
     };
   }
-  let canonicalId = id
-  if (set.versionInfo.status === 'archived') {
+  let canonicalId = id;
+  if (set.versionInfo.status === "archived") {
     // For archived set use the published or retracted version as the canonical version
     // As that is the most representative page for that set
-    const active = await activeSetOfArchivedSet(id)
+    const active = await activeSetOfArchivedSet(id);
     if (active) {
-      canonicalId = active._key
+      canonicalId = active._key;
     }
   }
   return {
