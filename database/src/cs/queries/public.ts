@@ -466,7 +466,7 @@ export async function getReactions(
   consumes: Array<string>,
   produces: Array<string>
 ) {
-  let query = aql`
+  const query = aql`
     FOR reaction IN Reaction
       LET consumed = (
         FOR state IN OUTBOUND reaction Consumes
