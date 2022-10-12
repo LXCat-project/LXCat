@@ -104,12 +104,7 @@ function check_shell_config(
   if (!res0.result) {
     let err: ErrorObject;
     if (Object.keys(res0.allowed).length === 0) {
-      err = get_errobj(
-        parent,
-        component,
-        {},
-        `bad shell config: ${shell}`
-      );
+      err = get_errobj(parent, component, {}, `bad shell config: ${shell}`);
     } else {
       const strobj = JSON.stringify(shell, null).replace(/"/g, "");
       err = get_errobj(
@@ -139,12 +134,8 @@ function get_term_momenta(
   component: AtomLS1Impl | AtomJ1L2Impl
 ): [number, number, number, number] {
   // NOTE: assumes config must have core and excited
-  const [L1, L2] = Object.values(component.config).map(
-    (val) => val.term.L
-  );
-  const [S1, S2] = Object.values(component.config).map(
-    (val) => val.term.S
-  );
+  const [L1, L2] = Object.values(component.config).map((val) => val.term.L);
+  const [S1, S2] = Object.values(component.config).map((val) => val.term.S);
   return [L1, L2, S1, S2];
 }
 

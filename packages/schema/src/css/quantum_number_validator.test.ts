@@ -13,7 +13,7 @@ import {
   check_LS,
   check_LS1,
   check_J1L2,
-  get_states
+  get_states,
 } from "./quantum_number_validator";
 import {
   check_quantum_numbers,
