@@ -150,7 +150,7 @@
             "core": {
               "scheme": "LS",
               "config": [{ "n": 3, "l": 1, "occupance": 1 }],
-              "term": { "L": 1, "S": 0.5, "P": -1, "J": 1.5 }
+              "term": { "L": 1, "S": 0.5, "P": -1 }
             },
             "excited": {
               "scheme": "LS",
