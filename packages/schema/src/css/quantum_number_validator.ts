@@ -83,7 +83,7 @@ export function check_parity(
 
 function check_shell_config(
   parent: string,
-  subkey: string,
+  subkey: "core" | "excited" | "",
   component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ): boolean {
@@ -93,7 +93,6 @@ function check_shell_config(
     shell = component.config;
     term = component.term;
   } else {
-    if (!(subkey in ["core", "excited"])) return false;
     parent = `${parent}/config/${subkey}`;
     let sub = component.config[subkey as keyof typeof component.config];
     shell = sub.config;
@@ -146,7 +145,7 @@ function check_shell_config_core_excited(
 ): boolean {
   let res: boolean = true;
   for (let subkey of ["core", "excited"]) {
-    res = res && check_shell_config(parent, subkey, component, errors);
+    res = res && check_shell_config(parent, subkey as "core" | "excited", component, errors);
   }
   return res;
 }
