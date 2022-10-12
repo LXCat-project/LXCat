@@ -22,9 +22,9 @@ import {
 
 import { AnyMolecule } from "../core/molecules";
 
-let inputs_ok: [string, InState<AnyAtom | AnyMolecule>][]; // FIXME: type w/o AnyMolecule not supported
-let inputs_parity_nok: [string, InState<AnyAtom | AnyMolecule>][];
-let inputs_momenta_nok: [string, InState<AnyAtom | AnyMolecule>][];
+let inputs_ok: [string, InState<AnyAtom>][]; // FIXME: type w/o AnyMolecule not supported
+let inputs_parity_nok: [string, InState<AnyAtom>][];
+let inputs_momenta_nok: [string, InState<AnyAtom>][];
 
 function readExample(fn: string) {
   const content = readFileSync(fn, { encoding: "utf8" });
@@ -50,6 +50,7 @@ describe("validate parity data", () => {
     const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
+        if (!comp.scheme) continue;
         const status: boolean = check_parity(
           `${key}/electronic/${idx}`,
           comp,
@@ -70,6 +71,7 @@ describe("validate parity data", () => {
     };
     for (const [key, atom] of inputs_parity_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
+        if (!comp.scheme) continue;
         const status: boolean = check_parity(
           `${key}/electronic/${idx}`,
           comp,
@@ -172,13 +174,13 @@ describe("dispatchers", () => {
   test("component w/ no errors", () => {
     for (const [key, atom] of inputs_ok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
+        if (!comp.scheme) continue;
         const errors: ErrorObject[] = [];
         const status = check_quantum_numbers(
           `${key}/electronic/${idx}`,
           comp,
           errors
         );
-        // console.log("Error: ", JSON.stringify(errors, null, 2));
         expect(status).toEqual(true);
         expect(errors).toHaveLength(0);
       }
@@ -194,6 +196,7 @@ describe("dispatchers", () => {
     const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_parity_nok) {
       for (const [idx, comp] of atom.electronic!.entries()) {
+        if (!comp.scheme) continue;
         const status = check_quantum_numbers(
           `${key}/electronic/${idx}`,
           comp,
@@ -209,6 +212,7 @@ describe("dispatchers", () => {
         }
       }
     }
+    // console.log("Error: ", JSON.stringify(errors, null, 2));
     // expect(
     //   check_quantum_numbers("foo", { scheme: "not-defined" }, errors)
     // ).toEqual(false);

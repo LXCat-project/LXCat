@@ -10,7 +10,8 @@ import { Dict } from "./common";
 import { shell_parities, combine_parity } from "./parity";
 import { AtomLS1Impl } from "../core/atoms/ls1";
 import { AtomJ1L2Impl } from "../core/atoms/j1l2";
-import { AtomLSImpl, LSTermImpl } from "../core/atoms/ls";
+import { AtomLSImpl, LSTerm, LSTermImpl } from "../core/atoms/ls";
+import { ShellEntry } from "../core/shell_entry";
 
 export function get_errobj(
   parent: string,
@@ -82,11 +83,24 @@ export function check_parity(
 
 function check_shell_config(
   parent: string,
-  component: AtomLSImpl,
-  term: LSTermImpl,
+  subkey: string,
+  component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
-) {
-  const res0 = check_momenta_from_shell(component.config!, term.L, term.S);
+): boolean {
+  let shell: ShellEntry[];
+  let term: LSTermImpl;
+  if (component.scheme == "LS") {
+    shell = component.config;
+    term = component.term;
+  } else {
+    if (!(subkey in ["core", "excited"])) return false;
+    parent = `${parent}/config/${subkey}`;
+    let sub = component.config[subkey as keyof typeof component.config];
+    shell = sub.config;
+    term = sub.term;
+  }
+
+  const res0 = check_momenta_from_shell(shell, term.L, term.S);
   if (!res0.result) {
     let err: ErrorObject;
     if (Object.keys(res0.allowed).length === 0) {
@@ -94,10 +108,10 @@ function check_shell_config(
         parent,
         component,
         {},
-        `bad shell config: ${component.config}`
+        `bad shell config: ${shell}`
       );
     } else {
-      const strobj = JSON.stringify(component.config, null).replace(/"/g, "");
+      const strobj = JSON.stringify(shell, null).replace(/"/g, "");
       err = get_errobj(
         parent,
         component,
@@ -116,7 +130,8 @@ export function check_LS(
   errors: ErrorObject[]
 ): boolean {
   /* NOTE: assumes for LS coupling, config never has core & excited */
-  const res0 = check_shell_config(parent, component, component.term!, errors);
+  //  AtomLSImpl['term']
+  const res0 = check_shell_config(parent, "", component, errors);
   return res0;
 }
 
@@ -138,19 +153,11 @@ function check_shell_config_core_excited(
   component: AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ): boolean {
-  const res_c = check_shell_config(
-    `${parent}/config/core`,
-    component.config.core,
-    component.config.core.term,
-    errors
-  );
-  const res_e = check_shell_config(
-    `${parent}/config/excited`,
-    component.config.excited,
-    component.config.excited.term,
-    errors
-  );
-  return res_c && res_e;
+  let res: boolean = true;
+  for (let subkey of ["core", "excited"]) {
+    res = res && check_shell_config(parent, subkey, component, errors);
+  }
+  return res;
 }
 
 export function check_LS1(
