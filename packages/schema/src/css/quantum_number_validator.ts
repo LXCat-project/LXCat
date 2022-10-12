@@ -333,7 +333,7 @@ export function check_states(
   for (const [key, atom] of states) {
     const _type = atom["type"];
     if (!(_type && _type.startsWith("Atom"))) continue;
-    for (const [idx, component] of atom.electronic.entries()) {
+    for (const [idx, component] of atom.electronic!.entries()) {
       if (!component.scheme) continue; // some don't have scheme
       check_quantum_numbers(`${key}/electronic/${idx}`, component, errors);
     }
