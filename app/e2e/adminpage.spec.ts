@@ -87,7 +87,8 @@ test.describe("/author/scat-css/add", () => {
     await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.0"]').fill('1.2');
     await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.1"]').fill('3.4e-5');
     await page.locator('[aria-label="Add consumed reaction entry"]').click();
-    await page.locator('select[name="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]').selectOption('s0');
+    await page.locator('button[name="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]').click();
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Ar}")').click();
   }
 
   test.describe("given minimal set", () => {

@@ -8,15 +8,17 @@ interface SelectProps {
   choices: Record<string, string>;
   value?: string;
   onChange: (newValue: string) => void;
+  name?: string;
 }
 
-export const LatexSelect = ({ choices, value, onChange }: SelectProps) => {
+export const LatexSelect = ({ choices, value, onChange, name }: SelectProps) => {
   return (
     <Menu>
       <Menu.Target>
         <Button
           variant="default"
           sx={() => ({ paddingLeft: 10, paddingRight: 10 })}
+          name={name}
         >
           <Group position="apart" spacing="sm">
             <Latex>{value ? choices[value] : ""}</Latex>

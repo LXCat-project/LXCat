@@ -111,6 +111,14 @@ const ReactionEntryForm = ({
     formState: { errors },
   } = useFormContext();
   const states: Record<string, State> = useWatch({ name: `set.states` });
+  const stateChoices = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(states).map(([value, s]) => {
+        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s).latex
+        return [value, latex];
+      })
+    )
+  }, [states])
   return (
     <div style={{ display: "flex" }}>
       <Stack>
@@ -132,17 +140,14 @@ const ReactionEntryForm = ({
       <Controller
         control={control}
         name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange, value, name } }) => (
           <Stack>
             <Input.Label>State</Input.Label>
             <LatexSelect
-              choices={Object.fromEntries(
-                Object.entries(states).map(([value, s]) => {
-                  return [value, s.latex];
-                })
-              )}
+              choices={stateChoices}
               value={value}
               onChange={onChange}
+              name={name}
             />
           </Stack>
         )}
