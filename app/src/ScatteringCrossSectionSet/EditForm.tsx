@@ -116,7 +116,7 @@ const ReactionEntryForm = ({
   const stateChoices = useMemo(() => {
     return Object.fromEntries(
       Object.entries(states).map(([value, s]) => {
-        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s).latex
+        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s as any).latex
         return [value, latex];
       })
     )
