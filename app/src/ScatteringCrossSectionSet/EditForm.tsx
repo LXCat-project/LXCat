@@ -16,7 +16,9 @@ import {
   Stack,
   Input,
 } from "@mantine/core";
-import Cite from "citation-js";
+import {Cite} from '@citation-js/core'
+import '@citation-js/plugin-bibtex'
+import '@citation-js/plugin-doi'
 import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
@@ -55,6 +57,8 @@ import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSectio
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
+import { doi2csl } from "../shared/doi2csl";
+import { bibtex2csl } from "../shared/bibtex2csl";
 import { LatexSelect } from "../shared/LatexSelect";
 import { Latex } from "../shared/Latex";
 
@@ -114,7 +118,7 @@ const ReactionEntryForm = ({
   const stateChoices = useMemo(() => {
     return Object.fromEntries(
       Object.entries(states).map(([value, s]) => {
-        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s).latex
+        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s as any).latex
         return [value, latex];
       })
     )
@@ -2197,7 +2201,12 @@ const ReferenceForm = ({
   return (
     <li>
       <Reference {...reference} />
-      <Button type="button" title="Remove reference" variant="light" onClick={onRemove}>
+      <Button
+        type="button"
+        title="Remove reference"
+        variant="light"
+        onClick={onRemove}
+      >
         &minus;
       </Button>
     </li>
@@ -2214,10 +2223,7 @@ const ImportDOIButton = ({
   async function onSubmit() {
     // TODO resolving doi can take long time and timeout, should notify user when fetch fails
     // TODO use mailto param to improve speed, see https://github.com/CrossRef/rest-api-doc#good-manners--more-reliable-service
-    const refs = await Cite.inputAsync(doi, {
-      forceType: "@doi/id",
-    });
-    const ref = refs[0];
+    const ref = await doi2csl(doi);
     // TODO handle fetch/parse errors
     const label = getReferenceLabel(ref);
     onAdd(label, ref);
@@ -2261,15 +2267,7 @@ const ImportBibTeXDOIButton = ({
   const [open, setOpen] = useState(false);
   async function onSubmit() {
     // TODO resolving doi can take long time and timeout, should notify user when fetch fails
-    const refs = await Cite.inputAsync(bibtex, {
-      forceType: "@bibtex/text",
-    });
-    const labelRefs = Object.fromEntries(
-      refs.map((r) => {
-        const label = getReferenceLabel(r);
-        return [label, r];
-      })
-    );
+    const labelRefs = await bibtex2csl(bibtex);
 
     onAdd(labelRefs);
     setOpen(false);
@@ -2566,6 +2564,7 @@ export const EditForm = ({
               <StatePickerModal onSubmit={addStates} />
               {/* TODO add button to clone a state? */}
               {/* TODO add buttons to collapse or expand all accordion items? */}
+              {/* TODO add parse from string button, which converts latex string 2 state object */}
             </Button.Group>
             <ErrorMessage errors={errors} name="set.states" />
           </Tabs.Panel>

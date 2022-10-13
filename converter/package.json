@@ -8,6 +8,7 @@
     "name": "dist/index"
   },
   "scripts": {
+    "dev": "npm run build",
     "build": "napi build --release --dts dist/index.d.ts",
     "build:debug": "napi build --dts dist/index.d.ts",
     "test": "node --loader ts-node/esm --test tests/valid.test.ts"

@@ -28,3 +28,9 @@ to the `CrossSectionSetRaw` schema definition as defined in `@lxcat/schema`.
 Additionally, an `out.txt` should be placed in the same directory. This file
 contains the output, in LXCat legacy format, that is expected by the converter.
 Finally, the test can be enabled by adding it to `tests/valid.test.ts`.
+
+Run tests with
+
+```shell
+npm run test
+```

@@ -10,11 +10,11 @@
     },
     "dev": {
       "dependsOn": ["^dev"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**", "target/**"]
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**", "target/**"]
     },
     "start": {
       "dependsOn": ["build"],

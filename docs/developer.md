@@ -116,6 +116,15 @@ To fetch in JSON format use
 curl https://nl.lxcat.net/api/scat-css/<id of set>
 ```
 
+The style of the reference can be changed using `refstyle` search param.
+Valid choices are `csl` (default), `apa` and `bibtex`.
+
+For example
+
+```bash
+curl https://nl.lxcat.net/api/scat-css/<id of set>?refstyle=apa
+```
+
 To fetch in Bolsig+ format use
 
 ```bash
