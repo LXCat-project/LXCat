@@ -47,7 +47,7 @@ function toJSONLD(section: CrossSectionItem) {
     const set = section.isPartOf[0];
     ld.creator = {
       "@type": "Organization",
-      name: set.organization, // TODO value is _key for example Organization/12345, but should be name of org
+      name: set.organization,
     };
     ld.includedInDataCatalog = {
       "@type": "DataCatalog",

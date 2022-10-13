@@ -122,7 +122,12 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
       <div>Complete: {set.complete ? "Yes" : "No"}</div>
       <ul>
         <li>
-          <a href={`/api/scat-css/${set.id}`} target="_blank" rel="noreferrer">
+          <a
+            href={`/api/scat-css/${set.id}`}
+            target="_blank"
+            rel="noreferrer"
+            download
+          >
             Download JSON format
           </a>
         </li>
@@ -132,6 +137,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
             href={`/api/scat-css/${set.id}/legacy`}
             target="_blank"
             rel="noreferrer"
+            download
           >
             Download Bolsig+ format
           </a>
