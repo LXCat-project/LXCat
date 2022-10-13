@@ -41,7 +41,7 @@ export function check_parity(
   }
 
   if (config === undefined) return true;
-  if (component.scheme == "LS") {
+  if (component.scheme == CouplingScheme.LS) {
     if (!Array.isArray(config)) return true; // nothing to check
 
     const _P: number = combine_parity(shell_parities(config));
@@ -52,8 +52,6 @@ export function check_parity(
     }
     return true;
   } else {
-    if (!("core" in config)) return true; // nothing to check
-
     const _Ps: number[] = [];
     let status = true;
     for (const [key, comp] of Object.entries(config)) {
@@ -68,7 +66,8 @@ export function check_parity(
         errors.push(err);
         status = status && false;
       }
-      _Ps.push(__P);
+      // NOTE: read from term, don't want to generate multiple errors
+      _Ps.push(comp.term.P);
     }
 
     const _P: number = combine_parity(_Ps);
