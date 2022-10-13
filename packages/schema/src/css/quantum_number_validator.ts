@@ -89,7 +89,7 @@ function check_shell_config(
 ): boolean {
   let shell: ShellEntry[];
   let term: LSTermImpl;
-  if (component.scheme == "LS") {
+  if (component.scheme == CouplingScheme.LS) {
     shell = component.config;
     term = component.term;
   } else {
@@ -98,7 +98,16 @@ function check_shell_config(
     shell = sub.config;
     term = sub.term;
   }
+  return check_shell_config_impl(parent, component, shell, term, errors);
+}
 
+function check_shell_config_impl(
+  parent: string,
+  component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
+  shell: ShellEntry[],
+  term: LSTermImpl,
+  errors: ErrorObject[]
+): boolean {
   const res0 = check_momenta_from_shell(shell, term.L, term.S);
   if (!res0.result) {
     let err: ErrorObject;
