@@ -133,8 +133,21 @@ export function check_LS(
 ): boolean {
   /* NOTE: assumes for LS coupling, config never has core & excited */
   //  AtomLSImpl['term']
-  const res0 = check_shell_config(parent, "", component, errors);
-  return res0;
+  const res_shell = check_shell_config(parent, "", component, errors);
+
+  const L = component.term.L;
+  const S = component.term.S;
+  const res_J = check_momenta(L, S, component.term.J);
+  if (!res_J.result) {
+    const err = get_errobj(
+      parent,
+      component,
+      { J: res_J.allowed },
+      `term inconsistent: with L=${L}, S1=${S}, J1 should be one of ${res_J.allowed}`
+    );
+    errors.push(err);
+  }
+  return res_shell && res_J.result;
 }
 
 function get_term_momenta(
