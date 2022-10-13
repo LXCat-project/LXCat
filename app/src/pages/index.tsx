@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Organization, WithContext, Website } from "schema-dts";
+import { Organization, WithContext, WebSite } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
 
 import { Layout } from "../shared/Layout";
@@ -14,7 +14,7 @@ const jsonLDLogo: WithContext<Organization> = {
   logo: logo.src,
 };
 
-const jsonLDWebsite: WithContext<Website> = {
+const jsonLDWebsite: WithContext<WebSite> = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   url: "/",
