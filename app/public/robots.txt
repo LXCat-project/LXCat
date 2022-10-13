@@ -1,0 +1,7 @@
+# Block all crawlers for signin
+User-agent: *
+Disallow: /api/auth/signin
+
+# Allow all crawlers
+User-agent: *
+Allow: /
