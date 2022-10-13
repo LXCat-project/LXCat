@@ -216,6 +216,10 @@ describe("dispatchers", () => {
     // expect(
     //   check_quantum_numbers("foo", { scheme: "not-defined" }, errors)
     // ).toEqual(false);
+    /* 3 actual errors lead to 2 additional errors
+       - second/0/excited has an malformed shell config: l > n,
+       - third/1/core P is incorrect, so it doesn't match shell & term
+    */
     expect(errors).toHaveLength(5);
   });
 
@@ -226,7 +230,12 @@ describe("dispatchers", () => {
 
   test("jsonobject.states w/ errors", () => {
     const errors: ErrorObject[] = check_states(inputs_momenta_nok, []);
+    // console.log("Error: ", JSON.stringify(errors, null, 2));
+    /* 4 actual errors lead to 3 additional errors
+      - second/0/core has a bad J, that also doesn't pass J1L2 coupling check
+      - third/1 has a bad K, so check on J also fails
+      - phosphorus/0/core has bad l in shell config, so parity also fails
+    */
     expect(errors).toHaveLength(7);
-    // expect(errors).toEqual();
   });
 });

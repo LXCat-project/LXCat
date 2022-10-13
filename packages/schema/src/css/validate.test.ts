@@ -6,6 +6,7 @@ import { validator } from "./validate";
 // atom
 import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
 import data_parity_nok from "./data/Ar_C_P_Nobody_LXCat_bad_parity.json";
+import data_momenta_nok from "./data/Ar_C_P_Nobody_LXCat_bad_momenta.json";
 
 describe("validate()", () => {
   test("minimal", () => {
@@ -80,17 +81,24 @@ describe("validate()", () => {
 });
 
 describe("validate() w/ examples", () => {
-  test.only("no errors", () => {
+  test("no errors", () => {
     if (validator.validate(data_ok)) {
       validator.validate_quantum_numbers(data_ok);
     }
+    console.log(JSON.stringify(validator.errors, null, 2));
     expect(validator.errors).toHaveLength(0);
   });
 
   test("w/ errors", () => {
+    // see quantum_number_validator.test.ts for explanation of error counts
     if (validator.validate(data_parity_nok)) {
       validator.validate_quantum_numbers(data_parity_nok);
     }
     expect(validator.errors).toHaveLength(5);
+
+    if (validator.validate(data_momenta_nok)) {
+      validator.validate_quantum_numbers(data_momenta_nok);
+    }
+    expect(validator.errors).toHaveLength(7);
   });
 });
