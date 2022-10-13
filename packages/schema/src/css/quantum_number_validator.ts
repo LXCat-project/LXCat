@@ -111,10 +111,10 @@ function check_shell_config_impl(
   const res0 = check_momenta_from_shell(shell, term.L, term.S);
   if (!res0.result) {
     let err: ErrorObject;
+    const strobj = JSON.stringify(shell, null).replace(/"/g, "");
     if (Object.keys(res0.allowed).length === 0) {
-      err = get_errobj(parent, component, {}, `bad shell config: ${shell}`);
+      err = get_errobj(parent, component, {}, `bad shell config: ${strobj}`);
     } else {
-      const strobj = JSON.stringify(shell, null).replace(/"/g, "");
       err = get_errobj(
         parent,
         component,
