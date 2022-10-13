@@ -385,3 +385,28 @@ export async function historyOfSection(key: string) {
   `);
   return await cursor.all();
 }
+
+export async function getReactions(
+  consumes: Array<string>,
+  produces: Array<string>
+) {
+  const query = aql`
+    FOR reaction IN Reaction
+      LET consumed = (
+        FOR state IN OUTBOUND reaction Consumes
+          RETURN state._id
+      )
+      
+      FILTER ${consumes} ALL IN consumed
+      
+      LET produced = (
+        FOR state IN OUTBOUND reaction Produces
+          RETURN state._id
+      )
+      
+      FILTER ${produces} ALL IN produced
+      
+      return reaction._id`;
+  const cursor: ArrayCursor<string> = await db().query(query);
+  return await cursor.all();
+}

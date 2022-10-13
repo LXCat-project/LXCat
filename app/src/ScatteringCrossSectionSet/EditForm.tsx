@@ -13,8 +13,10 @@ import {
   Text,
   Textarea,
   TextInput,
+  Stack,
+  Input,
 } from "@mantine/core";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
   FieldError,
@@ -54,6 +56,8 @@ import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
 import { doi2csl } from "../shared/doi2csl";
 import { bibtex2csl } from "../shared/bibtex2csl";
+import { LatexSelect } from "../shared/LatexSelect";
+import { Latex } from "../shared/Latex";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -104,14 +108,23 @@ const ReactionEntryForm = ({
 }) => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext();
   const states: Record<string, State> = useWatch({ name: `set.states` });
+  const stateChoices = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(states).map(([value, s]) => {
+        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s).latex
+        return [value, latex];
+      })
+    )
+  }, [states])
   return (
     <div style={{ display: "flex" }}>
-      <div>
+      <Stack>
+      <Input.Label>Count</Input.Label>
         <TextInput
-          label="Count"
           style={{ width: "4rem" }}
           error={errorMsg(
             errors,
@@ -124,23 +137,20 @@ const ReactionEntryForm = ({
             }
           )}
         />
-      </div>
-      <NativeSelect
-        label="State"
-        data={Object.entries(states).map(([value, s]) => {
-          // TODO render latex instead of id
-          const label = s.id === undefined ? getStateId(s) : s.id;
-          return { value, label };
-        })}
-        error={errorMsg(
-          errors,
-          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`
-        )}
-        {...register(
-          `set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`,
-          {
-            deps: ["set.states"],
-          }
+      </Stack>
+      <Controller
+        control={control}
+        name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
+        render={({ field: { onChange, value, name } }) => (
+          <Stack>
+            <Input.Label>State</Input.Label>
+            <LatexSelect
+              choices={stateChoices}
+              value={value}
+              onChange={onChange}
+              name={name}
+            />
+          </Stack>
         )}
       />
       <Button type="button" title="Remove process" onClick={onRemove}>
@@ -2087,20 +2097,22 @@ const StateForm = ({
     getValues,
     formState: { errors },
   } = useFormContext();
-  const [id, setId] = useState("");
   const state = useWatch({ name: `set.states.${label}` });
   // TODO label update based on whole state tricky as existing label (a key in states object) needs to be removed
-  useEffect(() => {
+  const latex = useMemo(() => {
     try {
-      setId(getStateId(state));
+      return getStateLatex(state);
     } catch (error) {
       // incomplete state, ignore error and dont update id
+      return "";
     }
   }, [state]);
 
   return (
     <Accordion.Item key={label} value={label}>
-      <Accordion.Control>{id}</Accordion.Control>
+      <Accordion.Control>
+        <Latex>{latex}</Latex>
+      </Accordion.Control>
       <Accordion.Panel>
         {expanded && (
           <>
@@ -2760,8 +2772,16 @@ function flattenCrossSection(
   };
 }
 
-function getStateId(state: InState<any>): string {
+function hashState(state: InState<any>): [string, string] {
   const parsed = parseState(state as InState<any>);
   // TODO also calculate latex string
-  return parsed.id;
+  return [parsed.id, parsed.latex];
+}
+
+function getStateId(state: InState<any>): string {
+  return hashState(state)[0];
+}
+
+function getStateLatex(state: InState<any>): string {
+  return hashState(state)[1];
 }
