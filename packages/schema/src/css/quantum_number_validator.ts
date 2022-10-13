@@ -152,10 +152,16 @@ function check_shell_config_core_excited(
   component: AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ): boolean {
-  let res: boolean = true;
-  for (let subkey of ["core", "excited"]) {
-    res = res && check_shell_config(parent, subkey as "core" | "excited", component, errors);
-  }
+  let res: boolean = ["core", "excited"]
+    .map((subkey) =>
+      check_shell_config(
+        parent,
+        subkey as "core" | "excited",
+        component,
+        errors
+      )
+    )
+    .reduce((prev, next) => prev && next);
   return res;
 }
 
@@ -295,30 +301,22 @@ export function check_quantum_numbers(
   component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ) {
-  let status = true;
+  let status_parity = check_parity(parent, component, errors);
+  let status_coupling;
   const scheme = component.scheme;
   switch (scheme) {
     case CouplingScheme.LS:
-      status =
-        status &&
-        check_parity(parent, component, errors) &&
-        check_LS(parent, component, errors);
+      status_coupling = check_LS(parent, component, errors);
       break;
     case CouplingScheme.LS1:
-      status =
-        status &&
-        check_parity(parent, component, errors) &&
-        check_LS1(parent, component, errors);
+      status_coupling = check_LS1(parent, component, errors);
       break;
     case CouplingScheme.J1L2:
-      status =
-        status &&
-        check_parity(parent, component, errors) &&
-        check_J1L2(parent, component, errors);
+      status_coupling = check_J1L2(parent, component, errors);
       break;
     // FIXME: uncomment, when the J1J2 coupling scheme is defined
     // case CouplingScheme.J1J2:
-    //   status = status && check_parity(parent, component, errors) && check_J1J2(parent, component, errors);
+    //   status = status && check_J1J2(parent, component, errors);
     //   break;
     default: {
       const err = get_errobj(
@@ -328,10 +326,10 @@ export function check_quantum_numbers(
         `unknown coupling scheme: ${scheme}`
       );
       errors.push(err);
-      status = false;
+      return false;
     }
   }
-  return status;
+  return status_parity && status_coupling;
 }
 
 export function check_states(

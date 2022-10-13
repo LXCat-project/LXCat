@@ -91,6 +91,6 @@ describe("validate() w/ examples", () => {
     if (validator.validate(data_parity_nok)) {
       validator.validate_quantum_numbers(data_parity_nok);
     }
-    expect(validator.errors).toHaveLength(4);
+    expect(validator.errors).toHaveLength(5);
   });
 });
