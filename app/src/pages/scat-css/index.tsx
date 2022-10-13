@@ -19,6 +19,7 @@ import {
   stateSelectionToSearchParam,
 } from "../../shared/StateFilter";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import Head from "next/head";
 
 interface Props {
   items: CrossSectionSetHeading[];
@@ -30,6 +31,9 @@ const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items, facets }) => {
   const selection = query2options(router.query);
   return (
     <Layout title="Scattering Cross Section sets">
+      <Head>
+        <link rel="canonical" href={`/scat-css`} />
+      </Head>
       <h1>Scattering Cross Section set</h1>
       <Filter facets={facets} selection={selection} />
       <hr />
