@@ -1,5 +1,8 @@
-// TODO replace with @citation-js/core + @citation-js/plugin-csl + ... for smaller bundle because those are treeshakeable
-import Cite from "citation-js";
+// TODO it would be nice to not load the citation packages on pages where it is not used (for example /scat-css)
+// could use https://nextjs.org/docs/advanced-features/dynamic-import
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 export function reference2bibliography(

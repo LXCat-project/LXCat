@@ -30,15 +30,4 @@ Whenever the types from which the schemas are derived are changed then this comm
 
 ## Tests
 
-Tests can be written as `src/**/*.test.ts` files  with [vitest](https://vitest.dev/) framework and run with
-
-```shell
-npm run test
-```
-
-To run tests with code coverage use
-
-```shell
-npm run test -- run --coverage
-xdg-open coverage/index.html
-```
+See [code contributor doc](../docs/code-contributor#unit-tests).

@@ -1,5 +1,7 @@
 # Code contributor docs
 
+This document is for someone developing the LXCat web application and its packages.
+
 ## Table of contents
 
 ## Where is the code?
@@ -238,3 +240,24 @@ This will open a web browser where stories of components can be seen.
 
 The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing the job artifacts to `app/storybook-static/index.html`.
 This can be useful for other people to test your component without having to install anything.
+
+## Unit Tests
+
+Tests can be written as `src/**/*.{test,spec}.ts` files  with [vitest](https://vitest.dev/) framework and run with
+
+```shell
+npm run test
+```
+
+To run tests with code coverage use
+
+```shell
+npm run test -- run --coverage
+xdg-open coverage/index.html
+```
+
+To debug tests in VS code
+1. Place a breakpoint or `debugger` statement in code
+2. In Debug sidebar select `Debug Current Test File`
+3. Focus on test file
+4. Press F5
