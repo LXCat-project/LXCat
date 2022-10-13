@@ -1,10 +1,13 @@
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useState } from "react";
+
 import { OrphanedCrossSectionItem } from "@lxcat/database/dist/css/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import Link from "next/link";
-import { useState } from "react";
+
+import { reactionAsText } from "../ScatteringCrossSection/reaction";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
-import { LutPlots } from "./LutPlots";
 
 interface ProcessProps {
   id: string;
@@ -24,7 +27,7 @@ const Process = ({
   return (
     <li>
       <Link href={`/scat-cs/${id}`}>
-        <a>
+        <a aria-label={reactionAsText(reaction)}>
           <ReactionSummary {...reaction} />
         </a>
       </Link>
@@ -69,6 +72,13 @@ export const colorScheme = [
   "#9edae5",
 ];
 
+export const LutPlotsDynamic = dynamic(
+  () => import("./LutPlots").then((m) => m.LutPlots),
+  {
+    ssr: false,
+  }
+);
+
 export const ProcessList = ({ processes }: Props) => {
   const [inPlot, setInPlot] = useState(
     processes.map((d, i) => i < INITIAL_PROCESSES2PLOT)
@@ -91,7 +101,7 @@ export const ProcessList = ({ processes }: Props) => {
           />
         ))}
       </ol>
-      <LutPlots
+      <LutPlotsDynamic
         processes={processes.filter((_p, i) => inPlot[i])}
         colors={processes
           .map((_, i) => colorScheme[i % colorScheme.length])

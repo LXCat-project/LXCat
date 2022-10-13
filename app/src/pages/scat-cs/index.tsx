@@ -36,9 +36,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     species2: stateSelectionToSearchParam(selection.species2),
     offset: paging.offset + paging.count,
   };
-  let canonicalUrl = '/scat-cs'
+  let canonicalUrl = "/scat-cs";
   if (paging.offset > 0) {
-    canonicalUrl = `/scat-cs?offset=${paging.offset}`
+    canonicalUrl = `/scat-cs?offset=${paging.offset}`;
   }
   return (
     <Layout title="Scattering Cross Section">

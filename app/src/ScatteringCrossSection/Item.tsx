@@ -1,9 +1,16 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { LutPlot } from "./LutPlot";
 import { LutTable } from "./LutTable";
+
+export const LutPlotDynamic = dynamic(
+  () => import("./LutPlot").then((m) => m.LutPlot),
+  {
+    ssr: false,
+  }
+);
 
 export const Item = (props: CrossSectionItem) => {
   return (
@@ -56,7 +63,11 @@ export const Item = (props: CrossSectionItem) => {
         ))}
       </div>
       <h2>Data</h2>
-      <LutPlot data={props.data} labels={props.labels} units={props.units} />
+      <LutPlotDynamic
+        data={props.data}
+        labels={props.labels}
+        units={props.units}
+      />
       <details>
         <summary>Data as table</summary>
         <LutTable data={props.data} labels={props.labels} units={props.units} />
