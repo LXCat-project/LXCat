@@ -14,6 +14,7 @@ import { stateSelectionToSearchParam } from "../../shared/StateFilter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
+import Head from "next/head";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -35,8 +36,15 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     species2: stateSelectionToSearchParam(selection.species2),
     offset: paging.offset + paging.count,
   };
+  let canonicalUrl = '/scat-cs'
+  if (paging.offset > 0) {
+    canonicalUrl = `/scat-cs?offset=${paging.offset}`
+  }
   return (
     <Layout title="Scattering Cross Section">
+      <Head>
+        <link rel="canonical" href={canonicalUrl} />
+      </Head>
       <h1>Scattering Cross Sections</h1>
       <Filter facets={facets} selection={selection} />
       <hr />
