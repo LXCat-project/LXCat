@@ -1,12 +1,12 @@
 import { describe, beforeAll, it, expect } from "vitest";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import {
   startDbWithUserAndCssCollections,
   sampleSets4SearchWithVersions,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { Facets, search, searchFacets, SearchOptions } from "./public";
-import { CrossSectionHeading } from "../public";
+import { byId, Facets, search, searchFacets, SearchOptions } from "./public";
+import { CrossSectionHeading, CrossSectionItem } from "../public";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -134,6 +134,69 @@ describe("given cross sections in different version states", () => {
       it("should return only published sets", () => {
         expect(results.length).toEqual(1);
         expect(results[0].isPartOf).toEqual(["H2 set"]);
+      });
+
+      describe("byId()", () => {
+        it("should return a cross section item", async () => {
+          const id = results[0].id;
+          const item = await byId(id);
+
+          const expected: CrossSectionItem = {
+            threshold: 42,
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            data: [[1, 3.14e-20]],
+            reference: [],
+            id: expect.stringMatching(/\d+/),
+            isPartOf: [
+              {
+                complete: false,
+                description: "Some description",
+                id: expect.stringMatching(/\d+/),
+                name: "H2 set",
+                organization: "Some published organization",
+                versionInfo: {
+                  createdOn: expect.any(String),
+                  status: "published",
+                  version: "1",
+                },
+              },
+            ],
+            versionInfo: {
+              status: "published",
+              version: "1",
+              createdOn: expect.any(String),
+              commitMessage: "",
+            },
+            reaction: {
+              lhs: [
+                {
+                  state: {
+                    charge: -1,
+                    id: "e",
+                    latex: "\\mathrm{e}",
+                    particle: "e",
+                  },
+                  count: 1,
+                },
+                {
+                  state: {
+                    charge: 0,
+                    id: "H2",
+                    latex: "\\mathrm{H2}",
+                    particle: "H2",
+                  },
+                  count: 1,
+                },
+              ],
+              reversible: false,
+              type_tags: [ReactionTypeTag.Effective],
+              rhs: [],
+            },
+          };
+          expect(item).toEqual(expected);
+        });
       });
     });
   });

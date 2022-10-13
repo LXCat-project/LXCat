@@ -2,6 +2,12 @@ import Link from "next/link";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 
+const style = {
+  boxShadow: "3px 5px 2px gray",
+  padding: 4,
+  border: "1px black solid",
+};
+
 export function ListItem(props: CrossSectionHeading) {
   let partOf = <></>;
   if (props.isPartOf.length === 1) {
@@ -11,14 +17,8 @@ export function ListItem(props: CrossSectionHeading) {
     partOf = <div>Part of {quotedNames} sets</div>;
   }
   return (
-    <Link href={`/scat-cs/${props.id}`} role="listitem">
-      <a
-        style={{
-          boxShadow: "3px 5px 2px gray",
-          padding: 4,
-          border: "1px black solid",
-        }}
-      >
+    <Link href={`/scat-cs/${props.id}`}>
+      <a style={style} role="listitem">
         <ReactionSummary {...props.reaction} />
         {partOf}
       </a>

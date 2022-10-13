@@ -1,9 +1,16 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { LutPlot } from "./LutPlot";
 import { LutTable } from "./LutTable";
+
+export const LutPlotDynamic = dynamic(
+  () => import("./LutPlot").then((m) => m.LutPlot),
+  {
+    ssr: false,
+  }
+);
 
 export const Item = (props: CrossSectionItem) => {
   return (
@@ -29,34 +36,46 @@ export const Item = (props: CrossSectionItem) => {
       )}
       <ul>
         <li>
-          <a href={`/api/scat-cs/${props.id}`} target="_blank" rel="noreferrer">
+          <a
+            href={`/api/scat-cs/${props.id}`}
+            target="_blank"
+            rel="noreferrer"
+            download
+          >
             Download JSON format
           </a>
         </li>
+        {/* TODO also allow a cross section to be downloaded in Bolsig+_ format
+        Converter currently only understands cross section sets.
         <li>
-          <a href="TODO" target="_blank" rel="noreferrer">
+          <a href="TODO" target="_blank" rel="noreferrer" download>
             Download Bolsig+ format
           </a>
-        </li>
+        </li> */}
       </ul>
       <h2>Reaction</h2>
       <ReactionSummary {...props.reaction} />
       {/* TODO show charge, non-simpleparticle data */}
       <h2>Part of set</h2>
 
-      <div>
+      <ul>
         {props.isPartOf.map((s) => (
-          <div key={s.id}>
+          <li key={s.id}>
             <div>
               Name: <Link href={`/scat-css/${s.id}`}>{s.name}</Link>
             </div>
             <div>Description: {s.description}</div>
             <div>Complete: {s.complete ? "Yes" : "No"}</div>
-          </div>
+            <div>Contributed by {s.organization}</div>
+          </li>
         ))}
-      </div>
+      </ul>
       <h2>Data</h2>
-      <LutPlot data={props.data} labels={props.labels} units={props.units} />
+      <LutPlotDynamic
+        data={props.data}
+        labels={props.labels}
+        units={props.units}
+      />
       <details>
         <summary>Data as table</summary>
         <LutTable data={props.data} labels={props.labels} units={props.units} />
