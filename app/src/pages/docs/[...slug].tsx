@@ -1,6 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { Mermaid } from "../../docs/Mermaid";
+import dynamic from "next/dynamic";
+
 import { listDocFiles, md2mdx } from "../../docs/generator";
 import { Layout } from "../../shared/Layout";
 
@@ -10,6 +11,11 @@ interface Props {
   slug: string[];
   mdxSource: MDXRemoteSerializeResult;
 }
+
+export const Mermaid = dynamic(
+  () => import("../../docs/Mermaid").then((mod) => mod.Mermaid),
+  { ssr: false }
+);
 
 const components = {
   Mermaid,

@@ -432,9 +432,8 @@ export async function historyOfSet(key: string) {
  * Find published/retracted css of archived version
  */
 export async function activeSetOfArchivedSet(key: string) {
-  // TODO use query on some page
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<string> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}

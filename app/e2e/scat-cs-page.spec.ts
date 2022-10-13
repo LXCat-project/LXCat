@@ -30,18 +30,15 @@ test.describe("section page", () => {
     await expect(canvas).toBeVisible();
   });
 
-  test("should be able to download SVG", async ({ page }) => {
-    // Open the vega action context menu aka ... icon
-    await page.locator("summary").first().click();
-
+  test("should be able to download JSON format", async ({ page }) => {
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.locator("text=Save as SVG").click(),
+      page.locator("text=Download JSON format").click(),
     ]);
 
-    const svgPath = await download.path();
-    const svgContent = await readFile(svgPath!, { encoding: "utf8" });
-    expect(svgContent).toContain("Energy (eV)");
+    const path = await download.path();
+    const content = await readFile(path!, { encoding: "utf8" });
+    expect(content).toContain("Energy");
   });
 
   test.describe("Data as table", () => {

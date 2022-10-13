@@ -31,7 +31,7 @@ export async function byId(id: string) {
       FOR s IN CrossSectionSet
         FILTER s._id == p._to
         FILTER ['published' ,'retracted'] ANY == s.versionInfo.status
-        RETURN MERGE(UNSET(s, ["_key", "_rev", "_id"]), {id: s._key})
+        RETURN MERGE(UNSET(s, ["_key", "_rev", "_id", "organization"]), {id: s._key, organization: DOCUMENT(s.organization).name})
     )
     LET reaction = (
       FOR r in Reaction
@@ -53,7 +53,7 @@ export async function byId(id: string) {
         RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
     )
     RETURN MERGE(
-      UNSET(cs, ["_key", "_rev", "_id"]),
+      UNSET(cs, ["_key", "_rev", "_id", "organization"]),
       { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": set}
     )
   `);
