@@ -187,6 +187,7 @@ export function check_LS1(
 
   const res_shell = check_shell_config_core_excited(parent, component, errors);
 
+  // NOTE: short-circuit coupling errors
   const res1 = check_momenta(L1, L2, term.L);
   if (!res1.result) {
     const err = get_errobj(
@@ -196,6 +197,7 @@ export function check_LS1(
       `term inconsistent with config: with L1=${L1}, L2=${L2}, L should be one of ${res1.allowed}`
     );
     errors.push(err);
+    return false;
   }
 
   const res2 = check_momenta(term.L, S1, term.K);
@@ -207,6 +209,7 @@ export function check_LS1(
       `term inconsistent with config: with L=${term.L}, S1=${S1}, K should be one of ${res2.allowed}`
     );
     errors.push(err);
+    return false;
   }
 
   const res3 = check_momenta(term.K, S2, term.J);
@@ -233,6 +236,7 @@ export function check_J1L2(
 
   const res_shell = check_shell_config_core_excited(parent, component, errors);
 
+  // NOTE: short-circuit coupling errors
   const res1 = check_momenta(L1, S1, J1);
   if (!res1.result) {
     const err = get_errobj(
@@ -242,6 +246,7 @@ export function check_J1L2(
       `term inconsistent: with L1=${L1}, S1=${S1}, J1 should be one of ${res1.allowed}`
     );
     errors.push(err);
+    return false;
   }
 
   const res2 = check_momenta(J1, L2, term.K);
@@ -253,6 +258,7 @@ export function check_J1L2(
       `term inconsistent: with J1=${J1}, L2=${L2}, K should be one of ${res2.allowed}`
     );
     errors.push(err);
+    return false;
   }
 
   const res3 = check_momenta(term.K, S2, term.J);

@@ -99,6 +99,6 @@ describe("validate() w/ examples", () => {
     if (validator.validate(data_momenta_nok)) {
       validator.validate_quantum_numbers(data_momenta_nok);
     }
-    expect(validator.errors).toHaveLength(7);
+    expect(validator.errors).toHaveLength(5);
   });
 });

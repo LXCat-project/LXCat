@@ -166,7 +166,7 @@ describe("validate angular momenta", () => {
       }
     }
     // console.log("Error: ", JSON.stringify(errors, null, 2));
-    expect(errors.length).toEqual(6);
+    expect(errors.length).toEqual(4);
   });
 });
 
@@ -231,11 +231,9 @@ describe("dispatchers", () => {
   test("jsonobject.states w/ errors", () => {
     const errors: ErrorObject[] = check_states(inputs_momenta_nok, []);
     // console.log("Error: ", JSON.stringify(errors, null, 2));
-    /* 4 actual errors lead to 3 additional errors
-      - second/0/core has a bad J, that also doesn't pass J1L2 coupling check
-      - third/1 has a bad K, so check on J also fails
+    /* 4 actual errors lead to 1 additional different error
       - phosphorus/0/core has bad l in shell config, so parity also fails
     */
-    expect(errors).toHaveLength(7);
+    expect(errors).toHaveLength(5);
   });
 });
