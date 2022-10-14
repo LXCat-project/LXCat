@@ -66,85 +66,89 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     return await response.json();
   };
 
-  const updateData = (
+  const updateData = async (
     updatedIndex: number,
     side: "lhs" | "rhs",
     newSelected: StateSelection
   ) => {
-    lhsFieldArray.fields.forEach(async ({ selected }, index) => {
-      if (!(side === "lhs" && index === updatedIndex)) {
-        // Get selected states based on other boxes.
-        const consumed = lhsFieldArray.fields
-          .filter((_, i) => i !== index)
-          .map((field, i) =>
-            getSelectedState(
-              side === "lhs" && i === updatedIndex
-                ? newSelected
-                : field.selected
+    return Promise.all([
+      ...lhsFieldArray.fields.map(async ({ selected }, index) => {
+        if (!(side === "lhs" && index === updatedIndex)) {
+          // Get selected states based on other boxes.
+          const consumed = lhsFieldArray.fields
+            .map((field, i) =>
+              i !== index
+                ? getSelectedState(
+                    side === "lhs" && i === updatedIndex
+                      ? newSelected
+                      : field.selected
+                  )
+                : undefined
             )
-          )
-          .filter((selected) => selected !== undefined);
-        const produced = rhsFieldArray.fields
-          .map((field, i) =>
-            getSelectedState(
-              side === "rhs" && i === updatedIndex
-                ? newSelected
-                : field.selected
+            .filter((selected) => selected !== undefined);
+          const produced = rhsFieldArray.fields
+            .map((field, i) =>
+              getSelectedState(
+                side === "rhs" && i === updatedIndex
+                  ? newSelected
+                  : field.selected
+              )
             )
-          )
-          .filter((selected) => selected !== undefined);
+            .filter((selected) => selected !== undefined);
 
-        const response = await fetch(
-          `/api/states/partaking?${new URLSearchParams({
-            stateProcess: StateProcess.Consumed,
-            consumes: JSON.stringify(consumed),
-            produces: JSON.stringify(produced),
-          })}`
-        );
+          const response = await fetch(
+            `/api/states/partaking?${new URLSearchParams({
+              stateProcess: StateProcess.Consumed,
+              consumes: JSON.stringify(consumed),
+              produces: JSON.stringify(produced),
+            })}`
+          );
 
-        lhsFieldArray.update(index, {
-          data: await response.json(),
-          selected,
-        });
-      }
-    });
-    rhsFieldArray.fields.forEach(async ({ selected }, index) => {
-      if (!(side === "rhs" && index === updatedIndex)) {
-        // Get selected states based on other boxes.
-        const consumed = lhsFieldArray.fields
-          .map((field, i) =>
-            getSelectedState(
-              side === "lhs" && i === updatedIndex
-                ? newSelected
-                : field.selected
+          lhsFieldArray.update(index, {
+            data: await response.json(),
+            selected,
+          });
+        }
+      }),
+      ...rhsFieldArray.fields.map(async ({ selected }, index) => {
+        if (!(side === "rhs" && index === updatedIndex)) {
+          // Get selected states based on other boxes.
+          const consumed = lhsFieldArray.fields
+            .map((field, i) =>
+              getSelectedState(
+                side === "lhs" && i === updatedIndex
+                  ? newSelected
+                  : field.selected
+              )
             )
-          )
-          .filter((selected) => selected !== undefined);
-        const produced = rhsFieldArray.fields
-          .filter((_, i) => i !== index)
-          .map((field, i) =>
-            getSelectedState(
-              side === "rhs" && i === updatedIndex
-                ? newSelected
-                : field.selected
+            .filter((selected) => selected !== undefined);
+          const produced = rhsFieldArray.fields
+            .map((field, i) =>
+              i !== index
+                ? getSelectedState(
+                    side === "rhs" && i === updatedIndex
+                      ? newSelected
+                      : field.selected
+                  )
+                : undefined
             )
-          )
-          .filter((selected) => selected !== undefined);
+            .filter((selected) => selected !== undefined);
 
-        const response = await fetch(
-          `/api/states/partaking?${new URLSearchParams({
-            stateProcess: StateProcess.Produced,
-            consumes: JSON.stringify(consumed),
-            produces: JSON.stringify(produced),
-          })}`
-        );
+          const response = await fetch(
+            `/api/states/partaking?${new URLSearchParams({
+              stateProcess: StateProcess.Produced,
+              consumes: JSON.stringify(consumed),
+              produces: JSON.stringify(produced),
+            })}`
+          );
 
-        rhsFieldArray.update(index, {
-          data: await response.json(),
-          selected,
-        });
-      }
-    });
+          rhsFieldArray.update(index, {
+            data: await response.json(),
+            selected,
+          });
+        }
+      }),
+    ]);
   };
 
   useEffect(() => {
@@ -172,11 +176,14 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           produces: JSON.stringify(rhsSelected),
         })}`
       );
-      const reactions = await response.json();
-      setReactions(reactions);
+      setReactions(await response.json());
     };
     updateReactions().catch(console.error);
   }, [lhsSelected, rhsSelected]);
+
+  useEffect(() => {
+    console.log(reactions);
+  }, [reactions]);
 
   return (
     <ReactionPicker
@@ -189,8 +196,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           };
           doAppend().catch(console.error);
         },
-        onRemove: (index) => {
-          updateData(index, "lhs", {});
+        onRemove: async (index) => {
+          await updateData(index, "lhs", {});
           lhsFieldArray.remove(index);
         },
         onUpdate(index, selected) {
@@ -210,8 +217,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           };
           doAppend().catch(console.error);
         },
-        onRemove: (index) => {
-          updateData(index, "rhs", {});
+        onRemove: async (index) => {
+          await updateData(index, "rhs", {});
           rhsFieldArray.remove(index);
         },
         onUpdate(index, selected) {

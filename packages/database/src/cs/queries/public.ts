@@ -398,34 +398,16 @@ export enum StateProcess {
   Produced = "Produces",
 }
 
-function getStateFilter(
-  consumedState: AqlLiteral,
+function getPartakingStateChildren(
   process: StateProcess,
-  reactions: Array<string> | AqlLiteral
-) {
-  return aql`
-    FOR reaction IN INBOUND ${consumedState} ${aql.literal(process)}
-      ${
-        !Array.isArray(reactions) || reactions.length > 0
-          ? aql`FILTER reaction._id IN ${reactions}`
-          : aql``
-      }
-      LIMIT 1
-      RETURN reaction
-  `;
-}
-
-function getStateChildren(
-  process: StateProcess,
-  reactions: Array<string> | AqlLiteral,
+  states: Array<string> | AqlLiteral,
   depth = 0
-) {
+): GeneratedAqlQuery {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
 
   const parent = aql.literal(levels[depth]);
   const child = aql.literal(levels[depth + 1]);
 
-  const includeParent = aql.literal(`${levels[depth]}InReaction`);
   const children = aql.literal(`${levels[depth]}Children`);
 
   const latexProperty = aql.literal(
@@ -434,43 +416,44 @@ function getStateChildren(
       : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`
   );
 
-  const aqlFilterReturn: GeneratedAqlQuery =
-    depth < 3
-      ? aql`
+  return depth < 3
+    ? aql`
         LET ${children} = (
           FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
-            ${getStateChildren(process, reactions, depth + 1)}
+            ${getPartakingStateChildren(process, states, depth + 1)}
         )
-        FILTER ${includeParent} > 0 OR LENGTH(${children}) > 0
+        ${
+          !Array.isArray(states) || states.length > 0
+            ? aql`FILTER ${parent}._id IN ${states} OR LENGTH(${children}) > 0`
+            : aql``
+        }
         RETURN {id: ${parent}._id, latex: ${latexProperty}, children: ${children}}`
-      : aql`
-        FILTER ${includeParent} > 0
+    : aql`
+        ${
+          !Array.isArray(states) || states.length > 0
+            ? aql`FILTER ${parent}._id IN ${states}`
+            : aql``
+        }
         RETURN {id: ${parent}._id, latex: ${latexProperty}}`;
-
-  return aql`
-    LET ${includeParent} = 
-      COUNT(${getStateFilter(parent, process, reactions)})
-    ${aqlFilterReturn}
-  `;
 }
 
 function getStateSelectionAQL(
   process: StateProcess,
-  reactions: Array<string> | AqlLiteral
+  states: Array<string> | AqlLiteral
 ) {
   return aql`
     FOR particle IN State
       FILTER NOT HAS(particle, "electronic")
-      ${getStateChildren(process, reactions)}`;
+      ${getPartakingStateChildren(process, states)}`;
 }
 
 export async function getStateSelection(
   process: StateProcess,
   reactions: Array<string> | AqlLiteral
 ) {
-  const cursor: ArrayCursor<NestedStateArray> = await db().query(
-    getStateSelectionAQL(process, reactions)
-  );
+  const query = getStateSelectionAQL(process, reactions);
+  console.log(query);
+  const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
 
@@ -480,30 +463,109 @@ export async function getPartakingStateSelection(
   produced: Array<string>
 ) {
   const query = aql`
-    LET reactions = (${getReactionsAQL(consumed, produced)})
-    ${getStateSelectionAQL(process, aql.literal("reactions"))}`;
+    LET states = (${getPartakingStateAQL(process, consumed, produced)})
+    ${getStateSelectionAQL(process, aql.literal("states"))}`;
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
 
-function getReactionsAQL(consumes: Array<string>, produces: Array<string>) {
+function getPartakingStateAQL(
+  process: StateProcess,
+  consumes: Array<string>,
+  produces: Array<string>
+) {
   return aql`
+    UNIQUE(FLATTEN(
+      LET lhsWithChildren = (
+        FOR parent IN ${consumes}
+          LET children = (
+            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+              RETURN child._id
+          )
+          RETURN children
+      )
+      LET rhsWithChildren = (
+        FOR parent IN ${produces}
+          LET children = (
+            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+              RETURN child._id
+          )
+          RETURN children
+      )
+
       FOR reaction IN Reaction
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
             RETURN state._id
         )
-        
-        FILTER ${consumes} ALL IN consumed
-        
+        LET lhsCount = COUNT(
+          FOR group IN lhsWithChildren
+            FILTER group ANY IN consumed
+            RETURN 1
+        )
+        FILTER lhsCount >= LENGTH(lhsWithChildren)
+
         LET produced = (
           FOR state IN OUTBOUND reaction Produces
             RETURN state._id
         )
-        
-        FILTER ${produces} ALL IN produced
-        
-        return reaction._id`;
+        LET rhsCount = COUNT(
+          FOR group IN rhsWithChildren
+            FILTER group ANY IN produced
+            RETURN 1
+        )
+        FILTER rhsCount >= LENGTH(rhsWithChildren)
+
+        RETURN ${aql.literal(
+          process === StateProcess.Consumed ? "consumed" : "produced"
+        )}
+    ))
+  `;
+}
+
+function getReactionsAQL(consumes: Array<string>, produces: Array<string>) {
+  return aql`
+      LET lhsWithChildren = (
+        FOR parent IN ${consumes}
+          LET children = (
+            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+              RETURN child._id
+          )
+          RETURN children
+      )
+      LET rhsWithChildren = (
+        FOR parent IN ${produces}
+          LET children = (
+            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+              RETURN child._id
+          )
+          RETURN children
+      )
+
+      FOR reaction IN Reaction
+        LET consumed = (
+          FOR state IN OUTBOUND reaction Consumes
+            RETURN state._id
+        )
+        LET lhsCount = COUNT(
+          FOR group IN lhsWithChildren
+            FILTER group ANY IN consumed
+            RETURN 1
+        )
+        FILTER lhsCount >= LENGTH(lhsWithChildren)
+
+        LET produced = (
+          FOR state IN OUTBOUND reaction Produces
+            RETURN state._id
+        )
+        LET rhsCount = COUNT(
+          FOR group IN rhsWithChildren
+            FILTER group ANY IN produced
+            RETURN 1
+        )
+        FILTER rhsCount >= LENGTH(rhsWithChildren)
+
+        RETURN reaction._id`;
 }
 
 export async function getReactions(

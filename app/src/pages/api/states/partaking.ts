@@ -3,7 +3,6 @@ import nc from "next-connect";
 
 import {
   getPartakingStateSelection,
-  getStateSelection,
   NestedStateArray,
   StateProcess,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -46,10 +45,12 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       : undefined;
 
   if (stateProcess && consumes && produces) {
-    const stateArray =
-      consumes.length === 0 && produces.length === 0
-        ? await getStateSelection(stateProcess, [])
-        : await getPartakingStateSelection(stateProcess, consumes, produces);
+    const stateArray = await getPartakingStateSelection(
+      stateProcess,
+      consumes,
+      produces
+    );
+    // TODO: Add optimized query for empty consumes and produces.
     res.json(stateArrayToTree(stateArray) ?? {});
   } else {
     res.json({});
