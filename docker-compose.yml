@@ -9,7 +9,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: app/Dockerfile
+      dockerfile: apps/app/Dockerfile
     env_file: .env
     ports:
       - "127.0.0.1:3000:3000"
@@ -21,11 +21,11 @@ services:
   setup:
     build:
       context: .
-      dockerfile: database/Dockerfile
+      dockerfile: apps/database/Dockerfile
     command: []
     env_file: .env
     volumes:
-      - ./database/seeds:/database/seeds
+      - ./apps/database/seeds:/apps/database/seeds
     depends_on:
       - database
     environment:
