@@ -189,44 +189,38 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     <ReactionPicker
       consumes={{
         entries: lhsFieldArray.fields,
-        onAppend() {
-          const doAppend = async () => {
-            const data = await initData("lhs");
-            lhsFieldArray.append({ data, selected: {} });
-          };
-          doAppend().catch(console.error);
+        onAppend: async () => {
+          const data = await initData("lhs");
+          lhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) => {
           await updateData(index, "lhs", {});
           lhsFieldArray.remove(index);
         },
-        onUpdate(index, selected) {
+        onUpdate: async (index, selected) => {
           lhsFieldArray.update(index, {
             selected,
             data: lhsFieldArray.fields[index].data,
           });
-          updateData(index, "lhs", selected);
+          return updateData(index, "lhs", selected);
         },
       }}
       produces={{
         entries: rhsFieldArray.fields,
-        onAppend() {
-          const doAppend = async () => {
-            const data = await initData("rhs");
-            rhsFieldArray.append({ data, selected: {} });
-          };
-          doAppend().catch(console.error);
+        onAppend: async () => {
+          const data = await initData("rhs");
+          rhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) => {
           await updateData(index, "rhs", {});
           rhsFieldArray.remove(index);
         },
-        onUpdate(index, selected) {
+        onUpdate: async (index, selected) => {
           rhsFieldArray.update(index, {
             selected,
             data: rhsFieldArray.fields[index].data,
           });
-          updateData(index, "rhs", selected);
+          return updateData(index, "rhs", selected);
         },
       }}
     />
