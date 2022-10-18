@@ -1,9 +1,7 @@
 {
   "workspaces": [
-    "app",
-    "converter",
-    "database",
-    "schema"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
