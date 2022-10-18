@@ -14,7 +14,7 @@ RUN npm ci
 RUN npm run build --no-cache
 
 # Production image, copy all the files and run next
-WORKDIR /code/app
+WORKDIR /code/apps/app
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
@@ -22,7 +22,7 @@ ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-RUN chown -R nextjs /code/app/.next
+RUN chown -R nextjs /code/apps/app/.next
 
 USER nextjs
 
