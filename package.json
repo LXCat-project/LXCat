@@ -1,6 +1,6 @@
 {
   "workspaces": [
-    "apps/*",
+    "app",
     "packages/*"
   ],
   "scripts": {

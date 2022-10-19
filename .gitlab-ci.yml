@@ -22,8 +22,8 @@ build-dev:
   artifacts:
     paths:
       - packages/schema/dist
-      - apps/database/dist
-      - apps/converter/dist
+      - packages/database/dist
+      - packages/converter/dist
   #     - app/.next
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -56,13 +56,13 @@ test-app:
   script:
     - npm ci --cache .npm --prefer-offline
     - npx playwright install chromium
-    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w apps/app -- --reporter=junit
-    - npm -w apps/app run build-storybook
+    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit.xml npm run test:e2e -w app -- --reporter=junit
+    - npm -w app run build-storybook
   artifacts:
     reports:
-      junit: apps/app/junit.xml
+      junit: app/junit.xml
     paths:
-      - apps/app/storybook-static/
+      - app/storybook-static/
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
@@ -95,13 +95,13 @@ test-database:
     DOCKER_DRIVER: overlay2
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -w apps/database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    - npm run test -w packages/database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: apps/database/coverage/cobertura-coverage.xml
-      junit: apps/database/junit.xml
+        path: packages/database/coverage/cobertura-coverage.xml
+      junit: packages/database/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -147,7 +147,7 @@ test-converter:
   image: node:lts-bullseye
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -w apps/converter
+    - npm run test -w packages/converter
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
