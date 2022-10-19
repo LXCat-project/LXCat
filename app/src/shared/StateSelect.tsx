@@ -1,5 +1,4 @@
 import { Button } from "@mantine/core";
-import { Fragment } from "react";
 import { LatexSelect } from "./LatexSelect";
 
 export type StateSummary = { latex: string; children?: StateTree };
@@ -22,7 +21,7 @@ export interface StateSelection {
   vibrational?: string;
   rotational?: string;
 }
-interface StateSelectStaticProps {
+interface StateSelectProps {
   data: StateTree;
   selected: StateSelection;
   onChange: (selected: StateSelection) => void;
@@ -34,7 +33,7 @@ export const StateSelect = ({
   selected: { particle, electronic, vibrational, rotational },
   onChange,
   inGroup,
-}: StateSelectStaticProps) => {
+}: StateSelectProps) => {
   const particleChange = (newParticle: string) => {
     onChange({ particle: newParticle });
   };
@@ -59,7 +58,7 @@ export const StateSelect = ({
       : undefined;
 
   const component = (
-    <Fragment>
+    <>
       <LatexSelect
         choices={mapObject(data, omitChildren)}
         value={particle}
@@ -72,7 +71,7 @@ export const StateSelect = ({
           onChange={electronicChange}
         />
       ) : (
-        <Fragment />
+        <></>
       )}
       {vibrationalEntries && Object.keys(vibrationalEntries).length > 0 ? (
         <LatexSelect
@@ -81,7 +80,7 @@ export const StateSelect = ({
           onChange={vibrationalChange}
         />
       ) : (
-        <Fragment />
+        <></>
       )}
       {rotationalEntries && Object.keys(rotationalEntries).length > 0 ? (
         <LatexSelect
@@ -90,9 +89,9 @@ export const StateSelect = ({
           onChange={rotationalChange}
         />
       ) : (
-        <Fragment />
+        <></>
       )}
-    </Fragment>
+    </>
   );
 
   return (inGroup ?? true) &&
