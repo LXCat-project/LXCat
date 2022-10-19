@@ -45,11 +45,11 @@ export const Item = (props: CrossSectionItem) => {
             Download JSON format
           </a>
         </li>
-        {/* TODO also allow a cross section to be downloaded in Bolsig+_ format
+        {/* TODO also allow a cross section to be downloaded in txt format
         Converter currently only understands cross section sets.
         <li>
           <a href="TODO" target="_blank" rel="noreferrer" download>
-            Download Bolsig+ format
+            Download txt format
           </a>
         </li> */}
       </ul>

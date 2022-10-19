@@ -98,7 +98,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         />
         <link rel="canonical" href={`/scat-css/${canonicalId}`} />
       </Head>
-      <h1>{set.name}</h1>
+      <h1>{set.name} by {set.contributor}</h1>
       {set.versionInfo.status === "retracted" && (
         <div style={{ backgroundColor: "red", color: "white", padding: 16 }}>
           <h2>This set has been retracted. Please do not use.</h2>
@@ -118,7 +118,6 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         </div>
       )}
       <div>{set.description}</div>
-      <div>Contributed by {set.contributor}</div>
       <div>Complete: {set.complete ? "Yes" : "No"}</div>
       <ul>
         <li>
@@ -131,7 +130,6 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
             Download JSON format
           </a>
         </li>
-        {/* TODO implement API endpoint for Bolsig+ format download */}
         <li>
           <a
             href={`/api/scat-css/${set.id}/legacy`}
@@ -139,7 +137,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
             rel="noreferrer"
             download
           >
-            Download Bolsig+ format
+            Download txt format
           </a>
         </li>
       </ul>
