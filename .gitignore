@@ -3,6 +3,5 @@
 .envrc
 .turbo
 node_modules
-*/dist
-*/coverage
-*/junit.xml
+**/coverage
+**/junit.xml
