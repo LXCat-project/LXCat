@@ -21,11 +21,11 @@ services:
   setup:
     build:
       context: .
-      dockerfile: database/Dockerfile
+      dockerfile: packages/database/Dockerfile
     command: []
     env_file: .env
     volumes:
-      - ./database/seeds:/database/seeds
+      - ./packages/database/seeds:/packages/database/seeds
     depends_on:
       - database
     environment:

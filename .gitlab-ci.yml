@@ -21,9 +21,9 @@ build-dev:
   # TODO reuse artifacts in workspace specific ci tasks like tests
   artifacts:
     paths:
-      - schema/dist
-      - database/dist
-      - converter/dist
+      - packages/schema/dist
+      - packages/database/dist
+      - packages/converter/dist
   #     - app/.next
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -99,13 +99,13 @@ test-database:
     DOCKER_DRIVER: overlay2
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -w database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    - npm run test -w packages/database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: database/coverage/cobertura-coverage.xml
-      junit: database/junit.xml
+        path: packages/database/coverage/cobertura-coverage.xml
+      junit: packages/database/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -125,13 +125,13 @@ test-schema:
   image: node:lts-bullseye
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -w schema -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    - npm run test -w packages/schema -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: schema/coverage/cobertura-coverage.xml
-      junit: schema/junit.xml
+        path: packages/schema/coverage/cobertura-coverage.xml
+      junit: packages/schema/junit.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -151,7 +151,7 @@ test-converter:
   image: node:lts-bullseye
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -w converter
+    - npm run test -w packages/converter
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
