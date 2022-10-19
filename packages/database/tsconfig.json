@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "ES2022",
+    "resolveJsonModule": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src/**/*.ts", "./setup", "./seeds/test"],
+  "extends": "@lxcat/tsconfig/base.json"
+}
