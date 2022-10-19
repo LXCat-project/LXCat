@@ -1,47 +1,44 @@
 import { OrphanedCrossSectionItem } from "@lxcat/database/dist/css/public";
-import { State } from "@lxcat/database/dist/shared/types/collections";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { Vega } from "react-vega";
 import { ScaleType } from "vega";
 import { Mark } from "vega-lite/build/src/mark";
-import { reactionLabel } from "../ScatteringCrossSection/ReactionSummary";
 
 interface Props {
   processes: OrphanedCrossSectionItem[];
+  colors: string[];
 }
 
-export const LutPlots = ({ processes }: Props) => {
+export const LutPlots = ({ processes, colors }: Props) => {
   if (processes.length === 0) {
     return <div>Nothing to plot, because zero sections are selected</div>;
   }
-  const spec = toVegaSpec(processes);
+  const spec = toVegaSpec(processes, colors);
   return <Vega spec={spec} />;
 };
 
 interface VegaData {
   x: number;
   y: number;
-  s: string;
+  c: string;
 }
 
-function sectionToVegaData(data: LUT["data"], reaction: Reaction<State>) {
-  const label = reactionLabel(reaction) + " " + reaction.type_tags.join(",");
+function sectionToVegaData(data: LUT["data"], c: string) {
   const rows = data
     .filter((d) => d[0] !== 0.0 && d[1] !== 0.0)
-    .map((d) => ({ x: d[0], y: d[1], s: label }));
+    .map((d) => ({ x: d[0], y: d[1], c }));
   return rows;
 }
 
-function toVegaData(processes: OrphanedCrossSectionItem[]) {
+function toVegaData(processes: OrphanedCrossSectionItem[], colors: string[]) {
   const emptyArray: VegaData[] = [];
   return emptyArray.concat(
-    ...processes.map((p, i) => sectionToVegaData(p.data, p.reaction))
+    ...processes.map((p, i) => sectionToVegaData(p.data, colors[i]))
   );
 }
 
-function toVegaSpec(processes: OrphanedCrossSectionItem[]) {
-  const values = toVegaData(processes);
+function toVegaSpec(processes: OrphanedCrossSectionItem[], colors: string[]) {
+  const values = toVegaData(processes, colors);
   const markType: Mark = "point";
   const scaleType: ScaleType = "log";
   const firstProcess = processes[0];
@@ -66,9 +63,9 @@ function toVegaSpec(processes: OrphanedCrossSectionItem[]) {
         title: `${labels[1]} (${units[1]})`,
       },
       color: {
-        field: "s",
-        title: "Process",
-        scale: { scheme: "category20" }, // When more then 20 sections are shown then colors will be re-used
+        field: "c",
+        legend: null,
+        scale: null,
       },
     },
     data: {

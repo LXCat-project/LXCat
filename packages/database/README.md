@@ -144,23 +144,6 @@ npm run collectionschema
 
 ## Tests
 
-Tests can be written as `src/**/*.spec.ts` files  with [vitest](https://vitest.dev/) framework and run with
-
-```shell
-npm run test
-```
+See [code contributor doc](../docs/code-contributor#unit-tests)
 
 The tests are done against a database running in a container using the [testcontainers](https://github.com/testcontainers/testcontainers-node) library.
-
-To run tests with code coverage use
-
-```shell
-npm run test -- run --coverage
-xdg-open coverage/index.html
-```
-
-To debug tests in VS code
-1. Place a breakpoint or `debugger` statement in code
-2. In Debug sidebar select `Debug Current Test File`
-3. Focus on test file
-4. Press F5

@@ -1,3 +1,5 @@
+import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { test, expect } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
@@ -21,31 +23,92 @@ test.describe("given 2 dummy sets", () => {
     await truncateNonUserCollections();
   });
 
-  test.describe('cross section set list page', () => {
+  test.describe("cross section set list page", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/scat-css");
     });
-    
-    test('should list 2 sets', async ({page}) => {
-      const set1 = page.locator('text=Some name')
-      const set2 = page.locator('text=Some other name')
-      await expect(set1).toBeVisible()
-      await expect(set2).toBeVisible()
-    })
-  })
 
-  test.describe('cross section set list api route', () => {   
-    test('given no search params, should list 2 sets', async ({request}) => {
-      const res = await request.get('/api/scat-css')
-      const {items} = await res.json()
-      expect(items).toHaveLength(2)
-    })
-    test('given filter on a org, should list 1 sets', async ({request}) => {
-      const res = await request.get('/api/scat-css?contributor=Some+organization')
-      const {items} = await res.json()
-      expect(items).toHaveLength(1)
-    })
-  })
+    test("should list 2 sets", async ({ page }) => {
+      const set1 = page.locator("text=Some name");
+      const set2 = page.locator("text=Some other name");
+      await expect(set1).toBeVisible();
+      await expect(set2).toBeVisible();
+    });
+  });
+
+  test.describe("cross section set list api route", () => {
+    test("given no search params, should list 2 sets", async ({ request }) => {
+      const res = await request.get("/api/scat-css");
+      const { items } = await res.json();
+      expect(items).toHaveLength(2);
+    });
+    test("given filter on a org, should list 1 sets", async ({ request }) => {
+      const res = await request.get(
+        "/api/scat-css?contributor=Some+organization"
+      );
+      const { items } = await res.json();
+      expect(items).toHaveLength(1);
+    });
+  });
+
+  test.describe("cross section set detail api route", () => {
+    let setId: string;
+    test.beforeEach(async ({ request }) => {
+      const res = await request.get(
+        "/api/scat-css?contributor=Some+organization"
+      );
+      const body: { items: CrossSectionSetHeading[] } = await res.json();
+      setId = body.items[0].id;
+    });
+
+    test.describe("/api/scat-css/[id]", () => {
+      test("given no refstyle should return csl", async ({ request }) => {
+        const res = await request.get(`/api/scat-css/${setId}`);
+        const set: CrossSectionSetRaw = await res.json();
+        const ref0 = Object.values(set.references)[0];
+        expect(ref0.id).toEqual("SomeMainId");
+      });
+
+      test("given bibtex refstyle should return bibtex string", async ({
+        request,
+      }) => {
+        const res = await request.get(`/api/scat-css/${setId}?refstyle=bibtex`);
+        const set: CrossSectionSetRaw = await res.json();
+        const expected = `@article{MyFamilyNameSome,
+\tauthor = {MyFamilyName, MyGivenName},
+\tjournal = {SomeJournal},
+\ttitle = {Some main reference title},
+\thowpublished = {https://doi.org/10.1109/5.771073},
+}
+
+`;
+        const ref0 = Object.values(set.references)[0];
+        expect(ref0).toEqual(expected);
+      });
+
+      test("given apa refstyle should return apa string", async ({
+        request,
+      }) => {
+        const res = await request.get(`/api/scat-css/${setId}?refstyle=apa`);
+        const set: CrossSectionSetRaw = await res.json();
+        const ref0 = Object.values(set.references)[0];
+        const expected =
+          "MyFamilyName, M. (n.d.). Some main reference title. In SomeJournal. https://doi.org/10.1109/5.771073\n";
+        expect(ref0).toEqual(expected);
+      });
+    });
+
+    // TODO legacy format for dummy sets causes a fatal runtime error
+    test.describe.skip("/api/scat-css/[id]/legacy", () => {
+      test("should return text in bolsig+ format", async ({ request }) => {
+        const res = await request.get(`/api/scat-css/${setId}/legacy`);
+
+        expect(res.headers()["Content-Type"]).toEqual("text/plain");
+        const body = await res.text();
+        expect(body).toBeTruthy();
+      });
+    });
+  });
 
   test.describe("cross section set details page", () => {
     test.beforeEach(async ({ page }) => {

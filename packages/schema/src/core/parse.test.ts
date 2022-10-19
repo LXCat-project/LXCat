@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { AnyAtom } from "./atoms";
 import { AnyMolecule } from "./molecules";
 import { parseCharge, parseState } from "./parse";
-import { SimpleParticle, State } from "./state";
+import { State } from "./state";
 
 describe("parseCharge()", () => {
   const testCases: Array<[number, string]> = [

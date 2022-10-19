@@ -20,7 +20,7 @@ export const AddForm = ({ onSubmit, organizations }: Props) => {
       states: {},
       references: {},
     };
-  }, []);
+  }, [organizations]);
   return (
     <EditForm
       set={newSet}
