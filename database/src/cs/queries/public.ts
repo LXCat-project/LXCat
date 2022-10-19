@@ -25,7 +25,7 @@ export async function byId(id: string) {
         FILTER r._id == rs._to
         RETURN UNSET(r, ["_key", "_rev", "_id"])
     )
-    LET set = (
+    LET sets = (
     FOR p IN IsPartOf
       FILTER p._from == cs._id
       FOR s IN CrossSectionSet
@@ -54,7 +54,7 @@ export async function byId(id: string) {
     )
     RETURN MERGE(
       UNSET(cs, ["_key", "_rev", "_id", "organization"]),
-      { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": set}
+      { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": sets}
     )
   `);
 
