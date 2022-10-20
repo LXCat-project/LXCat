@@ -69,7 +69,7 @@ export async function runDbCommand(command: string) {
     exec(
       command,
       {
-        cwd: resolve(__dirname, "../../database"),
+        cwd: resolve(__dirname, "../../packages/database"),
         env: process.env,
       },
       (error, stdout, stderr) => {
@@ -116,7 +116,7 @@ export async function uploadAndPublishDummySet(
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
-    `../database/seeds/test/crosssections/${file}`,
+    `../packages/database/seeds/test/crosssections/${file}`,
     { encoding: "utf8" }
   );
   await page.locator("textarea").fill(dummySet);

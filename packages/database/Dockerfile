@@ -6,7 +6,7 @@ WORKDIR /code
 COPY . .
 RUN npm install
 # Build database and skip app workspace build
-RUN npm run build --no-cache -w schema -w database
+RUN npm run build --no-cache -w packages/schema -w packages/database
 
 WORKDIR /code/database
 
