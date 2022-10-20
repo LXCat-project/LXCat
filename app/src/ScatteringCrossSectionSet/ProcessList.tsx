@@ -46,7 +46,7 @@ interface Props {
   processes: OrphanedCrossSectionItem[];
 }
 
-const INITIAL_PROCESSES2PLOT = 5;
+export const INITIAL_PROCESSES2PLOT = 5;
 
 // Copy of category20 color scheme from https://vega.github.io/vega/docs/schemes/
 export const colorScheme = [

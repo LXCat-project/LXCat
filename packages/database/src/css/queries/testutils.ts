@@ -2,6 +2,7 @@ import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { State } from "@lxcat/schema/dist/core/state";
+import { expect } from "vitest";
 
 import { toggleRole } from "../../auth/queries";
 import {
@@ -29,6 +30,9 @@ export async function createCsCollections() {
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;
+export const matches8601 = expect.stringMatching(ISO_8601_UTC);
+
+export const matchesId = expect.stringMatching(/\d+/);
 
 export async function startDbWithUserAndCssCollections() {
   const stopContainer = await startDbContainer();

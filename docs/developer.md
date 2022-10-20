@@ -138,3 +138,11 @@ To fetch in JSON format use
 ```bash
 curl https://nl.lxcat.net/api/scat-cs/<id of section>
 ```
+
+## Fetch multiple cross sections
+
+To fetch in JSON format use
+
+```bash
+curl https://nl.lxcat.net/api/scat-cs/bag?ids=<id of section1>,<id of section2>
+```

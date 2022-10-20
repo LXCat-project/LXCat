@@ -11,7 +11,12 @@ interface SelectProps {
   name?: string;
 }
 
-export const LatexSelect = ({ choices, value, onChange, name }: SelectProps) => {
+export const LatexSelect = ({
+  choices,
+  value,
+  onChange,
+  name,
+}: SelectProps) => {
   return (
     <Menu>
       <Menu.Target>
