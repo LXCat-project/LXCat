@@ -19,8 +19,8 @@
     "reload": "npm run drop-database && npm run setup && npm run seed seeds/test",
     "load-css": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/load_css.ts",
     "format": "prettier --write src/ seeds/ setup/",
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts src/ seeds/ setup/",
     "test": "vitest",
     "collectionschema:Particle": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Particle --out src/shared/schemas/Particle.schema.json -e none --no-top-ref",
@@ -51,7 +51,6 @@
     "testcontainers": "^8.10.1",
     "ts-json-schema-generator": "^1.1.0-next.5",
     "ts-node": "10.8.1",
-    "tsup": "^6.1.2",
     "typescript": "^4.7.3",
     "vitest": "^0.15.1"
   }
