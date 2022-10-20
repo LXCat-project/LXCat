@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { readFile } from "fs/promises";
 import {
   uploadAndPublishDummySet,
   truncateNonUserCollections,
@@ -32,6 +33,11 @@ test.describe("cross section index page", () => {
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
   });
+
+  test('should have link to bag page', async ({page}) => {
+    const baglink = page.locator('text=Plots and download the currently filtered cross sections')
+    await expect(baglink).toBeVisible();
+  })
 
   test.describe("when filtered on set name", () => {
     test.beforeEach(async ({ page }) => {
@@ -70,3 +76,34 @@ test.describe("cross section set index page", () => {
     });
   });
 });
+
+test.describe('cross section bag page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/scat-cs");
+    await page.locator('text=Plots and download the currently filtered cross sections').click();
+  });
+
+  test("should be able to download JSON format", async ({ page }) => {
+    // this exercises the /api/scat-cs/bag endpoint
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("text=Download JSON format").click(),
+    ]);
+
+    const path = await download.path();
+    const content = await readFile(path!, { encoding: "utf8" });
+    expect(content).toContain("Energy");
+  });
+
+  test("should have plot", async ({ page }) => {
+    const canvas = page.locator(".chart-wrapper");
+    await expect(canvas).toBeVisible();
+  });
+
+  test('should have 2 items', async ({page}) => {
+    const section1 = page.locator('text=Some name by Some organization')
+    const section2 = page.locator('text=Some other name by Some other organization');
+    await expect(section1).toBeVisible();
+    await expect(section2).toBeVisible();
+  })
+})

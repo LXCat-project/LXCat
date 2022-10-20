@@ -15,6 +15,10 @@ import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
+import Link from "next/link";
+import { Button } from "@mantine/core";
+import { stringify } from "querystring";
+import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -36,6 +40,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     species2: stateSelectionToSearchParam(selection.species2),
     offset: paging.offset + paging.count,
   };
+  const queryAsString = stringify({
+    species1: stateSelectionToSearchParam(selection.species1),
+    species2: stateSelectionToSearchParam(selection.species2),
+    set_name: selection.set_name,
+    tag: selection.tag,
+  });
   let canonicalUrl = "/scat-cs";
   if (paging.offset > 0) {
     canonicalUrl = `/scat-cs?offset=${paging.offset}`;
@@ -50,6 +60,18 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <hr />
       <List items={items} />
       <Paging paging={paging} nrOnPage={nrItems} query={query} />
+      {nrItems > 0 && nrItems <= BAG_SIZE ? (
+        <Link
+          href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
+          passHref
+        >
+          <Button component="a" variant="light">
+            Plots and download the currently filtered cross sections
+          </Button>
+        </Link>
+      ) : (
+        <></>
+      )}
     </Layout>
   );
 };
@@ -66,11 +88,12 @@ export const getServerSideProps: GetServerSideProps<
       context.query.offset && !Array.isArray(context.query.offset)
         ? parseInt(context.query.offset)
         : 0,
-    count: 100,
+    count: PAGE_SIZE,
     // count: Number.MAX_SAFE_INTEGER,
   };
 
   const items = await search(filter, paging);
+  console.log(context.query);
   return {
     props: {
       items,

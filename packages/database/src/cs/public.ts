@@ -18,3 +18,17 @@ export type CrossSectionItem = {
   reaction: Reaction<State>;
   reference: Reference[];
 } & Omit<CrossSection, "reaction">;
+
+type CrossSectionBagItem = {
+  id: string;
+  isPartOf: string[];
+  reaction: Reaction<string>;
+  reference: string[];
+} & Omit<CrossSection, "reaction" | "organization" | "versionInfo">;
+
+export type CrossSectionBag = {
+  states: Record<string, Omit<State, "id">>;
+  references: Record<string, Reference>;
+  sets: Record<string, Omit<CrossSectionSet, "versionInfo">>;
+  processes: CrossSectionBagItem[];
+};

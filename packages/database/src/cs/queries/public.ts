@@ -11,7 +11,11 @@ import {
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionHeading, CrossSectionItem } from "../public";
+import {
+  CrossSectionBag,
+  CrossSectionHeading,
+  CrossSectionItem,
+} from "../public";
 
 export async function byId(id: string) {
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
@@ -19,46 +23,146 @@ export async function byId(id: string) {
     FILTER cs._key == ${id}
     FILTER cs.versionInfo.status != 'draft'
     LET refs = (
-    FOR rs IN References
-      FILTER rs._from == cs._id
-      FOR r IN Reference
-        FILTER r._id == rs._to
-        RETURN UNSET(r, ["_key", "_rev", "_id"])
+      FOR rs IN References
+        FILTER rs._from == cs._id
+        FOR r IN Reference
+          FILTER r._id == rs._to
+          RETURN UNSET(r, ["_key", "_rev", "_id"])
+      )
+      LET sets = (
+      FOR p IN IsPartOf
+        FILTER p._from == cs._id
+        FOR s IN CrossSectionSet
+          FILTER s._id == p._to
+          FILTER ['published' ,'retracted'] ANY == s.versionInfo.status
+          RETURN MERGE(UNSET(s, ["_key", "_rev", "_id", "organization"]), {id: s._key, organization: DOCUMENT(s.organization).name})
+      )
+      LET reaction = (
+        FOR r in Reaction
+          FILTER r._id == cs.reaction
+          LET consumes = (
+            FOR c IN Consumes
+            FILTER c._from == r._id
+              FOR c2s IN State
+              FILTER c2s._id == c._to
+              RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+          )
+          LET produces = (
+            FOR p IN Produces
+            FILTER p._from == r._id
+              FOR p2s IN State
+              FILTER p2s._id == p._to
+              RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+          )
+          RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+      )
+      RETURN MERGE(
+        UNSET(cs, ["_key", "_rev", "_id", "organization"]),
+        { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": sets}
+      )
+  `);
+  return await cursor.next();
+}
+
+export async function byIds(ids: string[]) {
+  const cursor: ArrayCursor<CrossSectionBag> = await db().query(aql`
+    LET sets = MERGE(
+      FOR cs IN CrossSection
+        FILTER cs._key IN ${ids}
+        FILTER cs.versionInfo.status != 'draft'
+        FOR p IN IsPartOf
+          FILTER cs._id == p._from
+          FOR css IN CrossSectionSet
+            FILTER p._to == css._id
+              RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
     )
-    LET set = (
-    FOR p IN IsPartOf
-      FILTER p._from == cs._id
-      FOR s IN CrossSectionSet
-        FILTER s._id == p._to
-        FILTER ['published' ,'retracted'] ANY == s.versionInfo.status
-        RETURN MERGE(UNSET(s, ["_key", "_rev", "_id", "organization"]), {id: s._key, organization: DOCUMENT(s.organization).name})
+    LET references = MERGE(
+      FOR cs IN CrossSection
+        FILTER cs._key IN ${ids}
+        FILTER cs.versionInfo.status != 'draft'
+        FOR rs IN References
+          FILTER rs._from == cs._id
+          FOR r IN Reference
+            FILTER r._id == rs._to
+            RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
     )
-    LET reaction = (
-      FOR r in Reaction
-        FILTER r._id == cs.reaction
-        LET consumes = (
-          FOR c IN Consumes
-          FILTER c._from == r._id
-            FOR c2s IN State
-            FILTER c2s._id == c._to
-            RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+    LET states = MERGE(
+      FOR cs IN CrossSection
+        FILTER cs._key IN ${ids}
+        FILTER cs.versionInfo.status != 'draft'
+        FOR r in Reaction
+          FILTER r._id == cs.reaction
+          LET consumes = (
+            FOR c IN Consumes
+              FILTER c._from == r._id
+              FOR c2s IN State
+                FILTER c2s._id == c._to
+                RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
+          )
+          LET produces = (
+            FOR p IN Produces
+              FILTER p._from == r._id
+              FOR p2s IN State
+                FILTER p2s._id == p._to
+                RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
+          )
+        RETURN MERGE(UNION(consumes, produces))
+    )
+    LET processes = (
+      FOR cs IN CrossSection
+        FILTER cs._key IN ${ids}
+        FILTER cs.versionInfo.status != 'draft'
+        LET reaction = FIRST(
+          FOR r in Reaction
+            FILTER r._id == cs.reaction
+            LET consumes2 = (
+              FOR c IN Consumes
+                FILTER c._from == r._id
+                FOR c2s IN State
+                  FILTER c2s._id == c._to
+                  RETURN {state: c2s._key, count: c.count}
+            )
+            LET produces2 = (
+              FOR p IN Produces
+                FILTER p._from == r._id
+                FOR p2s IN State
+                  FILTER p2s._id == p._to
+                  RETURN {state: p2s._key, count: p.count}
+            )
+            RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
         )
-        LET produces = (
-          FOR p IN Produces
-          FILTER p._from == r._id
-            FOR p2s IN State
-            FILTER p2s._id == p._to
-            RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+        LET refs2 = (
+          FOR rs IN References
+            FILTER rs._from == cs._id
+            FOR r IN Reference
+              FILTER r._id == rs._to
+              RETURN r._key
         )
-        RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+        LET sets2 = (
+          FOR p IN IsPartOf
+            FILTER cs._id == p._from
+            RETURN PARSE_IDENTIFIER(p._to).key
+        )
+        RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),{ id: cs._key, reaction, reference: refs2, isPartOf: sets2})
     )
-    RETURN MERGE(
-      UNSET(cs, ["_key", "_rev", "_id", "organization"]),
-      { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": set}
-    )
+    RETURN {
+      states,
+      references,
+      processes,
+      sets
+    }
   `);
 
-  return await cursor.next();
+  const result = await cursor.next();
+  if (result === undefined) {
+    return {
+      states: {},
+      references: {},
+      processes: [],
+      sets: {},
+    };
+  }
+  return result;
 }
 
 export interface Facets {
