@@ -17,7 +17,7 @@ export type CrossSectionItem = {
   isPartOf: Array<CrossSectionSet & { id: string }>;
   reaction: Reaction<State>;
   reference: Reference[];
-} & Omit<CrossSection, "reaction" | "organization">;
+} & Omit<CrossSection, "reaction">;
 
 type CrossSectionBagItem = {
   id: string;
