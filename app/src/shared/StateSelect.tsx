@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Divider, Group, Sx } from "@mantine/core";
 import { LatexSelect } from "./LatexSelect";
 
 export type StateSummary = { latex: string; children?: StateTree };
@@ -26,6 +26,7 @@ interface StateSelectProps {
   selected: StateSelection;
   onChange: (selected: StateSelection) => void;
   inGroup?: boolean;
+  sx?: Sx;
 }
 
 export const StateSelect = ({
@@ -33,17 +34,18 @@ export const StateSelect = ({
   selected: { particle, electronic, vibrational, rotational },
   onChange,
   inGroup,
+  sx,
 }: StateSelectProps) => {
-  const particleChange = (newParticle: string) => {
+  const particleChange = (newParticle?: string) => {
     onChange({ particle: newParticle });
   };
-  const electronicChange = (newElectronic: string) => {
+  const electronicChange = (newElectronic?: string) => {
     onChange({ particle, electronic: newElectronic });
   };
-  const vibrationalChange = (newVibrational: string) => {
+  const vibrationalChange = (newVibrational?: string) => {
     onChange({ particle, electronic, vibrational: newVibrational });
   };
-  const rotationalChange = (newRotational: string) => {
+  const rotationalChange = (newRotational?: string) => {
     onChange({ particle, electronic, vibrational, rotational: newRotational });
   };
 
@@ -58,40 +60,74 @@ export const StateSelect = ({
       : undefined;
 
   const component = (
-    <>
+    <Group
+      spacing={0}
+      sx={[
+        (theme) => ({
+          borderRadius: 4,
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: theme.colors.gray[4],
+          overflow: "hidden",
+        }),
+        sx,
+      ]}
+    >
       <LatexSelect
         choices={mapObject(data, omitChildren)}
         value={particle}
         onChange={particleChange}
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0 ? (
-        <LatexSelect
-          choices={mapObject(electronicEntries, omitChildren)}
-          value={electronic}
-          onChange={electronicChange}
-        />
+        <>
+          <Divider
+            orientation="vertical"
+            color="gray.4"
+            // size="xs"
+            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
+          />
+          <LatexSelect
+            choices={mapObject(electronicEntries, omitChildren)}
+            value={electronic}
+            onChange={electronicChange}
+          />
+        </>
       ) : (
         <></>
       )}
       {vibrationalEntries && Object.keys(vibrationalEntries).length > 0 ? (
-        <LatexSelect
-          choices={mapObject(vibrationalEntries, omitChildren)}
-          value={vibrational}
-          onChange={vibrationalChange}
-        />
+        <>
+          <Divider
+            orientation="vertical"
+            color="gray.4"
+            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
+          />
+          <LatexSelect
+            choices={mapObject(vibrationalEntries, omitChildren)}
+            value={vibrational}
+            onChange={vibrationalChange}
+          />
+        </>
       ) : (
         <></>
       )}
       {rotationalEntries && Object.keys(rotationalEntries).length > 0 ? (
-        <LatexSelect
-          choices={mapObject(rotationalEntries, omitChildren)}
-          value={rotational}
-          onChange={rotationalChange}
-        />
+        <>
+          <Divider
+            orientation="vertical"
+            color="gray.4"
+            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
+          />
+          <LatexSelect
+            choices={mapObject(rotationalEntries, omitChildren)}
+            value={rotational}
+            onChange={rotationalChange}
+          />
+        </>
       ) : (
         <></>
       )}
-    </>
+    </Group>
   );
 
   return (inGroup ?? true) &&

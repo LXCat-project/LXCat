@@ -15,16 +15,20 @@ export const StateList = ({
   onUpdate,
 }: StateListProps) => {
   return (
-    <Stack align={"stretch"} spacing={"xs"}>
+    <Stack align="stretch" spacing="xs">
       {entries.map((entry, index) => {
         return (
-          <Button.Group key={entry.id}>
+          <Button.Group key={entry.id} sx={{borderRadius:4, overflow: "hidden"}}>
             <Button onClick={() => onRemove(index)}>-</Button>
             <StateSelect
               data={entry.data}
               selected={entry.selected}
               onChange={(selected) => onUpdate(index, selected)}
               inGroup={false}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
             />
           </Button.Group>
         );
