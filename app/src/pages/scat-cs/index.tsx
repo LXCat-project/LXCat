@@ -66,7 +66,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
           passHref
         >
           <Button component="a" variant="light">
-            Plots and download of current selection
+            Plots and download the currently filtered cross sections
           </Button>
         </Link>
       ) : (

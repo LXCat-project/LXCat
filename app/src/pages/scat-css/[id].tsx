@@ -152,6 +152,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         ))}
       </ul>
       <h2>Processes</h2>
+      {/* TODO there can be a lot of processes, to find which ones the user is looking for it would be nice to have filtering */}
+      {/* TODO there can be a lot of processes, which would render quicker with paging */}
       <ProcessList processes={set.processes} />
 
       {set.versionInfo.status === "published" &&

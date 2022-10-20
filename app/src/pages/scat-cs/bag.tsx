@@ -18,6 +18,7 @@ const ScatteringCrossSectionSelectionPage: NextPage<Props> = (props) => {
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
+      {/* TODO add dialog how to cite */}
       <Bag {...props} />
     </Layout>
   );
