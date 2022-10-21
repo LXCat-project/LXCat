@@ -1,4 +1,4 @@
-import { Divider, Group, Sx } from "@mantine/core";
+import { Divider, Group, Sx, Button } from "@mantine/core";
 import { LatexSelect } from "./LatexSelect";
 
 export type StateSummary = { latex: string; children?: StateTree };
@@ -77,6 +77,7 @@ export const StateSelect = ({
         choices={mapObject(data, omitChildren)}
         value={particle}
         onChange={particleChange}
+        placeholder={"\\mathrm{Particle}"}
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0 ? (
         <>
@@ -90,6 +91,7 @@ export const StateSelect = ({
             choices={mapObject(electronicEntries, omitChildren)}
             value={electronic}
             onChange={electronicChange}
+            placeholder={"\\mathrm{Electronic}"}
           />
         </>
       ) : (
@@ -106,6 +108,7 @@ export const StateSelect = ({
             choices={mapObject(vibrationalEntries, omitChildren)}
             value={vibrational}
             onChange={vibrationalChange}
+            placeholder={"\\mathrm{Vibrational}"}
           />
         </>
       ) : (
@@ -122,6 +125,7 @@ export const StateSelect = ({
             choices={mapObject(rotationalEntries, omitChildren)}
             value={rotational}
             onChange={rotationalChange}
+            placeholder={"\\mathrm{Rotational}"}
           />
         </>
       ) : (

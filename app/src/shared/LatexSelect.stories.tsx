@@ -27,7 +27,7 @@ const Template: ComponentStory<typeof LatexSelect> = (args) => {
     <LatexSelect
       {...args}
       value={value}
-      onChange={(newValue: string) => {
+      onChange={(newValue?: string) => {
         setValue(newValue);
         args.onChange(newValue);
       }}

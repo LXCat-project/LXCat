@@ -1,4 +1,4 @@
-import { Menu, Group } from "@mantine/core";
+import { Menu, Group, useMantineTheme } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
 import React from "react";
 
@@ -8,10 +8,15 @@ interface SelectProps {
   choices: Record<string, string>;
   value?: string;
   onChange: (newValue?: string) => void;
-  name?: string;
+  placeholder?: string;
 }
 
-export const LatexSelect = ({ choices, value, onChange }: SelectProps) => {
+export const LatexSelect = ({
+  choices,
+  value,
+  onChange,
+  placeholder,
+}: SelectProps) => {
   return (
     <Menu>
       <Menu.Target>
@@ -32,18 +37,25 @@ export const LatexSelect = ({ choices, value, onChange }: SelectProps) => {
             },
           })}
         >
-          <Latex>{value ? choices[value] : ""}</Latex>
           {value ? (
-            <IconX
-              size={14}
-              color="gray"
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange();
-              }}
-            />
+            <>
+              <Latex>{value ? choices[value] : ""}</Latex>
+              <IconX
+                size={14}
+                color="gray"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChange();
+                }}
+              />
+            </>
           ) : (
-            <IconSelector size={16} color="gray" />
+            <>
+              <Latex color={useMantineTheme().colors.gray[4]}>
+                {placeholder ?? ""}
+              </Latex>
+              <IconSelector size={16} color="gray" />
+            </>
           )}
         </Group>
       </Menu.Target>

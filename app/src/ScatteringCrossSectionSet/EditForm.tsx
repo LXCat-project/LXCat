@@ -151,7 +151,6 @@ const ReactionEntryForm = ({
               choices={stateChoices}
               value={value}
               onChange={onChange}
-              name={name}
             />
           </Stack>
         )}

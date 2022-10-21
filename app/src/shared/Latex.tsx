@@ -1,12 +1,8 @@
 import "katex/dist/katex.min.css";
+import { Math, MathProps } from "@lxcat/react-math/dist";
 
-// @ts-ignore
-import { InlineMath } from "react-katex";
+export type LatexProps = { children: string } & Omit<MathProps, "latex">;
 
-export interface LatexProps {
-  children: string;
-}
-
-export const Latex = ({ children }: LatexProps) => (
-  <InlineMath>{children}</InlineMath>
+export const Latex = ({ children, ...props }: LatexProps) => (
+  <Math latex={children} {...props} />
 );
