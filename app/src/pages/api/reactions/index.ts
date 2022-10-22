@@ -1,4 +1,7 @@
-import { getReactions } from "@lxcat/database/dist/cs/queries/public";
+import {
+  getReactions,
+  StateSelectionEntry,
+} from "@lxcat/database/dist/cs/queries/public";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -15,11 +18,11 @@ const handler = nc<AuthRequest, NextApiResponse>()
 
     const consumes =
       consumesParam && !Array.isArray(consumesParam)
-        ? (JSON.parse(consumesParam) as Array<string>)
+        ? (JSON.parse(consumesParam) as Array<StateSelectionEntry>)
         : [];
     const produces =
       producesParam && !Array.isArray(producesParam)
-        ? (JSON.parse(producesParam) as Array<string>)
+        ? (JSON.parse(producesParam) as Array<StateSelectionEntry>)
         : [];
 
     if (consumes.length > 0 || produces.length > 0) {

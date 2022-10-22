@@ -1,7 +1,11 @@
 import { Divider, Group, Sx, Button } from "@mantine/core";
 import { LatexSelect } from "./LatexSelect";
 
-export type StateSummary = { latex: string; children?: StateTree };
+export type StateSummary = {
+  latex: string;
+  valid: boolean;
+  children?: StateTree;
+};
 export type StateTree = Record<string, StateSummary>;
 
 function mapObject<T, R>(
@@ -14,6 +18,8 @@ function mapObject<T, R>(
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
 }
+
+export const OMIT_CHILDREN_KEY = "omit_children";
 
 export interface StateSelection {
   particle?: string;
@@ -49,13 +55,16 @@ export const StateSelect = ({
     onChange({ particle, electronic, vibrational, rotational: newRotational });
   };
 
-  const electronicEntries = particle ? data[particle].children : undefined;
+  const electronicEntries =
+    particle && particle !== OMIT_CHILDREN_KEY
+      ? data[particle].children
+      : undefined;
   const vibrationalEntries =
-    electronicEntries && electronic
+    electronicEntries && electronic && electronic !== OMIT_CHILDREN_KEY
       ? electronicEntries[electronic].children
       : undefined;
   const rotationalEntries =
-    vibrationalEntries && vibrational
+    vibrationalEntries && vibrational && vibrational !== OMIT_CHILDREN_KEY
       ? vibrationalEntries[vibrational].children
       : undefined;
 
@@ -81,14 +90,12 @@ export const StateSelect = ({
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0 ? (
         <>
-          <Divider
-            orientation="vertical"
-            color="gray.4"
-            // size="xs"
-            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
-          />
+          <Divider orientation="vertical" color="gray.4" />
           <LatexSelect
-            choices={mapObject(electronicEntries, omitChildren)}
+            choices={{
+              ...(data[particle!].valid ? { [OMIT_CHILDREN_KEY]: "-" } : {}),
+              ...mapObject(electronicEntries, omitChildren),
+            }}
             value={electronic}
             onChange={electronicChange}
             placeholder={"\\mathrm{Electronic}"}
@@ -99,13 +106,14 @@ export const StateSelect = ({
       )}
       {vibrationalEntries && Object.keys(vibrationalEntries).length > 0 ? (
         <>
-          <Divider
-            orientation="vertical"
-            color="gray.4"
-            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
-          />
+          <Divider orientation="vertical" color="gray.4" />
           <LatexSelect
-            choices={mapObject(vibrationalEntries, omitChildren)}
+            choices={{
+              ...(electronicEntries![electronic!].valid
+                ? { [OMIT_CHILDREN_KEY]: "-" }
+                : {}),
+              ...mapObject(vibrationalEntries, omitChildren),
+            }}
             value={vibrational}
             onChange={vibrationalChange}
             placeholder={"\\mathrm{Vibrational}"}
@@ -116,13 +124,14 @@ export const StateSelect = ({
       )}
       {rotationalEntries && Object.keys(rotationalEntries).length > 0 ? (
         <>
-          <Divider
-            orientation="vertical"
-            color="gray.4"
-            // sx={() => ({ height: "60%", transform: "translateY(35%)" })}
-          />
+          <Divider orientation="vertical" color="gray.4" />
           <LatexSelect
-            choices={mapObject(rotationalEntries, omitChildren)}
+            choices={{
+              ...(vibrationalEntries![vibrational!].valid
+                ? { [OMIT_CHILDREN_KEY]: "-" }
+                : {}),
+              ...mapObject(rotationalEntries, omitChildren),
+            }}
             value={rotational}
             onChange={rotationalChange}
             placeholder={"\\mathrm{Rotational}"}

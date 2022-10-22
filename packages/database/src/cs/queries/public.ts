@@ -390,6 +390,7 @@ export async function historyOfSection(key: string) {
 export interface NestedStateArray {
   id: string;
   latex: string;
+  valid: boolean;
   children?: Array<NestedStateArray>;
 }
 
@@ -422,19 +423,20 @@ function getPartakingStateChildren(
           FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
             ${getPartakingStateChildren(process, states, depth + 1)}
         )
+        LET valid = ${parent}._id IN ${states}
         ${
           !Array.isArray(states) || states.length > 0
-            ? aql`FILTER ${parent}._id IN ${states} OR LENGTH(${children}) > 0`
+            ? aql`FILTER valid OR LENGTH(${children}) > 0`
             : aql``
         }
-        RETURN {id: ${parent}._id, latex: ${latexProperty}, children: ${children}}`
+        RETURN {id: ${parent}._id, latex: ${latexProperty}, valid, children: ${children}}`
     : aql`
         ${
           !Array.isArray(states) || states.length > 0
             ? aql`FILTER ${parent}._id IN ${states}`
             : aql``
         }
-        RETURN {id: ${parent}._id, latex: ${latexProperty}}`;
+        RETURN {id: ${parent}._id, latex: ${latexProperty}, valid: true}`;
 }
 
 function getStateSelectionAQL(
@@ -459,39 +461,59 @@ export async function getStateSelection(
 
 export async function getPartakingStateSelection(
   process: StateProcess,
-  consumed: Array<string>,
-  produced: Array<string>
+  consumed: Array<StateSelectionEntry>,
+  produced: Array<StateSelectionEntry>
 ) {
   const query = aql`
     LET states = (${getPartakingStateAQL(process, consumed, produced)})
     ${getStateSelectionAQL(process, aql.literal("states"))}`;
+  console.log(query.query);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
 
+export interface StateSelectionEntry {
+  id: string;
+  includeChildren: boolean;
+}
+
 function getPartakingStateAQL(
   process: StateProcess,
-  consumes: Array<string>,
-  produces: Array<string>
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>
 ) {
   return aql`
     UNIQUE(FLATTEN(
-      LET lhsWithChildren = (
+      LET lhsChildren = (
         FOR parent IN ${consumes}
+          FILTER parent.includeChildren
           LET children = (
-            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
               RETURN child._id
           )
           RETURN children
       )
-      LET rhsWithChildren = (
+      LET lhsParents = (
+        FOR parent IN ${consumes}
+          FILTER NOT parent.includeChildren
+          RETURN [parent.id]
+      )
+      LET lhs = APPEND(lhsChildren, lhsParents)
+
+      LET rhsChildren = (
         FOR parent IN ${produces}
           LET children = (
-            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
               RETURN child._id
           )
           RETURN children
       )
+      LET rhsParents = (
+        FOR parent IN ${produces}
+          FILTER NOT parent.includeChildren
+          RETURN [parent.id]
+      )
+      LET rhs = APPEND(rhsChildren, rhsParents)
 
       FOR reaction IN Reaction
         LET consumed = (
@@ -499,22 +521,22 @@ function getPartakingStateAQL(
             RETURN state._id
         )
         LET lhsCount = COUNT(
-          FOR group IN lhsWithChildren
+          FOR group IN lhs
             FILTER group ANY IN consumed
             RETURN 1
         )
-        FILTER lhsCount >= LENGTH(lhsWithChildren)
+        FILTER lhsCount >= LENGTH(lhs)
 
         LET produced = (
           FOR state IN OUTBOUND reaction Produces
             RETURN state._id
         )
         LET rhsCount = COUNT(
-          FOR group IN rhsWithChildren
+          FOR group IN rhs
             FILTER group ANY IN produced
             RETURN 1
         )
-        FILTER rhsCount >= LENGTH(rhsWithChildren)
+        FILTER rhsCount >= LENGTH(rhs)
 
         RETURN ${aql.literal(
           process === StateProcess.Consumed ? "consumed" : "produced"
@@ -523,24 +545,41 @@ function getPartakingStateAQL(
   `;
 }
 
-function getReactionsAQL(consumes: Array<string>, produces: Array<string>) {
+function getReactionsAQL(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>
+) {
   return aql`
-      LET lhsWithChildren = (
+      LET lhsChildren = (
         FOR parent IN ${consumes}
+          FILTER parent.includeChildren
           LET children = (
-            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
               RETURN child._id
           )
           RETURN children
       )
-      LET rhsWithChildren = (
+      LET lhsParents = (
+        FOR parent IN ${consumes}
+          FILTER NOT parent.includeChildren
+          RETURN [parent.id]
+      )
+      LET lhs = APPEND(lhsChildren, lhsParents)
+
+      LET rhsChildren = (
         FOR parent IN ${produces}
           LET children = (
-            FOR child IN 0..3 OUTBOUND parent HasDirectSubstate
+            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
               RETURN child._id
           )
           RETURN children
       )
+      LET rhsParents = (
+        FOR parent IN ${produces}
+          FILTER NOT parent.includeChildren
+          RETURN [parent.id]
+      )
+      LET rhs = APPEND(rhsChildren, rhsParents)
 
       FOR reaction IN Reaction
         LET consumed = (
@@ -548,29 +587,29 @@ function getReactionsAQL(consumes: Array<string>, produces: Array<string>) {
             RETURN state._id
         )
         LET lhsCount = COUNT(
-          FOR group IN lhsWithChildren
+          FOR group IN lhs
             FILTER group ANY IN consumed
             RETURN 1
         )
-        FILTER lhsCount >= LENGTH(lhsWithChildren)
+        FILTER lhsCount >= LENGTH(lhs)
 
         LET produced = (
           FOR state IN OUTBOUND reaction Produces
             RETURN state._id
         )
         LET rhsCount = COUNT(
-          FOR group IN rhsWithChildren
+          FOR group IN rhs
             FILTER group ANY IN produced
             RETURN 1
         )
-        FILTER rhsCount >= LENGTH(rhsWithChildren)
+        FILTER rhsCount >= LENGTH(rhs)
 
         RETURN reaction._id`;
 }
 
 export async function getReactions(
-  consumes: Array<string>,
-  produces: Array<string>
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>
 ) {
   const cursor: ArrayCursor<string> = await db().query(
     getReactionsAQL(consumes, produces)

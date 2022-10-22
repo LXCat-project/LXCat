@@ -5,19 +5,17 @@ import {
   getPartakingStateSelection,
   NestedStateArray,
   StateProcess,
+  StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
 import { StateSummary, StateTree } from "../../../shared/StateSelect";
 
-export function stateArrayToObject(
-  array: NestedStateArray
-): [string, StateSummary] {
-  return [
-    array.id,
-    {
-      latex: array.latex,
-      children: stateArrayToTree(array.children),
-    },
-  ];
+export function stateArrayToObject({
+  id,
+  latex,
+  valid,
+  children,
+}: NestedStateArray): [string, StateSummary] {
+  return [id, { latex, valid, children: stateArrayToTree(children) }];
 }
 
 export function stateArrayToTree(
@@ -36,12 +34,12 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
 
   const consumes =
     query.consumes && !Array.isArray(query.consumes)
-      ? (JSON.parse(query.consumes) as Array<string>)
+      ? (JSON.parse(query.consumes) as Array<StateSelectionEntry>)
       : undefined;
 
   const produces =
     query.produces && !Array.isArray(query.produces)
-      ? (JSON.parse(query.produces) as Array<string>)
+      ? (JSON.parse(query.produces) as Array<StateSelectionEntry>)
       : undefined;
 
   if (stateProcess && consumes && produces) {

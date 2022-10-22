@@ -1,9 +1,16 @@
-import { StateProcess } from "@lxcat/database/dist/cs/queries/public";
+import {
+  StateProcess,
+  StateSelectionEntry,
+} from "@lxcat/database/dist/cs/queries/public";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "../../shared/ReactionPicker";
-import { StateSelection, StateTree } from "../../shared/StateSelect";
+import {
+  OMIT_CHILDREN_KEY,
+  StateSelection,
+  StateTree,
+} from "../../shared/StateSelect";
 
 interface Props {}
 
@@ -17,13 +24,36 @@ const getSelectedState = ({
   electronic,
   vibrational,
   rotational,
-}: StateSelection): string | undefined =>
-  rotational ?? vibrational ?? electronic ?? particle;
+}: StateSelection): StateSelectionEntry | undefined => {
+  if (particle) {
+    if (electronic) {
+      if (electronic === OMIT_CHILDREN_KEY) {
+        return { id: particle, includeChildren: false };
+      } else if (vibrational) {
+        if (vibrational === OMIT_CHILDREN_KEY) {
+          return { id: electronic, includeChildren: false };
+        } else if (rotational) {
+          if (rotational === OMIT_CHILDREN_KEY) {
+            return { id: vibrational, includeChildren: false };
+          }
+          return { id: rotational, includeChildren: false };
+        }
+        return { id: vibrational, includeChildren: true };
+      }
+      return { id: electronic, includeChildren: true };
+    }
+    return { id: particle, includeChildren: true };
+  }
 
-const getSelectedStates = (entries: Array<StateEntryProps>): Array<string> =>
+  return undefined;
+};
+
+const getSelectedStates = (
+  entries: Array<StateEntryProps>
+): Array<StateSelectionEntry> =>
   entries
     .map(({ selected }) => getSelectedState(selected))
-    .filter((id): id is string => id !== undefined);
+    .filter((id): id is StateSelectionEntry => id !== undefined);
 
 interface ListValues {
   lhs: Array<StateEntryProps>;
@@ -45,16 +75,20 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
   const [reactions, setReactions] = useState<Array<string>>([]);
-  const [lhsSelected, setLhsSelected] = useState<Array<string>>([]);
-  const [rhsSelected, setRhsSelected] = useState<Array<string>>([]);
+  const [lhsSelected, setLhsSelected] = useState<Array<StateSelectionEntry>>(
+    []
+  );
+  const [rhsSelected, setRhsSelected] = useState<Array<StateSelectionEntry>>(
+    []
+  );
 
   const initData = async (side: "lhs" | "rhs") => {
     const consumed = lhsFieldArray.fields
       .map(({ selected }) => getSelectedState(selected))
-      .filter((state): state is string => state !== undefined);
+      .filter((state): state is StateSelectionEntry => state !== undefined);
     const produced = rhsFieldArray.fields
       .map(({ selected }) => getSelectedState(selected))
-      .filter((state): state is string => state !== undefined);
+      .filter((state): state is StateSelectionEntry => state !== undefined);
     const response = await fetch(
       `/api/states/partaking?${new URLSearchParams({
         stateProcess:
@@ -121,7 +155,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
                   : field.selected
               )
             )
-            .filter((selected) => selected !== undefined);
+            .filter(
+              (selected): selected is StateSelectionEntry =>
+                selected !== undefined
+            );
           const produced = rhsFieldArray.fields
             .map((field, i) =>
               i !== index
@@ -132,7 +169,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
                   )
                 : undefined
             )
-            .filter((selected) => selected !== undefined);
+            .filter(
+              (selected): selected is StateSelectionEntry =>
+                selected !== undefined
+            );
 
           const response = await fetch(
             `/api/states/partaking?${new URLSearchParams({
@@ -155,14 +195,22 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     const newLhs = getSelectedStates(lhsFieldArray.fields);
     if (
       newLhs.length !== lhsSelected.length ||
-      !lhsSelected.every((id, index) => id === newLhs[index])
+      !lhsSelected.every(
+        ({ id, includeChildren }, index) =>
+          id === newLhs[index].id &&
+          includeChildren === newLhs[index].includeChildren
+      )
     ) {
       setLhsSelected(newLhs);
     }
     const newRhs = getSelectedStates(rhsFieldArray.fields);
     if (
       newRhs.length !== rhsSelected.length ||
-      !rhsSelected.every((id, index) => id === newRhs[index])
+      !rhsSelected.every(
+        ({ id, includeChildren }, index) =>
+          id === newRhs[index].id &&
+          includeChildren === newRhs[index].includeChildren
+      )
     ) {
       setRhsSelected(newRhs);
     }

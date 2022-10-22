@@ -8,16 +8,13 @@ import {
 } from "@lxcat/database/dist/cs/queries/public";
 import { StateSummary, StateTree } from "../../../shared/StateSelect";
 
-export function stateArrayToObject(
-  array: NestedStateArray
-): [string, StateSummary] {
-  return [
-    array.id,
-    {
-      latex: array.latex,
-      children: stateArrayToTree(array.children),
-    },
-  ];
+export function stateArrayToObject({
+  id,
+  latex,
+  valid,
+  children,
+}: NestedStateArray): [string, StateSummary] {
+  return [id, { latex, valid, children: stateArrayToTree(children) }];
 }
 
 export function stateArrayToTree(
