@@ -464,10 +464,11 @@ export async function getPartakingStateSelection(
   consumed: Array<StateSelectionEntry>,
   produced: Array<StateSelectionEntry>
 ) {
-  const query = aql`
-    LET states = (${getPartakingStateAQL(process, consumed, produced)})
-    ${getStateSelectionAQL(process, aql.literal("states"))}`;
-  console.log(query.query);
+  const query =
+    consumed.length > 0 || produced.length > 0
+      ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced)})
+    ${getStateSelectionAQL(process, aql.literal("states"))}`
+      : getFullStateTreeAQL(process);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
@@ -475,6 +476,50 @@ export async function getPartakingStateSelection(
 export interface StateSelectionEntry {
   id: string;
   includeChildren: boolean;
+}
+
+function getFullStateTreeAQL(process: StateProcess) {
+  return aql`
+    FOR particle IN State
+      FILTER NOT HAS(particle, "electronic")
+        LET particleChildren = (
+          FOR electronic in OUTBOUND particle HasDirectSubstate
+            LET electronicChildren = (
+              FOR vibrational IN OUTBOUND electronic HasDirectSubstate
+                LET vibrationalChildren = (
+                  FOR rotational IN OUTBOUND vibrational HasDirectSubstate
+                  LET valid = COUNT(
+                    FOR reaction IN INBOUND rotational ${aql.literal(process)}
+                      LIMIT 1
+                      RETURN 1
+                  ) == 1
+                  FILTER valid
+                  RETURN {id: rotational._id, latex: rotational.electronic[0].vibrational[0].rotational[0].latex, valid}
+                )
+                LET valid = COUNT(
+                  FOR reaction IN INBOUND vibrational ${aql.literal(process)}
+                    LIMIT 1
+                    RETURN 1
+                ) == 1
+                FILTER valid OR LENGTH(vibrationalChildren) > 0
+                RETURN {id: vibrational._id, latex: vibrational.electronic[0].vibrational[0].latex, valid: valid, children: vibrationalChildren}
+            )
+            LET valid = COUNT(
+              FOR reaction IN INBOUND electronic ${aql.literal(process)}
+                LIMIT 1
+                RETURN 1
+            ) == 1
+            FILTER valid OR LENGTH(electronicChildren) > 0
+            RETURN {id: electronic._id, latex: electronic.electronic[0].latex, valid: valid, children: electronicChildren}
+        )
+        LET valid = COUNT(
+          FOR reaction IN INBOUND particle ${aql.literal(process)}
+            LIMIT 1
+            RETURN 1
+        ) == 1
+        FILTER valid OR LENGTH(particleChildren) > 0
+        RETURN {id: particle._id, latex: particle.latex, valid: valid, children: particleChildren}
+  `;
 }
 
 function getPartakingStateAQL(
