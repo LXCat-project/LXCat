@@ -18,7 +18,10 @@ export const StateList = ({
     <Stack align="stretch" spacing="xs">
       {entries.map((entry, index) => {
         return (
-          <Button.Group key={entry.id} sx={{borderRadius:4, overflow: "hidden"}}>
+          <Button.Group
+            key={entry.id}
+            sx={{ borderRadius: 4, overflow: "hidden" }}
+          >
             <Button onClick={() => onRemove(index)}>-</Button>
             <StateSelect
               data={entry.data}
@@ -28,6 +31,7 @@ export const StateList = ({
               sx={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
+                borderLeftStyle: "none",
               }}
             />
           </Button.Group>

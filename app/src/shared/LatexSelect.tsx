@@ -1,4 +1,4 @@
-import { Menu, Group, useMantineTheme } from "@mantine/core";
+import { Menu, Group, Box } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
 import React from "react";
 
@@ -51,7 +51,7 @@ export const LatexSelect = ({
             </>
           ) : (
             <>
-              <Latex color={useMantineTheme().colors.gray[4]}>
+              <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>
                 {placeholder ?? ""}
               </Latex>
               <IconSelector size={16} color="gray" />
