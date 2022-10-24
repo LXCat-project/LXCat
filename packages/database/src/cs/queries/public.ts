@@ -402,6 +402,7 @@ export enum StateProcess {
 function getPartakingStateChildren(
   process: StateProcess,
   states: Array<string> | AqlLiteral,
+  ignoredStates: Array<string> | AqlLiteral,
   depth = 0
 ): GeneratedAqlQuery {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
@@ -421,12 +422,17 @@ function getPartakingStateChildren(
     ? aql`
         LET ${children} = (
           FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
-            ${getPartakingStateChildren(process, states, depth + 1)}
+            ${getPartakingStateChildren(
+              process,
+              states,
+              ignoredStates,
+              depth + 1
+            )}
         )
         LET valid = ${parent}._id IN ${states}
         ${
           !Array.isArray(states) || states.length > 0
-            ? aql`FILTER valid OR LENGTH(${children}) > 0`
+            ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND (valid OR LENGTH(${children}) > 0)`
             : aql``
         }
         RETURN {id: ${parent}._id, latex: ${latexProperty}, valid, children: ${children}}`
@@ -441,19 +447,21 @@ function getPartakingStateChildren(
 
 function getStateSelectionAQL(
   process: StateProcess,
-  states: Array<string> | AqlLiteral
+  states: Array<string> | AqlLiteral,
+  ignoredStates: Array<string> | AqlLiteral
 ) {
   return aql`
     FOR particle IN State
       FILTER NOT HAS(particle, "electronic")
-      ${getPartakingStateChildren(process, states)}`;
+      ${getPartakingStateChildren(process, states, ignoredStates)}`;
 }
 
 export async function getStateSelection(
   process: StateProcess,
-  reactions: Array<string> | AqlLiteral
+  reactions: Array<string> | AqlLiteral,
+  ignoredStates: Array<string> | AqlLiteral
 ) {
-  const query = getStateSelectionAQL(process, reactions);
+  const query = getStateSelectionAQL(process, reactions, ignoredStates);
   console.log(query);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
@@ -467,8 +475,15 @@ export async function getPartakingStateSelection(
   const query =
     consumed.length > 0 || produced.length > 0
       ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced)})
-    ${getStateSelectionAQL(process, aql.literal("states"))}`
+    ${getStateSelectionAQL(
+      process,
+      aql.literal("states"),
+      (process === StateProcess.Consumed ? consumed : produced).map(
+        (entry) => entry.id
+      )
+    )}`
       : getFullStateTreeAQL(process);
+  console.log(query.query);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
