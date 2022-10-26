@@ -55,7 +55,7 @@ const getSelectedStates = (
     .map(({ selected }) => getSelectedState(selected))
     .filter((id): id is StateSelectionEntry => id !== undefined);
 
-interface ListValues {
+export interface ListValues {
   lhs: Array<StateEntryProps>;
   rhs: Array<StateEntryProps>;
 }
@@ -70,7 +70,8 @@ interface ListValues {
  */
 
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
-  const { control } = useForm<ListValues>();
+  const { control, getValues } = useForm<ListValues>();
+  console.log(getValues())
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
