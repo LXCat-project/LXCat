@@ -51,7 +51,6 @@ function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
         contentUrl: `/api/scat-css/${set.id}/legacy`,
       },
     ],
-    isAccessibleForFree: true,
     creativeWorkStatus: set.versionInfo.status,
     dateModified: set.versionInfo.createdOn,
     version: set.versionInfo.version,

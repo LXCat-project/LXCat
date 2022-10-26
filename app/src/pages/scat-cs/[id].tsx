@@ -34,7 +34,6 @@ function toJSONLD(section: CrossSectionItem) {
         contentUrl: `/api/scat-cs/${section.id}`,
       },
     ],
-    isAccessibleForFree: true,
     creativeWorkStatus: section.versionInfo.status,
     dateModified: section.versionInfo.createdOn,
     version: section.versionInfo.version,
