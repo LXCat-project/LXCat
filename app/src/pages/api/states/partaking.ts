@@ -8,6 +8,7 @@ import {
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
 import { StateSummary, StateTree } from "../../../shared/StateSelect";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 export function stateArrayToObject({
   id,
@@ -42,11 +43,17 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       ? (JSON.parse(query.produces) as Array<StateSelectionEntry>)
       : undefined;
 
+  const typeTags =
+    query.typeTags && !Array.isArray(query.typeTags)
+      ? (JSON.parse(query.typeTags) as Array<ReactionTypeTag>)
+      : Object.values(ReactionTypeTag);
+
   if (stateProcess && consumes && produces) {
     const stateArray = await getPartakingStateSelection(
       stateProcess,
       consumes,
-      produces
+      produces,
+      typeTags
     );
     // TODO: Add optimized query for empty consumes and produces.
     res.json(stateArrayToTree(stateArray) ?? {});
