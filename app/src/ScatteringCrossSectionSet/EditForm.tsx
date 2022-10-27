@@ -16,9 +16,9 @@ import {
   Stack,
   Input,
 } from "@mantine/core";
-import {Cite} from '@citation-js/core'
-import '@citation-js/plugin-bibtex'
-import '@citation-js/plugin-doi'
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-bibtex";
+import "@citation-js/plugin-doi";
 import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
@@ -118,15 +118,18 @@ const ReactionEntryForm = ({
   const stateChoices = useMemo(() => {
     return Object.fromEntries(
       Object.entries(states).map(([value, s]) => {
-        const latex = s.latex && !(s.latex === '\\mathrm{}') ? s.latex : parseState(s as any).latex
+        const latex =
+          s.latex && !(s.latex === "\\mathrm{}")
+            ? s.latex
+            : parseState(s as any).latex;
         return [value, latex];
       })
-    )
-  }, [states])
+    );
+  }, [states]);
   return (
     <div style={{ display: "flex" }}>
       <Stack>
-      <Input.Label>Count</Input.Label>
+        <Input.Label>Count</Input.Label>
         <TextInput
           style={{ width: "4rem" }}
           error={errorMsg(

@@ -1,5 +1,14 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { Box, Grid, MantineTheme, MultiSelect, MultiSelectProps, Radio, Sx, Text } from "@mantine/core";
+import {
+  Box,
+  Grid,
+  MantineTheme,
+  MultiSelect,
+  MultiSelectProps,
+  Radio,
+  Sx,
+  Text,
+} from "@mantine/core";
 import { StateList, StateListProps } from "./StateList";
 
 interface ReactionPickerProps {

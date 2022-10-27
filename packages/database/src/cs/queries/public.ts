@@ -10,6 +10,7 @@ import {
   generateStateFilterAql,
   groupStateChoices,
   StateChoices,
+  StateTree,
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
@@ -63,11 +64,18 @@ export async function byId(id: string) {
   return await cursor.next();
 }
 
+type ReactionChoices = {
+  consumes: StateTree[];
+  produces: StateTree[];
+  typeTags: ReactionTypeTag[];
+};
+
 export interface Facets {
   set_name: string[];
   species1: StateChoices;
   species2: StateChoices;
   tag: string[];
+  reactions?: ReactionChoices[];
 }
 
 async function species1Choices(options: Omit<SearchOptions, "species1">) {
@@ -255,6 +263,27 @@ function generateSpeciesFilterForChoices(
   return speciesAql;
 }
 
+async function reactionsChoices(
+  options: SearchOptions
+): Promise<ReactionChoices[]> {
+  if (options.reactions === undefined) {
+    return [];
+  }
+  const reactionsChoices: ReactionChoices[] = [];
+  const dummyStateTree = {};
+  for (const reaction of options.reactions) {
+    reactionsChoices.push({
+      // TODO fill each state tree based on other options
+      consumes: reaction.lhs.map(() => dummyStateTree),
+      // TODO fill each state tree based on other options
+      produces: reaction.lhs.map(() => dummyStateTree),
+      // TODO fill type tags based on other options
+      typeTags: Object.values(ReactionTypeTag),
+    });
+  }
+  return reactionsChoices;
+}
+
 export async function searchFacets(options: SearchOptions): Promise<Facets> {
   // TODO make facets depend on each other
   // * species2 should only show species not in species1
@@ -271,6 +300,7 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
     species1: await species1Choices(nonSpecies1Options),
     species2: await species2Choices(nonSpecies2Options),
     tag: await tagChoices(nonTagOptions),
+    reactions: await reactionsChoices(options),
   };
 }
 
@@ -278,12 +308,14 @@ export interface SearchOptions {
   set_name: string[];
   species1: StateChoices;
   species2: StateChoices;
-  reactions?: Array<Reaction<{
-    particle?: string;
-    electronic?: string;
-    vibrational?: string;
-    rotational?: string;
-  }>>
+  reactions?: Array<
+    Reaction<{
+      particle?: string;
+      electronic?: string;
+      vibrational?: string;
+      rotational?: string;
+    }>
+  >;
   tag: string[];
 }
 
@@ -293,6 +325,14 @@ export function defaultSearchOptions(): SearchOptions {
     species1: { particle: {} },
     species2: { particle: {} },
     tag: [],
+    reactions: [
+      {
+        lhs: [{ count: 0, state: {} }],
+        rhs: [{ count: 0, state: {} }],
+        reversible: false,
+        type_tags: [],
+      },
+    ],
   };
 }
 

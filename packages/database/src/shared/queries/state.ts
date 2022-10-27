@@ -250,3 +250,10 @@ export async function listStateChoices(): Promise<StateChoices> {
   const rawChoices = await cursor.all();
   return groupStateChoices(rawChoices);
 }
+
+export type StateSummary = {
+  latex: string;
+  valid: boolean;
+  children?: StateTree;
+};
+export type StateTree = Record<string, StateSummary>;

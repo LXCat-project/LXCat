@@ -1,12 +1,9 @@
 import { Divider, Group, Sx, Button } from "@mantine/core";
+import type {
+  StateSummary,
+  StateTree,
+} from "@lxcat/database/dist/shared/queries/state";
 import { LatexSelect } from "./LatexSelect";
-
-export type StateSummary = {
-  latex: string;
-  valid: boolean;
-  children?: StateTree;
-};
-export type StateTree = Record<string, StateSummary>;
 
 function mapObject<T, R>(
   obj: Record<string, T>,

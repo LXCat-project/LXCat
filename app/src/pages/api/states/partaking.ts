@@ -7,8 +7,11 @@ import {
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
-import { StateSummary, StateTree } from "../../../shared/StateSelect";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import {
+  StateSummary,
+  StateTree,
+} from "@lxcat/database/dist/shared/queries/state";
 
 export function stateArrayToObject({
   id,

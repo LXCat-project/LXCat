@@ -1,11 +1,7 @@
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Box, Button } from "@mantine/core";
-import {
-  IconCopy,
-  IconEye,
-  IconPencil,
-} from "@tabler/icons";
+import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { useState } from "react";
 import { ReactionPicker } from "../shared/ReactionPicker";
 import { StringsFilter } from "../shared/StringsFilter";
@@ -33,13 +29,6 @@ export const FilterComponent = ({
     });
   }
 
-  function onTagChange(newTagSelection: string[]) {
-    onChange({
-      ...selection,
-      tag: newTagSelection,
-    });
-  }
-
   function onReset() {
     onChange({
       set_name: [],
@@ -49,22 +38,29 @@ export const FilterComponent = ({
     });
   }
 
-  const reactions = selection.reactions ?? [
-  //   {
-  //   rhs: [],
-  //   lhs: [],
-  //   reversible: true,
-  //   type_tags: []
-  // }
-];
+  const reactions =
+    selection.reactions ??
+    [
+      //   {
+      //   rhs: [],
+      //   lhs: [],
+      //   reversible: true,
+      //   type_tags: []
+      // }
+    ];
   function onReactionsChange(newReactions: SearchOptions["reactions"]) {
-    console.log(newReactions)
-    onChange({
-      ...selection,
-      reactions: newReactions,
-    }, 'reactions');
+    console.log(newReactions);
+    onChange(
+      {
+        ...selection,
+        reactions: newReactions,
+      },
+      "reactions"
+    );
   }
-  const [editableReaction, setEditableReaction] = useState(reactions.length - 1); 
+  const [editableReaction, setEditableReaction] = useState(
+    reactions.length - 1
+  );
 
   return (
     <div>
@@ -89,8 +85,8 @@ export const FilterComponent = ({
                           return {
                             id: `${i}-c-${j}`,
                             data: {},
-                            selected: s.state
-                          }
+                            selected: s.state,
+                          };
                         }),
                         onAppend: () => {},
                         onRemove: () => {},
@@ -101,8 +97,8 @@ export const FilterComponent = ({
                           return {
                             id: `${i}-c-${j}`,
                             data: {},
-                            selected: s.state
-                          }
+                            selected: s.state,
+                          };
                         }),
                         onAppend: () => {},
                         onRemove: () => {},
@@ -110,7 +106,7 @@ export const FilterComponent = ({
                       }}
                       typeTags={{
                         data: Object.keys(ReactionTypeTag),
-                        onChange: () => {}
+                        onChange: () => {},
                       }}
                     />
                     <Button.Group>
@@ -180,7 +176,7 @@ export const FilterComponent = ({
                   { rhs: [], lhs: [], reversible: false, type_tags: [] },
                 ];
                 onReactionsChange(newReactions);
-                setEditableReaction(newReactions.length -1)
+                setEditableReaction(newReactions.length - 1);
               }}
             >
               +
@@ -208,13 +204,8 @@ export const FilterComponent = ({
           />
         </fieldset>
         <fieldset>
-          <legend>Reaction type</legend>
-          <StringsFilter
-            // TODO order type tags alphabetically?
-            choices={facets.tag}
-            selection={selection.tag}
-            onChange={onTagChange}
-          />
+          <legend>Organization</legend>
+          TODO
         </fieldset>
       </div>
       <div>

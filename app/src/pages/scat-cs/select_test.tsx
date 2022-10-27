@@ -3,16 +3,13 @@ import {
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
+import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "../../shared/ReactionPicker";
-import {
-  OMIT_CHILDREN_KEY,
-  StateSelection,
-  StateTree,
-} from "../../shared/StateSelect";
+import { OMIT_CHILDREN_KEY, StateSelection } from "../../shared/StateSelect";
 
 /* ##TODO
  *  -
@@ -78,16 +75,16 @@ export interface ListValues {
 
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const { control, getValues } = useForm<ListValues>();
-  console.log(getValues())
+  console.log(getValues());
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
   const [reactions, setReactions] = useState<Array<ReactionSummary>>([]);
-  // TODO: Rerender changed box when intersection of selected and total type 
-  // tags changes. For example, select H2 on the lhs and the `electronic` and 
-  // `vibrational` type tags. Then, select CO2 instead of H2, and remove the 
-  // remaining `vibrational` tag. Finally, switch back to H2 (the `electronic` 
-  // tag will reappear) and CO2 will now still be an option while it should be 
+  // TODO: Rerender changed box when intersection of selected and total type
+  // tags changes. For example, select H2 on the lhs and the `electronic` and
+  // `vibrational` type tags. Then, select CO2 instead of H2, and remove the
+  // remaining `vibrational` tag. Finally, switch back to H2 (the `electronic`
+  // tag will reappear) and CO2 will now still be an option while it should be
   // constrained by the `electronic` type tag.
   const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>([]);
   const [selectedTags, setSelectedTags] = useState<Array<ReactionTypeTag>>([]);
@@ -261,7 +258,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     setTypeTags(newTags);
     setSelectedTags(selectedTags.filter((tag) => newTags.includes(tag)));
     console.log(selectedTags.filter((tag) => newTags.includes(tag)));
-  }, [reactions, selectedTags]);
+  }, [reactions]);
 
   return (
     <ReactionPicker

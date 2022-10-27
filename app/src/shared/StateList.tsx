@@ -1,5 +1,6 @@
+import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { Button, Center, Stack } from "@mantine/core";
-import { StateSelection, StateSelect, StateTree } from "./StateSelect";
+import { StateSelection, StateSelect } from "./StateSelect";
 
 export interface StateListProps {
   entries: Array<{ id: string; data: StateTree; selected: StateSelection }>;
