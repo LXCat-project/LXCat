@@ -6,7 +6,7 @@ import {
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+// import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "../../shared/ReactionPicker";
 import {
   OMIT_CHILDREN_KEY,
@@ -55,17 +55,17 @@ const getSelectedState = ({
   return undefined;
 };
 
-const getSelectedStates = (
-  entries: Array<StateEntryProps>
-): Array<StateSelectionEntry> =>
-  entries
-    .map(({ selected }) => getSelectedState(selected))
-    .filter((id): id is StateSelectionEntry => id !== undefined);
+// const getSelectedStates = (
+//   entries: Array<StateEntryProps>
+// ): Array<StateSelectionEntry> =>
+//   entries
+//     .map(({ selected }) => getSelectedState(selected))
+//     .filter((id): id is StateSelectionEntry => id !== undefined);
 
-interface ListValues {
-  lhs: Array<StateEntryProps>;
-  rhs: Array<StateEntryProps>;
-}
+// interface ListValues {
+//   lhs: Array<StateEntryProps>;
+//   rhs: Array<StateEntryProps>;
+// }
 
 /* Strategy
  *
@@ -76,11 +76,47 @@ interface ListValues {
  *  - Update the selection data of the other selection boxes.
  */
 
+const isStateSelectionUpdated = (
+  selected: Array<StateSelectionEntry>,
+  original: Array<StateSelectionEntry>
+): boolean => {
+  if (selected.length !== original.length) {
+    return false;
+  } else {
+    return selected.every((state, index) => state === original[index]);
+  }
+};
+
+const makeLatexStateId = (
+  { particle, electronic, vibrational, rotational }: StateSelection,
+  tree: StateTree
+): string => {
+  if (particle) {
+    const particleNode = tree[particle];
+    let id = `${particleNode.latex}`;
+    if (particleNode.children && electronic) {
+      const electronicNode = particleNode.children[electronic];
+      id += `\\left(${electronicNode.latex}`;
+      if (electronicNode.children && vibrational) {
+        const vibrationalNode = electronicNode.children[vibrational];
+        id += `\\left(${vibrationalNode.latex}`;
+        if (vibrationalNode.children && rotational) {
+          id += `\\left(${vibrationalNode.children[rotational].latex}\\right`;
+        }
+        id += `\\right)`;
+      }
+      id += `\\right)`;
+    }
+    return id;
+  }
+  return "";
+};
+
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   // TODO: Replace FieldArrays with normal useState hooks.
-  const { control } = useForm<ListValues>();
-  const lhsFieldArray = useFieldArray({ name: "lhs", control });
-  const rhsFieldArray = useFieldArray({ name: "rhs", control });
+  // const { control } = useForm<ListValues>();
+  // const lhsFieldArray = useFieldArray({ name: "lhs", control });
+  // const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
   const [lhsStates, setLhsStates] = useState<Array<StateEntryProps>>([]);
   const [rhsStates, setRhsStates] = useState<Array<StateEntryProps>>([]);
@@ -121,6 +157,13 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     return await response.json();
   };
 
+  // const fetchStateTreeForSelection = (
+  //   stateProcess: StateProcess,
+  //   consumes: Array<StateSelectionEntry>,
+  //   produces: Array<StateSelectionEntry>,
+  //   typeTags: Array<ReactionTypeTag>
+  // ) => {};
+
   const updateData = async (
     updatedIndex: number,
     side: "lhs" | "rhs",
@@ -146,9 +189,13 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
         (selected): selected is StateSelectionEntry => selected !== undefined
       );
 
-    return Promise.all([
-      ...lhsFieldArray.fields.map(async ({ selected }, index) => {
-        if (!(side === "lhs" && index === updatedIndex)) {
+    const [newLhsStates, newRhsStates] = await Promise.all([
+      Promise.all(
+        lhsStates.map(async ({ data, selected }, index) => {
+          if (side === "lhs" && index === updatedIndex) {
+            return { data, selected };
+          }
+
           // Get selected states based on other boxes.
           const consumed = newLhsSelected.filter((_, i) => i !== index);
           const produced = newRhsSelected;
@@ -164,14 +211,15 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
             })}`
           );
 
-          lhsFieldArray.update(index, {
-            data: await response.json(),
-            selected,
-          });
-        }
-      }),
-      ...rhsFieldArray.fields.map(async ({ selected }, index) => {
-        if (!(side === "rhs" && index === updatedIndex)) {
+          return { data: (await response.json()) as StateTree, selected };
+        })
+      ),
+      Promise.all(
+        rhsStates.map(async ({ data, selected }, index) => {
+          if (side === "rhs" && index === updatedIndex) {
+            return { data, selected };
+          }
+
           // Get selected states based on other boxes.
           const consumed = newLhsSelected;
           const produced = newRhsSelected.filter((_, i) => i !== index);
@@ -187,39 +235,45 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
             })}`
           );
 
-          rhsFieldArray.update(index, {
-            data: await response.json(),
-            selected,
-          });
-        }
-      }),
+          return { data: (await response.json()) as StateTree, selected };
+        })
+      ),
     ]);
+
+    if (isStateSelectionUpdated(newLhsSelected, lhsSelected)) {
+      setLhsSelected(newLhsSelected);
+    }
+    if (isStateSelectionUpdated(newRhsSelected, rhsSelected)) {
+      setRhsSelected(newRhsSelected);
+    }
+    setLhsStates(newLhsStates);
+    setRhsStates(newRhsStates);
   };
 
-  useEffect(() => {
-    const newLhs = getSelectedStates(lhsFieldArray.fields);
-    if (
-      newLhs.length !== lhsSelected.length ||
-      !lhsSelected.every(
-        ({ id, includeChildren }, index) =>
-          id === newLhs[index].id &&
-          includeChildren === newLhs[index].includeChildren
-      )
-    ) {
-      setLhsSelected(newLhs);
-    }
-    const newRhs = getSelectedStates(rhsFieldArray.fields);
-    if (
-      newRhs.length !== rhsSelected.length ||
-      !rhsSelected.every(
-        ({ id, includeChildren }, index) =>
-          id === newRhs[index].id &&
-          includeChildren === newRhs[index].includeChildren
-      )
-    ) {
-      setRhsSelected(newRhs);
-    }
-  }, [lhsFieldArray.fields, rhsFieldArray.fields, lhsSelected, rhsSelected]);
+  // useEffect(() => {
+  //   const newLhs = getSelectedStates(lhsFieldArray.fields);
+  //   if (
+  //     newLhs.length !== lhsSelected.length ||
+  //     !lhsSelected.every(
+  //       ({ id, includeChildren }, index) =>
+  //         id === newLhs[index].id &&
+  //         includeChildren === newLhs[index].includeChildren
+  //     )
+  //   ) {
+  //     setLhsSelected(newLhs);
+  //   }
+  //   const newRhs = getSelectedStates(rhsFieldArray.fields);
+  //   if (
+  //     newRhs.length !== rhsSelected.length ||
+  //     !rhsSelected.every(
+  //       ({ id, includeChildren }, index) =>
+  //         id === newRhs[index].id &&
+  //         includeChildren === newRhs[index].includeChildren
+  //     )
+  //   ) {
+  //     setRhsSelected(newRhs);
+  //   }
+  // }, [lhsFieldArray.fields, rhsFieldArray.fields, lhsSelected, rhsSelected]);
 
   useEffect(() => {
     const updateReactions = async () => {
@@ -246,7 +300,11 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   return (
     <ReactionPicker
       consumes={{
-        entries: lhsFieldArray.fields,
+        entries: lhsStates.map(({ selected, data }) => ({
+          id: makeLatexStateId(selected, data),
+          selected,
+          data,
+        })),
         onAppend: async () => {
           const data = await initData("lhs");
           setLhsStates([...lhsStates, { data, selected: {} }]);
@@ -256,28 +314,24 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           lhsFieldArray.remove(index);
         },
         onUpdate: async (index, selected) => {
-          lhsFieldArray.update(index, {
-            selected,
-            data: lhsFieldArray.fields[index].data,
-          });
           return updateData(index, "lhs", selected, selectedTags);
         },
       }}
       produces={{
-        entries: rhsFieldArray.fields,
+        entries: rhsStates.map(({ selected, data }) => ({
+          id: makeLatexStateId(selected, data),
+          selected,
+          data,
+        })),
         onAppend: async () => {
           const data = await initData("rhs");
-          rhsFieldArray.append({ data, selected: {} });
+          setRhsStates([...lhsStates, { data, selected: {} }]);
         },
         onRemove: async (index) => {
           await updateData(index, "rhs", {}, selectedTags);
           rhsFieldArray.remove(index);
         },
         onUpdate: async (index, selected) => {
-          rhsFieldArray.update(index, {
-            selected,
-            data: rhsFieldArray.fields[index].data,
-          });
           return updateData(index, "rhs", selected, selectedTags);
         },
       }}
