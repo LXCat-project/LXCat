@@ -1,21 +1,28 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { Box, Grid, MantineTheme, MultiSelect, Radio, Text } from "@mantine/core";
+import { Box, Grid, MantineTheme, MultiSelect, MultiSelectProps, Radio, Sx, Text } from "@mantine/core";
 import { StateList, StateListProps } from "./StateList";
 
 interface ReactionPickerProps {
   consumes: StateListProps;
   produces: StateListProps;
+  typeTags: Omit<MultiSelectProps, "sx">;
 }
 
-const listStyle = (theme: MantineTheme) => ({
-  padding: theme.spacing.md,
+const listStyle: Sx = (theme: MantineTheme) => ({
+  padding: theme.spacing.xs,
   borderStyle: "solid",
   borderRadius: theme.radius.md,
-  borderColor: theme.colors.brand[3],
+  borderColor: theme.colors.gray[4],
+  borderWidth: "thin",
 });
 
-export const ReactionPicker = ({ consumes, produces }: ReactionPickerProps) => {
+export const ReactionPicker = ({
+  consumes,
+  produces,
+  typeTags,
+}: ReactionPickerProps) => {
   return (
+<<<<<<< HEAD
     <Grid align={"center"}>
       <Grid.Col span={"content"}>
         <Box sx={listStyle}>
@@ -48,5 +55,26 @@ export const ReactionPicker = ({ consumes, produces }: ReactionPickerProps) => {
               }))}
             />
     </Grid>
+=======
+    <table>
+      <tr>
+        <td>
+          <Box sx={listStyle}>
+            <StateList {...consumes} />
+          </Box>
+        </td>
+        <td>
+          <Box sx={listStyle}>
+            <StateList {...produces} />
+          </Box>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan={2}>
+          <MultiSelect sx={{}} {...typeTags} />
+        </td>
+      </tr>
+    </table>
+>>>>>>> lxcat/state-select
   );
 };

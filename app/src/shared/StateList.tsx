@@ -22,7 +22,9 @@ export const StateList = ({
             key={entry.id}
             sx={{ borderRadius: 4, overflow: "hidden" }}
           >
-            <Button onClick={() => onRemove(index)}>-</Button>
+            <Button variant="light" onClick={() => onRemove(index)}>
+              -
+            </Button>
             <StateSelect
               data={entry.data}
               selected={entry.selected}
@@ -37,9 +39,9 @@ export const StateList = ({
           </Button.Group>
         );
       })}
-      <Center>
+      <div>
         <Button onClick={onAppend}>+</Button>
-      </Center>
+      </div>
     </Stack>
   );
 };

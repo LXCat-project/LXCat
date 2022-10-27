@@ -439,7 +439,7 @@ function getPartakingStateChildren(
     : aql`
         ${
           !Array.isArray(states) || states.length > 0
-            ? aql`FILTER ${parent}._id IN ${states}`
+            ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND ${parent}._id IN ${states}`
             : aql``
         }
         RETURN {id: ${parent}._id, latex: ${latexProperty}, valid: true}`;
@@ -470,11 +470,17 @@ export async function getStateSelection(
 export async function getPartakingStateSelection(
   process: StateProcess,
   consumed: Array<StateSelectionEntry>,
-  produced: Array<StateSelectionEntry>
+  produced: Array<StateSelectionEntry>,
+  typeTags: Array<ReactionTypeTag>
 ) {
   const query =
     consumed.length > 0 || produced.length > 0
-      ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced)})
+      ? aql`LET states = (${getPartakingStateAQL(
+          process,
+          consumed,
+          produced,
+          typeTags
+        )})
     ${getStateSelectionAQL(
       process,
       aql.literal("states"),
@@ -482,7 +488,7 @@ export async function getPartakingStateSelection(
         (entry) => entry.id
       )
     )}`
-      : getFullStateTreeAQL(process);
+      : getFullStateTreeAQL(process, typeTags);
   console.log(query.query);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
@@ -493,7 +499,10 @@ export interface StateSelectionEntry {
   includeChildren: boolean;
 }
 
-function getFullStateTreeAQL(process: StateProcess) {
+function getFullStateTreeAQL(
+  process: StateProcess,
+  typeTags: Array<ReactionTypeTag>
+) {
   return aql`
     FOR particle IN State
       FILTER NOT HAS(particle, "electronic")
@@ -505,6 +514,11 @@ function getFullStateTreeAQL(process: StateProcess) {
                   FOR rotational IN OUTBOUND vibrational HasDirectSubstate
                   LET valid = COUNT(
                     FOR reaction IN INBOUND rotational ${aql.literal(process)}
+                      ${
+                        typeTags.length > 0
+                          ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+                          : aql``
+                      }
                       LIMIT 1
                       RETURN 1
                   ) == 1
@@ -513,6 +527,11 @@ function getFullStateTreeAQL(process: StateProcess) {
                 )
                 LET valid = COUNT(
                   FOR reaction IN INBOUND vibrational ${aql.literal(process)}
+                    ${
+                      typeTags.length > 0
+                        ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+                        : aql``
+                    }
                     LIMIT 1
                     RETURN 1
                 ) == 1
@@ -521,6 +540,11 @@ function getFullStateTreeAQL(process: StateProcess) {
             )
             LET valid = COUNT(
               FOR reaction IN INBOUND electronic ${aql.literal(process)}
+                ${
+                  typeTags.length > 0
+                    ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+                    : aql``
+                }
                 LIMIT 1
                 RETURN 1
             ) == 1
@@ -529,6 +553,11 @@ function getFullStateTreeAQL(process: StateProcess) {
         )
         LET valid = COUNT(
           FOR reaction IN INBOUND particle ${aql.literal(process)}
+            ${
+              typeTags.length > 0
+                ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+                : aql``
+            }
             LIMIT 1
             RETURN 1
         ) == 1
@@ -540,7 +569,8 @@ function getFullStateTreeAQL(process: StateProcess) {
 function getPartakingStateAQL(
   process: StateProcess,
   consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>
+  produces: Array<StateSelectionEntry>,
+  typeTags: Array<ReactionTypeTag>
 ) {
   return aql`
     UNIQUE(FLATTEN(
@@ -576,6 +606,12 @@ function getPartakingStateAQL(
       LET rhs = APPEND(rhsChildren, rhsParents)
 
       FOR reaction IN Reaction
+        ${
+          typeTags.length > 0
+            ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+            : aql``
+        }
+
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
             RETURN state._id
@@ -664,14 +700,19 @@ function getReactionsAQL(
         )
         FILTER rhsCount >= LENGTH(rhs)
 
-        RETURN reaction._id`;
+        RETURN { id: reaction._id, typeTags: reaction.type_tags }`;
+}
+
+export interface ReactionSummary {
+  id: string;
+  typeTags: Array<ReactionTypeTag>;
 }
 
 export async function getReactions(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>
 ) {
-  const cursor: ArrayCursor<string> = await db().query(
+  const cursor: ArrayCursor<ReactionSummary> = await db().query(
     getReactionsAQL(consumes, produces)
   );
   return await cursor.all();

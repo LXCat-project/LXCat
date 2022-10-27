@@ -1,7 +1,9 @@
 import {
+  ReactionSummary,
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -11,6 +13,11 @@ import {
   StateSelection,
   StateTree,
 } from "../../shared/StateSelect";
+
+/* ##TODO
+ *  -
+ *
+ */
 
 interface Props {}
 
@@ -75,7 +82,15 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
-  const [reactions, setReactions] = useState<Array<string>>([]);
+  const [reactions, setReactions] = useState<Array<ReactionSummary>>([]);
+  // TODO: Rerender changed box when intersection of selected and total type 
+  // tags changes. For example, select H2 on the lhs and the `electronic` and 
+  // `vibrational` type tags. Then, select CO2 instead of H2, and remove the 
+  // remaining `vibrational` tag. Finally, switch back to H2 (the `electronic` 
+  // tag will reappear) and CO2 will now still be an option while it should be 
+  // constrained by the `electronic` type tag.
+  const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>([]);
+  const [selectedTags, setSelectedTags] = useState<Array<ReactionTypeTag>>([]);
   const [lhsSelected, setLhsSelected] = useState<Array<StateSelectionEntry>>(
     []
   );
@@ -96,6 +111,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
         consumes: JSON.stringify(consumed),
         produces: JSON.stringify(produced),
+        typeTags: JSON.stringify(selectedTags),
       })}`
     );
     return await response.json();
@@ -104,7 +120,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   const updateData = async (
     updatedIndex: number,
     side: "lhs" | "rhs",
-    newSelected: StateSelection
+    newSelected: StateSelection,
+    selectedTags: Array<ReactionTypeTag>
   ) => {
     return Promise.all([
       ...lhsFieldArray.fields.map(async ({ selected }, index) => {
@@ -136,6 +153,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
               stateProcess: StateProcess.Consumed,
               consumes: JSON.stringify(consumed),
               produces: JSON.stringify(produced),
+              typeTags: JSON.stringify(
+                selectedTags.filter((tag) => typeTags.includes(tag))
+              ),
             })}`
           );
 
@@ -180,6 +200,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
               stateProcess: StateProcess.Produced,
               consumes: JSON.stringify(consumed),
               produces: JSON.stringify(produced),
+              typeTags: JSON.stringify(
+                selectedTags.filter((tag) => typeTags.includes(tag))
+              ),
             })}`
           );
 
@@ -232,6 +255,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
 
   useEffect(() => {
     console.log(reactions);
+    const newTags = [
+      ...new Set(reactions.flatMap((reaction) => reaction.typeTags)),
+    ];
+    setTypeTags(newTags);
+    setSelectedTags(selectedTags.filter((tag) => newTags.includes(tag)));
+    console.log(selectedTags.filter((tag) => newTags.includes(tag)));
   }, [reactions]);
 
   return (
@@ -243,7 +272,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           lhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) => {
-          await updateData(index, "lhs", {});
+          await updateData(index, "lhs", {}, selectedTags);
           lhsFieldArray.remove(index);
         },
         onUpdate: async (index, selected) => {
@@ -251,7 +280,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
             selected,
             data: lhsFieldArray.fields[index].data,
           });
-          return updateData(index, "lhs", selected);
+          return updateData(index, "lhs", selected, selectedTags);
         },
       }}
       produces={{
@@ -261,7 +290,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
           rhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) => {
-          await updateData(index, "rhs", {});
+          await updateData(index, "rhs", {}, selectedTags);
           rhsFieldArray.remove(index);
         },
         onUpdate: async (index, selected) => {
@@ -269,7 +298,14 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
             selected,
             data: rhsFieldArray.fields[index].data,
           });
-          return updateData(index, "rhs", selected);
+          return updateData(index, "rhs", selected, selectedTags);
+        },
+      }}
+      typeTags={{
+        data: typeTags,
+        onChange: async (newTags: Array<ReactionTypeTag>) => {
+          setSelectedTags(newTags);
+          return updateData(-1, "lhs", {}, newTags);
         },
       }}
     />
