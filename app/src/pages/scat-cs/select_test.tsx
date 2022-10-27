@@ -77,19 +77,24 @@ interface ListValues {
  */
 
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
+  // TODO: Replace FieldArrays with normal useState hooks.
   const { control } = useForm<ListValues>();
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
+  const [lhsStates, setLhsStates] = useState<Array<StateEntryProps>>([]);
+  const [rhsStates, setRhsStates] = useState<Array<StateEntryProps>>([]);
+
   const [reactions, setReactions] = useState<Array<ReactionSummary>>([]);
-  // TODO: Rerender changed box when intersection of selected and total type 
-  // tags changes. For example, select H2 on the lhs and the `electronic` and 
-  // `vibrational` type tags. Then, select CO2 instead of H2, and remove the 
-  // remaining `vibrational` tag. Finally, switch back to H2 (the `electronic` 
-  // tag will reappear) and CO2 will now still be an option while it should be 
+  // TODO: Rerender changed box when intersection of selected and total type
+  // tags changes. For example, select H2 on the lhs and the `electronic` and
+  // `vibrational` type tags. Then, select CO2 instead of H2, and remove the
+  // remaining `vibrational` tag. Finally, switch back to H2 (the `electronic`
+  // tag will reappear) and CO2 will now still be an option while it should be
   // constrained by the `electronic` type tag.
   const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>([]);
   const [selectedTags, setSelectedTags] = useState<Array<ReactionTypeTag>>([]);
+
   const [lhsSelected, setLhsSelected] = useState<Array<StateSelectionEntry>>(
     []
   );
@@ -98,10 +103,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
   );
 
   const initData = async (side: "lhs" | "rhs") => {
-    const consumed = lhsFieldArray.fields
+    const consumed = lhsStates
       .map(({ selected }) => getSelectedState(selected))
       .filter((state): state is StateSelectionEntry => state !== undefined);
-    const produced = rhsFieldArray.fields
+    const produced = rhsStates
       .map(({ selected }) => getSelectedState(selected))
       .filter((state): state is StateSelectionEntry => state !== undefined);
     const response = await fetch(
@@ -122,30 +127,31 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     newSelected: StateSelection,
     selectedTags: Array<ReactionTypeTag>
   ) => {
+    const newLhsSelected = lhsSelected
+      .map((selected, index) =>
+        side == "lhs" && index == updatedIndex
+          ? getSelectedState(newSelected)
+          : selected
+      )
+      .filter(
+        (selected): selected is StateSelectionEntry => selected !== undefined
+      );
+    const newRhsSelected = rhsSelected
+      .map((selected, index) =>
+        side == "rhs" && index == updatedIndex
+          ? getSelectedState(newSelected)
+          : selected
+      )
+      .filter(
+        (selected): selected is StateSelectionEntry => selected !== undefined
+      );
+
     return Promise.all([
       ...lhsFieldArray.fields.map(async ({ selected }, index) => {
         if (!(side === "lhs" && index === updatedIndex)) {
           // Get selected states based on other boxes.
-          const consumed = lhsFieldArray.fields
-            .map((field, i) =>
-              i !== index
-                ? getSelectedState(
-                    side === "lhs" && i === updatedIndex
-                      ? newSelected
-                      : field.selected
-                  )
-                : undefined
-            )
-            .filter((selected) => selected !== undefined);
-          const produced = rhsFieldArray.fields
-            .map((field, i) =>
-              getSelectedState(
-                side === "rhs" && i === updatedIndex
-                  ? newSelected
-                  : field.selected
-              )
-            )
-            .filter((selected) => selected !== undefined);
+          const consumed = newLhsSelected.filter((_, i) => i !== index);
+          const produced = newRhsSelected;
 
           const response = await fetch(
             `/api/states/partaking?${new URLSearchParams({
@@ -167,32 +173,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
       ...rhsFieldArray.fields.map(async ({ selected }, index) => {
         if (!(side === "rhs" && index === updatedIndex)) {
           // Get selected states based on other boxes.
-          const consumed = lhsFieldArray.fields
-            .map((field, i) =>
-              getSelectedState(
-                side === "lhs" && i === updatedIndex
-                  ? newSelected
-                  : field.selected
-              )
-            )
-            .filter(
-              (selected): selected is StateSelectionEntry =>
-                selected !== undefined
-            );
-          const produced = rhsFieldArray.fields
-            .map((field, i) =>
-              i !== index
-                ? getSelectedState(
-                    side === "rhs" && i === updatedIndex
-                      ? newSelected
-                      : field.selected
-                  )
-                : undefined
-            )
-            .filter(
-              (selected): selected is StateSelectionEntry =>
-                selected !== undefined
-            );
+          const consumed = newLhsSelected;
+          const produced = newRhsSelected.filter((_, i) => i !== index);
 
           const response = await fetch(
             `/api/states/partaking?${new URLSearchParams({
@@ -259,7 +241,6 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     ];
     setTypeTags(newTags);
     setSelectedTags(selectedTags.filter((tag) => newTags.includes(tag)));
-    console.log(selectedTags.filter((tag) => newTags.includes(tag)));
   }, [reactions]);
 
   return (
@@ -268,7 +249,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
         entries: lhsFieldArray.fields,
         onAppend: async () => {
           const data = await initData("lhs");
-          lhsFieldArray.append({ data, selected: {} });
+          setLhsStates([...lhsStates, { data, selected: {} }]);
         },
         onRemove: async (index) => {
           await updateData(index, "lhs", {}, selectedTags);
