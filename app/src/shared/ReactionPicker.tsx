@@ -22,40 +22,6 @@ export const ReactionPicker = ({
   typeTags,
 }: ReactionPickerProps) => {
   return (
-<<<<<<< HEAD
-    <Grid align={"center"}>
-      <Grid.Col span={"content"}>
-        <Box sx={listStyle}>
-          <StateList {...consumes} />
-        </Box>
-      </Grid.Col>
-      <Radio.Group
-        orientation="vertical"
-      >
-        <Radio
-          value=""
-          label={<Text style={{ fontSize: "1.4em" }}>➞</Text>}
-        />
-        <Radio
-          value="reversible"
-          title="Reversible"
-          label={<Text style={{ fontSize: "1.4em" }}>⇄</Text>}
-        />
-      </Radio.Group>
-      <Grid.Col span={"content"}>
-        <Box sx={listStyle}>
-          <StateList {...produces} />
-        </Box>
-      </Grid.Col>
-      <MultiSelect
-              placeholder="Type tags"
-              data={Object.keys(ReactionTypeTag).map((t) => ({
-                label: t,
-                value: t,
-              }))}
-            />
-    </Grid>
-=======
     <table>
       <tr>
         <td>
@@ -75,6 +41,5 @@ export const ReactionPicker = ({
         </td>
       </tr>
     </table>
->>>>>>> lxcat/state-select
   );
 };
