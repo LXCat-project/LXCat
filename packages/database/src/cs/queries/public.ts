@@ -1,4 +1,5 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
@@ -277,6 +278,12 @@ export interface SearchOptions {
   set_name: string[];
   species1: StateChoices;
   species2: StateChoices;
+  reactions?: Array<Reaction<{
+    particle?: string;
+    electronic?: string;
+    vibrational?: string;
+    rotational?: string;
+  }>>
   tag: string[];
 }
 

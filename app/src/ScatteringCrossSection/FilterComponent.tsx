@@ -1,11 +1,15 @@
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
-import { ActionIcon, Box, Button } from "@mantine/core";
-import { IconCheck, IconEdit } from "@tabler/icons";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { Box, Button } from "@mantine/core";
+import {
+  IconCopy,
+  IconEye,
+  IconPencil,
+} from "@tabler/icons";
 import { useState } from "react";
 import { ReactionPicker } from "../shared/ReactionPicker";
-import { StateFilter } from "../shared/StateFilter";
 import { StringsFilter } from "../shared/StringsFilter";
+import { ReactionSummary } from "./ReactionSummary";
 
 export const FilterComponent = ({
   facets,
@@ -14,27 +18,13 @@ export const FilterComponent = ({
 }: {
   facets: Facets;
   selection: SearchOptions;
-  onChange: (selection: SearchOptions) => void;
+  onChange: (selection: SearchOptions, event?: string) => void;
 }) => {
   const hasAnySelection = Object.values(selection).some(
     (s) =>
       (Array.isArray(s) && s.length > 0) ||
       (typeof s === "object" && Object.keys(s).length > 0)
   );
-
-  function onSpecies1Change(newStateSelection: StateChoices) {
-    onChange({
-      ...selection,
-      species1: newStateSelection,
-    });
-  }
-
-  function onSpecies2Change(newStateSelection: StateChoices) {
-    onChange({
-      ...selection,
-      species2: newStateSelection,
-    });
-  }
 
   function onSetChange(newSetSelection: string[]) {
     onChange({
@@ -59,71 +49,155 @@ export const FilterComponent = ({
     });
   }
 
-  const [reactions, setReactions] = useState([{
-    consumes: [],
-    produces: [],
-    edit: true
-  }])
-
-  function addReaction() {
-
+  const reactions = selection.reactions ?? [
+  //   {
+  //   rhs: [],
+  //   lhs: [],
+  //   reversible: true,
+  //   type_tags: []
+  // }
+];
+  function onReactionsChange(newReactions: SearchOptions["reactions"]) {
+    console.log(newReactions)
+    onChange({
+      ...selection,
+      reactions: newReactions,
+    }, 'reactions');
   }
+  const [editableReaction, setEditableReaction] = useState(reactions.length - 1); 
 
   return (
     <div>
       <div style={{ display: "flex" }}>
-        {/* <fieldset>
-          <legend>First species</legend>
-          <StateFilter
-            choices={facets.species1}
-            selected={selection.species1}
-            onChange={onSpecies1Change}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Second species</legend>
-          <StateFilter
-            choices={facets.species2}
-            selected={selection.species2}
-            onChange={onSpecies2Change}
-          />
-        </fieldset> */}
-        <fieldset style={{flexGrow:1}}>
+        <fieldset style={{ flexGrow: 1 }}>
           <legend>Reaction</legend>
           <ul>
-            {reactions.map((r, i) => 
-               <li key={i} style={{display: 'flex' }}>
-                {r.edit ? 
+            {reactions.map((r, i) => (
+              <li
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {i == editableReaction ? (
                   <>
-                  <ReactionPicker                 
-                    consumes={{ 
-                      entries: r.consumes,
-                      onAppend: () => {},
-                      onRemove: () => {},
-                      onUpdate: () => {},
-                    }}
-                    produces={{ 
-                      entries: r.produces,
-                      onAppend: () => {},
-                      onRemove: () => {},
-                      onUpdate: () => {},
-                    }}
-                  />
-                  <ActionIcon variant="light"><IconCheck size={16} /></ActionIcon>
+                    <ReactionPicker
+                      consumes={{
+                        entries: r.lhs.map((s, j) => {
+                          return {
+                            id: `${i}-c-${j}`,
+                            data: {},
+                            selected: s.state
+                          }
+                        }),
+                        onAppend: () => {},
+                        onRemove: () => {},
+                        onUpdate: () => {},
+                      }}
+                      produces={{
+                        entries: r.rhs.map((s, j) => {
+                          return {
+                            id: `${i}-c-${j}`,
+                            data: {},
+                            selected: s.state
+                          }
+                        }),
+                        onAppend: () => {},
+                        onRemove: () => {},
+                        onUpdate: () => {},
+                      }}
+                      typeTags={{
+                        data: Object.keys(ReactionTypeTag),
+                        onChange: () => {}
+                      }}
+                    />
+                    <Button.Group>
+                      <Button
+                        variant="subtle"
+                        title="Remove reaction"
+                        onClick={() => {
+                          const newReactions = [...reactions];
+                          newReactions.splice(i, 1);
+                          onReactionsChange(newReactions);
+                        }}
+                      >
+                        -
+                      </Button>
+                      <Button
+                        variant="subtle"
+                        title="Clone reaction"
+                        onClick={() => {
+                          const newReactions = [
+                            ...reactions,
+                            { ...reactions[i] },
+                          ];
+                          onReactionsChange(newReactions);
+                        }}
+                      >
+                        <IconCopy size={16} />
+                      </Button>
+                      <Button
+                        variant="subtle"
+                        title="Toggle view mode"
+                        onClick={() => {
+                          setEditableReaction(-1);
+                        }}
+                      >
+                        <IconEye size={16} />
+                      </Button>
+                    </Button.Group>
                   </>
-                  :
+                ) : (
                   <>
-                    <span>Reaction TODO</span>
-                    <ActionIcon variant="light"><IconEdit size={16} /></ActionIcon>
-                    </>
-                }
-                <Button></Button>
+                    <ReactionSummary
+                      lhs={[]}
+                      rhs={[]}
+                      reversible={false}
+                      type_tags={[]}
+                    />
+                    <Button
+                      variant="subtle"
+                      title="Edit"
+                      onClick={() => {
+                        setEditableReaction(i);
+                      }}
+                    >
+                      <IconPencil size={16} />
+                    </Button>
+                  </>
+                )}
               </li>
-              )}
+            ))}
           </ul>
-          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Button title="Add reaction filter" onClick={addReaction}>+</Button>
+          <Box sx={{ display: "flex", justifyContent: "end" }}>
+            <Button
+              title="Add reaction filter"
+              onClick={() => {
+                const newReactions = [
+                  ...reactions,
+                  { rhs: [], lhs: [], reversible: false, type_tags: [] },
+                ];
+                onReactionsChange(newReactions);
+                setEditableReaction(newReactions.length -1)
+              }}
+            >
+              +
+            </Button>
           </Box>
+          <div>
+            Examples:{" "}
+            <Button
+              variant="subtle"
+              onClick={() => {
+                // TODO get reaction for Ar from db
+                onReactionsChange([]);
+              }}
+            >
+              Argon
+            </Button>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Set</legend>

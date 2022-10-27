@@ -261,7 +261,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
     setTypeTags(newTags);
     setSelectedTags(selectedTags.filter((tag) => newTags.includes(tag)));
     console.log(selectedTags.filter((tag) => newTags.includes(tag)));
-  }, [reactions]);
+  }, [reactions, selectedTags]);
 
   return (
     <ReactionPicker
