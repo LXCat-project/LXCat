@@ -84,6 +84,7 @@ export const StateSelect = ({
         value={particle}
         onChange={particleChange}
         placeholder={"\\mathrm{Particle}"}
+        clearable={true}
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0 ? (
         <>
