@@ -94,6 +94,8 @@ export const StatefulReactionPicker = ({
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
+  const [reversible, setReversible] = useState<string>("any");
+
   const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>(
     initTags ?? []
   );
@@ -286,6 +288,10 @@ export const StatefulReactionPicker = ({
           updateData(index, "rhs", undefined, selectedTags),
         onUpdate: async (index, selected) =>
           updateData(index, "rhs", selected, selectedTags),
+      }}
+      reversible={{
+        onChange: (value) => {setReversible(value ?? "any")},
+        value: reversible,
       }}
       typeTags={{
         data: typeTags,

@@ -5,11 +5,13 @@ import {
   MultiSelectProps,
   Sx,
 } from "@mantine/core";
+import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
 
 interface ReactionPickerProps {
   consumes: StateListProps;
   produces: StateListProps;
+  reversible: Omit<LatexSelectProps, "choices">;
   typeTags: Omit<MultiSelectProps, "sx">;
 }
 
@@ -24,6 +26,7 @@ const listStyle: Sx = (theme: MantineTheme) => ({
 export const ReactionPicker = ({
   consumes,
   produces,
+  reversible,
   typeTags,
 }: ReactionPickerProps) => {
   return (
@@ -36,13 +39,23 @@ export const ReactionPicker = ({
             </Box>
           </td>
           <td>
+            <LatexSelect
+              choices={{
+                any: "\\rightarrow \\\\ \\leftrightarrow",
+                right: "\\rightarrow",
+                reversible: "\\leftrightarrow",
+              }}
+              {...reversible}
+            />
+          </td>
+          <td>
             <Box sx={listStyle}>
               <StateList {...produces} />
             </Box>
           </td>
         </tr>
         <tr>
-          <td colSpan={2}>
+          <td colSpan={3}>
             <MultiSelect sx={{}} {...typeTags} />
           </td>
         </tr>
