@@ -10,6 +10,11 @@ import { ReactionPicker } from "./ReactionPicker";
 import { OMIT_CHILDREN_KEY, StateSelection, StateTree } from "./StateSelect";
 import { arrayEquality } from "./utils";
 
+
+// TODO: Fill the reaction tag multi select when particle selection is empty.
+// TODO: Include reversibility in the reaction search.
+// TODO: Include organization and set selection in the reaction search.
+
 interface StateEntryProps {
   data: StateTree;
   selected: StateSelection;
