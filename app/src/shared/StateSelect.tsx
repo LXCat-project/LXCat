@@ -30,7 +30,7 @@ export interface StateSelection {
 interface StateSelectProps {
   data: StateTree;
   selected: StateSelection;
-  onChange: (selected: StateSelection) => void;
+  onChange: (selected: StateSelection) => void | Promise<void>;
   inGroup?: boolean;
   sx?: Sx;
 }
@@ -42,18 +42,15 @@ export const StateSelect = ({
   inGroup,
   sx,
 }: StateSelectProps) => {
-  const particleChange = (newParticle?: string) => {
+  const particleChange = (newParticle?: string) =>
     onChange({ particle: newParticle });
-  };
-  const electronicChange = (newElectronic?: string) => {
+  const electronicChange = (newElectronic?: string) =>
     onChange({ particle, electronic: newElectronic });
-  };
-  const vibrationalChange = (newVibrational?: string) => {
+  const vibrationalChange = (newVibrational?: string) =>
     onChange({ particle, electronic, vibrational: newVibrational });
-  };
-  const rotationalChange = (newRotational?: string) => {
+
+  const rotationalChange = (newRotational?: string) =>
     onChange({ particle, electronic, vibrational, rotational: newRotational });
-  };
 
   const electronicEntries =
     particle && particle !== OMIT_CHILDREN_KEY

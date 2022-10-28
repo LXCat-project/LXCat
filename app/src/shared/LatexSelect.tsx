@@ -1,4 +1,4 @@
-import { Menu, Group, Box } from "@mantine/core";
+import { Menu, Group } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
 import React from "react";
 
@@ -7,7 +7,7 @@ import { Latex } from "./Latex";
 interface SelectProps {
   choices: Record<string, string>;
   value?: string;
-  onChange: (newValue?: string) => void;
+  onChange: (newValue?: string) => void | Promise<void>;
   placeholder?: string;
 }
 
@@ -43,9 +43,9 @@ export const LatexSelect = ({
               <IconX
                 size={14}
                 color="gray"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  onChange();
+                  await onChange();
                 }}
               />
             </>

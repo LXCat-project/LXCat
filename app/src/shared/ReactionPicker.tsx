@@ -1,10 +1,8 @@
 import {
   Box,
-  Grid,
   MantineTheme,
   MultiSelect,
   MultiSelectProps,
-  Stack,
   Sx,
 } from "@mantine/core";
 import { StateList, StateListProps } from "./StateList";
@@ -30,23 +28,25 @@ export const ReactionPicker = ({
 }: ReactionPickerProps) => {
   return (
     <table>
-      <tr>
-        <td>
-          <Box sx={listStyle}>
-            <StateList {...consumes} />
-          </Box>
-        </td>
-        <td>
-          <Box sx={listStyle}>
-            <StateList {...produces} />
-          </Box>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan={2}>
-          <MultiSelect sx={{}} {...typeTags} />
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <Box sx={listStyle}>
+              <StateList {...consumes} />
+            </Box>
+          </td>
+          <td>
+            <Box sx={listStyle}>
+              <StateList {...produces} />
+            </Box>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <MultiSelect sx={{}} {...typeTags} />
+          </td>
+        </tr>
+      </tbody>
     </table>
   );
 };
