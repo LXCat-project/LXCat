@@ -10,8 +10,6 @@ import { ReactionPicker } from "./ReactionPicker";
 import { OMIT_CHILDREN_KEY, StateSelection, StateTree } from "./StateSelect";
 import { arrayEquality } from "./utils";
 
-
-// TODO: Fill the reaction tag multi select when particle selection is empty.
 // TODO: Include reversibility in the reaction search.
 // TODO: Include organization and set selection in the reaction search.
 
@@ -231,13 +229,20 @@ export const StatefulReactionPicker = ({
         })}`
       )
     ).json() as Promise<Array<ReactionSummary>>;
+  const fetchTypeTags = async () =>
+    (await fetch("/api/reactions/type_tags")).json() as Promise<
+      Array<ReactionTypeTag>
+    >;
 
   useEffect(() => {
     const updateReactions = async () => {
       const reactions: Array<ReactionSummary> = await fetchReactions();
-      const newTags = [
-        ...new Set(reactions.flatMap((reaction) => reaction.typeTags)),
-      ];
+      const newTags =
+        reactions.length === 0
+          ? await fetchTypeTags()
+          : [...new Set(reactions.flatMap((reaction) => reaction.typeTags))];
+
+      console.log(newTags);
 
       setTypeTags(newTags);
 
@@ -295,7 +300,9 @@ export const StatefulReactionPicker = ({
           updateData(index, "rhs", selected, selectedTags),
       }}
       reversible={{
-        onChange: (value) => {setReversible(value ?? "any")},
+        onChange: (value) => {
+          setReversible(value ?? "any");
+        },
         value: reversible,
       }}
       typeTags={{

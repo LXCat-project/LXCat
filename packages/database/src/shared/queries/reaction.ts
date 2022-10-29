@@ -1,3 +1,4 @@
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
@@ -26,5 +27,15 @@ export async function findReactionId(reaction: Reaction<string>) {
                 LIMIT 1 // Stop when found
                 RETURN r._id
         `);
+  return cursor.next();
+}
+
+export async function getAvailableTypeTags() {
+  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(aql`
+    RETURN UNIQUE(FLATTEN(
+      FOR reaction in Reaction
+        RETURN reaction.type_tags
+    ))`);
+
   return cursor.next();
 }
