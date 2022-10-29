@@ -1,5 +1,5 @@
 import {
-  ReactionSummary,
+  Reversible,
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -10,13 +10,31 @@ import { ReactionPicker } from "./ReactionPicker";
 import { OMIT_CHILDREN_KEY, StateSelection, StateTree } from "./StateSelect";
 import { arrayEquality } from "./utils";
 
-// TODO: Include reversibility in the reaction search.
 // TODO: Include organization and set selection in the reaction search.
 
 interface StateEntryProps {
   data: StateTree;
   selected: StateSelection;
 }
+
+interface StateSelectUpdate {
+  kind: "state";
+  side: "lhs" | "rhs";
+  index: number;
+  value?: StateSelection;
+}
+
+interface TypeTagUpdate {
+  kind: "type_tag";
+  value: Array<ReactionTypeTag>;
+}
+
+interface ReversibleUpdate {
+  kind: "reversible";
+  value: Reversible;
+}
+
+type UpdateType = StateSelectUpdate | TypeTagUpdate | ReversibleUpdate;
 
 const getSelectedState = ({
   particle,
@@ -58,16 +76,20 @@ const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
-  typeTags: Array<ReactionTypeTag>
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible
 ) =>
-  fetch(
-    `/api/states/partaking?${new URLSearchParams({
-      stateProcess: stateProcess,
-      consumes: JSON.stringify(consumes),
-      produces: JSON.stringify(produces),
-      typeTags: JSON.stringify(typeTags),
-    })}`
-  );
+  (
+    await fetch(
+      `/api/states/partaking?${new URLSearchParams({
+        stateProcess: stateProcess,
+        consumes: JSON.stringify(consumes),
+        produces: JSON.stringify(produces),
+        typeTags: JSON.stringify(typeTags),
+        reversible,
+      })}`
+    )
+  ).json() as Promise<StateTree>;
 
 const isStateSelectionUpdated = (
   selected: Array<StateSelectionEntry>,
@@ -81,29 +103,50 @@ interface ListValues {
 }
 
 export type StatefulReactionPickerProps = {
-  onChange: (reactions: Array<ReactionSummary>) => void | Promise<void>;
-  typeTags?: Array<ReactionTypeTag>;
-  selectedTags?: Array<ReactionTypeTag>;
-} & Partial<ListValues>;
+  onChange: (reactions: Array<string>) => void | Promise<void>;
+  initialValues?: {
+    typeTags: Array<ReactionTypeTag>;
+    selectedTags: Array<ReactionTypeTag>;
+    reversible: Array<Reversible>;
+    selectedReversible: Reversible;
+  } & ListValues;
+};
 
 export const StatefulReactionPicker = ({
-  lhs,
-  rhs,
-  typeTags: initTags,
-  selectedTags: initSelectedTags,
   onChange,
+  initialValues,
 }: StatefulReactionPickerProps) => {
+  const {
+    lhs,
+    rhs,
+    typeTags: initTags,
+    selectedTags: initSelectedTags,
+    reversible: initReversible,
+    selectedReversible: initSelectedReversible,
+  } = initialValues ?? {
+    lhs: [],
+    rhs: [],
+    typeTags: [],
+    selectedTags: [],
+    reversible: [Reversible.Both, Reversible.True, Reversible.False],
+    selectedReversible: Reversible.Both,
+  };
+
   const { control } = useForm<ListValues>({ defaultValues: { lhs, rhs } });
   const lhsFieldArray = useFieldArray({ name: "lhs", control });
   const rhsFieldArray = useFieldArray({ name: "rhs", control });
 
-  const [reversible, setReversible] = useState<string>("any");
+  const [reversible, setReversible] =
+    useState<Array<Reversible>>(initReversible);
+  const [selectedReversible, setSelectedReversible] = useState<Reversible>(
+    initSelectedReversible ?? Reversible.Both
+  );
 
   const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>(
     initTags ?? []
   );
   const [selectedTags, setSelectedTags] = useState<Array<ReactionTypeTag>>(
-    initSelectedTags?.filter((tag) => initTags?.includes(tag)) ?? []
+    initSelectedTags.filter((tag) => initTags.includes(tag))
   );
 
   const [lhsSelected, setLhsSelected] = useState<Array<StateSelectionEntry>>(
@@ -113,165 +156,257 @@ export const StatefulReactionPicker = ({
     rhs ? getSelectedStates(rhs) : []
   );
 
-  const initData = async (side: "lhs" | "rhs") => {
-    const consumed = lhsFieldArray.fields
-      .map(({ selected }) => getSelectedState(selected))
-      .filter((state): state is StateSelectionEntry => state !== undefined);
-    const produced = rhsFieldArray.fields
-      .map(({ selected }) => getSelectedState(selected))
-      .filter((state): state is StateSelectionEntry => state !== undefined);
-    const response = await fetch(
-      `/api/states/partaking?${new URLSearchParams({
-        stateProcess:
-          side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
-        consumes: JSON.stringify(consumed),
-        produces: JSON.stringify(produced),
-        typeTags: JSON.stringify(selectedTags),
-      })}`
-    );
-    return await response.json();
-  };
+  // Used for initializing state.
+  useEffect(() => {
+    if (!initialValues) {
+      const effect = async () => {
+        const newTags = await fetchTypeTags([], [], Reversible.Both);
+        setTypeTags(newTags);
 
-  const updateData = async (
-    updatedIndex: number,
-    side: "lhs" | "rhs",
-    newSelected: StateSelection | undefined,
-    selectedTags: Array<ReactionTypeTag>
-  ) => {
-    const newLhsSelected = lhsFieldArray.fields
-      .map(({ selected }, index) =>
-        getSelectedState(
-          side == "lhs" && index == updatedIndex ? newSelected ?? {} : selected
-        )
-      )
-      .filter(
-        (selected): selected is StateSelectionEntry => selected !== undefined
-      );
+        const newReversible = await fetchReversible([], [], []);
+        setReversible(newReversible);
+        setSelectedReversible(
+          newReversible.length > 1 ? Reversible.Both : newReversible[0]
+        );
+      };
+      effect().catch(console.error);
+    }
+  }, []);
 
-    const newRhsSelected = rhsFieldArray.fields
-      .map(({ selected }, index) =>
-        getSelectedState(
-          side == "rhs" && index == updatedIndex ? newSelected ?? {} : selected
-        )
-      )
-      .filter(
-        (selected): selected is StateSelectionEntry => selected !== undefined
-      );
+  const update = async (type: UpdateType) => {
+    const newLhsSelected =
+      type.kind === "state" && type.side === "lhs"
+        ? lhsFieldArray.fields
+            .map(({ selected }, index) =>
+              getSelectedState(
+                type.kind === "state" &&
+                  type.side === "lhs" &&
+                  type.index === index
+                  ? type.value ?? {}
+                  : selected
+              )
+            )
+            .filter(
+              (selected): selected is StateSelectionEntry =>
+                selected !== undefined
+            )
+        : lhsSelected;
+    const newRhsSelected =
+      type.kind === "state" && type.side === "rhs"
+        ? rhsFieldArray.fields
+            .map(({ selected }, index) =>
+              getSelectedState(
+                type.index === index ? type.value ?? {} : selected
+              )
+            )
+            .filter(
+              (selected): selected is StateSelectionEntry =>
+                selected !== undefined
+            )
+        : rhsSelected;
+    const newSelectedReversible =
+      type.kind === "reversible" ? type.value : selectedReversible;
+    const newSelectedTags =
+      type.kind === "type_tag" ? type.value : selectedTags;
 
-    const [newLhsStates, newRhsStates] = await Promise.all([
+    if (type.kind === "type_tag") {
+      setSelectedTags(newSelectedTags);
+    } else if (type.kind === "reversible") {
+      setSelectedReversible(newSelectedReversible);
+    } else if (type.kind === "state") {
+      type.side === "lhs"
+        ? setLhsSelected(newLhsSelected)
+        : setRhsSelected(newRhsSelected);
+    }
+
+    fetchReactions(
+      newLhsSelected,
+      newRhsSelected,
+      newSelectedTags,
+      newSelectedReversible
+    ).then((reactions) => onChange(reactions));
+
+    Promise.all([
       Promise.all(
         lhsFieldArray.fields.map(async ({ data, selected }, index) => {
-          if (side === "lhs" && index === updatedIndex) {
-            return { data, selected: newSelected };
+          if (
+            type.kind === "state" &&
+            type.side === "lhs" &&
+            type.index === index
+          ) {
+            return type.value ? { data, selected: type.value } : undefined;
           }
 
-          // Get selected states based on other boxes.
           const consumed = newLhsSelected.filter((_, i) => i !== index);
           const produced = newRhsSelected;
 
-          const response = await fetchStateTreeForSelection(
+          const tree = await fetchStateTreeForSelection(
             StateProcess.Consumed,
             consumed,
             produced,
-            selectedTags
+            newSelectedTags,
+            newSelectedReversible
           );
 
-          return { data: (await response.json()) as StateTree, selected };
+          return { data: tree, selected };
         })
-      ),
+      ).then((newLhsStates) => {
+        const filteredStates = newLhsStates.filter(
+          (state): state is StateEntryProps => state !== undefined
+        );
+        lhsFieldArray.replace(filteredStates);
+        return filteredStates;
+      }),
       Promise.all(
         rhsFieldArray.fields.map(async ({ data, selected }, index) => {
-          if (side === "rhs" && index === updatedIndex) {
-            return newSelected ? { data, selected: newSelected } : undefined;
+          if (
+            type.kind === "state" &&
+            type.side === "rhs" &&
+            type.index === index
+          ) {
+            return type.value ? { data, selected: type.value } : undefined;
           }
 
           // Get selected states based on other boxes.
           const consumed = newLhsSelected;
           const produced = newRhsSelected.filter((_, i) => i !== index);
 
-          const response = await fetchStateTreeForSelection(
+          const tree = await fetchStateTreeForSelection(
             StateProcess.Produced,
             consumed,
             produced,
-            selectedTags
+            newSelectedTags,
+            newSelectedReversible
           );
 
-          return { data: (await response.json()) as StateTree, selected };
+          return { data: tree, selected };
         })
-      ),
-    ]);
-
-    lhsFieldArray.replace(
-      newLhsStates.filter(
-        (state): state is StateEntryProps => state !== undefined
-      )
-    );
-    rhsFieldArray.replace(
-      newRhsStates.filter(
-        (state): state is StateEntryProps => state !== undefined
-      )
-    );
-
-    if (isStateSelectionUpdated(newLhsSelected, lhsSelected)) {
-      setLhsSelected(newLhsSelected);
-    }
-    if (isStateSelectionUpdated(newRhsSelected, rhsSelected)) {
-      setRhsSelected(newRhsSelected);
-    }
+      ).then((newRhsStates) => {
+        const filteredStates = newRhsStates.filter(
+          (state): state is StateEntryProps => state !== undefined
+        );
+        rhsFieldArray.replace(filteredStates);
+        return filteredStates;
+      }),
+      type.kind !== "type_tag"
+        ? fetchTypeTags(
+            newLhsSelected,
+            newRhsSelected,
+            newSelectedReversible
+          ).then(async (newTags) => {
+            const filteredTags = newSelectedTags.filter((tag) =>
+              newTags.includes(tag)
+            );
+            setSelectedTags(filteredTags);
+            setTypeTags(newTags);
+            return filteredTags;
+          })
+        : typeTags,
+      type.kind !== "reversible"
+        ? fetchReversible(newLhsSelected, newRhsSelected, newSelectedTags).then(
+            (newReversible) => {
+              setReversible(newReversible);
+              return newReversible;
+            }
+          )
+        : reversible,
+    ]).then(async ([newLhsStates, newRhsStates, newSelectedTags, _]) => {
+      if (
+        type.kind !== "type_tag" &&
+        !arrayEquality(newSelectedTags, selectedTags)
+      ) {
+        if (type.kind === "state") {
+          if (type.side === "lhs") {
+            const tree = await fetchStateTreeForSelection(
+              StateProcess.Consumed,
+              newLhsSelected.filter((_, i) => i !== type.index),
+              newRhsSelected,
+              newSelectedTags,
+              newSelectedReversible
+            );
+            newLhsStates[type.index].data = tree;
+            lhsFieldArray.replace(newLhsStates);
+          } else {
+            fetchStateTreeForSelection(
+              StateProcess.Produced,
+              newLhsSelected,
+              newRhsSelected.filter((_, i) => i !== type.index),
+              newSelectedTags,
+              newSelectedReversible
+            ).then((tree) => {
+              newRhsStates[type.index].data = tree;
+              rhsFieldArray.replace(newRhsStates);
+            });
+          }
+        } else if (type.kind === "reversible") {
+          fetchReversible(newLhsSelected, newRhsSelected, newSelectedTags).then(
+            (newReversible) => {
+              setReversible(newReversible);
+            }
+          );
+        }
+      }
+    });
   };
 
-  const fetchReactions = async () =>
+  const initData = async (side: "lhs" | "rhs") => {
+    const response = await fetch(
+      `/api/states/partaking?${new URLSearchParams({
+        stateProcess:
+          side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
+        consumes: JSON.stringify(lhsSelected),
+        produces: JSON.stringify(rhsSelected),
+        typeTags: JSON.stringify(selectedTags),
+        reversible: selectedReversible,
+      })}`
+    );
+    return await response.json();
+  };
+
+  const fetchReactions = async (
+    consumes: Array<StateSelectionEntry>,
+    produces: Array<StateSelectionEntry>,
+    typeTags: Array<ReactionTypeTag>,
+    reversible: Reversible
+  ) =>
     (
       await fetch(
         `/api/reactions?${new URLSearchParams({
-          consumes: JSON.stringify(lhsSelected),
-          produces: JSON.stringify(rhsSelected),
+          consumes: JSON.stringify(consumes),
+          produces: JSON.stringify(produces),
+          typeTags: JSON.stringify(typeTags),
+          reversible,
         })}`
       )
-    ).json() as Promise<Array<ReactionSummary>>;
-  const fetchTypeTags = async () =>
-    (await fetch("/api/reactions/type_tags")).json() as Promise<
-      Array<ReactionTypeTag>
-    >;
-
-  useEffect(() => {
-    const updateReactions = async () => {
-      const reactions: Array<ReactionSummary> = await fetchReactions();
-      const newTags =
-        reactions.length === 0
-          ? await fetchTypeTags()
-          : [...new Set(reactions.flatMap((reaction) => reaction.typeTags))];
-
-      console.log(newTags);
-
-      setTypeTags(newTags);
-
-      const newSelectedTags = selectedTags.filter((tag) =>
-        newTags.includes(tag)
-      );
-
-      onChange(
-        newSelectedTags.length === 0
-          ? reactions
-          : reactions.filter((reaction) =>
-              reaction.typeTags.some((tag) => newSelectedTags.includes(tag))
-            )
-      );
-
-      if (arrayEquality(newSelectedTags, selectedTags)) {
-        setSelectedTags(newSelectedTags);
-      }
-    };
-    updateReactions().catch(console.error);
-  }, [lhsSelected, rhsSelected]);
-
-  useEffect(() => {
-    const update = async () => {
-      updateData(-1, "lhs", {}, selectedTags);
-      onChange(await fetchReactions());
-    };
-    update().catch(console.error);
-  }, [selectedTags]);
+    ).json() as Promise<Array<string>>;
+  const fetchTypeTags = async (
+    consumes: Array<StateSelectionEntry>,
+    produces: Array<StateSelectionEntry>,
+    reversible: Reversible
+  ) =>
+    (
+      await fetch(
+        `/api/reactions/type_tags?${new URLSearchParams({
+          consumes: JSON.stringify(consumes),
+          produces: JSON.stringify(produces),
+          reversible,
+        })}`
+      )
+    ).json() as Promise<Array<ReactionTypeTag>>;
+  const fetchReversible = async (
+    consumes: Array<StateSelectionEntry>,
+    produces: Array<StateSelectionEntry>,
+    typeTags: Array<ReactionTypeTag>
+  ) =>
+    (
+      await fetch(
+        `/api/reactions/reversible?${new URLSearchParams({
+          consumes: JSON.stringify(consumes),
+          produces: JSON.stringify(produces),
+          typeTags: JSON.stringify(typeTags),
+        })}`
+      )
+    ).json() as Promise<Array<Reversible>>;
 
   return (
     <ReactionPicker
@@ -282,11 +417,10 @@ export const StatefulReactionPicker = ({
           lhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) => {
-          await updateData(index, "lhs", {}, selectedTags);
-          lhsFieldArray.remove(index);
+          await update({ kind: "state", side: "lhs", index });
         },
         onUpdate: async (index, selected) =>
-          updateData(index, "lhs", selected, selectedTags),
+          update({ kind: "state", side: "lhs", index, value: selected }),
       }}
       produces={{
         entries: rhsFieldArray.fields,
@@ -295,20 +429,21 @@ export const StatefulReactionPicker = ({
           rhsFieldArray.append({ data, selected: {} });
         },
         onRemove: async (index) =>
-          updateData(index, "rhs", undefined, selectedTags),
+          update({ kind: "state", side: "rhs", index }),
         onUpdate: async (index, selected) =>
-          updateData(index, "rhs", selected, selectedTags),
+          update({ kind: "state", side: "rhs", index, value: selected }),
       }}
       reversible={{
-        onChange: (value) => {
-          setReversible(value ?? "any");
-        },
-        value: reversible,
+        onChange: (value) =>
+          update({ kind: "reversible", value: value as Reversible }),
+        choices: reversible,
+        value: selectedReversible,
       }}
       typeTags={{
         data: typeTags,
         value: selectedTags,
-        onChange: (newTags: Array<ReactionTypeTag>) => setSelectedTags(newTags),
+        onChange: (newTags: Array<ReactionTypeTag>) =>
+          update({ kind: "type_tag", value: newTags }),
       }}
     />
   );

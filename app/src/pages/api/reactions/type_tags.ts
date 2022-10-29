@@ -1,4 +1,8 @@
-import { getAvailableTypeTags } from "@lxcat/database/dist/shared/queries/reaction";
+import {
+  getAvailableTypeTags,
+  Reversible,
+  StateSelectionEntry,
+} from "@lxcat/database/dist/cs/queries/public";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -6,13 +10,26 @@ import {
   hasDeveloperRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
+import { parseParam } from "../../../shared/utils";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperRole)
-  .get(async (_, res) => {
-    const typeTags = await getAvailableTypeTags();
-    res.json(typeTags);
+  .get(async (req, res) => {
+    const {
+      consumes: consumesParam,
+      produces: producesParam,
+      reversible: reversibleParam,
+    } = req.query;
+
+    const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
+    const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+    const reversible =
+      reversibleParam && !Array.isArray(reversibleParam)
+        ? reversibleParam as Reversible
+        : Reversible.Both;
+
+    res.json(await getAvailableTypeTags(consumes, produces, reversible));
   });
 
 export default handler;

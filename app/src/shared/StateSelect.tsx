@@ -97,6 +97,7 @@ export const StateSelect = ({
             value={electronic}
             onChange={electronicChange}
             placeholder={"\\mathrm{Electronic}"}
+            clearable={true}
           />
         </>
       ) : (
@@ -115,6 +116,7 @@ export const StateSelect = ({
             value={vibrational}
             onChange={vibrationalChange}
             placeholder={"\\mathrm{Vibrational}"}
+            clearable={true}
           />
         </>
       ) : (
@@ -133,6 +135,7 @@ export const StateSelect = ({
             value={rotational}
             onChange={rotationalChange}
             placeholder={"\\mathrm{Rotational}"}
+            clearable={true}
           />
         </>
       ) : (

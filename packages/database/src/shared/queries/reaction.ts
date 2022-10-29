@@ -29,13 +29,3 @@ export async function findReactionId(reaction: Reaction<string>) {
         `);
   return cursor.next();
 }
-
-export async function getAvailableTypeTags() {
-  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(aql`
-    RETURN UNIQUE(FLATTEN(
-      FOR reaction in Reaction
-        RETURN reaction.type_tags
-    ))`);
-
-  return cursor.next();
-}

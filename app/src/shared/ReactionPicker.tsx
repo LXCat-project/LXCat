@@ -7,11 +7,14 @@ import {
 } from "@mantine/core";
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
+import { Reversible } from "@lxcat/database/dist/cs/queries/public";
 
 interface ReactionPickerProps {
   consumes: StateListProps;
   produces: StateListProps;
-  reversible: Omit<LatexSelectProps, "choices">;
+  reversible: Omit<LatexSelectProps, "choices"> & {
+    choices: Array<Reversible>;
+  };
   typeTags: Omit<MultiSelectProps, "sx">;
 }
 
@@ -23,10 +26,16 @@ const listStyle: Sx = (theme: MantineTheme) => ({
   borderWidth: "thin",
 });
 
+const choiceMap: Record<Reversible, string> = {
+  [Reversible.Both]: "\\rightarrow \\\\ \\leftrightarrow",
+  [Reversible.False]: "\\rightarrow",
+  [Reversible.True]: "\\leftrightarrow",
+};
+
 export const ReactionPicker = ({
   consumes,
   produces,
-  reversible,
+  reversible: { choices, ...reversible },
   typeTags,
 }: ReactionPickerProps) => {
   return (
@@ -40,11 +49,11 @@ export const ReactionPicker = ({
           </td>
           <td>
             <LatexSelect
-              choices={{
-                any: "\\rightarrow \\\\ \\leftrightarrow",
-                right: "\\rightarrow",
-                reversible: "\\leftrightarrow",
-              }}
+              choices={Object.fromEntries(
+                Object.entries(choiceMap).filter(([key, _]) =>
+                  choices.includes(key as Reversible)
+                )
+              )}
               {...reversible}
             />
           </td>

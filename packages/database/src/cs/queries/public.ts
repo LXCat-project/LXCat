@@ -462,7 +462,6 @@ export async function getStateSelection(
   ignoredStates: Array<string> | AqlLiteral
 ) {
   const query = getStateSelectionAQL(process, reactions, ignoredStates);
-  console.log(query);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
@@ -471,16 +470,19 @@ export async function getPartakingStateSelection(
   process: StateProcess,
   consumed: Array<StateSelectionEntry>,
   produced: Array<StateSelectionEntry>,
-  typeTags: Array<ReactionTypeTag>
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible
 ) {
-  const query =
-    consumed.length > 0 || produced.length > 0
-      ? aql`LET states = (${getPartakingStateAQL(
-          process,
-          consumed,
-          produced,
-          typeTags
-        )})
+  const query = !(
+    consumed.length === 0 &&
+    produced.length === 0 &&
+    typeTags.length === 0 &&
+    reversible === Reversible.Both
+  )
+    ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced, [
+        getReversibleFilterAQL(reversible),
+        getTypeTagFilterAQL(typeTags),
+      ])})
     ${getStateSelectionAQL(
       process,
       aql.literal("states"),
@@ -488,8 +490,7 @@ export async function getPartakingStateSelection(
         (entry) => entry.id
       )
     )}`
-      : getFullStateTreeAQL(process, typeTags);
-  console.log(query.query);
+    : getFullStateTreeAQL(process, typeTags);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
 }
@@ -570,7 +571,7 @@ function getPartakingStateAQL(
   process: StateProcess,
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
-  typeTags: Array<ReactionTypeTag>
+  filters: Array<ReactionFunction>
 ) {
   return aql`
     UNIQUE(FLATTEN(
@@ -606,11 +607,9 @@ function getPartakingStateAQL(
       LET rhs = APPEND(rhsChildren, rhsParents)
 
       FOR reaction IN Reaction
-        ${
-          typeTags.length > 0
-            ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
-            : aql``
-        }
+        ${filters
+          .map((filter) => filter(aql.literal("reaction")))
+          .reduce((total, filter) => aql`${total}\n${filter}`)}
 
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
@@ -641,9 +640,38 @@ function getPartakingStateAQL(
   `;
 }
 
+type ReactionFunction = (reaction: AqlLiteral) => GeneratedAqlQuery;
+
+const getTypeTagFilterAQL =
+  (typeTags: Array<ReactionTypeTag>): ReactionFunction =>
+  (reaction: AqlLiteral) =>
+    typeTags.length === 0
+      ? aql``
+      : aql`FILTER ${reaction}.type_tags ANY IN ${typeTags}`;
+
+const getReversibleFilterAQL =
+  (reversible: Reversible): ReactionFunction =>
+  (reaction: AqlLiteral) =>
+    reversible === Reversible.Both
+      ? aql``
+      : aql`FILTER ${reaction}.reversible == ${
+          reversible === Reversible.False ? false : true
+        }`;
+
+const returnTypeTags: ReactionFunction = (reaction: AqlLiteral) =>
+  aql`RETURN ${reaction}.type_tags`;
+
+const returnReversible: ReactionFunction = (reaction: AqlLiteral) =>
+  aql`RETURN ${reaction}.reversible`;
+
+const returnId: ReactionFunction = (reaction: AqlLiteral) =>
+  aql`RETURN ${reaction}._id`;
+
 function getReactionsAQL(
   consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>
+  produces: Array<StateSelectionEntry>,
+  returnStatement: ReactionFunction = returnId,
+  filters: Array<ReactionFunction> = []
 ) {
   return aql`
       LET lhsChildren = (
@@ -678,6 +706,9 @@ function getReactionsAQL(
       LET rhs = APPEND(rhsChildren, rhsParents)
 
       FOR reaction IN Reaction
+        ${filters
+          .map((filter) => filter(aql.literal("reaction")))
+          .reduce((total, filter) => aql`${total}\n${filter}`)}
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
             RETURN state._id
@@ -700,7 +731,9 @@ function getReactionsAQL(
         )
         FILTER rhsCount >= LENGTH(rhs)
 
-        RETURN { id: reaction._id, typeTags: reaction.type_tags }`;
+        // RETURN { id: reaction._id, typeTags: reaction.type_tags }
+        ${returnStatement(aql.literal("reaction"))}
+        `;
 }
 
 export interface ReactionSummary {
@@ -710,10 +743,74 @@ export interface ReactionSummary {
 
 export async function getReactions(
   consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>
+  produces: Array<StateSelectionEntry>,
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible
 ) {
   const cursor: ArrayCursor<ReactionSummary> = await db().query(
-    getReactionsAQL(consumes, produces)
+    getReactionsAQL(consumes, produces, returnId, [
+      getReversibleFilterAQL(reversible),
+      getTypeTagFilterAQL(typeTags),
+    ])
   );
   return await cursor.all();
+}
+
+export async function getAvailableTypeTags(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>,
+  reversible: Reversible
+) {
+  const cursor: ArrayCursor<Array<ReactionTypeTag>> = await db().query(
+    consumes.length === 0 &&
+      produces.length === 0 &&
+      reversible === Reversible.Both
+      ? aql`
+      RETURN UNIQUE(FLATTEN(
+        FOR reaction in Reaction
+          RETURN reaction.type_tags
+      ))
+    `
+      : aql`
+      RETURN UNIQUE(FLATTEN(
+        ${getReactionsAQL(consumes, produces, returnTypeTags, [
+          getReversibleFilterAQL(reversible),
+        ])}
+      ))
+    `
+  );
+
+  return cursor.next();
+}
+
+export enum Reversible {
+  True = "true",
+  False = "false",
+  Both = "both",
+}
+
+export async function getReversible(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>,
+  typeTags: Array<ReactionTypeTag>
+) {
+  const cursor: ArrayCursor<Array<boolean>> = await db().query(
+    aql`
+    RETURN UNIQUE(FLATTEN(
+      ${getReactionsAQL(consumes, produces, returnReversible, [
+        getTypeTagFilterAQL(typeTags),
+      ])}
+    ))
+  `
+  );
+
+  const result = (await cursor.next())!;
+
+  return result.length === 0
+    ? []
+    : result.length > 1
+    ? [Reversible.True, Reversible.False, Reversible.Both]
+    : result[0]
+    ? [Reversible.True, Reversible.Both]
+    : [Reversible.False, Reversible.Both];
 }
