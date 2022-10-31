@@ -1,19 +1,14 @@
 import { Divider, Group, Sx, Button } from "@mantine/core";
 import { LatexSelect } from "./LatexSelect";
+import { mapObject } from "./utils";
 
 export type StateSummary = {
   latex: string;
   valid: boolean;
   children?: StateTree;
 };
-export type StateTree = Record<string, StateSummary>;
 
-function mapObject<T, R>(
-  obj: Record<string, T>,
-  callback: (pair: [string, T]) => [string, R]
-): Record<string, R> {
-  return Object.fromEntries(Object.entries(obj).map(callback));
-}
+export type StateTree = Record<string, StateSummary>;
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
