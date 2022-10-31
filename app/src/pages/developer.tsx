@@ -1,5 +1,7 @@
+import { Button, Space } from "@mantine/core";
 import { useState } from "react";
 import { Layout } from "../shared/Layout";
+import { TermsOfUseCheckForDeveloper } from "../shared/TermsOfUseCheckForDeveloper";
 
 const DeveloperPage = () => {
   const [token, setToken] = useState("");
@@ -14,9 +16,19 @@ const DeveloperPage = () => {
     <Layout>
       <div>
         <h2>API tokens</h2>
-        <p>Some API endpoints require authentication.</p>
-        <p> Use `Authorization: Bearer &lt;token&gt;` as header in request.</p>
-        <button onClick={generateToken}>Generate token</button>
+        <p>
+          The API endpoints of the LXcat web service require authentication.
+        </p>
+        <p>
+          Use `Authorization: Bearer &lt;token&gt;` as header in the HTTP
+          request.
+        </p>
+        <TermsOfUseCheckForDeveloper />
+        <Space h="md" />
+        <Button onClick={generateToken}>
+          I agree with terms of usage & generate token
+        </Button>
+        <Space h="md" />
         {token && (
           <div>
             <textarea rows={5} cols={120} readOnly value={token} />
