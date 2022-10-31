@@ -4,6 +4,18 @@ To consume LXCat data by another program, the LXCat web service provides several
 
 ## Table of contents
 
+## Authorize and authenticate
+
+The API endpoints of the LXcat web service require authorization and authentication.
+
+You can get authorized by mailing [admin@lxcat.net](mailto:admin@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
+Send the mail from the same email you used to login to LXCat.
+
+Authentication is done using a [JWT](https://jwt.io) token. 
+The token can be generated and copied from the [/developer](/developer) page.
+
+Use `Authorization: Bearer <token>` as header in all of the HTTP requests.
+
 ## Fetch particle states
 
 To retrieve states of particle `Ar` use:
