@@ -29,12 +29,25 @@ export const FilterComponent = ({
     });
   }
 
+  function onOrganizationChange(newSelection: string[]) {
+    onChange({
+      ...selection,
+      organization: newSelection,
+    });
+  }
+  
   function onReset() {
     onChange({
+      // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
       set_name: [],
-      tag: [],
-      species1: { particle: {} },
-      species2: { particle: {} },
+      organization: [],
+      reactions: [
+        {
+          consumes: [{}],
+          produces: [{}],
+          type_tags: [],
+        },
+      ],
     });
   }
 
@@ -81,11 +94,11 @@ export const FilterComponent = ({
                   <>
                     <ReactionPicker
                       consumes={{
-                        entries: r.lhs.map((s, j) => {
+                        entries: r.consumes.map((selected, j) => {
                           return {
                             id: `${i}-c-${j}`,
                             data: {},
-                            selected: s.state,
+                            selected,
                           };
                         }),
                         onAppend: () => {},
@@ -93,11 +106,11 @@ export const FilterComponent = ({
                         onUpdate: () => {},
                       }}
                       produces={{
-                        entries: r.rhs.map((s, j) => {
+                        entries: r.produces.map((selected, j) => {
                           return {
                             id: `${i}-c-${j}`,
                             data: {},
-                            selected: s.state,
+                            selected,
                           };
                         }),
                         onAppend: () => {},
@@ -173,7 +186,12 @@ export const FilterComponent = ({
               onClick={() => {
                 const newReactions = [
                   ...reactions,
-                  { rhs: [], lhs: [], reversible: false, type_tags: [] },
+                  {
+                    consumes: [],
+                    produces: [],
+                    reversible: undefined,
+                    type_tags: [],
+                  },
                 ];
                 onReactionsChange(newReactions);
                 setEditableReaction(newReactions.length - 1);
@@ -205,7 +223,11 @@ export const FilterComponent = ({
         </fieldset>
         <fieldset>
           <legend>Organization</legend>
-          TODO
+          <StringsFilter
+            choices={facets.organization}
+            selection={selection.organization}
+            onChange={onOrganizationChange}
+          />
         </fieldset>
       </div>
       <div>

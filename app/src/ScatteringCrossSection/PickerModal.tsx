@@ -5,7 +5,6 @@ import {
 } from "@lxcat/database/dist/cs/queries/public";
 import { Button, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { stateSelectionToSearchParam } from "../shared/StateFilter";
 import { Picker, Picked } from "./Picker";
 
 export const PickerModal = ({
@@ -16,9 +15,15 @@ export const PickerModal = ({
   const [open, setOpen] = useState(false);
   const [filterChoices, setFilterChoies] = useState<Facets>({
     set_name: [],
-    species1: { particle: {} },
-    species2: { particle: {} },
-    tag: [],
+    organization: [],
+    reactions: [
+      {
+        consumes: [{}],
+        produces: [{}],
+        typeTags: [],
+        reversible: [true, false],
+      },
+    ],
   });
   const [filterSelection, setFilterSelection] = useState<SearchOptions>(
     defaultSearchOptions()
@@ -56,12 +61,13 @@ export const PickerModal = ({
     // TODO If filterSelection is empty then set choices to []
     const afn = async () => {
       const searchParams = new URLSearchParams({
-        species1: stateSelectionToSearchParam(filterSelection.species1),
-        species2: stateSelectionToSearchParam(filterSelection.species2),
+        reactions: JSON.stringify(filterSelection.reactions),
       });
-      filterSelection.tag.forEach((t) => searchParams.append("tag", t));
-      filterSelection.set_name.forEach((t) =>
-        searchParams.append("set_name", t)
+      filterSelection.organization.forEach((d) =>
+        searchParams.append("organization", d)
+      );
+      filterSelection.set_name.forEach((d) =>
+        searchParams.append("set_name", d)
       );
       const url = `/api/author/scat-cs?${searchParams.toString()}`;
       const headers = new Headers({

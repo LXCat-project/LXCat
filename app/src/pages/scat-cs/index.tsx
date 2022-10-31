@@ -10,7 +10,6 @@ import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { useRouter } from "next/router";
-import { stateSelectionToSearchParam } from "../../shared/StateFilter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
@@ -32,8 +31,6 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   const nrItems = items.length;
   const query = {
     ...selection,
-    species1: stateSelectionToSearchParam(selection.species1),
-    species2: stateSelectionToSearchParam(selection.species2),
     offset: paging.offset + paging.count,
   };
   let canonicalUrl = "/scat-cs";

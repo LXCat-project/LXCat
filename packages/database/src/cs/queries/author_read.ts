@@ -10,7 +10,6 @@ import {
   setNamesFilterAql,
 } from "./public";
 import { PagingOptions } from "../../shared/types/search";
-import { generateStateFilterAql } from "../../shared/queries/state";
 
 export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
@@ -26,26 +25,11 @@ export async function searchOwned(
   options: SearchOptions = defaultSearchOptions(),
   paging: PagingOptions = { offset: 0, count: 100 }
 ) {
-  let species1Filter = aql``;
-  if (Object.keys(options.species1).length > 0) {
-    const state1aql = generateStateFilterAql(options.species1, "s1");
-    species1Filter = aql`
-		LET s1 = reaction.lhs[0].state
-		FILTER ${state1aql}
-	`;
-  }
-  let species2Filter = aql``;
-  if (Object.keys(options.species2).length > 0) {
-    const state2aql = generateStateFilterAql(options.species2, "s2");
-    species2Filter = aql`
-		LET s2 = reaction.lhs[1].state
-		FILTER ${state2aql}
-	`;
-  }
-  const hasFilterOnTag = options.tag.length > 0;
-  const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ANY IN reaction.type_tags`
+  const hasFilterOnOrganization = options.organization.length > 0;
+  const organizationAql = hasFilterOnOrganization
+    ? aql`FILTER ${options.organization} ANY IN o.name`
     : aql``;
+  const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
 		FOR u IN users
@@ -54,6 +38,7 @@ export async function searchOwned(
 				FILTER m._from == u._id
 				FOR o IN Organization
 					FILTER m._to == o._id
+          ${organizationAql}
 					FOR cs IN CrossSection
 						FILTER cs.organization == o._id
 						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
@@ -73,6 +58,7 @@ export async function searchOwned(
 								FILTER i._to == css._id
 								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
 						)
+            ${reactionsAql}
             ${setNamesFilterAql(options.set_name)}
 						LET reaction = FIRST(
 							FOR r in Reaction
@@ -100,9 +86,6 @@ export async function searchOwned(
                       FILTER r._id == rs._to
                       RETURN UNSET(r, ["_key", "_rev", "_id"])
               )
-            ${species1Filter}
-            ${species2Filter}
-            ${typeTagAql}
             SORT cs.versionInfo.createdOn DESC
             ${limit_aql}
             RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})

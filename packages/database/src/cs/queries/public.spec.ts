@@ -21,70 +21,75 @@ describe("given cross sections in different version states", () => {
     {
       name: "empty",
       selection: {
-        species1: {
-          particle: {},
-        },
-        species2: {
-          particle: {},
-        },
+        reactions: [],
         set_name: [],
-        tag: [],
+        organization: [],
       },
     },
     {
-      name: "s1=e",
+      name: "empty single reaction",
       selection: {
-        species1: {
-          particle: {
-            e: { charge: {} },
+        reactions: [
+          {
+            consumes: [{}],
+            produces: [{}],
+            type_tags: [],
           },
-        },
-        species2: {
-          particle: {},
-        },
+        ],
         set_name: [],
-        tag: [],
+        organization: [],
       },
     },
     {
-      name: "s2=H2",
+      name: "r1c1=e",
       selection: {
-        species1: {
-          particle: {},
-        },
-        species2: {
-          particle: {
-            H2: { charge: {} },
+        reactions: [
+          {
+            consumes: [
+              {
+                particle: "e", // TODO replace with state id of e
+              },
+            ],
+            produces: [{}],
+            type_tags: [],
           },
-        },
+        ],
         set_name: [],
-        tag: [],
+        organization: [],
+      },
+    },
+    {
+      name: "r1c1=H2",
+      selection: {
+        reactions: [
+          {
+            consumes: [
+              {
+                particle: "H2", // TODO replace with state id of H2
+              },
+            ],
+            produces: [{}],
+            type_tags: [],
+          },
+        ],
+        set_name: [],
+        organization: [],
       },
     },
     {
       name: "set",
       selection: {
-        species1: {
-          particle: {},
-        },
-        species2: {
-          particle: {},
-        },
+        reactions: [],
         set_name: ["H2 set"],
-        tag: [],
+        organization: [],
       },
     },
     {
-      name: "tag=effective",
+      name: "organization",
       selection: {
-        species1: {
-          particle: {},
-        },
-        species2: {
-          particle: {},
-        },
+        reactions: [],
         set_name: [],
-        tag: [ReactionTypeTag.Effective],
+        organization: ["Some published organization"],
       },
     },
   ];
@@ -95,31 +100,10 @@ describe("given cross sections in different version states", () => {
         facets = await searchFacets(selection);
       });
       it("should return only published sets", () => {
-        const expected: SearchOptions = {
-          species1: {
-            particle: {
-              e: {
-                charge: {
-                  "-1": {
-                    electronic: {},
-                  },
-                },
-              },
-            },
-          },
-          species2: {
-            particle: {
-              H2: {
-                charge: {
-                  0: {
-                    electronic: {},
-                  },
-                },
-              },
-            },
-          },
+        const expected: Facets = {
+          reactions: [], // TODO fill and lift to cases
           set_name: ["H2 set"],
-          tag: [ReactionTypeTag.Effective],
+          organization: ["Some published organization"],
         };
         expect(facets).toEqual(expected);
       });
@@ -149,6 +133,7 @@ describe("given cross sections in different version states", () => {
             data: [[1, 3.14e-20]],
             reference: [],
             id: expect.stringMatching(/\d+/),
+            organization: "Some published organization",
             isPartOf: [
               {
                 complete: false,

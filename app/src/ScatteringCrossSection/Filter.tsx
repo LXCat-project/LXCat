@@ -1,5 +1,4 @@
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { stateSelectionToSearchParam } from "../shared/StateFilter";
 import { useRouter } from "next/router";
 import { FilterComponent } from "./FilterComponent";
 
@@ -14,8 +13,6 @@ export const Filter = ({ facets, selection }: Props) => {
   function onChange(newSelection: SearchOptions, event?: string) {
     const query = {
       ...newSelection,
-      species1: stateSelectionToSearchParam(newSelection.species1),
-      species2: stateSelectionToSearchParam(newSelection.species2),
       reactions: JSON.stringify(newSelection.reactions),
     };
     if (event?.startsWith("reactions")) {
