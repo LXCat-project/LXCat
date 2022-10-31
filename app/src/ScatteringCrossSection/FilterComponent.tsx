@@ -1,4 +1,4 @@
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { Facets, Reversible, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
@@ -46,6 +46,7 @@ export const FilterComponent = ({
           consumes: [{}],
           produces: [{}],
           type_tags: [],
+          reversible: Reversible.Both
         },
       ],
     });
@@ -117,9 +118,15 @@ export const FilterComponent = ({
                         onRemove: () => {},
                         onUpdate: () => {},
                       }}
+                      reversible={{
+                        choices: facets.reactions[i].reversible,
+                        value: r.reversible,
+                        onChange: () => {}
+                      }}
                       typeTags={{
                         data: Object.keys(ReactionTypeTag),
                         onChange: () => {},
+                        placeholder: "Any tag"
                       }}
                     />
                     <Button.Group>
@@ -189,7 +196,7 @@ export const FilterComponent = ({
                   {
                     consumes: [],
                     produces: [],
-                    reversible: undefined,
+                    reversible: Reversible.Both,
                     type_tags: [],
                   },
                 ];

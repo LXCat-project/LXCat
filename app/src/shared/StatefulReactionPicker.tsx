@@ -3,11 +3,12 @@ import {
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
+import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "./ReactionPicker";
-import { OMIT_CHILDREN_KEY, StateSelection, StateTree } from "./StateSelect";
+import { OMIT_CHILDREN_KEY, StateSelection } from "./StateSelect";
 import { arrayEquality } from "./utils";
 
 // TODO: Include organization and set selection in the reaction search.

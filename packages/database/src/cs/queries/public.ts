@@ -60,7 +60,7 @@ type ReactionChoices = {
   consumes: StateTree[];
   produces: StateTree[];
   typeTags: ReactionTypeTag[];
-  reversible: boolean[];
+  reversible: Reversible[];
 };
 
 export interface Facets {
@@ -172,7 +172,7 @@ async function reactionsChoices(
       // TODO fill type tags based on other options
       typeTags: Object.values(ReactionTypeTag),
       // TODO fill reversible based on other options
-      reversible: [true, false],
+      reversible: [Reversible.Both, Reversible.True, Reversible.False],
     });
   }
   return reactionsChoices;
@@ -204,7 +204,7 @@ interface StateOptions {
 interface ReactionOptions {
   consumes: StateOptions[];
   produces: StateOptions[];
-  reversible?: boolean; // undefined means either true or false
+  reversible: Reversible
   type_tags: ReactionTypeTag[];
 }
 
@@ -223,6 +223,7 @@ export function defaultSearchOptions(): SearchOptions {
         consumes: [{}],
         produces: [{}],
         type_tags: [],
+        reversible: Reversible.Both
       },
     ],
   };

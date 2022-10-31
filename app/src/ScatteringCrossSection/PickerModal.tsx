@@ -2,6 +2,7 @@ import {
   Facets,
   SearchOptions,
   defaultSearchOptions,
+  Reversible,
 } from "@lxcat/database/dist/cs/queries/public";
 import { Button, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ export const PickerModal = ({
         consumes: [{}],
         produces: [{}],
         typeTags: [],
-        reversible: [true, false],
+        reversible: [Reversible.Both, Reversible.False, Reversible.True],
       },
     ],
   });
