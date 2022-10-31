@@ -567,6 +567,45 @@ function getFullStateTreeAQL(
   `;
 }
 
+function getTreeForStateSelectionAQL(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>,
+  lhsIdentifier: AqlLiteral = aql.literal("lhs"),
+  rhsIdentifier: AqlLiteral = aql.literal("rhs")
+) {
+  return aql`
+    LET lhsChildren = (
+      FOR parent IN ${consumes}
+        FILTER parent.includeChildren
+        LET children = (
+          FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
+            RETURN child._id
+        )
+        RETURN children
+    )
+    LET lhsParents = (
+      FOR parent IN ${consumes}
+        FILTER NOT parent.includeChildren
+        RETURN [parent.id]
+    )
+    LET ${lhsIdentifier} = APPEND(lhsChildren, lhsParents)
+
+    LET rhsChildren = (
+      FOR parent IN ${produces}
+        LET children = (
+          FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
+            RETURN child._id
+        )
+        RETURN children
+    )
+    LET rhsParents = (
+      FOR parent IN ${produces}
+        FILTER NOT parent.includeChildren
+        RETURN [parent.id]
+    )
+    LET ${rhsIdentifier} = APPEND(rhsChildren, rhsParents)`;
+}
+
 function getPartakingStateAQL(
   process: StateProcess,
   consumes: Array<StateSelectionEntry>,
@@ -575,36 +614,7 @@ function getPartakingStateAQL(
 ) {
   return aql`
     UNIQUE(FLATTEN(
-      LET lhsChildren = (
-        FOR parent IN ${consumes}
-          FILTER parent.includeChildren
-          LET children = (
-            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
-              RETURN child._id
-          )
-          RETURN children
-      )
-      LET lhsParents = (
-        FOR parent IN ${consumes}
-          FILTER NOT parent.includeChildren
-          RETURN [parent.id]
-      )
-      LET lhs = APPEND(lhsChildren, lhsParents)
-
-      LET rhsChildren = (
-        FOR parent IN ${produces}
-          LET children = (
-            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
-              RETURN child._id
-          )
-          RETURN children
-      )
-      LET rhsParents = (
-        FOR parent IN ${produces}
-          FILTER NOT parent.includeChildren
-          RETURN [parent.id]
-      )
-      LET rhs = APPEND(rhsChildren, rhsParents)
+      ${getTreeForStateSelectionAQL(consumes, produces)}
 
       FOR reaction IN Reaction
         ${filters
@@ -640,6 +650,12 @@ function getPartakingStateAQL(
   `;
 }
 
+interface CSSetSummary {
+  id: string;
+  name: string;
+  organization: string;
+}
+
 type ReactionFunction = (reaction: AqlLiteral) => GeneratedAqlQuery;
 
 const getTypeTagFilterAQL =
@@ -658,6 +674,21 @@ const getReversibleFilterAQL =
           reversible === Reversible.False ? false : true
         }`;
 
+const getCrossSectionSetFilterAQL =
+  (setIds: Array<string>): ReactionFunction =>
+  (reaction: AqlLiteral) =>
+    setIds.length === 0
+      ? aql``
+      : aql`LET inSet = COUNT(
+              FOR cs IN CrossSection
+                FILTER cs.reaction = ${reaction}._id
+                FOR css IN OUTBOUND cs IsPartOf
+                  FILTER css._id in ${setIds}
+                  LIMIT 1
+                  RETURN 1
+            )
+            FILTER inSet > 0`;
+
 const returnTypeTags: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}.type_tags`;
 
@@ -667,6 +698,39 @@ const returnReversible: ReactionFunction = (reaction: AqlLiteral) =>
 const returnId: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}._id`;
 
+const returnCSSet: ReactionFunction = (reaction: AqlLiteral) =>
+  aql`FOR cs IN CrossSection
+        FILTER cs.reaction == ${reaction}._id
+        FOR css IN OUTBOUND cs IsPartOf
+          RETURN DISTINCT {id: css._id, organization: css.organization}
+      `;
+
+const returnCrossSectionHeading =
+  (setIds: Array<string>, produced: AqlLiteral, consumed: AqlLiteral) =>
+  (reaction: AqlLiteral) =>
+    aql`
+    FOR cs IN CrossSection
+      FILTER cs.reaction == reaction._id
+      LET sets = (
+        FOR css IN OUTBOUND cs IsPartOf
+          ${setIds.length > 0 ? aql`FILTER css._id IN ${setIds}` : aql``}
+          RETURN {id: css._id, name: css.name}
+      )
+      FILTER LENGTH(sets) > 0
+      RETURN {
+        id: cs._id, 
+        organization: cs.organization,
+        isPartOf: sets,
+        reaction: {
+          lhs: ${consumed}, 
+          rhs: ${produced}, 
+          reversible: ${reaction}.reversible, 
+          type_tags: ${reaction}.type_tags
+        },
+        reference: []
+      }
+   `;
+
 function getReactionsAQL(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
@@ -674,36 +738,7 @@ function getReactionsAQL(
   filters: Array<ReactionFunction> = []
 ) {
   return aql`
-      LET lhsChildren = (
-        FOR parent IN ${consumes}
-          FILTER parent.includeChildren
-          LET children = (
-            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
-              RETURN child._id
-          )
-          RETURN children
-      )
-      LET lhsParents = (
-        FOR parent IN ${consumes}
-          FILTER NOT parent.includeChildren
-          RETURN [parent.id]
-      )
-      LET lhs = APPEND(lhsChildren, lhsParents)
-
-      LET rhsChildren = (
-        FOR parent IN ${produces}
-          LET children = (
-            FOR child IN 0..3 OUTBOUND parent.id HasDirectSubstate
-              RETURN child._id
-          )
-          RETURN children
-      )
-      LET rhsParents = (
-        FOR parent IN ${produces}
-          FILTER NOT parent.includeChildren
-          RETURN [parent.id]
-      )
-      LET rhs = APPEND(rhsChildren, rhsParents)
+      ${getTreeForStateSelectionAQL(consumes, produces)}
 
       FOR reaction IN Reaction
         ${filters
@@ -731,9 +766,55 @@ function getReactionsAQL(
         )
         FILTER rhsCount >= LENGTH(rhs)
 
-        // RETURN { id: reaction._id, typeTags: reaction.type_tags }
         ${returnStatement(aql.literal("reaction"))}
         `;
+}
+
+function getCSSetAQL(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>,
+  filters: Array<ReactionFunction> = []
+) {
+  const query = aql`
+      ${getTreeForStateSelectionAQL(consumes, produces)}
+
+      FOR csSet IN CrossSectionSet
+        LET validSet = COUNT(
+	  FOR cs IN INBOUND csSet IsPartOf
+            FOR reaction IN Reaction
+              FILTER cs.reaction == reaction._id
+              ${filters
+                .map((filter) => filter(aql.literal("reaction")))
+                .reduce((total, filter) => aql`${total}\n${filter}`)}
+              LET consumed = (
+                FOR state IN OUTBOUND reaction Consumes
+                  RETURN state._id
+              )
+              LET lhsCount = COUNT(
+                FOR group IN lhs
+                  FILTER group ANY IN consumed
+                  RETURN 1
+              )
+              FILTER lhsCount >= LENGTH(lhs)
+
+              LET produced = (
+                FOR state IN OUTBOUND reaction Produces
+                  RETURN state._id
+              )
+              LET rhsCount = COUNT(
+                FOR group IN rhs
+                  FILTER group ANY IN produced
+                  RETURN 1
+              )
+              FILTER rhsCount >= LENGTH(rhs)
+
+	      LIMIT 1
+              RETURN 1
+	)
+	FILTER validSet > 0
+	RETURN {id: csSet._id, name: csSet.name, organization: csSet.organization}`;
+  console.log(query);
+  return query;
 }
 
 export interface ReactionSummary {
@@ -813,4 +894,21 @@ export async function getReversible(
     : result[0]
     ? [Reversible.True, Reversible.Both]
     : [Reversible.False, Reversible.Both];
+}
+
+export async function getCSSets(
+  consumes: Array<StateSelectionEntry>,
+  produces: Array<StateSelectionEntry>,
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible
+) {
+  const cursor: ArrayCursor<{ id: string; organization: string }> =
+    await db().query(
+      getCSSetAQL(consumes, produces, [
+        getReversibleFilterAQL(reversible),
+        getTypeTagFilterAQL(typeTags),
+      ])
+    );
+
+  return cursor.all();
 }

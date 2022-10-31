@@ -6,6 +6,7 @@ import {
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { CSSetTree } from "./CSSetFilter";
 import { ReactionPicker } from "./ReactionPicker";
 import { OMIT_CHILDREN_KEY, StateSelection, StateTree } from "./StateSelect";
 import { arrayEquality } from "./utils";
@@ -34,7 +35,16 @@ interface ReversibleUpdate {
   value: Reversible;
 }
 
-type UpdateType = StateSelectUpdate | TypeTagUpdate | ReversibleUpdate;
+interface CSSetUpdate {
+  kind: "cs_set";
+  selected: Set<string>;
+}
+
+type UpdateType =
+  | CSSetUpdate
+  | StateSelectUpdate
+  | TypeTagUpdate
+  | ReversibleUpdate;
 
 const getSelectedState = ({
   particle,
@@ -156,6 +166,21 @@ export const StatefulReactionPicker = ({
     rhs ? getSelectedStates(rhs) : []
   );
 
+  const [setTree, setSetTree] = useState<CSSetTree>({
+    "1": {
+      name: "IST Lisbon",
+      unfolded: true,
+      sets: {
+        "1": "Set one",
+        "2": "Set two",
+      },
+    },
+    "2": { name: "Phelps", unfolded: false, sets: {} },
+  });
+  const [selectedCSSets, setSelectedCSSets] = useState<Set<string>>(
+    new Set(["1"])
+  );
+
   // Used for initializing state.
   useEffect(() => {
     if (!initialValues) {
@@ -208,6 +233,8 @@ export const StatefulReactionPicker = ({
       type.kind === "reversible" ? type.value : selectedReversible;
     const newSelectedTags =
       type.kind === "type_tag" ? type.value : selectedTags;
+    const newSelectedCSSet =
+      type.kind === "cs_set" ? type.selected : selectedCSSets;
 
     if (type.kind === "type_tag") {
       setSelectedTags(newSelectedTags);
@@ -217,6 +244,8 @@ export const StatefulReactionPicker = ({
       type.side === "lhs"
         ? setLhsSelected(newLhsSelected)
         : setRhsSelected(newRhsSelected);
+    } else if (type.kind === "cs_set") {
+      setSelectedCSSets(newSelectedCSSet);
     }
 
     fetchReactions(
@@ -310,6 +339,14 @@ export const StatefulReactionPicker = ({
             }
           )
         : reversible,
+      type.kind !== "cs_set"
+        ? fetchCSSets(
+            newLhsSelected,
+            newRhsSelected,
+            newSelectedTags,
+            newSelectedReversible
+          ).then(console.log)
+        : setTree,
     ]).then(async ([newLhsStates, newRhsStates, newSelectedTags, _]) => {
       if (
         type.kind !== "type_tag" &&
@@ -407,6 +444,22 @@ export const StatefulReactionPicker = ({
         })}`
       )
     ).json() as Promise<Array<Reversible>>;
+  const fetchCSSets = async (
+    consumes: Array<StateSelectionEntry>,
+    produces: Array<StateSelectionEntry>,
+    typeTags: Array<ReactionTypeTag>,
+    reversible: Reversible
+  ) =>
+    (
+      await fetch(
+        `/api/reactions/cs-set?${new URLSearchParams({
+          consumes: JSON.stringify(consumes),
+          produces: JSON.stringify(produces),
+          typeTags: JSON.stringify(typeTags),
+          reversible,
+        })}`
+      )
+    ).json();
 
   return (
     <ReactionPicker
@@ -444,6 +497,36 @@ export const StatefulReactionPicker = ({
         value: selectedTags,
         onChange: (newTags: Array<ReactionTypeTag>) =>
           update({ kind: "type_tag", value: newTags }),
+      }}
+      sets={{
+        data: setTree,
+        selection: selectedCSSets,
+        onSetChecked(setId, checked) {
+          const newSelectedCSSets = new Set(selectedCSSets);
+
+          checked
+            ? newSelectedCSSets.add(setId)
+            : newSelectedCSSets.delete(setId);
+
+          setSelectedCSSets(newSelectedCSSets);
+        },
+        onOrganizationChecked(id, checked) {
+          const newSelectedCSSets = new Set(selectedCSSets);
+
+          Object.keys(setTree[id].sets).forEach((setId) => {
+            checked
+              ? newSelectedCSSets.add(setId)
+              : newSelectedCSSets.delete(setId);
+          });
+
+          setSelectedCSSets(newSelectedCSSets);
+        },
+        onOrganizationUnfolded(id, unfolded) {
+          const newTree = { ...setTree };
+          newTree[id].unfolded = unfolded;
+
+          setSetTree(newTree);
+        },
       }}
     />
   );

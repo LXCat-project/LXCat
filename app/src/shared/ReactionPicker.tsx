@@ -8,6 +8,7 @@ import {
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
 import { Reversible } from "@lxcat/database/dist/cs/queries/public";
+import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
 
 interface ReactionPickerProps {
   consumes: StateListProps;
@@ -16,6 +17,7 @@ interface ReactionPickerProps {
     choices: Array<Reversible>;
   };
   typeTags: Omit<MultiSelectProps, "sx">;
+  sets: CSSetFilterProps;
 }
 
 const listStyle: Sx = (theme: MantineTheme) => ({
@@ -37,6 +39,7 @@ export const ReactionPicker = ({
   produces,
   reversible: { choices, ...reversible },
   typeTags,
+  sets,
 }: ReactionPickerProps) => {
   return (
     <table>
@@ -60,6 +63,11 @@ export const ReactionPicker = ({
           <td>
             <Box sx={listStyle}>
               <StateList {...produces} />
+            </Box>
+          </td>
+          <td rowSpan={2}>
+            <Box sx={listStyle}>
+              <CSSetFilter {...sets} />
             </Box>
           </td>
         </tr>
