@@ -1,7 +1,6 @@
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import {
   Box,
-  Grid,
   MantineTheme,
   MultiSelect,
   MultiSelectProps,
@@ -9,11 +8,16 @@ import {
   Sx,
   Text,
 } from "@mantine/core";
+import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
+import { Reversible } from "@lxcat/database/dist/cs/queries/public";
 
 interface ReactionPickerProps {
   consumes: StateListProps;
   produces: StateListProps;
+  reversible: Omit<LatexSelectProps, "choices"> & {
+    choices: Array<Reversible>;
+  };
   typeTags: Omit<MultiSelectProps, "sx">;
 }
 
@@ -25,30 +29,49 @@ const listStyle: Sx = (theme: MantineTheme) => ({
   borderWidth: "thin",
 });
 
+const choiceMap: Record<Reversible, string> = {
+  [Reversible.Both]: "\\rightarrow \\\\ \\leftrightarrow",
+  [Reversible.False]: "\\rightarrow",
+  [Reversible.True]: "\\leftrightarrow",
+};
+
 export const ReactionPicker = ({
   consumes,
   produces,
+  reversible: { choices, ...reversible },
   typeTags,
 }: ReactionPickerProps) => {
   return (
     <table>
-      <tr>
-        <td>
-          <Box sx={listStyle}>
-            <StateList {...consumes} />
-          </Box>
-        </td>
-        <td>
-          <Box sx={listStyle}>
-            <StateList {...produces} />
-          </Box>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan={2}>
-          <MultiSelect sx={{}} {...typeTags} />
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <Box sx={listStyle}>
+              <StateList {...consumes} />
+            </Box>
+          </td>
+          <td>
+            <LatexSelect
+              choices={Object.fromEntries(
+                Object.entries(choiceMap).filter(([key, _]) =>
+                  choices.includes(key as Reversible)
+                )
+              )}
+              {...reversible}
+            />
+          </td>
+          <td>
+            <Box sx={listStyle}>
+              <StateList {...produces} />
+            </Box>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={3}>
+            <MultiSelect sx={{}} {...typeTags} />
+          </td>
+        </tr>
+      </tbody>
     </table>
   );
 };

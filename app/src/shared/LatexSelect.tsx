@@ -1,14 +1,15 @@
-import { Menu, Group, Box } from "@mantine/core";
+import { Menu, Group } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
 import React from "react";
 
 import { Latex } from "./Latex";
 
-interface SelectProps {
+export interface LatexSelectProps {
   choices: Record<string, string>;
   value?: string;
-  onChange: (newValue?: string) => void;
+  onChange: (newValue?: string) => void | Promise<void>;
   placeholder?: string;
+  clearable?: boolean;
 }
 
 export const LatexSelect = ({
@@ -16,7 +17,8 @@ export const LatexSelect = ({
   value,
   onChange,
   placeholder,
-}: SelectProps) => {
+  clearable,
+}: LatexSelectProps) => {
   return (
     <Menu>
       <Menu.Target>
@@ -38,24 +40,23 @@ export const LatexSelect = ({
           })}
         >
           {value ? (
-            <>
-              <Latex>{value ? choices[value] : ""}</Latex>
-              <IconX
-                size={14}
-                color="gray"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChange();
-                }}
-              />
-            </>
+            <Latex>{value ? choices[value] : ""}</Latex>
           ) : (
-            <>
-              <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>
-                {placeholder ?? ""}
-              </Latex>
-              <IconSelector size={16} color="gray" />
-            </>
+            <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>
+              {placeholder ?? ""}
+            </Latex>
+          )}
+          {value && clearable ? (
+            <IconX
+              size={14}
+              color="gray"
+              onClick={async (e) => {
+                e.stopPropagation();
+                await onChange();
+              }}
+            />
+          ) : (
+            <IconSelector size={16} color="gray" />
           )}
         </Group>
       </Menu.Target>

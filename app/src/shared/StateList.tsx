@@ -1,12 +1,12 @@
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
-import { Button, Center, Stack } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { StateSelection, StateSelect } from "./StateSelect";
 
 export interface StateListProps {
   entries: Array<{ id: string; data: StateTree; selected: StateSelection }>;
-  onAppend: () => void;
-  onRemove: (index: number) => void;
-  onUpdate: (index: number, selected: StateSelection) => void;
+  onAppend: () => void | Promise<void>;
+  onRemove: (index: number) => void | Promise<void>;
+  onUpdate: (index: number, selected: StateSelection) => void | Promise<void>;
 }
 
 export const StateList = ({
@@ -29,7 +29,7 @@ export const StateList = ({
             <StateSelect
               data={entry.data}
               selected={entry.selected}
-              onChange={(selected) => onUpdate(index, selected)}
+              onChange={async (selected) => onUpdate(index, selected)}
               inGroup={false}
               sx={{
                 borderTopLeftRadius: 0,

@@ -4,6 +4,7 @@ import nc from "next-connect";
 import {
   getPartakingStateSelection,
   NestedStateArray,
+  Reversible,
   StateProcess,
   StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -12,6 +13,7 @@ import {
   StateSummary,
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
+import { parseParam } from "../../../shared/utils";
 
 export function stateArrayToObject({
   id,
@@ -29,34 +31,33 @@ export function stateArrayToTree(
 }
 
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
-  const query = req.query;
+  const {
+    stateProcess: stateProcessParam,
+    consumes: consumesParam,
+    produces: producesParam,
+    typeTags: typeTagsParam,
+    reversible: reversibleParam,
+  } = req.query;
 
   const stateProcess =
-    query.stateProcess && !Array.isArray(query.stateProcess)
-      ? (query.stateProcess as StateProcess)
+    stateProcessParam && !Array.isArray(stateProcessParam)
+      ? (stateProcessParam as StateProcess)
       : undefined;
+  const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
+  const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+  const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
+  const reversible =
+    reversibleParam && !Array.isArray(reversibleParam)
+      ? (reversibleParam as Reversible)
+      : Reversible.Both;
 
-  const consumes =
-    query.consumes && !Array.isArray(query.consumes)
-      ? (JSON.parse(query.consumes) as Array<StateSelectionEntry>)
-      : undefined;
-
-  const produces =
-    query.produces && !Array.isArray(query.produces)
-      ? (JSON.parse(query.produces) as Array<StateSelectionEntry>)
-      : undefined;
-
-  const typeTags =
-    query.typeTags && !Array.isArray(query.typeTags)
-      ? (JSON.parse(query.typeTags) as Array<ReactionTypeTag>)
-      : Object.values(ReactionTypeTag);
-
-  if (stateProcess && consumes && produces) {
+  if (stateProcess) {
     const stateArray = await getPartakingStateSelection(
       stateProcess,
       consumes,
       produces,
-      typeTags
+      typeTags,
+      reversible
     );
     // TODO: Add optimized query for empty consumes and produces.
     res.json(stateArrayToTree(stateArray) ?? {});
