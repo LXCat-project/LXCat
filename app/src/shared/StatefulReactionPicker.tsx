@@ -166,7 +166,7 @@ export const StatefulReactionPicker = ({
     rhs ? getSelectedStates(rhs) : []
   );
 
-  const [setTree, setSetTree] = useState<CSSetTree>({
+  const [csSets, setCSSets] = useState<CSSetTree>({
     "1": {
       name: "IST Lisbon",
       unfolded: true,
@@ -345,8 +345,11 @@ export const StatefulReactionPicker = ({
             newRhsSelected,
             newSelectedTags,
             newSelectedReversible
-          ).then(console.log)
-        : setTree,
+          ).then((newCSSets) => {
+            setCSSets(newCSSets);
+            return newCSSets;
+          })
+        : csSets,
     ]).then(async ([newLhsStates, newRhsStates, newSelectedTags, _]) => {
       if (
         type.kind !== "type_tag" &&
@@ -499,7 +502,7 @@ export const StatefulReactionPicker = ({
           update({ kind: "type_tag", value: newTags }),
       }}
       sets={{
-        data: setTree,
+        data: csSets,
         selection: selectedCSSets,
         onSetChecked(setId, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
@@ -513,7 +516,7 @@ export const StatefulReactionPicker = ({
         onOrganizationChecked(id, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
 
-          Object.keys(setTree[id].sets).forEach((setId) => {
+          Object.keys(csSets[id].sets).forEach((setId) => {
             checked
               ? newSelectedCSSets.add(setId)
               : newSelectedCSSets.delete(setId);
@@ -522,10 +525,10 @@ export const StatefulReactionPicker = ({
           setSelectedCSSets(newSelectedCSSets);
         },
         onOrganizationUnfolded(id, unfolded) {
-          const newTree = { ...setTree };
+          const newTree = { ...csSets };
           newTree[id].unfolded = unfolded;
 
-          setSetTree(newTree);
+          setCSSets(newTree);
         },
       }}
     />
