@@ -15,3 +15,10 @@ export const parseParam = <ParsedType>(
   param && !Array.isArray(param)
     ? (JSON.parse(param) as ParsedType)
     : defaultValue;
+
+export function mapObject<T, R>(
+  obj: Record<string, T>,
+  callback: (pair: [string, T]) => [string, R]
+): Record<string, R> {
+  return Object.fromEntries(Object.entries(obj).map(callback));
+}

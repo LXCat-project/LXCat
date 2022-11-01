@@ -4,13 +4,7 @@ import type {
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
 import { LatexSelect } from "./LatexSelect";
-
-function mapObject<T, R>(
-  obj: Record<string, T>,
-  callback: (pair: [string, T]) => [string, R]
-): Record<string, R> {
-  return Object.fromEntries(Object.entries(obj).map(callback));
-}
+import { mapObject } from "./utils";
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];

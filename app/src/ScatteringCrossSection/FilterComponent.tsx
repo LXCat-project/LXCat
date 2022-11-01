@@ -128,6 +128,13 @@ export const FilterComponent = ({
                         onChange: () => {},
                         placeholder: "Any tag"
                       }}
+                      sets={{
+                        data: {},
+                        selection: new Set(),
+                        onOrganizationChecked: () => {},
+                        onOrganizationUnfolded: () => {},
+                        onSetChecked: () => {},
+                      }}
                     />
                     <Button.Group>
                       <Button
