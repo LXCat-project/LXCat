@@ -5,19 +5,15 @@ import type {
 } from "@lxcat/database/dist/shared/queries/state";
 import { LatexSelect } from "./LatexSelect";
 import { mapObject } from "./utils";
+import {
+  OMIT_CHILDREN_KEY,
+  StatePath,
+} from "@lxcat/database/dist/shared/getStateLeaf";
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
 }
 
-export const OMIT_CHILDREN_KEY = "omit_children";
-
-export interface StatePath {
-  particle?: string;
-  electronic?: string;
-  vibrational?: string;
-  rotational?: string;
-}
 interface StateSelectProps {
   data: StateTree;
   selected: StatePath;

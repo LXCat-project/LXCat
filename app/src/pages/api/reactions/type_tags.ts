@@ -1,8 +1,8 @@
 import {
   getAvailableTypeTags,
   Reversible,
-  StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
+import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -23,8 +23,8 @@ const handler = nc<AuthRequest, NextApiResponse>()
       setIds: setIdsParam,
     } = req.query;
 
-    const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
-    const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+    const consumes = parseParam<Array<StateLeaf>>(consumesParam, []);
+    const produces = parseParam<Array<StateLeaf>>(producesParam, []);
     const setIds = parseParam<Array<string>>(setIdsParam, []);
     const reversible =
       reversibleParam && !Array.isArray(reversibleParam)

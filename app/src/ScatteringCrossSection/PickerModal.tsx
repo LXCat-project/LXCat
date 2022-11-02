@@ -15,14 +15,13 @@ export const PickerModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [filterChoices, setFilterChoies] = useState<Facets>({
-    set_name: [],
-    organization: [],
     reactions: [
       {
         consumes: [{}],
         produces: [{}],
         typeTags: [],
         reversible: [Reversible.Both, Reversible.False, Reversible.True],
+        set: {},
       },
     ],
   });
@@ -64,12 +63,6 @@ export const PickerModal = ({
       const searchParams = new URLSearchParams({
         reactions: JSON.stringify(filterSelection.reactions),
       });
-      filterSelection.organization.forEach((d) =>
-        searchParams.append("organization", d)
-      );
-      filterSelection.set_name.forEach((d) =>
-        searchParams.append("set_name", d)
-      );
       const url = `/api/author/scat-cs?${searchParams.toString()}`;
       const headers = new Headers({
         Accept: "application/json",

@@ -6,8 +6,6 @@ export interface MathProps {
 
 // FIXME: Handle errors (see e.g. react-katex).
 export const Math = ({ latex }: MathProps) => {
-  const html = katex.renderToString(latex)
-  return (
-    <div dangerouslySetInnerHTML={{ __html: html }} />
-  );
+  const html = katex.renderToString(latex);
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };

@@ -6,11 +6,11 @@ import {
   NestedStateArray,
   Reversible,
   StateProcess,
-  StateSelectionEntry,
   stateArrayToTree,
 } from "@lxcat/database/dist/cs/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { parseParam } from "../../../shared/utils";
+import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   const {
@@ -26,8 +26,8 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
     stateProcessParam && !Array.isArray(stateProcessParam)
       ? (stateProcessParam as StateProcess)
       : undefined;
-  const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
-  const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+  const consumes = parseParam<Array<StateLeaf>>(consumesParam, []);
+  const produces = parseParam<Array<StateLeaf>>(producesParam, []);
   const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
   const setIds = parseParam<Array<string>>(setIdsParam, []);
   const reversible =

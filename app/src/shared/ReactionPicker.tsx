@@ -65,7 +65,7 @@ export const ReactionPicker = ({
               <StateList {...produces} />
             </Box>
           </td>
-          <td rowSpan={2}>
+          <td rowSpan={2} style={{ verticalAlign: "top" }}>
             <Box sx={listStyle}>
               <CSSetFilter {...sets} />
             </Box>

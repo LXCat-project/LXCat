@@ -1,4 +1,3 @@
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";

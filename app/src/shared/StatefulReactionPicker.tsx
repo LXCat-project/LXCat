@@ -2,14 +2,17 @@ import {
   CSSetTree,
   Reversible,
   StateProcess,
-  StateLeaf,
 } from "@lxcat/database/dist/cs/queries/public";
+import {
+  getStateLeaf,
+  StateLeaf,
+  StatePath,
+} from "@lxcat/database/dist/shared/getStateLeaf";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "./ReactionPicker";
-import { OMIT_CHILDREN_KEY, StatePath } from "./StateSelect";
 import { arrayEquality } from "./utils";
 
 interface StateEntryProps {
@@ -45,38 +48,7 @@ type UpdateType =
   | TypeTagUpdate
   | ReversibleUpdate;
 
-const getStateLeaf = ({
-  particle,
-  electronic,
-  vibrational,
-  rotational,
-}: StatePath): StateLeaf | undefined => {
-  if (particle) {
-    if (electronic) {
-      if (electronic === OMIT_CHILDREN_KEY) {
-        return { id: particle, includeChildren: false };
-      } else if (vibrational) {
-        if (vibrational === OMIT_CHILDREN_KEY) {
-          return { id: electronic, includeChildren: false };
-        } else if (rotational) {
-          if (rotational === OMIT_CHILDREN_KEY) {
-            return { id: vibrational, includeChildren: false };
-          }
-          return { id: rotational, includeChildren: false };
-        }
-        return { id: vibrational, includeChildren: true };
-      }
-      return { id: electronic, includeChildren: true };
-    }
-    return { id: particle, includeChildren: true };
-  }
-
-  return undefined;
-};
-
-const getSelectedStates = (
-  entries: Array<StateEntryProps>
-): Array<StateLeaf> =>
+const getSelectedStates = (entries: Array<StateEntryProps>): Array<StateLeaf> =>
   entries
     .map(({ selected }) => getStateLeaf(selected))
     .filter((id): id is StateLeaf => id !== undefined);
@@ -126,6 +98,8 @@ export type StatefulReactionPickerProps = {
     selectedTags: Array<ReactionTypeTag>;
     reversible: Array<Reversible>;
     selectedReversible: Reversible;
+    selectedCsSets: Set<string>;
+    csSets: CSSetTree;
   } & ListValues;
 };
 
@@ -140,6 +114,8 @@ export const StatefulReactionPicker = ({
     selectedTags: initSelectedTags,
     reversible: initReversible,
     selectedReversible: initSelectedReversible,
+    selectedCsSets: initSelectedCsSets,
+    csSets: initCsSets,
   } = initialValues ?? {
     lhs: [],
     rhs: [],
@@ -147,6 +123,8 @@ export const StatefulReactionPicker = ({
     selectedTags: [],
     reversible: [Reversible.Both, Reversible.True, Reversible.False],
     selectedReversible: Reversible.Both,
+    selectedCsSets: new Set(),
+    csSets: {},
   };
 
   const { control } = useForm<ListValues>({ defaultValues: { lhs, rhs } });
@@ -173,9 +151,10 @@ export const StatefulReactionPicker = ({
     rhs ? getSelectedStates(rhs) : []
   );
 
-  const [csSets, setCSSets] = useState<CSSetTree>({});
+  const [csSets, setCSSets] = useState<CSSetTree>(initCsSets);
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
-  const [selectedCSSets, setSelectedCSSets] = useState<Set<string>>(new Set());
+  const [selectedCSSets, setSelectedCSSets] =
+    useState<Set<string>>(initSelectedCsSets);
 
   // Used for initializing state.
   useEffect(() => {
@@ -191,6 +170,32 @@ export const StatefulReactionPicker = ({
         });
 
         fetchCSSets([], [], [], Reversible.Both).then(setCSSets);
+        fetchStateTreeForSelection(
+          StateProcess.Consumed,
+          [],
+          [],
+          [],
+          Reversible.Both,
+          new Set()
+        ).then((data) =>
+          lhsFieldArray.append({
+            data,
+            selected: {},
+          })
+        );
+        fetchStateTreeForSelection(
+          StateProcess.Produced,
+          [],
+          [],
+          [],
+          Reversible.Both,
+          new Set()
+        ).then((data) =>
+          rhsFieldArray.append({
+            data,
+            selected: {},
+          })
+        );
       };
       effect().catch(console.error);
     }
@@ -206,10 +211,7 @@ export const StatefulReactionPicker = ({
       type.kind === "state" && type.side === "lhs"
         ? newLhsPaths
             .map(getStateLeaf)
-            .filter(
-              (selected): selected is StateLeaf =>
-                selected !== undefined
-            )
+            .filter((selected): selected is StateLeaf => selected !== undefined)
         : lhsSelected;
     const newRhsPaths = rhsFieldArray.fields.map(({ selected }, index) =>
       type.kind === "state" && type.side === "rhs" && type.index === index
@@ -220,10 +222,7 @@ export const StatefulReactionPicker = ({
       type.kind === "state" && type.side === "rhs"
         ? newRhsPaths
             .map(getStateLeaf)
-            .filter(
-              (selected): selected is StateLeaf =>
-                selected !== undefined
-            )
+            .filter((selected): selected is StateLeaf => selected !== undefined)
         : rhsSelected;
     const newSelectedReversible =
       type.kind === "reversible" ? type.value : selectedReversible;
@@ -355,7 +354,7 @@ export const StatefulReactionPicker = ({
             setCSSets(newCSSets);
             return filteredSelectedSets;
           })
-        : selectedCSSets,
+        : newSelectedCSSets,
     ]).then(
       async ([
         newLhsStates,

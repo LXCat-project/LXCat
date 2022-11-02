@@ -66,9 +66,8 @@ export const getServerSideProps: GetServerSideProps<
     count: 100,
     // count: Number.MAX_SAFE_INTEGER,
   };
-
   const items = await search(filter, paging);
-  const facets = await searchFacets(filter)
+  const facets = await searchFacets(filter);
   return {
     props: {
       items,

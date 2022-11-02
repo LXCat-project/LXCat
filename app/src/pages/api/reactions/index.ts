@@ -1,8 +1,8 @@
 import {
   getReactions,
   Reversible,
-  StateSelectionEntry,
 } from "@lxcat/database/dist/cs/queries/public";
+import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
@@ -24,12 +24,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
       reversible: reversibleParam,
     } = req.query;
 
-    const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
-    const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+    const consumes = parseParam<Array<StateLeaf>>(consumesParam, []);
+    const produces = parseParam<Array<StateLeaf>>(producesParam, []);
     const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
     const reversible =
       reversibleParam && !Array.isArray(reversibleParam)
-        ? reversibleParam as Reversible
+        ? (reversibleParam as Reversible)
         : Reversible.Both;
 
     if (

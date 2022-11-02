@@ -3,6 +3,7 @@ import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { getStateLeaf, StateLeaf, StatePath } from "../../shared/getStateLeaf";
 import { StateSummary, StateTree } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
@@ -92,9 +93,12 @@ export function stateArrayToObject({
   valid,
   children,
 }: NestedStateArray): [string, StateSummary] {
-  const subtree = stateArrayToTree(children)
-  const r = subtree === undefined ? { latex, valid} : { latex, valid, children: subtree };
-  return [id, r]
+  const subtree = stateArrayToTree(children);
+  const r =
+    subtree === undefined
+      ? { latex, valid }
+      : { latex, valid, children: subtree };
+  return [id, r];
 }
 
 export function stateArrayToTree(
@@ -111,52 +115,54 @@ async function reactionsChoices(
   }
   const reactionsChoices: ReactionChoices[] = [];
   for (const reaction of options.reactions) {
-    const {consumes, produces, reversible, type_tags, set} = reaction
+    const {
+      consumes: consumesPaths,
+      produces: producesPaths,
+      reversible,
+      type_tags,
+      set,
+    } = reaction;
+    const consumes = consumesPaths
+      .map(getStateLeaf)
+      .filter((d): d is StateLeaf => d !== undefined);
+    const produces = producesPaths
+      .map(getStateLeaf)
+      .filter((d): d is StateLeaf => d !== undefined);
     reactionsChoices.push({
       // TODO fill each state tree based on other options
-      consumes: await Promise.all(consumes.map(async (_, i) => {
-        const array: NestedStateArray[] = await getPartakingStateSelection(
-          StateProcess.Consumed,
-          consumes.filter((_, i2) => i !== i2),
-          produces,
-          type_tags,
-          reversible,
-          set
-        )
-        return stateArrayToTree(array) ?? {}
-        })),
-      // TODO fill each state tree based on other options
-      produces:  await Promise.all(consumes.map(async (_, i) => {
-        const array: NestedStateArray[] = await getPartakingStateSelection(
-          StateProcess.Produced,
-          consumes,
-          produces.filter((_, i2) => i !== i2),
-          type_tags,
-          reversible,
-          set
-        )
-        return stateArrayToTree(array) ?? {}
-        })),
-      // TODO fill type tags based on other options
-      typeTags: (await getAvailableTypeTags(
-        consumes,
-        produces,
-        reversible,
-        set
-      )) ?? [],
-      // TODO fill reversible based on other options
-      reversible: await getReversible(
-        consumes,
-        produces,
-        type_tags,
-        set
+      consumes: await Promise.all(
+        consumes.map(async (_, i) => {
+          const array: NestedStateArray[] = await getPartakingStateSelection(
+            StateProcess.Consumed,
+            consumes.filter((_, i2) => i !== i2),
+            produces,
+            type_tags,
+            reversible,
+            set
+          );
+          return stateArrayToTree(array) ?? {};
+        })
       ),
-      set: await getCSSets(
-        consumes,
-        produces,
-        type_tags,
-        reversible,
-      )
+      // TODO fill each state tree based on other options
+      produces: await Promise.all(
+        consumes.map(async (_, i) => {
+          const array: NestedStateArray[] = await getPartakingStateSelection(
+            StateProcess.Produced,
+            consumes,
+            produces.filter((_, i2) => i !== i2),
+            type_tags,
+            reversible,
+            set
+          );
+          return stateArrayToTree(array) ?? {};
+        })
+      ),
+      // TODO fill type tags based on other options
+      typeTags:
+        (await getAvailableTypeTags(consumes, produces, reversible, set)) ?? [],
+      // TODO fill reversible based on other options
+      reversible: await getReversible(consumes, produces, type_tags, set),
+      set: await getCSSets(consumes, produces, type_tags, reversible),
     });
   }
   return reactionsChoices;
@@ -174,19 +180,12 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
   };
 }
 
-interface StateOptions {
-  particle?: string;
-  electronic?: string;
-  vibrational?: string;
-  rotational?: string;
-}
-
 interface ReactionOptions {
-  consumes: StateLeaf[];
-  produces: StateLeaf[];
-  reversible: Reversible
+  consumes: StatePath[];
+  produces: StatePath[];
+  reversible: Reversible;
   type_tags: ReactionTypeTag[];
-  set: string[]
+  set: string[];
 }
 
 export interface SearchOptions {
@@ -392,11 +391,6 @@ export async function getPartakingStateSelection(
     : getFullStateTreeAQL(process, typeTags);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
-}
-
-export interface StateLeaf {
-  id: string;
-  includeChildren: boolean;
 }
 
 function getFullStateTreeAQL(
@@ -792,7 +786,7 @@ export async function getReversible(
   `
   );
 
-  const result = (await cursor.next())!;
+  const result = await cursor.next() ?? [];
 
   return result.length === 0
     ? []

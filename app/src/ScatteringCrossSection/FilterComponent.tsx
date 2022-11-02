@@ -1,11 +1,12 @@
-import { Facets, Reversible, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import {
+  Facets,
+  Reversible,
+  SearchOptions,
+} from "@lxcat/database/dist/cs/queries/public";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { useState } from "react";
-import { ReactionPicker } from "../shared/ReactionPicker";
 import { StatefulReactionPicker } from "../shared/StatefulReactionPicker";
-import { StringsFilter } from "../shared/StringsFilter";
 import { ReactionSummary } from "./ReactionSummary";
 
 export const FilterComponent = ({
@@ -26,14 +27,13 @@ export const FilterComponent = ({
   function onReset() {
     onChange({
       // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
-      set_name: [],
-      organization: [],
       reactions: [
         {
-          consumes: [{}],
-          produces: [{}],
+          consumes: [],
+          produces: [],
           type_tags: [],
-          reversible: Reversible.Both
+          reversible: Reversible.Both,
+          set: [],
         },
       ],
     });
@@ -63,7 +63,7 @@ export const FilterComponent = ({
     reactions.length - 1
   );
 
-  console.log(facets, selection)
+  console.log(facets, selection);
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -82,76 +82,49 @@ export const FilterComponent = ({
                 {i == editableReaction ? (
                   <>
                     <StatefulReactionPicker
-                    onChange={function (
-                      consumes,
-                      produces,
-                      type_tags,
-                      reversible,
-                      set
-                    ) {
-                      console.log(arguments);
-                      const newReactionSelection = [...selection.reactions]
-                      newReactionSelection[i] = {
+                      onChange={function (
                         consumes,
                         produces,
-                        reversible,
                         type_tags,
-                        set: Array.from(set)
+                        reversible,
+                        set
+                      ) {
+                        console.log(arguments);
+                        const newReactionSelection = [...selection.reactions];
+                        newReactionSelection[i] = {
+                          consumes,
+                          produces,
+                          reversible,
+                          type_tags,
+                          set: Array.from(set),
+                        };
+                        onReactionsChange(newReactionSelection);
+                      }}
+                      initialValues={
+                        facets.reactions[i]
+                          ? {
+                              lhs: r.consumes.map((selected, j) => {
+                                return {
+                                  selected,
+                                  data: facets.reactions[i].consumes[j],
+                                };
+                              }),
+                              rhs: r.produces.map((selected, j) => {
+                                return {
+                                  selected,
+                                  data: facets.reactions[i].produces[j],
+                                };
+                              }),
+                              reversible: facets.reactions[i].reversible,
+                              selectedReversible: r.reversible,
+                              selectedTags: r.type_tags,
+                              typeTags: facets.reactions[i].typeTags,
+                              csSets: facets.reactions[i].set,
+                              selectedCsSets: new Set(r.set),
+                            }
+                          : undefined
                       }
-                      onReactionsChange(newReactionSelection)
-                    }}
-                    // initialValues={{
-                    //   lhs: r.consumes.map((selected, j) => {
-                    //     return {
-                    //       selected,
-                    //       data: facets.reactions[i].consumes[j]
-                    //     }
-                    //   })
-                    // }}
                     />
-                    {/* <ReactionPicker
-                      consumes={{
-                        entries: r.consumes.map((selected, j) => {
-                          return {
-                            id: `${i}-c-${j}`,
-                            data: {},
-                            selected,
-                          };
-                        }),
-                        onAppend: () => {},
-                        onRemove: () => {},
-                        onUpdate: () => {},
-                      }}
-                      produces={{
-                        entries: r.produces.map((selected, j) => {
-                          return {
-                            id: `${i}-c-${j}`,
-                            data: {},
-                            selected,
-                          };
-                        }),
-                        onAppend: () => {},
-                        onRemove: () => {},
-                        onUpdate: () => {},
-                      }}
-                      reversible={{
-                        choices: facets.reactions[i].reversible,
-                        value: r.reversible,
-                        onChange: () => {}
-                      }}
-                      typeTags={{
-                        data: Object.keys(ReactionTypeTag),
-                        onChange: () => {},
-                        placeholder: "Any tag"
-                      }}
-                      sets={{
-                        data: {},
-                        selection: new Set(),
-                        onOrganizationChecked: () => {},
-                        onOrganizationUnfolded: () => {},
-                        onSetChecked: () => {},
-                      }}
-                    /> */}
                     <Button.Group>
                       <Button
                         variant="subtle"
@@ -221,6 +194,7 @@ export const FilterComponent = ({
                     produces: [],
                     reversible: Reversible.Both,
                     type_tags: [],
+                    set: [],
                   },
                 ];
                 onReactionsChange(newReactions);

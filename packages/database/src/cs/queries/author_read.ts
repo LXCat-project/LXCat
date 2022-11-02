@@ -7,7 +7,6 @@ import { CrossSectionItem } from "../public";
 import {
   defaultSearchOptions,
   SearchOptions,
-  setNamesFilterAql,
 } from "./public";
 import { PagingOptions } from "../../shared/types/search";
 
