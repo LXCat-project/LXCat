@@ -180,7 +180,7 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
   };
 }
 
-interface ReactionOptions {
+export interface ReactionOptions {
   consumes: StatePath[];
   produces: StatePath[];
   reversible: Reversible;
@@ -218,6 +218,46 @@ export function setNamesFilterAql(set_names: string[]) {
 	  )
     FILTER LENGTH(${set_names}) == 0 OR ${set_names} ANY IN setNames
   `;
+}
+
+export async function byIds(csIds: Array<string>, paging: PagingOptions) {
+  const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
+  const q = aql`
+	FOR cs IN CrossSection
+          FILTER cs._id IN ${csIds}
+          FILTER cs.versionInfo.status == 'published'
+	  LET refs = (
+		FOR rs IN References
+		  FILTER rs._from == cs._id
+		  FOR r IN Reference
+			FILTER r._id == rs._to
+			RETURN UNSET(r, ["_key", "_rev", "_id"])
+	  )
+	  LET reaction = FIRST(
+		FOR r in Reaction
+		  FILTER r._id == cs.reaction
+		  LET consumes = (
+			FOR c IN Consumes
+			FILTER c._from == r._id
+			  FOR c2s IN State
+			  FILTER c2s._id == c._to
+			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
+		  )
+		  LET produces = (
+			FOR p IN Produces
+			FILTER p._from == r._id
+			  FOR p2s IN State
+			  FILTER p2s._id == p._to
+			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+		  )
+		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
+	  )
+	  LET setNames = [] // TODO implement
+	  ${limitAql}
+	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
+	`;
+  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
+  return await cursor.all();
 }
 
 export async function search(options: SearchOptions, paging: PagingOptions) {
@@ -591,6 +631,25 @@ const returnReversible: ReactionFunction = (reaction: AqlLiteral) =>
 const returnId: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}._id`;
 
+const returnCSId =
+  (setIds: Array<string>): ReactionFunction =>
+  (reaction: AqlLiteral) =>
+    setIds.length === 0
+      ? aql`
+      FOR cs IN CrossSection
+        FILTER cs.reaction == ${reaction}._id
+	RETURN cs._id`
+      : aql`
+      FOR cs IN CrossSection
+        FILTER cs.reaction == ${reaction}._id
+	LET csId = FIRST(
+	  FOR css IN OUTBOUND cs IsPartOf
+	  FILTER css._id IN ${setIds}
+	  RETURN cs._id
+	)
+	FILTER csId != null
+	RETURN csId`;
+
 const returnCSSet: ReactionFunction = (reaction: AqlLiteral) =>
   aql`FOR cs IN CrossSection
         FILTER cs.reaction == ${reaction}._id
@@ -713,21 +772,18 @@ function getCSSetAQL(
   return query;
 }
 
-export interface ReactionSummary {
-  id: string;
-  typeTags: Array<ReactionTypeTag>;
-}
-
-export async function getReactions(
+export async function getCSIdByReactionTemplate(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible
+  reversible: Reversible,
+  setIds: Array<string>
 ) {
-  const cursor: ArrayCursor<ReactionSummary> = await db().query(
-    getReactionsAQL(consumes, produces, returnId, [
+  const cursor: ArrayCursor<string> = await db().query(
+    getReactionsAQL(consumes, produces, returnCSId(setIds), [
       getReversibleFilterAQL(reversible),
       getTypeTagFilterAQL(typeTags),
+      // getCSSetFilterAQL(setIds),
     ])
   );
   return await cursor.all();
@@ -786,7 +842,7 @@ export async function getReversible(
   `
   );
 
-  const result = await cursor.next() ?? [];
+  const result = (await cursor.next()) ?? [];
 
   return result.length === 0
     ? []

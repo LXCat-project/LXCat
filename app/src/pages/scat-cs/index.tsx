@@ -11,9 +11,10 @@ import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { useRouter } from "next/router";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { Paging } from "../../ScatteringCrossSection/Paging";
+import { CallbackPaging } from "../../ScatteringCrossSection/CallbackPaging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
+import { useState } from "react";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -22,11 +23,14 @@ interface Props {
 }
 
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
-  items,
+  items: initialItems,
   facets,
   paging,
 }) => {
   const router = useRouter();
+  const [items, setItems] = useState(initialItems);
+  const [offset, setOffset] = useState(paging.offset);
+
   const selection = query2options(router.query);
   const nrItems = items.length;
   const query = {
@@ -37,16 +41,34 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   if (paging.offset > 0) {
     canonicalUrl = `/scat-cs?offset=${paging.offset}`;
   }
+  const onChange = async (newSelection: SearchOptions, offset: number = 0) => {
+    const res = await fetch(
+      `/api/scat-cs?${new URLSearchParams({
+        reactions: JSON.stringify(newSelection.reactions),
+        offset: `${offset}`,
+      })}`
+    );
+    setItems(await res.json());
+  };
+
   return (
     <Layout title="Scattering Cross Section">
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
       <h1>Scattering Cross Sections</h1>
-      <Filter facets={facets} selection={selection} />
+      <Filter facets={facets} selection={selection} onChange={onChange} />
       <hr />
       <List items={items} />
-      <Paging paging={paging} nrOnPage={nrItems} query={query} />
+      <CallbackPaging
+        paging={{ ...paging, offset }}
+        nrOnPage={nrItems}
+        onOffsetChange={async (newOffset) => {
+          setOffset(newOffset);
+          // TODO: Put new offset in route.
+          return onChange(selection, newOffset);
+        }}
+      />
     </Layout>
   );
 };
@@ -66,6 +88,7 @@ export const getServerSideProps: GetServerSideProps<
     count: 100,
     // count: Number.MAX_SAFE_INTEGER,
   };
+  // TODO: Replace search with csIdByReactionTemplate + byIds.
   const items = await search(filter, paging);
   const facets = await searchFacets(filter);
   return {

@@ -5,19 +5,20 @@ import { FilterComponent } from "./FilterComponent";
 interface Props {
   facets: Facets;
   selection: SearchOptions;
+  onChange: (newSelection: SearchOptions) => void | Promise<void>;
 }
 
-export const Filter = ({ facets, selection }: Props) => {
+export const Filter = ({ facets, selection, onChange }: Props) => {
   const router = useRouter();
 
-  function onChange(newSelection: SearchOptions, event?: string) {
+  function onFilterChange(newSelection: SearchOptions, event?: string) {
     const query = {
       ...newSelection,
       reactions: JSON.stringify(newSelection.reactions),
     };
     if (event?.startsWith("reactions")) {
       router.push({ query }, undefined, { shallow: true });
-      // TODO make sure update is done for cs list and non-reaction filters
+      onChange(newSelection);
     } else {
       router.push({ query });
     }
@@ -27,7 +28,7 @@ export const Filter = ({ facets, selection }: Props) => {
     <FilterComponent
       facets={facets}
       selection={selection}
-      onChange={onChange}
+      onChange={onFilterChange}
     />
   );
 };

@@ -3,6 +3,7 @@ import {
   Reversible,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
+import { getStateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { useState } from "react";
@@ -164,6 +165,11 @@ export const FilterComponent = ({
                 ) : (
                   <>
                     <ReactionSummary
+                      // TODO: Make function that returns Latex for given path 
+                      // in tree.
+                      // lhs={r.consumes.map((path, j) => {
+                      //   const tree = facets.reactions[i].consumes[j];
+                      // })}
                       lhs={[]}
                       rhs={[]}
                       reversible={false}
