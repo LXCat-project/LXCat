@@ -3,12 +3,10 @@ import {
   Reversible,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
-import { getStateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { useState } from "react";
 import { StatefulReactionPicker } from "../shared/StatefulReactionPicker";
-import { ReactionSummary } from "./ReactionSummary";
 
 export const FilterComponent = ({
   facets,
@@ -64,7 +62,8 @@ export const FilterComponent = ({
     reactions.length - 1
   );
 
-  console.log(facets, selection);
+  console.log(`facets: ${JSON.stringify(facets)}`)
+  console.log(`selection: ${JSON.stringify(selection)}`)
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -80,52 +79,53 @@ export const FilterComponent = ({
                   justifyContent: "space-between",
                 }}
               >
+                <StatefulReactionPicker
+                  onChange={function (
+                    consumes,
+                    produces,
+                    type_tags,
+                    reversible,
+                    set
+                  ) {
+                    console.log(arguments);
+                    const newReactionSelection = [...selection.reactions];
+                    newReactionSelection[i] = {
+                      consumes,
+                      produces,
+                      reversible,
+                      type_tags,
+                      set: Array.from(set),
+                    };
+                    onReactionsChange(newReactionSelection);
+                  }}
+                  viewOnly={i == editableReaction}
+                  initialValues={
+                    facets.reactions[i]
+                      ? {
+                          lhs: r.consumes.map((selected, j) => {
+                            return {
+                              selected,
+                              data: facets.reactions[i].consumes[j],
+                            };
+                          }),
+                          rhs: r.produces.map((selected, j) => {
+                            return {
+                              selected,
+                              data: facets.reactions[i].produces[j],
+                            };
+                          }),
+                          reversible: facets.reactions[i].reversible,
+                          selectedReversible: r.reversible,
+                          selectedTags: r.type_tags,
+                          typeTags: facets.reactions[i].typeTags,
+                          csSets: facets.reactions[i].set,
+                          selectedCsSets: new Set(r.set),
+                        }
+                      : undefined
+                  }
+                />
                 {i == editableReaction ? (
                   <>
-                    <StatefulReactionPicker
-                      onChange={function (
-                        consumes,
-                        produces,
-                        type_tags,
-                        reversible,
-                        set
-                      ) {
-                        console.log(arguments);
-                        const newReactionSelection = [...selection.reactions];
-                        newReactionSelection[i] = {
-                          consumes,
-                          produces,
-                          reversible,
-                          type_tags,
-                          set: Array.from(set),
-                        };
-                        onReactionsChange(newReactionSelection);
-                      }}
-                      initialValues={
-                        facets.reactions[i]
-                          ? {
-                              lhs: r.consumes.map((selected, j) => {
-                                return {
-                                  selected,
-                                  data: facets.reactions[i].consumes[j],
-                                };
-                              }),
-                              rhs: r.produces.map((selected, j) => {
-                                return {
-                                  selected,
-                                  data: facets.reactions[i].produces[j],
-                                };
-                              }),
-                              reversible: facets.reactions[i].reversible,
-                              selectedReversible: r.reversible,
-                              selectedTags: r.type_tags,
-                              typeTags: facets.reactions[i].typeTags,
-                              csSets: facets.reactions[i].set,
-                              selectedCsSets: new Set(r.set),
-                            }
-                          : undefined
-                      }
-                    />
                     <Button.Group>
                       <Button
                         variant="subtle"
@@ -164,17 +164,6 @@ export const FilterComponent = ({
                   </>
                 ) : (
                   <>
-                    <ReactionSummary
-                      // TODO: Make function that returns Latex for given path 
-                      // in tree.
-                      // lhs={r.consumes.map((path, j) => {
-                      //   const tree = facets.reactions[i].consumes[j];
-                      // })}
-                      lhs={[]}
-                      rhs={[]}
-                      reversible={false}
-                      type_tags={[]}
-                    />
                     <Button
                       variant="subtle"
                       title="Edit"

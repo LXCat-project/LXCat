@@ -1,7 +1,9 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
 import {
+  byIds,
   Facets,
+  getCSIdByReactionTemplate,
   search,
   searchFacets,
   SearchOptions,
@@ -15,6 +17,10 @@ import { CallbackPaging } from "../../ScatteringCrossSection/CallbackPaging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
 import { useState } from "react";
+import {
+  getStateLeaf,
+  StateLeaf,
+} from "@lxcat/database/dist/shared/getStateLeaf";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -30,6 +36,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
   const [offset, setOffset] = useState(paging.offset);
+
+  // TODO: Add state for facets.
 
   const selection = query2options(router.query);
   const nrItems = items.length;
@@ -88,8 +96,47 @@ export const getServerSideProps: GetServerSideProps<
     count: 100,
     // count: Number.MAX_SAFE_INTEGER,
   };
-  // TODO: Replace search with csIdByReactionTemplate + byIds.
-  const items = await search(filter, paging);
+
+  const csIdsNested = await Promise.all(
+    filter.reactions.map(
+      async ({
+        consumes: consumesPaths,
+        produces: producesPaths,
+        type_tags: typeTags,
+        reversible,
+        set,
+      }) => {
+        const consumes = consumesPaths
+          .map(getStateLeaf)
+          .filter((leaf): leaf is StateLeaf => leaf !== undefined);
+        const produces = producesPaths
+          .map(getStateLeaf)
+          .filter((leaf): leaf is StateLeaf => leaf !== undefined);
+
+        if (
+          !(
+            consumes.length === 0 &&
+            produces.length === 0 &&
+            typeTags.length === 0 &&
+            set.length === 0
+          )
+        ) {
+          return getCSIdByReactionTemplate(
+            consumes,
+            produces,
+            typeTags,
+            reversible,
+            set
+          );
+        } else {
+          return [];
+        }
+      }
+    )
+  );
+  const csIds = new Set(csIdsNested.flat());
+  const items = await byIds(Array.from(csIds), paging);
+
   const facets = await searchFacets(filter);
   return {
     props: {

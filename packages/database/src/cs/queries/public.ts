@@ -57,7 +57,7 @@ export async function byId(id: string) {
   return await cursor.next();
 }
 
-type ReactionChoices = {
+export type ReactionChoices = {
   consumes: StateTree[];
   produces: StateTree[];
   typeTags: ReactionTypeTag[];
@@ -129,7 +129,6 @@ async function reactionsChoices(
       .map(getStateLeaf)
       .filter((d): d is StateLeaf => d !== undefined);
     reactionsChoices.push({
-      // TODO fill each state tree based on other options
       consumes: await Promise.all(
         consumes.map(async (_, i) => {
           const array: NestedStateArray[] = await getPartakingStateSelection(
@@ -143,7 +142,6 @@ async function reactionsChoices(
           return stateArrayToTree(array) ?? {};
         })
       ),
-      // TODO fill each state tree based on other options
       produces: await Promise.all(
         consumes.map(async (_, i) => {
           const array: NestedStateArray[] = await getPartakingStateSelection(
@@ -157,10 +155,8 @@ async function reactionsChoices(
           return stateArrayToTree(array) ?? {};
         })
       ),
-      // TODO fill type tags based on other options
       typeTags:
         (await getAvailableTypeTags(consumes, produces, reversible, set)) ?? [],
-      // TODO fill reversible based on other options
       reversible: await getReversible(consumes, produces, type_tags, set),
       set: await getCSSets(consumes, produces, type_tags, reversible),
     });
@@ -169,10 +165,6 @@ async function reactionsChoices(
 }
 
 export async function searchFacets(options: SearchOptions): Promise<Facets> {
-  // TODO make facets depend on each other
-  // * species2 should only show species not in species1
-  // TODO make facets depend on current selection
-  // * selecting a set should only show species1 in that set
   /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
   /* eslint-enable @typescript-eslint/no-unused-vars */
   return {

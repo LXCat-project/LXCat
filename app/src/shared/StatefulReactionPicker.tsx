@@ -1,5 +1,7 @@
 import {
   CSSetTree,
+  ReactionChoices,
+  ReactionOptions,
   Reversible,
   StateProcess,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -10,8 +12,10 @@ import {
 } from "@lxcat/database/dist/shared/getStateLeaf";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { Group } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Latex } from "./Latex";
 import { ReactionPicker } from "./ReactionPicker";
 import { arrayEquality } from "./utils";
 
@@ -80,6 +84,71 @@ const isStateSelectionUpdated = (
 ) =>
   arrayEquality(selected, original, (first, second) => first.id === second.id);
 
+const getLatexFromTree = (tree: StateTree, path: StatePath) => {
+  let latex = "";
+
+  if (path.particle) {
+    let particle = tree[path.particle];
+    latex += particle.latex;
+    if (particle.children && path.electronic) {
+      let electronic = particle.children[path.electronic];
+      latex += `\\left(${electronic.latex}`;
+      if (electronic.children && path.vibrational) {
+        const vibrational = electronic.children[path.vibrational];
+        latex += `\\left(v=${vibrational.latex}`;
+        if (vibrational.children && path.rotational) {
+          latex += `\\left(J=${
+            vibrational.children[path.rotational].latex
+          }\\right)`;
+        }
+        latex += "\\right)";
+      }
+      latex += "\\right)";
+    }
+  }
+
+  return latex;
+};
+
+const getLatexForReaction = (
+  choices: ReactionChoices,
+  options: ReactionOptions
+) => {
+  let lhs = options.consumes
+    .map((path, j) => {
+      const tree = choices.consumes[j];
+      return getLatexFromTree(tree, path);
+    })
+    .join("+");
+  if (lhs === "") {
+    lhs = "*";
+  }
+  let rhs = options.produces
+    .map((path, j) => {
+      const tree = choices.produces[j];
+      return getLatexFromTree(tree, path);
+    })
+    .join("+");
+  if (rhs === "") {
+    rhs = "*";
+  }
+
+  const arrow =
+    options.reversible === Reversible.Both
+      ? "\\rightarrow \\\\ \\leftrightarrow"
+      : options.reversible === Reversible.False
+      ? "\\rightarrow"
+      : "\\leftrightarrow";
+
+  return (
+    <Group>
+      <Latex>{lhs}</Latex>
+      <Latex>{arrow}</Latex>
+      <Latex>{rhs}</Latex>
+    </Group>
+  );
+};
+
 interface ListValues {
   lhs: Array<StateEntryProps>;
   rhs: Array<StateEntryProps>;
@@ -93,6 +162,7 @@ export type StatefulReactionPickerProps = {
     reversible: Reversible,
     csSets: Set<string>
   ) => void | Promise<void>;
+  viewOnly: boolean;
   initialValues?: {
     typeTags: Array<ReactionTypeTag>;
     selectedTags: Array<ReactionTypeTag>;
@@ -105,6 +175,7 @@ export type StatefulReactionPickerProps = {
 
 export const StatefulReactionPicker = ({
   onChange,
+  viewOnly,
   initialValues,
 }: StatefulReactionPickerProps) => {
   const {
@@ -158,6 +229,7 @@ export const StatefulReactionPicker = ({
 
   // Used for initializing state.
   useEffect(() => {
+    console.log(`[ReactionPicker]: Initializing state.`);
     if (!initialValues) {
       const effect = async () => {
         fetchTypeTags([], [], Reversible.Both, new Set()).then(setTypeTags);
@@ -494,7 +566,7 @@ export const StatefulReactionPicker = ({
       )
     ).json() as Promise<CSSetTree>;
 
-  return (
+  return viewOnly ? (
     <ReactionPicker
       consumes={{
         entries: lhsFieldArray.fields,
@@ -563,5 +635,22 @@ export const StatefulReactionPicker = ({
         },
       }}
     />
+  ) : (
+    getLatexForReaction(
+      {
+        consumes: lhsFieldArray.fields.map((field) => field.data),
+        produces: rhsFieldArray.fields.map((field) => field.data),
+        reversible,
+        typeTags,
+        set: csSets,
+      },
+      {
+        consumes: lhsFieldArray.fields.map((field) => field.selected),
+        produces: rhsFieldArray.fields.map((field) => field.selected),
+        reversible: selectedReversible,
+        type_tags: selectedTags,
+        set: [...selectedCSSets],
+      }
+    )
   );
 };

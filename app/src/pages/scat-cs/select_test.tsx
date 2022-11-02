@@ -18,6 +18,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = () => {
       onChange={function () {
         console.log(arguments);
       }}
+      viewOnly={false}
     />
   );
 };
