@@ -167,6 +167,7 @@ export const StatefulReactionPicker = ({
   );
 
   const [csSets, setCSSets] = useState<CSSetTree>({});
+  const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
   const [selectedCSSets, setSelectedCSSets] = useState<Set<string>>(new Set());
 
   // Used for initializing state.
@@ -336,47 +337,73 @@ export const StatefulReactionPicker = ({
             newSelectedTags,
             newSelectedReversible
           ).then((newCSSets) => {
+            const sets = Object.values(newCSSets).flatMap((set) =>
+              Object.keys(set.sets)
+            );
+            const filteredSelectedSets = new Set(
+              [...newSelectedCSSet].filter((set) => sets.includes(set))
+            );
+            const filteredUnfoldedOrgs = new Set(
+              [...unfoldedOrgs].filter((orgId) => orgId in newCSSets)
+            );
+            setSelectedCSSets(filteredSelectedSets);
+            setUnfoldedOrgs(filteredUnfoldedOrgs);
             setCSSets(newCSSets);
-            return newCSSets;
+            return filteredSelectedSets;
           })
-        : csSets,
-    ]).then(async ([newLhsStates, newRhsStates, newSelectedTags, _]) => {
-      if (
-        type.kind !== "type_tag" &&
-        !arrayEquality(newSelectedTags, selectedTags)
-      ) {
-        if (type.kind === "state") {
-          if (type.side === "lhs") {
-            const tree = await fetchStateTreeForSelection(
-              StateProcess.Consumed,
-              newLhsSelected.filter((_, i) => i !== type.index),
+        : selectedCSSets,
+    ]).then(
+      async ([
+        newLhsStates,
+        newRhsStates,
+        newSelectedTags,
+        _,
+        newSelectedSets,
+      ]) => {
+        if (
+          type.kind !== "type_tag" &&
+          !arrayEquality(newSelectedTags, selectedTags)
+        ) {
+          if (type.kind === "state") {
+            if (type.side === "lhs") {
+              const tree = await fetchStateTreeForSelection(
+                StateProcess.Consumed,
+                newLhsSelected.filter((_, i) => i !== type.index),
+                newRhsSelected,
+                newSelectedTags,
+                newSelectedReversible
+              );
+              newLhsStates[type.index].data = tree;
+              lhsFieldArray.replace(newLhsStates);
+            } else {
+              fetchStateTreeForSelection(
+                StateProcess.Produced,
+                newLhsSelected,
+                newRhsSelected.filter((_, i) => i !== type.index),
+                newSelectedTags,
+                newSelectedReversible
+              ).then((tree) => {
+                newRhsStates[type.index].data = tree;
+                rhsFieldArray.replace(newRhsStates);
+              });
+            }
+          } else if (type.kind === "reversible") {
+            fetchReversible(
+              newLhsSelected,
+              newRhsSelected,
+              newSelectedTags
+            ).then(setReversible);
+          } else if (type.kind === "cs_set") {
+            fetchCSSets(
+              newLhsSelected,
               newRhsSelected,
               newSelectedTags,
               newSelectedReversible
-            );
-            newLhsStates[type.index].data = tree;
-            lhsFieldArray.replace(newLhsStates);
-          } else {
-            fetchStateTreeForSelection(
-              StateProcess.Produced,
-              newLhsSelected,
-              newRhsSelected.filter((_, i) => i !== type.index),
-              newSelectedTags,
-              newSelectedReversible
-            ).then((tree) => {
-              newRhsStates[type.index].data = tree;
-              rhsFieldArray.replace(newRhsStates);
-            });
+            ).then(setCSSets);
           }
-        } else if (type.kind === "reversible") {
-          fetchReversible(newLhsSelected, newRhsSelected, newSelectedTags).then(
-            (newReversible) => {
-              setReversible(newReversible);
-            }
-          );
         }
       }
-    });
+    );
   };
 
   const initData = async (side: "lhs" | "rhs") => {
@@ -494,6 +521,7 @@ export const StatefulReactionPicker = ({
       sets={{
         data: csSets,
         selection: selectedCSSets,
+        unfolded: unfoldedOrgs,
         onSetChecked(setId, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
 
@@ -515,10 +543,10 @@ export const StatefulReactionPicker = ({
           setSelectedCSSets(newSelectedCSSets);
         },
         onOrganizationUnfolded(id, unfolded) {
-          const newTree = { ...csSets };
-          newTree[id].unfolded = unfolded;
+          const newUnfolded = new Set(unfoldedOrgs);
+          unfolded ? newUnfolded.add(id) : newUnfolded.delete(id);
 
-          setCSSets(newTree);
+          setUnfoldedOrgs(newUnfolded);
         },
       }}
     />

@@ -902,7 +902,6 @@ export async function getReversible(
 // TODO: sets can possibly be an array of objects.
 interface OrganizationSummary {
   name: string;
-  unfolded: boolean;
   sets: Record<string, string>;
 }
 export type CSSetTree = Record<string, OrganizationSummary>;
@@ -943,7 +942,6 @@ export async function getCSSets(
       } else {
         total[set.orgId] = {
           name: set.orgName,
-          unfolded: false,
           sets: { [set.setId]: set.setName },
         };
       }
