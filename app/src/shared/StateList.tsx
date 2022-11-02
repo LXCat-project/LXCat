@@ -1,12 +1,12 @@
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { Button, Stack } from "@mantine/core";
-import { StateSelection, StateSelect } from "./StateSelect";
+import { StatePath, StateSelect } from "./StateSelect";
 
 export interface StateListProps {
-  entries: Array<{ id: string; data: StateTree; selected: StateSelection }>;
+  entries: Array<{ id: string; data: StateTree; selected: StatePath }>;
   onAppend: () => void | Promise<void>;
   onRemove: (index: number) => void | Promise<void>;
-  onUpdate: (index: number, selected: StateSelection) => void | Promise<void>;
+  onUpdate: (index: number, selected: StatePath) => void | Promise<void>;
 }
 
 export const StateList = ({

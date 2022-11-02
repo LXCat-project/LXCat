@@ -182,8 +182,8 @@ interface StateOptions {
 }
 
 interface ReactionOptions {
-  consumes: StateSelectionEntry[];
-  produces: StateSelectionEntry[];
+  consumes: StateLeaf[];
+  produces: StateLeaf[];
   reversible: Reversible
   type_tags: ReactionTypeTag[];
   set: string[]
@@ -364,8 +364,8 @@ export async function getStateSelection(
 
 export async function getPartakingStateSelection(
   process: StateProcess,
-  consumed: Array<StateSelectionEntry>,
-  produced: Array<StateSelectionEntry>,
+  consumed: Array<StateLeaf>,
+  produced: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
   setIds: Array<string>
@@ -394,7 +394,7 @@ export async function getPartakingStateSelection(
   return await cursor.all();
 }
 
-export interface StateSelectionEntry {
+export interface StateLeaf {
   id: string;
   includeChildren: boolean;
 }
@@ -467,8 +467,8 @@ function getFullStateTreeAQL(
 }
 
 function getTreeForStateSelectionAQL(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   lhsIdentifier: AqlLiteral = aql.literal("lhs"),
   rhsIdentifier: AqlLiteral = aql.literal("rhs")
 ) {
@@ -507,8 +507,8 @@ function getTreeForStateSelectionAQL(
 
 function getPartakingStateAQL(
   process: StateProcess,
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   filters: Array<ReactionFunction>
 ) {
   return aql`
@@ -631,8 +631,8 @@ const returnCrossSectionHeading =
    `;
 
 function getReactionsAQL(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   returnStatement: ReactionFunction = returnId,
   filters: Array<ReactionFunction> = []
 ) {
@@ -671,8 +671,8 @@ function getReactionsAQL(
 
 // TODO: Find out why the `LIMIT 1` statement breaks the query.
 function getCSSetAQL(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   filters: Array<ReactionFunction> = []
 ) {
   const query = aql`
@@ -725,8 +725,8 @@ export interface ReactionSummary {
 }
 
 export async function getReactions(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible
 ) {
@@ -740,8 +740,8 @@ export async function getReactions(
 }
 
 export async function getAvailableTypeTags(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   reversible: Reversible,
   setIds: Array<string>
 ) {
@@ -776,8 +776,8 @@ export enum Reversible {
 }
 
 export async function getReversible(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   setIds: Array<string>
 ) {
@@ -811,8 +811,8 @@ interface OrganizationSummary {
 export type CSSetTree = Record<string, OrganizationSummary>;
 
 export async function getCSSets(
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible
 ) {

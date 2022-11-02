@@ -12,7 +12,7 @@ function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
 
 export const OMIT_CHILDREN_KEY = "omit_children";
 
-export interface StateSelection {
+export interface StatePath {
   particle?: string;
   electronic?: string;
   vibrational?: string;
@@ -20,8 +20,8 @@ export interface StateSelection {
 }
 interface StateSelectProps {
   data: StateTree;
-  selected: StateSelection;
-  onChange: (selected: StateSelection) => void | Promise<void>;
+  selected: StatePath;
+  onChange: (selected: StatePath) => void | Promise<void>;
   inGroup?: boolean;
   sx?: Sx;
 }

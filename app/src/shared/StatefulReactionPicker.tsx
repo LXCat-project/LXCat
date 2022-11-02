@@ -2,28 +2,26 @@ import {
   CSSetTree,
   Reversible,
   StateProcess,
-  StateSelectionEntry,
+  StateLeaf,
 } from "@lxcat/database/dist/cs/queries/public";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { ReactionPicker } from "./ReactionPicker";
-import { OMIT_CHILDREN_KEY, StateSelection } from "./StateSelect";
+import { OMIT_CHILDREN_KEY, StatePath } from "./StateSelect";
 import { arrayEquality } from "./utils";
-
-// TODO: Include organization and set selection in the reaction search.
 
 interface StateEntryProps {
   data: StateTree;
-  selected: StateSelection;
+  selected: StatePath;
 }
 
 interface StateSelectUpdate {
   kind: "state";
   side: "lhs" | "rhs";
   index: number;
-  value?: StateSelection;
+  value?: StatePath;
 }
 
 interface TypeTagUpdate {
@@ -47,12 +45,12 @@ type UpdateType =
   | TypeTagUpdate
   | ReversibleUpdate;
 
-const getSelectedState = ({
+const getStateLeaf = ({
   particle,
   electronic,
   vibrational,
   rotational,
-}: StateSelection): StateSelectionEntry | undefined => {
+}: StatePath): StateLeaf | undefined => {
   if (particle) {
     if (electronic) {
       if (electronic === OMIT_CHILDREN_KEY) {
@@ -78,15 +76,15 @@ const getSelectedState = ({
 
 const getSelectedStates = (
   entries: Array<StateEntryProps>
-): Array<StateSelectionEntry> =>
+): Array<StateLeaf> =>
   entries
-    .map(({ selected }) => getSelectedState(selected))
-    .filter((id): id is StateSelectionEntry => id !== undefined);
+    .map(({ selected }) => getStateLeaf(selected))
+    .filter((id): id is StateLeaf => id !== undefined);
 
 const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
-  consumes: Array<StateSelectionEntry>,
-  produces: Array<StateSelectionEntry>,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
   setIds: Set<string>
@@ -105,8 +103,8 @@ const fetchStateTreeForSelection = async (
   ).json() as Promise<StateTree>;
 
 const isStateSelectionUpdated = (
-  selected: Array<StateSelectionEntry>,
-  original: Array<StateSelectionEntry>
+  selected: Array<StateLeaf>,
+  original: Array<StateLeaf>
 ) =>
   arrayEquality(selected, original, (first, second) => first.id === second.id);
 
@@ -117,8 +115,8 @@ interface ListValues {
 
 export type StatefulReactionPickerProps = {
   onChange: (
-    lhsSelected: Array<StateSelectionEntry>,
-    rhsSelected: Array<StateSelectionEntry>,
+    lhsSelected: Array<StatePath>,
+    rhsSelected: Array<StatePath>,
     typeTags: Array<ReactionTypeTag>,
     reversible: Reversible,
     csSets: Set<string>
@@ -168,10 +166,10 @@ export const StatefulReactionPicker = ({
     initSelectedTags.filter((tag) => initTags.includes(tag))
   );
 
-  const [lhsSelected, setLhsSelected] = useState<Array<StateSelectionEntry>>(
+  const [lhsSelected, setLhsSelected] = useState<Array<StateLeaf>>(
     lhs ? getSelectedStates(lhs) : []
   );
-  const [rhsSelected, setRhsSelected] = useState<Array<StateSelectionEntry>>(
+  const [rhsSelected, setRhsSelected] = useState<Array<StateLeaf>>(
     rhs ? getSelectedStates(rhs) : []
   );
 
@@ -199,33 +197,31 @@ export const StatefulReactionPicker = ({
   }, []);
 
   const update = async (type: UpdateType) => {
+    const newLhsPaths = lhsFieldArray.fields.map(({ selected }, index) =>
+      type.kind === "state" && type.side === "lhs" && type.index === index
+        ? type.value ?? {}
+        : selected
+    );
     const newLhsSelected =
       type.kind === "state" && type.side === "lhs"
-        ? lhsFieldArray.fields
-            .map(({ selected }, index) =>
-              getSelectedState(
-                type.kind === "state" &&
-                  type.side === "lhs" &&
-                  type.index === index
-                  ? type.value ?? {}
-                  : selected
-              )
-            )
+        ? newLhsPaths
+            .map(getStateLeaf)
             .filter(
-              (selected): selected is StateSelectionEntry =>
+              (selected): selected is StateLeaf =>
                 selected !== undefined
             )
         : lhsSelected;
+    const newRhsPaths = rhsFieldArray.fields.map(({ selected }, index) =>
+      type.kind === "state" && type.side === "rhs" && type.index === index
+        ? type.value ?? {}
+        : selected
+    );
     const newRhsSelected =
       type.kind === "state" && type.side === "rhs"
-        ? rhsFieldArray.fields
-            .map(({ selected }, index) =>
-              getSelectedState(
-                type.index === index ? type.value ?? {} : selected
-              )
-            )
+        ? newRhsPaths
+            .map(getStateLeaf)
             .filter(
-              (selected): selected is StateSelectionEntry =>
+              (selected): selected is StateLeaf =>
                 selected !== undefined
             )
         : rhsSelected;
@@ -369,8 +365,8 @@ export const StatefulReactionPicker = ({
         newSelectedCSSets,
       ]) => {
         onChange(
-          newLhsSelected,
-          newRhsSelected,
+          newLhsPaths,
+          newRhsPaths,
           newSelectedTags,
           newSelectedReversible,
           newSelectedCSSets
@@ -450,27 +446,9 @@ export const StatefulReactionPicker = ({
     return await response.json();
   };
 
-  const fetchReactions = async (
-    consumes: Array<StateSelectionEntry>,
-    produces: Array<StateSelectionEntry>,
-    typeTags: Array<ReactionTypeTag>,
-    reversible: Reversible,
-    setIds: Set<string>
-  ) =>
-    (
-      await fetch(
-        `/api/reactions?${new URLSearchParams({
-          consumes: JSON.stringify(consumes),
-          produces: JSON.stringify(produces),
-          typeTags: JSON.stringify(typeTags),
-          reversible,
-          setIds: JSON.stringify([...setIds]),
-        })}`
-      )
-    ).json() as Promise<Array<string>>;
   const fetchTypeTags = async (
-    consumes: Array<StateSelectionEntry>,
-    produces: Array<StateSelectionEntry>,
+    consumes: Array<StateLeaf>,
+    produces: Array<StateLeaf>,
     reversible: Reversible,
     setIds: Set<string>
   ) =>
@@ -485,8 +463,8 @@ export const StatefulReactionPicker = ({
       )
     ).json() as Promise<Array<ReactionTypeTag>>;
   const fetchReversible = async (
-    consumes: Array<StateSelectionEntry>,
-    produces: Array<StateSelectionEntry>,
+    consumes: Array<StateLeaf>,
+    produces: Array<StateLeaf>,
     typeTags: Array<ReactionTypeTag>,
     setIds: Set<string>
   ) =>
@@ -501,8 +479,8 @@ export const StatefulReactionPicker = ({
       )
     ).json() as Promise<Array<Reversible>>;
   const fetchCSSets = async (
-    consumes: Array<StateSelectionEntry>,
-    produces: Array<StateSelectionEntry>,
+    consumes: Array<StateLeaf>,
+    produces: Array<StateLeaf>,
     typeTags: Array<ReactionTypeTag>,
     reversible: Reversible
   ) =>
