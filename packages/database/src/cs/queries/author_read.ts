@@ -25,10 +25,6 @@ export async function searchOwned(
   options: SearchOptions = defaultSearchOptions(),
   paging: PagingOptions = { offset: 0, count: 100 }
 ) {
-  const hasFilterOnOrganization = options.organization.length > 0;
-  const organizationAql = hasFilterOnOrganization
-    ? aql`FILTER ${options.organization} ANY IN o.name`
-    : aql``;
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
@@ -38,7 +34,6 @@ export async function searchOwned(
 				FILTER m._from == u._id
 				FOR o IN Organization
 					FILTER m._to == o._id
-          ${organizationAql}
 					FOR cs IN CrossSection
 						FILTER cs.organization == o._id
 						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
@@ -59,7 +54,6 @@ export async function searchOwned(
 								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
 						)
             ${reactionsAql}
-            ${setNamesFilterAql(options.set_name)}
 						LET reaction = FIRST(
 							FOR r in Reaction
 								FILTER r._id == cs.reaction

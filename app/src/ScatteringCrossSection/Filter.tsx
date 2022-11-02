@@ -18,8 +18,9 @@ export const Filter = ({ facets, selection }: Props) => {
     if (event?.startsWith("reactions")) {
       router.push({ query }, undefined, { shallow: true });
       // TODO make sure update is done for cs list and non-reaction filters
+    } else {
+      router.push({ query });
     }
-    router.push({ query });
   }
 
   return (

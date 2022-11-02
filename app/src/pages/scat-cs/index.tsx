@@ -68,10 +68,11 @@ export const getServerSideProps: GetServerSideProps<
   };
 
   const items = await search(filter, paging);
+  const facets = await searchFacets(filter)
   return {
     props: {
       items,
-      facets: await searchFacets(filter),
+      facets,
       paging,
     },
   };

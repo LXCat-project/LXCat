@@ -13,8 +13,8 @@ import {
 import { parseParam } from "../../../shared/utils";
 
 const handler = nc<AuthRequest, NextApiResponse>()
-  .use(hasSessionOrAPIToken)
-  .use(hasDeveloperRole)
+  // .use(hasSessionOrAPIToken)
+  // .use(hasDeveloperRole)
   .get(async (req, res) => {
     const {
       consumes: consumesParam,

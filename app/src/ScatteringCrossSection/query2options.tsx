@@ -12,8 +12,6 @@ export function query2options(query: ParsedUrlQuery): SearchOptions {
       ? JSON.parse(query.reactions)
       : defaultReactions;
   return {
-    set_name: query2array(query.set_name),
-    organization: query2array(query.organization),
     reactions,
   };
 }

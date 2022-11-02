@@ -7,28 +7,10 @@ import {
   Reversible,
   StateProcess,
   StateSelectionEntry,
+  stateArrayToTree,
 } from "@lxcat/database/dist/cs/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import {
-  StateSummary,
-  StateTree,
-} from "@lxcat/database/dist/shared/queries/state";
 import { parseParam } from "../../../shared/utils";
-
-export function stateArrayToObject({
-  id,
-  latex,
-  valid,
-  children,
-}: NestedStateArray): [string, StateSummary] {
-  return [id, { latex, valid, children: stateArrayToTree(children) }];
-}
-
-export function stateArrayToTree(
-  array?: Array<NestedStateArray>
-): StateTree | undefined {
-  return array ? Object.fromEntries(array.map(stateArrayToObject)) : undefined;
-}
 
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   const {

@@ -3,7 +3,7 @@ import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
-import { StateTree } from "../../shared/queries/state";
+import { StateSummary, StateTree } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionHeading, CrossSectionItem } from "../public";
@@ -61,11 +61,10 @@ type ReactionChoices = {
   produces: StateTree[];
   typeTags: ReactionTypeTag[];
   reversible: Reversible[];
+  set: CSSetTree;
 };
 
 export interface Facets {
-  set_name: string[];
-  organization: string[];
   reactions: ReactionChoices[];
 }
 
@@ -87,72 +86,21 @@ function generateReactionFilterForChoices(
   `;
 }
 
-async function setChoices(
-  options: Omit<SearchOptions, "set_name">
-): Promise<string[]> {
-  // TODO use set._key as value and set.name as label
-  // TODO should have choice for cross sections which are not part of any set?
-
-  const hasFilterOnOrganization = options.organization.length > 0;
-  const organizationAql = hasFilterOnOrganization
-    ? aql`FILTER DOCUMENT(css.organization).name IN ${options.organization}`
-    : aql``;
-
-  const hasReactionOption = options.reactions.length > 0; // TODO improve check as could have empty reaction
-  let reactionAql = aql``;
-  if (hasReactionOption) {
-    reactionAql = generateReactionFilterForChoices(options);
-  }
-
-  const q = aql`
-    FOR css IN CrossSectionSet
-      FILTER css.versionInfo.status == 'published'
-      ${organizationAql}
-      ${reactionAql}
-      SORT css.name
-      RETURN css.name
-  `;
-  const cursor: ArrayCursor<string> = await db().query(q);
-  return await cursor.all();
+export function stateArrayToObject({
+  id,
+  latex,
+  valid,
+  children,
+}: NestedStateArray): [string, StateSummary] {
+  const subtree = stateArrayToTree(children)
+  const r = subtree === undefined ? { latex, valid} : { latex, valid, children: subtree };
+  return [id, r]
 }
 
-async function organizationChoices(
-  options: Omit<SearchOptions, "organization">
-) {
-  const hasReactionOption = options.reactions.length > 0; // TODO improve check as could have empty reaction
-  let csFilterAql = aql``;
-  if (hasReactionOption) {
-    const reactionAql = aql``; // TODO implement
-    csFilterAql = aql`
-      LET csf = (
-        FOR oiso IN IsPartOf
-          FILTER css._id == oiso._to
-          FOR ocs IN CrossSection      
-            FILTER ocs._id == oiso._from
-            FILTER ocs.versionInfo.status == 'published'
-            ${reactionAql}
-            RETURN 1
-      )
-      FILTER LENGTH(csf) > 0 
-    `;
-  }
-  const hasSetNameFilter = options.set_name.length > 0;
-  let setNameFilterAql = aql``;
-  if (hasSetNameFilter) {
-    setNameFilterAql = aql`FILTER ${options.set_name} ANY IN css.name`;
-  }
-
-  const q = aql`
-    FOR o IN Organization
-      FOR css IN CrossSectionSet
-        FILTER css.organization == o._id      
-        FILTER css.versionInfo.status == 'published'
-        ${setNameFilterAql}
-        ${csFilterAql}
-        RETURN DISTINCT o.name
-  `;
-  const cursor: ArrayCursor<string> = await db().query(q);
-  return await cursor.all();
+export function stateArrayToTree(
+  array?: Array<NestedStateArray>
+): StateTree | undefined {
+  return array ? Object.fromEntries(array.map(stateArrayToObject)) : undefined;
 }
 
 async function reactionsChoices(
@@ -162,17 +110,53 @@ async function reactionsChoices(
     return [];
   }
   const reactionsChoices: ReactionChoices[] = [];
-  const dummyStateTree = {};
   for (const reaction of options.reactions) {
+    const {consumes, produces, reversible, type_tags, set} = reaction
     reactionsChoices.push({
       // TODO fill each state tree based on other options
-      consumes: reaction.consumes.map(() => dummyStateTree),
+      consumes: await Promise.all(consumes.map(async (_, i) => {
+        const array: NestedStateArray[] = await getPartakingStateSelection(
+          StateProcess.Consumed,
+          consumes.filter((_, i2) => i !== i2),
+          produces,
+          type_tags,
+          reversible,
+          set
+        )
+        return stateArrayToTree(array) ?? {}
+        })),
       // TODO fill each state tree based on other options
-      produces: reaction.produces.map(() => dummyStateTree),
+      produces:  await Promise.all(consumes.map(async (_, i) => {
+        const array: NestedStateArray[] = await getPartakingStateSelection(
+          StateProcess.Produced,
+          consumes,
+          produces.filter((_, i2) => i !== i2),
+          type_tags,
+          reversible,
+          set
+        )
+        return stateArrayToTree(array) ?? {}
+        })),
       // TODO fill type tags based on other options
-      typeTags: Object.values(ReactionTypeTag),
+      typeTags: (await getAvailableTypeTags(
+        consumes,
+        produces,
+        reversible,
+        set
+      )) ?? [],
       // TODO fill reversible based on other options
-      reversible: [Reversible.Both, Reversible.True, Reversible.False],
+      reversible: await getReversible(
+        consumes,
+        produces,
+        type_tags,
+        set
+      ),
+      set: await getCSSets(
+        consumes,
+        produces,
+        type_tags,
+        reversible,
+      )
     });
   }
   return reactionsChoices;
@@ -184,12 +168,8 @@ export async function searchFacets(options: SearchOptions): Promise<Facets> {
   // TODO make facets depend on current selection
   // * selecting a set should only show species1 in that set
   /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
-  const { set_name: _s, ...nonSetOptions } = options;
-  const { organization: _o, ...nonOrganizationOptions } = options;
   /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
-    set_name: await setChoices(nonSetOptions),
-    organization: await organizationChoices(nonOrganizationOptions),
     reactions: await reactionsChoices(options),
   };
 }
@@ -202,28 +182,26 @@ interface StateOptions {
 }
 
 interface ReactionOptions {
-  consumes: StateOptions[];
-  produces: StateOptions[];
+  consumes: StateSelectionEntry[];
+  produces: StateSelectionEntry[];
   reversible: Reversible
   type_tags: ReactionTypeTag[];
+  set: string[]
 }
 
 export interface SearchOptions {
-  set_name: string[];
-  organization: string[];
   reactions: ReactionOptions[];
 }
 
 export function defaultSearchOptions(): SearchOptions {
   return {
-    set_name: [],
-    organization: [],
     reactions: [
       {
-        consumes: [{}],
-        produces: [{}],
+        consumes: [],
+        produces: [],
         type_tags: [],
-        reversible: Reversible.Both
+        reversible: Reversible.Both,
+        set: [],
       },
     ],
   };
@@ -245,7 +223,6 @@ export function setNamesFilterAql(set_names: string[]) {
 
 export async function search(options: SearchOptions, paging: PagingOptions) {
   const reactionsAql = aql``; // TODO implement
-  // TODO add organization filter
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
 	FOR cs IN CrossSection
@@ -258,7 +235,6 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 			RETURN UNSET(r, ["_key", "_rev", "_id"])
 	  )
     ${reactionsAql}
-	  ${setNamesFilterAql(options.set_name)}
 	  LET reaction = FIRST(
 		FOR r in Reaction
 		  FILTER r._id == cs.reaction
@@ -278,7 +254,7 @@ export async function search(options: SearchOptions, paging: PagingOptions) {
 		  )
 		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
-	  
+	  LET setNames = [] // TODO implement
 	  ${limitAql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;

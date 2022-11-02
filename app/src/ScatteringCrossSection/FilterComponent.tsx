@@ -4,6 +4,7 @@ import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { useState } from "react";
 import { ReactionPicker } from "../shared/ReactionPicker";
+import { StatefulReactionPicker } from "../shared/StatefulReactionPicker";
 import { StringsFilter } from "../shared/StringsFilter";
 import { ReactionSummary } from "./ReactionSummary";
 
@@ -22,20 +23,6 @@ export const FilterComponent = ({
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
-  function onSetChange(newSetSelection: string[]) {
-    onChange({
-      ...selection,
-      set_name: newSetSelection,
-    });
-  }
-
-  function onOrganizationChange(newSelection: string[]) {
-    onChange({
-      ...selection,
-      organization: newSelection,
-    });
-  }
-  
   function onReset() {
     onChange({
       // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
@@ -76,6 +63,7 @@ export const FilterComponent = ({
     reactions.length - 1
   );
 
+  console.log(facets, selection)
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -93,7 +81,35 @@ export const FilterComponent = ({
               >
                 {i == editableReaction ? (
                   <>
-                    <ReactionPicker
+                    <StatefulReactionPicker
+                    onChange={function (
+                      consumes,
+                      produces,
+                      type_tags,
+                      reversible,
+                      set
+                    ) {
+                      console.log(arguments);
+                      const newReactionSelection = [...selection.reactions]
+                      newReactionSelection[i] = {
+                        consumes,
+                        produces,
+                        reversible,
+                        type_tags,
+                        set: Array.from(set)
+                      }
+                      onReactionsChange(newReactionSelection)
+                    }}
+                    // initialValues={{
+                    //   lhs: r.consumes.map((selected, j) => {
+                    //     return {
+                    //       selected,
+                    //       data: facets.reactions[i].consumes[j]
+                    //     }
+                    //   })
+                    // }}
+                    />
+                    {/* <ReactionPicker
                       consumes={{
                         entries: r.consumes.map((selected, j) => {
                           return {
@@ -135,7 +151,7 @@ export const FilterComponent = ({
                         onOrganizationUnfolded: () => {},
                         onSetChecked: () => {},
                       }}
-                    />
+                    /> */}
                     <Button.Group>
                       <Button
                         variant="subtle"
@@ -226,22 +242,6 @@ export const FilterComponent = ({
               Argon
             </Button>
           </div>
-        </fieldset>
-        <fieldset>
-          <legend>Set</legend>
-          <StringsFilter
-            choices={facets.set_name}
-            selection={selection.set_name}
-            onChange={onSetChange}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Organization</legend>
-          <StringsFilter
-            choices={facets.organization}
-            selection={selection.organization}
-            onChange={onOrganizationChange}
-          />
         </fieldset>
       </div>
       <div>
