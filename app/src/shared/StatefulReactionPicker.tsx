@@ -115,7 +115,13 @@ interface ListValues {
 }
 
 export type StatefulReactionPickerProps = {
-  onChange: (reactions: Array<string>) => void | Promise<void>;
+  onChange: (
+    lhsSelected: Array<StateSelectionEntry>,
+    rhsSelected: Array<StateSelectionEntry>,
+    typeTags: Array<ReactionTypeTag>,
+    reversible: Reversible,
+    csSets: Set<string>
+  ) => void | Promise<void>;
   initialValues?: {
     typeTags: Array<ReactionTypeTag>;
     selectedTags: Array<ReactionTypeTag>;
@@ -241,14 +247,6 @@ export const StatefulReactionPicker = ({
       setSelectedCSSets(newSelectedCSSets);
     }
 
-    fetchReactions(
-      newLhsSelected,
-      newRhsSelected,
-      newSelectedTags,
-      newSelectedReversible,
-      newSelectedCSSets
-    ).then((reactions) => onChange(reactions));
-
     Promise.all([
       Promise.all(
         lhsFieldArray.fields.map(async ({ data, selected }, index) => {
@@ -327,7 +325,7 @@ export const StatefulReactionPicker = ({
             setTypeTags(newTags);
             return filteredTags;
           })
-        : typeTags,
+        : newSelectedTags,
       type.kind !== "reversible"
         ? fetchReversible(
             newLhsSelected,
@@ -369,6 +367,13 @@ export const StatefulReactionPicker = ({
         _,
         newSelectedCSSets,
       ]) => {
+        onChange(
+          newLhsSelected,
+          newRhsSelected,
+          newSelectedTags,
+          newSelectedReversible,
+          newSelectedCSSets
+        );
         if (
           (type.kind !== "type_tag" &&
             !arrayEquality(newSelectedTags, selectedTags)) ||

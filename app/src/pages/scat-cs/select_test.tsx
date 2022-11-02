@@ -1,12 +1,15 @@
 import { NextPage } from "next";
 import { StatefulReactionPicker } from "../../shared/StatefulReactionPicker";
 
-interface Props {};
+interface Props {}
 
 const ScatteringCrossSectionsPage: NextPage<Props> = () => {
-
   return (
-    <StatefulReactionPicker onChange={(reactions) => console.log(reactions)} />
+    <StatefulReactionPicker
+      onChange={function () {
+        console.log(arguments);
+      }}
+    />
   );
 };
 
