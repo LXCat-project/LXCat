@@ -37,6 +37,7 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
     produces: producesParam,
     typeTags: typeTagsParam,
     reversible: reversibleParam,
+    setIds: setIdsParam,
   } = req.query;
 
   const stateProcess =
@@ -46,6 +47,7 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
   const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
   const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
+  const setIds = parseParam<Array<string>>(setIdsParam, []);
   const reversible =
     reversibleParam && !Array.isArray(reversibleParam)
       ? (reversibleParam as Reversible)
@@ -57,7 +59,8 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       consumes,
       produces,
       typeTags,
-      reversible
+      reversible,
+      setIds
     );
     // TODO: Add optimized query for empty consumes and produces.
     res.json(stateArrayToTree(stateArray) ?? {});

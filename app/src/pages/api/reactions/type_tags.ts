@@ -20,16 +20,20 @@ const handler = nc<AuthRequest, NextApiResponse>()
       consumes: consumesParam,
       produces: producesParam,
       reversible: reversibleParam,
+      setIds: setIdsParam,
     } = req.query;
 
     const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
     const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
+    const setIds = parseParam<Array<string>>(setIdsParam, []);
     const reversible =
       reversibleParam && !Array.isArray(reversibleParam)
-        ? reversibleParam as Reversible
+        ? (reversibleParam as Reversible)
         : Reversible.Both;
 
-    res.json(await getAvailableTypeTags(consumes, produces, reversible));
+    res.json(
+      await getAvailableTypeTags(consumes, produces, reversible, setIds)
+    );
   });
 
 export default handler;

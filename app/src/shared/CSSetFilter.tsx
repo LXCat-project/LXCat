@@ -7,6 +7,7 @@ export type CSSetSelection = Set<string>;
 export interface CSSetFilterProps {
   data: CSSetTree;
   selection: CSSetSelection;
+  unfolded: Set<string>;
   onOrganizationChecked: (id: string, checked: boolean) => void;
   onOrganizationUnfolded: (id: string, unfolded: boolean) => void;
   onSetChecked: (setId: string, checked: boolean) => void;
@@ -15,6 +16,7 @@ export interface CSSetFilterProps {
 export const CSSetFilter = ({
   data,
   selection,
+  unfolded,
   onOrganizationChecked,
   onOrganizationUnfolded,
   onSetChecked,
@@ -32,7 +34,7 @@ export const CSSetFilter = ({
               {
                 // FIXME: Duplicating onClick is not great, but adding Box or
                 // div introduces weird displacement of the chevron.
-                summary.unfolded ? (
+                unfolded.has(id) ? (
                   <IconChevronDown
                     onClick={() => onOrganizationUnfolded(id, false)}
                   />
@@ -59,7 +61,7 @@ export const CSSetFilter = ({
                 }
               />
             </Box>
-            {summary.unfolded ? (
+            {unfolded.has(id) ? (
               <Stack spacing={2}>
                 {Object.entries(summary.sets).map(([setId, setName]) => (
                   <Box key={setId} sx={{ display: "inline-flex" }}>
