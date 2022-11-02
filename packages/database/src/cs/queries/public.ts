@@ -690,6 +690,7 @@ function getReactionsAQL(
         `;
 }
 
+// TODO: Find out why the `LIMIT 1` statement breaks the query.
 function getCSSetAQL(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
@@ -699,8 +700,9 @@ function getCSSetAQL(
       ${getTreeForStateSelectionAQL(consumes, produces)}
 
       FOR csSet IN CrossSectionSet
+        FILTER csSet.versionInfo.status == "published"
         LET validSet = COUNT(
-	  FOR cs IN INBOUND csSet IsPartOf
+          FOR cs IN INBOUND csSet IsPartOf
             FOR reaction IN Reaction
               FILTER cs.reaction == reaction._id
               ${filters
@@ -728,12 +730,13 @@ function getCSSetAQL(
               )
               FILTER rhsCount >= LENGTH(rhs)
 
-	      LIMIT 1
+              // LIMIT 1
               RETURN 1
-	)
-	FILTER validSet > 0
-	RETURN {id: csSet._id, name: csSet.name, organization: csSet.organization}`;
-  console.log(query);
+        )
+        FILTER validSet > 0
+        FOR org IN Organization
+          FILTER org._id == csSet.organization
+            RETURN {setId: csSet._id, setName: csSet.name, orgId: org._id, orgName: org.name}`;
   return query;
 }
 
@@ -816,19 +819,55 @@ export async function getReversible(
     : [Reversible.False, Reversible.Both];
 }
 
+// TODO: sets can possibly be an array of objects.
+interface OrganizationSummary {
+  name: string;
+  unfolded: boolean;
+  sets: Record<string, string>;
+}
+export type CSSetTree = Record<string, OrganizationSummary>;
+
 export async function getCSSets(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible
 ) {
-  const cursor: ArrayCursor<{ id: string; organization: string }> =
-    await db().query(
-      getCSSetAQL(consumes, produces, [
-        getReversibleFilterAQL(reversible),
-        getTypeTagFilterAQL(typeTags),
-      ])
-    );
+  const cursor: ArrayCursor<{
+    setId: string;
+    setName: string;
+    orgId: string;
+    orgName: string;
+  }> = await db().query(
+    consumes.length === 0 &&
+      produces.length === 0 &&
+      typeTags.length === 0 &&
+      reversible === Reversible.Both
+      ? aql`
+        FOR org IN Organization
+          FOR css IN CrossSectionSet
+          FILTER css.organization == org._id
+          FILTER css.versionInfo.status == "published"
+          RETURN {setId: css._id, setName: css.name, orgId: org._id, orgName: org.name}
+      `
+      : getCSSetAQL(consumes, produces, [
+          getReversibleFilterAQL(reversible),
+          getTypeTagFilterAQL(typeTags),
+        ])
+  );
 
-  return cursor.all();
+  return cursor.all().then((sets) =>
+    sets.reduce<CSSetTree>((total, set) => {
+      if (set.orgId in total) {
+        total[set.orgId].sets[set.setId] = set.setName;
+      } else {
+        total[set.orgId] = {
+          name: set.orgName,
+          unfolded: false,
+          sets: { [set.setId]: set.setName },
+        };
+      }
+      return total;
+    }, {})
+  );
 }

@@ -1,15 +1,8 @@
+import { CSSetTree } from "@lxcat/database/dist/cs/queries/public";
 import { Box, Checkbox, Space, Stack } from "@mantine/core";
 import { IconChevronDown, IconChevronRight } from "@tabler/icons";
 
-// TODO: sets can possibly be an array of objects.
-interface OrganizationSummary {
-  name: string;
-  unfolded: boolean;
-  sets: Record<string, string>;
-}
-
 export type CSSetSelection = Set<string>;
-export type CSSetTree = Record<string, OrganizationSummary>;
 
 export interface CSSetFilterProps {
   data: CSSetTree;

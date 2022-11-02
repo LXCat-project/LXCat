@@ -1,4 +1,5 @@
 import {
+  CSSetTree,
   Reversible,
   StateProcess,
   StateSelectionEntry,
@@ -7,7 +8,6 @@ import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { CSSetTree } from "./CSSetFilter";
 import { ReactionPicker } from "./ReactionPicker";
 import { OMIT_CHILDREN_KEY, StateSelection } from "./StateSelect";
 import { arrayEquality } from "./utils";
@@ -167,33 +167,23 @@ export const StatefulReactionPicker = ({
     rhs ? getSelectedStates(rhs) : []
   );
 
-  const [setTree, setSetTree] = useState<CSSetTree>({
-    "1": {
-      name: "IST Lisbon",
-      unfolded: true,
-      sets: {
-        "1": "Set one",
-        "2": "Set two",
-      },
-    },
-    "2": { name: "Phelps", unfolded: false, sets: {} },
-  });
-  const [selectedCSSets, setSelectedCSSets] = useState<Set<string>>(
-    new Set(["1"])
-  );
+  const [csSets, setCSSets] = useState<CSSetTree>({});
+  const [selectedCSSets, setSelectedCSSets] = useState<Set<string>>(new Set());
 
   // Used for initializing state.
   useEffect(() => {
     if (!initialValues) {
       const effect = async () => {
-        const newTags = await fetchTypeTags([], [], Reversible.Both);
-        setTypeTags(newTags);
+        fetchTypeTags([], [], Reversible.Both).then(setTypeTags);
 
-        const newReversible = await fetchReversible([], [], []);
-        setReversible(newReversible);
-        setSelectedReversible(
-          newReversible.length > 1 ? Reversible.Both : newReversible[0]
-        );
+        fetchReversible([], [], []).then((newReversible) => {
+          setReversible(newReversible);
+          setSelectedReversible(
+            newReversible.length > 1 ? Reversible.Both : newReversible[0]
+          );
+        });
+
+        fetchCSSets([], [], [], Reversible.Both).then(setCSSets);
       };
       effect().catch(console.error);
     }
@@ -346,8 +336,11 @@ export const StatefulReactionPicker = ({
             newRhsSelected,
             newSelectedTags,
             newSelectedReversible
-          ).then(console.log)
-        : setTree,
+          ).then((newCSSets) => {
+            setCSSets(newCSSets);
+            return newCSSets;
+          })
+        : csSets,
     ]).then(async ([newLhsStates, newRhsStates, newSelectedTags, _]) => {
       if (
         type.kind !== "type_tag" &&
@@ -460,7 +453,7 @@ export const StatefulReactionPicker = ({
           reversible,
         })}`
       )
-    ).json();
+    ).json() as Promise<CSSetTree>;
 
   return (
     <ReactionPicker
@@ -500,7 +493,7 @@ export const StatefulReactionPicker = ({
           update({ kind: "type_tag", value: newTags }),
       }}
       sets={{
-        data: setTree,
+        data: csSets,
         selection: selectedCSSets,
         onSetChecked(setId, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
@@ -514,7 +507,7 @@ export const StatefulReactionPicker = ({
         onOrganizationChecked(id, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
 
-          Object.keys(setTree[id].sets).forEach((setId) => {
+          Object.keys(csSets[id].sets).forEach((setId) => {
             checked
               ? newSelectedCSSets.add(setId)
               : newSelectedCSSets.delete(setId);
@@ -523,10 +516,10 @@ export const StatefulReactionPicker = ({
           setSelectedCSSets(newSelectedCSSets);
         },
         onOrganizationUnfolded(id, unfolded) {
-          const newTree = { ...setTree };
+          const newTree = { ...csSets };
           newTree[id].unfolded = unfolded;
 
-          setSetTree(newTree);
+          setCSSets(newTree);
         },
       }}
     />
