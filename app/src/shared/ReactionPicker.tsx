@@ -1,12 +1,9 @@
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import {
   Box,
   MantineTheme,
   MultiSelect,
   MultiSelectProps,
-  Radio,
   Sx,
-  Text,
 } from "@mantine/core";
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
