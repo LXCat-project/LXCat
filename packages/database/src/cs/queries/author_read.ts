@@ -4,10 +4,7 @@ import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { CrossSectionItem } from "../public";
-import {
-  defaultSearchOptions,
-  SearchOptions,
-} from "./public";
+import { defaultSearchOptions, SearchOptions } from "./public";
 import { PagingOptions } from "../../shared/types/search";
 
 export async function getVersionInfo(key: string) {

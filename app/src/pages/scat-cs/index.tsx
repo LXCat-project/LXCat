@@ -37,14 +37,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   const [items, setItems] = useState(initialItems);
   const [offset, setOffset] = useState(paging.offset);
 
-  // TODO: Add state for facets.
-
   const selection = query2options(router.query);
   const nrItems = items.length;
-  const query = {
-    ...selection,
-    offset: paging.offset + paging.count,
-  };
+
   let canonicalUrl = "/scat-cs";
   if (paging.offset > 0) {
     canonicalUrl = `/scat-cs?offset=${paging.offset}`;

@@ -62,8 +62,8 @@ export const FilterComponent = ({
     reactions.length - 1
   );
 
-  console.log(`facets: ${JSON.stringify(facets)}`)
-  console.log(`selection: ${JSON.stringify(selection)}`)
+  console.log(`facets: ${JSON.stringify(facets)}`);
+  console.log(`selection: ${JSON.stringify(selection)}`);
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -87,7 +87,6 @@ export const FilterComponent = ({
                     reversible,
                     set
                   ) {
-                    console.log(arguments);
                     const newReactionSelection = [...selection.reactions];
                     newReactionSelection[i] = {
                       consumes,

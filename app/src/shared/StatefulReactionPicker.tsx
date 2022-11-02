@@ -270,6 +270,30 @@ export const StatefulReactionPicker = ({
         );
       };
       effect().catch(console.error);
+    } else {
+      const effect = async () => {
+        if (lhsFieldArray.fields.length === 0) {
+          fetchStateTreeForSelection(
+            StateProcess.Consumed,
+            [],
+            getSelectedStates(rhs),
+            selectedTags,
+            selectedReversible,
+            selectedCSSets
+          ).then((data) => lhsFieldArray.append({ data, selected: {} }));
+        }
+        if (rhsFieldArray.fields.length === 0) {
+          fetchStateTreeForSelection(
+            StateProcess.Produced,
+            getSelectedStates(lhs),
+            [],
+            selectedTags,
+            selectedReversible,
+            selectedCSSets
+          ).then((data) => rhsFieldArray.append({ data, selected: {} }));
+        }
+      };
+      effect().catch(console.error);
     }
   }, []);
 
