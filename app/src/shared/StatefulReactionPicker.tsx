@@ -87,7 +87,8 @@ const fetchStateTreeForSelection = async (
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
   typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible
+  reversible: Reversible,
+  setIds: Set<string>
 ) =>
   (
     await fetch(
@@ -97,6 +98,7 @@ const fetchStateTreeForSelection = async (
         produces: JSON.stringify(produces),
         typeTags: JSON.stringify(typeTags),
         reversible,
+        setIds: JSON.stringify([...setIds]),
       })}`
     )
   ).json() as Promise<StateTree>;
@@ -174,9 +176,9 @@ export const StatefulReactionPicker = ({
   useEffect(() => {
     if (!initialValues) {
       const effect = async () => {
-        fetchTypeTags([], [], Reversible.Both).then(setTypeTags);
+        fetchTypeTags([], [], Reversible.Both, new Set()).then(setTypeTags);
 
-        fetchReversible([], [], []).then((newReversible) => {
+        fetchReversible([], [], [], new Set()).then((newReversible) => {
           setReversible(newReversible);
           setSelectedReversible(
             newReversible.length > 1 ? Reversible.Both : newReversible[0]
@@ -224,7 +226,7 @@ export const StatefulReactionPicker = ({
       type.kind === "reversible" ? type.value : selectedReversible;
     const newSelectedTags =
       type.kind === "type_tag" ? type.value : selectedTags;
-    const newSelectedCSSet =
+    const newSelectedCSSets =
       type.kind === "cs_set" ? type.selected : selectedCSSets;
 
     if (type.kind === "type_tag") {
@@ -236,14 +238,15 @@ export const StatefulReactionPicker = ({
         ? setLhsSelected(newLhsSelected)
         : setRhsSelected(newRhsSelected);
     } else if (type.kind === "cs_set") {
-      setSelectedCSSets(newSelectedCSSet);
+      setSelectedCSSets(newSelectedCSSets);
     }
 
     fetchReactions(
       newLhsSelected,
       newRhsSelected,
       newSelectedTags,
-      newSelectedReversible
+      newSelectedReversible,
+      newSelectedCSSets
     ).then((reactions) => onChange(reactions));
 
     Promise.all([
@@ -265,7 +268,8 @@ export const StatefulReactionPicker = ({
             consumed,
             produced,
             newSelectedTags,
-            newSelectedReversible
+            newSelectedReversible,
+            newSelectedCSSets
           );
 
           return { data: tree, selected };
@@ -296,7 +300,8 @@ export const StatefulReactionPicker = ({
             consumed,
             produced,
             newSelectedTags,
-            newSelectedReversible
+            newSelectedReversible,
+            newSelectedCSSets
           );
 
           return { data: tree, selected };
@@ -312,7 +317,8 @@ export const StatefulReactionPicker = ({
         ? fetchTypeTags(
             newLhsSelected,
             newRhsSelected,
-            newSelectedReversible
+            newSelectedReversible,
+            newSelectedCSSets
           ).then(async (newTags) => {
             const filteredTags = newSelectedTags.filter((tag) =>
               newTags.includes(tag)
@@ -323,12 +329,15 @@ export const StatefulReactionPicker = ({
           })
         : typeTags,
       type.kind !== "reversible"
-        ? fetchReversible(newLhsSelected, newRhsSelected, newSelectedTags).then(
-            (newReversible) => {
-              setReversible(newReversible);
-              return newReversible;
-            }
-          )
+        ? fetchReversible(
+            newLhsSelected,
+            newRhsSelected,
+            newSelectedTags,
+            newSelectedCSSets
+          ).then((newReversible) => {
+            setReversible(newReversible);
+            return newReversible;
+          })
         : reversible,
       type.kind !== "cs_set"
         ? fetchCSSets(
@@ -341,7 +350,7 @@ export const StatefulReactionPicker = ({
               Object.keys(set.sets)
             );
             const filteredSelectedSets = new Set(
-              [...newSelectedCSSet].filter((set) => sets.includes(set))
+              [...newSelectedCSSets].filter((set) => sets.includes(set))
             );
             const filteredUnfoldedOrgs = new Set(
               [...unfoldedOrgs].filter((orgId) => orgId in newCSSets)
@@ -358,11 +367,15 @@ export const StatefulReactionPicker = ({
         newRhsStates,
         newSelectedTags,
         _,
-        newSelectedSets,
+        newSelectedCSSets,
       ]) => {
         if (
-          type.kind !== "type_tag" &&
-          !arrayEquality(newSelectedTags, selectedTags)
+          (type.kind !== "type_tag" &&
+            !arrayEquality(newSelectedTags, selectedTags)) ||
+          // FIXME: This is inefficient (only one sets needs to be converted to
+          // an array).
+          (type.kind !== "cs_set" &&
+            !arrayEquality([...newSelectedCSSets], [...selectedCSSets]))
         ) {
           if (type.kind === "state") {
             if (type.side === "lhs") {
@@ -371,7 +384,8 @@ export const StatefulReactionPicker = ({
                 newLhsSelected.filter((_, i) => i !== type.index),
                 newRhsSelected,
                 newSelectedTags,
-                newSelectedReversible
+                newSelectedReversible,
+                newSelectedCSSets
               );
               newLhsStates[type.index].data = tree;
               lhsFieldArray.replace(newLhsStates);
@@ -381,17 +395,26 @@ export const StatefulReactionPicker = ({
                 newLhsSelected,
                 newRhsSelected.filter((_, i) => i !== type.index),
                 newSelectedTags,
-                newSelectedReversible
+                newSelectedReversible,
+                newSelectedCSSets
               ).then((tree) => {
                 newRhsStates[type.index].data = tree;
                 rhsFieldArray.replace(newRhsStates);
               });
             }
+          } else if (type.kind === "type_tag") {
+            fetchTypeTags(
+              newLhsSelected,
+              newRhsSelected,
+              newSelectedReversible,
+              newSelectedCSSets
+            ).then(setTypeTags);
           } else if (type.kind === "reversible") {
             fetchReversible(
               newLhsSelected,
               newRhsSelected,
-              newSelectedTags
+              newSelectedTags,
+              newSelectedCSSets
             ).then(setReversible);
           } else if (type.kind === "cs_set") {
             fetchCSSets(
@@ -415,6 +438,7 @@ export const StatefulReactionPicker = ({
         produces: JSON.stringify(rhsSelected),
         typeTags: JSON.stringify(selectedTags),
         reversible: selectedReversible,
+        setIds: JSON.stringify([...selectedCSSets]),
       })}`
     );
     return await response.json();
@@ -424,7 +448,8 @@ export const StatefulReactionPicker = ({
     consumes: Array<StateSelectionEntry>,
     produces: Array<StateSelectionEntry>,
     typeTags: Array<ReactionTypeTag>,
-    reversible: Reversible
+    reversible: Reversible,
+    setIds: Set<string>
   ) =>
     (
       await fetch(
@@ -433,13 +458,15 @@ export const StatefulReactionPicker = ({
           produces: JSON.stringify(produces),
           typeTags: JSON.stringify(typeTags),
           reversible,
+          setIds: JSON.stringify([...setIds]),
         })}`
       )
     ).json() as Promise<Array<string>>;
   const fetchTypeTags = async (
     consumes: Array<StateSelectionEntry>,
     produces: Array<StateSelectionEntry>,
-    reversible: Reversible
+    reversible: Reversible,
+    setIds: Set<string>
   ) =>
     (
       await fetch(
@@ -447,13 +474,15 @@ export const StatefulReactionPicker = ({
           consumes: JSON.stringify(consumes),
           produces: JSON.stringify(produces),
           reversible,
+          setIds: JSON.stringify([...setIds]),
         })}`
       )
     ).json() as Promise<Array<ReactionTypeTag>>;
   const fetchReversible = async (
     consumes: Array<StateSelectionEntry>,
     produces: Array<StateSelectionEntry>,
-    typeTags: Array<ReactionTypeTag>
+    typeTags: Array<ReactionTypeTag>,
+    setIds: Set<string>
   ) =>
     (
       await fetch(
@@ -461,6 +490,7 @@ export const StatefulReactionPicker = ({
           consumes: JSON.stringify(consumes),
           produces: JSON.stringify(produces),
           typeTags: JSON.stringify(typeTags),
+          setIds: JSON.stringify([...setIds]),
         })}`
       )
     ).json() as Promise<Array<Reversible>>;
@@ -529,7 +559,7 @@ export const StatefulReactionPicker = ({
             ? newSelectedCSSets.add(setId)
             : newSelectedCSSets.delete(setId);
 
-          setSelectedCSSets(newSelectedCSSets);
+          update({ kind: "cs_set", selected: newSelectedCSSets });
         },
         onOrganizationChecked(id, checked) {
           const newSelectedCSSets = new Set(selectedCSSets);
@@ -540,7 +570,7 @@ export const StatefulReactionPicker = ({
               : newSelectedCSSets.delete(setId);
           });
 
-          setSelectedCSSets(newSelectedCSSets);
+          update({ kind: "cs_set", selected: newSelectedCSSets });
         },
         onOrganizationUnfolded(id, unfolded) {
           const newUnfolded = new Set(unfoldedOrgs);

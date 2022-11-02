@@ -471,17 +471,20 @@ export async function getPartakingStateSelection(
   consumed: Array<StateSelectionEntry>,
   produced: Array<StateSelectionEntry>,
   typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible
+  reversible: Reversible,
+  setIds: Array<string>
 ) {
   const query = !(
     consumed.length === 0 &&
     produced.length === 0 &&
     typeTags.length === 0 &&
+    setIds.length === 0 &&
     reversible === Reversible.Both
   )
     ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced, [
         getReversibleFilterAQL(reversible),
         getTypeTagFilterAQL(typeTags),
+        getCSSetFilterAQL(setIds),
       ])})
     ${getStateSelectionAQL(
       process,
@@ -674,16 +677,16 @@ const getReversibleFilterAQL =
           reversible === Reversible.False ? false : true
         }`;
 
-const getCrossSectionSetFilterAQL =
+const getCSSetFilterAQL =
   (setIds: Array<string>): ReactionFunction =>
   (reaction: AqlLiteral) =>
     setIds.length === 0
       ? aql``
       : aql`LET inSet = COUNT(
               FOR cs IN CrossSection
-                FILTER cs.reaction = ${reaction}._id
+                FILTER cs.reaction == ${reaction}._id
                 FOR css IN OUTBOUND cs IsPartOf
-                  FILTER css._id in ${setIds}
+                  FILTER css._id IN ${setIds}
                   LIMIT 1
                   RETURN 1
             )
@@ -843,11 +846,13 @@ export async function getReactions(
 export async function getAvailableTypeTags(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
-  reversible: Reversible
+  reversible: Reversible,
+  setIds: Array<string>
 ) {
   const cursor: ArrayCursor<Array<ReactionTypeTag>> = await db().query(
     consumes.length === 0 &&
       produces.length === 0 &&
+      setIds.length === 0 &&
       reversible === Reversible.Both
       ? aql`
       RETURN UNIQUE(FLATTEN(
@@ -859,6 +864,7 @@ export async function getAvailableTypeTags(
       RETURN UNIQUE(FLATTEN(
         ${getReactionsAQL(consumes, produces, returnTypeTags, [
           getReversibleFilterAQL(reversible),
+          getCSSetFilterAQL(setIds),
         ])}
       ))
     `
@@ -876,13 +882,15 @@ export enum Reversible {
 export async function getReversible(
   consumes: Array<StateSelectionEntry>,
   produces: Array<StateSelectionEntry>,
-  typeTags: Array<ReactionTypeTag>
+  typeTags: Array<ReactionTypeTag>,
+  setIds: Array<string>
 ) {
   const cursor: ArrayCursor<Array<boolean>> = await db().query(
     aql`
     RETURN UNIQUE(FLATTEN(
       ${getReactionsAQL(consumes, produces, returnReversible, [
         getTypeTagFilterAQL(typeTags),
+        getCSSetFilterAQL(setIds),
       ])}
     ))
   `

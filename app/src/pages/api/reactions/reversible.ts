@@ -20,13 +20,15 @@ const handler = nc<AuthRequest, NextApiResponse>()
       consumes: consumesParam,
       produces: producesParam,
       typeTags: typeTagsParam,
+      setIds: setIdsParam,
     } = req.query;
 
     const consumes = parseParam<Array<StateSelectionEntry>>(consumesParam, []);
     const produces = parseParam<Array<StateSelectionEntry>>(producesParam, []);
     const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
+    const setIds = parseParam<Array<string>>(setIdsParam, []);
 
-    res.json(await getReversible(consumes, produces, typeTags));
+    res.json(await getReversible(consumes, produces, typeTags, setIds));
   });
 
 export default handler;
