@@ -285,3 +285,5 @@ reuse lint
 ```
 
 To add headers to files run `npm run addheader`.
+
+For binary files or text files without comment support a `<original file name>.license` file can be made, alternativly add file in `/.reuse/dep5` file.
