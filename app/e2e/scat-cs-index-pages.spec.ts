@@ -85,6 +85,7 @@ test.describe('cross section bag page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
     await page.locator('text=Plots and download the currently filtered cross sections').click();
+    await page.locator("text=I agree with the terms of use").click();
   });
 
   test("should be able to download JSON format", async ({ page }) => {

@@ -15,6 +15,7 @@ import {
   LutPlotsDynamic,
 } from "../ScatteringCrossSectionSet/ProcessList";
 import { Reference } from "../shared/Reference";
+import { TermsOfUseCheck } from "../shared/TermsOfUseCheck";
 import { BAG_SIZE } from "./constants";
 import { reactionAsText } from "./reaction";
 import { ReactionSummary } from "./ReactionSummary";
@@ -45,6 +46,12 @@ export const Bag = ({
   }, [bag]);
   return (
     <>
+      <TermsOfUseCheck
+        references={Object.values(bag.references)}
+        permaLink={`/scat-cs/bag?ids=${bag.processes
+          .map((p) => p.id)
+          .join(",")}`}
+      />
       <h1>Bag of scattering cross sections</h1>
       {hasMixedCompleteSets && (
         <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>

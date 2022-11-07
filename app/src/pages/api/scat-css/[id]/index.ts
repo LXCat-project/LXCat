@@ -4,7 +4,11 @@
 
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { AuthRequest } from "../../../../auth/middleware";
+import {
+  AuthRequest,
+  hasDeveloperOrDownloadRole,
+  hasSessionOrAPIToken,
+} from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
@@ -13,9 +17,8 @@ import { reference2bibliography } from "../../../../shared/cite";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)
-  // TODO: Fix api auth once issue #10 is resolved.
-  // .use(hasSessionOrAPIToken)
-  // .use(hasDeveloperRole)
+  .use(hasSessionOrAPIToken)
+  .use(hasDeveloperOrDownloadRole)
   .get(async (req, res) => {
     const { id, refstyle = "csl" } = req.query;
     if (typeof id === "string") {

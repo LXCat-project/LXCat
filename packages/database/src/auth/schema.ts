@@ -40,7 +40,13 @@ export const Account = z.object({
 });
 export type Account = z.infer<typeof Account>;
 
-export const Role = z.enum(["admin", "editor", "developer", "author"]);
+export const Role = z.enum([
+  "admin",
+  "editor", // TODO remove or implement
+  "developer",
+  "author",
+  "download",
+]);
 export type Role = z.infer<typeof Role>;
 
 export const User = z.object({

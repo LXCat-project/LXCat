@@ -3,35 +3,48 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { useState } from "react";
+import Link from "next/link";
+import { Reference } from "@lxcat/schema/dist/core/reference";
+
 import { Dialog } from "./Dialog";
 import { HowToCite } from "./HowToCite";
-import { Reference } from "@lxcat/schema/dist/core/reference";
+import { DOWNLOAD_COOKIE_NAME } from "./download";
+import { TermsOfUse } from "./TermsOfUse";
 
 interface Props {
   references: Reference[];
+  permaLink: string;
 }
 
-export const TermsOfUseCheck = ({ references }: Props) => {
-  // TODO remember that visitor agreed during current session or last hours/days
+export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
+  const hasDownloadToken =
+    typeof document !== "undefined"
+      ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
+      : false;
+  const [agreement, setAgreement] = useState(hasDownloadToken);
 
-  const [agreement, setAgreement] = useState(false);
+  async function acceptTermsOfUse() {
+    const url = "/api/auth/tou";
+    const res = await fetch(url, {
+      method: "POST",
+    });
+    if (res.ok) {
+      setAgreement(true);
+    } else {
+      // Give error feedback to user
+    }
+  }
+
   return (
-    <Dialog
-      isOpened={!agreement}
-      onSubmit={() => setAgreement(true)}
-      className="tos"
-    >
+    <Dialog isOpened={!agreement} onSubmit={acceptTermsOfUse} className="tos">
       <h2>Terms of use</h2>
+      <TermsOfUse />
+      {/* TODO make permaLink an absolute URL */}
       <p>
-        Users acknowledge understanding that LXCat is a community-based project
-        with open-access databases being freely provided by individual
-        contributors.
-      </p>
-      <p>
-        <b>
-          Proper referencing of material retrieved from this site is essential
-          for the survival of the project.
-        </b>
+        The permalink for this data is{" "}
+        <Link href={permaLink}>
+          <a>{permaLink}</a>
+        </Link>
       </p>
       <HowToCite references={references} />
       <form method="dialog">

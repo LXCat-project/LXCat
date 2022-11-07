@@ -97,16 +97,18 @@ const AdminUsers: NextPage<Props> = ({
                 <td>{u.name}</td>
                 <td>{u.email}</td>
                 <td>
-                  {Role.options.map((r) => (
-                    <label key={r}>
-                      {r}
-                      <input
-                        type="checkbox"
-                        checked={u.roles?.includes(r)}
-                        onChange={() => updateRole(u, r)}
-                      />
-                    </label>
-                  ))}
+                  {Role.options
+                    .filter((r) => r !== "download")
+                    .map((r) => (
+                      <label key={r}>
+                        {r}
+                        <input
+                          type="checkbox"
+                          checked={u.roles?.includes(r)}
+                          onChange={() => updateRole(u, r)}
+                        />
+                      </label>
+                    ))}
                 </td>
                 <td>
                   <MultiSelect

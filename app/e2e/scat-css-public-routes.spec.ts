@@ -118,6 +118,7 @@ test.describe("given 2 dummy sets", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/scat-css");
       await page.locator("text=Some name").click();
+      await page.locator("text=I agree with the terms of use").click();
       await page.waitForSelector('h2:has-text("Processes")');
     });
 
