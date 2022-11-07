@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetStaticProps, NextPage } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import dynamic from "next/dynamic";

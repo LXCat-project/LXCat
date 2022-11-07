@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { AtomicGenerator, AtomicDBGenerator } from "../generators";
 import { TwoTermConfig, ConfigTerm, TotalAngularSpecifier } from "./common";
 import { CouplingScheme } from "./coupling_scheme";

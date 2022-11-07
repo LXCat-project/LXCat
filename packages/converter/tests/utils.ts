@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import assert from "assert";
 import { join } from "node:path";
 import { it as test } from "node:test";

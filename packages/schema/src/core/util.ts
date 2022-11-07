@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 export type Pair<T> = [T, T];
 
 export interface Dict<ValueType> {

@@ -1,0 +1,26 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: LXCat Next Generation
+Upstream-Contact: LXCat developer team <>
+Source: https://gitlab.com/LXCat-project/lxcat-ng
+
+# Sample paragraph, commented out:
+#
+# Files: src/*
+# Copyright: $YEAR $NAME <$CONTACT>
+# License: ...
+
+Files: *.json
+Copyright: LXCat developer team
+License: AGPL-3.0-or-later
+
+Files: packages/database/src/shared/schemas/*.schema.json packages/database/src/*/schemas/*.schema.json
+Copyright: LXCat developer team
+License: AGPL-3.0-or-later
+
+Files: app/public/favicon.ico app/public/lxcat.png
+Copyright: LXCat developer team
+License: AGPL-3.0-or-later
+
+Files: packages/schema/src/css/CrossSectionSetRaw.schema.json
+Copyright: LXCat developer team
+License: Apache-2.0

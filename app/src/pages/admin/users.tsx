@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
 import { Role, User } from "@lxcat/database/dist/auth/schema";

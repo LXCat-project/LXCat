@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { aql, Database } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { Adapter, AdapterUser } from "next-auth/adapters";

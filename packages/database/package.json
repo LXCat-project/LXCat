@@ -1,9 +1,8 @@
 {
   "name": "@lxcat/database",
   "version": "1.0.0",
-  "description": "The web application needs an [arangodb](https://arangodb.com/) database to talk to.",
-  "author": "Stefan Verhoeven",
-  "license": "ISC",
+  "description": "Database abstraction layer for LXCat web application.",
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +31,8 @@
     "collectionschema:cs": "npm run collectionschema:CrossSection && npm run collectionschema:CrossSectionSet",
     "collectionschema:CrossSection": "ts-json-schema-generator -f ./tsconfig.json --path src/cs/collections.ts --type CrossSection --out src/cs/schemas/CrossSection.schema.json -e none --no-top-ref",
     "collectionschema:CrossSectionSet": "ts-json-schema-generator -f ./tsconfig.json --path src/css/collections.ts --type CrossSectionSet --out src/css/schemas/CrossSectionSet.schema.json -e none --no-top-ref",
-    "collectionschema": "npm run collectionschema:shared && npm run collectionschema:cs"
+    "collectionschema": "npm run collectionschema:shared && npm run collectionschema:cs",
+    "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat developer team' -r --skip-existing --exclude-year src setup"
   },
   "dependencies": {
     "@lxcat/schema": "*",

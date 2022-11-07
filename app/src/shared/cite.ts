@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 // TODO it would be nice to not load the citation packages on pages where it is not used (for example /scat-css)
 // could use https://nextjs.org/docs/advanced-features/dynamic-import
 import { Cite } from "@citation-js/core";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
 

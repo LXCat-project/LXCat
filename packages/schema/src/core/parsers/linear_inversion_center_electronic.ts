@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { LinearInversionCenterElectronicImpl } from "../molecules/components/electronic/linear_inversion_center";
 import {
   ComponentParser,

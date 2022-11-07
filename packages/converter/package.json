@@ -1,8 +1,7 @@
 {
   "name": "@lxcat/converter",
   "version": "0.1.0",
-  "description": "",
-  "private": true,
+  "description": "Convert LXCat JSON documents to legacy LXCat documents",
   "main": "dist/index.node",
   "types": "dist/index.d.ts",
   "napi": {
@@ -12,10 +11,11 @@
     "dev": "npm run build",
     "build": "napi build --release --strip --dts dist/index.d.ts",
     "build:debug": "napi build --dts dist/index.d.ts",
-    "test": "node --loader ts-node/esm --test tests/valid.test.ts"
+    "test": "node --loader ts-node/esm --test tests/valid.test.ts",
+    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat developer team' -r --skip-existing --exclude-year --skip-unrecognised src tests"
   },
   "author": "Daan Boer",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@napi-rs/cli": "^2.10.0",
     "@types/node": "^18.7.15",

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { LinearInversionCenterElectronicImpl } from "./components/electronic/linear_inversion_center";
 import { LinearTriatomVibrationalImpl } from "./components/vibrational/linear_triatomic";
 import { RotationalImpl } from "./components/rotational";

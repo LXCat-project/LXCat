@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { ListItem } from "./ListItem";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 

@@ -1,6 +1,13 @@
+<!--
+SPDX-FileCopyrightText: LXCat developer team
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # @lxcat/schema
 
 Package with JSON schemas and Typescript types of LXCat documents.
+Also includes validators.
 
 ## Installation
 

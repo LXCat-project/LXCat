@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { AtomJ1L2_DB } from "@lxcat/schema/dist/core/atoms/j1l2";
 import { AtomLS_DB } from "@lxcat/schema/dist/core/atoms/ls";
 import { AtomLS1_DB } from "@lxcat/schema/dist/core/atoms/ls1";

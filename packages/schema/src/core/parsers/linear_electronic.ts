@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { LinearElectronicImpl } from "../molecules/components/electronic/linear";
 import {
   ComponentParser,

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Ajv, { ErrorObject } from "ajv";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";

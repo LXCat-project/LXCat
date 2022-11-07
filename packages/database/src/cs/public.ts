@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Reference } from "@lxcat/schema/dist/core/reference";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { CrossSection } from "../cs/collections";

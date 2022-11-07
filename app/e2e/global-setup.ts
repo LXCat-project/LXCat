@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { chromium, FullConfig, Page } from "@playwright/test";
 import { testOidcServer } from "./test-oidc-server";
 import { startDbContainer } from "@lxcat/database/src/testutils";

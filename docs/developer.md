@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat developer team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Developer docs
 
 To consume LXCat data by another program, the LXCat web service provides several API endpoints.

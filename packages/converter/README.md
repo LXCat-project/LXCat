@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat developer team
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # @lxcat/converter
 
 Package with native node module that can convert LXCat JSON documents to legacy

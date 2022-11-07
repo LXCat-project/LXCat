@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { MoleculeParser } from "../parse";
 import { HomonuclearDiatom } from "../molecules/diatom_homonuclear";
 import { linearInversionCenterElectronicParser } from "./linear_inversion_center_electronic";

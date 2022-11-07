@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat developer team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Lxcat ng web application
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

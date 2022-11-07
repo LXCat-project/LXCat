@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { getVersionInfo as getVersionInfoOfSection } from "../../cs/queries/author_read";

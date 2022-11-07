@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { createGenerator, Config } from "ts-json-schema-generator";
 
 // TODO: The "expose" attribute is currently set to "none". However it should ideally be set to "export" or "all". The problem is that when one of these values is set, the generator will still use a top-level reference (even though "topRef" is set to false). This is problematic for the database collection schemas as ArangoDB does not (yet) support top-level references.

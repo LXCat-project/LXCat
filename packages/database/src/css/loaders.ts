@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
 import { createSet } from "./queries/author_write";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // Type definitions for the CSL JSON Schema
 // Project: https://github.com/citation-style-language/schema
 // Definitions by: Derek P Sifford <https://github.com/dsifford>

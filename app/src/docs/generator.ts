@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { readdir, readFile } from "fs/promises";
 import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";

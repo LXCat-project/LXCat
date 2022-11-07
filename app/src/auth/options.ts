@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { parseState } from "@lxcat/schema/dist/core/parse";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import {

@@ -1,6 +1,7 @@
 {
   "name": "@lxcat/app",
   "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +12,8 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat developer team' -r --skip-existing --exclude-year src e2e"
   },
   "dependencies": {
     "@citation-js/core": "^0.6.1",

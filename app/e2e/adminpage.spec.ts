@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { expect, Page, test } from "@playwright/test";
 import { truncateNonUserCollections } from "./global-setup";
 

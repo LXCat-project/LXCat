@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Reference } from "./reference";
 import { InState } from "./state";
 import { Dict } from "./util";

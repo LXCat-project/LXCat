@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Reaction } from "../core/reaction";
 import { Reference } from "../core/reference";
 import { CSStorage } from "./data_types";

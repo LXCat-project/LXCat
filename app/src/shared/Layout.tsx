@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode } from "react";

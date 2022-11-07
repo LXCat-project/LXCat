@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { aql } from "arangojs";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";

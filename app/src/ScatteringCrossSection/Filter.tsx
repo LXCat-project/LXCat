@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { stateSelectionToSearchParam } from "../shared/StateFilter";
 import { useRouter } from "next/router";

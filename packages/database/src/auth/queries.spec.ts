@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { describe, beforeAll, afterAll, it, expect } from "vitest";
 
 import { startDbContainer } from "../testutils";

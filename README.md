@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat developer team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # LXCat Next Generation
 
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
@@ -43,3 +49,8 @@ docker-compose run setup make-admin <email of user>
 
 Web application will run at `http://localhost:3000`.
 The app should be reversed proxied by a web server to provide https.
+
+## License
+
+The code in this project is released under GNU Affero General Public License v3.0 or later.
+Except for the schema (packages/schema) and converter (packages/converter) packages which is released under Apache 2.0.
