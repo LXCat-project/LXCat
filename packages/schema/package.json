@@ -10,7 +10,8 @@
     "format": "prettier --write src/",
     "test": "vitest",
     "dev": "tsc --watch",
-    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat developer team' -r --skip-existing --exclude-year src"
+    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat developer team' -r --skip-existing --exclude-year src",
+    "prepublishOnly": "build"
   },
   "license": "Apache-2.0",
   "dependencies": {
@@ -24,5 +25,13 @@
     "prettier": "^2.6.2",
     "typescript": "^4.7.3",
     "vitest": "^0.15.1"
+  },
+  "main": "dist/css/validate.js",
+  "types": "dist/css/validate.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

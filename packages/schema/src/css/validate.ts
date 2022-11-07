@@ -10,7 +10,7 @@ const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
 
 export const validateJSONSchema = ajv.compile<CrossSectionSetRaw>(schema);
 
-class Validator {
+export class Validator {
   errors: ErrorObject[] | undefined | null = [];
 
   validate(data: unknown): data is CrossSectionSetRaw {
