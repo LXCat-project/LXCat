@@ -86,3 +86,16 @@ A `docs/index.html` should have been written.
 <!--
 TODO put API documentation on GitLab pages
 -->
+
+## Publishing
+
+To publish `@lxcat/schema` to npmjs.com perform the following steps:
+
+1. Set version in `packages/schema/package.json` with `npm workspace @lxcat/schema version <patch|minor|major>`
+2. Commit and push changes to main branch
+3. Change to `packages/schema/` directory
+4. Make sure you are logged in on npm by checking with `npm whoami --scope lxcat` and optionally login in with `npm login --scope lxcat --publish`
+5. Make sure `npm run dev` is not running
+6. Clean dist/ with `npm run clean`
+7. Publish with `npm publish --otp <otp code>`
+8. Create git tag for version with `git tag @lxcat/schema@<value at packages/schema/package.json:version>` and `git push origin --tags`

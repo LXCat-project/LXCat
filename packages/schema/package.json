@@ -11,7 +11,8 @@
     "test": "vitest",
     "dev": "tsc --watch",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat developer team' -r --skip-existing --exclude-year src",
-    "prepublishOnly": "build"
+    "prepublishOnly": "build",
+    "clean": "rm -rf dist"
   },
   "license": "Apache-2.0",
   "dependencies": {
