@@ -284,6 +284,6 @@ pip install reuse
 reuse lint
 ```
 
-To add headers to files run `npm run addheader`.
+To add headers to files run `npm run addheader` or if that fails add header manually.
 
 For binary files or text files without comment support a `<original file name>.license` file can be made, alternativly add file in `/.reuse/dep5` file.
