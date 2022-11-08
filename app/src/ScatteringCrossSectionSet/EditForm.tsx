@@ -2141,7 +2141,7 @@ const StateForm = ({
                           charge,
                         });
                       } else {
-                        setValue(`set.states.${label}.electronic`, undefined);
+                        setValue(`set.states.${label}.electronic`, []);
                       }
                     }}
                     value={value === undefined ? "" : value}

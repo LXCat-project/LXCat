@@ -79,7 +79,10 @@ function parseAtom<
   let id = "";
   let latex = "";
 
-  if (!outputState.electronic) {
+  // TODO: This second check shouldn't be necessary as the length should be at
+  // least one (but for now it is necessary, as the EditForm might pass empty
+  // arrays).
+  if (!outputState.electronic || outputState.electronic.length === 0) {
     latex = id = outputState.particle;
     if (outputState.particle !== "e") {
       latex += parseChargeLatex(outputState.charge);
@@ -126,7 +129,7 @@ function parseMolecule<
   let id = "";
   let latex = "";
 
-  if (!outputState.electronic) {
+  if (!outputState.electronic || outputState.electronic.length === 0) {
     latex = id = state.particle;
     if (state.particle !== "e") {
       latex += parseChargeLatex(outputState.charge);
@@ -153,7 +156,7 @@ function parseMolecule<
     id += e.summary;
     latex += e.latex;
 
-    if (e.vibrational) {
+    if (e.vibrational && e.vibrational.length > 0) {
       id += `${ID_LEFT}v=`;
       latex += `${LATEX_LEFT}v=`;
 
@@ -164,7 +167,7 @@ function parseMolecule<
         id += v.summary;
         latex += v.latex;
 
-        if (v.rotational) {
+        if (v.rotational && v.rotational.length > 0) {
           id += `${ID_LEFT}J=`;
           latex += `${LATEX_LEFT}J=`;
 
