@@ -1,0 +1,15 @@
+# YAML 1.2
+---
+abstract: "An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas."
+authors:
+  -
+    affiliation: "Netherlands eScience Center"
+    family-names: Verhoeven
+    given-names: Stefan
+    orcid: "https://orcid.org/0000-0002-5821-2060"
+  -
+cff-version: "1.1.0"
+license: "AGPL-3.0-or-later"
+message: "If you use this software, please cite it using these metadata."
+title: LXCat Next Generation
+...

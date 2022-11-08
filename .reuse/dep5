@@ -18,3 +18,7 @@ License: AGPL-3.0-or-later
 Files: app/public/favicon.ico app/public/lxcat.png
 Copyright: LXCat developer team
 License: AGPL-3.0-or-later
+
+Files: CITATION.cff
+Copyright: LXCat developer team
+License: AGPL-3.0-or-later
