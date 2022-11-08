@@ -121,7 +121,7 @@ const ReactionEntryForm = ({
         const latex =
           s.latex && !(s.latex === "\\mathrm{}")
             ? s.latex
-            : parseState(s as any).latex;
+            : parseState(s).latex;
         return [value, latex];
       })
     );
@@ -2141,7 +2141,7 @@ const StateForm = ({
                           charge,
                         });
                       } else {
-                        setValue(`set.states.${label}.electronic`, []);
+                        setValue(`set.states.${label}.electronic`, undefined);
                       }
                     }}
                     value={value === undefined ? "" : value}
