@@ -445,6 +445,7 @@ function getFullStateTreeAQL(
                           ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
                           : aql``
                       }
+                      ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                       LIMIT 1
                       RETURN 1
                   ) == 1
@@ -458,6 +459,7 @@ function getFullStateTreeAQL(
                         ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
                         : aql``
                     }
+                    ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                     LIMIT 1
                     RETURN 1
                 ) == 1
@@ -471,6 +473,7 @@ function getFullStateTreeAQL(
                     ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
                     : aql``
                 }
+                ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                 LIMIT 1
                 RETURN 1
             ) == 1
@@ -484,6 +487,7 @@ function getFullStateTreeAQL(
                 ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
                 : aql``
             }
+            ${getCSSetFilterAQL([])(aql.literal("reaction"))}
             LIMIT 1
             RETURN 1
         ) == 1
@@ -602,17 +606,16 @@ const getReversibleFilterAQL =
 const getCSSetFilterAQL =
   (setIds: Array<string>): ReactionFunction =>
   (reaction: AqlLiteral) =>
-    setIds.length === 0
-      ? aql``
-      : aql`LET inSet = COUNT(
-              FOR cs IN CrossSection
-                FILTER cs.reaction == ${reaction}._id
-                FOR css IN OUTBOUND cs IsPartOf
-                  FILTER css._id IN ${setIds}
-                  LIMIT 1
-                  RETURN 1
-            )
-            FILTER inSet > 0`;
+    aql`LET inSet = COUNT(
+          FOR cs IN CrossSection
+            FILTER cs.reaction == ${reaction}._id
+            FOR css IN OUTBOUND cs IsPartOf
+	      FILTER css.versionInfo.status == "published"
+	      ${setIds.length === 0 ? aql`` : aql`FILTER css._id IN ${setIds}`}
+              LIMIT 1
+              RETURN 1
+        )
+        FILTER inSet > 0`;
 
 const returnTypeTags: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}.type_tags`;
