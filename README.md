@@ -54,3 +54,7 @@ The app should be reversed proxied by a web server to provide https.
 
 The code in this project is released under GNU Affero General Public License v3.0 or later.
 Except for the schema (packages/schema) and converter (packages/converter) packages which is released under Apache 2.0.
+
+## Copyright
+
+The LXCat team wrote the LXCat code. The LXCat team members are listend in [CITATION.cff](CITATION.cff).
