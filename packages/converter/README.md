@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: LXCat developer team
+SPDX-FileCopyrightText: LXCat team
 
 SPDX-License-Identifier: Apache-2.0
 -->

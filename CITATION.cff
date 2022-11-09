@@ -19,6 +19,12 @@ authors:
     affiliation: "Plasma Matters B.V."
     family-names: Graef
     given-names: Wouter
+  -
+    affiliation: "Eindhoven University of Technology"
+    family-names: Dijk
+    name-particle: van
+    given-names: Jan
+    orcid: "https://orcid.org/0000-0001-8002-5459"
 cff-version: "1.2.0"
 license: "AGPL-3.0-or-later"
 message: "If you use this software, please cite it using these metadata."
