@@ -1,5 +1,4 @@
 import Ajv, { ErrorObject } from "ajv";
-import { AnyAtom } from "../core/atoms";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
 import { get_states, check_states } from "./quantum_number_validator";
@@ -15,8 +14,8 @@ class Validator {
     const result = validateJSONSchema(data);
     this.errors = validateJSONSchema.errors;
     if (result) {
-      this.validate_quantum_numbers(data)
-      return (this.errors?.length === 0);
+      this.validate_quantum_numbers(data);
+      return this.errors?.length === 0;
     }
     // TODO add other validators like
     // foreign labels or

@@ -20,8 +20,6 @@ import {
   check_states,
 } from "./quantum_number_validator";
 
-import { AnyMolecule } from "../core/molecules";
-
 let inputs_ok: [string, InState<AnyAtom>][]; // FIXME: type w/o AnyMolecule not supported
 let inputs_parity_nok: [string, InState<AnyAtom>][];
 let inputs_momenta_nok: [string, InState<AnyAtom>][];
@@ -49,7 +47,8 @@ describe("validate parity data", () => {
   test("core & excited", () => {
     const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
         const status: boolean = check_parity(
           `${key}/electronic/${idx}`,
@@ -70,7 +69,8 @@ describe("validate parity data", () => {
       carbon: { 0: "P" },
     };
     for (const [key, atom] of inputs_parity_nok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
         const status: boolean = check_parity(
           `${key}/electronic/${idx}`,
@@ -104,7 +104,8 @@ describe("validate angular momenta", () => {
     const errors: ErrorObject[] = [];
     let status: boolean;
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
@@ -135,7 +136,8 @@ describe("validate angular momenta", () => {
     };
     let status: boolean;
     for (const [key, atom] of inputs_momenta_nok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
@@ -173,7 +175,8 @@ describe("validate angular momenta", () => {
 describe("dispatchers", () => {
   test("component w/ no errors", () => {
     for (const [key, atom] of inputs_ok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
         const errors: ErrorObject[] = [];
         const status = check_quantum_numbers(
@@ -195,7 +198,8 @@ describe("dispatchers", () => {
     };
     const errors: ErrorObject[] = [];
     for (const [key, atom] of inputs_parity_nok) {
-      for (const [idx, comp] of atom.electronic!.entries()) {
+      if (atom.electronic === undefined) continue;
+      for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
         const status = check_quantum_numbers(
           `${key}/electronic/${idx}`,
@@ -212,10 +216,6 @@ describe("dispatchers", () => {
         }
       }
     }
-    // console.log("Error: ", JSON.stringify(errors, null, 2));
-    // expect(
-    //   check_quantum_numbers("foo", { scheme: "not-defined" }, errors)
-    // ).toEqual(false);
     /* 3 actual errors lead to 2 additional errors
        - second/0/excited has an malformed shell config: l > n,
        - third/1/core P is incorrect, so it doesn't match shell & term
@@ -230,7 +230,6 @@ describe("dispatchers", () => {
 
   test("jsonobject.states w/ errors", () => {
     const errors: ErrorObject[] = check_states(inputs_momenta_nok, []);
-    // console.log("Error: ", JSON.stringify(errors, null, 2));
     /* 4 actual errors lead to 1 additional different error
       - phosphorus/0/core has bad l in shell config, so parity also fails
     */

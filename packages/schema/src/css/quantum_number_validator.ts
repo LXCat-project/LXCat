@@ -10,7 +10,7 @@ import { Dict } from "./common";
 import { shell_parities, combine_parity } from "./parity";
 import { AtomLS1Impl } from "../core/atoms/ls1";
 import { AtomJ1L2Impl } from "../core/atoms/j1l2";
-import { AtomLSImpl, LSTerm, LSTermImpl } from "../core/atoms/ls";
+import { AtomLSImpl, LSTermImpl } from "../core/atoms/ls";
 import { ShellEntry } from "../core/shell_entry";
 
 export function get_errobj(
@@ -35,7 +35,7 @@ export function check_parity(
   errors: ErrorObject[]
 ) {
   const config = component.config;
-  function message(_config: any, _parity: number) {
+  function message(_config: unknown, _parity: number) {
     const strobj = JSON.stringify(_config, null).replace(/"/g, "");
     return `term incosistent with config: for ${strobj}, parity should be ${_parity}`;
   }
@@ -93,7 +93,7 @@ function check_shell_config(
     term = component.term;
   } else {
     parent = `${parent}/config/${subkey}`;
-    let sub = component.config[subkey as keyof typeof component.config];
+    const sub = component.config[subkey as keyof typeof component.config];
     shell = sub.config;
     term = sub.term;
   }
@@ -164,7 +164,7 @@ function check_shell_config_core_excited(
   component: AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ): boolean {
-  let res: boolean = ["core", "excited"]
+  const res: boolean = ["core", "excited"]
     .map((subkey) =>
       check_shell_config(
         parent,
@@ -182,7 +182,7 @@ export function check_LS1(
   component: AtomLS1Impl,
   errors: ErrorObject[]
 ): boolean {
-  const term = component.term!;
+  const term = component.term;
   const [L1, L2, S1, S2] = get_term_momenta(component);
 
   const res_shell = check_shell_config_core_excited(parent, component, errors);
@@ -230,9 +230,9 @@ export function check_J1L2(
   component: AtomJ1L2Impl,
   errors: ErrorObject[]
 ): boolean {
-  const term = component.term!;
+  const term = component.term;
   const [L1, L2, S1, S2] = get_term_momenta(component);
-  const J1 = component.config!.core.term.J!;
+  const J1 = component.config.core.term.J;
 
   const res_shell = check_shell_config_core_excited(parent, component, errors);
 
@@ -319,7 +319,7 @@ export function check_quantum_numbers(
   component: AtomLSImpl | AtomLS1Impl | AtomJ1L2Impl,
   errors: ErrorObject[]
 ) {
-  let status_parity = check_parity(parent, component, errors);
+  const status_parity = check_parity(parent, component, errors);
   let status_coupling;
   const scheme = component.scheme;
   switch (scheme) {
@@ -356,8 +356,8 @@ export function check_states(
 ) {
   for (const [key, atom] of states) {
     const _type = atom["type"];
-    if (!(_type && _type.startsWith("Atom"))) continue;
-    for (const [idx, component] of atom.electronic!.entries()) {
+    if (!(_type && _type.startsWith("Atom") && atom.electronic !== undefined)) continue;
+    for (const [idx, component] of atom.electronic.entries()) {
       if (!component.scheme) continue; // some don't have scheme
       check_quantum_numbers(`${key}/electronic/${idx}`, component, errors);
     }
