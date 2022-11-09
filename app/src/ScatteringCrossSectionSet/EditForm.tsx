@@ -121,7 +121,7 @@ const ReactionEntryForm = ({
         const latex =
           s.latex && !(s.latex === "\\mathrm{}")
             ? s.latex
-            : parseState(s).latex;
+            : parseState(s as any).latex;
         return [value, latex];
       })
     );
