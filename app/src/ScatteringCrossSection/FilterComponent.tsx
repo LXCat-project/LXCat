@@ -1,12 +1,26 @@
 import {
   Facets,
+  ReactionChoices,
+  ReactionOptions,
   Reversible,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
-import { useState } from "react";
-import { StatefulReactionPicker } from "../shared/StatefulReactionPicker";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import {
+  StatefulReactionPicker,
+  StateSelectIds,
+} from "../shared/StatefulReactionPicker";
+
+interface FilterForm {
+  reactions: Array<{
+    choices?: ReactionChoices;
+    options: ReactionOptions;
+    ids: StateSelectIds;
+  }>;
+}
 
 export const FilterComponent = ({
   facets,
@@ -17,6 +31,25 @@ export const FilterComponent = ({
   selection: SearchOptions;
   onChange: (selection: SearchOptions, event?: string) => void;
 }) => {
+  const { control } = useForm<FilterForm>({
+    defaultValues: {
+      reactions: facets.reactions.map((choices, index) => ({
+        choices,
+        options: selection.reactions[index],
+      })),
+    },
+  });
+  const {
+    fields: reactions,
+    remove,
+    append,
+    update,
+  } = useFieldArray({ name: "reactions", control });
+
+  useEffect(() => {
+    onReactionsChange(reactions.map((reaction) => reaction.options));
+  }, [reactions]);
+
   const hasAnySelection = Object.values(selection).some(
     (s) =>
       (Array.isArray(s) && s.length > 0) ||
@@ -38,18 +71,8 @@ export const FilterComponent = ({
     });
   }
 
-  const reactions =
-    selection.reactions ??
-    [
-      //   {
-      //   rhs: [],
-      //   lhs: [],
-      //   reversible: true,
-      //   type_tags: []
-      // }
-    ];
   function onReactionsChange(newReactions: SearchOptions["reactions"]) {
-    console.log(newReactions);
+    console.log(JSON.stringify(newReactions, undefined, 2));
     onChange(
       {
         ...selection,
@@ -62,8 +85,6 @@ export const FilterComponent = ({
     reactions.length - 1
   );
 
-  console.log(`facets: ${JSON.stringify(facets)}`);
-  console.log(`selection: ${JSON.stringify(selection)}`);
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -72,7 +93,7 @@ export const FilterComponent = ({
           <ul>
             {reactions.map((r, i) => (
               <li
-                key={i}
+                key={r.id}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -80,48 +101,52 @@ export const FilterComponent = ({
                 }}
               >
                 <StatefulReactionPicker
-                  onChange={function (
-                    consumes,
-                    produces,
-                    type_tags,
-                    reversible,
-                    set
-                  ) {
-                    const newReactionSelection = [...selection.reactions];
-                    newReactionSelection[i] = {
-                      consumes,
-                      produces,
-                      reversible,
-                      type_tags,
-                      set: Array.from(set),
-                    };
-                    onReactionsChange(newReactionSelection);
-                  }}
-                  viewOnly={i == editableReaction}
-                  initialValues={
-                    facets.reactions[i]
-                      ? {
-                          lhs: r.consumes.map((selected, j) => {
-                            return {
-                              selected,
-                              data: facets.reactions[i].consumes[j],
-                            };
-                          }),
-                          rhs: r.produces.map((selected, j) => {
-                            return {
-                              selected,
-                              data: facets.reactions[i].produces[j],
-                            };
-                          }),
-                          reversible: facets.reactions[i].reversible,
-                          selectedReversible: r.reversible,
-                          selectedTags: r.type_tags,
-                          typeTags: facets.reactions[i].typeTags,
-                          csSets: facets.reactions[i].set,
-                          selectedCsSets: new Set(r.set),
-                        }
-                      : undefined
+                  ids={r.ids}
+                  choices={r.choices}
+                  selection={r.options}
+                  onTagsChange={(selectedTags) =>
+                    update(i, {
+                      choices: r.choices,
+                      options: { ...r.options, type_tags: selectedTags },
+                      ids: r.ids,
+                    })
                   }
+                  onConsumesChange={(selectedConsumed) =>
+                    update(i, {
+                      choices: r.choices,
+                      options: { ...r.options, consumes: selectedConsumed },
+                      ids: r.ids,
+                    })
+                  }
+                  onProducesChange={(selectedProduced) =>
+                    update(i, {
+                      choices: r.choices,
+                      options: { ...r.options, produces: selectedProduced },
+                      ids: r.ids,
+                    })
+                  }
+                  onReversibleChange={(selectedReversible) =>
+                    update(i, {
+                      choices: r.choices,
+                      options: { ...r.options, reversible: selectedReversible },
+                      ids: r.ids,
+                    })
+                  }
+                  onCSSetsChange={(selectedCSSets) =>
+                    update(i, {
+                      choices: r.choices,
+                      options: { ...r.options, set: [...selectedCSSets] },
+                      ids: r.ids,
+                    })
+                  }
+                  onChange={function (newChoices, newIds) {
+                    update(i, {
+                      choices: newChoices,
+                      options: r.options,
+                      ids: newIds,
+                    });
+                  }}
+                  editable={i == editableReaction}
                 />
                 {i == editableReaction ? (
                   <>
@@ -129,24 +154,14 @@ export const FilterComponent = ({
                       <Button
                         variant="subtle"
                         title="Remove reaction"
-                        onClick={() => {
-                          const newReactions = [...reactions];
-                          newReactions.splice(i, 1);
-                          onReactionsChange(newReactions);
-                        }}
+                        onClick={() => remove(i)}
                       >
                         -
                       </Button>
                       <Button
                         variant="subtle"
                         title="Clone reaction"
-                        onClick={() => {
-                          const newReactions = [
-                            ...reactions,
-                            { ...reactions[i] },
-                          ];
-                          onReactionsChange(newReactions);
-                        }}
+                        onClick={() => append(structuredClone(r))}
                       >
                         <IconCopy size={16} />
                       </Button>
@@ -181,18 +196,17 @@ export const FilterComponent = ({
             <Button
               title="Add reaction filter"
               onClick={() => {
-                const newReactions = [
-                  ...reactions,
-                  {
+                append({
+                  options: {
                     consumes: [],
                     produces: [],
                     reversible: Reversible.Both,
                     type_tags: [],
                     set: [],
                   },
-                ];
-                onReactionsChange(newReactions);
-                setEditableReaction(newReactions.length - 1);
+                  ids: { consumes: [], produces: [] },
+                });
+                setEditableReaction(reactions.length);
               }}
             >
               +

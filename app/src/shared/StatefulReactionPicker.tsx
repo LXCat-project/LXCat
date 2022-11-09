@@ -13,8 +13,8 @@ import {
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Group } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { nanoid } from "nanoid";
+import { useState } from "react";
 import { Latex } from "./Latex";
 import { ReactionPicker } from "./ReactionPicker";
 import { arrayEquality } from "./utils";
@@ -52,9 +52,9 @@ type UpdateType =
   | TypeTagUpdate
   | ReversibleUpdate;
 
-const getSelectedStates = (entries: Array<StateEntryProps>): Array<StateLeaf> =>
+const getSelectedStates = (entries: Array<StatePath>): Array<StateLeaf> =>
   entries
-    .map(({ selected }) => getStateLeaf(selected))
+    .map((selected) => getStateLeaf(selected))
     .filter((id): id is StateLeaf => id !== undefined);
 
 const fetchStateTreeForSelection = async (
@@ -77,12 +77,54 @@ const fetchStateTreeForSelection = async (
       })}`
     )
   ).json() as Promise<StateTree>;
-
-const isStateSelectionUpdated = (
-  selected: Array<StateLeaf>,
-  original: Array<StateLeaf>
+const fetchTypeTags = async (
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
+  reversible: Reversible,
+  setIds: Set<string>
 ) =>
-  arrayEquality(selected, original, (first, second) => first.id === second.id);
+  (
+    await fetch(
+      `/api/reactions/type_tags?${new URLSearchParams({
+        consumes: JSON.stringify(consumes),
+        produces: JSON.stringify(produces),
+        reversible,
+        setIds: JSON.stringify([...setIds]),
+      })}`
+    )
+  ).json() as Promise<Array<ReactionTypeTag>>;
+const fetchReversible = async (
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
+  typeTags: Array<ReactionTypeTag>,
+  setIds: Set<string>
+) =>
+  (
+    await fetch(
+      `/api/reactions/reversible?${new URLSearchParams({
+        consumes: JSON.stringify(consumes),
+        produces: JSON.stringify(produces),
+        typeTags: JSON.stringify(typeTags),
+        setIds: JSON.stringify([...setIds]),
+      })}`
+    )
+  ).json() as Promise<Array<Reversible>>;
+const fetchCSSets = async (
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible
+) =>
+  (
+    await fetch(
+      `/api/reactions/cs-set?${new URLSearchParams({
+        consumes: JSON.stringify(consumes),
+        produces: JSON.stringify(produces),
+        typeTags: JSON.stringify(typeTags),
+        reversible,
+      })}`
+    )
+  ).json() as Promise<CSSetTree>;
 
 const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   let latex = "";
@@ -149,199 +191,90 @@ const getLatexForReaction = (
   );
 };
 
-interface ListValues {
-  lhs: Array<StateEntryProps>;
-  rhs: Array<StateEntryProps>;
+export interface StateSelectIds {
+  consumes: Array<string>;
+  produces: Array<string>;
 }
 
 export type StatefulReactionPickerProps = {
-  onChange: (
-    lhsSelected: Array<StatePath>,
-    rhsSelected: Array<StatePath>,
-    typeTags: Array<ReactionTypeTag>,
-    reversible: Reversible,
-    csSets: Set<string>
-  ) => void | Promise<void>;
-  viewOnly: boolean;
-  initialValues?: {
-    typeTags: Array<ReactionTypeTag>;
-    selectedTags: Array<ReactionTypeTag>;
-    reversible: Array<Reversible>;
-    selectedReversible: Reversible;
-    selectedCsSets: Set<string>;
-    csSets: CSSetTree;
-  } & ListValues;
+  ids: StateSelectIds;
+  choices?: ReactionChoices;
+  selection: ReactionOptions;
+  editable: boolean;
+  onConsumesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  onProducesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  onTagsChange(newSelected: Array<ReactionTypeTag>): void | Promise<void>;
+  onReversibleChange(newSelected: Reversible): void | Promise<void>;
+  onCSSetsChange(newSelected: Set<string>): void | Promise<void>;
+  onChange(
+    newChoices: ReactionChoices,
+    ids: StateSelectIds
+  ): void | Promise<void>;
 };
 
-export const StatefulReactionPicker = ({
+export const StatefulReactionPicker = async ({
+  ids,
+  choices: initChoices,
+  selection,
+  editable,
   onChange,
-  viewOnly,
-  initialValues,
+  onConsumesChange,
+  onProducesChange,
+  onTagsChange,
+  onCSSetsChange,
+  onReversibleChange,
 }: StatefulReactionPickerProps) => {
-  const {
-    lhs,
-    rhs,
-    typeTags: initTags,
-    selectedTags: initSelectedTags,
-    reversible: initReversible,
-    selectedReversible: initSelectedReversible,
-    selectedCsSets: initSelectedCsSets,
-    csSets: initCsSets,
-  } = initialValues ?? {
-    lhs: [],
-    rhs: [],
-    typeTags: [],
-    selectedTags: [],
-    reversible: [Reversible.Both, Reversible.True, Reversible.False],
-    selectedReversible: Reversible.Both,
-    selectedCsSets: new Set(),
-    csSets: {},
+  const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
+
+  // TODO: initialize choices if undefined.
+  const choices = initChoices ?? {
+    consumes: [],
+    produces: [],
+    typeTags: await fetchTypeTags([], [], Reversible.Both, new Set()),
+    reversible: await fetchReversible([], [], [], new Set()),
+    set: await fetchCSSets([], [], [], Reversible.Both),
   };
 
-  const { control } = useForm<ListValues>({ defaultValues: { lhs, rhs } });
-  const lhsFieldArray = useFieldArray({ name: "lhs", control });
-  const rhsFieldArray = useFieldArray({ name: "rhs", control });
-
-  const [reversible, setReversible] =
-    useState<Array<Reversible>>(initReversible);
-  const [selectedReversible, setSelectedReversible] = useState<Reversible>(
-    initSelectedReversible ?? Reversible.Both
-  );
-
-  const [typeTags, setTypeTags] = useState<Array<ReactionTypeTag>>(
-    initTags ?? []
-  );
-  const [selectedTags, setSelectedTags] = useState<Array<ReactionTypeTag>>(
-    initSelectedTags.filter((tag) => initTags.includes(tag))
-  );
-
-  const [lhsSelected, setLhsSelected] = useState<Array<StateLeaf>>(
-    lhs ? getSelectedStates(lhs) : []
-  );
-  const [rhsSelected, setRhsSelected] = useState<Array<StateLeaf>>(
-    rhs ? getSelectedStates(rhs) : []
-  );
-
-  const [csSets, setCSSets] = useState<CSSetTree>(initCsSets);
-  const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
-  const [selectedCSSets, setSelectedCSSets] =
-    useState<Set<string>>(initSelectedCsSets);
-
-  // Used for initializing state.
-  useEffect(() => {
-    console.log(`[ReactionPicker]: Initializing state.`);
-    if (!initialValues) {
-      const effect = async () => {
-        fetchTypeTags([], [], Reversible.Both, new Set()).then(setTypeTags);
-
-        fetchReversible([], [], [], new Set()).then((newReversible) => {
-          setReversible(newReversible);
-          setSelectedReversible(
-            newReversible.length > 1 ? Reversible.Both : newReversible[0]
-          );
-        });
-
-        fetchCSSets([], [], [], Reversible.Both).then(setCSSets);
-        fetchStateTreeForSelection(
-          StateProcess.Consumed,
-          [],
-          [],
-          [],
-          Reversible.Both,
-          new Set()
-        ).then((data) =>
-          lhsFieldArray.append({
-            data,
-            selected: {},
-          })
-        );
-        fetchStateTreeForSelection(
-          StateProcess.Produced,
-          [],
-          [],
-          [],
-          Reversible.Both,
-          new Set()
-        ).then((data) =>
-          rhsFieldArray.append({
-            data,
-            selected: {},
-          })
-        );
-      };
-      effect().catch(console.error);
-    } else {
-      const effect = async () => {
-        if (lhsFieldArray.fields.length === 0) {
-          fetchStateTreeForSelection(
-            StateProcess.Consumed,
-            [],
-            getSelectedStates(rhs),
-            selectedTags,
-            selectedReversible,
-            selectedCSSets
-          ).then((data) => lhsFieldArray.append({ data, selected: {} }));
-        }
-        if (rhsFieldArray.fields.length === 0) {
-          fetchStateTreeForSelection(
-            StateProcess.Produced,
-            getSelectedStates(lhs),
-            [],
-            selectedTags,
-            selectedReversible,
-            selectedCSSets
-          ).then((data) => rhsFieldArray.append({ data, selected: {} }));
-        }
-      };
-      effect().catch(console.error);
-    }
-  }, []);
-
   const update = async (type: UpdateType) => {
-    const newLhsPaths = lhsFieldArray.fields.map(({ selected }, index) =>
+    const newLhsPaths = selection.consumes.map((selected, index) =>
       type.kind === "state" && type.side === "lhs" && type.index === index
         ? type.value ?? {}
         : selected
     );
-    const newLhsSelected =
-      type.kind === "state" && type.side === "lhs"
-        ? newLhsPaths
-            .map(getStateLeaf)
-            .filter((selected): selected is StateLeaf => selected !== undefined)
-        : lhsSelected;
-    const newRhsPaths = rhsFieldArray.fields.map(({ selected }, index) =>
+    const newLhsSelected = newLhsPaths
+      .map(getStateLeaf)
+      .filter((selected): selected is StateLeaf => selected !== undefined);
+    const newRhsPaths = selection.produces.map((selected, index) =>
       type.kind === "state" && type.side === "rhs" && type.index === index
         ? type.value ?? {}
         : selected
     );
-    const newRhsSelected =
-      type.kind === "state" && type.side === "rhs"
-        ? newRhsPaths
-            .map(getStateLeaf)
-            .filter((selected): selected is StateLeaf => selected !== undefined)
-        : rhsSelected;
+    const newRhsSelected = newRhsPaths
+      .map(getStateLeaf)
+      .filter((selected): selected is StateLeaf => selected !== undefined);
+
     const newSelectedReversible =
-      type.kind === "reversible" ? type.value : selectedReversible;
+      type.kind === "reversible" ? type.value : selection.reversible;
     const newSelectedTags =
-      type.kind === "type_tag" ? type.value : selectedTags;
+      type.kind === "type_tag" ? type.value : selection.type_tags;
     const newSelectedCSSets =
-      type.kind === "cs_set" ? type.selected : selectedCSSets;
+      type.kind === "cs_set" ? type.selected : new Set(selection.set);
 
     if (type.kind === "type_tag") {
-      setSelectedTags(newSelectedTags);
+      onTagsChange(newSelectedTags);
     } else if (type.kind === "reversible") {
-      setSelectedReversible(newSelectedReversible);
+      onReversibleChange(newSelectedReversible);
     } else if (type.kind === "state") {
       type.side === "lhs"
-        ? setLhsSelected(newLhsSelected)
-        : setRhsSelected(newRhsSelected);
+        ? onConsumesChange(newLhsPaths)
+        : onProducesChange(newRhsPaths);
     } else if (type.kind === "cs_set") {
-      setSelectedCSSets(newSelectedCSSets);
+      onCSSetsChange(newSelectedCSSets);
     }
 
     Promise.all([
       Promise.all(
-        lhsFieldArray.fields.map(async ({ data, selected }, index) => {
+        choices.consumes.map(async (data, index) => {
           if (
             type.kind === "state" &&
             type.side === "lhs" &&
@@ -362,17 +295,15 @@ export const StatefulReactionPicker = ({
             newSelectedCSSets
           );
 
-          return { data: tree, selected };
+          return { data: tree, selected: selection.consumes[index] };
         })
-      ).then((newLhsStates) => {
-        const filteredStates = newLhsStates.filter(
+      ).then((newConsumes) =>
+        newConsumes.filter(
           (state): state is StateEntryProps => state !== undefined
-        );
-        lhsFieldArray.replace(filteredStates);
-        return filteredStates;
-      }),
+        )
+      ),
       Promise.all(
-        rhsFieldArray.fields.map(async ({ data, selected }, index) => {
+        choices.produces.map(async (data, index) => {
           if (
             type.kind === "state" &&
             type.side === "rhs" &&
@@ -394,15 +325,13 @@ export const StatefulReactionPicker = ({
             newSelectedCSSets
           );
 
-          return { data: tree, selected };
+          return { data: tree, selected: selection.produces[index] };
         })
-      ).then((newRhsStates) => {
-        const filteredStates = newRhsStates.filter(
+      ).then((newProduces) =>
+        newProduces.filter(
           (state): state is StateEntryProps => state !== undefined
-        );
-        rhsFieldArray.replace(filteredStates);
-        return filteredStates;
-      }),
+        )
+      ),
       type.kind !== "type_tag"
         ? fetchTypeTags(
             newLhsSelected,
@@ -413,29 +342,31 @@ export const StatefulReactionPicker = ({
             const filteredTags = newSelectedTags.filter((tag) =>
               newTags.includes(tag)
             );
-            setSelectedTags(filteredTags);
-            setTypeTags(newTags);
-            return filteredTags;
+            onTagsChange(filteredTags);
+            return [newTags, filteredTags];
           })
-        : newSelectedTags,
+        : [choices.typeTags, newSelectedTags],
       type.kind !== "reversible"
         ? fetchReversible(
             newLhsSelected,
             newRhsSelected,
             newSelectedTags,
             newSelectedCSSets
-          ).then((newReversible) => {
-            setReversible(newReversible);
-            return newReversible;
-          })
-        : reversible,
+          ).then((newReversible): [Array<Reversible>, Reversible] => [
+            newReversible,
+            newSelectedReversible,
+          ])
+        : ([choices.reversible, newSelectedReversible] as [
+            Array<Reversible>,
+            Reversible
+          ]),
       type.kind !== "cs_set"
         ? fetchCSSets(
             newLhsSelected,
             newRhsSelected,
             newSelectedTags,
             newSelectedReversible
-          ).then((newCSSets) => {
+          ).then((newCSSets): [CSSetTree, Set<string>] => {
             const sets = Object.values(newCSSets).flatMap((set) =>
               Object.keys(set.sets)
             );
@@ -445,47 +376,55 @@ export const StatefulReactionPicker = ({
             const filteredUnfoldedOrgs = new Set(
               [...unfoldedOrgs].filter((orgId) => orgId in newCSSets)
             );
-            setSelectedCSSets(filteredSelectedSets);
+            onCSSetsChange(filteredSelectedSets);
             setUnfoldedOrgs(filteredUnfoldedOrgs);
-            setCSSets(newCSSets);
-            return filteredSelectedSets;
+            return [newCSSets, filteredSelectedSets];
           })
-        : newSelectedCSSets,
+        : ([choices.set, newSelectedCSSets] as [CSSetTree, Set<string>]),
     ]).then(
       async ([
-        newLhsStates,
-        newRhsStates,
-        newSelectedTags,
-        _,
-        newSelectedCSSets,
+        consumes,
+        produces,
+        [typeTags, newSelectedTags],
+        [reversible, newSelectedReversible],
+        [csSets, newSelectedCSSets],
       ]) => {
-        onChange(
-          newLhsPaths,
-          newRhsPaths,
-          newSelectedTags,
-          newSelectedReversible,
-          newSelectedCSSets
-        );
+        const newChoices = {
+          consumes: consumes.map((props) => props.data),
+          produces: produces.map((props) => props.data),
+          typeTags,
+          reversible,
+          set: csSets,
+        };
+        onChange(newChoices, ids);
         if (
           (type.kind !== "type_tag" &&
-            !arrayEquality(newSelectedTags, selectedTags)) ||
-          // FIXME: This is inefficient (only one sets needs to be converted to
+            !arrayEquality(newSelectedTags, selection.type_tags)) ||
+          // FIXME: This is inefficient (only one set needs to be converted to
           // an array).
           (type.kind !== "cs_set" &&
-            !arrayEquality([...newSelectedCSSets], [...selectedCSSets]))
+            !arrayEquality([...newSelectedCSSets], [...selection.set]))
         ) {
           if (type.kind === "state") {
             if (type.side === "lhs") {
-              const tree = await fetchStateTreeForSelection(
+              fetchStateTreeForSelection(
                 StateProcess.Consumed,
                 newLhsSelected.filter((_, i) => i !== type.index),
                 newRhsSelected,
                 newSelectedTags,
                 newSelectedReversible,
                 newSelectedCSSets
+              ).then((tree) =>
+                onChange(
+                  {
+                    ...newChoices,
+                    consumes: newChoices.consumes.map((data, i) =>
+                      type.index === i ? tree : data
+                    ),
+                  },
+                  ids
+                )
               );
-              newLhsStates[type.index].data = tree;
-              lhsFieldArray.replace(newLhsStates);
             } else {
               fetchStateTreeForSelection(
                 StateProcess.Produced,
@@ -494,10 +433,17 @@ export const StatefulReactionPicker = ({
                 newSelectedTags,
                 newSelectedReversible,
                 newSelectedCSSets
-              ).then((tree) => {
-                newRhsStates[type.index].data = tree;
-                rhsFieldArray.replace(newRhsStates);
-              });
+              ).then((tree) =>
+                onChange(
+                  {
+                    ...newChoices,
+                    produces: newChoices.produces.map((data, i) =>
+                      type.index === i ? tree : data
+                    ),
+                  },
+                  ids
+                )
+              );
             }
           } else if (type.kind === "type_tag") {
             fetchTypeTags(
@@ -505,98 +451,60 @@ export const StatefulReactionPicker = ({
               newRhsSelected,
               newSelectedReversible,
               newSelectedCSSets
-            ).then(setTypeTags);
+            ).then((typeTags) => onChange({ ...newChoices, typeTags }, ids));
           } else if (type.kind === "reversible") {
             fetchReversible(
               newLhsSelected,
               newRhsSelected,
               newSelectedTags,
               newSelectedCSSets
-            ).then(setReversible);
+            ).then((reversible) =>
+              onChange({ ...newChoices, reversible }, ids)
+            );
           } else if (type.kind === "cs_set") {
             fetchCSSets(
               newLhsSelected,
               newRhsSelected,
               newSelectedTags,
               newSelectedReversible
-            ).then(setCSSets);
+            ).then((csSets) => onChange({ ...newChoices, set: csSets }, ids));
           }
         }
       }
     );
   };
 
-  const initData = async (side: "lhs" | "rhs") => {
-    const response = await fetch(
-      `/api/states/partaking?${new URLSearchParams({
-        stateProcess:
-          side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
-        consumes: JSON.stringify(lhsSelected),
-        produces: JSON.stringify(rhsSelected),
-        typeTags: JSON.stringify(selectedTags),
-        reversible: selectedReversible,
-        setIds: JSON.stringify([...selectedCSSets]),
-      })}`
+  const initData = async (side: "lhs" | "rhs") =>
+    fetchStateTreeForSelection(
+      side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
+      selection.consumes
+        .map(getStateLeaf)
+        .filter((selected): selected is StateLeaf => selected !== undefined),
+      selection.produces
+        .map(getStateLeaf)
+        .filter((selected): selected is StateLeaf => selected !== undefined),
+      selection.type_tags,
+      selection.reversible,
+      new Set(selection.set)
     );
-    return await response.json();
-  };
 
-  const fetchTypeTags = async (
-    consumes: Array<StateLeaf>,
-    produces: Array<StateLeaf>,
-    reversible: Reversible,
-    setIds: Set<string>
-  ) =>
-    (
-      await fetch(
-        `/api/reactions/type_tags?${new URLSearchParams({
-          consumes: JSON.stringify(consumes),
-          produces: JSON.stringify(produces),
-          reversible,
-          setIds: JSON.stringify([...setIds]),
-        })}`
-      )
-    ).json() as Promise<Array<ReactionTypeTag>>;
-  const fetchReversible = async (
-    consumes: Array<StateLeaf>,
-    produces: Array<StateLeaf>,
-    typeTags: Array<ReactionTypeTag>,
-    setIds: Set<string>
-  ) =>
-    (
-      await fetch(
-        `/api/reactions/reversible?${new URLSearchParams({
-          consumes: JSON.stringify(consumes),
-          produces: JSON.stringify(produces),
-          typeTags: JSON.stringify(typeTags),
-          setIds: JSON.stringify([...setIds]),
-        })}`
-      )
-    ).json() as Promise<Array<Reversible>>;
-  const fetchCSSets = async (
-    consumes: Array<StateLeaf>,
-    produces: Array<StateLeaf>,
-    typeTags: Array<ReactionTypeTag>,
-    reversible: Reversible
-  ) =>
-    (
-      await fetch(
-        `/api/reactions/cs-set?${new URLSearchParams({
-          consumes: JSON.stringify(consumes),
-          produces: JSON.stringify(produces),
-          typeTags: JSON.stringify(typeTags),
-          reversible,
-        })}`
-      )
-    ).json() as Promise<CSSetTree>;
-
-  return viewOnly ? (
+  return editable ? (
     <ReactionPicker
       consumes={{
-        entries: lhsFieldArray.fields,
+        entries: ids.consumes.map((id, index) => ({
+          id,
+          data: choices.consumes[index],
+          selected: selection.consumes[index],
+        })),
         onAppend: async () => {
           const data = await initData("lhs");
-          lhsFieldArray.append({ data, selected: {} });
+          // lhsFieldArray.append({ data, selected: {} });
+          // TODO: Generate new id.
+          await onChange(
+            { ...choices, consumes: [...choices.consumes, data] },
+            { ...ids, consumes: [...ids.consumes, nanoid()] }
+          );
+          onConsumesChange([...selection.consumes, {}]);
         },
         onRemove: async (index) => {
           await update({ kind: "state", side: "lhs", index });
@@ -605,10 +513,18 @@ export const StatefulReactionPicker = ({
           update({ kind: "state", side: "lhs", index, value: selected }),
       }}
       produces={{
-        entries: rhsFieldArray.fields,
+        entries: ids.produces.map((id, index) => ({
+          id,
+          data: choices.produces[index],
+          selected: selection.produces[index],
+        })),
         onAppend: async () => {
           const data = await initData("rhs");
-          rhsFieldArray.append({ data, selected: {} });
+          await onChange(
+            { ...choices, produces: [...choices.produces, data] },
+            { ...ids, produces: [...ids.produces, nanoid()] }
+          );
+          onProducesChange([...selection.produces, {}]);
         },
         onRemove: async (index) =>
           update({ kind: "state", side: "rhs", index }),
@@ -618,21 +534,21 @@ export const StatefulReactionPicker = ({
       reversible={{
         onChange: (value) =>
           update({ kind: "reversible", value: value as Reversible }),
-        choices: reversible,
-        value: selectedReversible,
+        choices: choices.reversible,
+        value: selection.reversible,
       }}
       typeTags={{
-        data: typeTags,
-        value: selectedTags,
+        data: choices.typeTags,
+        value: selection.type_tags,
         onChange: (newTags: Array<ReactionTypeTag>) =>
           update({ kind: "type_tag", value: newTags }),
       }}
       sets={{
-        data: csSets,
-        selection: selectedCSSets,
+        data: choices.set,
+        selection: new Set(selection.set),
         unfolded: unfoldedOrgs,
         onSetChecked(setId, checked) {
-          const newSelectedCSSets = new Set(selectedCSSets);
+          const newSelectedCSSets = new Set(selection.set);
 
           checked
             ? newSelectedCSSets.add(setId)
@@ -641,9 +557,9 @@ export const StatefulReactionPicker = ({
           update({ kind: "cs_set", selected: newSelectedCSSets });
         },
         onOrganizationChecked(id, checked) {
-          const newSelectedCSSets = new Set(selectedCSSets);
+          const newSelectedCSSets = new Set(selection.set);
 
-          Object.keys(csSets[id].sets).forEach((setId) => {
+          Object.keys(choices.set[id].sets).forEach((setId) => {
             checked
               ? newSelectedCSSets.add(setId)
               : newSelectedCSSets.delete(setId);
@@ -660,21 +576,6 @@ export const StatefulReactionPicker = ({
       }}
     />
   ) : (
-    getLatexForReaction(
-      {
-        consumes: lhsFieldArray.fields.map((field) => field.data),
-        produces: rhsFieldArray.fields.map((field) => field.data),
-        reversible,
-        typeTags,
-        set: csSets,
-      },
-      {
-        consumes: lhsFieldArray.fields.map((field) => field.selected),
-        produces: rhsFieldArray.fields.map((field) => field.selected),
-        reversible: selectedReversible,
-        type_tags: selectedTags,
-        set: [...selectedCSSets],
-      }
-    )
+    getLatexForReaction(choices, selection)
   );
 };
