@@ -11,6 +11,14 @@ authors:
     affiliation: "Eindhoven University of Technology"
     family-names: Boer
     given-names: Daan
+  -
+    affiliation: "Netherlands eScience Center"
+    family-names: Ali
+    given-names: Suvayu
+  -
+    affiliation: "Plasma Matters B.V."
+    family-names: Graef
+    given-names: Wouter
 cff-version: "1.2.0"
 license: "AGPL-3.0-or-later"
 message: "If you use this software, please cite it using these metadata."
