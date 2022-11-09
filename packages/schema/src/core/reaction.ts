@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { ReactionTypeTag } from "./enumeration";
 
 // TODO: Split this in separate io and db interfaces.

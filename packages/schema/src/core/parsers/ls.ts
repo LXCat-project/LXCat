@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { AtomParser } from "../parse";
 import { AtomLS, AtomLSImpl, LSTerm, LSTermImpl } from "../atoms/ls";
 import {

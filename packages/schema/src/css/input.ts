@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { CrossSection } from "../cs/cs";
 import { InputDocument } from "../core/document";
 import { AnyAtomJSON } from "../core/atoms";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
 import { publish } from "@lxcat/database/dist/css/queries/author_write";
 import { NextApiResponse } from "next";

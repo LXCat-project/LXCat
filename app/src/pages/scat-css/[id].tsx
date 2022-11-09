@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import {

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { DocumentData } from "arangojs/documents";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";

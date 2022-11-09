@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { RequestHandler } from "next-connect";
 import NextCors from "nextjs-cors";

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # services:
 #   - name: arangodb/arangodb:3.7.12
 #     alias: db
@@ -170,6 +174,17 @@ build-prod:
     - touch .env
     - docker-compose build
     # TODO do stuff with build images
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
+
+reuse:
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  script:
+    - reuse lint
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import type {
   User as LocalUser,

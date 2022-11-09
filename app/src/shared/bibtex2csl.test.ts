@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { expect, test, describe } from "vitest";
 import { bibtex2csl } from "./bibtex2csl";
 

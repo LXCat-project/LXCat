@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // DONE: Move the coupling scheme into ConfigTerm.
 // DONE: LS coupling sometimes also requires intermediate term symbols (see
 // e.g. excited states of N on NIST).  -> This does not seem to be the case, as

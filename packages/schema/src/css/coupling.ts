@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { ShellEntry } from "../core/shell_entry";
 import { Dict } from "./common";
 
