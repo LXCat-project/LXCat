@@ -14,9 +14,12 @@ class Validator {
   validate(data: unknown): data is CrossSectionSetRaw {
     const result = validateJSONSchema(data);
     this.errors = validateJSONSchema.errors;
+    if (result) {
+      this.validate_quantum_numbers(data)
+      return (this.errors?.length === 0);
+    }
     // TODO add other validators like
     // foreign labels or
-    // particle state physics checks
     return result;
   }
 
@@ -26,7 +29,6 @@ class Validator {
     if (this.errors == undefined) {
       this.errors = [];
     }
-    // FIXME: doesn't return a status code, returns the error objects
     return check_states(states, this.errors);
   }
 }
