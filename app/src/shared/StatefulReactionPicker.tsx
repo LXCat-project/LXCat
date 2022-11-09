@@ -77,7 +77,7 @@ const fetchStateTreeForSelection = async (
       })}`
     )
   ).json() as Promise<StateTree>;
-const fetchTypeTags = async (
+export const fetchTypeTags = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
@@ -93,7 +93,7 @@ const fetchTypeTags = async (
       })}`
     )
   ).json() as Promise<Array<ReactionTypeTag>>;
-const fetchReversible = async (
+export const fetchReversible = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
@@ -109,7 +109,7 @@ const fetchReversible = async (
       })}`
     )
   ).json() as Promise<Array<Reversible>>;
-const fetchCSSets = async (
+export const fetchCSSets = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
@@ -198,7 +198,7 @@ export interface StateSelectIds {
 
 export type StatefulReactionPickerProps = {
   ids: StateSelectIds;
-  choices?: ReactionChoices;
+  choices: ReactionChoices;
   selection: ReactionOptions;
   editable: boolean;
   onConsumesChange(newSelected: Array<StatePath>): void | Promise<void>;
@@ -212,9 +212,9 @@ export type StatefulReactionPickerProps = {
   ): void | Promise<void>;
 };
 
-export const StatefulReactionPicker = async ({
+export const StatefulReactionPicker = ({
   ids,
-  choices: initChoices,
+  choices,
   selection,
   editable,
   onChange,
@@ -225,15 +225,6 @@ export const StatefulReactionPicker = async ({
   onReversibleChange,
 }: StatefulReactionPickerProps) => {
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
-
-  // TODO: initialize choices if undefined.
-  const choices = initChoices ?? {
-    consumes: [],
-    produces: [],
-    typeTags: await fetchTypeTags([], [], Reversible.Both, new Set()),
-    reversible: await fetchReversible([], [], [], new Set()),
-    set: await fetchCSSets([], [], [], Reversible.Both),
-  };
 
   const update = async (type: UpdateType) => {
     const newLhsPaths = selection.consumes.map((selected, index) =>

@@ -7,16 +7,20 @@ import {
 } from "@lxcat/database/dist/cs/queries/public";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
+import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
+  fetchCSSets,
+  fetchReversible,
+  fetchTypeTags,
   StatefulReactionPicker,
   StateSelectIds,
 } from "../shared/StatefulReactionPicker";
 
 interface FilterForm {
   reactions: Array<{
-    choices?: ReactionChoices;
+    choices: ReactionChoices;
     options: ReactionOptions;
     ids: StateSelectIds;
   }>;
@@ -36,6 +40,10 @@ export const FilterComponent = ({
       reactions: facets.reactions.map((choices, index) => ({
         choices,
         options: selection.reactions[index],
+        ids: {
+          consumes: choices.consumes.map(() => nanoid()),
+          produces: choices.produces.map(() => nanoid()),
+        }
       })),
     },
   });
@@ -195,8 +203,18 @@ export const FilterComponent = ({
           <Box sx={{ display: "flex", justifyContent: "end" }}>
             <Button
               title="Add reaction filter"
-              onClick={() => {
+              onClick={async () => {
+
+                  // TODO: initialize choices if undefined.
+                const choices = {
+                  consumes: [],
+                  produces: [],
+                  typeTags: await fetchTypeTags([], [], Reversible.Both, new Set()),
+                  reversible: await fetchReversible([], [], [], new Set()),
+                  set: await fetchCSSets([], [], [], Reversible.Both),
+                };
                 append({
+                  choices,
                   options: {
                     consumes: [],
                     produces: [],
