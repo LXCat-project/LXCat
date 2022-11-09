@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { ErrorObject } from "ajv";
 
 import { CouplingScheme } from "../core/atoms/coupling_scheme";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat developer team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { describe, expect, test } from "vitest";
 
 import { momentaMaxMin, momenta, momentaCouplings } from "./coupling";
