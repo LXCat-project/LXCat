@@ -20,10 +20,10 @@ export function parity(orbital: number, occupance: number): number {
  *
  * @return {number} parity
  */
-export function combine_parity(parities: number[]): number {
+export function combineParity(parities: number[]): number {
   return parities.reduce((prev, next) => prev * next, 1);
 }
 
-export function shell_parities(config: ShellEntry[]) {
+export function shellParities(config: ShellEntry[]) {
   return config.map((configItem) => parity(configItem.l, configItem.occupance));
 }

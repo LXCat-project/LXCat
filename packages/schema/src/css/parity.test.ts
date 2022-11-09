@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { parity, combine_parity } from "./parity";
+import { parity, combineParity } from "./parity";
 
 describe("parity", () => {
   test("calculation", () => {
@@ -15,8 +15,8 @@ describe("parity", () => {
 
   test("combination", () => {
     let parities = [1, -1, 1, -1];
-    expect(combine_parity(parities)).toEqual(1);
+    expect(combineParity(parities)).toEqual(1);
     parities = [-1, 1, -1, 1, -1];
-    expect(combine_parity(parities)).toEqual(-1);
+    expect(combineParity(parities)).toEqual(-1);
   });
 });

@@ -9,18 +9,16 @@ import { AnyAtom } from "../core/atoms";
 import { InState } from "../core/state";
 import { Dict } from "./common";
 import {
-  check_parity,
-  check_LS,
-  check_LS1,
-  check_J1L2,
-  get_states,
-} from "./quantum_number_validator";
-import {
-  check_quantum_numbers,
-  check_states,
+  checkParity,
+  checkLS,
+  checkLS1,
+  checkJ1L2,
+  getStates,
 } from "./quantum_number_validator";
 
-let inputs_ok: [string, InState<AnyAtom>][]; // FIXME: type w/o AnyMolecule not supported
+import { checkQuantumNumbers, checkStates } from "./quantum_number_validator";
+
+let inputs_ok: [string, InState<AnyAtom>][];
 let inputs_parity_nok: [string, InState<AnyAtom>][];
 let inputs_momenta_nok: [string, InState<AnyAtom>][];
 
@@ -38,9 +36,9 @@ beforeAll(() => {
   const data_momenta_nok = readExample(
     "src/css/data/Ar_C_P_Nobody_LXCat_bad_momenta.json"
   );
-  inputs_ok = get_states(data_ok);
-  inputs_parity_nok = get_states(data_parity_nok);
-  inputs_momenta_nok = get_states(data_momenta_nok);
+  inputs_ok = getStates(data_ok);
+  inputs_parity_nok = getStates(data_parity_nok);
+  inputs_momenta_nok = getStates(data_momenta_nok);
 });
 
 describe("validate parity data", () => {
@@ -50,7 +48,7 @@ describe("validate parity data", () => {
       if (atom.electronic === undefined) continue;
       for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
-        const status: boolean = check_parity(
+        const status: boolean = checkParity(
           `${key}/electronic/${idx}`,
           comp,
           errors
@@ -72,7 +70,7 @@ describe("validate parity data", () => {
       if (atom.electronic === undefined) continue;
       for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
-        const status: boolean = check_parity(
+        const status: boolean = checkParity(
           `${key}/electronic/${idx}`,
           comp,
           errors
@@ -109,13 +107,13 @@ describe("validate angular momenta", () => {
         const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
-            status = check_LS(parent, comp, errors);
+            status = checkLS(parent, comp, errors);
             break;
           case CouplingScheme.LS1:
-            status = check_LS1(parent, comp, errors);
+            status = checkLS1(parent, comp, errors);
             break;
           case CouplingScheme.J1L2:
-            status = check_J1L2(parent, comp, errors);
+            status = checkJ1L2(parent, comp, errors);
             break;
           default:
             status = false; // why am I here!?
@@ -141,13 +139,13 @@ describe("validate angular momenta", () => {
         const parent = `${key}/electronic/${idx}`;
         switch (comp.scheme) {
           case CouplingScheme.LS:
-            status = check_LS(parent, comp, errors);
+            status = checkLS(parent, comp, errors);
             break;
           case CouplingScheme.LS1:
-            status = check_LS1(parent, comp, errors);
+            status = checkLS1(parent, comp, errors);
             break;
           case CouplingScheme.J1L2:
-            status = check_J1L2(parent, comp, errors);
+            status = checkJ1L2(parent, comp, errors);
             break;
           default:
             status = false; // why am I here!?
@@ -179,7 +177,7 @@ describe("dispatchers", () => {
       for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
         const errors: ErrorObject[] = [];
-        const status = check_quantum_numbers(
+        const status = checkQuantumNumbers(
           `${key}/electronic/${idx}`,
           comp,
           errors
@@ -201,7 +199,7 @@ describe("dispatchers", () => {
       if (atom.electronic === undefined) continue;
       for (const [idx, comp] of atom.electronic.entries()) {
         if (!comp.scheme) continue;
-        const status = check_quantum_numbers(
+        const status = checkQuantumNumbers(
           `${key}/electronic/${idx}`,
           comp,
           errors
@@ -224,12 +222,12 @@ describe("dispatchers", () => {
   });
 
   test("jsonobject.states w/ no errors", () => {
-    const errors: ErrorObject[] = check_states(inputs_ok, []);
+    const errors: ErrorObject[] = checkStates(inputs_ok, []);
     expect(errors).toHaveLength(0);
   });
 
   test("jsonobject.states w/ errors", () => {
-    const errors: ErrorObject[] = check_states(inputs_momenta_nok, []);
+    const errors: ErrorObject[] = checkStates(inputs_momenta_nok, []);
     /* 4 actual errors lead to 1 additional different error
       - phosphorus/0/core has bad l in shell config, so parity also fails
     */

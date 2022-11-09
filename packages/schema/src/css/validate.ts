@@ -1,7 +1,7 @@
 import Ajv, { ErrorObject } from "ajv";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
-import { get_states, check_states } from "./quantum_number_validator";
+import { getStates, checkStates } from "./quantum_number_validator";
 
 const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
 
@@ -14,21 +14,20 @@ class Validator {
     const result = validateJSONSchema(data);
     this.errors = validateJSONSchema.errors;
     if (result) {
-      this.validate_quantum_numbers(data);
+      this.validateQuantumNumbers(data);
       return this.errors?.length === 0;
     }
     // TODO add other validators like
-    // foreign labels or
+    // foreign labels
     return result;
   }
 
-  // must be called after validate(..)
-  validate_quantum_numbers(data: CrossSectionSetRaw) {
-    const states = get_states(data);
+  validateQuantumNumbers(data: CrossSectionSetRaw) {
+    const states = getStates(data);
     if (this.errors == undefined) {
       this.errors = [];
     }
-    return check_states(states, this.errors);
+    return checkStates(states, this.errors);
   }
 }
 

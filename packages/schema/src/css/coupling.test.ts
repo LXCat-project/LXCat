@@ -1,19 +1,19 @@
 import { describe, expect, test } from "vitest";
 
-import { momenta_max_min, momenta, momenta_couplings } from "./coupling";
-import { momenta_from_shell } from "./coupling";
+import { momentaMaxMin, momenta, momentaCouplings } from "./coupling";
+import { momentaFromShell } from "./coupling";
 
 // FIXME: try half-integer examples
 describe("momenta from term", () => {
   test("Jmax Jmin", () => {
     let orbital = 2;
     let spin = 1;
-    let [max, min] = momenta_max_min(orbital, spin);
+    let [max, min] = momentaMaxMin(orbital, spin);
     expect(max + min).toEqual(2 * Math.max(orbital, spin));
 
     orbital = 1;
     spin = 2;
-    [max, min] = momenta_max_min(orbital, spin);
+    [max, min] = momentaMaxMin(orbital, spin);
     expect(max + min).toEqual(2 * Math.max(orbital, spin));
   });
 
@@ -29,15 +29,15 @@ describe("momenta from term", () => {
     const els: number[] = [2, 1, 0];
     const spin = 1;
     // FIXME: very example specific length test: spin = 1 => intermediate momenta overlap
-    expect(momenta_couplings(els, spin)).toHaveLength(els.length + 1);
+    expect(momentaCouplings(els, spin)).toHaveLength(els.length + 1);
 
     // different non-overlapping sets of momenta
     let spins = [1, 1.5];
-    expect(momenta_couplings(els, spins)).toHaveLength(els.length * 2 + 2);
+    expect(momentaCouplings(els, spins)).toHaveLength(els.length * 2 + 2);
 
     // overlapping sets of momenta, larger set is w/ spin 2
     spins = [1, 2];
-    expect(momenta_couplings(els, spins)).toHaveLength(els.length + 2);
+    expect(momentaCouplings(els, spins)).toHaveLength(els.length + 2);
   });
 });
 
@@ -52,7 +52,7 @@ describe("momenta from shell", () => {
       [5, 1, 0.5], // l = 1, 2x0, 2x-1
     ];
     for (const [occupance, L_exp, S_exp] of expected) {
-      const [L, S] = momenta_from_shell(l, occupance);
+      const [L, S] = momentaFromShell(l, occupance);
       expect(L).toEqual(L_exp);
       expect(S).toEqual(S_exp);
     }

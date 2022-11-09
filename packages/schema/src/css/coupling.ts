@@ -12,10 +12,7 @@ import { Dict } from "./common";
  *
  * @return {[number, number]} [maximum, minimum] angular momentum
  */
-export function momenta_max_min(
-  orbital: number,
-  spin: number
-): [number, number] {
+export function momentaMaxMin(orbital: number, spin: number): [number, number] {
   return [orbital + spin, Math.abs(orbital - spin)];
 }
 
@@ -34,7 +31,7 @@ export function momenta_max_min(
  *                    [max, max-1, max-2, ..., min]
  */
 export function momenta(orbital: number, spin: number): number[] {
-  const [jmax, jmin] = momenta_max_min(orbital, spin);
+  const [jmax, jmin] = momentaMaxMin(orbital, spin);
   return Array(jmax - jmin + 1)
     .fill(0)
     .map((_, idx) => jmax - idx);
@@ -54,7 +51,7 @@ export function momenta(orbital: number, spin: number): number[] {
  * @return {number[]} Array of all possible values of angular momenta:
  *                    [max, max-1, max-2, ..., min]
  */
-export function momenta_couplings(
+export function momentaCouplings(
   els: number[],
   spin: number | number[]
 ): number[] {
@@ -73,7 +70,7 @@ export function momenta_couplings(
   );
 }
 
-export function check_momenta(
+export function checkMomenta(
   orbital: number,
   spin: number,
   expected_J: number
@@ -85,14 +82,14 @@ export function check_momenta(
   };
 }
 
-export function check_couplings(
+export function checkCouplings(
   L1: number,
   L2: number,
   S1: number,
   expected_K: number
 ) {
   // NOTE: all possible total angular momenta: jmax, jmax-1, ..., jmin
-  const ls1s: number[] = momenta_couplings(momenta(L1, L2), S1);
+  const ls1s: number[] = momentaCouplings(momenta(L1, L2), S1);
   return {
     result: ls1s.includes(expected_K),
     allowed: ls1s,
@@ -109,7 +106,7 @@ export function check_couplings(
  *
  * @return {[number, number]} Array of L & S
  */
-export function momenta_from_shell(
+export function momentaFromShell(
   orbital: number,
   occupance: number
 ): [number, number] {
@@ -129,7 +126,7 @@ export function momenta_from_shell(
   return [L, S];
 }
 
-export function check_momenta_from_shell(
+export function checkMomentaFromShell(
   entries: ShellEntry[],
   L_expected: number,
   S_expected: number
@@ -145,7 +142,7 @@ export function check_momenta_from_shell(
         allowed: {},
       };
     }
-    const [_L, _S] = momenta_from_shell(entry.l, entry.occupance);
+    const [_L, _S] = momentaFromShell(entry.l, entry.occupance);
     S += _S;
     L += _L;
   }
