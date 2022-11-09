@@ -36,7 +36,7 @@ describe("validate()", () => {
     };
     const isValid = validator.validate(input);
     expect(isValid).toBeTruthy();
-    expect(validator.errors).toBeNull();
+    expect(validator.errors).toEqual([]);
   });
 
   test("minimal without name", () => {
@@ -83,21 +83,200 @@ describe("validate()", () => {
 describe("validate() w/ examples", () => {
   test("no errors", () => {
     const isValid = validator.validate(data_ok);
-    expect(isValid).toBeFalsy();
+    expect(isValid).toBeTruthy();
     expect(validator.errors).toHaveLength(0);
   });
 
   test("w/ parity errors", () => {
     // see quantum_number_validator.test.ts for explanation of error counts
     const isValid = validator.validate(data_parity_nok);
-    console.log(JSON.stringify(validator.errors, null, 2));
     expect(isValid).toBeFalsy();
-    expect(validator.errors).toEqual([]);
+    const expected = [
+      {
+        "keyword": "LS coupling",
+        "instancePath": "second/electronic/0/config/excited",
+        "schemaPath": "",
+        "params": {
+          "scheme": "LS",
+          "config": [
+            {
+              "n": 3,
+              "l": 3,
+              "occupance": 1
+            }
+          ],
+          "term": {
+            "S": 0.5,
+            "L": 2,
+            "P": 1
+          },
+          "allowed": {
+            "P": -1
+          }
+        },
+        "message": "term incosistent with config: for [{n:3,l:3,occupance:1}], parity should be -1"
+      },
+      {
+        "keyword": "J1L2 coupling",
+        "instancePath": "second/electronic/0/config/excited",
+        "schemaPath": "",
+        "params": {
+          "scheme": "J1L2",
+          "config": {
+            "core": {
+              "scheme": "LS",
+              "config": [
+                {
+                  "n": 3,
+                  "l": 1,
+                  "occupance": 5
+                }
+              ],
+              "term": {
+                "S": 0.5,
+                "L": 1,
+                "P": -1,
+                "J": 1.5
+              }
+            },
+            "excited": {
+              "scheme": "LS",
+              "config": [
+                {
+                  "n": 3,
+                  "l": 3,
+                  "occupance": 1
+                }
+              ],
+              "term": {
+                "S": 0.5,
+                "L": 2,
+                "P": 1
+              }
+            }
+          },
+          "term": {
+            "S": 0.5,
+            "K": 1.5,
+            "P": -1,
+            "J": 2
+          },
+          "allowed": {}
+        },
+        "message": "bad shell config: [{n:3,l:3,occupance:1}]"
+      },
+      {
+        "keyword": "LS coupling",
+        "instancePath": "third/electronic/1/config/core",
+        "schemaPath": "",
+        "params": {
+          "scheme": "LS",
+          "config": [
+            {
+              "n": 3,
+              "l": 1,
+              "occupance": 5
+            }
+          ],
+          "term": {
+            "S": 0.5,
+            "L": 1,
+            "P": 1,
+            "J": 1.5
+          },
+          "allowed": {
+            "P": -1
+          }
+        },
+        "message": "term incosistent with config: for [{n:3,l:1,occupance:5}], parity should be -1"
+      },
+      {
+        "keyword": "J1L2 coupling",
+        "instancePath": "third/electronic/1",
+        "schemaPath": "",
+        "params": {
+          "scheme": "J1L2",
+          "config": {
+            "core": {
+              "scheme": "LS",
+              "config": [
+                {
+                  "n": 3,
+                  "l": 1,
+                  "occupance": 5
+                }
+              ],
+              "term": {
+                "S": 0.5,
+                "L": 1,
+                "P": 1,
+                "J": 1.5
+              }
+            },
+            "excited": {
+              "scheme": "LS",
+              "config": [
+                {
+                  "n": 3,
+                  "l": 2,
+                  "occupance": 1
+                }
+              ],
+              "term": {
+                "S": 0.5,
+                "L": 2,
+                "P": 1
+              }
+            }
+          },
+          "term": {
+            "S": 0.5,
+            "K": 2.5,
+            "P": -1,
+            "J": 3
+          },
+          "allowed": {
+            "P": 1
+          }
+        },
+        "message": "term incosistent with config: for {core:{scheme:LS,config:[{n:3,l:1,occupance:5}],term:{S:0.5,L:1,P:1,J:1.5}},excited:{scheme:LS,config:[{n:3,l:2,occupance:1}],term:{S:0.5,L:2,P:1}}}, parity should be 1"
+      },
+      {
+        "keyword": "LS coupling",
+        "instancePath": "carbon/electronic/0",
+        "schemaPath": "",
+        "params": {
+          "scheme": "LS",
+          "config": [
+            {
+              "n": 2,
+              "l": 0,
+              "occupance": 1
+            },
+            {
+              "n": 2,
+              "l": 1,
+              "occupance": 3
+            }
+          ],
+          "term": {
+            "L": 0,
+            "S": 2,
+            "J": 2,
+            "P": 1
+          },
+          "allowed": {
+            "P": -1
+          }
+        },
+        "message": "term incosistent with config: for [{n:2,l:0,occupance:1},{n:2,l:1,occupance:3}], parity should be -1"
+      }
+    ];
+    expect(validator.errors).toEqual(expected);
   });
 
   test("w/ momenta errors", () => {
     const isValid = validator.validate(data_momenta_nok);
-    console.log(JSON.stringify(validator.errors, null, 2));
     expect(isValid).toBeFalsy();
     const expected = [
       {
