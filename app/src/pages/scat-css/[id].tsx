@@ -14,6 +14,7 @@ import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import { reference2bibliography } from "../../shared/cite";
+import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 
 interface Props {
   set: CrossSectionSetItem;
@@ -98,6 +99,10 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         />
         <link rel="canonical" href={`/scat-css/${canonicalId}`} />
       </Head>
+      <TermsOfUseCheck
+        references={references}
+        permaLink={`/scat-css/${set.id}`}
+      />
       <h1>
         {set.name} by {set.contributor}
       </h1>

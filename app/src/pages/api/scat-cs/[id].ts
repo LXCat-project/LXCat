@@ -2,14 +2,14 @@ import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
   AuthRequest,
-  hasDeveloperRole,
+  hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
 import { byId } from "@lxcat/database/dist/cs/queries/public";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
-  .use(hasDeveloperRole)
+  .use(hasDeveloperOrDownloadRole)
   .get(async (req, res) => {
     const { id } = req.query;
     if (typeof id === "string") {

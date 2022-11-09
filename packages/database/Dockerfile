@@ -8,6 +8,6 @@ RUN npm install
 # Build database and skip app workspace build
 RUN npm run build --no-cache -w packages/schema -w packages/database
 
-WORKDIR /code/database
+WORKDIR /code/packages/database
 
 ENTRYPOINT ["npm", "run"]

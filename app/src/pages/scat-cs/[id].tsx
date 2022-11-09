@@ -75,7 +75,10 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({
         <script key="jsonld" {...jsonLdScriptProps(toJSONLD(section))} />
         <link rel="canonical" href={`/scat-cs/${canonicalId}`} />
       </Head>
-      <TermsOfUseCheck references={section.reference} />
+      <TermsOfUseCheck
+        references={section.reference}
+        permaLink={`/scat-cs/${section.id}`}
+      />
       <Item {...section}></Item>
     </Layout>
   );
