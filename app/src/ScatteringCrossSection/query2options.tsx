@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { SearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { ParsedUrlQuery } from "querystring";
 import { query2array } from "../shared/query2array";

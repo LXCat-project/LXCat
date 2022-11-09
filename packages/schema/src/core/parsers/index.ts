@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { AtomParser, MoleculeParser } from "../parse";
 import { AnyAtom } from "../atoms";
 import { ParticleType } from "../enumeration";

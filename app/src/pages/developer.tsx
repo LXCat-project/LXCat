@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Button, Space } from "@mantine/core";
 import { useState } from "react";
 import { Layout } from "../shared/Layout";

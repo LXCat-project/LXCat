@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { RotationalImpl } from "../molecules/components/rotational";
 import { ComponentParser, PUR } from "./common";
 

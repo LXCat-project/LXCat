@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";

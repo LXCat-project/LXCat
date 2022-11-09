@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";

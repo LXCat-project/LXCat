@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
 import { AtomJ1L2 as AtomJ1L2State } from "@lxcat/schema/dist/core/atoms/j1l2";
 import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";

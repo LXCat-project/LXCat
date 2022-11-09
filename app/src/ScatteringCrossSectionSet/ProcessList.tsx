@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";

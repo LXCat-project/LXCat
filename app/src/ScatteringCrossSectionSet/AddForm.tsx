@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
