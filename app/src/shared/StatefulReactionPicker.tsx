@@ -13,7 +13,6 @@ import {
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Group } from "@mantine/core";
-import { nanoid } from "nanoid";
 import { useState } from "react";
 import { Latex } from "./Latex";
 import { ReactionPicker } from "./ReactionPicker";
@@ -202,14 +201,15 @@ export type StatefulReactionPickerProps = {
   selection: ReactionOptions;
   editable: boolean;
   onConsumesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  onConsumesAppend(choices: StateTree): void | Promise<void>;
+  onConsumesRemove(index: number): void | Promise<void>;
   onProducesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  onProducesAppend(choices: StateTree): void | Promise<void>;
+  onProducesRemove(index: number): void | Promise<void>;
   onTagsChange(newSelected: Array<ReactionTypeTag>): void | Promise<void>;
   onReversibleChange(newSelected: Reversible): void | Promise<void>;
   onCSSetsChange(newSelected: Set<string>): void | Promise<void>;
-  onChange(
-    newChoices: ReactionChoices,
-    ids: StateSelectIds
-  ): void | Promise<void>;
+  onChange(newChoices: ReactionChoices): void | Promise<void>;
 };
 
 export const StatefulReactionPicker = ({
@@ -219,7 +219,11 @@ export const StatefulReactionPicker = ({
   editable,
   onChange,
   onConsumesChange,
+  onConsumesAppend,
+  onConsumesRemove,
   onProducesChange,
+  onProducesAppend,
+  onProducesRemove,
   onTagsChange,
   onCSSetsChange,
   onReversibleChange,
@@ -257,21 +261,35 @@ export const StatefulReactionPicker = ({
       onReversibleChange(newSelectedReversible);
     } else if (type.kind === "state") {
       type.side === "lhs"
-        ? onConsumesChange(newLhsPaths)
-        : onProducesChange(newRhsPaths);
+        ? type.value
+          ? onConsumesChange(newLhsPaths)
+          : onConsumesRemove(type.index)
+        : type.value
+        ? onProducesChange(newRhsPaths)
+        : onProducesRemove(type.index);
     } else if (type.kind === "cs_set") {
       onCSSetsChange(newSelectedCSSets);
     }
 
+    const consumesChoices =
+      type.kind === "state" && type.side === "lhs" && !type.value
+        ? choices.consumes.filter((_, i) => i !== type.index)
+        : choices.consumes;
+    const producesChoices =
+      type.kind === "state" && type.side === "rhs" && !type.value
+        ? choices.produces.filter((_, i) => i !== type.index)
+        : choices.produces;
+
     Promise.all([
       Promise.all(
-        choices.consumes.map(async (data, index) => {
+        consumesChoices.map(async (data, index) => {
           if (
             type.kind === "state" &&
             type.side === "lhs" &&
-            type.index === index
+            type.index === index &&
+            type.value
           ) {
-            return type.value ? { data, selected: type.value } : undefined;
+            return { id: ids.consumes[index], data, selected: type.value };
           }
 
           const consumed = newLhsSelected.filter((_, i) => i !== index);
@@ -286,21 +304,29 @@ export const StatefulReactionPicker = ({
             newSelectedCSSets
           );
 
-          return { data: tree, selected: selection.consumes[index] };
+          return {
+            id: ids.consumes[index],
+            data: tree,
+            selected: selection.consumes[index],
+          };
         })
       ).then((newConsumes) =>
         newConsumes.filter(
-          (state): state is StateEntryProps => state !== undefined
+          (
+            state
+          ): state is { id: string; data: StateTree; selected: StatePath } =>
+            state !== undefined
         )
       ),
       Promise.all(
-        choices.produces.map(async (data, index) => {
+        producesChoices.map(async (data, index) => {
           if (
             type.kind === "state" &&
             type.side === "rhs" &&
-            type.index === index
+            type.index === index &&
+            type.value
           ) {
-            return type.value ? { data, selected: type.value } : undefined;
+            return { id: ids.produces[index], data, selected: type.value };
           }
 
           // Get selected states based on other boxes.
@@ -316,11 +342,18 @@ export const StatefulReactionPicker = ({
             newSelectedCSSets
           );
 
-          return { data: tree, selected: selection.produces[index] };
+          return {
+            id: ids.produces[index],
+            data: tree,
+            selected: selection.produces[index],
+          };
         })
       ).then((newProduces) =>
         newProduces.filter(
-          (state): state is StateEntryProps => state !== undefined
+          (
+            state
+          ): state is { id: string; data: StateTree; selected: StatePath } =>
+            state !== undefined
         )
       ),
       type.kind !== "type_tag"
@@ -387,7 +420,7 @@ export const StatefulReactionPicker = ({
           reversible,
           set: csSets,
         };
-        onChange(newChoices, ids);
+        onChange(newChoices);
         if (
           (type.kind !== "type_tag" &&
             !arrayEquality(newSelectedTags, selection.type_tags)) ||
@@ -397,7 +430,7 @@ export const StatefulReactionPicker = ({
             !arrayEquality([...newSelectedCSSets], [...selection.set]))
         ) {
           if (type.kind === "state") {
-            if (type.side === "lhs") {
+            if (type.side === "lhs" && type.value) {
               fetchStateTreeForSelection(
                 StateProcess.Consumed,
                 newLhsSelected.filter((_, i) => i !== type.index),
@@ -406,15 +439,12 @@ export const StatefulReactionPicker = ({
                 newSelectedReversible,
                 newSelectedCSSets
               ).then((tree) =>
-                onChange(
-                  {
-                    ...newChoices,
-                    consumes: newChoices.consumes.map((data, i) =>
-                      type.index === i ? tree : data
-                    ),
-                  },
-                  ids
-                )
+                onChange({
+                  ...newChoices,
+                  consumes: newChoices.consumes.map((data, i) =>
+                    type.index === i ? tree : data
+                  ),
+                })
               );
             } else {
               fetchStateTreeForSelection(
@@ -425,15 +455,12 @@ export const StatefulReactionPicker = ({
                 newSelectedReversible,
                 newSelectedCSSets
               ).then((tree) =>
-                onChange(
-                  {
-                    ...newChoices,
-                    produces: newChoices.produces.map((data, i) =>
-                      type.index === i ? tree : data
-                    ),
-                  },
-                  ids
-                )
+                onChange({
+                  ...newChoices,
+                  produces: newChoices.produces.map((data, i) =>
+                    type.index === i ? tree : data
+                  ),
+                })
               );
             }
           } else if (type.kind === "type_tag") {
@@ -442,30 +469,28 @@ export const StatefulReactionPicker = ({
               newRhsSelected,
               newSelectedReversible,
               newSelectedCSSets
-            ).then((typeTags) => onChange({ ...newChoices, typeTags }, ids));
+            ).then((typeTags) => onChange({ ...newChoices, typeTags }));
           } else if (type.kind === "reversible") {
             fetchReversible(
               newLhsSelected,
               newRhsSelected,
               newSelectedTags,
               newSelectedCSSets
-            ).then((reversible) =>
-              onChange({ ...newChoices, reversible }, ids)
-            );
+            ).then((reversible) => onChange({ ...newChoices, reversible }));
           } else if (type.kind === "cs_set") {
             fetchCSSets(
               newLhsSelected,
               newRhsSelected,
               newSelectedTags,
               newSelectedReversible
-            ).then((csSets) => onChange({ ...newChoices, set: csSets }, ids));
+            ).then((csSets) => onChange({ ...newChoices, set: csSets }));
           }
         }
       }
     );
   };
 
-  const initData = async (side: "lhs" | "rhs") =>
+  const initTree = async (side: "lhs" | "rhs") =>
     fetchStateTreeForSelection(
       side === "lhs" ? StateProcess.Consumed : StateProcess.Produced,
       selection.consumes
@@ -488,14 +513,8 @@ export const StatefulReactionPicker = ({
           selected: selection.consumes[index],
         })),
         onAppend: async () => {
-          const data = await initData("lhs");
-          // lhsFieldArray.append({ data, selected: {} });
-          // TODO: Generate new id.
-          await onChange(
-            { ...choices, consumes: [...choices.consumes, data] },
-            { ...ids, consumes: [...ids.consumes, nanoid()] }
-          );
-          onConsumesChange([...selection.consumes, {}]);
+          const tree = await initTree("lhs");
+          return onConsumesAppend(tree);
         },
         onRemove: async (index) => {
           await update({ kind: "state", side: "lhs", index });
@@ -510,12 +529,8 @@ export const StatefulReactionPicker = ({
           selected: selection.produces[index],
         })),
         onAppend: async () => {
-          const data = await initData("rhs");
-          await onChange(
-            { ...choices, produces: [...choices.produces, data] },
-            { ...ids, produces: [...ids.produces, nanoid()] }
-          );
-          onProducesChange([...selection.produces, {}]);
+          const tree = await initTree("rhs");
+          return onProducesAppend(tree);
         },
         onRemove: async (index) =>
           update({ kind: "state", side: "rhs", index }),

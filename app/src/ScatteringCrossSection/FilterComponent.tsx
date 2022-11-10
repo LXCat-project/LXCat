@@ -17,6 +17,8 @@ import {
   StateSelectIds,
 } from "../shared/StatefulReactionPicker";
 
+// TODO: This is way too complex.
+
 export const FilterComponent = ({
   facets,
   selection,
@@ -55,18 +57,18 @@ export const FilterComponent = ({
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
+  const defaultReactionOptions = () => ({
+    consumes: [],
+    produces: [],
+    type_tags: [],
+    reversible: Reversible.Both,
+    set: [],
+  });
+
   function onReset() {
     onChange({
       // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
-      reactions: [
-        {
-          consumes: [],
-          produces: [],
-          type_tags: [],
-          reversible: Reversible.Both,
-          set: [],
-        },
-      ],
+      reactions: [defaultReactionOptions()],
     });
   }
 
@@ -133,6 +135,63 @@ export const FilterComponent = ({
                       )
                     )
                   }
+                  onConsumesAppend={(newChoices) =>
+                    setReactions((prevReactions) => {
+                      const test = prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              ids: {
+                                ...reaction.ids,
+                                consumes: [...reaction.ids.consumes, nanoid()],
+                              },
+                              options: {
+                                ...reaction.options,
+                                consumes: [...reaction.options.consumes, {}],
+                              },
+                              choices: {
+                                ...reaction.choices,
+                                consumes: [
+                                  ...reaction.choices.consumes,
+                                  newChoices,
+                                ],
+                              },
+                            }
+                          : reaction
+                      );
+                      console.log(test);
+                      return test;
+                    })
+                  }
+                  onConsumesRemove={(indexToRemove) =>
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              ids: {
+                                ...reaction.ids,
+                                consumes: reaction.ids.consumes.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
+                              },
+                              options: {
+                                ...reaction.options,
+                                consumes: reaction.options.consumes.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
+                              },
+                              choices: {
+                                ...reaction.choices,
+                                consumes: reaction.choices.consumes.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
+                              },
+                            }
+                          : reaction
+                      )
+                    )
+                  }
                   onProducesChange={(selectedProduced) =>
                     setReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
@@ -142,6 +201,61 @@ export const FilterComponent = ({
                               options: {
                                 ...reaction.options,
                                 produces: selectedProduced,
+                              },
+                            }
+                          : reaction
+                      )
+                    )
+                  }
+                  onProducesAppend={(newChoices) =>
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              ids: {
+                                ...reaction.ids,
+                                produces: [...reaction.ids.produces, nanoid()],
+                              },
+                              options: {
+                                ...reaction.options,
+                                produces: [...reaction.options.produces, {}],
+                              },
+                              choices: {
+                                ...reaction.choices,
+                                produces: [
+                                  ...reaction.choices.produces,
+                                  newChoices,
+                                ],
+                              },
+                            }
+                          : reaction
+                      )
+                    )
+                  }
+                  onProducesRemove={(indexToRemove) =>
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              ids: {
+                                ...reaction.ids,
+                                produces: reaction.ids.produces.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
+                              },
+                              options: {
+                                ...reaction.options,
+                                produces: reaction.options.produces.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
+                              },
+                              choices: {
+                                ...reaction.choices,
+                                produces: reaction.choices.produces.filter(
+                                  (_, j) => indexToRemove !== j
+                                ),
                               },
                             }
                           : reaction
@@ -178,14 +292,13 @@ export const FilterComponent = ({
                       )
                     )
                   }
-                  onChange={function (newChoices, newIds) {
+                  onChange={function (newChoices) {
                     setReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
                               ...reaction,
                               choices: newChoices,
-                              ids: newIds,
                             }
                           : reaction
                       )
@@ -250,7 +363,6 @@ export const FilterComponent = ({
             <Button
               title="Add reaction filter"
               onClick={async () => {
-                // TODO: initialize choices if undefined.
                 const choices = {
                   consumes: [],
                   produces: [],
@@ -268,13 +380,7 @@ export const FilterComponent = ({
                   {
                     id: nanoid(),
                     choices,
-                    options: {
-                      consumes: [],
-                      produces: [],
-                      reversible: Reversible.Both,
-                      type_tags: [],
-                      set: [],
-                    },
+                    options: defaultReactionOptions(),
                     ids: { consumes: [], produces: [] },
                   },
                 ]);
