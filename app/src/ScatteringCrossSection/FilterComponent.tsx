@@ -9,7 +9,6 @@ import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
 import {
   fetchCSSets,
   fetchReversible,
@@ -17,14 +16,6 @@ import {
   StatefulReactionPicker,
   StateSelectIds,
 } from "../shared/StatefulReactionPicker";
-
-interface FilterForm {
-  reactions: Array<{
-    choices: ReactionChoices;
-    options: ReactionOptions;
-    ids: StateSelectIds;
-  }>;
-}
 
 export const FilterComponent = ({
   facets,
@@ -35,24 +26,24 @@ export const FilterComponent = ({
   selection: SearchOptions;
   onChange: (selection: SearchOptions, event?: string) => void;
 }) => {
-  const { control } = useForm<FilterForm>({
-    defaultValues: {
-      reactions: facets.reactions.map((choices, index) => ({
-        choices,
-        options: selection.reactions[index],
-        ids: {
-          consumes: choices.consumes.map(() => nanoid()),
-          produces: choices.produces.map(() => nanoid()),
-        }
-      })),
-    },
-  });
-  const {
-    fields: reactions,
-    remove,
-    append,
-    update,
-  } = useFieldArray({ name: "reactions", control });
+  const [reactions, setReactions] = useState<
+    Array<{
+      id: string;
+      choices: ReactionChoices;
+      options: ReactionOptions;
+      ids: StateSelectIds;
+    }>
+  >(
+    facets.reactions.map((choices, index) => ({
+      id: nanoid(),
+      choices,
+      options: selection.reactions[index],
+      ids: {
+        consumes: choices.consumes.map(() => nanoid()),
+        produces: choices.produces.map(() => nanoid()),
+      },
+    }))
+  );
 
   useEffect(() => {
     onReactionsChange(reactions.map((reaction) => reaction.options));
@@ -113,46 +104,92 @@ export const FilterComponent = ({
                   choices={r.choices}
                   selection={r.options}
                   onTagsChange={(selectedTags) =>
-                    update(i, {
-                      choices: r.choices,
-                      options: { ...r.options, type_tags: selectedTags },
-                      ids: r.ids,
-                    })
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              options: {
+                                ...reaction.options,
+                                type_tags: selectedTags,
+                              },
+                            }
+                          : reaction
+                      )
+                    )
                   }
                   onConsumesChange={(selectedConsumed) =>
-                    update(i, {
-                      choices: r.choices,
-                      options: { ...r.options, consumes: selectedConsumed },
-                      ids: r.ids,
-                    })
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              options: {
+                                ...reaction.options,
+                                consumes: selectedConsumed,
+                              },
+                            }
+                          : reaction
+                      )
+                    )
                   }
                   onProducesChange={(selectedProduced) =>
-                    update(i, {
-                      choices: r.choices,
-                      options: { ...r.options, produces: selectedProduced },
-                      ids: r.ids,
-                    })
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              options: {
+                                ...reaction.options,
+                                produces: selectedProduced,
+                              },
+                            }
+                          : reaction
+                      )
+                    )
                   }
                   onReversibleChange={(selectedReversible) =>
-                    update(i, {
-                      choices: r.choices,
-                      options: { ...r.options, reversible: selectedReversible },
-                      ids: r.ids,
-                    })
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              options: {
+                                ...reaction.options,
+                                reversible: selectedReversible,
+                              },
+                            }
+                          : reaction
+                      )
+                    )
                   }
                   onCSSetsChange={(selectedCSSets) =>
-                    update(i, {
-                      choices: r.choices,
-                      options: { ...r.options, set: [...selectedCSSets] },
-                      ids: r.ids,
-                    })
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              options: {
+                                ...reaction.options,
+                                set: [...selectedCSSets],
+                              },
+                            }
+                          : reaction
+                      )
+                    )
                   }
                   onChange={function (newChoices, newIds) {
-                    update(i, {
-                      choices: newChoices,
-                      options: r.options,
-                      ids: newIds,
-                    });
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
+                        index === i
+                          ? {
+                              ...reaction,
+                              choices: newChoices,
+                              ids: newIds,
+                            }
+                          : reaction
+                      )
+                    );
                   }}
                   editable={i == editableReaction}
                 />
@@ -162,14 +199,23 @@ export const FilterComponent = ({
                       <Button
                         variant="subtle"
                         title="Remove reaction"
-                        onClick={() => remove(i)}
+                        onClick={() =>
+                          setReactions((prevReactions) =>
+                            prevReactions.filter((_, j) => i !== j)
+                          )
+                        }
                       >
                         -
                       </Button>
                       <Button
                         variant="subtle"
                         title="Clone reaction"
-                        onClick={() => append(structuredClone(r))}
+                        onClick={() =>
+                          setReactions((prevReactions) => [
+                            ...prevReactions,
+                            { ...structuredClone(r), id: nanoid() },
+                          ])
+                        }
                       >
                         <IconCopy size={16} />
                       </Button>
@@ -204,26 +250,34 @@ export const FilterComponent = ({
             <Button
               title="Add reaction filter"
               onClick={async () => {
-
-                  // TODO: initialize choices if undefined.
+                // TODO: initialize choices if undefined.
                 const choices = {
                   consumes: [],
                   produces: [],
-                  typeTags: await fetchTypeTags([], [], Reversible.Both, new Set()),
+                  typeTags: await fetchTypeTags(
+                    [],
+                    [],
+                    Reversible.Both,
+                    new Set()
+                  ),
                   reversible: await fetchReversible([], [], [], new Set()),
                   set: await fetchCSSets([], [], [], Reversible.Both),
                 };
-                append({
-                  choices,
-                  options: {
-                    consumes: [],
-                    produces: [],
-                    reversible: Reversible.Both,
-                    type_tags: [],
-                    set: [],
+                setReactions((prevReactions) => [
+                  ...prevReactions,
+                  {
+                    id: nanoid(),
+                    choices,
+                    options: {
+                      consumes: [],
+                      produces: [],
+                      reversible: Reversible.Both,
+                      type_tags: [],
+                      set: [],
+                    },
+                    ids: { consumes: [], produces: [] },
                   },
-                  ids: { consumes: [], produces: [] },
-                });
+                ]);
                 setEditableReaction(reactions.length);
               }}
             >
