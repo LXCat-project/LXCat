@@ -212,6 +212,9 @@ export type StatefulReactionPickerProps = {
   onChange(newChoices: ReactionChoices): void | Promise<void>;
 };
 
+// TODO: Make new component that accepts selection and possibly choices for each
+// subcomponent. If choices are omitted, fetch them based on the selection.
+
 export const StatefulReactionPicker = ({
   ids,
   choices,
