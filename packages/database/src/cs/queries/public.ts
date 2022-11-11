@@ -130,10 +130,12 @@ async function reactionsChoices(
       .filter((d): d is StateLeaf => d !== undefined);
     reactionsChoices.push({
       consumes: await Promise.all(
-        consumes.map(async (_, i) => {
+        consumesPaths.map(async (_, i) => {
           const array: NestedStateArray[] = await getPartakingStateSelection(
             StateProcess.Consumed,
-            consumes.filter((_, i2) => i !== i2),
+            consumesPaths
+              .filter((path, i2) => i !== i2 && path.particle !== undefined)
+              .map(getStateLeaf) as Array<StateLeaf>,
             produces,
             type_tags,
             reversible,
@@ -143,11 +145,13 @@ async function reactionsChoices(
         })
       ),
       produces: await Promise.all(
-        consumes.map(async (_, i) => {
+        producesPaths.map(async (_, i) => {
           const array: NestedStateArray[] = await getPartakingStateSelection(
             StateProcess.Produced,
             consumes,
-            produces.filter((_, i2) => i !== i2),
+            producesPaths
+              .filter((path, i2) => i !== i2 && path.particle !== undefined)
+              .map(getStateLeaf) as Array<StateLeaf>,
             type_tags,
             reversible,
             set
@@ -188,8 +192,8 @@ export function defaultSearchOptions(): SearchOptions {
   return {
     reactions: [
       {
-        consumes: [],
-        produces: [],
+        consumes: [{}],
+        produces: [{}],
         type_tags: [],
         reversible: Reversible.Both,
         set: [],

@@ -4,14 +4,12 @@ import {
   byIds,
   Facets,
   getCSIdByReactionTemplate,
-  search,
   searchFacets,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
 import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
-import { useRouter } from "next/router";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { CallbackPaging } from "../../ScatteringCrossSection/CallbackPaging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
@@ -25,19 +23,19 @@ import {
 interface Props {
   items: CrossSectionHeading[];
   facets: Facets;
+  selection: SearchOptions;
   paging: PagingOptions;
 }
 
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
+  selection,
   paging,
 }) => {
-  const router = useRouter();
   const [items, setItems] = useState(initialItems);
   const [offset, setOffset] = useState(paging.offset);
 
-  const selection = query2options(router.query);
   const nrItems = items.length;
 
   let canonicalUrl = "/scat-cs";
@@ -82,7 +80,7 @@ export const getServerSideProps: GetServerSideProps<
   Props,
   Record<keyof SearchOptions, string[]>
 > = async (context) => {
-  const filter: SearchOptions = query2options(context.query);
+  const filter = query2options(context.query);
   const paging = {
     offset:
       context.query.offset && !Array.isArray(context.query.offset)
@@ -137,6 +135,7 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       items,
       facets,
+      selection: filter,
       paging,
     },
   };

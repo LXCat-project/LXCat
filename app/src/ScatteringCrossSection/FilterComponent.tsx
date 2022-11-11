@@ -4,6 +4,7 @@ import {
   ReactionOptions,
   Reversible,
   SearchOptions,
+  StateProcess,
 } from "@lxcat/database/dist/cs/queries/public";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
@@ -12,12 +13,11 @@ import { useEffect, useState } from "react";
 import {
   fetchCSSets,
   fetchReversible,
+  fetchStateTreeForSelection,
   fetchTypeTags,
   StatefulReactionPicker,
   StateSelectIds,
 } from "../shared/StatefulReactionPicker";
-
-// TODO: This is way too complex.
 
 export const FilterComponent = ({
   facets,
@@ -58,8 +58,8 @@ export const FilterComponent = ({
   );
 
   const defaultReactionOptions = () => ({
-    consumes: [],
-    produces: [],
+    consumes: [{}],
+    produces: [{}],
     type_tags: [],
     reversible: Reversible.Both,
     set: [],
@@ -364,8 +364,26 @@ export const FilterComponent = ({
               title="Add reaction filter"
               onClick={async () => {
                 const choices = {
-                  consumes: [],
-                  produces: [],
+                  consumes: [
+                    await fetchStateTreeForSelection(
+                      StateProcess.Consumed,
+                      [],
+                      [],
+                      [],
+                      Reversible.Both,
+                      new Set()
+                    ),
+                  ],
+                  produces: [
+                    await fetchStateTreeForSelection(
+                      StateProcess.Produced,
+                      [],
+                      [],
+                      [],
+                      Reversible.Both,
+                      new Set()
+                    ),
+                  ],
                   typeTags: await fetchTypeTags(
                     [],
                     [],
@@ -381,7 +399,7 @@ export const FilterComponent = ({
                     id: nanoid(),
                     choices,
                     options: defaultReactionOptions(),
-                    ids: { consumes: [], produces: [] },
+                    ids: { consumes: [nanoid()], produces: [nanoid()] },
                   },
                 ]);
                 setEditableReaction(reactions.length);

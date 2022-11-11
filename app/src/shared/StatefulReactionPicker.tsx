@@ -49,7 +49,7 @@ type UpdateType =
 const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
   entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
 
-const fetchStateTreeForSelection = async (
+export const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
