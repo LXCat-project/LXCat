@@ -19,6 +19,38 @@ import {
   StateSelectIds,
 } from "../shared/StatefulReactionPicker";
 
+// TODO: Memoize this call.
+async function defaultReactionChoices() {
+  const [consumes, produces, typeTags, reversible, set] = await Promise.all([
+    fetchStateTreeForSelection(
+      StateProcess.Consumed,
+      [],
+      [],
+      [],
+      Reversible.Both,
+      new Set()
+    ),
+    fetchStateTreeForSelection(
+      StateProcess.Produced,
+      [],
+      [],
+      [],
+      Reversible.Both,
+      new Set()
+    ),
+    fetchTypeTags([], [], Reversible.Both, new Set()),
+    fetchReversible([], [], [], new Set()),
+    fetchCSSets([], [], [], Reversible.Both),
+  ]);
+  return {
+    consumes: [consumes],
+    produces: [produces],
+    typeTags,
+    reversible,
+    set,
+  } as ReactionChoices;
+}
+
 export const FilterComponent = ({
   facets,
   selection,
@@ -57,6 +89,7 @@ export const FilterComponent = ({
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
+  // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
   const defaultReactionOptions = () => ({
     consumes: [{}],
     produces: [{}],
@@ -65,16 +98,25 @@ export const FilterComponent = ({
     set: [],
   });
 
-  function onReset() {
-    // TODO: Reset reaction state.
-    onChange({
-      // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
-      reactions: [defaultReactionOptions()],
-    });
+  async function onReset() {
+    const choices = await defaultReactionChoices();
+    setReactions((_) => [
+      {
+        id: nanoid(),
+        choices,
+        options: defaultReactionOptions(),
+        ids: { consumes: [nanoid()], produces: [nanoid()] },
+      },
+    ]);
+    onChange(
+      {
+        reactions: [defaultReactionOptions()],
+      },
+      "reactions"
+    );
   }
 
   function onReactionsChange(newReactions: SearchOptions["reactions"]) {
-    console.log(JSON.stringify(newReactions, undefined, 2));
     onChange(
       {
         ...selection,
@@ -160,7 +202,6 @@ export const FilterComponent = ({
                             }
                           : reaction
                       );
-                      console.log(test);
                       return test;
                     })
                   }
@@ -364,36 +405,7 @@ export const FilterComponent = ({
             <Button
               title="Add reaction filter"
               onClick={async () => {
-                const choices = {
-                  consumes: [
-                    await fetchStateTreeForSelection(
-                      StateProcess.Consumed,
-                      [],
-                      [],
-                      [],
-                      Reversible.Both,
-                      new Set()
-                    ),
-                  ],
-                  produces: [
-                    await fetchStateTreeForSelection(
-                      StateProcess.Produced,
-                      [],
-                      [],
-                      [],
-                      Reversible.Both,
-                      new Set()
-                    ),
-                  ],
-                  typeTags: await fetchTypeTags(
-                    [],
-                    [],
-                    Reversible.Both,
-                    new Set()
-                  ),
-                  reversible: await fetchReversible([], [], [], new Set()),
-                  set: await fetchCSSets([], [], [], Reversible.Both),
-                };
+                const choices = await defaultReactionChoices();
                 setReactions((prevReactions) => [
                   ...prevReactions,
                   {
