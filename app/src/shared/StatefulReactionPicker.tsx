@@ -18,11 +18,6 @@ import { Latex } from "./Latex";
 import { ReactionPicker } from "./ReactionPicker";
 import { arrayEquality } from "./utils";
 
-interface StateEntryProps {
-  data: StateTree;
-  selected: StatePath;
-}
-
 interface StateSelectUpdate {
   kind: "state";
   side: "lhs" | "rhs";
@@ -51,10 +46,8 @@ type UpdateType =
   | TypeTagUpdate
   | ReversibleUpdate;
 
-const getSelectedStates = (entries: Array<StatePath>): Array<StateLeaf> =>
-  entries
-    .map((selected) => getStateLeaf(selected))
-    .filter((id): id is StateLeaf => id !== undefined);
+const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
+  entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
 
 const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
@@ -214,6 +207,7 @@ export type StatefulReactionPickerProps = {
 
 // TODO: Make new component that accepts selection and possibly choices for each
 // subcomponent. If choices are omitted, fetch them based on the selection.
+//  -> This requires Nextjs 13 and the React 18 (use + fetch) to do properly.
 
 export const StatefulReactionPicker = ({
   ids,
@@ -234,22 +228,21 @@ export const StatefulReactionPicker = ({
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
 
   const update = async (type: UpdateType) => {
-    const newLhsPaths = selection.consumes.map((selected, index) =>
-      type.kind === "state" && type.side === "lhs" && type.index === index
-        ? type.value ?? {}
-        : selected
-    );
-    const newLhsSelected = newLhsPaths
-      .map(getStateLeaf)
-      .filter((selected): selected is StateLeaf => selected !== undefined);
+    const newLhsPaths = selection.consumes
+      .map((selected, index) =>
+        type.kind === "state" && type.side === "lhs" && type.index === index
+          ? type.value
+          : selected
+      )
+      .filter((path): path is StatePath => path !== undefined);
+    const newLhsSelected = getStateLeafs(newLhsPaths);
+
     const newRhsPaths = selection.produces.map((selected, index) =>
       type.kind === "state" && type.side === "rhs" && type.index === index
         ? type.value ?? {}
         : selected
     );
-    const newRhsSelected = newRhsPaths
-      .map(getStateLeaf)
-      .filter((selected): selected is StateLeaf => selected !== undefined);
+    const newRhsSelected = getStateLeafs(newRhsPaths);
 
     const newSelectedReversible =
       type.kind === "reversible" ? type.value : selection.reversible;
@@ -283,6 +276,15 @@ export const StatefulReactionPicker = ({
         ? choices.produces.filter((_, i) => i !== type.index)
         : choices.produces;
 
+    const consumesIds =
+      type.kind === "state" && type.side === "lhs" && !type.value
+        ? ids.consumes.filter((_, i) => i !== type.index)
+        : ids.consumes;
+    const producesIds =
+      type.kind === "state" && type.side === "rhs" && !type.value
+        ? ids.produces.filter((_, i) => i !== type.index)
+        : ids.produces;
+
     Promise.all([
       Promise.all(
         consumesChoices.map(async (data, index) => {
@@ -292,10 +294,15 @@ export const StatefulReactionPicker = ({
             type.index === index &&
             type.value
           ) {
-            return { id: ids.consumes[index], data, selected: type.value };
+            return { id: consumesIds[index], data, selected: type.value };
           }
 
-          const consumed = newLhsSelected.filter((_, i) => i !== index);
+          const consumed = newLhsPaths
+            .filter(
+              (path, i): path is StatePath =>
+                i !== index && path.particle !== undefined
+            )
+            .map(getStateLeaf) as Array<StateLeaf>;
           const produced = newRhsSelected;
 
           const tree = await fetchStateTreeForSelection(
@@ -308,9 +315,9 @@ export const StatefulReactionPicker = ({
           );
 
           return {
-            id: ids.consumes[index],
+            id: consumesIds[index],
             data: tree,
-            selected: selection.consumes[index],
+            selected: newLhsPaths[index],
           };
         })
       ).then((newConsumes) =>
@@ -329,12 +336,17 @@ export const StatefulReactionPicker = ({
             type.index === index &&
             type.value
           ) {
-            return { id: ids.produces[index], data, selected: type.value };
+            return { id: producesIds[index], data, selected: type.value };
           }
 
           // Get selected states based on other boxes.
           const consumed = newLhsSelected;
-          const produced = newRhsSelected.filter((_, i) => i !== index);
+          const produced = newRhsPaths
+            .filter(
+              (path, i): path is StatePath =>
+                i !== index && path.particle !== undefined
+            )
+            .map(getStateLeaf) as Array<StateLeaf>;
 
           const tree = await fetchStateTreeForSelection(
             StateProcess.Produced,
@@ -346,9 +358,9 @@ export const StatefulReactionPicker = ({
           );
 
           return {
-            id: ids.produces[index],
+            id: producesIds[index],
             data: tree,
-            selected: selection.produces[index],
+            selected: newRhsPaths[index],
           };
         })
       ).then((newProduces) =>
