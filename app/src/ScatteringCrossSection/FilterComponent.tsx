@@ -66,6 +66,7 @@ export const FilterComponent = ({
   });
 
   function onReset() {
+    // TODO: Reset reaction state.
     onChange({
       // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
       reactions: [defaultReactionOptions()],
