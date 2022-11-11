@@ -13,7 +13,7 @@ export function ListItem(props: CrossSectionHeading) {
   if (props.isPartOf.length === 1) {
     partOf = <div>Part of &quot;{props.isPartOf[0]}&quot; set</div>;
   } else if (props.isPartOf.length > 1) {
-    const quotedNames = props.isPartOf.map((n) => `&quot;{n}&quot;`).join(", ");
+    const quotedNames = props.isPartOf.map((n) => `&quot;${n}&quot;`).join(", ");
     partOf = <div>Part of {quotedNames} sets</div>;
   }
   return (

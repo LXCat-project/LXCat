@@ -248,7 +248,10 @@ export async function byIds(csIds: Array<string>, paging: PagingOptions) {
 		  )
 		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
 	  )
-	  LET setNames = [] // TODO implement
+	  LET setNames = (
+            FOR css IN OUTBOUND cs IsPartOf
+	      RETURN css.name
+	  )
 	  ${limitAql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
