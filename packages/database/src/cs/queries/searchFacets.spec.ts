@@ -5,459 +5,424 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { Facets, search, searchFacets, SearchOptions } from "./public";
-import { StateChoices } from "../../shared/queries/state";
+import {
+  defaultSearchOptions,
+  Facets,
+  getCSIdByReactionTemplate,
+  ReactionChoices,
+  ReactionOptions,
+  search,
+  searchFacets,
+  SearchOptions,
+} from "./public";
+import { StateChoices, StateSummary } from "../../shared/queries/state";
 import { CrossSectionHeading } from "../public";
+import { NestedState, removeIdsFromTree } from "./testutils";
+import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
 
 beforeAll(startDbWithUserAndCssCollections);
 
-const emptySelection: Readonly<SearchOptions> = {
-  set_name: [],
-  tag: [],
-  species1: { particle: {} },
-  species2: { particle: {} },
-};
+const emptySelection: Readonly<SearchOptions> = defaultSearchOptions();
+
+const getCSIdsFromTemplate = async (selection: ReactionOptions) =>
+  getCSIdByReactionTemplate(
+    selection.consumes
+      .map(getStateLeaf)
+      .filter((leaf): leaf is StateLeaf => leaf !== undefined),
+    selection.produces
+      .map(getStateLeaf)
+      .filter((leaf): leaf is StateLeaf => leaf !== undefined),
+    selection.type_tags,
+    selection.reversible,
+    selection.set
+  );
 
 describe("searchFacets()", () => {
-  describe("given cross sections which consume e+H2, e+N2, Ar++Ar", () => {
+  describe("given cross sections which consume e+H2, e+N2, e+Ar, and e+H2", () => {
+    let allChoices: ReactionChoices;
+
     beforeAll(async () => {
       await sampleSets4Search();
+
+      allChoices = (await searchFacets(emptySelection)).reactions[0]!;
 
       return truncateCrossSectionSetCollections;
     });
 
     describe("without selection", () => {
-      let facets: Facets;
-      beforeAll(async () => {
-        facets = await searchFacets(emptySelection);
-      });
-
-      it("should have e and Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            e: {
-              charge: {
-                "-1": {
-                  electronic: {},
-                },
+      it("should consume e, Ar, H2, and N2", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{H2}", valid: true },
+          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{Ar}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+          {
+            children: [
+              {
+                children: [],
+                latex: "{}^{1}\\mathrm{S}_{0}",
+                valid: true,
               },
-            },
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
+            ],
+            latex: "\\mathrm{He}",
+            valid: false,
           },
-        };
-        expect(facets.species1).toEqual(expected);
+        ];
+        expect(allChoices.consumes.flatMap(removeIdsFromTree)).toEqual(
+          expected
+        );
       });
 
-      it("should have N2, H2, Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            H2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
+      it("should produce e, Ar^+, H2, and N2", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{H2}", valid: true },
+          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{Ar^+}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+          {
+            children: [
+              {
+                children: [],
+                latex: "*",
+                valid: true,
               },
-            },
-            N2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
+            ],
+            latex: "\\mathrm{He}",
+            valid: false,
           },
-        };
-        expect(facets.species2).toEqual(expected);
+        ];
+        expect(allChoices.produces.flatMap(removeIdsFromTree)).toEqual(
+          expected
+        );
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
-        expect(facets.tag).toEqual(expected);
+      it("should have Effective, Ionization, and Electronic reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Ionization,
+          ReactionTypeTag.Electronic,
+        ];
+        expect(allChoices.typeTags).toEqual(expected);
       });
 
-      it("should have 3 set names", () => {
-        const expected = ["Ar set", "H2 set", "N2 set"];
-        expect(facets.set_name).toEqual(expected);
+      it("should have 4 set names", () => {
+        const expected = ["H2 set", "Ar set", "He set", "N2 set"];
+        expect(
+          Object.values(allChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
       });
     });
 
-    describe("with species2=N2 selected", () => {
-      let facets: Facets;
+    describe("consuming N2", () => {
+      let reactionChoices: ReactionChoices;
+      let searchResults: Array<string>;
+
       beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          species2: {
-            particle: {
-              N2: {
-                charge: {},
-              },
-            },
-          },
-        };
-        facets = await searchFacets(selection);
+        let selection = emptySelection;
+
+        const [particle, _] = allChoices.consumes
+          .flatMap(Object.entries)
+          .find(([_, particle]) => particle.latex === "\\mathrm{N2}")!;
+        selection.reactions[0].consumes = [{ particle }, {}];
+
+        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
       });
 
-      it("should have e for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            e: {
-              charge: {
-                "-1": {
-                  electronic: {},
-                },
+      it("first select has all consumable states", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{H2}", valid: true },
+          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{Ar}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+          {
+            children: [
+              {
+                children: [],
+                latex: "{}^{1}\\mathrm{S}_{0}",
+                valid: true,
               },
-            },
+            ],
+            latex: "\\mathrm{He}",
+            valid: false,
           },
-        };
-        expect(facets.species1).toEqual(expected);
+        ];
+        expect(removeIdsFromTree(reactionChoices.consumes[0])).toEqual(
+          expected
+        );
       });
 
-      it("should have N2, H2, Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            H2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-            N2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species2).toEqual(expected);
+      it("second select can just consume e", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(removeIdsFromTree(reactionChoices.consumes[1])).toEqual(
+          expected
+        );
+      });
+
+      it("can produce e and N2", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(removeIdsFromTree(reactionChoices.produces[0])).toEqual(
+          expected
+        );
       });
 
       it("should have Effective reaction type tag", () => {
-        const expected = ["Effective"];
-        expect(facets.tag).toEqual(expected);
+        const expected = [ReactionTypeTag.Effective];
+        expect(reactionChoices.typeTags).toEqual(expected);
       });
 
       it("should have N2 set name", () => {
         const expected = ["N2 set"];
-        expect(facets.set_name).toEqual(expected);
+        expect(
+          Object.values(reactionChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
+      });
+
+      it("should result in a single cross section", () => {
+        expect(searchResults).toHaveLength(1);
       });
     });
 
-    describe("with species1=Arp selected", () => {
-      let facets: Facets;
+    describe("producing Ar^+", () => {
+      let reactionChoices: ReactionChoices;
+      let searchResults: Array<string>;
+
       beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          species1: {
-            particle: {
-              Ar: {
-                charge: {},
-              },
-            },
-          },
-        };
-        facets = await searchFacets(selection);
+        let selection = emptySelection;
+
+        const [particle, _] = allChoices.produces
+          .flatMap(Object.entries)
+          .find(([_, particle]) => particle.latex === "\\mathrm{Ar^+}")!;
+        selection.reactions[0].produces = [{ particle }, {}];
+
+        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
       });
 
-      it("should have e and Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            e: {
-              charge: {
-                "-1": {
-                  electronic: {},
-                },
-              },
-            },
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species1).toEqual(expected);
+      it("can consume e and Ar", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{Ar}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(removeIdsFromTree(reactionChoices.consumes[0])).toEqual(
+          expected
+        );
       });
 
-      it("should have Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
+      it("first select has all producable states", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{H2}", valid: true },
+          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{Ar^+}", valid: true },
+          { children: [], latex: "\\mathrm{e}", valid: true },
+          {
+            children: [{ children: [], latex: "*", valid: true }],
+            latex: "\\mathrm{He}",
+            valid: false,
           },
-        };
-        expect(facets.species2).toEqual(expected);
+        ];
+        expect(removeIdsFromTree(reactionChoices.produces[0])).toEqual(
+          expected
+        );
+      });
+
+      it("second select can just produce e", () => {
+        const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(removeIdsFromTree(reactionChoices.produces[1])).toEqual(
+          expected
+        );
       });
 
       it("should have Ionization reaction type tag", () => {
-        const expected = ["Ionization"];
-        expect(facets.tag).toEqual(expected);
+        const expected = [ReactionTypeTag.Ionization];
+        expect(reactionChoices.typeTags).toEqual(expected);
       });
 
       it("should have Ar set name", () => {
         const expected = ["Ar set"];
-        expect(facets.set_name).toEqual(expected);
+        expect(
+          Object.values(reactionChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
+      });
+
+      it("should result in a single cross section", () => {
+        expect(searchResults.length).toEqual(1);
       });
     });
 
     describe("with tag=Ionization", () => {
-      let facets: Facets;
+      let reactionChoices: ReactionChoices;
+      let searchResults: Array<string>;
+
       beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          tag: [ReactionTypeTag.Ionization],
-        };
-        facets = await searchFacets(selection);
+        let selection = emptySelection;
+        selection.reactions[0].type_tags = [ReactionTypeTag.Ionization];
+        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
       });
 
-      it("should have Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species1).toEqual(expected);
+      it("should consume e and Ar", () => {
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{Ar}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
-      it("should have Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species2).toEqual(expected);
+      it("should produce e and Ar^+", () => {
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
       it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
-        expect(facets.tag).toEqual(expected);
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Ionization,
+          ReactionTypeTag.Electronic,
+        ];
+        expect(reactionChoices.typeTags).toEqual(expected);
       });
 
       it("should have Ar set name", () => {
         const expected = ["Ar set"];
-        expect(facets.set_name).toEqual(expected);
+        expect(
+          Object.values(reactionChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
+      });
+
+      it("should have a single cross section in search results", () => {
+        expect(searchResults).toHaveLength(1);
       });
     });
 
-    describe("with set=N2 selected", () => {
-      let facets: Facets;
+    describe("with set=Ar selected", () => {
+      let reactionChoices: ReactionChoices;
       beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          set_name: ["Ar set"],
-        };
-        facets = await searchFacets(selection);
+        let selection = emptySelection;
+
+        const [setId, _] = Object.values(allChoices.set)
+          .flatMap((org) => Object.entries(org.sets))
+          .find(([_, name]) => name === "Ar set")!;
+
+        selection.reactions[0].set = [setId];
+        reactionChoices = (await searchFacets(selection)).reactions[0]!;
       });
 
-      it("should have Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species1).toEqual(expected);
+      it("should consume e and Ar", () => {
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{Ar}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
       it("should have Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species2).toEqual(expected);
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
       it("should have Ionization reaction type tag", () => {
-        const expected = ["Ionization"];
-        expect(facets.tag).toEqual(expected);
+        const expected = [ReactionTypeTag.Ionization];
+        expect(reactionChoices.typeTags).toEqual(expected);
       });
 
-      it("should have 3 set names", () => {
-        const expected = ["Ar set", "H2 set", "N2 set"];
-        expect(facets.set_name).toEqual(expected);
+      it("should have 4 set names", () => {
+        const expected = ["H2 set", "Ar set", "He set", "N2 set"];
+        expect(
+          Object.values(reactionChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
       });
     });
 
     describe("with tag=Ionization or Effective", () => {
-      let facets: Facets;
+      let reactionChoices: ReactionChoices;
       let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          tag: [ReactionTypeTag.Effective, ReactionTypeTag.Ionization],
-        };
-        facets = await searchFacets(selection);
+        let selection = emptySelection;
+        selection.reactions[0].type_tags = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Ionization,
+        ];
+        reactionChoices = (await searchFacets(selection)).reactions[0]!;
         searchResults = await search(selection, { count: 100, offset: 0 });
       });
 
-      it("should have e and Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            e: {
-              charge: {
-                "-1": {
-                  electronic: {},
-                },
-              },
-            },
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species1).toEqual(expected);
+      it("should consume e, Ar, H2, and N2", () => {
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{H2}", valid: true },
+          { children: {}, latex: "\\mathrm{N2}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
-      it("should have N2, H2, Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            H2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-            N2: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species2).toEqual(expected);
+      it("should produce e, Ar^+, H2, N2", () => {
+        const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{H2}", valid: true },
+          { children: {}, latex: "\\mathrm{N2}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
+          { children: {}, latex: "\\mathrm{e}", valid: true },
+        ];
+        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+          expected
+        );
       });
 
       it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
-        expect(facets.tag).toEqual(expected);
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Ionization,
+          ReactionTypeTag.Electronic,
+        ];
+        expect(reactionChoices.typeTags).toEqual(expected);
       });
 
       it("should have 3 set names", () => {
-        const expected = ["Ar set", "H2 set", "N2 set"];
-        expect(facets.set_name).toEqual(expected);
+        const expected = ["H2 set", "Ar set", "N2 set"];
+        expect(
+          Object.values(reactionChoices.set).flatMap((org) =>
+            Object.values(org.sets)
+          )
+        ).toEqual(expected);
       });
 
       it("should have all 3 cross sections in search() results", () => {
-        expect(searchResults.length).toEqual(3);
-      });
-    });
-
-    describe("with set=N2 selected", () => {
-      let facets: Facets;
-      beforeAll(async () => {
-        const selection: SearchOptions = {
-          ...emptySelection,
-          set_name: ["Ar set"],
-        };
-        facets = await searchFacets(selection);
-      });
-
-      it("should have Arp for species1", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                1: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species1).toEqual(expected);
-      });
-
-      it("should have Ar for species2", () => {
-        const expected: StateChoices = {
-          particle: {
-            Ar: {
-              charge: {
-                0: {
-                  electronic: {},
-                },
-              },
-            },
-          },
-        };
-        expect(facets.species2).toEqual(expected);
-      });
-
-      it("should have Ionization reaction type tag", () => {
-        const expected = ["Ionization"];
-        expect(facets.tag).toEqual(expected);
-      });
-
-      it("should have 3 set names", () => {
-        const expected = ["Ar set", "H2 set", "N2 set"];
-        expect(facets.set_name).toEqual(expected);
+        expect(searchResults.length).toEqual(4);
       });
     });
   });

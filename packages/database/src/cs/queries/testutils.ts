@@ -11,6 +11,7 @@ import { Status } from "../../shared/types/version_info";
 import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { InState } from "@lxcat/schema/dist/core/state";
+import { StateTree } from "../../shared/queries/state";
 
 export async function createSampleCrossSection(
   state_ids: Dict<string>,
@@ -29,6 +30,19 @@ export async function createSampleCrossSection(
     __return: truncateCrossSectionCollections,
     keycs1,
   };
+}
+
+export interface NestedState {
+  latex: string;
+  valid: boolean;
+  children: Array<NestedState>;
+}
+
+export function removeIdsFromTree(tree: StateTree): Array<NestedState> {
+  return Object.values(tree).map((summary) => ({
+    ...summary,
+    children: summary.children ? removeIdsFromTree(summary.children) : [],
+  }));
 }
 
 export function sampleCrossSection(): CrossSection<string, string, LUT> {

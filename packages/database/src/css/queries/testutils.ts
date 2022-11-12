@@ -1,7 +1,10 @@
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
+import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
+import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { State } from "@lxcat/schema/dist/core/state";
+import { Dict, XOR } from "@lxcat/schema/dist/core/util";
 
 import { toggleRole } from "../../auth/queries";
 import {
@@ -138,31 +141,106 @@ export const sampleSets4Search = async () => {
       particle: "Ar",
       charge: 0,
     },
+    "He{1S0}": {
+      particle: "He",
+      charge: 0,
+      type: "AtomLS",
+      electronic: [
+        {
+          config: [],
+          scheme: CouplingScheme.LS,
+          term: { L: 0, S: 0, J: 0, P: 1 },
+        },
+      ],
+    },
+    "He{*}": {
+      particle: "He",
+      charge: 0,
+      type: "AtomLS",
+      electronic: [{ e: "*" }],
+    },
   };
   await createSet(
     setFrom(
       "H2 set",
-      states.e,
-      states.H2,
-      [ReactionTypeTag.Effective],
+      { e: states.e, H2: states.H2 },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          type_tags: [ReactionTypeTag.Effective],
+          reversible: false,
+        },
+      ],
       "Some organization"
     )
   );
   await createSet(
     setFrom(
       "N2 set",
-      states.e,
-      states.N2,
-      [ReactionTypeTag.Effective],
+      { e: states.e, N2: states.N2 },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "N2" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "N2" },
+          ],
+          type_tags: [ReactionTypeTag.Effective],
+          reversible: false,
+        },
+      ],
       "Some other organization"
     )
   );
   await createSet(
     setFrom(
       "Ar set",
-      states.Arp,
-      states.Ar,
-      [ReactionTypeTag.Ionization],
+      { e: states.e, Ar: states.Ar, Arp: states.Arp },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "Ar" },
+          ],
+          rhs: [
+            { count: 2, state: "e" },
+            { count: 1, state: "Arp" },
+          ],
+          type_tags: [ReactionTypeTag.Ionization],
+          reversible: false,
+        },
+      ],
+      "Some organization"
+    )
+  );
+  await createSet(
+    setFrom(
+      "He set",
+      { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "He{1S0}" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "He{*}" },
+          ],
+          type_tags: [ReactionTypeTag.Electronic],
+          reversible: false,
+        },
+      ],
       "Some organization"
     )
   );
@@ -176,7 +254,7 @@ export const sampleSets4Search = async () => {
  * 1. archived = CO2
  */
 export const sampleSets4SearchWithVersions = async () => {
-  const states = {
+  const states: Dict<State<XOR<AnyAtom, AnyMolecule>>> = {
     e: {
       particle: "e",
       charge: -1,
@@ -197,17 +275,43 @@ export const sampleSets4SearchWithVersions = async () => {
       particle: "Ar",
       charge: 0,
     },
-    CO2: {
-      particle: "CO2",
+    "He{1S0}": {
+      particle: "He",
       charge: 0,
+      type: "AtomLS",
+      electronic: [
+        {
+          config: [],
+          scheme: CouplingScheme.LS,
+          term: { L: 0, S: 0, J: 0, P: 1 },
+        },
+      ],
+    },
+    "He{*}": {
+      particle: "He",
+      charge: 0,
+      type: "AtomLS",
+      electronic: [{ e: "*" }],
     },
   };
   await createSet(
     setFrom(
       "H2 set",
-      states.e,
-      states.H2,
-      [ReactionTypeTag.Effective],
+      { e: states.e, H2: states.H2 },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          type_tags: [ReactionTypeTag.Effective],
+          reversible: false,
+        },
+      ],
       "Some published organization"
     ),
     "published"
@@ -215,9 +319,21 @@ export const sampleSets4SearchWithVersions = async () => {
   await createSet(
     setFrom(
       "N2 set",
-      states.e,
-      states.N2,
-      [ReactionTypeTag.Attachment],
+      { e: states.e, N2: states.N2 },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "H2" },
+          ],
+          type_tags: [ReactionTypeTag.Effective],
+          reversible: false,
+        },
+      ],
       "Some draft organization"
     ),
     "draft"
@@ -225,9 +341,21 @@ export const sampleSets4SearchWithVersions = async () => {
   const id2retract = await createSet(
     setFrom(
       "Ar set",
-      states.Arp,
-      states.Ar,
-      [ReactionTypeTag.Ionization],
+      { e: states.e, Ar: states.Ar, Arp: states.Arp },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "Ar" },
+          ],
+          rhs: [
+            { count: 2, state: "e" },
+            { count: 1, state: "Arp" },
+          ],
+          type_tags: [ReactionTypeTag.Ionization],
+          reversible: false,
+        },
+      ],
       "Some retracted organization"
     ),
     "published"
@@ -235,10 +363,22 @@ export const sampleSets4SearchWithVersions = async () => {
   await deleteSet(id2retract, "Oops");
   await createSet(
     setFrom(
-      "CO2 set",
-      states.e,
-      states.CO2,
-      [ReactionTypeTag.Electronic],
+      "He set",
+      { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },
+      [
+        {
+          lhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "He{1S0}" },
+          ],
+          rhs: [
+            { count: 1, state: "e" },
+            { count: 1, state: "He{*}" },
+          ],
+          type_tags: [ReactionTypeTag.Electronic],
+          reversible: false,
+        },
+      ],
       "Some archived organization"
     ),
     "archived"
@@ -247,9 +387,8 @@ export const sampleSets4SearchWithVersions = async () => {
 
 function setFrom(
   name: string,
-  c1: State<AnyAtomJSON | AnyMoleculeJSON>,
-  c2: State<AnyAtomJSON | AnyMoleculeJSON>,
-  type_tags: ReactionTypeTag[],
+  states: Readonly<Dict<State<AnyAtom | AnyMolecule>>>,
+  reactions: ReadonlyArray<Reaction<string>>,
   contributor: string
 ): CrossSectionSetInputOwned {
   return {
@@ -258,29 +397,16 @@ function setFrom(
     name,
     description: "Some description",
     references: {},
-    states: {
-      c1,
-      c2,
-    },
-    processes: [
-      {
-        reaction: {
-          lhs: [
-            { count: 1, state: "c1" },
-            { count: 1, state: "c2" },
-          ],
-          rhs: [],
-          reversible: false,
-          type_tags,
-        },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: [],
-      },
-    ],
+    states,
+    processes: reactions.map((reaction) => ({
+      reaction,
+      threshold: 0,
+      type: Storage.LUT,
+      labels: ["Energy", "Cross Section"],
+      units: ["eV", "m^2"],
+      data: [[0, 3.14e-20]],
+      reference: [],
+    })),
   };
 }
 
