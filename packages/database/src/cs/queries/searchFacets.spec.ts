@@ -22,8 +22,6 @@ import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
 
 beforeAll(startDbWithUserAndCssCollections);
 
-const emptySelection: Readonly<SearchOptions> = defaultSearchOptions();
-
 const getCSIdsFromTemplate = async (selection: ReactionOptions) =>
   getCSIdByReactionTemplate(
     selection.consumes
@@ -44,7 +42,7 @@ describe("searchFacets()", () => {
     beforeAll(async () => {
       await sampleSets4Search();
 
-      allChoices = (await searchFacets(emptySelection)).reactions[0]!;
+      allChoices = (await searchFacets(defaultSearchOptions())).reactions[0]!;
 
       return truncateCrossSectionSetCollections;
     });
@@ -120,7 +118,7 @@ describe("searchFacets()", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = emptySelection;
+        let selection = defaultSearchOptions();
 
         const [particle, _] = allChoices.consumes
           .flatMap(Object.entries)
@@ -197,7 +195,7 @@ describe("searchFacets()", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = emptySelection;
+        let selection = defaultSearchOptions();
 
         const [particle, _] = allChoices.produces
           .flatMap(Object.entries)
@@ -268,7 +266,7 @@ describe("searchFacets()", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = emptySelection;
+        let selection = defaultSearchOptions();
         selection.reactions[0].type_tags = [ReactionTypeTag.Ionization];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
         searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
@@ -320,7 +318,7 @@ describe("searchFacets()", () => {
     describe("with set=Ar selected", () => {
       let reactionChoices: ReactionChoices;
       beforeAll(async () => {
-        let selection = emptySelection;
+        let selection = defaultSearchOptions();
 
         const [setId, _] = Object.values(allChoices.set)
           .flatMap((org) => Object.entries(org.sets))
@@ -370,7 +368,7 @@ describe("searchFacets()", () => {
       let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
-        let selection = emptySelection;
+        let selection = defaultSearchOptions();
         selection.reactions[0].type_tags = [
           ReactionTypeTag.Effective,
           ReactionTypeTag.Ionization,
