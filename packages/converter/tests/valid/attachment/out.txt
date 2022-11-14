@@ -2,6 +2,11 @@
 
 COMMENT: CO2 attachment cross section test.
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PERMLINK:         https://ng.lxcat.net/scat-css/test-id
+TERMS OF USE:     https://ng.lxcat.net/scat-css/test-id#terms_of_use
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 ************************************************************************************************************************
 
 ATTACHMENT

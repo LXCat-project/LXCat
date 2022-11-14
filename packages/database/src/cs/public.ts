@@ -7,6 +7,7 @@ import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { CrossSection } from "../cs/collections";
 import { CrossSectionSet } from "../css/collections";
 import { State } from "../shared/types/collections";
+import { SelfReference } from "@lxcat/schema/dist/core/document";
 
 export interface CrossSectionHeading {
   id: string;
@@ -21,7 +22,8 @@ export type CrossSectionItem = {
   isPartOf: Array<CrossSectionSet & { id: string }>;
   reaction: Reaction<State>;
   reference: Reference[];
-} & Omit<CrossSection, "reaction">;
+} & Omit<CrossSection, "reaction"> &
+  SelfReference;
 
 type CrossSectionBagItem = {
   id: string;
@@ -35,4 +37,4 @@ export type CrossSectionBag = {
   references: Record<string, Reference>;
   sets: Record<string, Omit<CrossSectionSet, "versionInfo">>;
   processes: CrossSectionBagItem[];
-};
+} & SelfReference;

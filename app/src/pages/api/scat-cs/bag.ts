@@ -25,6 +25,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
     }
     const ids = idsSchema.parse(rawIds);
     const data = await byIds(ids);
+    data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${ids.join(
+      ","
+    )}`;
+    data.terms_of_use = `${
+      process.env.NEXT_PUBLIC_URL
+    }/scat-cs/bag?ids=${ids.join(",")}#terms_of_use`;
     res.json(data);
   });
 

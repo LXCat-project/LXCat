@@ -6,7 +6,28 @@ import { Reference } from "./reference";
 import { InState } from "./state";
 import { Dict } from "./util";
 
-export interface InputDocument<StateType, ProcessType> {
+export interface SelfReference {
+  /**
+   * URL to JSON schema of this document.
+   *
+   * @format uri
+   */
+  $schema?: string;
+  /**
+   * URL where dataset was downloaded from.
+   *
+   * @format uri
+   */
+  url?: string;
+  /**
+   * URL to terms of use.
+   *
+   * @format uri
+   */
+  terms_of_use?: string;
+}
+
+export interface InputDocument<StateType, ProcessType> extends SelfReference {
   /**
    * @minLength 1
    */

@@ -10,6 +10,7 @@ import { Dialog } from "./Dialog";
 import { HowToCite } from "./HowToCite";
 import { DOWNLOAD_COOKIE_NAME } from "./download";
 import { TermsOfUse } from "./TermsOfUse";
+import { useRouter } from "next/router";
 
 interface Props {
   references: Reference[];
@@ -17,11 +18,14 @@ interface Props {
 }
 
 export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
+  const { asPath } = useRouter();
+  const hash = asPath.split("#")[1] || "";
+  const hasForce = hash.includes("terms_of_use");
   const hasDownloadToken =
     typeof document !== "undefined"
       ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
       : false;
-  const [agreement, setAgreement] = useState(hasDownloadToken);
+  const [agreement, setAgreement] = useState(!hasForce && hasDownloadToken);
 
   async function acceptTermsOfUse() {
     const url = "/api/auth/tou";
@@ -32,6 +36,9 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
       setAgreement(true);
     } else {
       // Give error feedback to user
+    }
+    if (hasForce) {
+      document.location.hash = "";
     }
   }
 
