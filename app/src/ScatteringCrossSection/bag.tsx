@@ -44,14 +44,11 @@ export const Bag = ({
     const { processes, states } = bag;
     return flattenReactions(processes, states);
   }, [bag]);
+  const permaLink = `${
+    process.env.NEXT_PUBLIC_URL
+  }/scat-cs/bag?ids=${bag.processes.map((p) => p.id).join(",")}`;
   return (
     <>
-      <TermsOfUseCheck
-        references={Object.values(bag.references)}
-        permaLink={`/scat-cs/bag?ids=${bag.processes
-          .map((p) => p.id)
-          .join(",")}`}
-      />
       <h1>Bag of scattering cross sections</h1>
       {hasMixedCompleteSets && (
         <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>
@@ -78,6 +75,10 @@ export const Bag = ({
           </li>
         ))}
       </ul>
+      <TermsOfUseCheck
+        references={Object.values(bag.references)}
+        permaLink={permaLink}
+      />
       <h2>Processes</h2>
       <div className="proceses-list" style={{ display: "flex" }}>
         <ol>
