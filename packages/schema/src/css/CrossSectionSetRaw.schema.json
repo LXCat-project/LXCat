@@ -6,7 +6,7 @@
   "properties": {
     "$schema": {
       "description": "URL to JSON schema of this document.",
-      "format": "uri",
+      "minLength": 1,
       "type": "string"
     },
     "complete": {
@@ -3238,12 +3238,12 @@
     },
     "terms_of_use": {
       "description": "URL to terms of use.",
-      "format": "uri",
+      "minLength": 1,
       "type": "string"
     },
     "url": {
       "description": "URL where dataset was downloaded from.",
-      "format": "uri",
+      "minLength": 1,
       "type": "string"
     }
   },
