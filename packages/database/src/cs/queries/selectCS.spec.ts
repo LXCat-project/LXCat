@@ -2,20 +2,22 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import {
   sampleSets4Search,
+  sampleSets4SearchWithVersions,
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
 import {
+  byId,
+  byIds,
   defaultSearchOptions,
-  Facets,
   getCSIdByReactionTemplate,
   ReactionChoices,
   ReactionOptions,
+  Reversible,
   search,
   searchFacets,
-  SearchOptions,
 } from "./public";
-import { StateChoices, StateSummary } from "../../shared/queries/state";
+import { StateSummary } from "../../shared/queries/state";
 import { CrossSectionHeading } from "../public";
 import { NestedState, removeIdsFromTree } from "./testutils";
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
@@ -35,7 +37,7 @@ const getCSIdsFromTemplate = async (selection: ReactionOptions) =>
     selection.set
   );
 
-describe("searchFacets()", () => {
+describe("Selecting individual cross sections", () => {
   describe("given cross sections which consume e+H2, e+N2, e+Ar, and e+H2", () => {
     let allChoices: ReactionChoices;
 
@@ -338,7 +340,7 @@ describe("searchFacets()", () => {
         );
       });
 
-      it("should have Ar for species2", () => {
+      it("should produce e and Ar^+", () => {
         const expected: ReadonlyArray<StateSummary> = [
           { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
@@ -421,6 +423,191 @@ describe("searchFacets()", () => {
 
       it("should have all 3 cross sections in search() results", () => {
         expect(searchResults.length).toEqual(4);
+      });
+    });
+  });
+  describe("given versioned cross section sets", () => {
+    let publishedChoices: ReactionChoices;
+    let csIds: Array<string>;
+    let searchResults: Array<CrossSectionHeading>;
+
+    beforeAll(async () => {
+      await sampleSets4SearchWithVersions();
+
+      const defaultOptions = defaultSearchOptions();
+
+      publishedChoices = (await searchFacets(defaultOptions)).reactions[0]!;
+      csIds = await getCSIdsFromTemplate(defaultOptions.reactions[0]!);
+      searchResults = await byIds(csIds, { offset: 0, count: 10 });
+
+      return truncateCrossSectionSetCollections;
+    });
+
+    it("should only return published sets", () => {
+      const expected = ["H2 set"];
+      expect(
+        Object.values(publishedChoices.set).flatMap((org) =>
+          Object.values(org.sets)
+        )
+      ).toEqual(expected);
+    });
+
+    it("should only return consumable species from published sets", () => {
+      const expected: ReadonlyArray<NestedState> = [
+        { children: [], latex: "\\mathrm{H2}", valid: true },
+        { children: [], latex: "\\mathrm{e}", valid: true },
+      ];
+      expect(publishedChoices.consumes.flatMap(removeIdsFromTree)).toEqual(
+        expected
+      );
+    });
+
+    it("should only return producable species from published sets", () => {
+      const expected: ReadonlyArray<NestedState> = [
+        { children: [], latex: "\\mathrm{H2}", valid: true },
+        { children: [], latex: "\\mathrm{e}", valid: true },
+      ];
+      expect(publishedChoices.produces.flatMap(removeIdsFromTree)).toEqual(
+        expected
+      );
+    });
+
+    it("should only return cross sections from published sets", () => {
+      const expected = [ReactionTypeTag.Effective];
+      expect(publishedChoices.typeTags).toEqual(expected);
+    });
+
+    it("should only return reversibility options that occur in published sets", () => {
+      const expected = [Reversible.False, Reversible.Both];
+      expect(publishedChoices.reversible).toEqual(expected);
+    });
+
+    it("should only return cross sections from published sets", async () => {
+      expect(csIds).toHaveLength(1);
+      expect(searchResults).toEqual([
+        {
+          id: expect.stringMatching(/\d+/),
+          reaction: {
+            reversible: false,
+            type_tags: [ReactionTypeTag.Effective],
+            rhs: [
+              {
+                state: {
+                  charge: -1,
+                  id: "e",
+                  latex: "\\mathrm{e}",
+                  particle: "e",
+                },
+                count: 1,
+              },
+              {
+                state: {
+                  charge: 0,
+                  id: "H2",
+                  latex: "\\mathrm{H2}",
+                  particle: "H2",
+                },
+                count: 1,
+              },
+            ],
+            lhs: [
+              {
+                state: {
+                  charge: -1,
+                  id: "e",
+                  latex: "\\mathrm{e}",
+                  particle: "e",
+                },
+                count: 1,
+              },
+              {
+                state: {
+                  charge: 0,
+                  id: "H2",
+                  latex: "\\mathrm{H2}",
+                  particle: "H2",
+                },
+                count: 1,
+              },
+            ],
+          },
+          reference: [],
+          isPartOf: ["H2 set"],
+        },
+      ]);
+      const cs = await byId(csIds[0].split("/")[1]);
+      expect(cs).toEqual({
+        data: [[0, 3.14e-20]],
+        labels: ["Energy", "Cross Section"],
+        reaction: {
+          lhs: [
+            {
+              state: {
+                charge: -1,
+                id: "e",
+                latex: "\\mathrm{e}",
+                particle: "e",
+              },
+              count: 1,
+            },
+            {
+              state: {
+                charge: 0,
+                id: "H2",
+                latex: "\\mathrm{H2}",
+                particle: "H2",
+              },
+              count: 1,
+            },
+          ],
+          reversible: false,
+          type_tags: [ReactionTypeTag.Effective],
+          rhs: [
+            {
+              state: {
+                charge: -1,
+                id: "e",
+                latex: "\\mathrm{e}",
+                particle: "e",
+              },
+              count: 1,
+            },
+            {
+              state: {
+                charge: 0,
+                id: "H2",
+                latex: "\\mathrm{H2}",
+                particle: "H2",
+              },
+              count: 1,
+            },
+          ],
+        },
+        threshold: 0,
+        type: "LUT",
+        units: ["eV", "m^2"],
+        versionInfo: {
+          status: "published",
+          version: "1",
+          createdOn: expect.any(String),
+          commitMessage: "",
+        },
+        reference: [],
+        isPartOf: [
+          {
+            complete: false,
+            description: "Some description",
+            name: "H2 set",
+            versionInfo: {
+              status: "published",
+              version: "1",
+              createdOn: expect.any(String),
+            },
+            organization: "Some published organization",
+            id: expect.stringMatching(/\d+/),
+          },
+        ],
+        id: expect.stringMatching(/\d+/),
       });
     });
   });

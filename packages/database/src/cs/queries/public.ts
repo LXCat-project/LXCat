@@ -785,7 +785,7 @@ export async function getCSIdByReactionTemplate(
     getReactionsAQL(consumes, produces, returnCSId(setIds), [
       getReversibleFilterAQL(reversible),
       getTypeTagFilterAQL(typeTags),
-      // getCSSetFilterAQL(setIds),
+      getCSSetFilterAQL(setIds),
     ])
   );
   return await cursor.all();
@@ -805,6 +805,7 @@ export async function getAvailableTypeTags(
       ? aql`
       RETURN UNIQUE(FLATTEN(
         FOR reaction in Reaction
+	  ${getCSSetFilterAQL(setIds)(aql.literal("reaction"))}
           RETURN reaction.type_tags
       ))
     `
