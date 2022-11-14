@@ -24,24 +24,21 @@ test.describe("cross section index page", () => {
     await page.goto("/scat-cs");
   });
 
-  test("should have 2 items listed", async ({ page }) => {
+  // FIXME: How to uniquely locate consuming StateSelect and select Uo?
+  test.only("should have 2 items listed", async ({ page }) => {
     const section1 = page.locator('text=/.*Part of "Some name" set.*/');
-    const section2 = page.locator(
-      'text=/.*Part of "Some other name" set.*/'
-    );
+    const section2 = page.locator('text=/.*Part of "Some other name" set.*/');
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
   });
 
   test.describe("when filtered on set name", () => {
     test.beforeEach(async ({ page }) => {
-      await page.locator('label:has-text("Some other name")').click();
+      await page.locator('label:has-text("Some other organization")').click();
     });
 
-    test("should list single section", async ({ page }) => {
-      const section2 = page.locator(
-        'text=/.*Part of "Some other name" set.*/'
-      );
+    test("should list single cross section", async ({ page }) => {
+      const section2 = page.locator('text=/.*Part of "Some other name" set.*/');
       await expect(section2).toBeVisible();
     });
   });
