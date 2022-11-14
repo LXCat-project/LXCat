@@ -12,6 +12,7 @@ This document is for someone developing the LXCat web application and its packag
 
 ## Where is the code?
 
+Code is hosted on [https://gitlab.com/LXCat-project/lxcat-ng](https://gitlab.com/LXCat-project/lxcat-ng).
 Code to fill the database can be found in [../database/](../database/).
 Code to that runs the website can be found in [../app/](../app/).
 Code to that describes the shape of LXCat documents can be found in [../schema/](../schema/).
