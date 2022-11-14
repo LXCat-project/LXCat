@@ -183,7 +183,7 @@ test.describe("given 2 dummy sets", () => {
         urlWithHash = `/scat-css/${id}#terms_of_use`;
       });
 
-      test.only("should show terms of use dialog", async ({ context }) => {
+      test("should show terms of use dialog", async ({ context }) => {
         const page = await context.newPage();
         await page.goto(urlWithHash);
         const acceptButton = page.locator("text=I agree with the terms of use");
