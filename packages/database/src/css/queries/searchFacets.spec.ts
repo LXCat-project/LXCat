@@ -36,6 +36,17 @@ describe("searchFacets()", () => {
                 },
               },
             },
+            He: {
+              charge: {
+                0: {
+                  electronic: {
+                    "^1S_0": {
+                      vibrational: {},
+                    },
+                  },
+                },
+              },
+            },
             N2: {
               charge: {
                 0: {
@@ -60,8 +71,12 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
     });
@@ -81,8 +96,12 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
 
@@ -123,8 +142,12 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
 
@@ -220,7 +243,7 @@ describe("searchFacets()", () => {
       });
 
       it("should have Effective reaction type tags", () => {
-        const expected = ["Effective"];
+        const expected = [ReactionTypeTag.Effective];
         expect(facets.tag).toEqual(expected);
       });
 
@@ -231,6 +254,17 @@ describe("searchFacets()", () => {
               charge: {
                 0: {
                   electronic: {},
+                },
+              },
+            },
+            He: {
+              charge: {
+                0: {
+                  electronic: {
+                    "^1S_0": {
+                      vibrational: {},
+                    },
+                  },
                 },
               },
             },
