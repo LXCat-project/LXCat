@@ -120,7 +120,7 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = defaultSearchOptions();
+        const selection = defaultSearchOptions();
 
         const [particle, _] = allChoices.consumes
           .flatMap(Object.entries)
@@ -197,7 +197,7 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = defaultSearchOptions();
+        const selection = defaultSearchOptions();
 
         const [particle, _] = allChoices.produces
           .flatMap(Object.entries)
@@ -268,7 +268,7 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        let selection = defaultSearchOptions();
+        const selection = defaultSearchOptions();
         selection.reactions[0].type_tags = [ReactionTypeTag.Ionization];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
         searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
@@ -320,7 +320,7 @@ describe("Selecting individual cross sections", () => {
     describe("with set=Ar selected", () => {
       let reactionChoices: ReactionChoices;
       beforeAll(async () => {
-        let selection = defaultSearchOptions();
+        const selection = defaultSearchOptions();
 
         const [setId, _] = Object.values(allChoices.set)
           .flatMap((org) => Object.entries(org.sets))
@@ -370,7 +370,7 @@ describe("Selecting individual cross sections", () => {
       let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
-        let selection = defaultSearchOptions();
+        const selection = defaultSearchOptions();
         selection.reactions[0].type_tags = [
           ReactionTypeTag.Effective,
           ReactionTypeTag.Ionization,
