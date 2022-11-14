@@ -29,6 +29,10 @@ const handler = nc<AuthRequest, NextApiResponse>()
         return;
       }
 
+      data.$schema = `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`;
+      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
+      data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
+
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {
         (data as any).references = Object.fromEntries(

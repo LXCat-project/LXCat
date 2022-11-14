@@ -18,6 +18,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const { id } = req.query;
     if (typeof id === "string") {
       const data = await byId(id);
+      if (data === undefined) {
+        res.status(404).end("Not found");
+        return;
+      }
+      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}`;
+      data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}#terms_of_use`;
       res.json(data);
     }
     throw Error("Unable to handle request");

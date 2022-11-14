@@ -8,6 +8,7 @@ import CrossSectionSetRaw from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema
 
 // Route to host JSON schema of CrossSectionSet
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (_req, res) => {
+  // TODO set content type to application/schema+json
   res.json(CrossSectionSetRaw);
 });
 
