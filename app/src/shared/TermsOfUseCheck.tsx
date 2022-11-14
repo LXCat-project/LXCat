@@ -36,22 +36,26 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
   }
 
   return (
-    <Dialog isOpened={!agreement} onSubmit={acceptTermsOfUse} className="tos">
-      <h2>Terms of use</h2>
-      <TermsOfUse />
-      {/* TODO make permaLink an absolute URL */}
-      <p>
-        The permalink for this data is{" "}
-        <Link href={permaLink}>
-          <a>{permaLink}</a>
-        </Link>
-      </p>
-      <HowToCite references={references} />
-      <form method="dialog">
-        <button value="default" type="submit">
-          I agree with the terms of use
-        </button>
-      </form>
-    </Dialog>
+    <>
+      <button type="button" onClick={() => setAgreement(false)}>
+        Terms of use
+      </button>
+      <Dialog isOpened={!agreement} onSubmit={acceptTermsOfUse} className="tos">
+        <h2>Terms of use</h2>
+        <TermsOfUse />
+        <p>
+          The permalink for this data is{" "}
+          <Link href={permaLink}>
+            <a>{permaLink}</a>
+          </Link>
+        </p>
+        <HowToCite references={references} />
+        <form method="dialog">
+          <button value="default" type="submit">
+            I agree with the terms of use
+          </button>
+        </form>
+      </Dialog>
+    </>
   );
 };
