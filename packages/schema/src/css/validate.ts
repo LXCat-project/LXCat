@@ -3,11 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Ajv, { ErrorObject } from "ajv";
+import addFormats from "ajv-formats"
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
 import { getStates, checkStates } from "./quantum_number_validator";
 
 const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
+addFormats(ajv)
 
 export const validateJSONSchema = ajv.compile<CrossSectionSetRaw>(schema);
 
