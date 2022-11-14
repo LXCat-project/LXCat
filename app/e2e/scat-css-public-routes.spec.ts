@@ -168,5 +168,27 @@ test.describe("given 2 dummy sets", () => {
         ).toBeVisible();
       });
     });
+
+    test.describe("visit details page with #terms_of_use hash", () => {
+      let urlWithHash = "";
+      test.beforeEach(async ({ page }) => {
+        const download = await page
+          .locator("text=Download JSON format")
+          .getAttribute("href");
+        if (download === null) {
+          test.fail();
+          return;
+        }
+        const id = download.replace("/api/scat-css/", "");
+        urlWithHash = `/scat-css/${id}#terms_of_use`;
+      });
+
+      test("should show terms of use dialog", async ({ context }) => {
+        const page = await context.newPage();
+        await page.goto(urlWithHash);
+        const acceptButton = page.locator("text=I agree with the terms of use");
+        await expect(acceptButton).toBeVisible();
+      });
+    });
   });
 });

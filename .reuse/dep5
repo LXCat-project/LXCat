@@ -22,3 +22,8 @@ License: AGPL-3.0-or-later
 Files: CITATION.cff
 Copyright: LXCat team
 License: AGPL-3.0-or-later
+
+# Files that get generated
+Files: app/next-env.d.ts
+Copyright: LXCat team
+License: AGPL-3.0-or-later

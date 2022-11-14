@@ -46,7 +46,7 @@ async function globalSetup(config: FullConfig) {
 
   console.log("Create admin user and store its cookie");
   const browser = await chromium.launch();
-  const baseURL = env.NEXTAUTH_URL.replace("api/auth", "");
+  const baseURL = env.NEXT_PUBLIC_URL;
   const email = "admin@ng.lxcat.net";
   const adminPage = await browser.newPage({ baseURL });
   // Login with test oidc account

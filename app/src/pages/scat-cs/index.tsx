@@ -50,9 +50,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     set_name: selection.set_name,
     tag: selection.tag,
   });
-  let canonicalUrl = "/scat-cs";
+  let canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/scat-cs`;
   if (paging.offset > 0) {
-    canonicalUrl = `/scat-cs?offset=${paging.offset}`;
+    canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
   }
   return (
     <Layout title="Scattering Cross Section">
