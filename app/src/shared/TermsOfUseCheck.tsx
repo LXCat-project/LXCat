@@ -1,40 +1,68 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { useState } from "react";
+import Link from "next/link";
+import { Reference } from "@lxcat/schema/dist/core/reference";
+
 import { Dialog } from "./Dialog";
 import { HowToCite } from "./HowToCite";
-import { Reference } from "@lxcat/schema/dist/core/reference";
+import { DOWNLOAD_COOKIE_NAME } from "./download";
+import { TermsOfUse } from "./TermsOfUse";
+import { useRouter } from "next/router";
 
 interface Props {
   references: Reference[];
+  permaLink: string;
 }
 
-export const TermsOfUseCheck = ({ references }: Props) => {
-  // TODO remember that visitor agreed during current session or last hours/days
+export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
+  const { asPath } = useRouter();
+  const hash = asPath.split("#")[1] || "";
+  const hasForce = hash.includes("terms_of_use");
+  const hasDownloadToken =
+    typeof document !== "undefined"
+      ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
+      : false;
+  const [agreement, setAgreement] = useState(!hasForce && hasDownloadToken);
 
-  const [agreement, setAgreement] = useState(false);
+  async function acceptTermsOfUse() {
+    const url = "/api/auth/tou";
+    const res = await fetch(url, {
+      method: "POST",
+    });
+    if (res.ok) {
+      setAgreement(true);
+    } else {
+      // Give error feedback to user
+    }
+    if (hasForce) {
+      document.location.hash = "";
+    }
+  }
+
   return (
-    <Dialog
-      isOpened={!agreement}
-      onSubmit={() => setAgreement(true)}
-      className="tos"
-    >
-      <h2>Terms of use</h2>
-      <p>
-        Users acknowledge understanding that LXCat is a community-based project
-        with open-access databases being freely provided by individual
-        contributors.
-      </p>
-      <p>
-        <b>
-          Proper referencing of material retrieved from this site is essential
-          for the survival of the project.
-        </b>
-      </p>
-      <HowToCite references={references} />
-      <form method="dialog">
-        <button value="default" type="submit">
-          I agree with the terms of use
-        </button>
-      </form>
-    </Dialog>
+    <>
+      <button type="button" onClick={() => setAgreement(false)}>
+        Terms of use
+      </button>
+      <Dialog isOpened={!agreement} onSubmit={acceptTermsOfUse} className="tos">
+        <h2>Terms of use</h2>
+        <TermsOfUse />
+        <p>
+          The permalink for this data is{" "}
+          <Link href={permaLink}>
+            <a>{permaLink}</a>
+          </Link>
+        </p>
+        <HowToCite references={references} />
+        <form method="dialog">
+          <button value="default" type="submit">
+            I agree with the terms of use
+          </button>
+        </form>
+      </Dialog>
+    </>
   );
 };

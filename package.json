@@ -1,4 +1,5 @@
 {
+  "license": "AGPL-3.0-or-later",
   "workspaces": [
     "app",
     "packages/*"
@@ -9,9 +10,11 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "start": "turbo run start",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "addheader": "turbo run addheader"
   },
   "devDependencies": {
     "turbo": "^1.2.16"
-  }
+  },
+  "version": "0.2.0"
 }

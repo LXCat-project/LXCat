@@ -1,8 +1,26 @@
+<!--
+SPDX-FileCopyrightText: LXCat team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Developer docs
 
 To consume LXCat data by another program, the LXCat web service provides several API endpoints.
 
 ## Table of contents
+
+## Authorize and authenticate
+
+The API endpoints of the LXcat web service require authorization and authentication.
+
+You can get authorized by mailing [admin@lxcat.net](mailto:admin@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
+Send the mail from the same email you used to login to LXCat.
+
+Authentication is done using a [JWT](https://jwt.io) token. 
+The token can be generated and copied from the [/developer](/developer) page.
+
+Use `Authorization: Bearer <token>` as header in all of the HTTP requests.
 
 ## Fetch particle states
 
@@ -137,4 +155,12 @@ To fetch in JSON format use
 
 ```bash
 curl https://nl.lxcat.net/api/scat-cs/<id of section>
+```
+
+## Fetch multiple cross sections
+
+To fetch in JSON format use
+
+```bash
+curl https://nl.lxcat.net/api/scat-cs/bag?ids=<id of section1>,<id of section2>
 ```

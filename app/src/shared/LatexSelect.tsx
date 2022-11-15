@@ -1,5 +1,10 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Menu, Group } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
+
 import React from "react";
 
 import { Latex } from "./Latex";

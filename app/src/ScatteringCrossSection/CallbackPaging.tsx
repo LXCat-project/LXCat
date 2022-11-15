@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Button } from "@mantine/core";
 

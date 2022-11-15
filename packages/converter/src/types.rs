@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -49,6 +53,8 @@ pub struct Document {
     pub processes: Vec<Process>,
     pub states: HashMap<String, State>,
     pub references: HashMap<String, String>,
+    pub url: String,
+    pub terms_of_use: String,
 }
 
 #[derive(Debug, Deserialize)]

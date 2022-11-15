@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
 import { db } from "../src/db";

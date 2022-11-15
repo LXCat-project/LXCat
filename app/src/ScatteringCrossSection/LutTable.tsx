@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 
 type Props = Pick<LUT, "data" | "labels" | "units">;

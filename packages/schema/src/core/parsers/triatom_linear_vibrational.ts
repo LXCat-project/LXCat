@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { LinearTriatomVibrationalImpl } from "../molecules/components/vibrational/linear_triatomic";
 import { ComponentParser, PUV } from "./common";
 

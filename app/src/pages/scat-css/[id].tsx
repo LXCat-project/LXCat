@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import {
@@ -14,6 +18,7 @@ import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import { reference2bibliography } from "../../shared/cite";
+import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 
 interface Props {
   set: CrossSectionSetItem;
@@ -24,8 +29,8 @@ function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
   const ld: WithContext<Dataset> = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    identifier: `/scat-css/${set.id}`,
-    url: `/scat-css/${set.id}`, // TODO make URL absolute
+    identifier: `${process.env.NEXT_PUBLIC_URL}/scat-css/${set.id}`,
+    url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${set.id}`, // TODO make URL absolute
     name: `Scattering Cross Section set - ${set.name}`,
     alternateName: set.name,
     description: set.description,
@@ -57,7 +62,7 @@ function toJSONLD(set: CrossSectionSetItem, reference: CSL.Data | undefined) {
     includedInDataCatalog: {
       "@type": "DataCatalog",
       name: "lxcat",
-      url: "/",
+      url: process.env.NEXT_PUBLIC_URL,
     },
     // TODO add variableMeasured
     // TODO add license
@@ -95,8 +100,12 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
           key="jsonld"
           {...jsonLdScriptProps(toJSONLD(set, references[0]))}
         />
-        <link rel="canonical" href={`/scat-css/${canonicalId}`} />
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_URL}/scat-css/${canonicalId}`}
+        />
       </Head>
+
       <h1>
         {set.name} by {set.contributor}
       </h1>
@@ -150,7 +159,13 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
           </li>
         ))}
       </ul>
+      <TermsOfUseCheck
+        references={references}
+        permaLink={`${process.env.NEXT_PUBLIC_URL}/scat-css/${set.id}`}
+      />
       <h2>Processes</h2>
+      {/* TODO there can be a lot of processes, to find which ones the user is looking for it would be nice to have filtering */}
+      {/* TODO there can be a lot of processes, which would render quicker with paging */}
       <ProcessList processes={set.processes} />
 
       {set.versionInfo.status === "published" &&

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
@@ -46,7 +50,7 @@ interface Props {
   processes: OrphanedCrossSectionItem[];
 }
 
-const INITIAL_PROCESSES2PLOT = 5;
+export const INITIAL_PROCESSES2PLOT = 5;
 
 // Copy of category20 color scheme from https://vega.github.io/vega/docs/schemes/
 export const colorScheme = [

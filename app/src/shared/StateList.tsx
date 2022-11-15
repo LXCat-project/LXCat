@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { StatePath } from "@lxcat/database/dist/shared/getStateLeaf";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { Button, Stack } from "@mantine/core";

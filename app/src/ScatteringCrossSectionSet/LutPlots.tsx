@@ -1,11 +1,17 @@
-import { OrphanedCrossSectionItem } from "@lxcat/database/dist/css/public";
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Vega } from "react-vega";
 import { ScaleType } from "vega";
 import { Mark } from "vega-lite/build/src/mark";
 
+type PlotableCrossSection = Pick<CrossSectionItem, "data" | "labels" | "units">;
+
 interface Props {
-  processes: OrphanedCrossSectionItem[];
+  processes: PlotableCrossSection[];
   colors: string[];
 }
 
@@ -30,14 +36,14 @@ function sectionToVegaData(data: LUT["data"], c: string) {
   return rows;
 }
 
-function toVegaData(processes: OrphanedCrossSectionItem[], colors: string[]) {
+function toVegaData(processes: PlotableCrossSection[], colors: string[]) {
   const emptyArray: VegaData[] = [];
   return emptyArray.concat(
     ...processes.map((p, i) => sectionToVegaData(p.data, colors[i]))
   );
 }
 
-function toVegaSpec(processes: OrphanedCrossSectionItem[], colors: string[]) {
+function toVegaSpec(processes: PlotableCrossSection[], colors: string[]) {
   const values = toVegaData(processes, colors);
   const markType: Mark = "point";
   const scaleType: ScaleType = "log";

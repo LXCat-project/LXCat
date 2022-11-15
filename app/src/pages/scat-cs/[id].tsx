@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { Dataset, WithContext } from "schema-dts";
@@ -19,8 +23,8 @@ function toJSONLD(section: CrossSectionItem) {
   const ld: WithContext<Dataset> = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    identifier: `/scat-cs/${section.id}`,
-    url: `/scat-cs/${section.id}`, // TODO make URL absolute
+    identifier: `${process.env.NEXT_PUBLIC_URL}/scat-cs/${section.id}`,
+    url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/${section.id}`,
     name: `Scattering Cross Section of ${reactionAsText(section.reaction)}`,
     keywords: [
       "cross section",
@@ -51,7 +55,7 @@ function toJSONLD(section: CrossSectionItem) {
     ld.includedInDataCatalog = {
       "@type": "DataCatalog",
       name: set.name,
-      url: `/scat-css/${set.id}`,
+      url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${set.id}`,
     };
     ld.description = set.description;
   }
@@ -72,10 +76,16 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({
     >
       <Head>
         <script key="jsonld" {...jsonLdScriptProps(toJSONLD(section))} />
-        <link rel="canonical" href={`/scat-cs/${canonicalId}`} />
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_URL}/scat-cs/${canonicalId}`}
+        />
       </Head>
-      <TermsOfUseCheck references={section.reference} />
       <Item {...section}></Item>
+      <TermsOfUseCheck
+        references={section.reference}
+        permaLink={`${process.env.NEXT_PUBLIC_URL}/scat-cs/${section.id}`}
+      />
     </Layout>
   );
 };

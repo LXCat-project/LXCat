@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Lxcat ng web application
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
@@ -88,9 +94,9 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
 
             This will make app available on [https://localhost:8443](https://localhost:8443).
             In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
-            Also set `NEXTAUTH_URL=https://localhost:8443` in `.env.local` file.
+            Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
         - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
-            Also set `NEXTAUTH_URL=https://< lxcat ng domain >` in `.env.local` file.
+            Also set `NEXT_PUBLIC_URL=https://< lxcat ng domain >` in `.env.local` file.
 
 ### For Keycloak
 
@@ -143,7 +149,8 @@ In `.env.local` file define the following key/value pairs
 
 ```env
 # Where openid identity provider should redirect back to
-NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
+# And used as root url for absolute URLs
+NEXT_PUBLIC_URL=<URL where users visit server, like http://localhost:3000>
 # Secret used to sign JWT api tokens
 NEXTAUTH_SECRET=<Random string>
 # Password used to connect to database

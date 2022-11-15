@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
@@ -32,7 +36,10 @@ const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items, facets }) => {
   return (
     <Layout title="Scattering Cross Section sets">
       <Head>
-        <link rel="canonical" href={`/scat-css`} />
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_URL}/scat-css`}
+        />
       </Head>
       <h1>Scattering Cross Section set</h1>
       <Filter facets={facets} selection={selection} />

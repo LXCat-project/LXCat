@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { test, expect } from "@playwright/test";
@@ -114,6 +118,7 @@ test.describe("given 2 dummy sets", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/scat-css");
       await page.locator("text=Some name").click();
+      await page.locator("text=I agree with the terms of use").click();
       await page.waitForSelector('h2:has-text("Processes")');
     });
 
@@ -161,6 +166,28 @@ test.describe("given 2 dummy sets", () => {
             "text=Nothing to plot, because zero sections are selected"
           )
         ).toBeVisible();
+      });
+    });
+
+    test.describe("visit details page with #terms_of_use hash", () => {
+      let urlWithHash = "";
+      test.beforeEach(async ({ page }) => {
+        const download = await page
+          .locator("text=Download JSON format")
+          .getAttribute("href");
+        if (download === null) {
+          test.fail();
+          return;
+        }
+        const id = download.replace("/api/scat-css/", "");
+        urlWithHash = `/scat-css/${id}#terms_of_use`;
+      });
+
+      test("should show terms of use dialog", async ({ context }) => {
+        const page = await context.newPage();
+        await page.goto(urlWithHash);
+        const acceptButton = page.locator("text=I agree with the terms of use");
+        await expect(acceptButton).toBeVisible();
       });
     });
   });

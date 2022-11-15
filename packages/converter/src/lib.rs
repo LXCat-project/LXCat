@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 mod types;
 
 use std::fmt::Write;
@@ -150,10 +154,15 @@ impl Document {
     pub fn into_legacy(mut self) -> std::result::Result<String, Box<dyn Error>> {
         let mut legacy = String::new();
 
+        let self_reference = format!(
+            "{}\nPERMLINK:         {}\nTERMS OF USE:     {}\n{}\n",
+            END, self.url, self.terms_of_use, END
+        );
+
         write!(
             legacy,
-            "{}\n\nCOMMENT: {}\n\n{}\n",
-            STARS, self.description, STARS
+            "{}\n\nCOMMENT: {}\n\n{}\n{}\n",
+            STARS, self.description, self_reference, STARS
         )?;
 
         for process in self.processes.iter_mut() {

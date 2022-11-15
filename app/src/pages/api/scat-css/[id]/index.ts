@@ -1,6 +1,14 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { AuthRequest } from "../../../../auth/middleware";
+import {
+  AuthRequest,
+  hasDeveloperOrDownloadRole,
+  hasSessionOrAPIToken,
+} from "../../../../auth/middleware";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
@@ -9,9 +17,8 @@ import { reference2bibliography } from "../../../../shared/cite";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)
-  // TODO: Fix api auth once issue #10 is resolved.
-  // .use(hasSessionOrAPIToken)
-  // .use(hasDeveloperRole)
+  .use(hasSessionOrAPIToken)
+  .use(hasDeveloperOrDownloadRole)
   .get(async (req, res) => {
     const { id, refstyle = "csl" } = req.query;
     if (typeof id === "string") {
@@ -21,6 +28,10 @@ const handler = nc<AuthRequest, NextApiResponse>()
         res.status(404).end("Not found");
         return;
       }
+
+      data.$schema = `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`;
+      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
+      data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
 
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {

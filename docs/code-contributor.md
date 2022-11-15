@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Code contributor docs
 
 This document is for someone developing the LXCat web application and its packages.
@@ -6,6 +12,7 @@ This document is for someone developing the LXCat web application and its packag
 
 ## Where is the code?
 
+Code is hosted on [https://gitlab.com/LXCat-project/lxcat-ng](https://gitlab.com/LXCat-project/lxcat-ng).
 Code to fill the database can be found in [../database/](../database/).
 Code to that runs the website can be found in [../app/](../app/).
 Code to that describes the shape of LXCat documents can be found in [../schema/](../schema/).
@@ -261,3 +268,23 @@ To debug tests in VS code
 2. In Debug sidebar select `Debug Current Test File`
 3. Focus on test file
 4. Press F5
+
+## Licensing
+
+This project uses GNU Affero General Public License v3.0 or later for the web application and any package not published to npmjs.com.
+The Apache 2.0 license is used for packages published to npmjs.com.
+
+This project uses the [REUSE specification](https://reuse.software/) for licensing and copyright.
+
+To test compliance use
+
+```shell
+python3 -m venv .venv
+. .venv/bin/activate
+pip install reuse
+reuse lint
+```
+
+To add headers to files run `npm run addheader` or if that fails add header manually.
+
+For binary files or text files without comment support a `<original file name>.license` file can be made, alternativly add file in `/.reuse/dep5` file.

@@ -1,7 +1,7 @@
 {
   "name": "@lxcat/schema",
   "version": "1.0.0",
-  "description": "",
+  "description": "Schema and validator for LXCat",
   "scripts": {
     "json:css": "ts-json-schema-generator -f ./tsconfig.json --no-top-ref --path src/css/input.ts --type CrossSectionSetRaw --out src/css/CrossSectionSetRaw.schema.json -e none",
     "json": "npm run json:css",
@@ -9,10 +9,12 @@
     "lint": "eslint src/ --ext .ts",
     "format": "prettier --write src/",
     "test": "vitest",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
+    "prepublishOnly": "build",
+    "clean": "rm -rf dist"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "ajv": "^8.11.0",
     "ts-json-schema-generator": "^1.1.0-next.5"
@@ -24,5 +26,13 @@
     "prettier": "^2.6.2",
     "typescript": "^4.7.3",
     "vitest": "^0.15.1"
+  },
+  "main": "dist/css/validate.js",
+  "types": "dist/css/validate.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

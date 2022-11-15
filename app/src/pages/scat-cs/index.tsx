@@ -1,8 +1,12 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
 import {
-  byIds,
   Facets,
+  getCSHeadings,
   getCSIdByReactionTemplate,
   searchFacets,
   SearchOptions,
@@ -11,7 +15,7 @@ import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { CallbackPaging } from "../../ScatteringCrossSection/CallbackPaging";
+import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
 import { useState } from "react";
@@ -19,6 +23,10 @@ import {
   getStateLeaf,
   StateLeaf,
 } from "@lxcat/database/dist/shared/getStateLeaf";
+import Link from "next/link";
+import { Button } from "@mantine/core";
+import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
+import { useRouter } from "next/router";
 
 interface Props {
   items: CrossSectionHeading[];
@@ -34,14 +42,16 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   paging,
 }) => {
   const [items, setItems] = useState(initialItems);
-  const [offset, setOffset] = useState(paging.offset);
+
+  const router = useRouter();
 
   const nrItems = items.length;
 
   let canonicalUrl = "/scat-cs";
   if (paging.offset > 0) {
-    canonicalUrl = `/scat-cs?offset=${paging.offset}`;
+    canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
   }
+
   const onChange = async (newSelection: SearchOptions, offset: number = 0) => {
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
@@ -61,15 +71,19 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <Filter facets={facets} selection={selection} onChange={onChange} />
       <hr />
       <List items={items} />
-      <CallbackPaging
-        paging={{ ...paging, offset }}
-        nrOnPage={nrItems}
-        onOffsetChange={async (newOffset) => {
-          setOffset(newOffset);
-          // TODO: Put new offset in route.
-          return onChange(selection, newOffset);
-        }}
-      />
+      <Paging paging={paging} nrOnPage={nrItems} query={router.query} />
+      {nrItems > 0 && nrItems <= BAG_SIZE ? (
+        <Link
+          href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
+          passHref
+        >
+          <Button component="a" variant="light">
+            Plots and download the currently filtered cross sections
+          </Button>
+        </Link>
+      ) : (
+        <></>
+      )}
     </Layout>
   );
 };
@@ -86,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<
       context.query.offset && !Array.isArray(context.query.offset)
         ? parseInt(context.query.offset)
         : 0,
-    count: 100,
+    count: PAGE_SIZE,
     // count: Number.MAX_SAFE_INTEGER,
   };
 
@@ -128,7 +142,7 @@ export const getServerSideProps: GetServerSideProps<
     )
   );
   const csIds = new Set(csIdsNested.flat());
-  const items = await byIds(Array.from(csIds), paging);
+  const items = await getCSHeadings(Array.from(csIds), paging);
 
   const facets = await searchFacets(filter);
   return {

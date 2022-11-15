@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { getCSSets, Reversible } from "@lxcat/database/dist/cs/queries/public";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";

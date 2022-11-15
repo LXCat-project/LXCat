@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
   },
   "dependencies": {
     "@citation-js/core": "^0.6.1",
@@ -32,6 +33,7 @@
     "@next/bundle-analyzer": "^12.2.5",
     "@tabler/icons": "^1.101.0",
     "arangojs": "^7.7.0",
+    "cookie": "^0.5.0",
     "mermaid": "^9.1.1",
     "nanoid": "^4.0.0",
     "next": "^12.1.4",
@@ -72,6 +74,7 @@
     "@storybook/manager-webpack5": "^6.5.9",
     "@storybook/react": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
+    "@types/cookie": "^0.5.1",
     "@types/node": "17.0.21",
     "@types/oidc-provider": "^7.11.1",
     "@types/react": "17.0.45",

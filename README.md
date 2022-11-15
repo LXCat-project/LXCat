@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: LXCat team
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # LXCat Next Generation
 
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
@@ -35,11 +41,20 @@ docker-compose run setup seed seeds/test
 # To seed db with production data use
 # The `./database/seeds` directory is bind mounted inside the Docker container,
 # so copy any seed files to that directory
-cp -r <production data seed> ./database/seeds/<production data seed>
-docker-compose run setup seed seeds/<production data seed>
+cp -r <production data seed> ./packages/database/seeds/<production data seed>
+docker-compose run setup load-css /packages/database/seeds/<production data seed>
 # To give an already logged in user admin rights
 docker-compose run setup make-admin <email of user>
 ```
 
 Web application will run at `http://localhost:3000`.
 The app should be reversed proxied by a web server to provide https.
+
+## License
+
+The code in this project is released under GNU Affero General Public License v3.0 or later.
+Except for the schema (packages/schema) and converter (packages/converter) packages which is released under Apache 2.0.
+
+## Copyright
+
+The LXCat team wrote the LXCat code. The LXCat team members are listend in [CITATION.cff](CITATION.cff).

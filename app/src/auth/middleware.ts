@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import {
   Session,
   unstable_getServerSession as getServerSession,
@@ -13,6 +17,7 @@ import { Role } from "@lxcat/database/dist/auth/schema";
 import { decode } from "next-auth/jwt";
 import { options } from "./options";
 import { ParsedUrlQuery } from "querystring";
+import { DOWNLOAD_COOKIE_NAME } from "../shared/download";
 
 interface JwtPayload {
   email: string;
@@ -24,7 +29,7 @@ export interface AuthRequest extends NextApiRequest {
 }
 
 /**
- * API Middleware to check if request contains an authenticated session or valid API token.
+ * API Middleware to check if request contains an authenticated session, a valid download token in cookie or valid API token.
  * Sets `user` property in `req` or returns 401.
  */
 export const hasSessionOrAPIToken: RequestHandler<
@@ -36,6 +41,19 @@ export const hasSessionOrAPIToken: RequestHandler<
     req.user = session.user;
     next();
     return;
+  }
+  if (DOWNLOAD_COOKIE_NAME in req.cookies) {
+    const secret = process.env.NEXTAUTH_SECRET!;
+    const token = req.cookies[DOWNLOAD_COOKIE_NAME];
+    const session2 = await decode({ token, secret });
+    if (session2 !== null) {
+      req.user = {
+        roles: session2.roles as Role[],
+        email: session2.email as string,
+      };
+      next();
+      return;
+    }
   }
   if (req.headers.authorization?.split(" ")[0] === "Bearer") {
     const token = req.headers.authorization.split(" ")[1];
@@ -103,6 +121,29 @@ export const hasDeveloperRole: RequestHandler<
 > = async (req, res, next) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.developer)) {
+      next();
+    } else {
+      res.status(403).end("Forbidden");
+    }
+  } else {
+    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+  }
+};
+
+/**
+ * API Middleware to check if user has developer or download role.
+ * Returns 403 when user does not have developer or download role.
+ */
+export const hasDeveloperOrDownloadRole: RequestHandler<
+  AuthRequest,
+  NextApiResponse
+> = async (req, res, next) => {
+  if (req.user) {
+    if (
+      "roles" in req.user &&
+      (req.user.roles!.includes(Role.enum.developer) ||
+        req.user.roles!.includes(Role.enum.download))
+    ) {
       next();
     } else {
       res.status(403).end("Forbidden");

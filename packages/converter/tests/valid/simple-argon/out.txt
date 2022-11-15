@@ -2,6 +2,11 @@
 
 COMMENT: An example cross section set.
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PERMLINK:         https://ng.lxcat.net/scat-css/test-id
+TERMS OF USE:     https://ng.lxcat.net/scat-css/test-id#terms_of_use
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 ************************************************************************************************************************
 
 EFFECTIVE

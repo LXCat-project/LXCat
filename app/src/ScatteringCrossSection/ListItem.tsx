@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import Link from "next/link";
 import { ReactionSummary } from "./ReactionSummary";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";

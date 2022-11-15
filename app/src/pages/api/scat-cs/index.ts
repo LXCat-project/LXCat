@@ -1,5 +1,9 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import {
-  byIds,
+  getCSHeadings,
   getCSIdByReactionTemplate,
   ReactionOptions,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -57,7 +61,7 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
   );
 
   const csIds = new Set(csIdsNested.flat());
-  const csHeadings = await byIds(Array.from(csIds), { count: 100, offset });
+  const csHeadings = await getCSHeadings(Array.from(csIds), { count: 100, offset });
   res.json(csHeadings);
 });
 

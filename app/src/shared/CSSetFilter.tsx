@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { CSSetTree } from "@lxcat/database/dist/cs/queries/public";
 import { Box, Checkbox, Space, Stack } from "@mantine/core";
 import { IconChevronDown, IconChevronRight } from "@tabler/icons";

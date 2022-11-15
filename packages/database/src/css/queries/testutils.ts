@@ -1,10 +1,16 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
 import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
+
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { State } from "@lxcat/schema/dist/core/state";
 import { Dict, XOR } from "@lxcat/schema/dist/core/util";
+import { expect } from "vitest";
 
 import { toggleRole } from "../../auth/queries";
 import {
@@ -32,6 +38,9 @@ export async function createCsCollections() {
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;
+export const matches8601 = expect.stringMatching(ISO_8601_UTC);
+
+export const matchesId = expect.stringMatching(/\d+/);
 
 export async function startDbWithUserAndCssCollections() {
   const stopContainer = await startDbContainer();

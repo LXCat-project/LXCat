@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import "dotenv/config";
 import { db } from "../src/db";
 import ContributorIndbAsJsonSchema from "../src/shared/schemas/Contributor.schema.json";

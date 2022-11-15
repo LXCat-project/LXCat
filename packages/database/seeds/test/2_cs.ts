@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: LXCat team
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import "dotenv/config";
 import { join, dirname } from "path";
 import { load_css_dir } from "../../src/css/loaders";

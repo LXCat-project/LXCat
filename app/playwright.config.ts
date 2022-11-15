@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 
@@ -19,6 +22,7 @@ const config: PlaywrightTestConfig = {
         ? "http://docker:8003"
         : "http://localhost:8003",
       NEXTAUTH_SECRET: "secret4tests",
+      NEXT_PUBLIC_URL: "http://localhost:8001",
       NEXTAUTH_URL: "http://localhost:8001/api/auth",
       TESTOIDC_CLIENT_ID: "lxcat-ng-test",
       TESTOIDC_CLIENT_SECRET: "clientsecret4tests",
