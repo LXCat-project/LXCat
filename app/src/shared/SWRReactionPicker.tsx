@@ -22,6 +22,7 @@ import { Latex } from "./Latex";
 import { ReactionPicker } from "./ReactionPicker";
 
 import useSWRImmutable from "swr/immutable";
+import useSWR from "swr";
 
 const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
   entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
@@ -219,39 +220,28 @@ const csSetsFetcher = async ({
     reversible
   );
 
-const consumesFetcher = async ({
+const stateFetcher = async ({
   consumes,
   produces,
   type_tags,
   reversible,
   set,
-}: ReactionOptions) =>
-  Promise.all(
-    consumes.map(async (_, index) =>
-      fetchStateTreeForSelection(
-        StateProcess.Consumed,
-        getStateLeafs(consumes.filter((_, j) => j !== index)),
-        getStateLeafs(produces),
-        type_tags,
-        reversible,
-        new Set(set)
-      )
-    )
-  );
-
-const producesFetcher = async ({
-  consumes,
-  produces,
-  type_tags,
-  reversible,
-  set,
-}: ReactionOptions) =>
+  process,
+}: ReactionOptions & { process: StateProcess }) =>
   Promise.all(
     produces.map(async (_, index) =>
       fetchStateTreeForSelection(
-        StateProcess.Produced,
-        getStateLeafs(consumes),
-        getStateLeafs(produces.filter((_, j) => j !== index)),
+        process,
+        getStateLeafs(
+          consumes.filter(
+            (_, j) => process === StateProcess.Consumed && j !== index
+          )
+        ),
+        getStateLeafs(
+          produces.filter(
+            (_, j) => process === StateProcess.Produced && j !== index
+          )
+        ),
         type_tags,
         reversible,
         new Set(set)
@@ -296,15 +286,22 @@ export const SWRReactionPicker = ({
     csSetsFetcher
   );
   const { data: consumes, error: consumeError } = useSWRImmutable(
-    selection,
-    consumesFetcher
+    { ...selection, process: StateProcess.Consumed },
+    stateFetcher
   );
   const { data: produces, error: produceError } = useSWRImmutable(
-    selection,
-    producesFetcher
+    { ...selection, process: StateProcess.Produced },
+    stateFetcher
   );
 
   if (!(typeTags && consumes && produces && reversible && csSets)) {
+    console.log(
+      JSON.stringify(
+        { consumes, produces, reversible, typeTags, csSets },
+        null,
+        2
+      )
+    );
     return (
       <div>
         {JSON.stringify(
