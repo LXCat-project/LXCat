@@ -30,7 +30,7 @@ test.describe("cross section index page", () => {
   });
 
   // FIXME: How to uniquely locate consuming StateSelect and select Uo?
-  test.only("should have 2 items listed", async ({ page }) => {
+  test("should have 2 items listed", async ({ page }) => {
     const section1 = page.locator('text=/.*Part of "Some name" set.*/');
     const section2 = page.locator('text=/.*Part of "Some other name" set.*/');
     await expect(section1).toBeVisible();
