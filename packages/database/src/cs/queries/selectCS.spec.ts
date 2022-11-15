@@ -12,8 +12,8 @@ import {
 } from "../../css/queries/testutils";
 import {
   byId,
-  byIds,
   defaultSearchOptions,
+  getCSHeadings,
   getCSIdByReactionTemplate,
   ReactionChoices,
   ReactionOptions,
@@ -442,7 +442,7 @@ describe("Selecting individual cross sections", () => {
 
       publishedChoices = (await searchFacets(defaultOptions)).reactions[0]!;
       csIds = await getCSIdsFromTemplate(defaultOptions.reactions[0]!);
-      searchResults = await byIds(csIds, { offset: 0, count: 10 });
+      searchResults = await getCSHeadings(csIds, { offset: 0, count: 10 });
 
       return truncateCrossSectionSetCollections;
     });
