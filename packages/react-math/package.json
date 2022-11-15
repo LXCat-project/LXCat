@@ -14,7 +14,8 @@
     "dev": "tsc --watch",
     "build": "tsc",
     "format": "prettier --write src/",
-    "lint": "eslint --ext .ts,.tsx src/"
+    "lint": "eslint --ext .ts,.tsx src/",
+    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src"
   },
   "dependencies": {
     "katex": "^0.16.2",
