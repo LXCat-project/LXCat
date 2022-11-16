@@ -4,6 +4,8 @@
 
 import { useMemo } from "react";
 
+import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 
 import { reference2bibliography } from "./cite";
@@ -16,10 +18,10 @@ export const Reference = (r: ReferenceRecord) => {
     <cite>
       {r.URL ? (
         <a href={r.URL} target="_blank" rel="noreferrer">
-          {bibliography}
+          <Latex>{bibliography}</Latex>
         </a>
       ) : (
-        bibliography
+        <Latex>bibliography</Latex>
       )}
     </cite>
   );
