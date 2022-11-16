@@ -8,6 +8,8 @@ import {
   Facets,
   getCSHeadings,
   getCSIdByReactionTemplate,
+  ReactionChoices,
+  Reversible,
   searchFacets,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
@@ -15,6 +17,7 @@ import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+import { getIdByLabel } from '@lxcat/database/dist/shared/queries/state'
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
@@ -28,11 +31,40 @@ import { Button } from "@mantine/core";
 import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 import { useRouter } from "next/router";
 
+interface Example {
+  label: string;
+  selection: SearchOptions
+  facets: Facets
+}
+
 interface Props {
   items: CrossSectionHeading[];
   facets: Facets;
   selection: SearchOptions;
   paging: PagingOptions;
+  defaultReactionChoices: ReactionChoices,
+  examples: Example[]
+}
+
+async function getExample(label: string, particle: string): Promise<Example> {
+  const stateId = await getIdByLabel(particle)
+  const selection: SearchOptions = {
+    reactions: [{
+      consumes: [{
+        particle: stateId
+      }],
+      produces: [],
+      reversible: Reversible.Both,
+      type_tags: [],
+      set: []
+    }]
+  }
+  const facets = await searchFacets(selection);
+  return {
+    label,
+    selection,
+    facets
+  }
 }
 
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
@@ -40,6 +72,8 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   facets,
   selection,
   paging,
+  examples,
+  defaultReactionChoices,
 }) => {
   const [items, setItems] = useState(initialItems);
 
@@ -145,12 +179,22 @@ export const getServerSideProps: GetServerSideProps<
   const items = await getCSHeadings(Array.from(csIds), paging);
 
   const facets = await searchFacets(filter);
+
+  // TODO cache default choices
+  const defaultChoices = await searchFacets({reactions:[{"consumes":[{}],"produces":[{}],"type_tags":[],"reversible": Reversible.Both,"set":[]}]})
+  // TODO cache examples
+  const examples = [
+    await getExample('Argon', 'Ar')
+  ]
+
   return {
     props: {
       items,
       facets,
       selection: filter,
       paging,
+      defaultReactionChoices: defaultChoices.reactions[0],
+      examples
     },
   };
 };

@@ -21,6 +21,7 @@ import {
   ChoiceRow,
   generateStateChoicesAql,
   generateStateFilterAql,
+  getIdByLabel,
   groupStateChoices,
   listStateChoices,
   listStates,
@@ -1060,5 +1061,12 @@ describe("listStates()", () => {
         expect(result).toEqual(expected);
       });
     });
+
+    describe('getIdByLabel()', () => {
+      it('given N2 should return a id', async () => {
+        const result = await getIdByLabel('N2')
+        expect(result).toMatch(/State\/\d+/)
+      })
+    })
   });
 });
