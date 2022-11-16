@@ -24,9 +24,11 @@ test.afterAll(async () => {
   await truncateNonUserCollections();
 });
 
-test.describe("cross section index page", () => {
+test.describe("cross section index page with Uo selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
+    await page.locator('[aria-controls="particle-select"]').first().click()
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
   });
 
   // FIXME: How to uniquely locate consuming StateSelect and select Uo?
@@ -81,6 +83,8 @@ test.describe("cross section set index page", () => {
 test.describe('cross section bag page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
+    await page.locator('[aria-controls="particle-select"]').first().click()
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
     await page.locator('text=Plots and download the currently filtered cross sections').click();
     await page.locator("text=I agree with the terms of use").click();
   });

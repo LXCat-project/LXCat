@@ -17,7 +17,7 @@ import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { getIdByLabel } from '@lxcat/database/dist/shared/queries/state'
+import { getIdByLabel } from "@lxcat/database/dist/shared/queries/state";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
@@ -33,8 +33,8 @@ import { useRouter } from "next/router";
 
 interface Example {
   label: string;
-  selection: SearchOptions
-  facets: Facets
+  selection: SearchOptions;
+  facets: Facets;
 }
 
 interface Props {
@@ -42,29 +42,39 @@ interface Props {
   facets: Facets;
   selection: SearchOptions;
   paging: PagingOptions;
-  defaultReactionChoices: ReactionChoices,
-  examples: Example[]
+  defaultReactionChoices: ReactionChoices;
+  examples: Example[];
 }
 
-async function getExample(label: string, particle: string): Promise<Example> {
-  const stateId = await getIdByLabel(particle)
-  const selection: SearchOptions = {
-    reactions: [{
-      consumes: [{
-        particle: stateId
-      }],
-      produces: [],
-      reversible: Reversible.Both,
-      type_tags: [],
-      set: []
-    }]
+async function getExample(
+  label: string,
+  particle: string
+): Promise<Example | undefined> {
+  const stateId = await getIdByLabel(particle);
+  if (stateId === undefined) {
+    return undefined;
   }
+  const selection: SearchOptions = {
+    reactions: [
+      {
+        consumes: [
+          {
+            particle: stateId,
+          },
+        ],
+        produces: [],
+        reversible: Reversible.Both,
+        type_tags: [],
+        set: [],
+      },
+    ],
+  };
   const facets = await searchFacets(selection);
   return {
     label,
     selection,
-    facets
-  }
+    facets,
+  };
 }
 
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
@@ -181,11 +191,23 @@ export const getServerSideProps: GetServerSideProps<
   const facets = await searchFacets(filter);
 
   // TODO cache default choices
-  const defaultChoices = await searchFacets({reactions:[{"consumes":[{}],"produces":[{}],"type_tags":[],"reversible": Reversible.Both,"set":[]}]})
+  const defaultChoices = await searchFacets({
+    reactions: [
+      {
+        consumes: [{}],
+        produces: [{}],
+        type_tags: [],
+        reversible: Reversible.Both,
+        set: [],
+      },
+    ],
+  });
   // TODO cache examples
-  const examples = [
-    await getExample('Argon', 'Ar')
-  ]
+  const examples = [];
+  const argonExample = await getExample("Argon", "Ar");
+  if (argonExample !== undefined) {
+    examples.push(argonExample);
+  }
 
   return {
     props: {
@@ -194,7 +216,7 @@ export const getServerSideProps: GetServerSideProps<
       selection: filter,
       paging,
       defaultReactionChoices: defaultChoices.reactions[0],
-      examples
+      examples,
     },
   };
 };

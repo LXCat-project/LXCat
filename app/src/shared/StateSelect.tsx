@@ -76,6 +76,8 @@ export const StateSelect = ({
         onChange={particleChange}
         placeholder={"\\mathrm{Particle}"}
         clearable={true}
+        // TODO make name uniq between StateSelect instances
+        name="particle-select"
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0 ? (
         <>

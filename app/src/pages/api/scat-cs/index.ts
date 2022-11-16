@@ -61,7 +61,10 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
   );
 
   const csIds = new Set(csIdsNested.flat());
-  const csHeadings = await getCSHeadings(Array.from(csIds), { count: 100, offset });
+  const csHeadings = await getCSHeadings(Array.from(csIds), {
+    count: 100,
+    offset,
+  });
   res.json(csHeadings);
 });
 

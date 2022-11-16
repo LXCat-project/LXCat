@@ -15,6 +15,7 @@ export interface LatexSelectProps {
   onChange: (newValue?: string) => void | Promise<void>;
   placeholder?: string;
   clearable?: boolean;
+  name?: string;
 }
 
 export const LatexSelect = ({
@@ -23,6 +24,7 @@ export const LatexSelect = ({
   onChange,
   placeholder,
   clearable,
+  name,
 }: LatexSelectProps) => {
   return (
     <Menu>
@@ -61,7 +63,7 @@ export const LatexSelect = ({
               }}
             />
           ) : (
-            <IconSelector size={16} color="gray" />
+            <IconSelector size={16} color="gray" aria-controls={name} />
           )}
         </Group>
       </Menu.Target>
