@@ -229,23 +229,24 @@ const stateFetcher = async ({
   process,
 }: ReactionOptions & { process: StateProcess }) =>
   Promise.all(
-    produces.map(async (_, index) =>
-      fetchStateTreeForSelection(
-        process,
-        getStateLeafs(
-          consumes.filter(
-            (_, j) => process === StateProcess.Consumed && j !== index
-          )
-        ),
-        getStateLeafs(
-          produces.filter(
-            (_, j) => process === StateProcess.Produced && j !== index
-          )
-        ),
-        type_tags,
-        reversible,
-        new Set(set)
-      )
+    (process === StateProcess.Consumed ? consumes : produces).map(
+      async (_, index) =>
+        fetchStateTreeForSelection(
+          process,
+          getStateLeafs(
+            consumes.filter(
+              (_, j) => process === StateProcess.Consumed && j !== index
+            )
+          ),
+          getStateLeafs(
+            produces.filter(
+              (_, j) => process === StateProcess.Produced && j !== index
+            )
+          ),
+          type_tags,
+          reversible,
+          new Set(set)
+        )
     )
   );
 

@@ -135,8 +135,8 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onConsumesAppend={() =>
-                    setReactions((prevReactions) => {
-                      const test = prevReactions.map((reaction, index) =>
+                    setReactions((prevReactions) =>
+                      prevReactions.map((reaction, index) =>
                         index === i
                           ? {
                               ...reaction,
@@ -150,9 +150,8 @@ export const SWRFilterComponent = ({
                               },
                             }
                           : reaction
-                      );
-                      return test;
-                    })
+                      )
+                    )
                   }
                   onConsumesRemove={(indexToRemove) =>
                     setReactions((prevReactions) =>
