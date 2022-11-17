@@ -296,18 +296,16 @@ export interface SearchOptions {
   reactions: ReactionOptions[];
 }
 
+export const defaultReactionOptions = () => ({
+  consumes: [{}],
+  produces: [{}],
+  type_tags: [],
+  reversible: Reversible.Both,
+  set: [],
+});
+
 export function defaultSearchOptions(): SearchOptions {
-  return {
-    reactions: [
-      {
-        consumes: [{}],
-        produces: [{}],
-        type_tags: [],
-        reversible: Reversible.Both,
-        set: [],
-      },
-    ],
-  };
+  return { reactions: [defaultReactionOptions()] };
 }
 
 export function setNamesFilterAql(set_names: string[]) {
@@ -324,7 +322,10 @@ export function setNamesFilterAql(set_names: string[]) {
   `;
 }
 
-export async function getCSHeadings(csIds: Array<string>, paging: PagingOptions) {
+export async function getCSHeadings(
+  csIds: Array<string>,
+  paging: PagingOptions
+) {
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
 	FOR cs IN CrossSection

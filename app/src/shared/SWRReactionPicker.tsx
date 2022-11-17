@@ -19,10 +19,9 @@ import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Group } from "@mantine/core";
 import { useState } from "react";
 import { Latex } from "./Latex";
-import { ReactionPicker } from "./ReactionPicker";
+import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
 
 import useSWRImmutable from "swr/immutable";
-import useSWR from "swr";
 
 const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
   entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
@@ -34,7 +33,7 @@ export const fetchStateTreeForSelection = async (
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
   setIds: Set<string>
-) =>
+): Promise<StateTree> =>
   (
     await fetch(
       `/api/states/partaking?${new URLSearchParams({
@@ -46,13 +45,13 @@ export const fetchStateTreeForSelection = async (
         setIds: JSON.stringify([...setIds]),
       })}`
     )
-  ).json() as Promise<StateTree>;
+  ).json();
 export const fetchTypeTags = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
   setIds: Set<string>
-) =>
+): Promise<Array<ReactionTypeTag>> =>
   (
     await fetch(
       `/api/reactions/type_tags?${new URLSearchParams({
@@ -62,13 +61,13 @@ export const fetchTypeTags = async (
         setIds: JSON.stringify([...setIds]),
       })}`
     )
-  ).json() as Promise<Array<ReactionTypeTag>>;
+  ).json();
 export const fetchReversible = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   setIds: Set<string>
-) =>
+): Promise<Array<Reversible>> =>
   (
     await fetch(
       `/api/reactions/reversible?${new URLSearchParams({
@@ -78,13 +77,13 @@ export const fetchReversible = async (
         setIds: JSON.stringify([...setIds]),
       })}`
     )
-  ).json() as Promise<Array<Reversible>>;
+  ).json();
 export const fetchCSSets = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible
-) =>
+): Promise<CSSetTree> =>
   (
     await fetch(
       `/api/reactions/cs-set?${new URLSearchParams({
@@ -94,7 +93,7 @@ export const fetchCSSets = async (
         reversible,
       })}`
     )
-  ).json() as Promise<CSSetTree>;
+  ).json();
 
 const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   let latex = "";
@@ -122,44 +121,6 @@ const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   return latex;
 };
 
-const getLatexForReaction = (
-  choices: ReactionChoices,
-  options: ReactionOptions
-) => {
-  let lhs = options.consumes
-    .map((path, j) => {
-      const tree = choices.consumes[j];
-      return getLatexFromTree(tree, path);
-    })
-    .join("+");
-  if (lhs === "") {
-    lhs = "*";
-  }
-  let rhs = options.produces
-    .map((path, j) => {
-      const tree = choices.produces[j];
-      return getLatexFromTree(tree, path);
-    })
-    .join("+");
-  if (rhs === "") {
-    rhs = "*";
-  }
-
-  const arrow =
-    options.reversible === Reversible.Both
-      ? "\\rightarrow \\\\ \\leftrightarrow"
-      : options.reversible === Reversible.False
-      ? "\\rightarrow"
-      : "\\leftrightarrow";
-
-  return (
-    <Group>
-      <Latex>{lhs}</Latex>
-      <Latex>{arrow}</Latex>
-      <Latex>{rhs}</Latex>
-    </Group>
-  );
-};
 
 export interface StateSelectIds {
   consumes: Array<string>;
@@ -170,10 +131,19 @@ export type StatefulReactionPickerProps = {
   ids: StateSelectIds;
   selection: ReactionOptions;
   editable: boolean;
-  onConsumesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  latex: JSX.Element;
+  onConsumesChange(
+    index: number,
+    newSelected: StatePath,
+    newLatex: string
+  ): void | Promise<void>;
   onConsumesAppend(): void | Promise<void>;
   onConsumesRemove(index: number): void | Promise<void>;
-  onProducesChange(newSelected: Array<StatePath>): void | Promise<void>;
+  onProducesChange(
+    index: number,
+    newSelected: StatePath,
+    newLatex: string
+  ): void | Promise<void>;
   onProducesAppend(): void | Promise<void>;
   onProducesRemove(index: number): void | Promise<void>;
   onTagsChange(newSelected: Array<ReactionTypeTag>): void | Promise<void>;
@@ -220,36 +190,6 @@ const csSetsFetcher = async ({
     reversible
   );
 
-const stateFetcher = async ({
-  consumes,
-  produces,
-  type_tags,
-  reversible,
-  set,
-  process,
-}: ReactionOptions & { process: StateProcess }) =>
-  Promise.all(
-    (process === StateProcess.Consumed ? consumes : produces).map(
-      async (_, index) =>
-        fetchStateTreeForSelection(
-          process,
-          getStateLeafs(
-            consumes.filter(
-              (_, j) => process === StateProcess.Consumed && j !== index
-            )
-          ),
-          getStateLeafs(
-            produces.filter(
-              (_, j) => process === StateProcess.Produced && j !== index
-            )
-          ),
-          type_tags,
-          reversible,
-          new Set(set)
-        )
-    )
-  );
-
 function omit<T extends object, K extends keyof T>(
   obj: T,
   ...keys: K[]
@@ -263,6 +203,7 @@ export const SWRReactionPicker = ({
   ids,
   selection,
   editable,
+  latex,
   onConsumesChange,
   onConsumesAppend,
   onConsumesRemove,
@@ -276,39 +217,26 @@ export const SWRReactionPicker = ({
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
   const { data: typeTags, error: tagError } = useSWRImmutable(
     omit(selection, "type_tags"),
-    typeTagFetcher
+    typeTagFetcher,
+    { keepPreviousData: true }
   );
   const { data: reversible, error: reversibleError } = useSWRImmutable(
     omit(selection, "reversible"),
-    reversibleFetcher
+    reversibleFetcher,
+    { keepPreviousData: true }
   );
   const { data: csSets, error: csSetsError } = useSWRImmutable(
     omit(selection, "set"),
-    csSetsFetcher
-  );
-  const { data: consumes, error: consumeError } = useSWRImmutable(
-    { ...selection, process: StateProcess.Consumed },
-    stateFetcher
-  );
-  const { data: produces, error: produceError } = useSWRImmutable(
-    { ...selection, process: StateProcess.Produced },
-    stateFetcher
+    csSetsFetcher,
+    { keepPreviousData: true }
   );
 
-  if (!(typeTags && consumes && produces && reversible && csSets)) {
-    console.log(
-      JSON.stringify(
-        { consumes, produces, reversible, typeTags, csSets },
-        null,
-        2
-      )
-    );
+  if (!(typeTags && reversible && csSets)) {
+    // console.log(JSON.stringify({ reversible, typeTags, csSets }, null, 2));
     return (
       <div>
         {JSON.stringify(
           {
-            consumes: consumeError,
-            produces: produceError,
             reversible: reversibleError,
             typeTags: tagError,
             csSets: csSetsError,
@@ -321,36 +249,44 @@ export const SWRReactionPicker = ({
   }
 
   return editable ? (
-    <ReactionPicker
+    <SWRReactionPickerImpl
       consumes={{
         entries: ids.consumes.map((id, index) => ({
           id,
-          data: consumes[index],
           selected: selection.consumes[index],
+          selection: {
+            consumes: getStateLeafs(
+              selection.consumes.filter((_, j) => j !== index)
+            ),
+            produces: getStateLeafs(selection.produces),
+            typeTags: selection.type_tags,
+            reversible: selection.reversible,
+            csSets: new Set(selection.set),
+          },
         })),
+        process: StateProcess.Consumed,
         onAppend: onConsumesAppend,
         onRemove: onConsumesRemove,
-        onUpdate: async (index, selected) =>
-          onConsumesChange(
-            selection.consumes.map((value, j) =>
-              index === j ? selected : value
-            )
-          ),
+        onUpdate: onConsumesChange,
       }}
       produces={{
         entries: ids.produces.map((id, index) => ({
           id,
-          data: produces[index],
           selected: selection.produces[index],
+          selection: {
+            consumes: getStateLeafs(selection.consumes),
+            produces: getStateLeafs(
+              selection.produces.filter((_, j) => j !== index)
+            ),
+            typeTags: selection.type_tags,
+            reversible: selection.reversible,
+            csSets: new Set(selection.set),
+          },
         })),
+        process: StateProcess.Produced,
         onAppend: onProducesAppend,
         onRemove: onProducesRemove,
-        onUpdate: async (index, selected) =>
-          onProducesChange(
-            selection.produces.map((value, j) =>
-              index === j ? selected : value
-            )
-          ),
+        onUpdate: onProducesChange,
       }}
       reversible={{
         onChange: (value) => onReversibleChange(value as Reversible),
@@ -395,9 +331,6 @@ export const SWRReactionPicker = ({
       }}
     />
   ) : (
-    getLatexForReaction(
-      { consumes, produces, reversible, typeTags, set: csSets },
-      selection
-    )
+    latex
   );
 };

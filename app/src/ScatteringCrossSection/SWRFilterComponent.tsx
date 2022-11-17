@@ -3,16 +3,47 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
+  defaultReactionOptions,
   ReactionOptions,
   Reversible,
   SearchOptions,
 } from "@lxcat/database/dist/cs/queries/public";
-import { Box, Button } from "@mantine/core";
+import { Box, Button, Group } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
+import { Latex } from "../shared/Latex";
 import { StateSelectIds } from "../shared/StatefulReactionPicker";
 import { SWRReactionPicker } from "../shared/SWRReactionPicker";
+
+const getLatexForReaction = (
+  options: ReactionOptions,
+  latex: { consumes: Array<string>; produces: Array<string> }
+) => {
+  let lhs = latex.consumes.join("+");
+  if (lhs === "") {
+    lhs = "*";
+  }
+  let rhs = latex.produces.join("+");
+  if (rhs === "") {
+    rhs = "*";
+  }
+
+  const arrow =
+    options.reversible === Reversible.Both
+      ? "\\rightarrow \\\\ \\leftrightarrow"
+      : options.reversible === Reversible.False
+      ? "\\rightarrow"
+      : "\\leftrightarrow";
+
+  return (
+    <Group>
+      <Latex>{lhs}</Latex>
+      <Latex>{arrow}</Latex>
+      <Latex>{rhs}</Latex>
+    </Group>
+  );
+};
 
 export const SWRFilterComponent = ({
   selection,
@@ -26,6 +57,7 @@ export const SWRFilterComponent = ({
       id: string;
       options: ReactionOptions;
       ids: StateSelectIds;
+      latex: { consumes: Array<string>; produces: Array<string> };
     }>
   >(
     selection.reactions.map((options) => ({
@@ -34,6 +66,10 @@ export const SWRFilterComponent = ({
       ids: {
         consumes: options.consumes.map(() => nanoid()),
         produces: options.produces.map(() => nanoid()),
+      },
+      latex: {
+        consumes: options.consumes.map(() => ""),
+        produces: options.produces.map(() => ""),
       },
     }))
   );
@@ -48,21 +84,13 @@ export const SWRFilterComponent = ({
       (typeof s === "object" && Object.keys(s).length > 0)
   );
 
-  // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
-  const defaultReactionOptions = () => ({
-    consumes: [{}],
-    produces: [{}],
-    type_tags: [],
-    reversible: Reversible.Both,
-    set: [],
-  });
-
   async function onReset() {
     setReactions((_) => [
       {
         id: nanoid(),
         options: defaultReactionOptions(),
         ids: { consumes: [nanoid()], produces: [nanoid()] },
+        latex: { consumes: [""], produces: [""] },
       },
     ]);
     onChange(
@@ -104,6 +132,7 @@ export const SWRFilterComponent = ({
                 <SWRReactionPicker
                   ids={r.ids}
                   selection={r.options}
+                  latex={getLatexForReaction(r.options, r.latex)}
                   onTagsChange={(selectedTags) =>
                     setReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
@@ -119,7 +148,7 @@ export const SWRFilterComponent = ({
                       )
                     )
                   }
-                  onConsumesChange={(selectedConsumed) =>
+                  onConsumesChange={(updatedIndex, path, latex) =>
                     setReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
@@ -127,7 +156,19 @@ export const SWRFilterComponent = ({
                               ...reaction,
                               options: {
                                 ...reaction.options,
-                                consumes: selectedConsumed,
+                                consumes: reaction.options.consumes.map(
+                                  (value, currentIndex) =>
+                                    currentIndex === updatedIndex ? path : value
+                                ),
+                              },
+                              latex: {
+                                ...reaction.latex,
+                                consumes: reaction.latex.consumes.map(
+                                  (value, currentIndex) =>
+                                    currentIndex === updatedIndex
+                                      ? latex
+                                      : value
+                                ),
                               },
                             }
                           : reaction
@@ -147,6 +188,10 @@ export const SWRFilterComponent = ({
                               options: {
                                 ...reaction.options,
                                 consumes: [...reaction.options.consumes, {}],
+                              },
+                              latex: {
+                                ...reaction.latex,
+                                consumes: [...reaction.latex.consumes, ""],
                               },
                             }
                           : reaction
@@ -176,7 +221,7 @@ export const SWRFilterComponent = ({
                       )
                     )
                   }
-                  onProducesChange={(selectedProduced) =>
+                  onProducesChange={(updatedIndex, path, latex) =>
                     setReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
@@ -184,7 +229,19 @@ export const SWRFilterComponent = ({
                               ...reaction,
                               options: {
                                 ...reaction.options,
-                                produces: selectedProduced,
+                                produces: reaction.options.produces.map(
+                                  (value, currentIndex) =>
+                                    currentIndex === updatedIndex ? path : value
+                                ),
+                              },
+                              latex: {
+                                ...reaction.latex,
+                                produces: reaction.latex.produces.map(
+                                  (value, currentIndex) =>
+                                    currentIndex === updatedIndex
+                                      ? latex
+                                      : value
+                                ),
                               },
                             }
                           : reaction
@@ -204,6 +261,10 @@ export const SWRFilterComponent = ({
                               options: {
                                 ...reaction.options,
                                 produces: [...reaction.options.produces, {}],
+                              },
+                              latex: {
+                                ...reaction.latex,
+                                produces: [...reaction.latex.produces, ""],
                               },
                             }
                           : reaction
@@ -328,6 +389,7 @@ export const SWRFilterComponent = ({
                     id: nanoid(),
                     options: defaultReactionOptions(),
                     ids: { consumes: [nanoid()], produces: [nanoid()] },
+                    latex: { consumes: [""], produces: [""] },
                   },
                 ]);
                 setEditableReaction(reactions.length);
