@@ -101,14 +101,8 @@ export const SWRFilterComponent = ({
     );
   }
 
-  function onReactionsChange(newReactions: SearchOptions["reactions"]) {
-    onChange(
-      {
-        ...selection,
-        reactions: newReactions,
-      },
-      "reactions"
-    );
+  function onReactionsChange(newReactions: Array<ReactionOptions>) {
+    onChange({ reactions: newReactions }, "reactions");
   }
   const [editableReaction, setEditableReaction] = useState(
     reactions.length - 1

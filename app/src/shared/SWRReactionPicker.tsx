@@ -4,27 +4,22 @@
 
 import {
   CSSetTree,
-  ReactionChoices,
   ReactionOptions,
   Reversible,
   StateProcess,
 } from "@lxcat/database/dist/cs/queries/public";
 import {
-  getStateLeaf,
+  getStateLeafs,
   StateLeaf,
   StatePath,
 } from "@lxcat/database/dist/shared/getStateLeaf";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { Group } from "@mantine/core";
 import { useState } from "react";
-import { Latex } from "./Latex";
 import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
 
 import useSWRImmutable from "swr/immutable";
-
-const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
-  entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
+import { omit } from "./utils";
 
 export const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
@@ -95,33 +90,6 @@ export const fetchCSSets = async (
     )
   ).json();
 
-const getLatexFromTree = (tree: StateTree, path: StatePath) => {
-  let latex = "";
-
-  if (path.particle) {
-    let particle = tree[path.particle];
-    latex += particle.latex;
-    if (particle.children && path.electronic) {
-      let electronic = particle.children[path.electronic];
-      latex += `\\left(${electronic.latex}`;
-      if (electronic.children && path.vibrational) {
-        const vibrational = electronic.children[path.vibrational];
-        latex += `\\left(v=${vibrational.latex}`;
-        if (vibrational.children && path.rotational) {
-          latex += `\\left(J=${
-            vibrational.children[path.rotational].latex
-          }\\right)`;
-        }
-        latex += "\\right)";
-      }
-      latex += "\\right)";
-    }
-  }
-
-  return latex;
-};
-
-
 export interface StateSelectIds {
   consumes: Array<string>;
   produces: Array<string>;
@@ -189,15 +157,6 @@ const csSetsFetcher = async ({
     type_tags,
     reversible
   );
-
-function omit<T extends object, K extends keyof T>(
-  obj: T,
-  ...keys: K[]
-): Omit<T, K> {
-  const _ = { ...obj };
-  keys.forEach((key) => delete _[key]);
-  return _;
-}
 
 export const SWRReactionPicker = ({
   ids,

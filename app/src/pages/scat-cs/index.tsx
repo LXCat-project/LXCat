@@ -5,31 +5,43 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
 import {
+  CSSetTree,
+  defaultReactionOptions,
+  defaultSearchOptions,
   Facets,
   getCSHeadings,
   getCSIdByReactionTemplate,
   ReactionChoices,
+  ReactionOptions,
   Reversible,
   searchFacets,
   SearchOptions,
+  StateProcess,
 } from "@lxcat/database/dist/cs/queries/public";
 import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { getIdByLabel } from "@lxcat/database/dist/shared/queries/state";
+import {
+  getIdByLabel,
+  StateTree,
+} from "@lxcat/database/dist/shared/queries/state";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
 import { useState } from "react";
 import {
   getStateLeaf,
+  getStateLeafs,
   StateLeaf,
 } from "@lxcat/database/dist/shared/getStateLeaf";
 import Link from "next/link";
 import { Button } from "@mantine/core";
 import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 import { useRouter } from "next/router";
+import { SWRConfig, unstable_serialize } from "swr";
+import { omit } from "../../shared/utils";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 interface Example {
   label: string;
@@ -77,6 +89,83 @@ async function getExample(
   };
 }
 
+const generateCachePairs = (
+  selection: ReactionOptions,
+  choices: ReactionChoices
+) => [
+  [unstable_serialize(omit(selection, "type_tags")), choices.typeTags] as [
+    string,
+    Array<ReactionTypeTag>
+  ],
+  [unstable_serialize(omit(selection, "reversible")), choices.reversible] as [
+    string,
+    Array<Reversible>
+  ],
+  [unstable_serialize(omit(selection, "set")), choices.set] as [
+    string,
+    CSSetTree
+  ],
+  ...choices.consumes.map(
+    (tree, index) =>
+      [
+        unstable_serialize({
+          ...selection,
+          consumes: getStateLeafs(
+            selection.consumes.filter(
+              (_, selectionIndex) => selectionIndex != index
+            )
+          ),
+          produces: getStateLeafs(selection.produces),
+        }),
+        tree,
+      ] as [string, StateTree]
+  ),
+  ...choices.consumes.map(
+    (tree, index) =>
+      [
+        unstable_serialize({
+          ...selection,
+          consumes: getStateLeafs(selection.consumes),
+          produces: getStateLeafs(
+            selection.produces.filter(
+              (_, selectionIndex) => selectionIndex != index
+            )
+          ),
+        }),
+        tree,
+      ] as [string, StateTree]
+  ),
+];
+
+class LogMap {
+  _data: Map<string, any>;
+
+  constructor(pairs: Array<[string, any]>) {
+    this._data = new Map(pairs);
+  }
+
+  has(key: string) {
+    console.log(`[LogMap.has] ${key}`);
+    return this._data.has(key);
+  }
+  get(key: string) {
+    console.log(`[LogMap.get] ${key}`);
+    return this._data.get(key);
+  }
+  set(key: string, value: any) {
+    console.log(`[LogMap.set] ${key}`);
+    return this._data.set(key, value);
+  }
+  delete(key: string) {
+    console.log(`[LogMap.set] ${key}`);
+    return this._data.delete(key);
+  }
+  keys() {
+    console.log(`[LogMap.keys]`);
+    return this._data.keys();
+  }
+}
+
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
@@ -106,13 +195,29 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     setItems(await res.json());
   };
 
+  // FIXME: Manually cached keys are not found at runtime.
   return (
     <Layout title="Scattering Cross Section">
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
       <h1>Scattering Cross Sections</h1>
-      <Filter facets={facets} selection={selection} onChange={onChange} />
+      <SWRConfig
+        value={{
+          provider: () =>
+            new LogMap([
+              ...generateCachePairs(
+                defaultReactionOptions(),
+                defaultReactionChoices
+              ),
+              ...selection.reactions.flatMap((options, index) =>
+                generateCachePairs(options, facets.reactions[index])
+              ),
+            ]),
+        }}
+      >
+        <Filter facets={facets} selection={selection} onChange={onChange} />
+      </SWRConfig>
       <hr />
       <List items={items} />
       <Paging paging={paging} nrOnPage={nrItems} query={router.query} />
@@ -188,20 +293,12 @@ export const getServerSideProps: GetServerSideProps<
   const csIds = new Set(csIdsNested.flat());
   const items = await getCSHeadings(Array.from(csIds), paging);
 
+  // TODO cache facets
+  // TODO only fetch facets if filter !== defaultSearchOptions().
   const facets = await searchFacets(filter);
 
   // TODO cache default choices
-  const defaultChoices = await searchFacets({
-    reactions: [
-      {
-        consumes: [{}],
-        produces: [{}],
-        type_tags: [],
-        reversible: Reversible.Both,
-        set: [],
-      },
-    ],
-  });
+  const defaultChoices = await searchFacets(defaultSearchOptions());
   // TODO cache examples
   const examples = [];
   const argonExample = await getExample("Argon", "Ar");

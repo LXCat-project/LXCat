@@ -4,8 +4,7 @@
 
 import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { useRouter } from "next/router";
-import { SWRConfig } from "swr/_internal";
-import { FilterComponent } from "./FilterComponent";
+import { useSWRConfig } from "swr/_internal";
 import { SWRFilterComponent } from "./SWRFilterComponent";
 
 interface Props {
@@ -16,6 +15,8 @@ interface Props {
 
 export const Filter = ({ facets, selection, onChange }: Props) => {
   const router = useRouter();
+  const {cache} = useSWRConfig();
+  console.log(cache);
 
   function onFilterChange(newSelection: SearchOptions, event?: string) {
     const query = {
@@ -31,12 +32,10 @@ export const Filter = ({ facets, selection, onChange }: Props) => {
   }
 
   return (
-    <SWRConfig value={{ provider: () => new Map() }}>
       <SWRFilterComponent
         // facets={facets}
         selection={selection}
         onChange={onFilterChange}
       />
-    </SWRConfig>
   );
 };

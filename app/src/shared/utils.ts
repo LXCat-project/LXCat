@@ -20,9 +20,18 @@ export const parseParam = <ParsedType>(
     ? (JSON.parse(param) as ParsedType)
     : defaultValue;
 
-export function mapObject<T, R>(
+export const mapObject = <T, R>(
   obj: Record<string, T>,
   callback: (pair: [string, T]) => [string, R]
-): Record<string, R> {
+): Record<string, R> => {
   return Object.fromEntries(Object.entries(obj).map(callback));
-}
+};
+
+export const omit = <T extends object, K extends keyof T>(
+  obj: T,
+  ...keys: K[]
+): Omit<T, K> => {
+  const _ = { ...obj };
+  keys.forEach((key) => delete _[key]);
+  return _;
+};

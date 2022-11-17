@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
+  defaultReactionOptions,
   Facets,
   ReactionChoices,
   ReactionOptions,
@@ -92,15 +93,6 @@ export const FilterComponent = ({
       (Array.isArray(s) && s.length > 0) ||
       (typeof s === "object" && Object.keys(s).length > 0)
   );
-
-  // TODO dedup packages/database/src/cs/queries/public.ts:defaultSearchOptions()
-  const defaultReactionOptions = () => ({
-    consumes: [{}],
-    produces: [{}],
-    type_tags: [],
-    reversible: Reversible.Both,
-    set: [],
-  });
 
   async function onReset() {
     const choices = await defaultReactionChoices();

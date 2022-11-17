@@ -44,3 +44,6 @@ export const getStateLeaf = ({
 
   return undefined;
 };
+
+export const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
+  entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
