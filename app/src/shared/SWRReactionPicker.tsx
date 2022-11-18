@@ -190,8 +190,9 @@ export const SWRReactionPicker = ({
     { keepPreviousData: true }
   );
 
+  // NOTE: Technically this should never equate to true, as `keepPreviousData` 
+  // is true and the initial state is prefetched and added to the cache.
   if (!(typeTags && reversible && csSets)) {
-    // console.log(JSON.stringify({ reversible, typeTags, csSets }, null, 2));
     return (
       <div>
         {JSON.stringify(
