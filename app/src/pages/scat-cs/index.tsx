@@ -42,6 +42,7 @@ import { useRouter } from "next/router";
 import { SWRConfig, unstable_serialize } from "swr";
 import { omit } from "../../shared/utils";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import deepEqual from "deep-equal";
 
 interface Example {
   label: string;
@@ -143,35 +144,6 @@ const generateCachePairs = (
   ),
 ];
 
-class LogMap {
-  _data: Map<string, any>;
-
-  constructor(pairs: Array<[string, any]>) {
-    this._data = new Map(pairs);
-  }
-
-  has(key: string) {
-    console.log(`[LogMap.has] ${key}`);
-    return this._data.has(key);
-  }
-  get(key: string) {
-    console.log(`[LogMap.get] ${key}`);
-    return this._data.get(key);
-  }
-  set(key: string, value: any) {
-    console.log(`[LogMap.set] ${key}`);
-    return this._data.set(key, value);
-  }
-  delete(key: string) {
-    console.log(`[LogMap.set] ${key}`);
-    return this._data.delete(key);
-  }
-  keys() {
-    console.log(`[LogMap.keys]`);
-    return this._data.keys();
-  }
-}
-
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
@@ -209,7 +181,6 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <h1>Scattering Cross Sections</h1>
       <SWRConfig
         value={{
-          provider: () => new LogMap([]),
           fallback: Object.fromEntries([
             ...generateCachePairs(
               defaultReactionOptions(),
@@ -258,58 +229,61 @@ export const getServerSideProps: GetServerSideProps<
     // count: Number.MAX_SAFE_INTEGER,
   };
 
-  const csIdsNested = await Promise.all(
-    filter.reactions.map(
-      async ({
-        consumes: consumesPaths,
-        produces: producesPaths,
-        typeTags,
-        reversible,
-        set,
-      }) => {
-        const consumes = consumesPaths
-          .map(getStateLeaf)
-          .filter((leaf): leaf is StateLeaf => leaf !== undefined);
-        const produces = producesPaths
-          .map(getStateLeaf)
-          .filter((leaf): leaf is StateLeaf => leaf !== undefined);
+  const defaultOptions = defaultSearchOptions();
+  const defaultChoices = searchFacets(defaultOptions);
 
-        if (
-          !(
-            consumes.length === 0 &&
-            produces.length === 0 &&
-            typeTags.length === 0 &&
-            set.length === 0
+  const [facets, items] = deepEqual(defaultOptions, filter)
+    ? [await defaultChoices, []]
+    : await Promise.all([
+        searchFacets(filter),
+        Promise.all(
+          filter.reactions.map(
+            async ({
+              consumes: consumesPaths,
+              produces: producesPaths,
+              typeTags,
+              reversible,
+              set,
+            }) => {
+              const consumes = consumesPaths
+                .map(getStateLeaf)
+                .filter((leaf): leaf is StateLeaf => leaf !== undefined);
+              const produces = producesPaths
+                .map(getStateLeaf)
+                .filter((leaf): leaf is StateLeaf => leaf !== undefined);
+
+              if (
+                !(
+                  consumes.length === 0 &&
+                  produces.length === 0 &&
+                  typeTags.length === 0 &&
+                  set.length === 0
+                )
+              ) {
+                return getCSIdByReactionTemplate(
+                  consumes,
+                  produces,
+                  typeTags,
+                  reversible,
+                  set
+                );
+              } else {
+                return [];
+              }
+            }
           )
-        ) {
-          return getCSIdByReactionTemplate(
-            consumes,
-            produces,
-            typeTags,
-            reversible,
-            set
-          );
-        } else {
-          return [];
-        }
-      }
-    )
-  );
-  const csIds = new Set(csIdsNested.flat());
-  const items = await getCSHeadings(Array.from(csIds), paging);
+        ).then((csIdsNested) =>
+          getCSHeadings([...new Set(csIdsNested.flat())], paging)
+        ),
+      ]);
+  // }
 
-  // TODO cache facets
-  // TODO only fetch facets if filter !== defaultSearchOptions().
-  const facets = await searchFacets(filter);
-
-  // TODO cache default choices
-  const defaultChoices = await searchFacets(defaultSearchOptions());
-  // TODO cache examples
-  const examples = [];
-  const argonExample = await getExample("Argon", "Ar");
-  if (argonExample !== undefined) {
-    examples.push(argonExample);
-  }
+  // TODO: implement and cache examples
+  // const examples = [];
+  // const argonExample = await getExample("Argon", "Ar");
+  // if (argonExample !== undefined) {
+  //   examples.push(argonExample);
+  // }
 
   return {
     props: {
@@ -317,8 +291,8 @@ export const getServerSideProps: GetServerSideProps<
       facets,
       selection: filter,
       paging,
-      defaultReactionChoices: defaultChoices.reactions[0],
-      examples,
+      defaultReactionChoices: (await defaultChoices).reactions[0],
+      examples: [],
     },
   };
 };
