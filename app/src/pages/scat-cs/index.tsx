@@ -144,8 +144,39 @@ const generateCachePairs = (
   ),
 ];
 
-// FIXME: The page is not refreshed when the clear button is clicked in one of 
-// the state selects (might also be a caching error).
+class CacheMap {
+  _data: Map<string, any>;
+
+  constructor(pairs: Array<[string, any]>) {
+    this._data = new Map(
+      pairs.map(([key, value]) => [
+        key,
+        { data: value, isValidating: false, isLoading: false },
+      ])
+    );
+  }
+
+  has(key: string) {
+    return this._data.has(key);
+  }
+
+  get(key: string) {
+    return this._data.get(key);
+  }
+
+  set(key: string, value: any) {
+    return this._data.set(key, value);
+  }
+
+  delete(key: string) {
+    return this._data.delete(key);
+  }
+
+  keys() {
+    return this._data.keys();
+  }
+}
+
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
@@ -183,15 +214,16 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <h1>Scattering Cross Sections</h1>
       <SWRConfig
         value={{
-          fallback: Object.fromEntries([
-            ...generateCachePairs(
-              defaultReactionOptions(),
-              defaultReactionChoices
-            ),
-            ...selection.reactions.flatMap((options, index) =>
-              generateCachePairs(options, facets.reactions[index])
-            ),
-          ]),
+          provider: () =>
+            new CacheMap([
+              ...generateCachePairs(
+                defaultReactionOptions(),
+                defaultReactionChoices
+              ),
+              ...selection.reactions.flatMap((options, index) =>
+                generateCachePairs(options, facets.reactions[index])
+              ),
+            ]),
         }}
       >
         <Filter facets={facets} selection={selection} onChange={onChange} />
