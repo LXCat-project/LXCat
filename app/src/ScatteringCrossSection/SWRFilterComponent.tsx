@@ -135,7 +135,7 @@ export const SWRFilterComponent = ({
                               ...reaction,
                               options: {
                                 ...reaction.options,
-                                type_tags: selectedTags,
+                                typeTags: selectedTags,
                               },
                             }
                           : reaction

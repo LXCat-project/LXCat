@@ -227,7 +227,7 @@ async function reactionsChoices(
         consumes: consumesPaths,
         produces: producesPaths,
         reversible,
-        typeTags: type_tags,
+        typeTags,
         set,
       }) => {
         const consumes = consumesPaths
@@ -257,7 +257,7 @@ async function reactionsChoices(
                     )
                     .map(getStateLeaf) as Array<StateLeaf>,
                   produces,
-                  type_tags,
+                  typeTags,
                   reversible,
                   set
                 );
@@ -277,7 +277,7 @@ async function reactionsChoices(
                         path.particle !== undefined
                     )
                     .map(getStateLeaf) as Array<StateLeaf>,
-                  type_tags,
+                  typeTags,
                   reversible,
                   set
                 );
@@ -287,8 +287,8 @@ async function reactionsChoices(
           getAvailableTypeTags(consumes, produces, reversible, set).then(
             (typeTags) => typeTags ?? []
           ),
-          getReversible(consumes, produces, type_tags, set),
-          getCSSets(consumes, produces, type_tags, reversible),
+          getReversible(consumes, produces, typeTags, set),
+          getCSSets(consumes, produces, typeTags, reversible),
         ]);
 
         return {
@@ -299,7 +299,7 @@ async function reactionsChoices(
           set: setChoices,
         };
       }
-    ),
+    )
   );
 }
 
