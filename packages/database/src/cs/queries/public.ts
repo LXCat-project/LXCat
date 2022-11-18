@@ -227,7 +227,7 @@ async function reactionsChoices(
       consumes: consumesPaths,
       produces: producesPaths,
       reversible,
-      type_tags,
+      typeTags: type_tags,
       set,
     } = reaction;
     const consumes = consumesPaths
@@ -288,7 +288,7 @@ export interface ReactionOptions {
   consumes: StatePath[];
   produces: StatePath[];
   reversible: Reversible;
-  type_tags: ReactionTypeTag[];
+  typeTags: ReactionTypeTag[];
   set: string[];
 }
 
@@ -299,7 +299,7 @@ export interface SearchOptions {
 export const defaultReactionOptions = () => ({
   consumes: [{}],
   produces: [{}],
-  type_tags: [],
+  typeTags: [],
   reversible: Reversible.Both,
   set: [],
 });

@@ -27,7 +27,7 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
       async ({
         consumes: consumesPaths,
         produces: producesPaths,
-        type_tags: typeTags,
+        typeTags: typeTags,
         reversible,
         set,
       }) => {

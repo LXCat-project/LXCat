@@ -76,7 +76,7 @@ async function getExample(
         ],
         produces: [],
         reversible: Reversible.Both,
-        type_tags: [],
+        typeTags: [],
         set: [],
       },
     ],
@@ -93,7 +93,7 @@ const generateCachePairs = (
   selection: ReactionOptions,
   choices: ReactionChoices
 ) => [
-  [unstable_serialize(omit(selection, "type_tags")), choices.typeTags] as [
+  [unstable_serialize(omit(selection, "typeTags")), choices.typeTags] as [
     string,
     Array<ReactionTypeTag>
   ],
@@ -116,7 +116,7 @@ const generateCachePairs = (
           ),
           produces: getStateLeafs(selection.produces),
           reversible: selection.reversible,
-          typeTags: selection.type_tags,
+          typeTags: selection.typeTags,
           csSets: selection.set,
           process: StateProcess.Consumed,
         }),
@@ -134,7 +134,7 @@ const generateCachePairs = (
             )
           ),
           reversible: selection.reversible,
-          typeTags: selection.type_tags,
+          typeTags: selection.typeTags,
           csSets: selection.set,
           process: StateProcess.Produced,
         }),
@@ -263,7 +263,7 @@ export const getServerSideProps: GetServerSideProps<
       async ({
         consumes: consumesPaths,
         produces: producesPaths,
-        type_tags: typeTags,
+        typeTags,
         reversible,
         set,
       }) => {

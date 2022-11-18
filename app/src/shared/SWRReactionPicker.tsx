@@ -135,13 +135,13 @@ const typeTagFetcher = async ({
 const reversibleFetcher = async ({
   consumes,
   produces,
-  type_tags,
+  typeTags,
   set,
 }: Omit<ReactionOptions, "reversible">) =>
   fetchReversible(
     getStateLeafs(consumes),
     getStateLeafs(produces),
-    type_tags,
+    typeTags,
     new Set(set)
   );
 
@@ -149,12 +149,12 @@ const csSetsFetcher = async ({
   consumes,
   produces,
   reversible,
-  type_tags,
+  typeTags,
 }: Omit<ReactionOptions, "set">) =>
   fetchCSSets(
     getStateLeafs(consumes),
     getStateLeafs(produces),
-    type_tags,
+    typeTags,
     reversible
   );
 
@@ -175,7 +175,7 @@ export const SWRReactionPicker = ({
 }: StatefulReactionPickerProps) => {
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
   const { data: typeTags, error: tagError } = useSWRImmutable(
-    omit(selection, "type_tags"),
+    omit(selection, "typeTags"),
     typeTagFetcher,
     { keepPreviousData: true }
   );
@@ -218,7 +218,7 @@ export const SWRReactionPicker = ({
               selection.consumes.filter((_, j) => j !== index)
             ),
             produces: getStateLeafs(selection.produces),
-            typeTags: selection.type_tags,
+            typeTags: selection.typeTags,
             reversible: selection.reversible,
             csSets: new Set(selection.set),
           },
@@ -237,7 +237,7 @@ export const SWRReactionPicker = ({
             produces: getStateLeafs(
               selection.produces.filter((_, j) => j !== index)
             ),
-            typeTags: selection.type_tags,
+            typeTags: selection.typeTags,
             reversible: selection.reversible,
             csSets: new Set(selection.set),
           },
@@ -254,7 +254,7 @@ export const SWRReactionPicker = ({
       }}
       typeTags={{
         data: typeTags,
-        value: selection.type_tags,
+        value: selection.typeTags,
         onChange: (newTags: Array<ReactionTypeTag>) => onTagsChange(newTags),
       }}
       sets={{

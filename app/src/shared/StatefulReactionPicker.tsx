@@ -251,7 +251,7 @@ export const StatefulReactionPicker = ({
     const newSelectedReversible =
       type.kind === "reversible" ? type.value : selection.reversible;
     const newSelectedTags =
-      type.kind === "type_tag" ? type.value : selection.type_tags;
+      type.kind === "type_tag" ? type.value : selection.typeTags;
     const newSelectedCSSets =
       type.kind === "cs_set" ? type.selected : new Set(selection.set);
 
@@ -442,7 +442,7 @@ export const StatefulReactionPicker = ({
         onChange(newChoices);
         if (
           (type.kind !== "type_tag" &&
-            !arrayEquality(newSelectedTags, selection.type_tags)) ||
+            !arrayEquality(newSelectedTags, selection.typeTags)) ||
           // FIXME: This is inefficient (only one set needs to be converted to
           // an array).
           (type.kind !== "cs_set" &&
@@ -518,7 +518,7 @@ export const StatefulReactionPicker = ({
       selection.produces
         .map(getStateLeaf)
         .filter((selected): selected is StateLeaf => selected !== undefined),
-      selection.type_tags,
+      selection.typeTags,
       selection.reversible,
       new Set(selection.set)
     );
@@ -564,7 +564,7 @@ export const StatefulReactionPicker = ({
       }}
       typeTags={{
         data: choices.typeTags,
-        value: selection.type_tags,
+        value: selection.typeTags,
         onChange: (newTags: Array<ReactionTypeTag>) =>
           update({ kind: "type_tag", value: newTags }),
       }}

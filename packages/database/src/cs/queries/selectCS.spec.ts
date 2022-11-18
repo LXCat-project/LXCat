@@ -36,7 +36,7 @@ const getCSIdsFromTemplate = async (selection: ReactionOptions) =>
     selection.produces
       .map(getStateLeaf)
       .filter((leaf): leaf is StateLeaf => leaf !== undefined),
-    selection.type_tags,
+    selection.typeTags,
     selection.reversible,
     selection.set
   );
@@ -273,7 +273,7 @@ describe("Selecting individual cross sections", () => {
 
       beforeAll(async () => {
         const selection = defaultSearchOptions();
-        selection.reactions[0].type_tags = [ReactionTypeTag.Ionization];
+        selection.reactions[0].typeTags = [ReactionTypeTag.Ionization];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
         searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
       });
@@ -375,7 +375,7 @@ describe("Selecting individual cross sections", () => {
 
       beforeAll(async () => {
         const selection = defaultSearchOptions();
-        selection.reactions[0].type_tags = [
+        selection.reactions[0].typeTags = [
           ReactionTypeTag.Effective,
           ReactionTypeTag.Ionization,
         ];
