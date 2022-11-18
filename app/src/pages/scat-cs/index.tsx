@@ -144,6 +144,8 @@ const generateCachePairs = (
   ),
 ];
 
+// FIXME: The page is not refreshed when the clear button is clicked in one of 
+// the state selects (might also be a caching error).
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
