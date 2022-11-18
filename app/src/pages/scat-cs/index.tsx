@@ -109,28 +109,34 @@ const generateCachePairs = (
     (tree, index) =>
       [
         unstable_serialize({
-          ...selection,
           consumes: getStateLeafs(
             selection.consumes.filter(
-              (_, selectionIndex) => selectionIndex != index
+              (_, selectionIndex) => selectionIndex !== index
             )
           ),
           produces: getStateLeafs(selection.produces),
+          reversible: selection.reversible,
+          typeTags: selection.type_tags,
+          csSets: selection.set,
+          process: StateProcess.Consumed,
         }),
         tree,
       ] as [string, StateTree]
   ),
-  ...choices.consumes.map(
+  ...choices.produces.map(
     (tree, index) =>
       [
         unstable_serialize({
-          ...selection,
           consumes: getStateLeafs(selection.consumes),
           produces: getStateLeafs(
             selection.produces.filter(
-              (_, selectionIndex) => selectionIndex != index
+              (_, selectionIndex) => selectionIndex !== index
             )
           ),
+          reversible: selection.reversible,
+          typeTags: selection.type_tags,
+          csSets: selection.set,
+          process: StateProcess.Produced,
         }),
         tree,
       ] as [string, StateTree]
@@ -195,7 +201,6 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     setItems(await res.json());
   };
 
-  // FIXME: Manually cached keys are not found at runtime.
   return (
     <Layout title="Scattering Cross Section">
       <Head>
@@ -204,16 +209,16 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <h1>Scattering Cross Sections</h1>
       <SWRConfig
         value={{
-          provider: () =>
-            new LogMap([
-              ...generateCachePairs(
-                defaultReactionOptions(),
-                defaultReactionChoices
-              ),
-              ...selection.reactions.flatMap((options, index) =>
-                generateCachePairs(options, facets.reactions[index])
-              ),
-            ]),
+          provider: () => new LogMap([]),
+          fallback: Object.fromEntries([
+            ...generateCachePairs(
+              defaultReactionOptions(),
+              defaultReactionChoices
+            ),
+            ...selection.reactions.flatMap((options, index) =>
+              generateCachePairs(options, facets.reactions[index])
+            ),
+          ]),
         }}
       >
         <Filter facets={facets} selection={selection} onChange={onChange} />
