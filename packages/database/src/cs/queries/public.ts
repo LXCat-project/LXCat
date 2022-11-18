@@ -221,59 +221,86 @@ async function reactionsChoices(
   if (options.reactions === undefined) {
     return [];
   }
-  const reactionsChoices: ReactionChoices[] = [];
-  for (const reaction of options.reactions) {
-    const {
-      consumes: consumesPaths,
-      produces: producesPaths,
-      reversible,
-      typeTags: type_tags,
-      set,
-    } = reaction;
-    const consumes = consumesPaths
-      .map(getStateLeaf)
-      .filter((d): d is StateLeaf => d !== undefined);
-    const produces = producesPaths
-      .map(getStateLeaf)
-      .filter((d): d is StateLeaf => d !== undefined);
-    reactionsChoices.push({
-      consumes: await Promise.all(
-        consumesPaths.map(async (_, i) => {
-          const array: NestedStateArray[] = await getPartakingStateSelection(
-            StateProcess.Consumed,
-            consumesPaths
-              .filter((path, i2) => i !== i2 && path.particle !== undefined)
-              .map(getStateLeaf) as Array<StateLeaf>,
-            produces,
-            type_tags,
-            reversible,
-            set
-          );
-          return stateArrayToTree(array) ?? {};
-        })
-      ),
-      produces: await Promise.all(
-        producesPaths.map(async (_, i) => {
-          const array: NestedStateArray[] = await getPartakingStateSelection(
-            StateProcess.Produced,
-            consumes,
-            producesPaths
-              .filter((path, i2) => i !== i2 && path.particle !== undefined)
-              .map(getStateLeaf) as Array<StateLeaf>,
-            type_tags,
-            reversible,
-            set
-          );
-          return stateArrayToTree(array) ?? {};
-        })
-      ),
-      typeTags:
-        (await getAvailableTypeTags(consumes, produces, reversible, set)) ?? [],
-      reversible: await getReversible(consumes, produces, type_tags, set),
-      set: await getCSSets(consumes, produces, type_tags, reversible),
-    });
-  }
-  return reactionsChoices;
+  return Promise.all(
+    options.reactions.map<Promise<ReactionChoices>>(
+      async ({
+        consumes: consumesPaths,
+        produces: producesPaths,
+        reversible,
+        typeTags: type_tags,
+        set,
+      }) => {
+        const consumes = consumesPaths
+          .map(getStateLeaf)
+          .filter((d): d is StateLeaf => d !== undefined);
+        const produces = producesPaths
+          .map(getStateLeaf)
+          .filter((d): d is StateLeaf => d !== undefined);
+
+        const [
+          consumesTrees,
+          producesTrees,
+          typeTagChoices,
+          reversibleChoices,
+          setChoices,
+        ] = await Promise.all([
+          Promise.all(
+            consumesPaths.map(async (_, consumesIndex) => {
+              const array: NestedStateArray[] =
+                await getPartakingStateSelection(
+                  StateProcess.Consumed,
+                  consumesPaths
+                    .filter(
+                      (path, currentIndex) =>
+                        consumesIndex !== currentIndex &&
+                        path.particle !== undefined
+                    )
+                    .map(getStateLeaf) as Array<StateLeaf>,
+                  produces,
+                  type_tags,
+                  reversible,
+                  set
+                );
+              return stateArrayToTree(array) ?? {};
+            })
+          ),
+          Promise.all(
+            producesPaths.map(async (_, producesIndex) => {
+              const array: NestedStateArray[] =
+                await getPartakingStateSelection(
+                  StateProcess.Produced,
+                  consumes,
+                  producesPaths
+                    .filter(
+                      (path, currentIndex) =>
+                        producesIndex !== currentIndex &&
+                        path.particle !== undefined
+                    )
+                    .map(getStateLeaf) as Array<StateLeaf>,
+                  type_tags,
+                  reversible,
+                  set
+                );
+              return stateArrayToTree(array) ?? {};
+            })
+          ),
+          getAvailableTypeTags(consumes, produces, reversible, set).then(
+            (typeTags) => typeTags ?? []
+          ),
+          getReversible(consumes, produces, type_tags, set),
+          getCSSets(consumes, produces, type_tags, reversible),
+        ]);
+
+        return {
+          consumes: consumesTrees,
+          produces: producesTrees,
+          typeTags: typeTagChoices,
+          reversible: reversibleChoices,
+          set: setChoices,
+        };
+      }
+    ),
+  );
 }
 
 export async function searchFacets(options: SearchOptions): Promise<Facets> {
