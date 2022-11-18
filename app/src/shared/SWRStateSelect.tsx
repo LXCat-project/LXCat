@@ -3,7 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Sx } from "@mantine/core";
-import { StateLeaf, StatePath } from "@lxcat/database/dist/shared/getStateLeaf";
+import {
+  OMIT_CHILDREN_KEY,
+  StateLeaf,
+  StatePath,
+} from "@lxcat/database/dist/shared/getStateLeaf";
 import {
   Reversible,
   StateProcess,
@@ -47,13 +51,25 @@ const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   if (path.particle) {
     let particle = tree[path.particle];
     latex += particle.latex;
-    if (particle.children && path.electronic) {
+    if (
+      particle.children &&
+      path.electronic &&
+      path.electronic !== OMIT_CHILDREN_KEY
+    ) {
       let electronic = particle.children[path.electronic];
       latex += `\\left(${electronic.latex}`;
-      if (electronic.children && path.vibrational) {
+      if (
+        electronic.children &&
+        path.vibrational &&
+        path.vibrational !== OMIT_CHILDREN_KEY
+      ) {
         const vibrational = electronic.children[path.vibrational];
         latex += `\\left(v=${vibrational.latex}`;
-        if (vibrational.children && path.rotational) {
+        if (
+          vibrational.children &&
+          path.rotational &&
+          path.rotational !== OMIT_CHILDREN_KEY
+        ) {
           latex += `\\left(J=${
             vibrational.children[path.rotational].latex
           }\\right)`;
