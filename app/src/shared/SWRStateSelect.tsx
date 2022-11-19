@@ -14,7 +14,6 @@ import {
 } from "@lxcat/database/dist/cs/queries/public";
 
 import useSWRImmutable from "swr/immutable";
-import { fetchStateTreeForSelection } from "./StatefulReactionPicker";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { StateSelect } from "./StateSelect";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
@@ -27,6 +26,26 @@ export interface SWRReactionOptions {
   csSets: Set<string>;
 }
 
+export const fetchStateTreeForSelection = async (
+  stateProcess: StateProcess,
+  consumes: Array<StateLeaf>,
+  produces: Array<StateLeaf>,
+  typeTags: Array<ReactionTypeTag>,
+  reversible: Reversible,
+  setIds: Set<string>
+): Promise<StateTree> =>
+  (
+    await fetch(
+      `/api/states/partaking?${new URLSearchParams({
+        stateProcess: stateProcess,
+        consumes: JSON.stringify(consumes),
+        produces: JSON.stringify(produces),
+        typeTags: JSON.stringify(typeTags),
+        reversible,
+        setIds: JSON.stringify([...setIds]),
+      })}`
+    )
+  ).json();
 async function stateFetcher({
   process,
   consumes,

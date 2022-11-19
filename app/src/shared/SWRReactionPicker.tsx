@@ -21,26 +21,6 @@ import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
 import useSWRImmutable from "swr/immutable";
 import { omit } from "./utils";
 
-export const fetchStateTreeForSelection = async (
-  stateProcess: StateProcess,
-  consumes: Array<StateLeaf>,
-  produces: Array<StateLeaf>,
-  typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible,
-  setIds: Set<string>
-): Promise<StateTree> =>
-  (
-    await fetch(
-      `/api/states/partaking?${new URLSearchParams({
-        stateProcess: stateProcess,
-        consumes: JSON.stringify(consumes),
-        produces: JSON.stringify(produces),
-        typeTags: JSON.stringify(typeTags),
-        reversible,
-        setIds: JSON.stringify([...setIds]),
-      })}`
-    )
-  ).json();
 export const fetchTypeTags = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
