@@ -2,24 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { Facets, ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { useRouter } from "next/router";
 import { SWRFilterComponent } from "./SWRFilterComponent";
 
 interface Props {
   facets: Facets;
-  selection: SearchOptions;
-  onChange: (newSelection: SearchOptions) => void | Promise<void>;
+  selection: Array<ReactionTemplate>;
+  onChange: (newSelection: Array<ReactionTemplate>) => void | Promise<void>;
 }
 
 export const Filter = ({ facets, selection, onChange }: Props) => {
   const router = useRouter();
 
-  function onFilterChange(newSelection: SearchOptions, event?: string) {
-    const query = {
-      ...newSelection,
-      reactions: JSON.stringify(newSelection.reactions),
-    };
+  function onFilterChange(
+    newSelection: Array<ReactionTemplate>,
+    event?: string
+  ) {
+    const query = JSON.stringify(newSelection);
+
     if (event?.startsWith("reactions")) {
       router.push({ query }, undefined, { shallow: true });
       onChange(newSelection);
@@ -29,10 +30,10 @@ export const Filter = ({ facets, selection, onChange }: Props) => {
   }
 
   return (
-      <SWRFilterComponent
-        // facets={facets}
-        selection={selection}
-        onChange={onFilterChange}
-      />
+    <SWRFilterComponent
+      // facets={facets}
+      selection={selection}
+      onChange={onFilterChange}
+    />
   );
 };

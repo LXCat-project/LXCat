@@ -8,8 +8,9 @@ import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { CrossSectionItem } from "../public";
-import { defaultSearchOptions, SearchOptions } from "./public";
+import { defaultSearchTemplate } from "../picker/default";
 import { PagingOptions } from "../../shared/types/search";
+import { ReactionTemplate } from "../picker/types";
 
 export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
@@ -22,7 +23,7 @@ export async function getVersionInfo(key: string) {
 
 export async function searchOwned(
   email: string,
-  options: SearchOptions = defaultSearchOptions(),
+  _options: Array<ReactionTemplate> = defaultSearchTemplate(),
   paging: PagingOptions = { offset: 0, count: 100 }
 ) {
   const reactionsAql = aql``; // TODO implement

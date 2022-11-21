@@ -18,3 +18,7 @@ export interface VersionInfo {
   commitMessage?: string; // Description of what was changed since previous version.
   retractMessage?: string; // Description why item was retracted.
 }
+
+export interface KeyedVersionInfo extends VersionInfo {
+  _key: string;
+}

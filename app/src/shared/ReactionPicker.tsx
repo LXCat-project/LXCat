@@ -11,8 +11,8 @@ import {
 } from "@mantine/core";
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { StateList, StateListProps } from "./StateList";
-import { Reversible } from "@lxcat/database/dist/cs/queries/public";
 import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
+import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 
 interface ReactionPickerProps {
   consumes: StateListProps;

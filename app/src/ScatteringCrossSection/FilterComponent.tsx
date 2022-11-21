@@ -3,14 +3,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-  defaultReactionOptions,
   Facets,
   ReactionChoices,
-  ReactionOptions,
+  ReactionTemplate,
   Reversible,
-  SearchOptions,
   StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/dist/cs/picker/types";
+import { defaultReactionTemplate, defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import { Box, Button } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
@@ -62,21 +61,21 @@ export const FilterComponent = ({
   onChange,
 }: {
   facets: Facets;
-  selection: SearchOptions;
-  onChange: (selection: SearchOptions, event?: string) => void;
+  selection: Array<ReactionTemplate>;
+  onChange: (selection: Array<ReactionTemplate>, event?: string) => void;
 }) => {
   const [reactions, setReactions] = useState<
     Array<{
       id: string;
       choices: ReactionChoices;
-      options: ReactionOptions;
+      options: ReactionTemplate;
       ids: StateSelectIds;
     }>
   >(
     facets.reactions.map((choices, index) => ({
       id: nanoid(),
       choices,
-      options: selection.reactions[index],
+      options: selection[index],
       ids: {
         consumes: choices.consumes.map(() => nanoid()),
         produces: choices.produces.map(() => nanoid()),
@@ -100,26 +99,15 @@ export const FilterComponent = ({
       {
         id: nanoid(),
         choices,
-        options: defaultReactionOptions(),
+        options: defaultReactionTemplate(),
         ids: { consumes: [nanoid()], produces: [nanoid()] },
       },
     ]);
-    onChange(
-      {
-        reactions: [defaultReactionOptions()],
-      },
-      "reactions"
-    );
+    onChange(defaultSearchTemplate(), "reactions");
   }
 
-  function onReactionsChange(newReactions: SearchOptions["reactions"]) {
-    onChange(
-      {
-        ...selection,
-        reactions: newReactions,
-      },
-      "reactions"
-    );
+  function onReactionsChange(newReactions: Array<ReactionTemplate>) {
+    onChange(newReactions, "reactions");
   }
   const [editableReaction, setEditableReaction] = useState(
     reactions.length - 1
@@ -407,7 +395,7 @@ export const FilterComponent = ({
                   {
                     id: nanoid(),
                     choices,
-                    options: defaultReactionOptions(),
+                    options: defaultReactionTemplate(),
                     ids: { consumes: [nanoid()], produces: [nanoid()] },
                   },
                 ]);

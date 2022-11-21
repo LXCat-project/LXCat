@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getReversible } from "@lxcat/database/dist/cs/queries/public";
+import { getReversible } from "@lxcat/database/dist/cs/picker/queries/public";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextApiResponse } from "next";

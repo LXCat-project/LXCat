@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  getAvailableTypeTags,
-  Reversible,
-} from "@lxcat/database/dist/cs/queries/public";
+import { getAvailableTypeTags } from "@lxcat/database/dist/cs/picker/queries/public";
+import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { NextApiResponse } from "next";
 import nc from "next-connect";

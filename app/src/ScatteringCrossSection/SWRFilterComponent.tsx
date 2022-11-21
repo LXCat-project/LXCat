@@ -3,11 +3,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-  defaultReactionOptions,
-  ReactionOptions,
+  defaultReactionTemplate,
+  defaultSearchTemplate,
+} from "@lxcat/database/dist/cs/picker/default";
+import {
+  ReactionTemplate,
   Reversible,
-  SearchOptions,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/dist/cs/picker/types";
 import { Box, Button, Group } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
@@ -17,7 +19,7 @@ import { StateSelectIds } from "../shared/StatefulReactionPicker";
 import { SWRReactionPicker } from "../shared/SWRReactionPicker";
 
 const getLatexForReaction = (
-  options: ReactionOptions,
+  options: ReactionTemplate,
   latex: { consumes: Array<string>; produces: Array<string> }
 ) => {
   let lhs = latex.consumes.join("+");
@@ -49,18 +51,18 @@ export const SWRFilterComponent = ({
   selection,
   onChange,
 }: {
-  selection: SearchOptions;
-  onChange: (selection: SearchOptions, event?: string) => void;
+  selection: Array<ReactionTemplate>;
+  onChange: (selection: Array<ReactionTemplate>, event?: string) => void;
 }) => {
   const [reactions, setReactions] = useState<
     Array<{
       id: string;
-      options: ReactionOptions;
+      options: ReactionTemplate;
       ids: StateSelectIds;
       latex: { consumes: Array<string>; produces: Array<string> };
     }>
   >(
-    selection.reactions.map((options) => ({
+    selection.map((options) => ({
       id: nanoid(),
       options,
       ids: {
@@ -88,21 +90,16 @@ export const SWRFilterComponent = ({
     setReactions((_) => [
       {
         id: nanoid(),
-        options: defaultReactionOptions(),
+        options: defaultReactionTemplate(),
         ids: { consumes: [nanoid()], produces: [nanoid()] },
         latex: { consumes: [""], produces: [""] },
       },
     ]);
-    onChange(
-      {
-        reactions: [defaultReactionOptions()],
-      },
-      "reactions"
-    );
+    onChange(defaultSearchTemplate(), "reactions");
   }
 
-  function onReactionsChange(newReactions: Array<ReactionOptions>) {
-    onChange({ reactions: newReactions }, "reactions");
+  function onReactionsChange(newReactions: Array<ReactionTemplate>) {
+    onChange(newReactions, "reactions");
   }
   const [editableReaction, setEditableReaction] = useState(
     reactions.length - 1
@@ -381,7 +378,7 @@ export const SWRFilterComponent = ({
                   ...prevReactions,
                   {
                     id: nanoid(),
-                    options: defaultReactionOptions(),
+                    options: defaultReactionTemplate(),
                     ids: { consumes: [nanoid()], produces: [nanoid()] },
                     latex: { consumes: [""], produces: [""] },
                   },

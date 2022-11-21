@@ -5,15 +5,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 
-import {
-  getStateSelection,
-  NestedStateArray,
-  StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+import { getStateSelection } from "@lxcat/database/dist/cs/picker/queries/public";
 import {
   StateSummary,
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
+import {
+  NestedStateArray,
+  StateProcess,
+} from "@lxcat/database/dist/cs/picker/types";
 
 export function stateArrayToObject({
   id,

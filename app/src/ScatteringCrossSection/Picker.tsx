@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { Facets, ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { Checkbox, Space, Group, Button } from "@mantine/core";
 import { useState } from "react";
 import { FilterComponent } from "./FilterComponent";
@@ -19,8 +19,8 @@ export const Picker = ({
   onSubmit,
 }: {
   filterChoices: Facets;
-  filterSelection: SearchOptions;
-  setFilterSelection: (selection: SearchOptions) => void;
+  filterSelection: Array<ReactionTemplate>;
+  setFilterSelection: (selection: Array<ReactionTemplate>) => void;
   choices: Picked;
   onSubmit: (picked: Picked) => void;
 }) => {

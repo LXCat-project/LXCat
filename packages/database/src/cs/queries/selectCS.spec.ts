@@ -10,25 +10,21 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import {
-  byId,
-  defaultSearchOptions,
-  getCSHeadings,
-  getCSIdByReactionTemplate,
-  ReactionChoices,
-  ReactionOptions,
-  Reversible,
-  search,
-  searchFacets,
-} from "./public";
 import { StateSummary } from "../../shared/queries/state";
 import { CrossSectionHeading } from "../public";
 import { NestedState, removeIdsFromTree } from "./testutils";
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
+import { defaultSearchTemplate } from "../picker/default";
+import { ReactionChoices, ReactionTemplate, Reversible } from "../picker/types";
+import {
+  getCSIdByReactionTemplate,
+  searchFacets,
+} from "../picker/queries/public";
+import { byId, getCSHeadings, search } from "./public";
 
 beforeAll(startDbWithUserAndCssCollections);
 
-const getCSIdsFromTemplate = async (selection: ReactionOptions) =>
+const getCSIdsFromTemplate = async (selection: ReactionTemplate) =>
   getCSIdByReactionTemplate(
     selection.consumes
       .map(getStateLeaf)
@@ -48,7 +44,7 @@ describe("Selecting individual cross sections", () => {
     beforeAll(async () => {
       await sampleSets4Search();
 
-      allChoices = (await searchFacets(defaultSearchOptions())).reactions[0]!;
+      allChoices = (await searchFacets(defaultSearchTemplate())).reactions[0]!;
 
       return truncateCrossSectionSetCollections;
     });
@@ -124,15 +120,15 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        const selection = defaultSearchOptions();
+        const selection = defaultSearchTemplate();
 
         const [particle, _] = allChoices.consumes
           .flatMap(Object.entries)
           .find(([_, particle]) => particle.latex === "\\mathrm{N2}")!;
-        selection.reactions[0].consumes = [{ particle }, {}];
+        selection[0].consumes = [{ particle }, {}];
 
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
-        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
+        searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
       it("first select has all consumable states", () => {
@@ -201,15 +197,15 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        const selection = defaultSearchOptions();
+        const selection = defaultSearchTemplate();
 
         const [particle, _] = allChoices.produces
           .flatMap(Object.entries)
           .find(([_, particle]) => particle.latex === "\\mathrm{Ar^+}")!;
-        selection.reactions[0].produces = [{ particle }, {}];
+        selection[0].produces = [{ particle }, {}];
 
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
-        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
+        searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
       it("can consume e and Ar", () => {
@@ -272,10 +268,10 @@ describe("Selecting individual cross sections", () => {
       let searchResults: Array<string>;
 
       beforeAll(async () => {
-        const selection = defaultSearchOptions();
-        selection.reactions[0].typeTags = [ReactionTypeTag.Ionization];
+        const selection: Array<ReactionTemplate> = defaultSearchTemplate();
+        selection[0].typeTags = [ReactionTypeTag.Ionization];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
-        searchResults = await getCSIdsFromTemplate(selection.reactions[0]!);
+        searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
       it("should consume e and Ar", () => {
@@ -324,13 +320,13 @@ describe("Selecting individual cross sections", () => {
     describe("with set=Ar selected", () => {
       let reactionChoices: ReactionChoices;
       beforeAll(async () => {
-        const selection = defaultSearchOptions();
+        const selection: Array<ReactionTemplate> = defaultSearchTemplate();
 
         const [setId, _] = Object.values(allChoices.set)
           .flatMap((org) => Object.entries(org.sets))
           .find(([_, name]) => name === "Ar set")!;
 
-        selection.reactions[0].set = [setId];
+        selection[0].set = [setId];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
       });
 
@@ -374,12 +370,13 @@ describe("Selecting individual cross sections", () => {
       let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
-        const selection = defaultSearchOptions();
-        selection.reactions[0].typeTags = [
+        const selection: Array<ReactionTemplate> = defaultSearchTemplate();
+        selection[0].typeTags = [
           ReactionTypeTag.Effective,
           ReactionTypeTag.Ionization,
         ];
         reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        // FIXME: This function does not use the provided selection.
         searchResults = await search(selection, { count: 100, offset: 0 });
       });
 
@@ -438,10 +435,10 @@ describe("Selecting individual cross sections", () => {
     beforeAll(async () => {
       await sampleSets4SearchWithVersions();
 
-      const defaultOptions = defaultSearchOptions();
+      const defaultOptions = defaultSearchTemplate();
 
       publishedChoices = (await searchFacets(defaultOptions)).reactions[0]!;
-      csIds = await getCSIdsFromTemplate(defaultOptions.reactions[0]!);
+      csIds = await getCSIdsFromTemplate(defaultOptions[0]!);
       searchResults = await getCSHeadings(csIds, { offset: 0, count: 10 });
 
       return truncateCrossSectionSetCollections;

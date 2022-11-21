@@ -2,19 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  defaultReactionOptions,
-  SearchOptions,
-} from "@lxcat/database/dist/cs/queries/public";
+import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
+import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { ParsedUrlQuery } from "querystring";
 
-export function query2options(query: ParsedUrlQuery): SearchOptions {
-  const defaultReactions = defaultReactionOptions();
-  const reactions =
-    query.reactions && !Array.isArray(query.reactions)
-      ? JSON.parse(query.reactions)
-      : [defaultReactions];
-  return {
-    reactions,
-  };
+export function getTemplateFromQuery(
+  query: ParsedUrlQuery
+): Array<ReactionTemplate> {
+  return query.reactions && !Array.isArray(query.reactions)
+    ? JSON.parse(query.reactions)
+    : defaultSearchTemplate();
 }

@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import {
   Facets,
-  SearchOptions,
-  defaultSearchOptions,
+  ReactionTemplate,
   Reversible,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/dist/cs/picker/types";
 import { Button, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Picker, Picked } from "./Picker";
@@ -29,9 +29,9 @@ export const PickerModal = ({
       },
     ],
   });
-  const [filterSelection, setFilterSelection] = useState<SearchOptions>(
-    defaultSearchOptions()
-  );
+  const [filterSelection, setFilterSelection] = useState<
+    Array<ReactionTemplate>
+  >(defaultSearchTemplate());
   const [choices, setChoices] = useState<Picked>([]);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const PickerModal = ({
     // TODO If filterSelection is empty then set choices to []
     const afn = async () => {
       const searchParams = new URLSearchParams({
-        reactions: JSON.stringify(filterSelection.reactions),
+        reactions: JSON.stringify(filterSelection),
       });
       const url = `/api/author/scat-cs?${searchParams.toString()}`;
       const headers = new Headers({

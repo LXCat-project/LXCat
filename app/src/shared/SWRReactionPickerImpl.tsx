@@ -10,10 +10,7 @@ import {
   Sx,
 } from "@mantine/core";
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
-import {
-  Reversible,
-  StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
 import { SWRStateList, SWRStateListProps } from "./SWRStateList";
 

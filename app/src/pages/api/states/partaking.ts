@@ -5,16 +5,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 
-import {
-  getPartakingStateSelection,
-  NestedStateArray,
-  Reversible,
-  StateProcess,
-  stateArrayToTree,
-} from "@lxcat/database/dist/cs/queries/public";
+import { getPartakingStateSelection } from "@lxcat/database/dist/cs/picker/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { parseParam } from "../../../shared/utils";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
+import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
+import { stateArrayToTree } from "./in_reaction";
 
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   const {

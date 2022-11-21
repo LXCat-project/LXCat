@@ -4,20 +4,6 @@
 
 import { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
-import {
-  CSSetTree,
-  defaultReactionOptions,
-  defaultSearchOptions,
-  Facets,
-  getCSHeadings,
-  getCSIdByReactionTemplate,
-  ReactionChoices,
-  ReactionOptions,
-  Reversible,
-  searchFacets,
-  SearchOptions,
-  StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
 import { List } from "../../ScatteringCrossSection/List";
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
@@ -27,7 +13,7 @@ import {
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
 import { Paging } from "../../ScatteringCrossSection/Paging";
-import { query2options } from "../../ScatteringCrossSection/query2options";
+import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";
 import { useState } from "react";
 import {
@@ -43,17 +29,34 @@ import { SWRConfig, unstable_serialize } from "swr";
 import { omit } from "../../shared/utils";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import deepEqual from "deep-equal";
+import {
+  CSSetTree,
+  Facets,
+  ReactionChoices,
+  ReactionTemplate,
+  Reversible,
+  StateProcess,
+} from "@lxcat/database/dist/cs/picker/types";
+import {
+  getCSIdByReactionTemplate,
+  searchFacets,
+} from "@lxcat/database/dist/cs/picker/queries/public";
+import {
+  defaultReactionTemplate,
+  defaultSearchTemplate,
+} from "@lxcat/database/dist/cs/picker/default";
+import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
 
 interface Example {
   label: string;
-  selection: SearchOptions;
+  selection: Array<ReactionTemplate>;
   facets: Facets;
 }
 
 interface Props {
   items: CrossSectionHeading[];
   facets: Facets;
-  selection: SearchOptions;
+  selection: Array<ReactionTemplate>;
   paging: PagingOptions;
   defaultReactionChoices: ReactionChoices;
   examples: Example[];
@@ -67,21 +70,19 @@ async function getExample(
   if (stateId === undefined) {
     return undefined;
   }
-  const selection: SearchOptions = {
-    reactions: [
-      {
-        consumes: [
-          {
-            particle: stateId,
-          },
-        ],
-        produces: [],
-        reversible: Reversible.Both,
-        typeTags: [],
-        set: [],
-      },
-    ],
-  };
+  const selection: Array<ReactionTemplate> = [
+    {
+      consumes: [
+        {
+          particle: stateId,
+        },
+      ],
+      produces: [],
+      reversible: Reversible.Both,
+      typeTags: [],
+      set: [],
+    },
+  ];
   const facets = await searchFacets(selection);
   return {
     label,
@@ -91,7 +92,7 @@ async function getExample(
 }
 
 const generateCachePairs = (
-  selection: ReactionOptions,
+  selection: ReactionTemplate,
   choices: ReactionChoices
 ) => [
   [unstable_serialize(omit(selection, "typeTags")), choices.typeTags] as [
@@ -196,10 +197,13 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
   }
 
-  const onChange = async (newSelection: SearchOptions, offset: number = 0) => {
+  const onChange = async (
+    newSelection: Array<ReactionTemplate>,
+    offset: number = 0
+  ) => {
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
-        reactions: JSON.stringify(newSelection.reactions),
+        reactions: JSON.stringify(newSelection),
         offset: `${offset}`,
       })}`
     );
@@ -217,10 +221,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
           provider: () =>
             new CacheMap([
               ...generateCachePairs(
-                defaultReactionOptions(),
+                defaultReactionTemplate(),
                 defaultReactionChoices
               ),
-              ...selection.reactions.flatMap((options, index) =>
+              ...selection.flatMap((options, index) =>
                 generateCachePairs(options, facets.reactions[index])
               ),
             ]),
@@ -249,11 +253,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
 
 export default ScatteringCrossSectionsPage;
 
-export const getServerSideProps: GetServerSideProps<
-  Props,
-  Record<keyof SearchOptions, string[]>
-> = async (context) => {
-  const filter = query2options(context.query);
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const template = getTemplateFromQuery(context.query);
   const paging = {
     offset:
       context.query.offset && !Array.isArray(context.query.offset)
@@ -263,15 +266,15 @@ export const getServerSideProps: GetServerSideProps<
     // count: Number.MAX_SAFE_INTEGER,
   };
 
-  const defaultOptions = defaultSearchOptions();
-  const defaultChoices = searchFacets(defaultOptions);
+  const defaultTemplates = defaultSearchTemplate();
+  const defaultChoices = searchFacets(defaultTemplates);
 
-  const [facets, items] = deepEqual(defaultOptions, filter)
+  const [facets, items] = deepEqual(defaultTemplates, template)
     ? [await defaultChoices, []]
     : await Promise.all([
-        searchFacets(filter),
+        searchFacets(template),
         Promise.all(
-          filter.reactions.map(
+          template.map(
             async ({
               consumes: consumesPaths,
               produces: producesPaths,
@@ -323,7 +326,7 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       items,
       facets,
-      selection: filter,
+      selection: template,
       paging,
       defaultReactionChoices: (await defaultChoices).reactions[0],
       examples: [],

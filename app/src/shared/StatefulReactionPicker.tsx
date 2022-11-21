@@ -5,10 +5,10 @@
 import {
   CSSetTree,
   ReactionChoices,
-  ReactionOptions,
+  ReactionTemplate,
   Reversible,
   StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/dist/cs/picker/types";
 import {
   getStateLeaf,
   StateLeaf,
@@ -150,7 +150,7 @@ const getLatexFromTree = (tree: StateTree, path: StatePath) => {
 
 const getLatexForReaction = (
   choices: ReactionChoices,
-  options: ReactionOptions
+  options: ReactionTemplate
 ) => {
   let lhs = options.consumes
     .map((path, j) => {
@@ -195,7 +195,7 @@ export interface StateSelectIds {
 export type StatefulReactionPickerProps = {
   ids: StateSelectIds;
   choices: ReactionChoices;
-  selection: ReactionOptions;
+  selection: ReactionTemplate;
   editable: boolean;
   onConsumesChange(newSelected: Array<StatePath>): void | Promise<void>;
   onConsumesAppend(choices: StateTree): void | Promise<void>;

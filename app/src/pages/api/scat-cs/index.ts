@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { getCSIdByReactionTemplate } from "@lxcat/database/dist/cs/picker/queries/public";
+import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import {
   getCSHeadings,
-  getCSIdByReactionTemplate,
-  ReactionOptions,
 } from "@lxcat/database/dist/cs/queries/public";
 import {
   getStateLeaf,
@@ -18,7 +18,7 @@ import { parseParam } from "../../../shared/utils";
 
 const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
   const { reactions: reactionsParam, offset: offsetParam } = req.query;
-  const reactions = parseParam<Array<ReactionOptions>>(reactionsParam, []);
+  const reactions = parseParam<Array<ReactionTemplate>>(reactionsParam, []);
   const offset =
     offsetParam && !Array.isArray(offsetParam) ? parseInt(offsetParam) : 0;
 

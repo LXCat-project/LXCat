@@ -4,16 +4,15 @@
 
 import {
   CSSetTree,
-  ReactionOptions,
+  ReactionTemplate,
   Reversible,
   StateProcess,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/dist/cs/picker/types";
 import {
   getStateLeafs,
   StateLeaf,
   StatePath,
 } from "@lxcat/database/dist/shared/getStateLeaf";
-import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { useState } from "react";
 import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
@@ -77,7 +76,7 @@ export interface StateSelectIds {
 
 export type StatefulReactionPickerProps = {
   ids: StateSelectIds;
-  selection: ReactionOptions;
+  selection: ReactionTemplate;
   editable: boolean;
   latex: JSX.Element;
   onConsumesChange(
@@ -104,7 +103,7 @@ const typeTagFetcher = async ({
   produces,
   reversible,
   set,
-}: Omit<ReactionOptions, "typeTags">) =>
+}: Omit<ReactionTemplate, "typeTags">) =>
   fetchTypeTags(
     getStateLeafs(consumes),
     getStateLeafs(produces),
@@ -117,7 +116,7 @@ const reversibleFetcher = async ({
   produces,
   typeTags,
   set,
-}: Omit<ReactionOptions, "reversible">) =>
+}: Omit<ReactionTemplate, "reversible">) =>
   fetchReversible(
     getStateLeafs(consumes),
     getStateLeafs(produces),
@@ -130,7 +129,7 @@ const csSetsFetcher = async ({
   produces,
   reversible,
   typeTags,
-}: Omit<ReactionOptions, "set">) =>
+}: Omit<ReactionTemplate, "set">) =>
   fetchCSSets(
     getStateLeafs(consumes),
     getStateLeafs(produces),
