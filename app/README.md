@@ -32,7 +32,7 @@ npm install
 npm run dev  # Starts app, database, schema workspaces in development mode
 ```
 
-The application uses `@lxcat/database` package which needs a ArangoDB database server, see its [README(../packages/database/README.md) how to setup the database.
+The application uses `@lxcat/database` package which needs a ArangoDB database server, see its [README](../packages/database/README.md) how to setup the database.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -197,7 +197,7 @@ At least one identity provider should be configured.
 
 The end to end tests (`e2e/**.spec.ts`) are written and run using [playwright](https://playwright.dev/).
 
-Before running test ensure a browser is installed with
+Before running test ensure playwright's chromium browser is installed with
 
 ```shell
 npx playwright install chromium
