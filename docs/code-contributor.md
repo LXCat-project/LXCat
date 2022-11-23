@@ -26,6 +26,7 @@ This document is for someone developing the LXCat web application and its packag
   - [React component development](#react-component-development)
   - [Unit Tests](#unit-tests)
   - [Licensing](#licensing)
+  - [Publishing software](#publishing-software)
 
 ## Where is the code?
 
@@ -306,3 +307,13 @@ reuse lint
 To add headers to files run `npm run addheader` or if that fails add header manually.
 
 For binary files or text files without comment support a `<original file name>.license` file can be made, alternativly add file in `/.reuse/dep5` file.
+
+## Publishing software
+
+If there are changes to the code you want to cite you will need to create a new Digital Object Identifier (DOI).
+
+To create a new DOI:
+
+1. Bump version in package.json files, rerun `npm install`, commit & push to main branch.
+2. Create a new [GitLab release](https://gitlab.com/LXCat-project/lxcat-ng/-/releases/new).
+3. On Zenodo page for LXCat ng, a new version needs to be created with the tarball of the new release.
