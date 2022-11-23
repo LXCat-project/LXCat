@@ -148,9 +148,10 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
 In `.env.local` file define the following key/value pairs
 
 ```env
-# Where openid identity provider should redirect back to
-# And used as root url for absolute URLs
+# Used as root url for absolute URLs
 NEXT_PUBLIC_URL=<URL where users visit server, like http://localhost:3000>
+# Where openid identity provider should redirect back to
+NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
 # Secret used to sign JWT api tokens
 NEXTAUTH_SECRET=<Random string>
 # Password used to connect to database
