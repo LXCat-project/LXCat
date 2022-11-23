@@ -6,6 +6,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Data contributor docs
 
+This document is for someone adding or editing data.
+
+- [Data contributor docs](#data-contributor-docs)
+  - [Submit](#submit)
+  - [Versioning](#versioning)
+
+
 ## Submit
 
 To submit a new scattering cross section

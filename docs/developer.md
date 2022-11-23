@@ -8,7 +8,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 To consume LXCat data by another program, the LXCat web service provides several API endpoints.
 
-## Table of contents
+- [Developer docs](#developer-docs)
+  - [Authorize and authenticate](#authorize-and-authenticate)
+  - [Fetch particle states](#fetch-particle-states)
+  - [Fetch cross section sets](#fetch-cross-section-sets)
+    - [Filtering](#filtering)
+    - [Paging](#paging)
+  - [Fetch cross section set](#fetch-cross-section-set)
+  - [Fetch a cross section](#fetch-a-cross-section)
+  - [Fetch multiple cross sections](#fetch-multiple-cross-sections)
 
 ## Authorize and authenticate
 

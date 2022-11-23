@@ -8,13 +8,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This document is for LXCat administrators.
 
-## Table of contents
+- [Administrator docs](#administrator-docs)
+  - [How to assign roles to users?](#how-to-assign-roles-to-users)
+  - [How to let new user edit an existing data set?](#how-to-let-new-user-edit-an-existing-data-set)
 
 ## How to assign roles to users?
 
 A logged in user has the same permissions as an anonymous user.
 
-To give a a logged in user more permssions, you need to assign roles to them on the [/admin/users](/admin/users) page.
+To give a logged in user more permssions, you need to assign roles to them on the [/admin/users](/admin/users) page.
 
 Available roles:
 

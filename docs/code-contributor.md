@@ -8,18 +8,36 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This document is for someone developing the LXCat web application and its packages.
 
-## Table of contents
+- [Code contributor docs](#code-contributor-docs)
+  - [Where is the code?](#where-is-the-code)
+  - [How to perform local deployment with test data?](#how-to-perform-local-deployment-with-test-data)
+  - [How to make a merge request](#how-to-make-a-merge-request)
+  - [Documentation](#documentation)
+    - [Code highlighting](#code-highlighting)
+    - [Local images](#local-images)
+    - [Diagrams](#diagrams)
+    - [Math](#math)
+  - [Technology wishes](#technology-wishes)
+    - [Full stack web framework](#full-stack-web-framework)
+    - [Schema / validation](#schema--validation)
+  - [Technology choices](#technology-choices)
+  - [Debugging](#debugging)
+  - [Database diagram](#database-diagram)
+  - [React component development](#react-component-development)
+  - [Unit Tests](#unit-tests)
+  - [Licensing](#licensing)
 
 ## Where is the code?
 
 Code is hosted on [https://gitlab.com/LXCat-project/lxcat-ng](https://gitlab.com/LXCat-project/lxcat-ng).
-Code to fill the database can be found in [../database/](../database/).
-Code to that runs the website can be found in [../app/](../app/).
-Code to that describes the shape of LXCat documents can be found in [../schema/](../schema/).
+Code to fill the database can be found in `/packages/database`.
+Code that runs the website can be found in `/app`.
+Code that describes the shape of LXCat documents can be found in `/packages/schema`.
+Code that can convert LXCat documents to txt format can be found in `/packages/converter`.
 
 ## How to perform local deployment with test data?
 
-See [../database/README](../database/README) how to seed the database with test data.
+See [/packages/database](https://gitlab.com/LXCat-project/lxcat-ng/-/blob/main/packages/database/README.md) how to seed the database with test data.
 
 ## How to make a merge request
 
@@ -27,18 +45,13 @@ See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html
 
 ## Documentation
 
-The documentation is formatted in Markdown files in the `/docs` directory.
+The documentation is formatted in [GitLab flavored Markdown](https://docs.gitlab.com/ee/user/markdown.html) files in the `/docs` directory.
 
 The documentation is also hosted on the website at `https://<somewhere>/docs`.
 
 To have working links between Markdown files on the website use URLs without the `.md` extension.
 
 The following features are available in Markdown
-
-### Inject Table of contents
-
-Adding `## Table of contents` will inject a table of contents for all headers.
-All the headers also become bookmarkable.
 
 ### Code highlighting
 

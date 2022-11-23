@@ -6,7 +6,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Maintainer docs
 
-## Table of contents
+This document is for a system adminstrator of the web site.
+
+- [Maintainer docs](#maintainer-docs)
+  - [Services](#services)
+  - [Deployment](#deployment)
+    - [docker](#docker)
+    - [systemd services](#systemd-services)
+    - [LXCat NG](#lxcat-ng)
+  - [Maintenance](#maintenance)
 
 ## Services
 
