@@ -1,7 +1,7 @@
 {
   "name": "@lxcat/converter",
   "version": "0.1.0",
-  "description": "Convert LXCat JSON documents to legacy LXCat documents",
+  "description": "Convert LXCat JSON documents to txt format",
   "main": "dist/index.node",
   "types": "dist/index.d.ts",
   "files": [

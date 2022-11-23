@@ -6,8 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # @lxcat/converter
 
-Package with native node module that can convert LXCat JSON documents to legacy
-LXCat documents.
+Package with native node module that can convert LXCat JSON documents to txt format.
 
 ## Installation
 
@@ -18,11 +17,14 @@ npm install @lxcat/converter
 ## Contributing
 
 ### Install dependencies
+
 ```shell
+# Install rust
 curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
-cd ..
-npm install -w converter
-cd converter
+# Change to root of repo
+cd ../..
+npm install -w packages/converter
+cd packages/converter
 ```
 
 ## Tests
