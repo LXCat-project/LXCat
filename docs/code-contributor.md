@@ -41,13 +41,13 @@ See [/packages/database](https://gitlab.com/LXCat-project/lxcat-ng/-/blob/main/p
 
 ## How to make a merge request
 
-See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create merge request in [repository](https://gitlab.com/LXCat-project/lxcat-ng).
+See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create a merge request in [repository](https://gitlab.com/LXCat-project/lxcat-ng).
 
 ## Documentation
 
 The documentation is formatted in [GitLab flavored Markdown](https://docs.gitlab.com/ee/user/markdown.html) files in the `/docs` directory.
 
-The documentation is also hosted on the website at `https://<somewhere>/docs`.
+The documentation is also hosted on the website at `https://<domain of lxcat website>/docs`.
 
 To have working links between Markdown files on the website use URLs without the `.md` extension.
 
@@ -122,16 +122,21 @@ $$
 L = \frac{1}{2} \rho v^2 S C_L
 $$
 
+<!-- 
+Latex rendering with $$ delimiter is not yet available on GitLab,
+see https://docs.gitlab.com/ee/user/markdown.html#latex-compatible-fencing
+-->
+
 ## Technology wishes
 
-Document to figure out what pieces of software to use.
+Wishes for the pieces of software to be used.
 
 Stack should be stable and usable by maintainers of lxcat.
 
 The current lxcat is written in PHP and uses Mysql as database with phpmyadmin as admin interface.
 In the new lxcat, the admin interface should be part of the web application and offer some one to upload or edit a cross section set using a web form. This new interface should be behind a login.
 
-The prototype by Daan is written in [Typescript](https://www.typescriptlang.org/) and uses [Arangodb](https://www.arangodb.com) as database.
+The prototype by Daan Boer is written in [Typescript](https://www.typescriptlang.org/) and uses [Arangodb](https://www.arangodb.com) as database.
 For the new lxcat we want to keep using TypeScript and ArangoDB.
 
 The current lxcat uses a [time machine](https://nl.lxcat.net/data/time_machine.php) to show previous versions of data.
@@ -148,7 +153,7 @@ Whishes:
 * renders most HTML on server
 * reuse layout
 * styled using ui framework like material or antd
-* auth
+* external authentication
 * api with openapi
 * markdown
 * db agnostic
@@ -177,7 +182,7 @@ Possible options see https://learning-notes.mistermicheels.com/javascript/typesc
 * App authentication = OpenID identity providers + [next-auth](https://next-auth.js.org)
 * API authentication = (OpenID identity providers + next-auth) or JWT based API token
 * Authorization = roles assigned to users
-* OpenID identity provider = Orcid
+* OpenID identity provider = Orcid or Keycloak
 * Schema = [Zod](https://github.com/colinhacks/zod), used for validation, typescript type, JSON schema for API consumers and database collection
 * Database seeding and migration = Handrolled directory importer
 * Configuration = dotenv
@@ -194,7 +199,7 @@ See [NextJS debugging docs](https://nextjs.org/docs/advanced-features/debugging#
 The following diagram shows all document and edge collections.
 
 > The columns mentioned are for illustration.
-> Each document collection has a JSON schema (defined in /app/src/**/schema.ts) which defines the shape of each document inserted/updated.
+> Each document collection has a JSON schema (defined in /packages/database/src/**/schema.ts) which defines the shape of each document inserted/updated.
 
 ```mermaid
 erDiagram
@@ -247,7 +252,7 @@ The diagram can be edited on https://mermaid.live/ by copying the code block tex
 
 The React components can be developed in isolation with [storybook](https://storybook.js.org/).
 
-By writing a story as `app/src/<Component>.stories.tsx` according to [docs](https://storybook.js.org/docs/react/writing-stories/introduction).
+By writing a story as `/app/src/<Component>.stories.tsx` according to [docs](https://storybook.js.org/docs/react/writing-stories/introduction).
 
 The storybook can be run with
 
@@ -258,12 +263,12 @@ npm run storybook
 
 This will open a web browser where stories of components can be seen.
 
-The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing the job artifacts to `app/storybook-static/index.html`.
+The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing the job artifacts to `/app/storybook-static/index.html`.
 This can be useful for other people to test your component without having to install anything.
 
 ## Unit Tests
 
-Tests can be written as `src/**/*.{test,spec}.ts` files  with [vitest](https://vitest.dev/) framework and run with
+Tests can be written as `src/**/*.{test,spec}.ts` files with [vitest](https://vitest.dev/) framework and run with
 
 ```shell
 npm run test
@@ -287,7 +292,7 @@ To debug tests in VS code
 This project uses GNU Affero General Public License v3.0 or later for the web application and any package not published to npmjs.com.
 The Apache 2.0 license is used for packages published to npmjs.com.
 
-This project uses the [REUSE specification](https://reuse.software/) for licensing and copyright.
+This project uses the [REUSE software](https://reuse.software/) recommendations for licensing and copyright.
 
 To test compliance use
 

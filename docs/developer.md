@@ -22,7 +22,7 @@ To consume LXCat data by another program, the LXCat web service provides several
 
 The API endpoints of the LXcat web service require authorization and authentication.
 
-You can get authorized by mailing [admin@lxcat.net](mailto:admin@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
+You can get authorized by mailing [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
 Send the mail from the same email you used to login to LXCat.
 
 Authentication is done using a [JWT](https://jwt.io) token. 
