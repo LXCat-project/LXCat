@@ -389,7 +389,7 @@ export const SWRFilterComponent = ({
               +
             </Button>
           </Box>
-          <div>
+          {/*<div>
             Examples:{" "}
             <Button
               variant="subtle"
@@ -400,7 +400,7 @@ export const SWRFilterComponent = ({
             >
               Argon
             </Button>
-          </div>
+          </div>*/}
         </fieldset>
       </div>
       <div>
