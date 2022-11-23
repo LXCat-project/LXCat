@@ -54,9 +54,9 @@ if (validator.validate(doc)) {
 ### Install dependencies
 
 ```shell
-cd ..
-npm run install -w schema
-cd schema
+cd ../..
+npm run install -w packages/schema
+cd packages/schema
 ```
 
 ### Generate JSON schemas

@@ -6,11 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Database
 
-The web application needs an [arangodb](https://arangodb.com/) database to talk to.
+The web application needs an [ArangoDB](https://arangodb.com/) database to talk to.
+This package provides a data abstraction layer for the application to the database.
 
 ## Run for development
 
-Create `.env` file inside `database/` directory with
+Create `.env` file inside `packages/database/` directory with
 
 ```shell
 ARANGO_PASSWORD=<arangodb root password used to connect to Docker container>
@@ -29,8 +30,10 @@ Spin up a database container.
 docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.9.1
 ```
 
-The `./orangodb3` directory is used to persist the collection data.
+The `./arangodb3` directory is used to persist the collection data.
 The container will listen on [http://localhost:8529](http://localhost:8529).
+
+The ArangoDB dashboard (built-in admin web interface) can be accessed in a web browser by visiting [http://localhost:8529](http://localhost:8529) and login with `root` as username and value of ARANGO_PASSWORD environment variable as password and select `lxcat` (or value of ARANGO_DB environment variable if set) as DB. 
 
 ## Setup
 
@@ -38,7 +41,7 @@ To create database and create all empty collections run following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-cd .. && npm install && npm run build --workspace schema && cd database
+cd ../.. && npm install && npm run build --workspace packages/schema && cd database
 npm run setup
 ```
 
@@ -129,14 +132,8 @@ npm run reload
 
 ## Make usable for app
 
-```
-npx tsup src/index.ts src/*/queries.ts src/*/schema.ts src/*/queries --dts
-
-# Exclude cli tests and test utils from dist
-find src -type f |grep -v cli | grep -v spec |grep -v testutils |perl -pe 's/\n/ /'
-
-npx tsup src/css/collection.ts src/css/queries/author_read.ts src/css/queries/author_write.ts src/css/queries/public.ts src/css/loaders.ts src/css/schema.ts src/css/public.ts src/systemDb.ts src/db.ts src/cs/queries.ts src/cs/collections.ts src/cs/schema.ts src/cs/public.ts src/auth/queries.ts src/auth/schema.ts src/shared/queries.ts src/shared/types/collections.ts src/shared/types/version_info.ts src/shared/schema.ts src/index.ts src/date.ts --dts
-
+```shell
+npm run build
 ```
 
 ## Generate collection schemas
@@ -150,6 +147,6 @@ npm run collectionschema
 
 ## Tests
 
-See [code contributor doc](../docs/code-contributor#unit-tests)
+See [code contributor doc](../../docs/code-contributor#unit-tests)
 
 The tests are done against a database running in a container using the [testcontainers](https://github.com/testcontainers/testcontainers-node) library.
