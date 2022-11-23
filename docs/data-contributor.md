@@ -17,12 +17,12 @@ This document is for someone adding or editing data.
 
 ## Preparation
 
-To perform data contribution task you first need to
+To perform data contribution tasks you first need to
 
-1. You need to sign in first 
+1. Sign in 
    - By clicking on `Sign in` button in upper right corner of any page.
 2. On your [profile](/profile) page click `Perform author tasks` link. 
-   - If this link is missing then email [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20contributor%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20contribute%20data.) to request permission to contribute to LXCat. Send the mail from the same email you used to login to LXCat.
+   - If this link is missing then email [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20contributor%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20contribute%20data.) to request permission to contribute to LXCat. Please send the mail from the same email you used to sign into LXCat.
 
 ## Submit
 

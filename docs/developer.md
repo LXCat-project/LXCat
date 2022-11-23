@@ -120,7 +120,7 @@ For example to only get sets which have a cross section with a rotational reacti
 curl https://nl.lxcat.net/api/scat-css?tag=Rotational
 ```
 
-Another way to get the filter you want is to go to [https://nl.lxcat.net//scat-css](https://nl.lxcat.net//scat-css), apply some filters and copy all the search params (stuff after `?` in the adress bar) to `https://nl.lxcat.net/api/scat-css?<search params from web page>`.
+Another way to get the filter you want is to go to [https://nl.lxcat.net//scat-css](https://nl.lxcat.net/scat-css), apply some filters and copy all the search params (stuff after `?` in the adress bar) to `https://nl.lxcat.net/api/scat-css?<search params from web page>`.
 
 ### Paging
 
@@ -156,6 +156,8 @@ To fetch in Bolsig+ format use
 ```bash
 curl https://nl.lxcat.net/api/scat-css/<id of set>/legacy
 ```
+
+<!-- TODO Document how to use /api/scat-cs endpoint -->
 
 ## Fetch a cross section
 
