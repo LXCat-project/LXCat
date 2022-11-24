@@ -30,7 +30,7 @@ This document is for someone developing the LXCat web application and its packag
 
 ## Where is the code?
 
-Code is hosted on [https://gitlab.com/LXCat-project/lxcat-ng](https://gitlab.com/LXCat-project/lxcat-ng).
+Code is hosted on [https://gitlab.com/LXCat-project/lxcat](https://gitlab.com/LXCat-project/lxcat).
 Code to fill the database can be found in `/packages/database`.
 Code that runs the website can be found in `/app`.
 Code that describes the shape of LXCat documents can be found in `/packages/schema`.
@@ -38,11 +38,11 @@ Code that can convert LXCat documents to txt format can be found in `/packages/c
 
 ## How to perform local deployment with test data?
 
-See [/packages/database](https://gitlab.com/LXCat-project/lxcat-ng/-/blob/main/packages/database/README.md) how to seed the database with test data.
+See [/packages/database](https://gitlab.com/LXCat-project/lxcat/-/blob/main/packages/database/README.md) how to seed the database with test data.
 
 ## How to make a merge request
 
-See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create a merge request in [repository](https://gitlab.com/LXCat-project/lxcat-ng).
+See [https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html) how to create a merge request in [repository](https://gitlab.com/LXCat-project/lxcat).
 
 ## Documentation
 
@@ -315,5 +315,5 @@ If there are changes to the code you want to cite you will need to create a new 
 To create a new DOI:
 
 1. Bump version in package.json files, rerun `npm install`, commit & push to main branch.
-2. Create a new [GitLab release](https://gitlab.com/LXCat-project/lxcat-ng/-/releases/new).
-3. On Zenodo page for LXCat ng, a new version needs to be created with the tarball of the new release.
+2. Create a new [GitLab release](https://gitlab.com/LXCat-project/lxcat/-/releases/new).
+3. On Zenodo page for LXCat, a new version needs to be created with the tarball of the new release.

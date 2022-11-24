@@ -4,9 +4,9 @@ SPDX-FileCopyrightText: LXCat team
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# LXCat ng web application and web service
+# LXCat web application and web service
 
-- [LXCat ng web application and web service](#lxcat-ng-web-application-and-web-service)
+- [LXCat web application and web service](#lxcat-web-application-and-web-service)
   - [Getting Started](#getting-started)
   - [Learn More](#learn-more)
   - [Setup auth](#setup-auth)
@@ -111,8 +111,8 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
             This will make app available on [https://localhost:8443](https://localhost:8443).
             In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
             Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
-        - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
-            Also set `NEXT_PUBLIC_URL=https://< lxcat ng domain >` in `.env.local` file.
+        - For production deployments set to `https://< lxcat domain >/api/auth/callback/orcid`
+            Also set `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
 
 ### For Keycloak
 
@@ -129,12 +129,12 @@ docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD
 
 Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
-1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-ng-test-realm`
-2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users)
+1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-test-realm`
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-real/users)
    * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
    * Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
-3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-ng-test-real). This is the oauth provider the lxcat app will authenticate against.
-   * Client ID: lxcat-ng-test
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real). This is the oauth provider the lxcat app will authenticate against.
+   * Client ID: lxcat-test
    * Client protocol: openid-connect
    * Root URL: http://localhost:3000 or whatever url the application is running on.
    * After creation edit client some more
