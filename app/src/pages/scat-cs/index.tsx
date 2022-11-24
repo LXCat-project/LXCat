@@ -22,7 +22,7 @@ import {
   StateLeaf,
 } from "@lxcat/database/dist/shared/getStateLeaf";
 import Link from "next/link";
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 import { useRouter } from "next/router";
 import { SWRConfig, unstable_serialize } from "swr";
@@ -182,11 +182,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
   selection,
-  paging,
+  paging: initialPaging,
   examples,
   defaultReactionChoices,
 }) => {
   const [items, setItems] = useState(initialItems);
+  const [paging, setPaging] = useState(initialPaging);
 
   const router = useRouter();
 
@@ -197,17 +198,15 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
   }
 
-  const onChange = async (
-    newSelection: Array<ReactionTemplate>,
-    offset: number = 0
-  ) => {
+  const onChange = async (newSelection: Array<ReactionTemplate>) => {
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
         reactions: JSON.stringify(newSelection),
-        offset: `${offset}`,
+        offset: "0",
       })}`
     );
     setItems(await res.json());
+    setPaging((prevPaging) => ({ ...prevPaging, offset: 0 }));
   };
 
   return (
@@ -233,7 +232,14 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
         <Filter facets={facets} selection={selection} onChange={onChange} />
       </SWRConfig>
       <hr />
-      <List items={items} />
+      {nrItems > 1 ? (
+        <List items={items} />
+      ) : (
+        <Text>
+          The selection is empty. Use the selection tool above to start
+          searching for cross sections.
+        </Text>
+      )}
       <Paging paging={paging} nrOnPage={nrItems} query={router.query} />
       {nrItems > 0 && nrItems <= BAG_SIZE ? (
         <Link
@@ -241,7 +247,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
           passHref
         >
           <Button component="a" variant="light">
-            Plots and download the currently filtered cross sections
+            Plot selection
           </Button>
         </Link>
       ) : (
