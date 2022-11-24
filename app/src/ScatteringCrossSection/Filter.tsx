@@ -19,7 +19,9 @@ export const Filter = ({ facets, selection, onChange }: Props) => {
     newSelection: Array<ReactionTemplate>,
     event?: string
   ) {
-    const query = JSON.stringify(newSelection);
+    const query = new URLSearchParams({
+      reactions: JSON.stringify(newSelection),
+    }).toString();
 
     if (event?.startsWith("reactions")) {
       router.push({ query }, undefined, { shallow: true });
