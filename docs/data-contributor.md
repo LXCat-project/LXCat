@@ -14,6 +14,7 @@ This document is for someone adding or editing data.
   - [Edit](#edit)
   - [Retract](#retract)
   - [Versioning](#versioning)
+  - [Organization](#organization)
 
 ## Preparation
 
@@ -98,3 +99,13 @@ A published cross section set can only have published cross sections.
 A draft cross section set can have draft or published cross sections.
 Two cross section sets can share cross sections.
 An organization has users as members and owns cross sections and cross section sets.
+
+## Organization
+
+An organization has users as members. A cross section set is owned by an organization.
+
+Any member of an organization can edit the cross section sets owned by that organization. A single cross section can be present in multiple cross section sets, but those sets must be owned by same organization.
+
+To become member of an organization in LXCat you can email [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20organization%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20contribute%20data%20in%20the%20...%20organization.) to request access.
+
+A cross section is always part of a cross section set.
