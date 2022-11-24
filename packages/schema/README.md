@@ -8,6 +8,8 @@ SPDX-License-Identifier: Apache-2.0
 
 Package with JSON schemas, validator and Typescript types of LXCat documents.
 
+LXCat is an open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
+
 The validation is multi-step, first the input is checked against a JSON schema and then the quantum numbers of the members of the input reactions are checked.
 
 ## Installation
