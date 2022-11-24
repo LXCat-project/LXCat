@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
       NEXTAUTH_SECRET: "secret4tests",
       NEXT_PUBLIC_URL: "http://localhost:8001",
       NEXTAUTH_URL: "http://localhost:8001/api/auth",
-      TESTOIDC_CLIENT_ID: "lxcat-ng-test",
+      TESTOIDC_CLIENT_ID: "lxcat-test",
       TESTOIDC_CLIENT_SECRET: "clientsecret4tests",
       TESTOIDC_CLIENT_ISSUER: "http://localhost:8002",
     },

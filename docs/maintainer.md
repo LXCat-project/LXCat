@@ -13,7 +13,7 @@ This document is for a system adminstrator of the web site.
   - [Deployment](#deployment)
     - [docker](#docker)
     - [systemd services](#systemd-services)
-    - [LXCat NG](#lxcat-ng)
+    - [LXCat](#lxcat)
   - [How to check health of website?](#how-to-check-health-of-website)
     - [Via web browser](#via-web-browser)
     - [Via ssh](#via-ssh)
@@ -127,17 +127,17 @@ Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
   $ sudo loginctl enable-linger docker
   ```
 
-### LXCat NG
-LXCat NG comes with a `docker-compose.yml` script which will also be used for the production environment.
+### LXCat
+LXCat comes with a `docker-compose.yml` script which will also be used for the production environment.
 
 1. Since the docker-compose service expects to be working from a directory under `~/.config/docker-compose/` we add a softlink to the location of the local git repository (here `~/git`):
    ```shell
-   $ ln -s $HOME/git/lxcat-ng ~/.config/docker-compose/lxcat-ng
+   $ ln -s $HOME/git/lxcat ~/.config/docker-compose/lxcat
    ```
 2. If a suitable environment file `.env` is set up we can start the service:
    ```shell
-   $ systemctl --user enable docker-compose@lxcat-ng.service
-   $ systemctl --user start docker-compose@lxcat-ng.service
+   $ systemctl --user enable docker-compose@lxcat.service
+   $ systemctl --user start docker-compose@lxcat.service
    ```
 3. The docker container port should only be exposed to localhost.
    To provide access from outside a reverse proxy using apache is set up, the relevant part of the apache config being:
@@ -154,7 +154,7 @@ LXCat NG comes with a `docker-compose.yml` script which will also be used for th
 Some notes:
 - To see the systemd journal use the command:
   ```shell
-  $ journalctl --user-unit docker-compose@lxcat-ng.service
+  $ journalctl --user-unit docker-compose@lxcat.service
   ```
 
 ## How to check health of website?
@@ -177,7 +177,7 @@ You can check if the website is healthy by checking with a web browser or by ssh
 
 ```shell
 # Change to directory where docker-compose was started
-cd $HOME/git/lxcat-ng
+cd $HOME/git/lxcat
 # List Docker containers
 /usr/local/bin/docker-compose ps
 ```
@@ -186,9 +186,9 @@ Should show something like
 
 ```shell
 NAME                  COMMAND                  SERVICE             STATUS              PORTS
-lxcat-ng-app-1        "docker-entrypoint.s…"   app                 running             127.0.0.1:3000->3000/tcp
-lxcat-ng-database-1   "/entrypoint.sh aran…"   database            running             8529/tcp
-lxcat-ng-setup-1      "npm run"                setup               exited (0)   
+lxcat-app-1        "docker-entrypoint.s…"   app                 running             127.0.0.1:3000->3000/tcp
+lxcat-database-1   "/entrypoint.sh aran…"   database            running             8529/tcp
+lxcat-setup-1      "npm run"                setup               exited (0)
 ```
 The `app` and `database` services should have `running` status.
 It is OK that the `setup` service is in `exited` status as it is only use to run commands.

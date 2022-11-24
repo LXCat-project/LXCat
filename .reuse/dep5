@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: LXCat Next Generation
+Upstream-Name: LXCat
 Upstream-Contact: LXCat team <info@lxcat.net>
-Source: https://gitlab.com/LXCat-project/lxcat-ng
+Source: https://gitlab.com/LXCat-project/lxcat
 
 # Sample paragraph, commented out:
 #
