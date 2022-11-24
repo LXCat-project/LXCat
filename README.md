@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: LXCat team
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# LXCat Next Generation
+# LXCat
 
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
 
