@@ -4,7 +4,7 @@
 
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import Link from "next/link";
-import { ParsedUrlQuery } from "querystring";
+import { ParsedUrlQueryInput } from "querystring";
 
 export const Paging = ({
   paging,
@@ -14,8 +14,8 @@ export const Paging = ({
 }: {
   paging: PagingOptions;
   nrOnPage: number;
-  query: ParsedUrlQuery;
-  onChange: (newPaging: PagingOptions) => void | Promise<void>;
+  query: ParsedUrlQueryInput;
+  onChange?: (newPaging: PagingOptions) => void | Promise<void>;
 }) => (
   <div style={{ marginTop: "1rem" }}>
     {paging.offset > 0 && (
@@ -30,9 +30,14 @@ export const Paging = ({
       >
         <a
           title="Previous page"
-          onClick={() =>
-            onChange({ ...paging, offset: paging.offset - paging.count })
-          }
+          onClick={() => {
+            if (onChange) {
+              return onChange({
+                ...paging,
+                offset: paging.offset - paging.count,
+              });
+            }
+          }}
         >
           &lt;&lt;
         </a>
@@ -55,9 +60,14 @@ export const Paging = ({
       >
         <a
           title="Next page"
-          onClick={() =>
-            onChange({ ...paging, offset: paging.offset + paging.count })
-          }
+          onClick={() => {
+            if (onChange) {
+              return onChange({
+                ...paging,
+                offset: paging.offset + paging.count,
+              });
+            }
+          }}
         >
           &gt;&gt;
         </a>
