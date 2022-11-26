@@ -2,17 +2,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Facets, ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
+import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { useRouter } from "next/router";
 import { SWRFilterComponent } from "./SWRFilterComponent";
 
 interface Props {
-  facets: Facets;
   selection: Array<ReactionTemplate>;
   onChange: (newSelection: Array<ReactionTemplate>) => void | Promise<void>;
 }
 
-export const Filter = ({ facets, selection, onChange }: Props) => {
+export const Filter = ({ selection, onChange }: Props) => {
   const router = useRouter();
 
   function onFilterChange(
@@ -31,11 +30,5 @@ export const Filter = ({ facets, selection, onChange }: Props) => {
     }
   }
 
-  return (
-    <SWRFilterComponent
-      // facets={facets}
-      selection={selection}
-      onChange={onFilterChange}
-    />
-  );
+  return <SWRFilterComponent selection={selection} onChange={onFilterChange} />;
 };

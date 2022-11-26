@@ -181,13 +181,13 @@ class CacheMap {
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   facets,
-  selection,
+  selection: initialSelection,
   paging: initialPaging,
-  examples,
   defaultReactionChoices,
 }) => {
   const [items, setItems] = useState(initialItems);
   const [paging, setPaging] = useState(initialPaging);
+  const [selection, setSelection] = useState(initialSelection);
 
   const router = useRouter();
 
@@ -206,7 +206,19 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       })}`
     );
     setItems(await res.json());
+    setSelection(newSelection);
     setPaging((prevPaging) => ({ ...prevPaging, offset: 0 }));
+  };
+
+  const onPageChange = async (newPaging: PagingOptions) => {
+    const res = await fetch(
+      `/api/scat-cs?${new URLSearchParams({
+        reactions: JSON.stringify(selection),
+        offset: newPaging.offset.toString(),
+      })}`
+    );
+    setItems(await res.json());
+    setPaging(newPaging);
   };
 
   return (
@@ -229,10 +241,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             ]),
         }}
       >
-        <Filter facets={facets} selection={selection} onChange={onChange} />
+        <Filter selection={selection} onChange={onChange} />
       </SWRConfig>
       <hr />
-      {nrItems > 1 ? (
+      {nrItems > 0 ? (
         <List items={items} />
       ) : (
         <Text>
@@ -240,7 +252,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
           searching for cross sections.
         </Text>
       )}
-      <Paging paging={paging} nrOnPage={nrItems} query={router.query} />
+      <Paging
+        paging={paging}
+        nrOnPage={nrItems}
+        query={router.query}
+        onChange={onPageChange}
+      />
       {nrItems > 0 && nrItems <= BAG_SIZE ? (
         <Link
           href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
@@ -269,7 +286,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         ? parseInt(context.query.offset)
         : 0,
     count: PAGE_SIZE,
-    // count: Number.MAX_SAFE_INTEGER,
   };
 
   const defaultTemplates = defaultSearchTemplate();

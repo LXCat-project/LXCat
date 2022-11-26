@@ -13,7 +13,7 @@ import {
 import { Box, Button, Group } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Latex } from "../shared/Latex";
 import { StateSelectIds } from "../shared/StatefulReactionPicker";
 import { SWRReactionPicker } from "../shared/SWRReactionPicker";
@@ -47,6 +47,13 @@ const getLatexForReaction = (
   );
 };
 
+type ReactionInformation = {
+  id: string;
+  options: ReactionTemplate;
+  ids: StateSelectIds;
+  latex: { consumes: Array<string>; produces: Array<string> };
+};
+
 export const SWRFilterComponent = ({
   selection,
   onChange,
@@ -54,14 +61,7 @@ export const SWRFilterComponent = ({
   selection: Array<ReactionTemplate>;
   onChange: (selection: Array<ReactionTemplate>, event?: string) => void;
 }) => {
-  const [reactions, setReactions] = useState<
-    Array<{
-      id: string;
-      options: ReactionTemplate;
-      ids: StateSelectIds;
-      latex: { consumes: Array<string>; produces: Array<string> };
-    }>
-  >(
+  const [reactions, setReactions] = useState<Array<ReactionInformation>>(
     selection.map((options) => ({
       id: nanoid(),
       options,
@@ -76,9 +76,17 @@ export const SWRFilterComponent = ({
     }))
   );
 
-  useEffect(() => {
-    onReactionsChange(reactions.map((reaction) => reaction.options));
-  }, [reactions]);
+  const updateReactions = async (
+    callback: (
+      prevReactions: Array<ReactionInformation>
+    ) => Array<ReactionInformation>
+  ) => {
+    setReactions((prevReactions) => {
+      const newReactions = callback(prevReactions);
+      onReactionsChange(newReactions.map((reaction) => reaction.options));
+      return newReactions;
+    });
+  };
 
   const hasAnySelection = Object.values(selection).some(
     (s) =>
@@ -87,7 +95,7 @@ export const SWRFilterComponent = ({
   );
 
   async function onReset() {
-    setReactions((_) => [
+    updateReactions((_) => [
       {
         id: nanoid(),
         options: defaultReactionTemplate(),
@@ -125,7 +133,7 @@ export const SWRFilterComponent = ({
                   selection={r.options}
                   latex={getLatexForReaction(r.options, r.latex)}
                   onTagsChange={(selectedTags) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -140,7 +148,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onConsumesChange={(updatedIndex, path, latex) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -167,7 +175,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onConsumesAppend={() =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -190,7 +198,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onConsumesRemove={(indexToRemove) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -213,7 +221,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onProducesChange={(updatedIndex, path, latex) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -240,7 +248,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onProducesAppend={() =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -263,7 +271,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onProducesRemove={(indexToRemove) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -286,7 +294,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onReversibleChange={(selectedReversible) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -301,7 +309,7 @@ export const SWRFilterComponent = ({
                     )
                   }
                   onCSSetsChange={(selectedCSSets) =>
-                    setReactions((prevReactions) =>
+                    updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
@@ -324,7 +332,7 @@ export const SWRFilterComponent = ({
                         variant="subtle"
                         title="Remove reaction"
                         onClick={() =>
-                          setReactions((prevReactions) =>
+                          updateReactions((prevReactions) =>
                             prevReactions.filter((_, j) => i !== j)
                           )
                         }
@@ -335,7 +343,7 @@ export const SWRFilterComponent = ({
                         variant="subtle"
                         title="Clone reaction"
                         onClick={() =>
-                          setReactions((prevReactions) => [
+                          updateReactions((prevReactions) => [
                             ...prevReactions,
                             { ...structuredClone(r), id: nanoid() },
                           ])
@@ -374,7 +382,7 @@ export const SWRFilterComponent = ({
             <Button
               title="Add reaction filter"
               onClick={async () => {
-                setReactions((prevReactions) => [
+                updateReactions((prevReactions) => [
                   ...prevReactions,
                   {
                     id: nanoid(),
