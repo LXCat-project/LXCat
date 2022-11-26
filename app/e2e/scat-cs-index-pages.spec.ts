@@ -40,7 +40,7 @@ test.describe("cross section index page with Uo selected", () => {
   });
 
   test('should have link to bag page', async ({page}) => {
-    const baglink = page.locator('text=Plots and download the currently filtered cross sections')
+    const baglink = page.locator('text=Plot selection')
     await expect(baglink).toBeVisible();
   })
 
@@ -85,7 +85,7 @@ test.describe('cross section bag page', () => {
     await page.goto("/scat-cs");
     await page.locator('[aria-controls="particle-select"]').first().click()
     await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
-    await page.locator('text=Plots and download the currently filtered cross sections').click();
+    await page.locator('text=Plot selection').click();
     await page.locator("text=I agree with the terms of use").click();
   });
 
