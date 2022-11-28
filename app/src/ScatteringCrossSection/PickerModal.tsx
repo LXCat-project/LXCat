@@ -63,8 +63,8 @@ export const PickerModal = ({
     onSubmit(picked);
   };
 
-  // TODO implement api route that returns filter facets (aka choices) for cross
-  // sections that are public and drafts of author
+  // TODO: implement api route that returns filter options for cross sections
+  // that are public or drafts of the current organization.
   return (
     <>
       <Button type="button" variant="light" onClick={() => toggleModal(true)}>

@@ -10,9 +10,9 @@ import { db } from "../../../db";
 import { getStateLeaf, StateLeaf } from "../../../shared/getStateLeaf";
 import {
   CSSetTree,
-  Facets,
+  SearchOptions,
   NestedStateArray,
-  ReactionChoices,
+  ReactionOptions,
   ReactionTemplate,
   Reversible,
   StateProcess,
@@ -194,14 +194,14 @@ export async function getCSSets(
   );
 }
 
-async function reactionsChoices(
+export async function getSearchOptions(
   templates: Array<ReactionTemplate>
-): Promise<Array<ReactionChoices>> {
+): Promise<SearchOptions> {
   if (templates === undefined) {
     return [];
   }
   return Promise.all(
-    templates.map<Promise<ReactionChoices>>(
+    templates.map(
       async ({
         consumes: consumesPaths,
         produces: producesPaths,
@@ -280,14 +280,4 @@ async function reactionsChoices(
       }
     )
   );
-}
-
-export async function searchFacets(
-  templates: Array<ReactionTemplate>
-): Promise<Facets> {
-  /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
-  /* eslint-enable @typescript-eslint/no-unused-vars */
-  return {
-    reactions: await reactionsChoices(templates),
-  };
 }

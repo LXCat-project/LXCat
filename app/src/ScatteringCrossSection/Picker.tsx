@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { Facets, ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
+import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { Checkbox, Space, Group, Button } from "@mantine/core";
 import { useState } from "react";
 import { ReactionSummary } from "./ReactionSummary";

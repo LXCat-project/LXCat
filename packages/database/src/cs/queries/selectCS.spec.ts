@@ -15,10 +15,10 @@ import { CrossSectionHeading } from "../public";
 import { NestedState, removeIdsFromTree } from "./testutils";
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
 import { defaultSearchTemplate } from "../picker/default";
-import { ReactionChoices, ReactionTemplate, Reversible } from "../picker/types";
+import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
 import {
   getCSIdByReactionTemplate,
-  searchFacets,
+  getSearchOptions,
 } from "../picker/queries/public";
 import { byId, getCSHeadings, search } from "./public";
 
@@ -39,12 +39,12 @@ const getCSIdsFromTemplate = async (selection: ReactionTemplate) =>
 
 describe("Selecting individual cross sections", () => {
   describe("given cross sections which consume e+H2, e+N2, e+Ar, and e+H2", () => {
-    let allChoices: ReactionChoices;
+    let allOptions: ReactionOptions;
 
     beforeAll(async () => {
       await sampleSets4Search();
 
-      allChoices = (await searchFacets(defaultSearchTemplate())).reactions[0]!;
+      allOptions = (await getSearchOptions(defaultSearchTemplate()))[0]!;
 
       return truncateCrossSectionSetCollections;
     });
@@ -68,7 +68,7 @@ describe("Selecting individual cross sections", () => {
             valid: false,
           },
         ];
-        expect(allChoices.consumes.flatMap(removeIdsFromTree)).toEqual(
+        expect(allOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
           expected
         );
       });
@@ -91,7 +91,7 @@ describe("Selecting individual cross sections", () => {
             valid: false,
           },
         ];
-        expect(allChoices.produces.flatMap(removeIdsFromTree)).toEqual(
+        expect(allOptions.produces.flatMap(removeIdsFromTree)).toEqual(
           expected
         );
       });
@@ -102,13 +102,13 @@ describe("Selecting individual cross sections", () => {
           ReactionTypeTag.Ionization,
           ReactionTypeTag.Electronic,
         ];
-        expect(allChoices.typeTags).toEqual(expected);
+        expect(allOptions.typeTags).toEqual(expected);
       });
 
       it("should have 4 set names", () => {
         const expected = ["H2 set", "Ar set", "He set", "N2 set"];
         expect(
-          Object.values(allChoices.set).flatMap((org) =>
+          Object.values(allOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -116,18 +116,18 @@ describe("Selecting individual cross sections", () => {
     });
 
     describe("consuming N2", () => {
-      let reactionChoices: ReactionChoices;
+      let reactionOptions: ReactionOptions;
       let searchResults: Array<string>;
 
       beforeAll(async () => {
         const selection = defaultSearchTemplate();
 
-        const [particle, _] = allChoices.consumes
+        const [particle, _] = allOptions.consumes
           .flatMap(Object.entries)
           .find(([_, particle]) => particle.latex === "\\mathrm{N2}")!;
         selection[0].consumes = [{ particle }, {}];
 
-        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        reactionOptions = (await getSearchOptions(selection))[0]!;
         searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
@@ -149,7 +149,7 @@ describe("Selecting individual cross sections", () => {
             valid: false,
           },
         ];
-        expect(removeIdsFromTree(reactionChoices.consumes[0])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.consumes[0])).toEqual(
           expected
         );
       });
@@ -158,7 +158,7 @@ describe("Selecting individual cross sections", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
-        expect(removeIdsFromTree(reactionChoices.consumes[1])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.consumes[1])).toEqual(
           expected
         );
       });
@@ -168,20 +168,20 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
-        expect(removeIdsFromTree(reactionChoices.produces[0])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
           expected
         );
       });
 
       it("should have Effective reaction type tag", () => {
         const expected = [ReactionTypeTag.Effective];
-        expect(reactionChoices.typeTags).toEqual(expected);
+        expect(reactionOptions.typeTags).toEqual(expected);
       });
 
       it("should have N2 set name", () => {
         const expected = ["N2 set"];
         expect(
-          Object.values(reactionChoices.set).flatMap((org) =>
+          Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -193,18 +193,18 @@ describe("Selecting individual cross sections", () => {
     });
 
     describe("producing Ar^+", () => {
-      let reactionChoices: ReactionChoices;
+      let reactionOptions: ReactionOptions;
       let searchResults: Array<string>;
 
       beforeAll(async () => {
         const selection = defaultSearchTemplate();
 
-        const [particle, _] = allChoices.produces
+        const [particle, _] = allOptions.produces
           .flatMap(Object.entries)
           .find(([_, particle]) => particle.latex === "\\mathrm{Ar^+}")!;
         selection[0].produces = [{ particle }, {}];
 
-        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        reactionOptions = (await getSearchOptions(selection))[0]!;
         searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
@@ -213,7 +213,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{Ar}", valid: true },
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
-        expect(removeIdsFromTree(reactionChoices.consumes[0])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.consumes[0])).toEqual(
           expected
         );
       });
@@ -230,7 +230,7 @@ describe("Selecting individual cross sections", () => {
             valid: false,
           },
         ];
-        expect(removeIdsFromTree(reactionChoices.produces[0])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
           expected
         );
       });
@@ -239,20 +239,20 @@ describe("Selecting individual cross sections", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
-        expect(removeIdsFromTree(reactionChoices.produces[1])).toEqual(
+        expect(removeIdsFromTree(reactionOptions.produces[1])).toEqual(
           expected
         );
       });
 
       it("should have Ionization reaction type tag", () => {
         const expected = [ReactionTypeTag.Ionization];
-        expect(reactionChoices.typeTags).toEqual(expected);
+        expect(reactionOptions.typeTags).toEqual(expected);
       });
 
       it("should have Ar set name", () => {
         const expected = ["Ar set"];
         expect(
-          Object.values(reactionChoices.set).flatMap((org) =>
+          Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -264,13 +264,13 @@ describe("Selecting individual cross sections", () => {
     });
 
     describe("with tag=Ionization", () => {
-      let reactionChoices: ReactionChoices;
+      let reactionOptions: ReactionOptions;
       let searchResults: Array<string>;
 
       beforeAll(async () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
         selection[0].typeTags = [ReactionTypeTag.Ionization];
-        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        reactionOptions = (await getSearchOptions(selection))[0]!;
         searchResults = await getCSIdsFromTemplate(selection[0]!);
       });
 
@@ -279,7 +279,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected
         );
       });
@@ -289,7 +289,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected
         );
       });
@@ -300,13 +300,13 @@ describe("Selecting individual cross sections", () => {
           ReactionTypeTag.Ionization,
           ReactionTypeTag.Electronic,
         ];
-        expect(reactionChoices.typeTags).toEqual(expected);
+        expect(reactionOptions.typeTags).toEqual(expected);
       });
 
       it("should have Ar set name", () => {
         const expected = ["Ar set"];
         expect(
-          Object.values(reactionChoices.set).flatMap((org) =>
+          Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -318,16 +318,16 @@ describe("Selecting individual cross sections", () => {
     });
 
     describe("with set=Ar selected", () => {
-      let reactionChoices: ReactionChoices;
+      let reactionOptions: ReactionOptions;
       beforeAll(async () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
 
-        const [setId, _] = Object.values(allChoices.set)
+        const [setId, _] = Object.values(allOptions.set)
           .flatMap((org) => Object.entries(org.sets))
           .find(([_, name]) => name === "Ar set")!;
 
         selection[0].set = [setId];
-        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        reactionOptions = (await getSearchOptions(selection))[0]!;
       });
 
       it("should consume e and Ar", () => {
@@ -335,7 +335,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected
         );
       });
@@ -345,20 +345,20 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected
         );
       });
 
       it("should have Ionization reaction type tag", () => {
         const expected = [ReactionTypeTag.Ionization];
-        expect(reactionChoices.typeTags).toEqual(expected);
+        expect(reactionOptions.typeTags).toEqual(expected);
       });
 
       it("should have 4 set names", () => {
         const expected = ["H2 set", "Ar set", "He set", "N2 set"];
         expect(
-          Object.values(reactionChoices.set).flatMap((org) =>
+          Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -366,7 +366,7 @@ describe("Selecting individual cross sections", () => {
     });
 
     describe("with tag=Ionization or Effective", () => {
-      let reactionChoices: ReactionChoices;
+      let reactionOptions: ReactionOptions;
       let searchResults: CrossSectionHeading[];
 
       beforeAll(async () => {
@@ -375,7 +375,7 @@ describe("Selecting individual cross sections", () => {
           ReactionTypeTag.Effective,
           ReactionTypeTag.Ionization,
         ];
-        reactionChoices = (await searchFacets(selection)).reactions[0]!;
+        reactionOptions = (await getSearchOptions(selection))[0]!;
         // FIXME: This function does not use the provided selection.
         searchResults = await search(selection, { count: 100, offset: 0 });
       });
@@ -387,7 +387,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.consumes.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected
         );
       });
@@ -399,7 +399,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
-        expect(reactionChoices.produces.flatMap(Object.values)).toEqual(
+        expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected
         );
       });
@@ -410,13 +410,13 @@ describe("Selecting individual cross sections", () => {
           ReactionTypeTag.Ionization,
           ReactionTypeTag.Electronic,
         ];
-        expect(reactionChoices.typeTags).toEqual(expected);
+        expect(reactionOptions.typeTags).toEqual(expected);
       });
 
       it("should have 3 set names", () => {
         const expected = ["H2 set", "Ar set", "N2 set"];
         expect(
-          Object.values(reactionChoices.set).flatMap((org) =>
+          Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
           )
         ).toEqual(expected);
@@ -428,7 +428,7 @@ describe("Selecting individual cross sections", () => {
     });
   });
   describe("given versioned cross section sets", () => {
-    let publishedChoices: ReactionChoices;
+    let publishedOptions: ReactionOptions;
     let csIds: Array<string>;
     let searchResults: Array<CrossSectionHeading>;
 
@@ -437,7 +437,7 @@ describe("Selecting individual cross sections", () => {
 
       const defaultOptions = defaultSearchTemplate();
 
-      publishedChoices = (await searchFacets(defaultOptions)).reactions[0]!;
+      publishedOptions = (await getSearchOptions(defaultOptions))[0]!;
       csIds = await getCSIdsFromTemplate(defaultOptions[0]!);
       searchResults = await getCSHeadings(csIds, { offset: 0, count: 10 });
 
@@ -447,7 +447,7 @@ describe("Selecting individual cross sections", () => {
     it("should only return published sets", () => {
       const expected = ["H2 set"];
       expect(
-        Object.values(publishedChoices.set).flatMap((org) =>
+        Object.values(publishedOptions.set).flatMap((org) =>
           Object.values(org.sets)
         )
       ).toEqual(expected);
@@ -458,7 +458,7 @@ describe("Selecting individual cross sections", () => {
         { children: [], latex: "\\mathrm{H2}", valid: true },
         { children: [], latex: "\\mathrm{e}", valid: true },
       ];
-      expect(publishedChoices.consumes.flatMap(removeIdsFromTree)).toEqual(
+      expect(publishedOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
         expected
       );
     });
@@ -468,19 +468,19 @@ describe("Selecting individual cross sections", () => {
         { children: [], latex: "\\mathrm{H2}", valid: true },
         { children: [], latex: "\\mathrm{e}", valid: true },
       ];
-      expect(publishedChoices.produces.flatMap(removeIdsFromTree)).toEqual(
+      expect(publishedOptions.produces.flatMap(removeIdsFromTree)).toEqual(
         expected
       );
     });
 
     it("should only return cross sections from published sets", () => {
       const expected = [ReactionTypeTag.Effective];
-      expect(publishedChoices.typeTags).toEqual(expected);
+      expect(publishedOptions.typeTags).toEqual(expected);
     });
 
     it("should only return reversibility options that occur in published sets", () => {
       const expected = [Reversible.False, Reversible.Both];
-      expect(publishedChoices.reversible).toEqual(expected);
+      expect(publishedOptions.reversible).toEqual(expected);
     });
 
     it("should only return cross sections from published sets", async () => {

@@ -36,7 +36,7 @@ interface OrganizationSummary {
 }
 export type CSSetTree = Record<string, OrganizationSummary>;
 
-export type ReactionChoices = {
+export type ReactionOptions = {
   consumes: StateTree[];
   produces: StateTree[];
   typeTags: ReactionTypeTag[];
@@ -44,9 +44,7 @@ export type ReactionChoices = {
   set: CSSetTree;
 };
 
-export interface Facets {
-  reactions: ReactionChoices[];
-}
+export type SearchOptions = Array<ReactionOptions>;
 
 export enum Reversible {
   True = "true",

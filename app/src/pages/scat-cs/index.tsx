@@ -31,15 +31,15 @@ import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import deepEqual from "deep-equal";
 import {
   CSSetTree,
-  Facets,
-  ReactionChoices,
+  SearchOptions,
+  ReactionOptions,
   ReactionTemplate,
   Reversible,
   StateProcess,
 } from "@lxcat/database/dist/cs/picker/types";
 import {
   getCSIdByReactionTemplate,
-  searchFacets,
+  getSearchOptions,
 } from "@lxcat/database/dist/cs/picker/queries/public";
 import {
   defaultReactionTemplate,
@@ -50,15 +50,15 @@ import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
 interface Example {
   label: string;
   selection: Array<ReactionTemplate>;
-  facets: Facets;
+  options: SearchOptions;
 }
 
 interface Props {
   items: CrossSectionHeading[];
-  facets: Facets;
+  options: SearchOptions;
   selection: Array<ReactionTemplate>;
   paging: PagingOptions;
-  defaultReactionChoices: ReactionChoices;
+  defaultReactionOptions: ReactionOptions;
   examples: Example[];
 }
 
@@ -83,31 +83,31 @@ async function getExample(
       set: [],
     },
   ];
-  const facets = await searchFacets(selection);
+  const options = await getSearchOptions(selection);
   return {
     label,
     selection,
-    facets,
+    options: options,
   };
 }
 
 const generateCachePairs = (
   selection: ReactionTemplate,
-  choices: ReactionChoices
+  options: ReactionOptions
 ) => [
-  [unstable_serialize(omit(selection, "typeTags")), choices.typeTags] as [
+  [unstable_serialize(omit(selection, "typeTags")), options.typeTags] as [
     string,
     Array<ReactionTypeTag>
   ],
-  [unstable_serialize(omit(selection, "reversible")), choices.reversible] as [
+  [unstable_serialize(omit(selection, "reversible")), options.reversible] as [
     string,
     Array<Reversible>
   ],
-  [unstable_serialize(omit(selection, "set")), choices.set] as [
+  [unstable_serialize(omit(selection, "set")), options.set] as [
     string,
     CSSetTree
   ],
-  ...choices.consumes.map(
+  ...options.consumes.map(
     (tree, index) =>
       [
         unstable_serialize({
@@ -125,7 +125,7 @@ const generateCachePairs = (
         tree,
       ] as [string, StateTree]
   ),
-  ...choices.produces.map(
+  ...options.produces.map(
     (tree, index) =>
       [
         unstable_serialize({
@@ -180,10 +180,10 @@ class CacheMap {
 
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
-  facets,
+  options,
   selection: initialSelection,
   paging: initialPaging,
-  defaultReactionChoices,
+  defaultReactionOptions,
 }) => {
   const [items, setItems] = useState(initialItems);
   const [paging, setPaging] = useState(initialPaging);
@@ -233,10 +233,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             new CacheMap([
               ...generateCachePairs(
                 defaultReactionTemplate(),
-                defaultReactionChoices
+                defaultReactionOptions
               ),
-              ...selection.flatMap((options, index) =>
-                generateCachePairs(options, facets.reactions[index])
+              ...selection.flatMap((selected, index) =>
+                generateCachePairs(selected, options[index])
               ),
             ]),
         }}
@@ -289,12 +289,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   };
 
   const defaultTemplates = defaultSearchTemplate();
-  const defaultChoices = searchFacets(defaultTemplates);
+  const defaultOptions = getSearchOptions(defaultTemplates);
 
-  const [facets, items] = deepEqual(defaultTemplates, template)
-    ? [await defaultChoices, []]
+  const [options, items] = deepEqual(defaultTemplates, template)
+    ? [await defaultOptions, []]
     : await Promise.all([
-        searchFacets(template),
+        getSearchOptions(template),
         Promise.all(
           template.map(
             async ({
@@ -347,10 +347,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       items,
-      facets,
+      options: options,
       selection: template,
       paging,
-      defaultReactionChoices: (await defaultChoices).reactions[0],
+      defaultReactionOptions: (await defaultOptions)[0],
       examples: [],
     },
   };
