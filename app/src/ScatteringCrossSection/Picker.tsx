@@ -6,19 +6,17 @@ import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { Facets, ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { Checkbox, Space, Group, Button } from "@mantine/core";
 import { useState } from "react";
-import { FilterComponent } from "./FilterComponent";
 import { ReactionSummary } from "./ReactionSummary";
+import { SWRFilterComponent } from "./SWRFilterComponent";
 
 export type Picked = CrossSectionItem[];
 
 export const Picker = ({
-  filterChoices,
   filterSelection,
   setFilterSelection,
   choices,
   onSubmit,
 }: {
-  filterChoices: Facets;
   filterSelection: Array<ReactionTemplate>;
   setFilterSelection: (selection: Array<ReactionTemplate>) => void;
   choices: Picked;
@@ -37,8 +35,7 @@ export const Picker = ({
     <>
       <fieldset>
         <legend>Filter</legend>
-        <FilterComponent
-          facets={filterChoices}
+        <SWRFilterComponent
           selection={filterSelection}
           onChange={setFilterSelection}
         />
@@ -50,10 +47,7 @@ export const Picker = ({
             <Checkbox
               key={c.id}
               value={c.id}
-              label={
-                <ReactionSummary {...c.reaction} />
-                // TODO use latex reaction as label for cs
-              }
+              label={<ReactionSummary {...c.reaction} />}
             />
           ))}
         </Checkbox.Group>

@@ -74,7 +74,7 @@ export interface StateSelectIds {
   produces: Array<string>;
 }
 
-export type StatefulReactionPickerProps = {
+export type SWRReactionPickerProps = {
   ids: StateSelectIds;
   selection: ReactionTemplate;
   editable: boolean;
@@ -151,7 +151,7 @@ export const SWRReactionPicker = ({
   onTagsChange,
   onCSSetsChange,
   onReversibleChange,
-}: StatefulReactionPickerProps) => {
+}: SWRReactionPickerProps) => {
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
   const { data: typeTags, error: tagError } = useSWRImmutable(
     omit(selection, "typeTags"),

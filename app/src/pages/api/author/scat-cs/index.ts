@@ -29,6 +29,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       throw new Error("How did you get here?");
     }
     const results = await searchOwned(me.email, selection, paging);
+    console.log(results);
     res.json(results);
   });
 

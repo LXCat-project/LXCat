@@ -15,8 +15,7 @@ import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { Latex } from "../shared/Latex";
-import { StateSelectIds } from "../shared/StatefulReactionPicker";
-import { SWRReactionPicker } from "../shared/SWRReactionPicker";
+import { SWRReactionPicker, StateSelectIds } from "../shared/SWRReactionPicker";
 
 const getLatexForReaction = (
   options: ReactionTemplate,
