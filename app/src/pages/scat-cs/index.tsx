@@ -22,7 +22,7 @@ import {
   StateLeaf,
 } from "@lxcat/database/dist/shared/getStateLeaf";
 import Link from "next/link";
-import { Button, Text } from "@mantine/core";
+import { Button, Center, Space, Text } from "@mantine/core";
 import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 import { useRouter } from "next/router";
 import { SWRConfig, unstable_serialize } from "swr";
@@ -244,6 +244,23 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
         <Filter selection={selection} onChange={onChange} />
       </SWRConfig>
       <hr />
+      {nrItems > 0 && nrItems <= BAG_SIZE ? (
+        <>
+          <Center>
+            <Link
+              href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
+              passHref
+            >
+              <Button component="a" variant="light">
+                Plot selection
+              </Button>
+            </Link>
+          </Center>
+          <Space h="sm" />
+        </>
+      ) : (
+        <></>
+      )}
       {nrItems > 0 ? (
         <List items={items} />
       ) : (
@@ -258,18 +275,6 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
         query={router.query}
         onChange={onPageChange}
       />
-      {nrItems > 0 && nrItems <= BAG_SIZE ? (
-        <Link
-          href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
-          passHref
-        >
-          <Button component="a" variant="light">
-            Plot selection
-          </Button>
-        </Link>
-      ) : (
-        <></>
-      )}
     </Layout>
   );
 };

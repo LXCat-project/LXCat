@@ -68,6 +68,7 @@ export const SWRFilterComponent = ({
         consumes: options.consumes.map(() => nanoid()),
         produces: options.produces.map(() => nanoid()),
       },
+      // TODO: Think of a way to obtain state latex on page load.
       latex: {
         consumes: options.consumes.map(() => ""),
         produces: options.produces.map(() => ""),
