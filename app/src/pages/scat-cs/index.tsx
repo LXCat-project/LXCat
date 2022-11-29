@@ -46,6 +46,7 @@ import {
   defaultSearchTemplate,
 } from "@lxcat/database/dist/cs/picker/default";
 import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
+import { IconGraph } from "@tabler/icons";
 
 interface Example {
   label: string;
@@ -251,7 +252,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
               href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
               passHref
             >
-              <Button component="a" variant="light">
+              <Button leftIcon={<IconGraph />} component="a" variant="light">
                 Plot selection
               </Button>
             </Link>
