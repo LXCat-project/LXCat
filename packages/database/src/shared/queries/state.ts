@@ -254,3 +254,21 @@ export async function listStateChoices(): Promise<StateChoices> {
   const rawChoices = await cursor.all();
   return groupStateChoices(rawChoices);
 }
+
+export async function getIdByLabel(label: string) {
+  const query = aql`
+    FOR s IN State
+      FILTER s.id == ${label}
+      LIMIT 1
+      RETURN s._id
+  `
+  const cursor: ArrayCursor<string> = await db().query(query)
+  return cursor.next()
+}
+
+export type StateSummary = {
+  latex: string;
+  valid: boolean;
+  children?: StateTree;
+};
+export type StateTree = Record<string, StateSummary>;

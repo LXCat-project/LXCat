@@ -155,10 +155,11 @@ const ReactionEntryForm = ({
           <Stack>
             <Input.Label>State</Input.Label>
             <LatexSelect
+              placeholder="Particle"
               choices={stateChoices}
               value={value}
               onChange={onChange}
-              name={name}
+              name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
             />
           </Stack>
         )}

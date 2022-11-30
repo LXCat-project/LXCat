@@ -93,7 +93,7 @@ describe("given cross sections in different version states", () => {
     },
   ];
   describe.each(cases)("with $name selection", ({ selection }) => {
-    describe("searchFactets()", () => {
+    describe("searchFacets()", () => {
       let facets: FilterOptions;
       beforeAll(async () => {
         facets = await searchFacets(selection);

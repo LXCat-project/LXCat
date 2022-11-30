@@ -11,9 +11,9 @@ import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { mustBeAuthor } from "../../../auth/middleware";
 import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";
 import { Layout } from "../../../shared/Layout";
-import { defaultSearchOptions } from "@lxcat/database/dist/cs/queries/public";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { Paging } from "../../../ScatteringCrossSection/Paging";
+import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 
 interface Props {
   items: CrossSectionItem[];
@@ -95,7 +95,7 @@ export default Page;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const me = await mustBeAuthor(context);
-  const filter = defaultSearchOptions();
+  const filter = defaultSearchTemplate();
   const paging = {
     offset:
       context.query.offset && !Array.isArray(context.query.offset)

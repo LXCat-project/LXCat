@@ -26,6 +26,6 @@ test("/data-center", async ({ page }) => {
 
 test("/team", async ({ page }) => {
   await page.goto("/team");
-  const title = page.locator("head title");
-  await expect(title).toContainText("Team");
+  const h1 = page.locator("h1");
+  await expect(h1).toContainText("Team page");
 });
