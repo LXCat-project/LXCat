@@ -7,7 +7,7 @@
 #     alias: db
 
 build-dev:
-  image: node:lts-bullseye
+  image: node:16-bullseye
   stage: build
   cache:
     key:
@@ -88,7 +88,7 @@ test-database:
   stage: test
   dependencies:
     - build-dev
-  image: node:lts-bullseye
+  image: node:16-bullseye
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -126,7 +126,7 @@ test-schema:
   stage: test
   dependencies:
     - build-dev
-  image: node:lts-bullseye
+  image: node:16-bullseye
   script:
     - npm ci --cache .npm --prefer-offline
     - npm run test -w packages/schema -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
@@ -152,7 +152,7 @@ test-converter:
   stage: test
   dependencies:
     - build-dev
-  image: node:lts-bullseye
+  image: node:16-bullseye
   script:
     - npm ci --cache .npm --prefer-offline
     - npm run test -w packages/converter
@@ -171,7 +171,7 @@ build-prod:
   before_script:
     - apk add --no-cache docker-compose
   script:
-    - touch .env
+    - echo 'NEXT_PUBLIC_URL=http://localhost:3000' > .env
     - docker-compose build
     # TODO do stuff with build images
   rules:

@@ -11,14 +11,14 @@ import {
   hasSessionOrAPIToken,
   hasAuthorRole,
 } from "../../../../auth/middleware";
-import { query2options } from "../../../../ScatteringCrossSection/query2options";
+import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasAuthorRole)
   .get(async (req, res) => {
     const query = req.query;
-    const selection = query2options(query);
+    const selection = getTemplateFromQuery(query);
     // TODO retrieve paging options from URL query
     const paging = {
       offset: 0,
@@ -29,6 +29,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       throw new Error("How did you get here?");
     }
     const results = await searchOwned(me.email, selection, paging);
+    console.log(results);
     res.json(results);
   });
 

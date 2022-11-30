@@ -9,7 +9,11 @@ import "@citation-js/plugin-doi";
 export async function doi2csl(doi: string) {
   const cite = await Cite.async(doi, {
     forceType: "@doi/id",
+    generateGraph: false,
   });
-  const ref = cite.data[0];
+  const ref = cite.get({ format: "real", type: "json", style: "csl" })[0];
+
+  ref.author?.forEach((author) => delete (author as any)["affiliation"]);
+
   return ref;
 }
