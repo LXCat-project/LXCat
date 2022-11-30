@@ -10,7 +10,7 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../../auth/middleware";
 import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
-import { validator } from "@lxcat/schema/dist/css/validate";
+import { validator } from "@lxcat/schema/css/validate";
 import {
   deleteSet,
   updateSet,

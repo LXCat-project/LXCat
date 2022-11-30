@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { describe, beforeAll, it, expect } from "vitest";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/core/enumeration";
 import {
   startDbWithUserAndCssCollections,
   sampleSets4SearchWithVersions,

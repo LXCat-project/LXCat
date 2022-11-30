@@ -4,7 +4,7 @@
 
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { Reaction, ReactionEntry } from "@lxcat/schema/core/reaction";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { z } from "zod";

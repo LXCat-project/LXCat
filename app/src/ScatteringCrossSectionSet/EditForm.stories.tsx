@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
-import { AtomJ1L2 as AtomJ1L2State } from "@lxcat/schema/dist/core/atoms/j1l2";
-import { AtomLS as AtomLSState } from "@lxcat/schema/dist/core/atoms/ls";
-import { AtomLS1 as AtomLS1State } from "@lxcat/schema/dist/core/atoms/ls1";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { HeteronuclearDiatom as HeteronuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_heteronuclear";
-import { HomonuclearDiatom as HomonuclearDiatomState } from "@lxcat/schema/dist/core/molecules/diatom_homonuclear";
-import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } from "@lxcat/schema/dist/core/molecules/triatom_linear_inversion_center";
-import { InState } from "@lxcat/schema/dist/core/state";
+import { CouplingScheme } from "@lxcat/schema/core/atoms/coupling_scheme";
+import { AtomJ1L2 as AtomJ1L2State } from "@lxcat/schema/core/atoms/j1l2";
+import { AtomLS as AtomLSState } from "@lxcat/schema/core/atoms/ls";
+import { AtomLS1 as AtomLS1State } from "@lxcat/schema/core/atoms/ls1";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/core/enumeration";
+import { HeteronuclearDiatom as HeteronuclearDiatomState } from "@lxcat/schema/core/molecules/diatom_heteronuclear";
+import { HomonuclearDiatom as HomonuclearDiatomState } from "@lxcat/schema/core/molecules/diatom_homonuclear";
+import { LinearTriatomInversionCenter as LinearTriatomInversionCenterState } from "@lxcat/schema/core/molecules/triatom_linear_inversion_center";
+import { InState } from "@lxcat/schema/core/state";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "../theme";
 import { EditForm } from "./EditForm";

@@ -4,7 +4,7 @@
 
 import { useMemo } from "react";
 
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema/core/reference";
 
 import { reference2bibliography } from "./cite";
 

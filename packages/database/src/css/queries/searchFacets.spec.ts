@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
 import { beforeAll, describe, expect, it } from "vitest";
 import { StateChoices } from "../../shared/queries/state";
 import { CrossSectionSetHeading } from "../public";

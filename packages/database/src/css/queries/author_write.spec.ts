@@ -21,7 +21,7 @@ import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet, KeyedVersionInfo } from "./public";
 import { createCsCollections, ISO_8601_UTC, sampleEmail } from "./testutils";
 import { deepClone } from "./deepClone";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { Storage } from "@lxcat/schema/core/enumeration";
 
 describe("given filled ArangoDB container", () => {
   beforeAll(async () => {

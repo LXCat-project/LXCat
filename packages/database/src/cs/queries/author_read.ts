@@ -6,7 +6,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { CrossSection } from "@lxcat/schema/cs/cs";
 import { CrossSectionItem } from "../public";
 import {
   defaultSearchOptions,

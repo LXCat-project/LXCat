@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Reference } from "./Reference";
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema/core/reference";
 
 interface Props {
   references: ReferenceRecord[];

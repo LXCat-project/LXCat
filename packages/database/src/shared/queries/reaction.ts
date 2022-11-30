@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { Reaction } from "@lxcat/schema/core/reaction";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";

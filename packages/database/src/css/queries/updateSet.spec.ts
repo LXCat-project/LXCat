@@ -4,8 +4,8 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { CSL } from "@lxcat/schema/dist/core/csl";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { CSL } from "@lxcat/schema/core/csl";
+import { Storage } from "@lxcat/schema/core/enumeration";
 import { aql } from "arangojs";
 
 import { byOrgAndId, searchOwned } from "../../cs/queries/author_read";
@@ -29,7 +29,7 @@ import {
   sampleCrossSection,
   sampleStates,
 } from "../../cs/queries/testutils";
-import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { ReactionEntry } from "@lxcat/schema/core/reaction";
 import { insert_state_dict } from "../../shared/queries";
 
 const email = "somename@example.com";

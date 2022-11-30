@@ -16,7 +16,7 @@ import { useMemo } from "react";
 import Head from "next/head";
 import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { CSL } from "@lxcat/schema/dist/core/csl";
+import { CSL } from "@lxcat/schema/core/csl";
 import { reference2bibliography } from "../../shared/cite";
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 

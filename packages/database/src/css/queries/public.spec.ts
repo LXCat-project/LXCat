@@ -13,7 +13,7 @@ import {
   truncateCrossSectionSetCollections,
 } from "./testutils";
 import { FilterOptions, search, searchFacets, SortOptions } from "./public";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
 
 beforeAll(startDbWithUserAndCssCollections);
 

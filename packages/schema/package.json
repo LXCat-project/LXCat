@@ -29,6 +29,22 @@
   },
   "main": "dist/css/validate.js",
   "types": "dist/css/validate.d.ts",
+  "type": "module",
+  "exports": {
+    ".": "./dist/css/validate.js",
+    "./core/atoms": "./dist/core/atoms/index.js",
+    "./core/molecules": "./dist/core/molecules/index.js",
+    "./*": "./dist/*"
+  },
+  "typesVersions": {
+    "*": {
+      "core/atoms": ["dist/core/atoms/index.d.ts"],
+      "core/molecules": ["dist/core/molecules/index.d.ts"],
+      "*": [
+        "dist/*"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],

@@ -6,7 +6,7 @@
 // so define it minimally here
 
 declare module "@citation-js/core" {
-  import { Reference } from "@lxcat/schema/dist/core/reference";
+  import { Reference } from "@lxcat/schema/core/reference";
   export declare class Cite {
     constructor(csl: Reference, { forceType: string }?);
     format(

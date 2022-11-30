@@ -2,19 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { Dict } from "@lxcat/schema/core/util";
+import { Storage } from "@lxcat/schema/core/enumeration";
 import { createSection, updateSection } from "./write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { CrossSection } from "@lxcat/schema/cs/cs";
 import { db } from "../../db";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { LUT } from "@lxcat/schema/core/data_types";
 import { deepClone } from "../../css/queries/deepClone";
 import { insert_state_dict } from "../../shared/queries";
 import { byOwnerAndId } from "./author_read";
 import { Status } from "../../shared/types/version_info";
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { InState } from "@lxcat/schema/dist/core/state";
+import { AnyAtomJSON } from "@lxcat/schema/core/atoms";
+import { AnyMoleculeJSON } from "@lxcat/schema/core/molecules";
+import { InState } from "@lxcat/schema/core/state";
 
 export async function createSampleCrossSection(
   state_ids: Dict<string>,

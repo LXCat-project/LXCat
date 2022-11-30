@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { beforeAll, describe, expect, it } from "vitest";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { Storage } from "@lxcat/schema/core/enumeration";
 
 import { createSet } from "./author_write";
 import {

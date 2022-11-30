@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { State } from "@lxcat/schema/dist/core/state";
+import { AnyAtomJSON } from "@lxcat/schema/core/atoms";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/core/enumeration";
+import { AnyMoleculeJSON } from "@lxcat/schema/core/molecules";
+import { State } from "@lxcat/schema/core/state";
 import { expect } from "vitest";
 
 import { toggleRole } from "../../auth/queries";

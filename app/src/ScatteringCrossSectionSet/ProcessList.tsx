@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import { OrphanedCrossSectionItem } from "@lxcat/database/dist/css/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { Reaction } from "@lxcat/schema/core/reaction";
 
 import { reactionAsText } from "../ScatteringCrossSection/reaction";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";

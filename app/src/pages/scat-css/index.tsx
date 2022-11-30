@@ -22,7 +22,7 @@ import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
 } from "../../shared/StateFilter";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
 import Head from "next/head";
 
 interface Props {

@@ -10,7 +10,7 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { createSet } from "@lxcat/database/dist/css/queries/author_write";
-import { validator } from "@lxcat/schema/dist/css/validate";
+import { validator } from "@lxcat/schema/css/validate";
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 
 const handler = nc<AuthRequest, NextApiResponse>()

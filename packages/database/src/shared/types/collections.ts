@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AtomJ1L2_DB } from "@lxcat/schema/dist/core/atoms/j1l2";
-import { AtomLS_DB } from "@lxcat/schema/dist/core/atoms/ls";
-import { AtomLS1_DB } from "@lxcat/schema/dist/core/atoms/ls1";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { HeteronuclearDiatom_DB } from "@lxcat/schema/dist/core/molecules/diatom_heteronuclear";
-import { HomonuclearDiatom_DB } from "@lxcat/schema/dist/core/molecules/diatom_homonuclear";
-import { LinearTriatomInversionCenter_DB } from "@lxcat/schema/dist/core/molecules/triatom_linear_inversion_center";
-import { DBState } from "@lxcat/schema/dist/core/state";
-export type { Reference } from "@lxcat/schema/dist/core/reference";
+import { AtomJ1L2_DB } from "@lxcat/schema/core/atoms/j1l2";
+import { AtomLS_DB } from "@lxcat/schema/core/atoms/ls";
+import { AtomLS1_DB } from "@lxcat/schema/core/atoms/ls1";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
+import { HeteronuclearDiatom_DB } from "@lxcat/schema/core/molecules/diatom_heteronuclear";
+import { HomonuclearDiatom_DB } from "@lxcat/schema/core/molecules/diatom_homonuclear";
+import { LinearTriatomInversionCenter_DB } from "@lxcat/schema/core/molecules/triatom_linear_inversion_center";
+import { DBState } from "@lxcat/schema/core/state";
+export type { Reference } from "@lxcat/schema/core/reference";
 
 // The 'name' field can be used as the id of the document.
 type ElectronConfiguration = Array<Array<number>>;

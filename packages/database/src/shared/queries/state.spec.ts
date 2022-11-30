@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { InState } from "@lxcat/schema/dist/core/state";
-import { Dict } from "@lxcat/schema/dist/core/util";
+import { AnyAtomJSON } from "@lxcat/schema/core/atoms";
+import { AnyMoleculeJSON } from "@lxcat/schema/core/molecules";
+import { InState } from "@lxcat/schema/core/state";
+import { Dict } from "@lxcat/schema/core/util";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { beforeAll, describe, it, expect } from "vitest";

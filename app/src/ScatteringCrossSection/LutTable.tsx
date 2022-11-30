@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { LUT } from "@lxcat/schema/core/data_types";
 
 type Props = Pick<LUT, "data" | "labels" | "units">;
 

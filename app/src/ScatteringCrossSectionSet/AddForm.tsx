@@ -4,7 +4,7 @@
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 import { useMemo } from "react";
 import { EditForm } from "./EditForm";
 
