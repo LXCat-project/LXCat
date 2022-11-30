@@ -44,7 +44,6 @@ const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
       reversible,
       setIds
     );
-    // TODO: Add optimized query for empty consumes and produces.
     res.json(stateArrayToTree(stateArray) ?? {});
   } else {
     res.json({});
