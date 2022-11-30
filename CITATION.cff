@@ -25,6 +25,10 @@ authors:
     name-particle: van
     given-names: Jan
     orcid: "https://orcid.org/0000-0001-8002-5459"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.7381573
+    description: Latest version
 cff-version: "1.2.0"
 license: "AGPL-3.0-or-later"
 message: "If you use this software, please cite it using these metadata."
