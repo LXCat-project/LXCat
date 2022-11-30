@@ -7,8 +7,8 @@ import Link from "next/link";
 import {
   activeSetOfArchivedSet,
   byId,
-} from "@lxcat/database/dist/css/queries/public";
-import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
+} from "@lxcat/database/css/queries/public";
+import { CrossSectionSetItem } from "@lxcat/database/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 import { Reference } from "../../shared/Reference";
@@ -16,7 +16,7 @@ import { useMemo } from "react";
 import Head from "next/head";
 import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { CSL } from "@lxcat/schema/dist/core/csl";
+import { CSL } from "@lxcat/schema/core/csl";
 import { reference2bibliography } from "../../shared/cite";
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 

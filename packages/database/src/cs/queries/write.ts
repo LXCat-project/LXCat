@@ -10,12 +10,12 @@ import {
   insert_reaction_with_dict,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { CrossSection } from "@lxcat/schema/cs/cs";
 import { aql } from "arangojs";
 import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { LUT } from "@lxcat/schema/core/data_types";
 import { ArrayCursor } from "arangojs/cursor";
 
 export async function createSection(

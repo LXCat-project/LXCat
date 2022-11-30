@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Reference } from "@lxcat/schema/dist/core/reference";
+import { Reference } from "@lxcat/schema/core/reference";
 
 import { Dialog } from "./Dialog";
 import { HowToCite } from "./HowToCite";

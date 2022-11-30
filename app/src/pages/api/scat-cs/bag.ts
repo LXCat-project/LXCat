@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
+import { byIds } from "@lxcat/database/cs/queries/public";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 

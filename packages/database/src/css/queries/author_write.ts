@@ -5,10 +5,10 @@
 import { aql } from "arangojs";
 import deepEqual from "deep-equal";
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { LUT } from "@lxcat/schema/core/data_types";
+import { Dict } from "@lxcat/schema/core/util";
+import { CrossSection } from "@lxcat/schema/cs/cs";
+import { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 import { ArrayCursor } from "arangojs/cursor";
 import { byOrgAndId } from "../../cs/queries/author_read";
 import {

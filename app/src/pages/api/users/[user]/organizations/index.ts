@@ -5,7 +5,7 @@
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import { z } from "zod";
-import { makeMemberless, setMembers } from "@lxcat/database/dist/auth/queries";
+import { makeMemberless, setMembers } from "@lxcat/database/auth/queries";
 
 import {
   AuthRequest,

@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { CrossSectionItem } from "@lxcat/database/cs/public";
+import { Facets, SearchOptions } from "@lxcat/database/cs/queries/public";
 import { Checkbox, Space, Group, Button } from "@mantine/core";
 import { useState } from "react";
 import { FilterComponent } from "./FilterComponent";

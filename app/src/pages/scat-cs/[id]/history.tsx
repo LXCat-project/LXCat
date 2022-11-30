@@ -5,7 +5,7 @@
 import {
   historyOfSection,
   KeyedVersionInfo,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/cs/queries/public";
 import { GetServerSideProps, NextPage } from "next";
 import { HistoryTable } from "../../../ScatteringCrossSection/HistoryTable";
 import { Layout } from "../../../shared/Layout";

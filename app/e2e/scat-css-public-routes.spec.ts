@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
-import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import type { CrossSectionSetHeading } from "@lxcat/database/css/public";
+import type { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 import { test, expect } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {

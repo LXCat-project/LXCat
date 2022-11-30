@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { KeyedVersionInfo } from "@lxcat/database/dist/css/queries/public";
+import { KeyedVersionInfo } from "@lxcat/database/css/queries/public";
 import Link from "next/link";
 import styles from "./HistoryTable.module.css";
 

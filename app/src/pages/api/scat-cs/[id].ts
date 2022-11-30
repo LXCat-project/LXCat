@@ -9,7 +9,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import { byId } from "@lxcat/database/dist/cs/queries/public";
+import { byId } from "@lxcat/database/cs/queries/public";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { ListItem } from "./ListItem";
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
+import { CrossSectionHeading } from "@lxcat/database/cs/public";
 
 interface Props {
   items: CrossSectionHeading[];

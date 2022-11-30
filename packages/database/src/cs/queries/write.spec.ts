@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { Dict } from "@lxcat/schema/core/util";
+import { Storage } from "@lxcat/schema/core/enumeration";
 import { beforeAll, describe, expect, it } from "vitest";
 import { toggleRole } from "../../auth/queries";
 import {
@@ -14,9 +14,9 @@ import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { deepClone } from "../../css/queries/deepClone";
 import { startDbContainer } from "../../testutils";
 import { createSection, publish } from "./write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { CrossSection } from "@lxcat/schema/cs/cs";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { LUT } from "@lxcat/schema/core/data_types";
 import { historyOfSection } from "./public";
 import { db } from "../../db";
 import {

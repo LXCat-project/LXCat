@@ -6,13 +6,13 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 
-import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import { CrossSectionSetHeading } from "@lxcat/database/css/public";
 import {
   FilterOptions,
   search,
   searchFacets,
   SortOptions,
-} from "@lxcat/database/dist/css/queries/public";
+} from "@lxcat/database/css/queries/public";
 
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
@@ -22,7 +22,7 @@ import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
 } from "../../shared/StateFilter";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
 import Head from "next/head";
 
 interface Props {

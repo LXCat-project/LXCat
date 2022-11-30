@@ -15,8 +15,8 @@ import {
   ChoiceRow,
 } from "../../shared/queries/state";
 import { PagingOptions } from "../../shared/types/search";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
+import { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 
 export interface FilterOptions {
   contributor: string[];

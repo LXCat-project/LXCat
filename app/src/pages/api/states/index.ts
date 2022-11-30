@@ -10,7 +10,7 @@ import {
   stateSelectionToSearchParam,
 } from "../../../shared/StateFilter";
 
-import { listStates } from "@lxcat/database/dist/shared/queries/state";
+import { listStates } from "@lxcat/database/shared/queries/state";
 
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   // TODO exclude/include draft states from logged in user?

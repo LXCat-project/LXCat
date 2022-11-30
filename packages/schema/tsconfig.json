@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
+    "target": "es2020",
+    "module": "es2020",
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "rootDir": "./src",
     "outDir": "./dist"
   },

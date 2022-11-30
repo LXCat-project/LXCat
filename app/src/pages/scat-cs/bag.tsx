@@ -5,8 +5,8 @@
 import { GetServerSideProps, NextPage } from "next";
 
 import { Layout } from "../../shared/Layout";
-import { byIds, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
+import { byIds, SearchOptions } from "@lxcat/database/cs/queries/public";
+import { CrossSectionBag } from "@lxcat/database/cs/public";
 import Head from "next/head";
 import { Bag, idsSchema } from "../../ScatteringCrossSection/bag";
 

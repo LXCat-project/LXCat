@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { parseState } from "@lxcat/schema/dist/core/parse";
-import { CSL } from "@lxcat/schema/dist/core/csl";
+import { parseState } from "@lxcat/schema/core/parse";
+import { CSL } from "@lxcat/schema/core/csl";
 import {
   AtomicGenerator,
   MolecularGenerator,
-} from "@lxcat/schema/dist/core/generators";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { DBState, InState } from "@lxcat/schema/dist/core/state";
-import { Dict } from "@lxcat/schema/dist/core/util";
+} from "@lxcat/schema/core/generators";
+import { Reaction } from "@lxcat/schema/core/reaction";
+import { DBState, InState } from "@lxcat/schema/core/state";
+import { Dict } from "@lxcat/schema/core/util";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 

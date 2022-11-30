@@ -11,7 +11,7 @@ import {
   CrossSectionSetInputOwned,
   byOwnerAndId,
   getVersionInfo,
-} from "@lxcat/database/dist/css/queries/author_read";
+} from "@lxcat/database/css/queries/author_read";
 import Link from "next/link";
 
 interface Props {

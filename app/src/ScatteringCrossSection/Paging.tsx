@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+import { PagingOptions } from "@lxcat/database/shared/types/search";
 import Link from "next/link";
 
 export const Paging = ({

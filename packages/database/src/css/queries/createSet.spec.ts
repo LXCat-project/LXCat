@@ -4,8 +4,8 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { CSL } from "@lxcat/schema/dist/core/csl";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { CSL } from "@lxcat/schema/core/csl";
+import { Storage } from "@lxcat/schema/core/enumeration";
 
 import { db } from "../../db";
 import { createSet } from "./author_write";
@@ -14,7 +14,7 @@ import {
   truncateCrossSectionSetCollections,
 } from "./testutils";
 import { insert_reference_dict, insert_state_dict } from "../../shared/queries";
-import { Dict } from "@lxcat/schema/dist/core/util";
+import { Dict } from "@lxcat/schema/core/util";
 import { createSection } from "../../cs/queries/write";
 import { byOwnerAndId } from "./author_read";
 import { aql } from "arangojs";

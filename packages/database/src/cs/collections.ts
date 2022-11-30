@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { VersionInfo } from "../shared/types/version_info";
-import { CSParameters } from "@lxcat/schema/dist/cs/cs";
-import { CSStorage } from "@lxcat/schema/dist/cs/data_types";
+import { CSParameters } from "@lxcat/schema/cs/cs";
+import { CSStorage } from "@lxcat/schema/cs/data_types";
 
 export type CrossSection = {
   reaction: string; // A key in Reaction collection

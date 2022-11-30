@@ -11,13 +11,13 @@ import {
   CrossSectionSetInputOwned,
   byOwnerAndId,
   getVersionInfo,
-} from "@lxcat/database/dist/css/queries/author_read";
+} from "@lxcat/database/css/queries/author_read";
 import Link from "next/link";
 import { EditForm } from "../../../../ScatteringCrossSectionSet/EditForm";
 import {
   OrganizationFromDB,
   userMemberships,
-} from "@lxcat/database/dist/auth/queries";
+} from "@lxcat/database/auth/queries";
 import { ErrorList } from "../../../../shared/ErrorList";
 
 interface Props {

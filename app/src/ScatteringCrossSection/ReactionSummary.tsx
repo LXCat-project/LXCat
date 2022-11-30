@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { State } from "@lxcat/database/shared/types/collections";
+import { Reaction } from "@lxcat/schema/core/reaction";
 
 import "katex/dist/katex.min.css";
 // @ts-ignore

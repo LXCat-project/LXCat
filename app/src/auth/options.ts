@@ -9,8 +9,9 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 import { NextAuthOptions } from "next-auth";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
-import { db } from "@lxcat/database";
-import { User } from "@lxcat/database/dist/auth/schema";
+// TODO simplify import to import { db } from "@lxcat/database";
+import { db } from "@lxcat/database/db";
+import { User } from "@lxcat/database/auth/schema";
 import logo from "../../public/lxcat.png";
 import { env } from "process";
 

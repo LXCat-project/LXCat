@@ -9,12 +9,12 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../../auth/middleware";
-import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
-import { validator } from "@lxcat/schema/dist/css/validate";
+import { isOwner } from "@lxcat/database/css/queries/author_read";
+import { validator } from "@lxcat/schema/css/validate";
 import {
   deleteSet,
   updateSet,
-} from "@lxcat/database/dist/css/queries/author_write";
+} from "@lxcat/database/css/queries/author_write";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

@@ -6,7 +6,7 @@
  * Functions that interact with API endpoints
  */
 
-import { CrossSectionSetOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { CrossSectionSetOwned } from "@lxcat/database/css/queries/author_read";
 
 const headers = new Headers({
   Accept: "application/json",

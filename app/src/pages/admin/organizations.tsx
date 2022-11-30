@@ -5,7 +5,7 @@
 import {
   listOrganizations,
   OrganizationFromDB,
-} from "@lxcat/database/dist/auth/queries";
+} from "@lxcat/database/auth/queries";
 import { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import { mustBeAdmin } from "../../auth/middleware";

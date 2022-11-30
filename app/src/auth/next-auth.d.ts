@@ -6,7 +6,7 @@ import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import type {
   User as LocalUser,
   Session as LocalSession,
-} from "@lxcat/database/dist/auth/schema";
+} from "@lxcat/database/auth/schema";
 
 declare module "next-auth" {
   /**

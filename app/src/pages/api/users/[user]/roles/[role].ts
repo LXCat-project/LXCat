@@ -4,13 +4,13 @@
 
 import { NextApiResponse } from "next";
 import nc from "next-connect";
-import { toggleRole } from "@lxcat/database/dist/auth/queries";
+import { toggleRole } from "@lxcat/database/auth/queries";
 import {
   AuthRequest,
   hasAdminRole,
   hasSession,
 } from "../../../../../auth/middleware";
-import { Role } from "@lxcat/database/dist/auth/schema";
+import { Role } from "@lxcat/database/auth/schema";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSession)

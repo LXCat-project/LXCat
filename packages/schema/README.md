@@ -23,13 +23,13 @@ npm install @lxcat/schema
 To get Typescript type for a LXCat Cross Section Set
 
 ```ts
-import type { CrossSectionSetRaw } from '@lxcat/schema/dist/css/input
+import type { CrossSectionSetRaw } from '@lxcat/schema/css/input
 ```
 
 To get JSON schema for a LXCat Cross Section Set
 
 ```js
-import schema from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
+import schema from "@lxcat/schema/css/CrossSectionSetRaw.schema.json";
 ```
 
 (your tsconfig should be confgured for [JSON imports](https://www.typescriptlang.org/tsconfig#resolveJsonModule))
@@ -37,7 +37,7 @@ import schema from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 To validate a LXCat Cross Section Set document
 
 ```js
-import { Validator } from '@lxcat/schema/dist/css/validate'
+import { Validator } from '@lxcat/schema/css/validate'
 
 const validator = new Validator()
 
