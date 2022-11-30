@@ -8,6 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7381573.svg)](https://doi.org/10.5281/zenodo.7381573)
+
 ## Installation
 
 To get familiar with the code read the following documentation:
@@ -49,6 +51,28 @@ docker-compose run setup make-admin <email of user>
 
 Web application will run at `http://localhost:3000`.
 The app should be reversed proxied by a web server to provide https.
+
+## How to cite
+
+If you use LXCat in your project or in a scientific publication, we would
+appreciate if you cite our project.
+
+```bibtex
+@software{lxcat2022,
+  author       = {Verhoeven, Stefan and
+                  Boer, Daan and
+                  Ali, Suvayu and
+                  Graef, Wouter and
+                  van Dijk, Jan},
+  title        = {LXCat},
+  month        = nov,
+  year         = 2022,
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {10.5281/zenodo.7381574},
+  url          = {https://doi.org/10.5281/zenodo.7381574}
+}
+```
 
 ## License
 
