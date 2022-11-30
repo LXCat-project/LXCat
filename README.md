@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: LXCat team
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# LXCat Next Generation
+# LXCat
 
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
 
@@ -13,10 +13,10 @@ An open-access website for collecting, displaying, and downloading electron and 
 To get familiar with the code read the following documentation:
 
 - [docs/code-contributor.md](docs/code-contributor.md) for technology choices.
-- [database/README.md](database/README.md) for spinning up the database and filling it.
-- [app/README.md](app/README.md) for web application and web service
-- [schema/README.md](schema/README.md) for JSON schemas and Typescript types of LXCat documents
-- [converter/README.md](converter/README.md) for conversion to the legacy LXCat format.
+- [app/README.md](app/README.md) for web application and web service.
+- [packages/database/README.md](packages/database/README.md) for spinning up the database and filling it.
+- [packages/schema/README.md](packages/schema/README.md) for JSON schemas, validators and Typescript types of LXCat documents.
+- [packages/converter/README.md](packages/converter/README.md) for conversion to the legacy LXCat format.
 
 ## Documentation
 
@@ -53,7 +53,7 @@ The app should be reversed proxied by a web server to provide https.
 ## License
 
 The code in this project is released under GNU Affero General Public License v3.0 or later.
-Except for the schema (packages/schema) and converter (packages/converter) packages which is released under Apache 2.0.
+Except for the schema (packages/schema) and converter (packages/converter) packages which are released under Apache 2.0.
 
 ## Copyright
 

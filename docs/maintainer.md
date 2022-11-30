@@ -6,7 +6,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Maintainer docs
 
-## Table of contents
+This document is for a system adminstrator of the web site.
+
+- [Maintainer docs](#maintainer-docs)
+  - [Services](#services)
+  - [Deployment](#deployment)
+    - [docker](#docker)
+    - [systemd services](#systemd-services)
+    - [LXCat](#lxcat)
+  - [How to check health of website?](#how-to-check-health-of-website)
+    - [Via web browser](#via-web-browser)
+    - [Via ssh](#via-ssh)
 
 ## Services
 
@@ -32,11 +42,12 @@ Docker compose can run all the services except for the reverse proxy which uses 
 
 ## Deployment
 
-The LXCat servers run debian, and the following description is specific to debian 11.
+The LXCat servers run Debian, and the following description is specific to Debian 11.
 It is considered good practice to run docker in rootless mode.
 To that end a special user `docker` is set up, which will run the service using systemd.
 
 ### docker
+
 1. The recipe at https://docs.docker.com/engine/security/rootless/ can be followed to set up docker for user `docker`.
 2. Provide environment variables by adding the following export in `~/.bashrc`:
 ```
@@ -48,6 +59,7 @@ $ sudo curl -L https://github.com/docker/compose/releases/download/v2.0.1/docker
 ```
 
 ### systemd services
+
 Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
 1. For the docker service add the file `docker.service`:
   ```
@@ -115,17 +127,17 @@ Set up systemd services for user `docker` in `$HOME/.config/systemd/user/`:
   $ sudo loginctl enable-linger docker
   ```
 
-### LXCat NG
-LXCat NG comes with a `docker-compose.yml` script which will also be used for the production environment.
+### LXCat
+LXCat comes with a `docker-compose.yml` script which will also be used for the production environment.
 
 1. Since the docker-compose service expects to be working from a directory under `~/.config/docker-compose/` we add a softlink to the location of the local git repository (here `~/git`):
-   ```
-   $ ln -s $HOME/git/lxcat-ng ~/.config/docker-compose/lxcat-ng
+   ```shell
+   $ ln -s $HOME/git/lxcat ~/.config/docker-compose/lxcat
    ```
 2. If a suitable environment file `.env` is set up we can start the service:
-   ```
-   $ systemctl --user enable docker-compose@lxcat-ng.service
-   $ systemctl --user start docker-compose@lxcat-ng.service
+   ```shell
+   $ systemctl --user enable docker-compose@lxcat.service
+   $ systemctl --user start docker-compose@lxcat.service
    ```
 3. The docker container port should only be exposed to localhost.
    To provide access from outside a reverse proxy using apache is set up, the relevant part of the apache config being:
@@ -141,10 +153,44 @@ LXCat NG comes with a `docker-compose.yml` script which will also be used for th
 
 Some notes:
 - To see the systemd journal use the command:
-  ```
-  $ journalctl --user-unit docker-compose@lxcat-ng.service
+  ```shell
+  $ journalctl --user-unit docker-compose@lxcat.service
   ```
 
-## Maintenance
+## How to check health of website?
 
-* How to check health of website?
+You can check if the website is healthy by checking with a web browser or by ssh-ing into server.
+
+### Via web browser
+
+1. Visit `/scat-css` page
+   - Should render a bunch of sets.
+   - Checks that reverse proxy, web application and database are working.
+2. Sign in and goto `/profile` page
+   - Should show your username and email
+   - Checks that the identity provider is working.
+
+### Via ssh
+
+1. Check that reverse proxy aka Apache is running with `systemctl status apache2`.
+2. Check that all Docker containers are running with
+
+```shell
+# Change to directory where docker-compose was started
+cd $HOME/git/lxcat
+# List Docker containers
+/usr/local/bin/docker-compose ps
+```
+
+Should show something like
+
+```shell
+NAME                  COMMAND                  SERVICE             STATUS              PORTS
+lxcat-app-1        "docker-entrypoint.s…"   app                 running             127.0.0.1:3000->3000/tcp
+lxcat-database-1   "/entrypoint.sh aran…"   database            running             8529/tcp
+lxcat-setup-1      "npm run"                setup               exited (0)
+```
+The `app` and `database` services should have `running` status.
+It is OK that the `setup` service is in `exited` status as it is only use to run commands.
+
+If not use `/usr/local/bin/docker-compose logs` to get idea why it is not running.
