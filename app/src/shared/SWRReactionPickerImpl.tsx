@@ -77,7 +77,7 @@ export const SWRReactionPickerImpl = ({
         </tr>
         <tr>
           <td colSpan={3}>
-            <MultiSelect sx={{}} {...typeTags} />
+            <MultiSelect sx={{}} placeholder="Reaction type tag(s)" {...typeTags} />
           </td>
         </tr>
       </tbody>
