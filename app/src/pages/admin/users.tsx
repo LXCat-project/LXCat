@@ -4,14 +4,14 @@
 
 import type { GetServerSideProps, NextPage } from "next";
 import { Layout } from "../../shared/Layout";
-import { Role, User } from "@lxcat/database/dist/auth/schema";
+import { Role, User } from "@lxcat/database/auth/schema";
 import { useState } from "react";
 import {
   listOrganizations,
   listUsers,
   OrganizationFromDB,
   UserFromDB,
-} from "@lxcat/database/dist/auth/queries";
+} from "@lxcat/database/auth/queries";
 import { mustBeAdmin } from "../../auth/middleware";
 import { Button, MultiSelect } from "@mantine/core";
 

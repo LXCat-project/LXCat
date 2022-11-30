@@ -7,8 +7,8 @@ import Link from "next/link";
 import {
   activeSetOfArchivedSet,
   byId,
-} from "@lxcat/database/dist/css/queries/public";
-import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
+} from "@lxcat/database/css/queries/public";
+import { CrossSectionSetItem } from "@lxcat/database/css/public";
 import { Layout } from "../../shared/Layout";
 import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 import { Reference } from "../../shared/Reference";

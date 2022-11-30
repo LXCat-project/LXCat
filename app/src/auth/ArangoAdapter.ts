@@ -8,14 +8,14 @@ import { Adapter, AdapterUser } from "next-auth/adapters";
 import {
   dropUser as deleteUser,
   getUserByKey,
-} from "@lxcat/database/dist/auth/queries";
+} from "@lxcat/database/auth/queries";
 import {
   Account,
   Session,
   User,
   UserInDb,
   UserWithAccountSessionInDb,
-} from "@lxcat/database/dist/auth/schema";
+} from "@lxcat/database/auth/schema";
 
 export const ArangoAdapter = (db: Database): Adapter => {
   function toAdapterUser(profile: UserInDb | undefined): AdapterUser | null {

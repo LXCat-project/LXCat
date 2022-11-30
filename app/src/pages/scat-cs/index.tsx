@@ -9,13 +9,13 @@ import {
   search,
   searchFacets,
   SearchOptions,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/cs/queries/public";
 import { List } from "../../ScatteringCrossSection/List";
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
+import { CrossSectionHeading } from "@lxcat/database/cs/public";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { useRouter } from "next/router";
 import { stateSelectionToSearchParam } from "../../shared/StateFilter";
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+import { PagingOptions } from "@lxcat/database/shared/types/search";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { query2options } from "../../ScatteringCrossSection/query2options";
 import Head from "next/head";

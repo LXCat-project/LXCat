@@ -6,8 +6,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 
-import { OrphanedCrossSectionItem } from "@lxcat/database/dist/css/public";
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { OrphanedCrossSectionItem } from "@lxcat/database/css/public";
+import { State } from "@lxcat/database/shared/types/collections";
 import { Reaction } from "@lxcat/schema/core/reaction";
 
 import { reactionAsText } from "../ScatteringCrossSection/reaction";

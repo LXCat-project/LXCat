@@ -5,14 +5,14 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/cs/public";
 
-import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
+import { searchOwned } from "@lxcat/database/cs/queries/author_read";
 import { mustBeAuthor } from "../../../auth/middleware";
 import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";
 import { Layout } from "../../../shared/Layout";
-import { defaultSearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+import { defaultSearchOptions } from "@lxcat/database/cs/queries/public";
+import { PagingOptions } from "@lxcat/database/shared/types/search";
 import { Paging } from "../../../ScatteringCrossSection/Paging";
 
 interface Props {

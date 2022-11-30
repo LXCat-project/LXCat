@@ -5,7 +5,7 @@
 import {
   StateChoices,
   StateDict,
-} from "@lxcat/database/dist/shared/queries/state";
+} from "@lxcat/database/shared/queries/state";
 import { Button, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { stateSelectionToSearchParam } from "../shared/StateFilter";

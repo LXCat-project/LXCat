@@ -4,7 +4,7 @@
 
 import nc from "next-connect";
 import { NextApiResponse } from "next";
-import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
+import { searchOwned } from "@lxcat/database/cs/queries/author_read";
 
 import {
   AuthRequest,

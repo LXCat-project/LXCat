@@ -5,7 +5,7 @@
 import {
   StateChoices,
   StateDict,
-} from "@lxcat/database/dist/shared/queries/state";
+} from "@lxcat/database/shared/queries/state";
 import { Button, Checkbox, Group, Space } from "@mantine/core";
 import { useState } from "react";
 import { StateFilter } from "../shared/StateFilter";

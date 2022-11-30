@@ -9,9 +9,9 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { createSet } from "@lxcat/database/dist/css/queries/author_write";
+import { createSet } from "@lxcat/database/css/queries/author_write";
 import { validator } from "@lxcat/schema/css/validate";
-import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { listOwned } from "@lxcat/database/css/queries/author_read";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

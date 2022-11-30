@@ -9,8 +9,8 @@ import {
   hasAdminRole,
   hasSession,
 } from "../../../auth/middleware";
-import { Organization } from "@lxcat/database/dist/auth/schema";
-import { addOrganization } from "@lxcat/database/dist/auth/queries";
+import { Organization } from "@lxcat/database/auth/schema";
+import { addOrganization } from "@lxcat/database/auth/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSession)

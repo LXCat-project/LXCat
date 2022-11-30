@@ -4,13 +4,38 @@
 
 import { chromium, FullConfig, Page } from "@playwright/test";
 import { testOidcServer } from "./test-oidc-server";
-import { startDbContainer } from "@lxcat/database/src/testutils";
+import { ArangoDBContainer, Wait } from "testcontainers";
+import { PortWithOptionalBinding } from "testcontainers/dist/port";
 import { exec } from "child_process";
 import { resolve } from "path";
 import { rm } from "fs/promises";
-import { db } from "@lxcat/database/src/db";
+import { db, setDb } from "@lxcat/database/db";
+import { setSystemDb, systemDb } from "@lxcat/database/systemDb";
 import { Browser } from "playwright-core";
 import { readFile } from "fs/promises";
+
+export async function startDbContainer(
+  password = "testpw",
+  port: PortWithOptionalBinding = 8529
+) {
+  const dbImage = "arangodb/arangodb:3.9.1";
+  const container = await new ArangoDBContainer(dbImage, password)
+    .withExposedPorts(port)
+    .withWaitStrategy(Wait.forLogMessage("is ready for business. Have fun"))
+    .start();
+  const stream = await container.logs();
+  stream
+    .on("data", (line) => console.log(line))
+    .on("err", (line) => console.error(line))
+    .on("end", () => console.log("Stream closed"));
+  const url = container.getHttpUrl();
+  setSystemDb(url, password);
+  await systemDb().createDatabase("lxcat");
+  setDb(url, password);
+  return async () => {
+    await container.stop();
+  };
+}
 
 async function globalSetup(config: FullConfig) {
   const env = config?.webServer?.env || {};

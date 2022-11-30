@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { Facets, SearchOptions } from "@lxcat/database/cs/queries/public";
 import { stateSelectionToSearchParam } from "../shared/StateFilter";
 import { useRouter } from "next/router";
 import { FilterComponent } from "./FilterComponent";

@@ -9,7 +9,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
+import { byIdJSON } from "@lxcat/database/css/queries/public";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import { applyCORS } from "../../../../shared/cors";

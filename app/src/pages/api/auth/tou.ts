@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Role } from "@lxcat/database/dist/auth/schema";
+import { Role } from "@lxcat/database/auth/schema";
 import { NextApiResponse } from "next";
 import { encode } from "next-auth/jwt";
 import nc from "next-connect";

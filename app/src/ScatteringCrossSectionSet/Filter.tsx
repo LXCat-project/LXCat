@@ -4,8 +4,8 @@
 
 import Link from "next/link";
 import { CheckBoxGroup } from "../shared/CheckBoxGroup";
-import { FilterOptions } from "@lxcat/database/dist/css/queries/public";
-import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
+import { FilterOptions } from "@lxcat/database/css/queries/public";
+import { StateChoices } from "@lxcat/database/shared/queries/state";
 import { useRouter } from "next/router";
 import {
   stateSelectionToSearchParam,

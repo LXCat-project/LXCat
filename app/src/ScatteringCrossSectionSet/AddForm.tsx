@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { OrganizationFromDB } from "@lxcat/database/auth/queries";
+import { CrossSectionSetInputOwned } from "@lxcat/database/css/queries/author_read";
 import { CrossSectionSetRaw } from "@lxcat/schema/css/input";
 import { useMemo } from "react";
 import { EditForm } from "./EditForm";

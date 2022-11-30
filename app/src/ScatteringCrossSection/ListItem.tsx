@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
+import { CrossSectionHeading } from "@lxcat/database/cs/public";
 
 const style = {
   boxShadow: "3px 5px 2px gray",

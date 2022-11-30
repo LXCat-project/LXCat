@@ -13,7 +13,7 @@ import {
   FilterOptions,
   search,
   SortOptions,
-} from "@lxcat/database/dist/css/queries/public";
+} from "@lxcat/database/css/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/core/enumeration";
 import { query2array } from "../../../shared/query2array";
 import {

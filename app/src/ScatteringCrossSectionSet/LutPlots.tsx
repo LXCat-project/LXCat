@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/cs/public";
 import { LUT } from "@lxcat/schema/core/data_types";
 import { Vega } from "react-vega";
 import { ScaleType } from "vega";

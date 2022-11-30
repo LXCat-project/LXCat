@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/cs/public";
 import { LutTable } from "./LutTable";
 
 export const LutPlotDynamic = dynamic(

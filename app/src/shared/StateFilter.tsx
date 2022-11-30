@@ -7,7 +7,7 @@ import {
   ParticleChoices,
   StateChoices,
   VibrationalChoices,
-} from "@lxcat/database/dist/shared/queries/state";
+} from "@lxcat/database/shared/queries/state";
 import { useEffect, useState } from "react";
 
 import "katex/dist/katex.min.css";

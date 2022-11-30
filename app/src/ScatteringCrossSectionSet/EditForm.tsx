@@ -39,8 +39,8 @@ import {
 import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
 import { ajvResolver } from "@hookform/resolvers/ajv";
 
-import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { OrganizationFromDB } from "@lxcat/database/auth/queries";
+import { CrossSectionSetInputOwned } from "@lxcat/database/css/queries/author_read";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/core/enumeration";
 import { Reference as ReferenceRecord } from "@lxcat/schema/core/reference";
 import { Dict, Pair } from "@lxcat/schema/core/util";
@@ -52,14 +52,14 @@ import schema4set from "@lxcat/schema/css/CrossSectionSetRaw.schema.json";
 import { parseState } from "@lxcat/schema/core/parse";
 
 import { Reference } from "../shared/Reference";
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { State } from "@lxcat/database/shared/types/collections";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
 import { Reaction } from "@lxcat/schema/core/reaction";
 import { StatePickerModal } from "./StatePickeModal";
-import { StateDict } from "@lxcat/database/dist/shared/queries/state";
+import { StateDict } from "@lxcat/database/shared/queries/state";
 import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/cs/public";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
 import { doi2csl } from "../shared/doi2csl";
 import { bibtex2csl } from "../shared/bibtex2csl";

@@ -6,7 +6,7 @@ import {
   Facets,
   SearchOptions,
   defaultSearchOptions,
-} from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/cs/queries/public";
 import { Button, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { stateSelectionToSearchParam } from "../shared/StateFilter";

@@ -7,12 +7,12 @@ import { Layout } from "../../../shared/Layout";
 import type { ErrorObject } from "ajv";
 import { useState } from "react";
 import { mustBeAuthor } from "../../../auth/middleware";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { CrossSectionSetInputOwned } from "@lxcat/database/css/queries/author_read";
 import Link from "next/link";
 import {
   OrganizationFromDB,
   userMemberships,
-} from "@lxcat/database/dist/auth/queries";
+} from "@lxcat/database/auth/queries";
 import { AddForm } from "../../../ScatteringCrossSectionSet/AddForm";
 import { ErrorList } from "../../../shared/ErrorList";
 
