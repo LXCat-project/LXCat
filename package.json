@@ -14,11 +14,7 @@
     "addheader": "turbo run addheader"
   },
   "devDependencies": {
-    "@types/deep-equal": "^1.0.1",
     "turbo": "^1.2.16"
   },
-  "version": "0.2.0",
-  "dependencies": {
-    "deep-equal": "^2.1.0"
-  }
+  "version": "0.1.0"
 }
