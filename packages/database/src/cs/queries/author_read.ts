@@ -8,13 +8,9 @@ import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { CrossSectionItem } from "../public";
-import {
-  defaultSearchOptions,
-  SearchOptions,
-  setNamesFilterAql,
-} from "./public";
+import { defaultSearchTemplate } from "../picker/default";
 import { PagingOptions } from "../../shared/types/search";
-import { generateStateFilterAql } from "../../shared/queries/state";
+import { ReactionTemplate } from "../picker/types";
 
 export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
@@ -27,29 +23,10 @@ export async function getVersionInfo(key: string) {
 
 export async function searchOwned(
   email: string,
-  options: SearchOptions = defaultSearchOptions(),
+  _options: Array<ReactionTemplate> = defaultSearchTemplate(),
   paging: PagingOptions = { offset: 0, count: 100 }
 ) {
-  let species1Filter = aql``;
-  if (Object.keys(options.species1).length > 0) {
-    const state1aql = generateStateFilterAql(options.species1, "s1");
-    species1Filter = aql`
-		LET s1 = reaction.lhs[0].state
-		FILTER ${state1aql}
-	`;
-  }
-  let species2Filter = aql``;
-  if (Object.keys(options.species2).length > 0) {
-    const state2aql = generateStateFilterAql(options.species2, "s2");
-    species2Filter = aql`
-		LET s2 = reaction.lhs[1].state
-		FILTER ${state2aql}
-	`;
-  }
-  const hasFilterOnTag = options.tag.length > 0;
-  const typeTagAql = hasFilterOnTag
-    ? aql`FILTER ${options.tag} ANY IN reaction.type_tags`
-    : aql``;
+  const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
 		FOR u IN users
@@ -77,7 +54,7 @@ export async function searchOwned(
 								FILTER i._to == css._id
 								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
 						)
-            ${setNamesFilterAql(options.set_name)}
+            ${reactionsAql}
 						LET reaction = FIRST(
 							FOR r in Reaction
 								FILTER r._id == cs.reaction
@@ -104,9 +81,6 @@ export async function searchOwned(
                       FILTER r._id == rs._to
                       RETURN UNSET(r, ["_key", "_rev", "_id"])
               )
-            ${species1Filter}
-            ${species2Filter}
-            ${typeTagAql}
             SORT cs.versionInfo.createdOn DESC
             ${limit_aql}
             RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})

@@ -5,7 +5,7 @@
 import { GetServerSideProps, NextPage } from "next";
 
 import { Layout } from "../../shared/Layout";
-import { byIds, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
+import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import Head from "next/head";
 import { Bag, idsSchema } from "../../ScatteringCrossSection/bag";
@@ -32,7 +32,7 @@ export default ScatteringCrossSectionSelectionPage;
 
 export const getServerSideProps: GetServerSideProps<
   Props,
-  Record<keyof SearchOptions, string[]>
+  { reactions: string[] }
 > = async (context) => {
   let rawIds = context.query.ids;
   if (typeof rawIds === "string") {

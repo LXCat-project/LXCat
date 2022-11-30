@@ -40,6 +40,17 @@ describe("searchFacets()", () => {
                 },
               },
             },
+            He: {
+              charge: {
+                0: {
+                  electronic: {
+                    "^1S_0": {
+                      vibrational: {},
+                    },
+                  },
+                },
+              },
+            },
             N2: {
               charge: {
                 0: {
@@ -50,9 +61,6 @@ describe("searchFacets()", () => {
             Ar: {
               charge: {
                 0: {
-                  electronic: {},
-                },
-                1: {
                   electronic: {},
                 },
               },
@@ -67,8 +75,12 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
     });
@@ -88,20 +100,21 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
 
-      it("should have Ar, Arp for state", () => {
+      it("should have Ar for state", () => {
         const expected: StateChoices = {
           particle: {
             Ar: {
               charge: {
                 0: {
-                  electronic: {},
-                },
-                1: {
                   electronic: {},
                 },
               },
@@ -133,12 +146,16 @@ describe("searchFacets()", () => {
         expect(facets.contributor).toEqual(expected);
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization"];
+      it("should have Effective, Electronic, and Ionization reaction type tags", () => {
+        const expected = [
+          ReactionTypeTag.Effective,
+          ReactionTypeTag.Electronic,
+          ReactionTypeTag.Ionization,
+        ];
         expect(facets.tag).toEqual(expected);
       });
 
-      it("should have H2, N2, Ar, Arp for state", () => {
+      it("should have H2, N2, Ar for state", () => {
         const expected: StateChoices = {
           particle: {
             H2: {
@@ -158,9 +175,6 @@ describe("searchFacets()", () => {
             Ar: {
               charge: {
                 0: {
-                  electronic: {},
-                },
-                1: {
                   electronic: {},
                 },
               },
@@ -233,7 +247,7 @@ describe("searchFacets()", () => {
       });
 
       it("should have Effective reaction type tags", () => {
-        const expected = ["Effective"];
+        const expected = [ReactionTypeTag.Effective];
         expect(facets.tag).toEqual(expected);
       });
 
@@ -247,6 +261,17 @@ describe("searchFacets()", () => {
                 },
               },
             },
+            He: {
+              charge: {
+                0: {
+                  electronic: {
+                    "^1S_0": {
+                      vibrational: {},
+                    },
+                  },
+                },
+              },
+            },
             N2: {
               charge: {
                 0: {
@@ -257,9 +282,6 @@ describe("searchFacets()", () => {
             Ar: {
               charge: {
                 0: {
-                  electronic: {},
-                },
-                1: {
                   electronic: {},
                 },
               },

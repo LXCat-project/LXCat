@@ -23,7 +23,13 @@ test.describe("section page", () => {
   test.beforeEach(async ({ page }) => {
     // goto a section page
     await page.goto("/scat-cs");
-    await page.locator('text=/.*Part of "Some name" set.*/').click();
+    await page.locator('[aria-controls="particle-select"]').first().click()
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
+    // TODO waiting should not be needed
+    const item = await page.waitForSelector('a[role="listitem"]')
+    // TODO item.click() should have worked but did not so implemented workaround to goto href
+    const itemUrl = await item.getAttribute('href')
+    await page.goto(itemUrl ?? '')
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();

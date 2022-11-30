@@ -2,34 +2,33 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Facets, SearchOptions } from "@lxcat/database/dist/cs/queries/public";
-import { stateSelectionToSearchParam } from "../shared/StateFilter";
+import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { useRouter } from "next/router";
-import { FilterComponent } from "./FilterComponent";
+import { SWRFilterComponent } from "./SWRFilterComponent";
 
 interface Props {
-  facets: Facets;
-  selection: SearchOptions;
+  selection: Array<ReactionTemplate>;
+  onChange: (newSelection: Array<ReactionTemplate>) => void | Promise<void>;
 }
 
-export const Filter = ({ facets, selection }: Props) => {
+export const Filter = ({ selection, onChange }: Props) => {
   const router = useRouter();
 
-  function onChange(newSelection: SearchOptions) {
-    router.push({
-      query: {
-        ...newSelection,
-        species1: stateSelectionToSearchParam(newSelection.species1),
-        species2: stateSelectionToSearchParam(newSelection.species2),
-      },
-    });
+  function onFilterChange(
+    newSelection: Array<ReactionTemplate>,
+    event?: string
+  ) {
+    const query = new URLSearchParams({
+      reactions: JSON.stringify(newSelection),
+    }).toString();
+
+    if (event?.startsWith("reactions")) {
+      router.push({ query }, undefined, { shallow: true });
+      onChange(newSelection);
+    } else {
+      router.push({ query });
+    }
   }
 
-  return (
-    <FilterComponent
-      facets={facets}
-      selection={selection}
-      onChange={onChange}
-    />
-  );
+  return <SWRFilterComponent selection={selection} onChange={onFilterChange} />;
 };

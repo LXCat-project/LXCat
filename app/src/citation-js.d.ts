@@ -7,15 +7,23 @@
 
 declare module "@citation-js/core" {
   import { Reference } from "@lxcat/schema/dist/core/reference";
+  export declare interface InputOptions {
+    forceType?: string;
+    generateGraph?: boolean;
+  }
+  export declare interface OutputOptions {
+    format?: "real";
+    type?: string;
+    style?: string;
+    lang?: string;
+  }
   export declare class Cite {
     constructor(csl: Reference, { forceType: string }?);
     format(
       format: string,
       { format: string, template: string }?
     ): string | Record<string, string>;
-    static async: (
-      value: string,
-      { forceType: string }?
-    ) => Promise<{ data: Reference[] }>;
+    get(options?: OutputOptions): Array<Reference>;
+    static async: (value: string, options?: InputOptions) => Promise<Cite>;
   }
 }

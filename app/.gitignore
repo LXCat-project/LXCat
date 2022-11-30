@@ -11,6 +11,7 @@
 
 # testing
 /coverage
+adminStorageState.json
 
 # next.js
 /.next/
