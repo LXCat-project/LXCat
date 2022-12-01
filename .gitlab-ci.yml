@@ -217,8 +217,9 @@ build-binaries:
     - source "$HOME/.cargo/env"
     - rustc --version
     - npm ci --cache .npm --prefer-offline
-    - cd packages/converter && npm run build -- --target $TARGET
-    - mv packages/converter/@lxcat/converter.$PLATFORM.node packages/converter/npm/$PLATFORM/
+    - pushd packages/converter
+    - npm run build -- --target $TARGET
+    - mv @lxcat/converter.$PLATFORM.node npm/$PLATFORM/
   artifacts:
     expire_in: 1 week
     paths:
