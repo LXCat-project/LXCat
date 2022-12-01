@@ -1,6 +1,6 @@
 {
   "name": "@lxcat/schema",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Schema and validator for LXCat",
   "scripts": {
     "json:css": "ts-json-schema-generator -f ./tsconfig.json --no-top-ref --path src/css/input.ts --type CrossSectionSetRaw --out src/css/CrossSectionSetRaw.schema.json -e none",
@@ -11,7 +11,7 @@
     "test": "vitest",
     "dev": "tsc --watch",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
-    "prepublishOnly": "build",
+    "prepublishOnly": "npm run build",
     "clean": "rm -rf dist"
   },
   "license": "Apache-2.0",

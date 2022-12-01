@@ -24,34 +24,33 @@ test.afterAll(async () => {
   await truncateNonUserCollections();
 });
 
-test.describe("cross section index page", () => {
+test.describe("cross section index page with Uo selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
+    await page.locator('[aria-controls="particle-select"]').first().click()
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
   });
 
+  // FIXME: How to uniquely locate consuming StateSelect and select Uo?
   test("should have 2 items listed", async ({ page }) => {
     const section1 = page.locator('text=/.*Part of "Some name" set.*/');
-    const section2 = page.locator(
-      'text=/.*Part of "Some other name" set.*/'
-    );
+    const section2 = page.locator('text=/.*Part of "Some other name" set.*/');
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
   });
 
   test('should have link to bag page', async ({page}) => {
-    const baglink = page.locator('text=Plots and download the currently filtered cross sections')
+    const baglink = page.locator('text=Plot selection')
     await expect(baglink).toBeVisible();
   })
 
   test.describe("when filtered on set name", () => {
     test.beforeEach(async ({ page }) => {
-      await page.locator('label:has-text("Some other name")').click();
+      await page.locator('label:has-text("Some other organization")').click();
     });
 
-    test("should list single section", async ({ page }) => {
-      const section2 = page.locator(
-        'text=/.*Part of "Some other name" set.*/'
-      );
+    test("should list single cross section", async ({ page }) => {
+      const section2 = page.locator('text=/.*Part of "Some other name" set.*/');
       await expect(section2).toBeVisible();
     });
   });
@@ -84,7 +83,9 @@ test.describe("cross section set index page", () => {
 test.describe('cross section bag page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
-    await page.locator('text=Plots and download the currently filtered cross sections').click();
+    await page.locator('[aria-controls="particle-select"]').first().click()
+    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
+    await page.locator('text=Plot selection').click();
     await page.locator("text=I agree with the terms of use").click();
   });
 

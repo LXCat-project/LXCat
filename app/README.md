@@ -4,7 +4,21 @@ SPDX-FileCopyrightText: LXCat team
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Lxcat ng web application
+# LXCat web application and web service
+
+- [LXCat web application and web service](#lxcat-web-application-and-web-service)
+  - [Getting Started](#getting-started)
+  - [Learn More](#learn-more)
+  - [Setup auth](#setup-auth)
+    - [In auth0 dashboard](#in-auth0-dashboard)
+    - [In GitLab application settings](#in-gitlab-application-settings)
+    - [For Orcid sandbox](#for-orcid-sandbox)
+    - [For Orcid](#for-orcid)
+    - [For Keycloak](#for-keycloak)
+    - [In local directory](#in-local-directory)
+  - [End to end tests](#end-to-end-tests)
+  - [Unit Tests](#unit-tests)
+  - [Optimizations](#optimizations)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -18,11 +32,13 @@ npm install
 npm run dev  # Starts app, database, schema workspaces in development mode
 ```
 
+The application uses `@lxcat/database` package which needs a ArangoDB database server, see its [README](../packages/database/README.md) how to setup the database.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/pages/index.tsx`. The page auto-updates as you edit the file.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The `src/pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 ## Learn More
 
@@ -46,7 +62,7 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
     - Allowed Logout URLs
         - For dev deployment set to `http://localhost:3000`
 
-2. Make sure `disable sign ups` is disabled in auth0 authentication database settings
+2. Make sure `disable sign ups` is disabled in auth0 authentication database settings. So users can register themselves.
 
 ### In GitLab application settings
 
@@ -95,8 +111,8 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
             This will make app available on [https://localhost:8443](https://localhost:8443).
             In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
             Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
-        - For production deployments set to `https://< lxcat ng domain >/api/auth/callback/orcid`
-            Also set `NEXT_PUBLIC_URL=https://< lxcat ng domain >` in `.env.local` file.
+        - For production deployments set to `https://< lxcat domain >/api/auth/callback/orcid`
+            Also set `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
 
 ### For Keycloak
 
@@ -113,12 +129,12 @@ docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD
 
 Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
-1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-ng-test-realm`
-2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-ng-test-real/users)
+1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-test-realm`
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-real/users)
    * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
    * Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
-3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-ng-test-real). This is the oauth provider the lxcat app will authenticate against.
-   * Client ID: lxcat-ng-test
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real). This is the oauth provider the lxcat app will authenticate against.
+   * Client ID: lxcat-test
    * Client protocol: openid-connect
    * Root URL: http://localhost:3000 or whatever url the application is running on.
    * After creation edit client some more
@@ -148,9 +164,10 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
 In `.env.local` file define the following key/value pairs
 
 ```env
-# Where openid identity provider should redirect back to
-# And used as root url for absolute URLs
+# Used as root url for absolute URLs
 NEXT_PUBLIC_URL=<URL where users visit server, like http://localhost:3000>
+# Where openid identity provider should redirect back to
+NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
 # Secret used to sign JWT api tokens
 NEXTAUTH_SECRET=<Random string>
 # Password used to connect to database
@@ -180,13 +197,13 @@ At least one identity provider should be configured.
 
 The end to end tests (`e2e/**.spec.ts`) are written and run using [playwright](https://playwright.dev/).
 
-Before running test ensure browser are installed with
+Before running test ensure playwright's chromium browser is installed with
 
 ```shell
 npx playwright install chromium
 ```
 
-Make sure port 8001, 8002, and 8003 are not in use.
+Also make sure port 8001, 8002, and 8003 are not in use.
 
 ```shell
 npm run test:e2e
@@ -209,11 +226,11 @@ graph TD
     playwright -->|execute| t[tests]
 ```
 
-The `app/e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also 
+The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also 
 * signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`
 * has utility functions to fill or truncate database
 
-The `app/e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
+The `e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
 a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars. 
 
 ## Unit Tests

@@ -8,13 +8,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 To consume LXCat data by another program, the LXCat web service provides several API endpoints.
 
-## Table of contents
+- [Developer docs](#developer-docs)
+  - [Authorize and authenticate](#authorize-and-authenticate)
+  - [Fetch particle states](#fetch-particle-states)
+  - [Fetch cross section sets](#fetch-cross-section-sets)
+    - [Filtering](#filtering)
+    - [Paging](#paging)
+  - [Fetch cross section set](#fetch-cross-section-set)
+  - [Fetch cross sections](#fetch-cross-sections)
+    - [Paging](#paging-1)
+  - [Fetch a cross section](#fetch-a-cross-section)
+  - [Fetch multiple cross sections](#fetch-multiple-cross-sections)
 
 ## Authorize and authenticate
 
 The API endpoints of the LXcat web service require authorization and authentication.
 
-You can get authorized by mailing [admin@lxcat.net](mailto:admin@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
+You can get authorized by mailing [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
 Send the mail from the same email you used to login to LXCat.
 
 Authentication is done using a [JWT](https://jwt.io) token. 
@@ -112,7 +122,7 @@ For example to only get sets which have a cross section with a rotational reacti
 curl https://nl.lxcat.net/api/scat-css?tag=Rotational
 ```
 
-Another way to get the filter you want is to go to [https://nl.lxcat.net//scat-css](https://nl.lxcat.net//scat-css), apply some filters and copy all the search params (stuff after `?` in the adress bar) to `https://nl.lxcat.net/api/scat-css?<search params from web page>`.
+Another way to get the filter you want is to go to [https://nl.lxcat.net//scat-css](https://nl.lxcat.net/scat-css), apply some filters and copy all the search params (stuff after `?` in the adress bar) to `https://nl.lxcat.net/api/scat-css?<search params from web page>`.
 
 ### Paging
 
@@ -149,6 +159,54 @@ To fetch in Bolsig+ format use
 curl https://nl.lxcat.net/api/scat-css/<id of set>/legacy
 ```
 
+This API endpoint requires authentication.
+
+## Fetch cross sections
+
+Cross section headers can be fetched at `https://nl.lxcat.net/api/scat-cs` URL, this will return nothing as it requires search parameters.
+
+The search parameters can be found on the [Cross sections search page](https://nl.lxcat.net/scat-cs). Copy all the search params (stuff after `?` in the adress bar) to `https://nl.lxcat.net/api/scat-cs?<search params from web page>`.
+For example select `Ionization` as a reaction type tag then the search params are `reactions=%5B%7B"consumes"%3A%5B%7B%7D%5D%2C"produces"%3A%5B%7B%7D%5D%2C"typeTags"%3A%5B"Ionization"%5D%2C"reversible"%3A"both"%2C"set"%3A%5B%5D%7D%5D`. To do an API call 
+
+```bash
+curl  'https://nl.lxcat.net/api/scat-cs?reactions=%5B%7B"consumes"%3A%5B%7B%7D%5D%2C"produces"%3A%5B%7B%7D%5D%2C"typeTags"%3A%5B"Ionization"%5D%2C"reversible"%3A"both"%2C"set"%3A%5B%5D%7D%5D'
+```
+
+THis will return something like:
+
+```json
+[
+  {
+    "id": "132336",
+    "reaction": {
+      "reversible": false,
+      "type_tags": [
+        "Ionization"
+      ],
+      "rhs": [{...}],
+      "lhs": [{...}],
+    },
+    "reference: [{...}],
+    "isPartOf": [
+      "N2"
+    ]
+  },
+  ...
+]
+```
+
+The `id` can be used to fetch the data of the cross section.
+
+### Paging
+
+The `offset` and `count` search param can be used for paging.
+
+For example to list sections 1,2,3 use
+
+```bash
+curl https://nl.lxcat.net/api/scat-cs?offset=1&count=3&<other search params>
+```
+
 ## Fetch a cross section
 
 To fetch in JSON format use
@@ -156,6 +214,8 @@ To fetch in JSON format use
 ```bash
 curl https://nl.lxcat.net/api/scat-cs/<id of section>
 ```
+
+This API endpoint requires authentication.
 
 ## Fetch multiple cross sections
 

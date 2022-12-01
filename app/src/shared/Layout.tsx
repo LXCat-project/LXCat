@@ -16,7 +16,7 @@ export const Layout = ({ children, title = "" }: Props) => {
   return (
     <div>
       <Head>
-        <title>LXCat next generation{title && `: ${title}`}</title>
+        <title>LXCat{title && `: ${title}`}</title>
         <meta
           name="description"
           content="An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections, swarm parameters (mobility, diffusion coefficient, etc.), reaction rates, energy distribution functions, etc. and other data required for modeling low temperature plasmas."
