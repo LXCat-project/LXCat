@@ -6,6 +6,11 @@
 #   - name: arangodb/arangodb:3.7.12
 #     alias: db
 
+stages:
+  - build
+  - test
+  - publish
+
 build-dev:
   image: node:16-bullseye
   stage: build
