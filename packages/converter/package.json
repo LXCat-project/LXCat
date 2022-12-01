@@ -23,11 +23,11 @@
   "scripts": {
     "dev": "npm run build",
     "build": "napi build --platform --release --strip --dts @lxcat/index.d.ts",
-    "artifacts": "for f in @suvayu/*.node; do p=${f#*.};p=${p%.*}; mv -v $f npm/$p/${f#*/}; done",
+    "artifacts": "for f in @lxcat/*.node; do p=${f#*.};p=${p%.*}; mv -v $f npm/$p/${f#*/}; done",
     "build:debug": "napi build --dts @lxcat/index.d.ts",
     "test": "node --loader ts-node/esm --test tests/valid.test.ts",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year --skip-unrecognised src tests",
-    "clean": "rm rf target @lxcat"
+    "clean": "rm -rf target @lxcat"
   },
   "author": "Daan Boer",
   "license": "Apache-2.0",
