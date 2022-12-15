@@ -6,6 +6,11 @@
 #   - name: arangodb/arangodb:3.7.12
 #     alias: db
 
+stages:
+  - build
+  - test
+  - publish
+
 build-dev:
   image: node:16-bullseye
   stage: build
@@ -27,7 +32,6 @@ build-dev:
     paths:
       - packages/schema/dist
       - packages/database/dist
-      - packages/converter/dist
   #     - app/.next
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -189,3 +193,55 @@ reuse:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
     - when: never
+
+build-binaries:
+  stage: build
+  parallel:
+    matrix:
+      - IMAGE: node:lts-bullseye
+        TARGET: x86_64-unknown-linux-gnu
+        PLATFORM: linux-x64-gnu
+      # - IMAGE: node:lts-alpine
+      #   TARGET: x86_64-unknown-linux-musl
+      #   PLATFORM: linux-x64-musl
+  image: $IMAGE
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  script:
+    - '[ -f /etc/alpine-release ] && apk --no-cache add libc6-compat curl gcc'
+    - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
+    - source "$HOME/.cargo/env"
+    - rustc --version
+    - npm ci --cache .npm --prefer-offline
+    - pushd packages/converter
+    - npm run build -- --target $TARGET
+    - mv @lxcat/converter.$PLATFORM.node npm/$PLATFORM/
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - packages/converter/npm/$PLATFORM
+
+publish-binaries:
+  stage: publish
+  image: node:lts-bullseye
+  dependencies:
+    - "build-binaries: [node:lts-bullseye, x86_64-unknown-linux-gnu, linux-x64-gnu]"
+    # - "build-binaries: [node:lts-alpine, x86_64-unknown-linux-musl, linux-x64-musl]"
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - npm config set "//registry.npmjs.org/:_authToken" $NPMJS_TOKEN
+    # FIXME: add linux-x64-musl below after fixing the binary build
+    - |
+      for p in linux-x64-gnu;
+      do
+          pushd npm/$p && {
+                npm publish --tag release --access public
+                popd
+            }
+      done
+    - npm publish --tag release --access public

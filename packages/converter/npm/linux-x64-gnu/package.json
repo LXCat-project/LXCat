@@ -1,0 +1,26 @@
+{
+  "name": "@lxcat/converter-linux-x64-gnu",
+  "version": "0.1.0",
+  "description": "Convert LXCat JSON documents to legacy LXCat documents",
+  "os": ["linux"],
+  "cpu": ["x64"],
+  "libc": ["glibc"],
+  "main": "converter.linux-x64-gnu.node",
+  "files": [
+    "converter.linux-x64-gnu.node"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "author": "Daan Boer",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/LXCat-project/lxcat.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/LXCat-project/lxcat/-/issues"
+  },
+  "homepage": "https://gitlab.com/LXCat-project/lxcat/-/tree/main/packages/converter"
+}

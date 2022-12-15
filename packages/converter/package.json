@@ -1,26 +1,33 @@
 {
   "name": "@lxcat/converter",
   "version": "0.1.0",
-  "description": "Convert LXCat JSON documents to txt format",
-  "main": "dist/index.node",
-  "types": "dist/index.d.ts",
+  "description": "Convert LXCat JSON documents to legacy LXCat documents",
+  "main": "index.js",
+  "types": "@lxcat/index.d.ts",
   "files": [
-    "dist"
+    "@lxcat"
   ],
   "publishConfig": {
     "access": "public"
   },
   "napi": {
-    "name": "dist/index"
+    "name": "@lxcat/converter",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-unknown-linux-gnu",
+        "x86_64-unknown-linux-musl"
+      ]
+    }
   },
   "scripts": {
     "dev": "npm run build",
-    "build": "napi build --release --strip --dts dist/index.d.ts",
-    "build:debug": "napi build --dts dist/index.d.ts",
+    "build": "napi build --platform --release --strip --dts @lxcat/index.d.ts",
+    "artifacts": "for f in @lxcat/*.node; do p=${f#*.};p=${p%.*}; mv -v $f npm/$p/${f#*/}; done",
+    "build:debug": "napi build --dts @lxcat/index.d.ts",
     "test": "node --loader ts-node/esm --test tests/valid.test.ts",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year --skip-unrecognised src tests",
-    "clean": "rm rf target dist",
-    "prepublishOnly": "npm run build"
+    "clean": "rm -rf target @lxcat"
   },
   "author": "Daan Boer",
   "license": "Apache-2.0",
@@ -29,5 +36,17 @@
     "@types/node": "^18.7.15",
     "ts-node": "10.8.1",
     "typescript": "^4.8.2"
-  }
+  },
+  "optionalDependencies": {
+    "@lxcat/converter-linux-x64-gnu": "^0.1.0",
+    "@lxcat/converter-linux-x64-musl": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/LXCat-project/lxcat.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/LXCat-project/lxcat/-/issues"
+  },
+  "homepage": "https://gitlab.com/LXCat-project/lxcat/-/tree/main/packages/converter"
 }
