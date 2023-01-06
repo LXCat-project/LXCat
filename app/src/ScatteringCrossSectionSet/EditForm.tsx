@@ -2353,7 +2353,8 @@ interface Props {
 }
 
 const myResolver = () => {
-  const fn = ajvResolver(schema4form as any, { allowUnionTypes: true });
+  // FIXME: For some reason @hookform/resolvers points to an old ajv version resulting in an error when removing "as any".
+  const fn = ajvResolver(schema4form as any, { allowUnionTypes: true } as any);
   return async (values: FieldValues, context: any, options: any) => {
     const newValues = pruneFieldValues(values);
     return fn(newValues, context, options);

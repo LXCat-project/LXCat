@@ -7,10 +7,10 @@ FROM node:16-alpine
 RUN apk add --no-cache libc6-compat git
 WORKDIR /code
 COPY . .
-RUN npm install
+RUN pnpm install
 # Build database and skip app workspace build
-RUN npm run build --no-cache -w packages/schema -w packages/database
+RUN pnpm build --no-cache -w packages/schema -w packages/database
 
 WORKDIR /code/packages/database
 
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["pnpm"]

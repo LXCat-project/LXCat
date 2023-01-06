@@ -15,7 +15,7 @@ The validation is multi-step, first the input is checked against a JSON schema a
 ## Installation
 
 ```shell
-npm install @lxcat/schema
+pnpm install @lxcat/schema
 ```
 
 ## Usage
@@ -59,7 +59,7 @@ if (validator.validate(doc)) {
 
 ```shell
 cd ../..
-npm run install -w packages/schema
+pnpm install -w packages/schema
 cd packages/schema
 ```
 
@@ -68,7 +68,7 @@ cd packages/schema
 The JSON schemas (`src/**/*.schema.json` files) can be generated with
 
 ```shell
-npm run json
+pnpm json
 ```
 
 Whenever the types from which the schemas are derived are changed then this command should be run.
@@ -95,11 +95,11 @@ TODO put API documentation on GitLab pages
 
 To publish `@lxcat/schema` to npmjs.com perform the following steps:
 
-1. Set version in `packages/schema/package.json` with `npm workspace @lxcat/schema version <patch|minor|major>`
+1. Set version in `packages/schema/package.json` with `pnpm version <patch|minor|major> -w @lxcat/schema --update-workspaces=false`
 2. Commit and push changes to main branch
 3. Change to `packages/schema/` directory
-4. Make sure you are logged in on npm by checking with `npm whoami --scope lxcat` and optionally login in with `npm login --scope lxcat --publish`
-5. Make sure `npm run dev` is not running
-6. Clean dist/ with `npm run clean`
-7. Publish with `npm publish --otp <otp code>`
+4. Make sure you are logged in on npm by checking with `pnpm whoami --scope lxcat` and optionally login in with `pnpm login --scope lxcat --publish`
+5. Make sure `pnpm dev` is not running
+6. Clean dist/ with `pnpm clean`
+7. Publish with `pnpm publish --otp <otp code>`
 8. Create git tag for version with `git tag @lxcat/schema@<value at packages/schema/package.json:version>` and `git push origin --tags`
