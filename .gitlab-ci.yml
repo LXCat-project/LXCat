@@ -73,7 +73,7 @@ test-app:
     # - npm run test -w app -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
     - pnpm -C app test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
     - npx playwright install chromium
-    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml pnpm -C app test:e2e -- --reporter=junit
+    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml pnpm -C app test:e2e --reporter=junit
     - pnpm -C app build-storybook
   artifacts:
     reports:

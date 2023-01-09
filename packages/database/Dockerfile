@@ -12,7 +12,8 @@ COPY . .
 
 RUN pnpm install
 # Build database and skip app workspace build
-RUN pnpm build --no-cache -w packages/schema -w packages/database
+RUN pnpm -C packages/schema build
+RUN pnpm -C packages/database build
 
 WORKDIR /code/packages/database
 
