@@ -41,7 +41,7 @@ To create database and create all empty collections run following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-cd ../.. && pnpm install && pnpm build --workspace packages/schema && cd database
+cd pnpm install && pnpm -C ../schema build
 pnpm run setup
 ```
 

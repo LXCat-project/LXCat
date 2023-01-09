@@ -58,9 +58,7 @@ if (validator.validate(doc)) {
 ### Install dependencies
 
 ```shell
-cd ../..
-pnpm install -w packages/schema
-cd packages/schema
+pnpm -C packages/schema install
 ```
 
 ### Generate JSON schemas
