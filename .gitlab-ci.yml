@@ -44,7 +44,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: mcr.microsoft.com/playwright:v1.23.0-focal
+  image: mcr.microsoft.com/playwright:v1.27.1-focal
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -72,7 +72,7 @@ test-app:
     - pnpm install
     # - npm run test -w app -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
     - pnpm -C app test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
-    - npx playwright install chromium
+    # - npx playwright install chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml pnpm -C app test:e2e --reporter=junit
     - pnpm -C app build-storybook
   artifacts:
