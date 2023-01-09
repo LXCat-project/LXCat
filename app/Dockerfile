@@ -9,16 +9,19 @@ ENV NEXT_PUBLIC_URL $NEXT_PUBLIC_URL
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat git rust cargo
+# Install pnpm https://pnpm.io/installation
+RUN wget -qO /bin/pnpm "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" && chmod +x /bin/pnpm
+
 WORKDIR /code
 COPY . .
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npm run build --no-cache
+RUN pnpm build --no-cache
 
 # Production image, copy all the files and run next
 WORKDIR /code/app
@@ -37,4 +40,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "start"]

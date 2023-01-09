@@ -11,7 +11,7 @@ Package with native node module that can convert LXCat JSON documents to txt for
 ## Installation
 
 ```shell
-npm install @lxcat/converter
+pnpm install @lxcat/converter
 ```
 
 ## Contributing
@@ -23,7 +23,7 @@ npm install @lxcat/converter
 curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
 # Change to root of repo
 cd ../..
-npm install -w packages/converter
+pnpm install -w packages/converter
 cd packages/converter
 ```
 
@@ -40,5 +40,5 @@ Finally, the test can be enabled by adding it to `tests/valid.test.ts`.
 Run tests with
 
 ```shell
-npm run test
+pnpm test
 ```

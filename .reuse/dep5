@@ -24,6 +24,6 @@ Copyright: LXCat team
 License: AGPL-3.0-or-later
 
 # Files that get generated
-Files: app/next-env.d.ts
+Files: app/next-env.d.ts pnpm-lock.yaml flake.lock
 Copyright: LXCat team
 License: AGPL-3.0-or-later

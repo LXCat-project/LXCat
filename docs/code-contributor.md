@@ -259,7 +259,7 @@ The storybook can be run with
 
 ```shell
 cd app
-npm run storybook
+pnpm storybook
 ```
 
 This will open a web browser where stories of components can be seen.
@@ -272,13 +272,13 @@ This can be useful for other people to test your component without having to ins
 Tests can be written as `src/**/*.{test,spec}.ts` files with [vitest](https://vitest.dev/) framework and run with
 
 ```shell
-npm run test
+pnpm test
 ```
 
 To run tests with code coverage use
 
 ```shell
-npm run test -- run --coverage
+pnpm test -- run --coverage
 xdg-open coverage/index.html
 ```
 
@@ -304,7 +304,7 @@ pip install reuse
 reuse lint
 ```
 
-To add headers to files run `npm run addheader` or if that fails add header manually.
+To add headers to files run `pnpm addheader` or if that fails add header manually.
 
 For binary files or text files without comment support a `<original file name>.license` file can be made, alternativly add file in `/.reuse/dep5` file.
 
@@ -314,6 +314,6 @@ If there are changes to the code you want to cite you will need to create a new 
 
 To create a new DOI:
 
-1. Bump version in package.json files, rerun `npm install`, commit & push to main branch.
+1. Bump version in package.json files, rerun `pnpm install`, commit & push to main branch.
 2. Create a new [GitLab release](https://gitlab.com/LXCat-project/lxcat/-/releases/new).
 3. On Zenodo page for LXCat, a new version needs to be created with the tarball of the new release.
