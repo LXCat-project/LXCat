@@ -32,7 +32,7 @@ test.describe("/profile", () => {
   });
 });
 
-// TODO should scat-css tests be here in their own file?
+// TODO should scat-css tests be here or in their own file?
 test("/api/author/scat-css", async ({ request, page }) => {
   const headers = {
     Accept: "application/json",
@@ -55,7 +55,7 @@ test.describe("/author/scat-css/add", () => {
       await page.locator('button:has-text("Submit")').click();
 
       const warning = page.locator(
-        'text=Name *must NOT have fewer than 1 characters >> div[role="alert"]'
+        "text=Name *must NOT have fewer than 1 characters"
       );
       await expect(warning).toBeVisible();
     });
@@ -76,87 +76,89 @@ test.describe("/author/scat-css/add", () => {
     await page.goto("/author/scat-css/add");
     // General
     await page.locator('input[name="set\\.name"]').fill("My name");
-    await page.locator('select[name="set\\.contributor"]').selectOption("MyOrg");
+    await page
+      .locator('select[name="set\\.contributor"]')
+      .selectOption("MyOrg");
     // States
     await page.locator('button[role="tab"]:has-text("States")').click();
     await page.locator('[aria-label="Add a state"]').click();
-    await page
-      .locator('input[name="set\\.states\\.s0\\.particle"]')
-      .fill("Ar");
+    await page.locator('input[name="set\\.states\\.s0\\.particle"]').fill("Ar");
     await page.locator('input[name="set\\.states\\.s0\\.charge"]').fill("0");
     // Processes
     await page.locator('button[role="tab"]:has-text("Processes")').click();
     await page.locator('[aria-label="Add process"]').click();
     await page.locator('[aria-label="Add data row to process"]').click();
-    await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.0"]').fill('1.2');
-    await page.locator('input[name="set\\.processes\\.0\\.data\\.0\\.1"]').fill('3.4e-5');
+    await page
+      .locator('input[name="set\\.processes\\.0\\.data\\.0\\.0"]')
+      .fill("1.2");
+    await page
+      .locator('input[name="set\\.processes\\.0\\.data\\.0\\.1"]')
+      .fill("3.4e-5");
     await page.locator('[aria-label="Add consumed reaction entry"]').click();
-    await page.locator('[aria-controls="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]').click();
-    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Ar}")').click();
+    await page
+      .locator(
+        '[aria-controls="set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state"]'
+      )
+      .click();
+    await page
+      .locator('button[role="menuitem"]:has-text("\\mathrm{Ar}")')
+      .click();
   }
 
   test.describe("given minimal set", () => {
-    test.beforeAll(async ({browser}) => {
-      const page = await browser.newPage()
+    test.beforeAll(async ({ browser }) => {
+      const page = await browser.newPage();
       await addOrganization("MyOrg", page);
-    })
+    });
 
     test.beforeEach(async ({ page }) => {
-      await fillAddSetForm(page)
+      await fillAddSetForm(page);
     });
 
     test("should have json document", async ({ page }) => {
       await page.locator('button[role="tab"]:has-text("JSON")').click();
-      const json = await page.locator('pre').innerText();
+      const json = await page.locator("pre").innerText();
       const expected = {
-        "name": "My name",
-        "description": "",
-        "complete": false,
-        "contributor": "MyOrg",
-        "processes": [
+        name: "My name",
+        description: "",
+        complete: false,
+        contributor: "MyOrg",
+        processes: [
           {
-            "reaction": {
-              "lhs": [
+            reaction: {
+              lhs: [
                 {
-                  "count": 1,
-                  "state": "s0"
-                }
+                  count: 1,
+                  state: "s0",
+                },
               ],
-              "rhs": [],
-              "reversible": false,
-              "type_tags": []
+              rhs: [],
+              reversible: false,
+              type_tags: [],
             },
-            "threshold": 0,
-            "type": "LUT",
-            "labels": [
-              "Energy",
-              "CrossSection"
-            ],
-            "units": [
-              "eV",
-              "m^2"
-            ],
-            "data": [
-              [1.2, 3.4e-5]
-            ],
-            "parameters": {}
-          }
+            threshold: 0,
+            type: "LUT",
+            labels: ["Energy", "CrossSection"],
+            units: ["eV", "m^2"],
+            data: [[1.2, 3.4e-5]],
+            parameters: {},
+          },
         ],
-        "states": {
-          "s0": {
-            "particle": "Ar",
-            "charge": 0
-          }
+        states: {
+          s0: {
+            particle: "Ar",
+            charge: 0,
+          },
         },
-        "references": {}
-      }
-      expect(JSON.parse(json)).toEqual(expected)
+        references: {},
+      };
+      expect(JSON.parse(json)).toEqual(expected);
     });
 
-    test('after submit should have success message', async ({page}) => {
+    test("after submit should have success message", async ({ page }) => {
       await page.locator('button:has-text("Submit")').click();
 
-      await expect(page.locator('.status')).toContainText('Adding successful')
-    })
+      await expect(page.locator(".status")).toContainText("Adding successful");
+    });
   });
 });

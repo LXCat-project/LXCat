@@ -18,7 +18,6 @@ export type CrossSectionInput<StateType> = InputDocument<
 > & { complete: boolean };
 
 // TODO should set have own references?
-// TODO do not disable linter
 /**
  * To add a cross section set to the LXCat application, the set should be valid against this schema.
  */

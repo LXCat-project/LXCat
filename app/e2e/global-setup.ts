@@ -2,15 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { chromium, FullConfig, Page } from "@playwright/test";
-import { testOidcServer } from "./test-oidc-server";
-import { startDbContainer } from "@lxcat/database/src/testutils";
-import { exec } from "child_process";
-import { resolve } from "path";
-import { rm } from "fs/promises";
 import { db } from "@lxcat/database/src/db";
-import { Browser } from "playwright-core";
+import { startDbContainer } from "@lxcat/database/src/testutils";
+import { Browser, chromium, FullConfig, Page } from "@playwright/test";
+import { exec } from "child_process";
+import { rm } from "fs/promises";
 import { readFile } from "fs/promises";
+import { resolve } from "path";
+import { testOidcServer } from "./test-oidc-server";
 
 async function globalSetup(config: FullConfig) {
   const env = config?.webServer?.env || {};
@@ -22,7 +21,7 @@ async function globalSetup(config: FullConfig) {
     env.TESTOIDC_CLIENT_ID,
     env.TESTOIDC_CLIENT_SECRET,
     env.NEXTAUTH_URL + "/callback/testoidc",
-    parseInt(oidcUrl.port)
+    parseInt(oidcUrl.port),
   );
 
   console.log("Starting database server");
@@ -40,7 +39,7 @@ async function globalSetup(config: FullConfig) {
 
   console.log("Create collections");
   // create db collections
-  await runDbCommand("npm run setup");
+  await runDbCommand("pnpm run setup");
   // It is up to tests to login
   // and to populate and truncate db
 
@@ -52,7 +51,7 @@ async function globalSetup(config: FullConfig) {
   // Login with test oidc account
   await signUp(adminPage, email);
   // add admin roles
-  await runDbCommand(`npm run make-admin ${email}`);
+  await runDbCommand(`pnpm make-admin ${email}`);
   await adminPage.context().storageState({ path: "adminStorageState.json" });
   // TODO create user for each role and store the those users cookies.
   await browser.close();
@@ -83,7 +82,7 @@ export async function runDbCommand(command: string) {
           reject(error);
         }
         presolve(stdout);
-      }
+      },
     );
   });
 }
@@ -93,9 +92,9 @@ async function signUp(page: Page, email: string) {
   await page.locator("text=Sign in").click();
   await page.locator("text=Sign in with Test dummy").click();
   // Login to test oidc server
-  await page.locator('[placeholder="Enter any login"]').fill(email);
-  await page.locator('[placeholder="and password"]').fill("foobar");
-  await page.locator('button:has-text("Sign-in")').click();
+  await page.locator("[placeholder=\"Enter any login\"]").fill(email);
+  await page.locator("[placeholder=\"and password\"]").fill("foobar");
+  await page.locator("button:has-text(\"Sign-in\")").click();
   // Give consent that email and profile can be used by app
   await page.locator("text=Continue").click();
   await page.waitForURL("/");
@@ -114,32 +113,32 @@ export async function truncateNonUserCollections() {
 export async function uploadAndPublishDummySet(
   browser: Browser,
   file = "dummy.json",
-  org = "Some organization"
+  org = "Some organization",
 ) {
   const page = await browser.newPage();
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
     `../packages/database/seeds/test/crosssections/${file}`,
-    { encoding: "utf8" }
+    { encoding: "utf8" },
   );
   await page.locator("textarea").fill(dummySet);
   await page.locator("text=Upload cross section set").click();
-  await page.waitForSelector('span:has-text("Upload successful")');
+  await page.waitForSelector("span:has-text(\"Upload successful\")");
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
   // Mantine multiselect is hard to test as it changes its dom tree based on selection
-  await page.locator('div[role="combobox"]').click();
+  await page.locator("div[role=\"combobox\"]").click();
   await page.locator(`text=${org}`).click();
   await page.waitForSelector(`div:has-text("${org}")`);
 
   // Publish set
   await page.goto("/author/scat-css");
   await page.reload(); // TODO sometimes no set is listed, use reload to give server some time as workaround
-  await page.waitForSelector('td:has-text("draft")');
-  await page.locator('tbody button:has-text("Publish")').click();
+  await page.waitForSelector("td:has-text(\"draft\")");
+  await page.locator("tbody button:has-text(\"Publish\")").click();
   // Press publish in dialog
-  await page.locator('dialog >> button:has-text("Publish")').click();
-  await page.waitForSelector('td:has-text("published")');
+  await page.locator("dialog >> button:has-text(\"Publish\")").click();
+  await page.waitForSelector("td:has-text(\"published\")");
 }

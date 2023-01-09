@@ -12,15 +12,21 @@ build-dev:
   cache:
     key:
       files:
-        - package-lock.json
+        - pnpm-lock.yaml
     paths:
-      - .npm/
-  script:
+      - .pnpm-store
+  before_script:
+    # Install rust dependencies
     - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
     - source "$HOME/.cargo/env"
-    - npm ci --cache .npm --prefer-offline
-    - npm run build
-    - npm run lint
+    # Install pnpm
+    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - pnpm config set store-dir .pnpm-store
+  script:
+    - pnpm install
+    - pnpm build
+    - pnpm lint
+    # - npm ci --cache .npm --prefer-offline
     # TODO Run prettier --check to enforce merge requests are formatted correctly
   # TODO reuse artifacts in workspace specific ci tasks like tests
   artifacts:
@@ -38,7 +44,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: mcr.microsoft.com/playwright:v1.23.0-focal
+  image: mcr.microsoft.com/playwright:v1.27.1-focal
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -54,15 +60,21 @@ test-app:
   cache:
     key:
       files:
-        - package-lock.json
+        - pnpm-lock.yaml
     paths:
-      - .npm/    
+      - .pnpm-store
+  before_script:
+    # Install pnpm
+    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - pnpm config set store-dir .pnpm-store
   script:
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -w app -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
-    - npx playwright install chromium
-    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml npm run test:e2e -w app -- --reporter=junit
-    - npm -w app run build-storybook
+    # - npm ci --cache .npm --prefer-offline
+    - pnpm install
+    # - npm run test -w app -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
+    - pnpm -C app test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
+    # - npx playwright install chromium
+    - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml pnpm -C app test:e2e --reporter=junit
+    - pnpm -C app build-storybook
   artifacts:
     reports:
       coverage_report:
@@ -82,9 +94,9 @@ test-database:
   cache:
     key:
       files:
-        - package-lock.json
+        - pnpm-lock.yaml
     paths:
-      - .npm/    
+      - .pnpm-store
   stage: test
   dependencies:
     - build-dev
@@ -101,9 +113,14 @@ test-database:
     DOCKER_TLS_CERTDIR: ""
     # Improve performance with overlayfs.
     DOCKER_DRIVER: overlay2
+  before_script:
+    # Install pnpm
+    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - pnpm config set store-dir .pnpm-store
   script:
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -w packages/database -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    # - npm ci --cache .npm --prefer-offline
+    - pnpm install
+    - pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:
@@ -120,16 +137,21 @@ test-schema:
   cache:
     key:
       files:
-        - package-lock.json
+        - pnpm-lock.yaml
     paths:
-      - .npm/    
+      - .pnpm-store
   stage: test
   dependencies:
     - build-dev
   image: node:16-bullseye
+  before_script:
+    # Install pnpm
+    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - pnpm config set store-dir .pnpm-store
   script:
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -w packages/schema -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    # - npm ci --cache .npm --prefer-offline
+    - pnpm install
+    - pnpm -C packages/schema test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
   artifacts:
     reports:
       coverage_report:
@@ -146,16 +168,21 @@ test-converter:
   cache:
     key:
       files:
-        - package-lock.json
+        - pnpm-lock.yaml
     paths:
-      - .npm/
+      - .pnpm-store
   stage: test
   dependencies:
     - build-dev
   image: node:16-bullseye
+  before_script:
+    # Install pnpm
+    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - pnpm config set store-dir .pnpm-store
   script:
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -w packages/converter
+    # - npm ci --cache .npm --prefer-offline
+    - pnpm install
+    - pnpm -C packages/converter test
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always

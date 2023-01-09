@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "description": "Schema and validator for LXCat",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "json:css": "ts-json-schema-generator -f ./tsconfig.json --no-top-ref --path src/css/input.ts --type CrossSectionSetRaw --out src/css/CrossSectionSetRaw.schema.json -e none",
-    "json": "npm run json:css",
+    "json": "pnpm json:css",
     "build": "tsc",
     "lint": "eslint src/ --ext .ts",
     "format": "prettier --write src/",
     "test": "vitest",
     "dev": "tsc --watch",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm build",
     "clean": "rm -rf dist"
   },
   "license": "Apache-2.0",
@@ -20,6 +21,7 @@
     "ts-json-schema-generator": "^1.1.0-next.5"
   },
   "devDependencies": {
+    "@lxcat/tsconfig": "*",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "c8": "^7.11.3",
     "eslint": "8.10.0",

@@ -15,7 +15,7 @@
     "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
     "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
     "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",
-    "reload": "npm run drop-database && npm run setup && npm run seed seeds/test",
+    "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
     "load-css": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/load_css.ts",
     "format": "prettier --write src/ seeds/ setup/",
     "dev": "tsc -p tsconfig.build.json --watch",
@@ -27,31 +27,33 @@
     "collectionschema:Reference": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Reference --out src/shared/schemas/Reference.schema.json -e none --no-top-ref",
     "collectionschema:State": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type State --out src/shared/schemas/State.schema.json -e none --no-top-ref",
     "collectionschema:Reaction": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Reaction --out src/shared/schemas/Reaction.schema.json -e none --no-top-ref",
-    "collectionschema:shared": "npm run collectionschema:Particle && npm run collectionschema:Contributor && npm run collectionschema:Reference && npm run collectionschema:State && npm run collectionschema:Reaction",
-    "collectionschema:cs": "npm run collectionschema:CrossSection && npm run collectionschema:CrossSectionSet",
+    "collectionschema:shared": "pnpm collectionschema:Particle && pnpm collectionschema:Contributor && pnpm collectionschema:Reference && pnpm collectionschema:State && pnpm collectionschema:Reaction",
+    "collectionschema:cs": "pnpm collectionschema:CrossSection && pnpm collectionschema:CrossSectionSet",
     "collectionschema:CrossSection": "ts-json-schema-generator -f ./tsconfig.json --path src/cs/collections.ts --type CrossSection --out src/cs/schemas/CrossSection.schema.json -e none --no-top-ref",
     "collectionschema:CrossSectionSet": "ts-json-schema-generator -f ./tsconfig.json --path src/css/collections.ts --type CrossSectionSet --out src/css/schemas/CrossSectionSet.schema.json -e none --no-top-ref",
-    "collectionschema": "npm run collectionschema:shared && npm run collectionschema:cs",
+    "collectionschema": "pnpm collectionschema:shared && pnpm collectionschema:cs",
     "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src setup"
   },
   "dependencies": {
     "@lxcat/schema": "*",
     "arangojs": "^7.7.0",
+    "deep-equal": "^2.0.5",
     "dotenv": "^16.0.0",
     "zod": "^3.14.2",
-    "zod-to-json-schema": "^3.11.3",
-    "deep-equal": "^2.0.5"
+    "zod-to-json-schema": "^3.11.3"
   },
   "devDependencies": {
-    "@types/deep-equal":"^1.0.1",
+    "@lxcat/tsconfig": "*",
+    "@types/deep-equal": "^1.0.1",
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "c8": "^7.11.3",
     "eslint": "8.10.0",
     "prettier": "^2.6.2",
     "testcontainers": "^8.10.1",
     "ts-json-schema-generator": "^1.1.0-next.5",
-    "ts-node": "10.8.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.3",
-    "vitest": "^0.15.1"
+    "vitest": "^0.26.3"
   }
 }

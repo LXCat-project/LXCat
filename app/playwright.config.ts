@@ -12,7 +12,7 @@ const config: PlaywrightTestConfig = {
   globalSetup: require.resolve("./e2e/global-setup"),
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
-    command: "npm run dev -- --port 8001",
+    command: "pnpm dev -- --port 8001",
     port: 8001,
     // timeout: 2 * 60 * 1000, // Wait for 2 minutes to spinup app dev server
     reuseExistingServer: !process.env.CI,

@@ -28,8 +28,8 @@ First, run the development server:
 
 ```bash
 cd .. # in root of repo
-npm install
-npm run dev  # Starts app, database, schema workspaces in development mode
+pnpm install
+pnpm dev  # Starts app, database, schema workspaces in development mode
 ```
 
 The application uses `@lxcat/database` package which needs a ArangoDB database server, see its [README](../packages/database/README.md) how to setup the database.
@@ -206,13 +206,13 @@ npx playwright install chromium
 Also make sure port 8001, 8002, and 8003 are not in use.
 
 ```shell
-npm run test:e2e
+pnpm test:e2e
 ```
 
 To debug and record add `await page.pause()` and run tests with
 
 ```shell
-npm run test:e2e -- --headed
+pnpm test:e2e -- --headed
 ```
 
 The test command spins up the app dev server, ArangoDB in a Docker container, a test OpenID connect server and then executes the tests in the `e2e/` directory.
@@ -242,7 +242,7 @@ See [code contributor doc](../docs/code-contributor#unit-tests)
 To see which modules are loaded by web browser use
 
 ```shell
-ANALYZE=true npm run build
+ANALYZE=true pnpm build
 ```
 
 Command writes `.next/analyze/client.html`.

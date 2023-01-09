@@ -41,8 +41,8 @@ To create database and create all empty collections run following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-cd ../.. && npm install && npm run build --workspace packages/schema && cd database
-npm run setup
+cd ../.. && pnpm install && pnpm build --workspace packages/schema && cd database
+pnpm run setup
 ```
 
 ## Seeding with test data
@@ -51,7 +51,7 @@ The app requires some collections to be filled.
 This can be done by writing scripts inside a directory for example `seeds/test/` and running:
 
 ```shell
-npm run seed seeds/test
+pnpm seed seeds/test
 ```
 
 This will create a number of dummy documents in the database.
@@ -89,7 +89,7 @@ To make sure the scripts are executed in the correct order when using `*`, name 
 To run the scripts use
 
 ```sh
-npm run seed <a directory with Typescript files (*.ts) that fill the database>
+pnpm seed <a directory with Typescript files (*.ts) that fill the database>
 ```
 
 ### Load directory of cross section set JSON documents
@@ -97,7 +97,7 @@ npm run seed <a directory with Typescript files (*.ts) that fill the database>
 Instead of writing seed scripts you can also load a directory of cross section set JSON documents with
 
 ```shell
-npm run load-css <a directory with cross section set JSON documents>
+pnpm load-css <a directory with cross section set JSON documents>
 ```
 
 > When runnning command with Docker, make sure directory is readable inside container.
@@ -111,7 +111,7 @@ There is a chicken and the egg problem to access the page.
 The admin role can also be assigned to a user that has already logged in once by running following command
 
 ```sh
-npm run make-admin <email of user>
+pnpm make-admin <email of user>
 ```
 
 ## Start over
@@ -121,19 +121,19 @@ npm run make-admin <email of user>
 To start over the whole database can be dropped with
 
 ```sh
-npm run drop-database
+pnpm drop-database
 ```
 
 To start over and fill database with test seed use
 
 ```sh
-npm run reload
+pnpm reload
 ```
 
 ## Make usable for app
 
 ```shell
-npm run build
+pnpm build
 ```
 
 ## Generate collection schemas
@@ -142,7 +142,7 @@ The JSON schemas for the ArangoDB collections are stored as `src/**/*.schema.jso
 Any time the types change run
 
 ```shell
-npm run collectionschema
+pnpm collectionschema
 ```
 
 ## Tests

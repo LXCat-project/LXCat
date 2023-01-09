@@ -5,12 +5,16 @@ FROM node:16-alpine
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat git
+RUN wget -qO /bin/pnpm "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" && chmod +x /bin/pnpm
+
 WORKDIR /code
 COPY . .
-RUN npm install
+
+RUN pnpm install
 # Build database and skip app workspace build
-RUN npm run build --no-cache -w packages/schema -w packages/database
+RUN pnpm -C packages/schema build
+RUN pnpm -C packages/database build
 
 WORKDIR /code/packages/database
 
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["pnpm", "run"]
