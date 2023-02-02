@@ -10,6 +10,7 @@ import { listDocFiles, md2mdx } from "../../docs/generator";
 import { Layout } from "../../shared/Layout";
 
 import "highlight.js/styles/github.css";
+import "katex/dist/katex.min.css";
 
 interface Props {
   slug: string[];
