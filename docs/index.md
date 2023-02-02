@@ -6,11 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # LXCat documentation
 
-There is documentation for different audiences
+There is documentation for different audiences.
 
-* [Visitors of website](visitor)
-* [Data contributors](data-contributor)
-* [Maintainer](maintainer)
-* [Administrator](administrator)
-* [Developer](developer)
-* [Code contributor](code-contributor)
+- [Visitors of the website](visitor)
+- [Data contributors](data-contributor)
+- [Maintainers](maintainer)
+- [Administrators](administrator)
+- [Developers](developer)
+- [Code contributors](code-contributor)

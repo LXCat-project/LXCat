@@ -7,7 +7,7 @@ import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
-import rehypeMathjax from "rehype-mathjax"; // TODO switch from MathJax to Katex, as Katex is already used to render reactions.
+import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkEmbedImages from "remark-embed-images";
 import remarkGfm from "remark-gfm";
@@ -66,7 +66,7 @@ export async function md2mdx(slug: string[]) {
         [rehypeAutolinkHeadings, { behavior: "wrap" }],
         [rehypeHighlight, { ignoreMissing: true }],
         rehypeMermaid,
-        rehypeMathjax,
+        rehypeKatex,
       ],
     },
   };
