@@ -253,23 +253,23 @@ erDiagram
         string commitMessage
     }
     User ||--o{ MemberOf: from
-    MemberOf |o--|{ Organization: to
+    MemberOf |o--|{ Organization : "to"
     Organization ||--o{ CrossSectionSet: Provides
     CrossSectionSet ||--|{ CrossSectionSetHistory: fromFuture
     CrossSectionSet ||--|{ CrossSectionSetHistory: toPast
     CrossSection ||--|{ IsPartOf: from
-    IsPartOf }|--|| CrossSectionSet: to
+    IsPartOf }|--|| CrossSectionSet: "to"
     Organization ||--o{ CrossSection: Provides
     CrossSection ||--|{ CrossSectionHistory: fromFuture
     CrossSection ||--|{ CrossSectionHistory: toPast
-    Reference ||--|{ References: to
+    Reference ||--|{ References: "to"
     References }|--|| CrossSection: from
     Reaction ||--|{ Produces: from
-    Produces }|--|| State: to
+    Produces }|--|| State: "to"
     Reaction ||--|{ Consumes: from
-    Consumes }|--|| State: to
+    Consumes }|--|| State: "to"
     State |o--|{ HasDirectSubstate: from
-    HasDirectSubstate ||--|{ State: to
+    HasDirectSubstate ||--|{ State: "to"
     Reaction }|--|| CrossSection: reaction
 ```
 
