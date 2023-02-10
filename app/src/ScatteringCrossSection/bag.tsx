@@ -84,10 +84,11 @@ export const Bag = ({
         <ol>
           {flatProcesses.map((p, i) => (
             <li key={p.id}>
-              <Link href={`/scat-cs/${p.id}`}>
-                <a aria-label={reactionAsText(p.reaction)}>
-                  <ReactionSummary {...p.reaction} />
-                </a>
+              <Link
+                href={`/scat-cs/${p.id}`}
+                aria-label={reactionAsText(p.reaction)}
+              >
+                <ReactionSummary {...p.reaction} />
               </Link>
               <div>{p.reaction.type_tags.join(", ")}</div>
               {/* TODO make set clickable */}

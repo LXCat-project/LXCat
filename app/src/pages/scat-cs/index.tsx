@@ -251,6 +251,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             <Link
               href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
               passHref
+              legacyBehavior
             >
               <Button leftIcon={<IconGraph />} component="a" variant="light">
                 Plot selection

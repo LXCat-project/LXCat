@@ -23,22 +23,14 @@ export const NavBar = () => {
   return (
     <nav style={navStyle}>
       <Link href="/">
-        <a>
-          <Image src={logo} alt="Logo of LXCat" />
-        </a>
+        <Image src={logo} alt="Logo of LXCat" />
       </Link>
       <div
         style={{ flexGrow: 1, display: "flex", flexDirection: "row", gap: 10 }}
       >
-        <Link href="/data-center">
-          <a>Data center</a>
-        </Link>
-        <Link href="/team">
-          <a>Team</a>
-        </Link>
-        <Link href="/docs/index">
-          <a>Docs</a>
-        </Link>
+        <Link href="/data-center">Data center</Link>
+        <Link href="/team">Team</Link>
+        <Link href="/docs/index">Docs</Link>
       </div>
       <UserAnchor />
     </nav>

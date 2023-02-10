@@ -75,6 +75,7 @@ export const Filter = ({ facets, selection }: Props) => {
             pathname: "/scat-css",
           }}
           passHref
+          legacyBehavior
         >
           <button disabled={!hasAnySelection}>Clear selection</button>
         </Link>

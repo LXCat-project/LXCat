@@ -8,10 +8,7 @@ import {
   StateLeaf,
   StatePath,
 } from "@lxcat/database/dist/shared/getStateLeaf";
-import {
-  Reversible,
-  StateProcess,
-} from "@lxcat/database/dist/cs/picker/types";
+import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
 
 import useSWRImmutable from "swr/immutable";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";

@@ -27,9 +27,7 @@ function renderItem(item: CrossSectionItem) {
         {item.versionInfo.status === "published" ||
         item.versionInfo.status === "retracted" ? (
           <Link href={`/scat-cs/${item.id}`}>
-            <a>
-              <ReactionSummary {...item.reaction} />
-            </a>
+            <ReactionSummary {...item.reaction} />
           </Link>
         ) : (
           <>
@@ -42,10 +40,11 @@ function renderItem(item: CrossSectionItem) {
         <ul>
           {item.isPartOf.map((s) => (
             <li key={s.id}>
-              <Link href={`/author/scat-css/${s.id}/edit`}>
-                <a title="Click to edit set">
-                  {s.name} ({s.versionInfo.version})
-                </a>
+              <Link
+                href={`/author/scat-css/${s.id}/edit`}
+                title="Click to edit set"
+              >
+                {s.name}({s.versionInfo.version})
               </Link>
             </li>
           ))}
@@ -84,9 +83,7 @@ const Page: NextPage<Props> = ({ items, paging }) => {
         <tbody>{rows}</tbody>
       </table>
       <Paging paging={paging} nrOnPage={nrItems} query={query} />
-      <Link href="/author">
-        <a>Back</a>
-      </Link>
+      <Link href="/author">Back</Link>
     </Layout>
   );
 };

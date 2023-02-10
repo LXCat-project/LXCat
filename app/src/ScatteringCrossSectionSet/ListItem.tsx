@@ -13,10 +13,8 @@ const style = {
 
 export const ListItem = (props: CrossSectionSetHeading) => {
   return (
-    <Link href={`/scat-css/${props.id}`}>
-      <a style={style} role="listitem">
-        {props.name}
-      </a>
+    <Link href={`/scat-css/${props.id}`} style={style} role="listitem">
+      {props.name}
     </Link>
   );
 };

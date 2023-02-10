@@ -54,9 +54,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
           Adding successful, a draft has been created with id is {id}
         </div>
       )}
-      <Link href={`/author/scat-css`}>
-        <a>Back</a>
-      </Link>
+      <Link href={`/author/scat-css`}>Back</Link>
     </Layout>
   );
 };

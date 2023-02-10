@@ -52,9 +52,7 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
         <TermsOfUse />
         <p>
           The permalink for this data is{" "}
-          <Link href={permaLink}>
-            <a>{permaLink}</a>
-          </Link>
+          <Link href={permaLink}>{permaLink}</Link>
         </p>
         <HowToCite references={references} />
         <form method="dialog">

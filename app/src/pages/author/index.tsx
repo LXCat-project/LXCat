@@ -16,14 +16,10 @@ const Admin: NextPage<Props> = () => {
       <span>To add, update, publish, retract documents.</span>
       <ul>
         <li>
-          <Link href="/author/scat-cs">
-            <a>Scattering cross section</a>
-          </Link>
+          <Link href="/author/scat-cs">Scattering cross section</Link>
         </li>
         <li>
-          <Link href="/author/scat-css">
-            <a>Scattering cross section set</a>
-          </Link>
+          <Link href="/author/scat-css">Scattering cross section set</Link>
         </li>
       </ul>
     </Layout>

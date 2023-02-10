@@ -70,9 +70,7 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
         )}
         {id && <span>Upload successful, id is {id}</span>}
       </form>
-      <Link href={`/author/scat-css`}>
-        <a>Back</a>
-      </Link>
+      <Link href={`/author/scat-css`}>Back</Link>
     </Layout>
   );
 };
