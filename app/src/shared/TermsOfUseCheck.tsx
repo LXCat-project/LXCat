@@ -11,6 +11,7 @@ import { HowToCite } from "./HowToCite";
 import { DOWNLOAD_COOKIE_NAME } from "./download";
 import { TermsOfUse } from "./TermsOfUse";
 import { useRouter } from "next/router";
+import { Button, Center, Modal } from "@mantine/core";
 
 interface Props {
   references: Reference[];
@@ -47,7 +48,13 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
       <button type="button" onClick={() => setAgreement(false)}>
         Terms of use
       </button>
-      <Dialog isOpened={!agreement} onSubmit={acceptTermsOfUse} className="tos">
+      <Modal
+        opened={!agreement}
+        withCloseButton={false}
+        onSubmit={acceptTermsOfUse}
+        onClose={() => {}}
+        size="70%"
+      >
         <h2>Terms of use</h2>
         <TermsOfUse />
         <p>
@@ -55,12 +62,12 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
           <Link href={permaLink}>{permaLink}</Link>
         </p>
         <HowToCite references={references} />
-        <form method="dialog">
-          <button value="default" type="submit">
+        <Center>
+          <Button onClick={acceptTermsOfUse}>
             I agree with the terms of use
-          </button>
-        </form>
-      </Dialog>
+          </Button>
+        </Center>
+      </Modal>
     </>
   );
 };

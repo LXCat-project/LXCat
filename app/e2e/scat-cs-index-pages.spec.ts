@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
-  uploadAndPublishDummySet,
   truncateNonUserCollections,
+  uploadAndPublishDummySet,
 } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
@@ -27,8 +27,10 @@ test.afterAll(async () => {
 test.describe("cross section index page with Uo selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
-    await page.locator('[aria-controls="particle-select"]').first().click()
-    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
+    await page.locator('[aria-controls="particle-select"]').first().click();
+    await page
+      .locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")')
+      .click();
   });
 
   // FIXME: How to uniquely locate consuming StateSelect and select Uo?
@@ -39,10 +41,10 @@ test.describe("cross section index page with Uo selected", () => {
     await expect(section2).toBeVisible();
   });
 
-  test('should have link to bag page', async ({page}) => {
-    const baglink = page.locator('text=Plot selection')
+  test("should have link to bag page", async ({ page }) => {
+    const baglink = page.locator("text=Plot selection");
     await expect(baglink).toBeVisible();
-  })
+  });
 
   test.describe("when filtered on set name", () => {
     test.beforeEach(async ({ page }) => {
@@ -80,12 +82,14 @@ test.describe("cross section set index page", () => {
   });
 });
 
-test.describe('cross section bag page', () => {
+test.describe("cross section bag page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
-    await page.locator('[aria-controls="particle-select"]').first().click()
-    await page.locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")').click();
-    await page.locator('text=Plot selection').click();
+    await page.locator('[aria-controls="particle-select"]').first().click();
+    await page
+      .locator('button[role="menuitem"]:has-text("\\mathrm{Uo}")')
+      .click();
+    await page.locator("text=Plot selection").click();
     await page.locator("text=I agree with the terms of use").click();
   });
 
@@ -106,10 +110,12 @@ test.describe('cross section bag page', () => {
     await expect(canvas).toBeVisible();
   });
 
-  test('should have 2 items', async ({page}) => {
-    const section1 = page.locator('text=Some name by Some organization')
-    const section2 = page.locator('text=Some other name by Some other organization');
+  test("should have 2 items", async ({ page }) => {
+    const section1 = page.locator("text=Some name by Some organization");
+    const section2 = page.locator(
+      "text=Some other name by Some other organization"
+    );
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
-  })
-})
+  });
+});
