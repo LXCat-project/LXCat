@@ -11,16 +11,12 @@ interface Props {
   className?: string;
 }
 
-export const Dialog = ({
-  isOpened,
-  onSubmit: onsubmit,
-  children,
-  className,
-}: Props) => {
-  const ref: any = useRef(null);
+export const Dialog = ({ isOpened, onSubmit, children, className }: Props) => {
+  const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     if (isOpened) {
       ref.current?.showModal();
+      return () => ref.current?.close();
     } else {
       ref.current?.close();
     }
@@ -28,8 +24,8 @@ export const Dialog = ({
   return (
     <dialog
       ref={ref}
-      onCancel={() => onsubmit("cancel")}
-      onClose={(e) => onsubmit((e.target as any).returnValue)}
+      onCancel={() => onSubmit("cancel")}
+      onClose={(e) => onSubmit(e.currentTarget.returnValue)}
       className={className}
     >
       {children}
