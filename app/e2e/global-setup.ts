@@ -4,7 +4,7 @@
 
 import { db } from "@lxcat/database/src/db";
 import { startDbContainer } from "@lxcat/database/src/testutils";
-import { Browser, chromium, FullConfig, Page } from "@playwright/test";
+import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
 import { rm } from "fs/promises";
 import { readFile } from "fs/promises";
@@ -91,8 +91,22 @@ async function signUp(page: Page, email: string) {
   await page.goto("/");
   await page.locator("text=Sign in").click();
   await page.locator("text=Sign in with Test dummy").click();
+
   // Login to test oidc server
-  await page.locator("[placeholder=\"Enter any login\"]").fill(email);
+  // NOTE: The test would sometimes fail to click the `Sign in with Test dummy` button on the first try.
+  try {
+    await page.locator("[placeholder=\"Enter any login\"]").fill(email, {
+      timeout: 1000,
+    });
+  } catch (error) {
+    if (error instanceof errors.TimeoutError) {
+      // Retry
+      await page.locator("text=Sign in with Test dummy").click();
+      await page.locator("[placeholder=\"Enter any login\"]").fill(email);
+    } else {
+      throw error;
+    }
+  }
   await page.locator("[placeholder=\"and password\"]").fill("foobar");
   await page.locator("button:has-text(\"Sign-in\")").click();
   // Give consent that email and profile can be used by app
