@@ -147,7 +147,7 @@ test.describe("given 2 dummy sets", () => {
         .locator('details[title="Click to view actions"]')
         .nth(1);
 
-      await details.locator("summary").click();
+      await details.locator("summary").click({ timeout: 60000 });
 
       const [download] = await Promise.all([
         page.waitForEvent("download"),

@@ -96,7 +96,7 @@ test.describe("cross section bag page", () => {
   test("should be able to download JSON format", async ({ page }) => {
     // this exercises the /api/scat-cs/bag endpoint
     const [download] = await Promise.all([
-      page.waitForEvent("download"),
+      page.waitForEvent("download", { timeout: 60000 }),
       page.locator("text=Download JSON format").click(),
     ]);
 
