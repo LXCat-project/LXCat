@@ -30,10 +30,8 @@ const Process = ({
 }: ProcessProps) => {
   return (
     <li>
-      <Link href={`/scat-cs/${id}`}>
-        <a aria-label={reactionAsText(reaction)}>
-          <ReactionSummary {...reaction} />
-        </a>
+      <Link href={`/scat-cs/${id}`} aria-label={reactionAsText(reaction)}>
+        <ReactionSummary {...reaction} />
       </Link>
       <div>{reaction.type_tags.join(", ")}</div>
       <div>

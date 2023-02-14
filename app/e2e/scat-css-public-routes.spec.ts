@@ -4,11 +4,11 @@
 
 import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
 import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
-  uploadAndPublishDummySet,
   truncateNonUserCollections,
+  uploadAndPublishDummySet,
 } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
@@ -141,12 +141,19 @@ test.describe("given 2 dummy sets", () => {
     });
 
     test("should be able to download SVG", async ({ page }) => {
+      test.setTimeout(60000);
+
       // Open the vega action context menu aka ... icon
-      await page.locator("summary").first().click();
+      // FIXME: For some reason there are two overlapping buttons. The latter button is the correct one, hence the `nth(1)`.
+      const details = page
+        .locator('details[title="Click to view actions"]')
+        .nth(1);
+
+      await details.locator("summary").click();
 
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        page.locator("text=Save as SVG").click(),
+        details.locator("text=Save as SVG").click(),
       ]);
 
       const svgPath = await download.path();

@@ -75,9 +75,7 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
       {id && id !== set._key && (
         <div>Update successful, the draft been updated.</div>
       )}
-      <Link href={`/author/scat-css`}>
-        <a>Back</a>
-      </Link>
+      <Link href={`/author/scat-css`}>Back</Link>
     </Layout>
   );
 };

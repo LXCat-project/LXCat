@@ -54,9 +54,7 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
               <td>
                 {item.versionInfo.status === "published" ||
                 item.versionInfo.status === "retracted" ? (
-                  <Link href={`/scat-css/${item._key}`}>
-                    <a>{item.name}</a>
-                  </Link>
+                  <Link href={`/scat-css/${item._key}`}>{item.name}</Link>
                 ) : (
                   <>{item.name}</>
                 )}
@@ -69,14 +67,10 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
                 {item.versionInfo.status === "draft" && (
                   <>
                     <Link href={`/author/scat-css/${item._key}/edit`}>
-                      <a>
-                        <button>Edit</button>
-                      </a>
+                      <button>Edit</button>
                     </Link>
                     <Link href={`/author/scat-css/${item._key}/editraw`}>
-                      <a>
-                        <button>Edit JSON</button>
-                      </a>
+                      <button>Edit JSON</button>
                     </Link>
                     <button
                       onClick={() => {
@@ -99,14 +93,10 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
                 {item.versionInfo.status === "published" && (
                   <>
                     <Link href={`/author/scat-css/${item._key}/edit`}>
-                      <a>
-                        <button>Edit</button>
-                      </a>
+                      <button>Edit</button>
                     </Link>
                     <Link href={`/author/scat-css/${item._key}/editraw`}>
-                      <a>
-                        <button>Edit JSON</button>
-                      </a>
+                      <button>Edit JSON</button>
                     </Link>
                     <button
                       onClick={() => {
@@ -126,20 +116,14 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
 
       <div>
         <Link href="/author/scat-css/add">
-          <a>
-            <button>Add</button>
-          </a>
+          <button>Add</button>
         </Link>
         <Link href="/author/scat-css/addraw">
-          <a>
-            <button>Add as JSON document</button>
-          </a>
+          <button>Add as JSON document</button>
         </Link>
       </div>
       <div>
-        <Link href="/author">
-          <a>Back</a>
-        </Link>
+        <Link href="/author">Back</Link>
       </div>
 
       <RetractDialog

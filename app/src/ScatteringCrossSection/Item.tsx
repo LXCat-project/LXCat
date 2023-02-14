@@ -31,10 +31,8 @@ export const Item = (props: CrossSectionItem) => {
           <h2>This cross section is not the latest version.</h2>
           <p>
             Visit{" "}
-            <Link href={`/scat-cs/${props.id}/history`}>
-              <a>history page</a>
-            </Link>{" "}
-            to see newer versions.
+            <Link href={`/scat-cs/${props.id}/history`}>history page</Link> to
+            see newer versions.
           </p>
         </div>
       )}
@@ -66,7 +64,10 @@ export const Item = (props: CrossSectionItem) => {
         {props.isPartOf.map((s) => (
           <li key={s.id}>
             <div>
-              Name: <Link href={`/scat-css/${s.id}`}>{s.name}</Link>
+              Name:{" "}
+              <Link href={`/scat-css/${s.id}`} legacyBehavior>
+                {s.name}
+              </Link>
             </div>
             <div>Description: {s.description}</div>
             <div>Complete: {s.complete ? "Yes" : "No"}</div>
@@ -98,10 +99,8 @@ export const Item = (props: CrossSectionItem) => {
           <div>
             <p>
               Visit{" "}
-              <Link href={`/scat-cs/${props.id}/history`}>
-                <a>history page</a>
-              </Link>{" "}
-              to see older versions.
+              <Link href={`/scat-cs/${props.id}/history`}>history page</Link> to
+              see older versions.
             </p>
           </div>
         )}

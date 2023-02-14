@@ -24,24 +24,18 @@ export const HistoryTable = ({ versions }: Props) => (
       {versions.map((h) => (
         <tr key={h.version}>
           <td>
-            <Link href={`/scat-cs/${h._key}`}>
-              <a>{h.version}</a>
-            </Link>
+            <Link href={`/scat-cs/${h._key}`}>{h.version}</Link>
           </td>
           <td>
-            <Link href={`/scat-cs/${h._key}`}>
-              <a>{h.status}</a>
-            </Link>
+            <Link href={`/scat-cs/${h._key}`}>{h.status}</Link>
           </td>
           <td title={h.createdOn}>
             <Link href={`/scat-cs/${h._key}`}>
-              <a>{new Date(h.createdOn).toDateString()}</a>
+              {new Date(h.createdOn).toDateString()}
             </Link>
           </td>
           <td>
-            <Link href={`/scat-cs/${h._key}`}>
-              <a>{h.commitMessage}</a>
-            </Link>
+            <Link href={`/scat-cs/${h._key}`}>{h.commitMessage}</Link>
           </td>
         </tr>
       ))}
