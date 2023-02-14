@@ -13,15 +13,13 @@ export function UserAnchor() {
     return (
       <>
         <Link href="/profile">
-          <a>
-            <Image
-              src={user.image!}
-              title={`Logged in ${user.name}`}
-              alt="Picture of logged in user"
-              width={40}
-              height={40}
-            />
-          </a>
+          <Image
+            src={user.image!}
+            title={`Logged in ${user.name}`}
+            alt="Picture of logged in user"
+            width={40}
+            height={40}
+          />
         </Link>
       </>
     );

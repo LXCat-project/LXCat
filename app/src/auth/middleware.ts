@@ -2,22 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  Session,
-  unstable_getServerSession as getServerSession,
-} from "next-auth";
+import { Role } from "@lxcat/database/dist/auth/schema";
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
   PreviewData,
 } from "next";
-import { RequestHandler } from "next-connect";
-import { Role } from "@lxcat/database/dist/auth/schema";
+import { getServerSession, Session } from "next-auth";
 import { decode } from "next-auth/jwt";
-import { options } from "./options";
+import { RequestHandler } from "next-connect";
 import { ParsedUrlQuery } from "querystring";
 import { DOWNLOAD_COOKIE_NAME } from "../shared/download";
+import { options } from "./options";
 
 interface JwtPayload {
   email: string;

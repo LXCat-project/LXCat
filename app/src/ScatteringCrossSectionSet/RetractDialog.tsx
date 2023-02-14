@@ -27,10 +27,8 @@ export const RetractDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
       <form method="dialog">
         <div>
           Please describe why{" "}
-          <Link href={`/scat-css/${selectedSetId}`}>
-            <a>this set</a>
-          </Link>{" "}
-          should be retracted.
+          <Link href={`/scat-css/${selectedSetId}`}>this set</Link> should be
+          retracted.
         </div>
         <textarea
           cols={80}
@@ -40,10 +38,8 @@ export const RetractDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
         ></textarea>
         <div>
           Users visiting{" "}
-          <Link href={`/scat-css/${selectedSetId}`}>
-            <a>the page</a>
-          </Link>{" "}
-          will see this description.
+          <Link href={`/scat-css/${selectedSetId}`}>the page</Link> will see
+          this description.
         </div>
         <button value="cancel">Cancel</button>
         <button value="default" type="submit">

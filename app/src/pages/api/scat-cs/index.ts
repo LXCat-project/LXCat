@@ -4,9 +4,7 @@
 
 import { getCSIdByReactionTemplate } from "@lxcat/database/dist/cs/picker/queries/public";
 import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
-import {
-  getCSHeadings,
-} from "@lxcat/database/dist/cs/queries/public";
+import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
 import {
   getStateLeaf,
   StateLeaf,

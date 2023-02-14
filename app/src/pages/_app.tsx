@@ -9,7 +9,10 @@ import { MantineProvider } from "@mantine/core";
 import { theme } from "../theme";
 import { Session } from "next-auth";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{session: Session}>) {
+function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps<{ session: Session }>) {
   return (
     <SessionProvider session={session}>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>

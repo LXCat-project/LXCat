@@ -119,10 +119,7 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>
           <h2>This set is not the latest version.</h2>
           <p>
-            Visit{" "}
-            <Link href={`/scat-css/${set.id}/history`}>
-              <a>history page</a>
-            </Link>{" "}
+            Visit <Link href={`/scat-css/${set.id}/history`}>history page</Link>{" "}
             to see newer versions.
           </p>
         </div>
@@ -173,10 +170,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
           <div>
             <p>
               Visit{" "}
-              <Link href={`/scat-css/${set.id}/history`}>
-                <a>history page</a>
-              </Link>{" "}
-              to see older versions.
+              <Link href={`/scat-css/${set.id}/history`}>history page</Link> to
+              see older versions.
             </p>
           </div>
         )}

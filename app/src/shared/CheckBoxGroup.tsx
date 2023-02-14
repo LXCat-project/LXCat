@@ -37,12 +37,10 @@ export const CheckBoxGroup = ({
                 query,
               }}
             >
-              <a>
-                <label>
-                  <input type="checkbox" readOnly checked={checked} />
-                  {d}
-                </label>
-              </a>
+              <label>
+                <input type="checkbox" readOnly checked={checked} />
+                {d}
+              </label>
             </Link>
           </div>
         );

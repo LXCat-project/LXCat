@@ -23,15 +23,14 @@ export function ListItem(props: CrossSectionHeading) {
     partOf = <div>Part of {quotedNames} sets</div>;
   }
   return (
-    <Link href={`/scat-cs/${props.id}`}>
-      <a
-        style={style}
-        role="listitem"
-        aria-label={props.reaction.lhs[0].state.id}
-      >
-        <ReactionSummary {...props.reaction} />
-        {partOf}
-      </a>
+    <Link
+      href={`/scat-cs/${props.id}`}
+      style={style}
+      role="listitem"
+      aria-label={props.reaction.lhs[0].state.id}
+    >
+      <ReactionSummary {...props.reaction} />
+      {partOf}
     </Link>
   );
 }

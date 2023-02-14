@@ -27,20 +27,17 @@ export const Paging = ({
           },
         }}
         shallow={true}
+        title="Previous page"
+        onClick={() => {
+          if (onChange) {
+            return onChange({
+              ...paging,
+              offset: paging.offset - paging.count,
+            });
+          }
+        }}
       >
-        <a
-          title="Previous page"
-          onClick={() => {
-            if (onChange) {
-              return onChange({
-                ...paging,
-                offset: paging.offset - paging.count,
-              });
-            }
-          }}
-        >
-          &lt;&lt;
-        </a>
+        &lt;&lt;
       </Link>
     )}
     <span>
@@ -57,20 +54,17 @@ export const Paging = ({
           },
         }}
         shallow={true}
+        title="Next page"
+        onClick={() => {
+          if (onChange) {
+            return onChange({
+              ...paging,
+              offset: paging.offset + paging.count,
+            });
+          }
+        }}
       >
-        <a
-          title="Next page"
-          onClick={() => {
-            if (onChange) {
-              return onChange({
-                ...paging,
-                offset: paging.offset + paging.count,
-              });
-            }
-          }}
-        >
-          &gt;&gt;
-        </a>
+        &gt;&gt;
       </Link>
     )}
   </div>
