@@ -141,13 +141,15 @@ test.describe("given 2 dummy sets", () => {
     });
 
     test("should be able to download SVG", async ({ page }) => {
+      test.setTimeout(60000);
+
       // Open the vega action context menu aka ... icon
       // FIXME: For some reason there are two overlapping buttons. The latter button is the correct one, hence the `nth(1)`.
       const details = page
         .locator('details[title="Click to view actions"]')
         .nth(1);
 
-      await details.locator("summary").click({ timeout: 60000 });
+      await details.locator("summary").click();
 
       const [download] = await Promise.all([
         page.waitForEvent("download"),
