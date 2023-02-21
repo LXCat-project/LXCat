@@ -6,15 +6,22 @@ import { GetStaticProps, NextPage } from "next";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import dynamic from "next/dynamic";
 
-import { listDocFiles, md2mdx } from "../../docs/generator";
-import { Layout } from "../../shared/Layout";
+import {
+  DocFile,
+  extractMarkdownHeaders,
+  listDocFiles,
+  md2mdx,
+} from "../../docs/generator";
 
 import "highlight.js/styles/github.css";
 import "katex/dist/katex.min.css";
+import { AppShell, Navbar } from "@mantine/core";
+import { NavBar } from "../../shared/NavBar";
 
 interface Props {
   slug: string[];
   mdxSource: MDXRemoteSerializeResult;
+  docFiles: Array<DocFile>;
 }
 
 export const Mermaid = dynamic(
@@ -26,11 +33,26 @@ const components = {
   Mermaid,
 };
 
-const MarkdownPage: NextPage<Props> = ({ slug, mdxSource }) => {
+const MarkdownPage: NextPage<Props> = ({ slug, mdxSource, docFiles }) => {
   return (
-    <Layout title={`Docs - ${slug.join("/")}`}>
+    // <Layout title={`Docs - ${slug.join("/")}`}>
+    <AppShell
+      header={<NavBar />}
+      navbar={
+        <Navbar sx={{ zIndex: 10 }} p="xs" width={{ base: 300 }}>
+          {docFiles.map((file) =>
+            file.entries ? (
+              <a href={`/docs/${file.name}`}>{file.entries[0].title}</a>
+            ) : (
+              <></>
+            )
+          )}
+        </Navbar>
+      }
+    >
       <MDXRemote {...mdxSource} components={components} />
-    </Layout>
+    </AppShell>
+    // </Layout>
   );
 };
 
@@ -55,10 +77,12 @@ export const getStaticProps: GetStaticProps<Props, { slug: string[] }> = async (
   const slug = context.params!.slug;
   try {
     const mdxSource = await md2mdx(slug);
+    const docFiles = await extractMarkdownHeaders();
     return {
       props: {
         slug,
         mdxSource,
+        docFiles,
       },
     };
   } catch (error) {
