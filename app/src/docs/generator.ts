@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { readdir, readFile } from "fs/promises";
+import { fromMarkdown } from "mdast-util-from-markdown";
+import { Heading } from "mdast-util-from-markdown/lib";
 import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -130,13 +132,31 @@ const makeNestedEntries = (
   return [children, index];
 };
 
-// FIXME: Parsing headers this way is not concise enough, due to e.g. comments in code blocks. Use an actual markdown parser instead.
+const extractHeadingValue = (content: Heading["children"][0]): string => {
+  switch (content.type) {
+    case "text":
+      return content.value;
+    case "emphasis":
+    case "strong":
+      return content.children
+        .map((child) => extractHeadingValue(child))
+        .join("");
+    default:
+      throw new Error(
+        `Unknown syntax node in markdown heading:\n${JSON.stringify(
+          content,
+          null,
+          2
+        )}`
+      );
+  }
+};
+
+// TODO: Introduce a system for ordering the documentation pages, e.g. enforce all documentation markdown files to start with a number to indicate their order.
 export const extractMarkdownHeaders = async () => {
   const files = await readdir(DOC_ROOT).then((files) =>
     files.filter((file) => file.endsWith(".md"))
   );
-
-  const headerRegex = /(?<flag>#{1,6})\s+(?<content>.+)/g;
 
   return await Promise.all(
     files.map(async (file): Promise<DocFile> => {
@@ -144,12 +164,18 @@ export const extractMarkdownHeaders = async () => {
         encoding: "utf8",
       });
 
-      const entries = Array.from(content.matchAll(headerRegex)).map(
-        ({ groups }): DocHeader => {
-          let { flag, content } = groups!;
-          return { depth: flag.length, title: content };
-        }
-      );
+      const tree = fromMarkdown(content);
+
+      const entries = tree.children
+        .filter((child): child is Heading => child.type === "heading")
+        .map(
+          (heading): DocHeader => ({
+            title: heading.children
+              .map((child) => extractHeadingValue(child))
+              .join(""),
+            depth: heading.depth,
+          })
+        );
 
       return makeNestedDocFile({ name: file.slice(0, -3), entries });
     })
