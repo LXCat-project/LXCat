@@ -1,5 +1,4 @@
 import { Reference } from "@lxcat/schema/dist/core/reference";
-import { formatReference } from "./cite";
 import { ReferenceList } from "./ReferenceList";
 import { FormattedReference } from "./types";
 
@@ -269,7 +268,8 @@ const LXCAT_REFERENCES: Array<Reference> = [
     issued: {
       "date-parts": [[2012]],
     },
-    note: "Chemical Physics of Low-Temperature Plasmas (in honour of Prof Mario Capitelli)",
+    note:
+      "Chemical Physics of Low-Temperature Plasmas (in honour of Prof Mario Capitelli)",
     page: "148-153",
     title:
       "The LXCat project: Electron scattering cross sections and swarm parameters for low temperature plasma modeling",
@@ -280,13 +280,34 @@ const LXCAT_REFERENCES: Array<Reference> = [
   },
 ];
 
-export const HowToCite = ({ references }: { references: Array<FormattedReference> }) => {
-  const lxcatRefs = LXCAT_REFERENCES.map((ref) => formatReference(ref.id, ref));
+const FORMATTED_LXCAT_REFERENCES: Array<FormattedReference> = [
+  {
+    id: "atoms9010016",
+    ref:
+      "Carbone, E., Graef, W., Hagelaar, G., Boer, D., Hopkins, M. M., Stephens, J. C., Yee, B. T., Pancheshnyi, S., van Dijk, J., & Pitchford, L. (2021). Data Needs for Modeling Low-Temperature Non-Equilibrium Plasmas: The LXCat Project, History, Perspectives and a Tutorial. Atoms, 9(1). https://doi.org/10.3390/atoms9010016\n",
+    url: "https://doi.org/10.3390/atoms9010016",
+  },
+  {
+    id: "https://doi.org/10.1002/ppap.201600098",
+    ref:
+      "Pitchford, L. C., Alves, L. L., Bartschat, K., Biagi, S. F., Bordage, M.-C., Bray, I., Brion, C. E., Brunger, M. J., Campbell, L., Chachereau, A., Chaudhury, B., Christophorou, L. G., Carbone, E., Dyatko, N. A., Franck, C. M., Fursa, D. V., Gangwar, R. K., Guerra, V., Haefliger, P., … Pancheshnyi, S. (2017). LXCat: an Open-Access, Web-Based Platform for Data Needed for Modeling Low Temperature Plasmas. Plasma Processes and Polymers, 14(1–2), 1600098. https://doi.org/10.1002/ppap.201600098\n",
+    url: "https://doi.org/10.1002/ppap.201600098",
+  },
+  {
+    id: "PANCHESHNYI2012148",
+    ref:
+      "Pancheshnyi, S., Biagi, S., Bordage, M. C., Hagelaar, G. J. M., Morgan, W. L., Phelps, A. V., & Pitchford, L. C. (2012). The LXCat project: Electron scattering cross sections and swarm parameters for low temperature plasma modeling. Chemical Physics, 398, 148–153. https://doi.org/10.1016/j.chemphys.2011.04.020\n",
+    url: "https://doi.org/10.1016/j.chemphys.2011.04.020",
+  },
+];
 
-    return (
+export const HowToCite = (
+  { references }: { references: Array<FormattedReference> },
+) => {
+  return (
     <div>
       <h2>How to reference data</h2>
-      <ReferenceList references={[...references, ...lxcatRefs]} />
+      <ReferenceList references={[...references, ...FORMATTED_LXCAT_REFERENCES]} />
     </div>
   );
 };
