@@ -37,6 +37,7 @@
     "arangojs": "^7.8.0",
     "cookie": "^0.5.0",
     "deep-equal": "^2.2.0",
+    "github-slugger": "^2.0.0",
     "mermaid": "^9.3.0",
     "nanoid": "^4.0.1",
     "next": "^13.1.6",

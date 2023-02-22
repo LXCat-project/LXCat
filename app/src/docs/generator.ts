@@ -19,7 +19,7 @@ import { VFile } from "vfile";
 import { serialize } from "./serialize";
 import { rehypeMermaid } from "./transformer";
 
-const DOC_ROOT = join(__dirname, "../../../../../docs");
+const DOC_ROOT = join(__dirname, "../../../../../../docs");
 
 export async function listDocFiles(dir = DOC_ROOT) {
   const files = await readdir(dir, { withFileTypes: true });
@@ -130,6 +130,7 @@ const makeNestedEntries = (
   return [children, index];
 };
 
+// FIXME: Parsing headers this way is not concise enough, due to e.g. comments in code blocks. Use an actual markdown parser instead.
 export const extractMarkdownHeaders = async () => {
   const files = await readdir(DOC_ROOT).then((files) =>
     files.filter((file) => file.endsWith(".md"))
