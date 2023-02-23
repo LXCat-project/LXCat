@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Reference } from "@lxcat/schema/dist/core/reference";
 
 // TODO it would be nice to not load the citation packages on pages where it is not used (for example /scat-css)
@@ -7,13 +9,16 @@ import "@citation-js/plugin-csl";
 
 import { FormattedReference } from "./types";
 
-export const formatReference = (id: string, r: Reference): FormattedReference => (
+export const formatReference = (
+  id: string,
+  r: Reference,
+): FormattedReference => (
   {
     id,
     ref: reference2bibliography(r),
-    url: r.URL
+    url: r.URL,
   }
-)
+);
 
 function reference2bibliography(r: Reference, template = "apa"): string {
   const cite = new Cite(r, {
