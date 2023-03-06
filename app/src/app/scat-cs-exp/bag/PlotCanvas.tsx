@@ -2,22 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+"use client";
+
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Vega, VisualizationSpec } from "react-vega";
-import { ScaleType } from "vega";
-import { Mark } from "vega-lite/build/src/mark";
-
-type PlotableCrossSection = Pick<CrossSectionItem, "data" | "labels" | "units">;
 
 interface Props {
-  processes: PlotableCrossSection[];
+  processes: LUT[];
   colors: string[];
 }
 
 export const LutPlots = ({ processes, colors }: Props) => {
   if (processes.length === 0) {
-    return <div>Nothing to plot, because zero cross sections are selected</div>;
+    return <div>Nothing to plot.</div>;
   }
   const spec = toVegaSpec(processes, colors);
   return <Vega spec={spec} />;
@@ -26,24 +23,22 @@ export const LutPlots = ({ processes, colors }: Props) => {
 interface VegaData {
   x: number;
   y: number;
-  c: string;
+  color: string;
 }
 
-const csToVegaData = (data: LUT["data"], c: string): Array<VegaData> =>
+const lutToVega = (data: LUT["data"], color: string): Array<VegaData> =>
   data
     .filter(([x, y]) => x !== 0.0 && y !== 0.0)
-    .map(([x, y]) => ({ x, y, c }));
+    .map(([x, y]) => ({ x, y, color }));
 
 const toVegaData = (
-  processes: PlotableCrossSection[],
+  processes: LUT[],
   colors: string[]
 ): Array<VegaData> =>
-  processes.flatMap((p, i) => csToVegaData(p.data, colors[i]));
+  processes.flatMap((p, i) => lutToVega(p.data, colors[i]));
 
-function toVegaSpec(processes: PlotableCrossSection[], colors: string[]): VisualizationSpec {
+const toVegaSpec = (processes: LUT[], colors: string[]): VisualizationSpec => {
   const values = toVegaData(processes, colors);
-  const markType: Mark = "line";
-  const scaleType: ScaleType = "log";
   const firstProcess = processes[0];
   const labels = firstProcess.labels;
   const units = firstProcess.units;
@@ -52,22 +47,22 @@ function toVegaSpec(processes: PlotableCrossSection[], colors: string[]): Visual
     width: 800,
     height: 600,
     mark: {
-      type: markType,
+      type: "line",
       point: true,
     },
     encoding: {
       x: {
         field: "x",
-        scale: { type: scaleType },
+        scale: { type: "log" },
         title: `${labels[0]} (${units[0]})`,
       },
       y: {
         field: "y",
-        scale: { type: scaleType },
+        scale: { type: "log" },
         title: `${labels[1]} (${units[1]})`,
       },
       color: {
-        field: "c",
+        field: "color",
         legend: null,
         scale: null,
       },

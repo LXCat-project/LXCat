@@ -65,7 +65,7 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
         </p>
         <HowToCite references={references} />
         <Center>
-          <Button onClick={acceptTermsOfUse}>
+          <Button sx={{marginTop: 10}} onClick={acceptTermsOfUse}>
             I agree with the terms of use
           </Button>
         </Center>

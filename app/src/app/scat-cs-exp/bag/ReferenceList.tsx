@@ -1,15 +1,9 @@
 "use client";
 
-import { List } from "@mantine/core";
 import { Reference } from "./Reference";
+import { TableScrollArea } from "./Table";
 import { FormattedReference } from "./types";
 
 export const ReferenceList = ({ references }: { references: Array<FormattedReference> }) => (
-  <List>
-    {references.map((ref) => (
-      <List.Item key={ref.id}>
-        <Reference>{ref}</Reference>
-      </List.Item>
-    ))}
-  </List>
+  <TableScrollArea headers={[{label: "References", key: "ref"}]} data={references.map((ref) => ({key: ref.id, ref: <Reference>{ref}</Reference>}))} />
 )
