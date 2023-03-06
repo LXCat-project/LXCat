@@ -170,7 +170,7 @@ test.describe("given 2 dummy sets", () => {
       test("should show no plot", async ({ page }) => {
         await expect(
           page.locator(
-            "text=Nothing to plot, because zero sections are selected"
+            "text=Nothing to plot, because zero cross sections are selected"
           )
         ).toBeVisible();
       });
