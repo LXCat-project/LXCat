@@ -16,23 +16,32 @@ interface Process extends LUT {
   reaction: Reaction<State>;
 }
 
+const NUM_LINES_INIT = 5;
+
 export const ProcessPlot = (
   { processes }: { processes: Array<Process> },
 ) => {
   // TODO: Map a selected process to an available color.
-  const [selected, setSelected] = useState(new Set<string>());
+  const [selected, setSelected] = useState(
+    new Set<string>(
+      processes.slice(0, NUM_LINES_INIT).map(process => process.id),
+    ),
+  );
 
   const toggleRow = (key: string) =>
     setSelected((selection) => (
       new Set(selection.delete(key) ? selection : selection.add(key))
     ));
 
-  let colorSelection = processes.reduce<Array<string>>((prev, process, index) => {
-    if (selected.has(process.id)) {
-      prev.push(colorScheme[index % colorScheme.length]);
-    }
-    return prev;
-  }, []);
+  let colorSelection = processes.reduce<Array<string>>(
+    (prev, process, index) => {
+      if (selected.has(process.id)) {
+        prev.push(colorScheme[index % colorScheme.length]);
+      }
+      return prev;
+    },
+    [],
+  );
 
   return (
     <>
@@ -50,7 +59,11 @@ export const ProcessPlot = (
           reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
           _check: (
             <Checkbox
-              sx={{".mantine-Checkbox-input:checked": {backgroundColor: colorScheme[index % colorScheme.length]}}}
+              sx={{
+                ".mantine-Checkbox-input:checked": {
+                  backgroundColor: colorScheme[index % colorScheme.length],
+                },
+              }}
               checked={selected.has(process.id)}
               onChange={() => toggleRow(process.id)}
             />
