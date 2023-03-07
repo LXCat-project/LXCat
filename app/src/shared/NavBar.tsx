@@ -87,7 +87,11 @@ export const NavBar = () => {
 
     if (menuItems) {
       return (
-        <Menu key={entry.label} trigger="hover" exitTransitionDuration={0}>
+        <Menu
+          key={entry.label}
+          trigger="hover"
+          transitionProps={{ exitDuration: 0 }}
+        >
           <Menu.Target>
             <UnstyledButton className={classes.menuItem}>
               <Group spacing="xs">

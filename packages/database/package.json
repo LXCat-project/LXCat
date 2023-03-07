@@ -35,25 +35,25 @@
     "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src setup"
   },
   "dependencies": {
-    "@lxcat/schema": "*",
-    "arangojs": "^7.7.0",
-    "deep-equal": "^2.0.5",
-    "dotenv": "^16.0.0",
-    "zod": "^3.14.2",
-    "zod-to-json-schema": "^3.11.3"
+    "@lxcat/schema": "^0.1.0",
+    "arangojs": "^7.8.0",
+    "deep-equal": "^2.2.0",
+    "dotenv": "^16.0.3",
+    "zod": "^3.21.2",
+    "zod-to-json-schema": "^3.20.4"
   },
   "devDependencies": {
-    "@lxcat/tsconfig": "*",
+    "@lxcat/tsconfig": "^0.1.0",
     "@types/deep-equal": "^1.0.1",
-    "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.27.1",
-    "c8": "^7.11.3",
+    "@types/node": "^18.14.6",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "c8": "^7.13.0",
     "eslint": "8.10.0",
-    "prettier": "^2.6.2",
-    "testcontainers": "^8.10.1",
-    "ts-json-schema-generator": "^1.1.0-next.5",
+    "prettier": "^2.8.4",
+    "testcontainers": "^8.16.0",
+    "ts-json-schema-generator": "^1.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.3",
+    "typescript": "^4.9.5",
     "vitest": "^0.26.3"
   }
 }

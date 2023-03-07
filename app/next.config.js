@@ -7,6 +7,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  swcMinify: false,
   // experimental: {
   //   outputStandalone: true,
   // },

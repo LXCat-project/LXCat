@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, createStyles, ScrollArea, Table } from "@mantine/core";
+import { createStyles, ScrollArea, Table } from "@mantine/core";
 import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -70,7 +70,11 @@ export function TableScrollArea<Row extends TableRow>(
       }}
       onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
     >
-      <Table sx={{ minWidth: 700 }}>
+      <Table
+        sx={{
+          // minWidth: 700
+        }}
+      >
         <thead
           className={cx(classes.header, { [classes.scrolled]: scrolled })}
         >
