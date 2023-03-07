@@ -221,7 +221,6 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           name={`set.processes.${processIndex}.reaction.reversible`}
           render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
-              orientation="vertical"
               onChange={(v) => onChange(v !== "")}
               value={value ? "reversible" : ""}
               onBlur={onBlur}
@@ -230,15 +229,17 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
                 `set.processes.${processIndex}.reaction.reversible`
               )}
             >
-              <Radio
-                value=""
-                label={<Text style={{ fontSize: "2em" }}>➞</Text>}
-              />
-              <Radio
-                value="reversible"
-                title="Reversible"
-                label={<Text style={{ fontSize: "2em" }}>⇄</Text>}
-              />
+              <Stack>
+                <Radio
+                  value=""
+                  label={<Text style={{ fontSize: "2em" }}>➞</Text>}
+                />
+                <Radio
+                  value="reversible"
+                  title="Reversible"
+                  label={<Text style={{ fontSize: "2em" }}>⇄</Text>}
+                />
+              </Stack>
             </Radio.Group>
           )}
         />
