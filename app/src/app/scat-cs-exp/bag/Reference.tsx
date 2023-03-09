@@ -4,11 +4,20 @@
 
 "use client";
 
-import Link from "next/link"
+import Link from "next/link";
 import "katex/dist/katex.min.css";
-import Latex from "react-latex-next"
-import { FormattedReference } from "./types"
+import Latex from "react-latex-next";
+import { FormattedReference } from "./types";
 
-export const Reference = ({ children: { ref, url } }: { children: FormattedReference }) => (
-  url ? <Link href={url}><Latex>{ref}</Latex></Link> : <Latex>{ref}</Latex>
-)
+export const Reference = ({
+  children: { ref, url },
+}: {
+  children: FormattedReference;
+}) =>
+  url ? (
+    <Link href={url} target="_blank">
+      <Latex>{ref}</Latex>
+    </Link>
+  ) : (
+    <Latex>{ref}</Latex>
+  );
