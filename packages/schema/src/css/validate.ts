@@ -5,7 +5,7 @@
 import Ajv, { ErrorObject } from "ajv";
 import schema from "./CrossSectionSetRaw.schema.json";
 import { CrossSectionSetRaw } from "./input";
-import { getStates, checkStates } from "./quantum_number_validator";
+import { checkStates, getStates } from "./quantum_number_validator";
 
 const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
 

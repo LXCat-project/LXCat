@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, beforeAll, it, expect } from "vitest";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import {
-  startDbWithUserAndCssCollections,
-  truncateCrossSectionSetCollections,
-  sampleCrossSectionSet,
-  matchesId,
-} from "../../css/queries/testutils";
-import { byIds } from "./public";
-import { CrossSectionBag } from "../public";
+import { beforeAll, describe, expect, it } from "vitest";
 import { createSet } from "../../css/queries/author_write";
 import { byId as setById } from "../../css/queries/public";
+import {
+  matchesId,
+  sampleCrossSectionSet,
+  startDbWithUserAndCssCollections,
+  truncateCrossSectionSetCollections,
+} from "../../css/queries/testutils";
+import { CrossSectionBag } from "../public";
+import { byIds } from "./public";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -183,11 +183,11 @@ describe("given 4 published cross sections in 2 sets", () => {
       };
       // TODO do not ignore the keys of the objects
       expect(Object.values(result.states)).toEqual(
-        Object.values(expected.states)
+        Object.values(expected.states),
       );
       expect(Object.values(result.sets)).toEqual(Object.values(expected.sets));
       expect(Object.values(result.references)).toEqual(
-        Object.values(expected.references)
+        Object.values(expected.references),
       );
       expect(result.processes).toEqual(expected.processes);
     });
@@ -269,11 +269,11 @@ describe("given 4 published cross sections in 2 sets", () => {
       };
       // TODO do not ignore the keys of the objects
       expect(Object.values(result.states)).toEqual(
-        Object.values(expected.states)
+        Object.values(expected.states),
       );
       expect(Object.values(result.sets)).toEqual(Object.values(expected.sets));
       expect(Object.values(result.references)).toEqual(
-        Object.values(expected.references)
+        Object.values(expected.references),
       );
       expect(result.processes).toEqual(expected.processes);
     });

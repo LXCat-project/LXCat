@@ -23,7 +23,7 @@ pnpm install @lxcat/schema
 To get Typescript type for a LXCat Cross Section Set
 
 ```ts
-import type { CrossSectionSetRaw } from '@lxcat/schema/dist/css/input
+import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/inpu";
 ```
 
 To get JSON schema for a LXCat Cross Section Set

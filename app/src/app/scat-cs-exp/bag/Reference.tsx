@@ -14,10 +14,10 @@ export const Reference = ({
 }: {
   children: FormattedReference;
 }) =>
-  url ? (
-    <Link href={url} target="_blank">
-      <Latex>{ref}</Latex>
-    </Link>
-  ) : (
-    <Latex>{ref}</Latex>
-  );
+  url
+    ? (
+      <Link href={url} target="_blank">
+        <Latex>{ref}</Latex>
+      </Link>
+    )
+    : <Latex>{ref}</Latex>;

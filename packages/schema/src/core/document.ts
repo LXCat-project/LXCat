@@ -16,7 +16,6 @@ export interface SelfReference {
    * URL to JSON schema of this document.
    *
    * @minLength 1
-   *
    */
   $schema?: string;
   /**

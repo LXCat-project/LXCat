@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import nc from "next-connect";
 import { NextApiResponse } from "next";
+import nc from "next-connect";
 
+import { getSearchOptions } from "@lxcat/database/dist/cs/picker/queries/public";
 import {
   AuthRequest,
-  hasSessionOrAPIToken,
   hasAuthorRole,
+  hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
-import { getSearchOptions } from "@lxcat/database/dist/cs/picker/queries/public";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

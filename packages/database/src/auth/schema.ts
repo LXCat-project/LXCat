@@ -84,7 +84,7 @@ export type UserWithAccountSessionInDb = z.infer<
 >;
 
 export const UserWithAccountSessionInDbAsJsonSchema = zodToJsonSchema(
-  UserWithAccountSessionInDb
+  UserWithAccountSessionInDb,
 );
 
 export const Organization = z.object({

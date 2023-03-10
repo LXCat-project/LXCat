@@ -5,9 +5,9 @@
 import { AnyAtom } from "./atoms";
 import {
   ExtractAtomic,
+  ExtractElectronic,
   ExtractRotational,
   ExtractVibrational,
-  ExtractElectronic,
 } from "./extract";
 import {
   AtomicDBGenerator,
@@ -20,11 +20,11 @@ import {
 import { AnyMolecule } from "./molecules";
 import { atomParsers, parsers } from "./parsers";
 import { ComponentParser, PUA, PUE, PUR, PUV } from "./parsers/common";
-import { State, DBState, SimpleParticle, DBIdentifier } from "./state";
+import { DBIdentifier, DBState, SimpleParticle, State } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
 export interface MoleculeParser<
-  M extends MolecularGenerator<unknown, unknown, unknown, string>
+  M extends MolecularGenerator<unknown, unknown, unknown, string>,
 > {
   // particle_type: ParticleType.Molecule;
   e: ComponentParser<PUE<ExtractElectronic<M>>>;
@@ -44,7 +44,7 @@ type MoleculeParserDict<T extends UnknownMolecule> = {
 
 export type StateParserDict<
   A extends AtomicGenerator<unknown, string>,
-  M extends UnknownMolecule
+  M extends UnknownMolecule,
 > = AtomParserDict<A> & MoleculeParserDict<M>;
 
 export function parseCharge(charge: number): string {
@@ -76,7 +76,7 @@ const COMPOUND_SEP = "|";
 function parseAtom<
   Input extends AtomicGenerator<unknown, S>,
   Output extends AtomicDBGenerator<unknown, S>,
-  S extends keyof AtomParserDict<AnyAtom>
+  S extends keyof AtomParserDict<AnyAtom>,
 >(state: State<Input>): DBState<Output> {
   const outputState = state as DBState<Output>;
 
@@ -100,9 +100,11 @@ function parseAtom<
   }
 
   id = `${state.particle}${parseCharge(state.charge)}${ID_LEFT}`;
-  latex = `\\mathrm{${state.particle}}${parseChargeLatex(
-    state.charge
-  )}${LATEX_LEFT}`;
+  latex = `\\mathrm{${state.particle}}${
+    parseChargeLatex(
+      state.charge,
+    )
+  }${LATEX_LEFT}`;
 
   const parser = parsers[outputState.type] as AtomParser<Input>;
 
@@ -126,7 +128,7 @@ function parseAtom<
 function parseMolecule<
   Input extends MolecularGenerator<unknown, unknown, unknown, S>,
   Output extends MolecularDBGenerator<unknown, unknown, unknown, S>,
-  S extends keyof MoleculeParserDict<AnyMolecule>
+  S extends keyof MoleculeParserDict<AnyMolecule>,
 >(state: State<Input>): DBState<Output> {
   const outputState = state as DBState<Output>;
 
@@ -147,9 +149,11 @@ function parseMolecule<
   }
 
   id = `${state.particle}${parseCharge(state.charge)}${ID_LEFT}`;
-  latex = `\\mathrm{${state.particle}}${parseChargeLatex(
-    state.charge
-  )}${LATEX_LEFT}`;
+  latex = `\\mathrm{${state.particle}}${
+    parseChargeLatex(
+      state.charge,
+    )
+  }${LATEX_LEFT}`;
 
   const parser = parsers[outputState.type] as MoleculeParser<Input>;
 
@@ -204,9 +208,9 @@ function parseMolecule<
 }
 
 function parseSimpleParticle(
-  state: SimpleParticle
+  state: SimpleParticle,
 ): SimpleParticle & LatexString & DBIdentifier {
-  const outputState = <SimpleParticle & LatexString & DBIdentifier>state;
+  const outputState = <SimpleParticle & LatexString & DBIdentifier> state;
 
   let id = state.particle;
   let latex = id;
@@ -227,11 +231,11 @@ function parseSimpleParticle(
 // library/core/parse.ts.
 export function parseState<
   Input extends AtomicGenerator<unknown, string>,
-  Output extends AtomicDBGenerator<unknown, string>
+  Output extends AtomicDBGenerator<unknown, string>,
 >(state: State<Input>): DBState<Output>;
 export function parseState<
   Input extends MolecularGenerator<unknown, unknown, unknown, string>,
-  Output extends MolecularDBGenerator<unknown, unknown, unknown, string>
+  Output extends MolecularDBGenerator<unknown, unknown, unknown, string>,
 >(state: State<Input>): DBState<Output> {
   if (!state.type) {
     // TODO: For some reason the return type of parseSimpleParticle is not

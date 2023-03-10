@@ -49,7 +49,7 @@ type ArrayMinOne<T> = [T, ...Array<T>];
 export type AtomicGenericGenerator<
   E,
   AT = unknown,
-  SE extends string = "electronic"
+  SE extends string = "electronic",
 > = {
   [key in SE]?: ArrayMinOne<AT & (UAtomic<E> | E)>;
 };
@@ -60,8 +60,9 @@ export type AtomicGenericGenerator<
  * @template E Type of the electronic component.
  * @template A The string identifier of the generated atomic type.
  */
-export type AtomicGenerator<E, A extends string> = TypeString<A> &
-  AtomicGenericGenerator<E>;
+export type AtomicGenerator<E, A extends string> =
+  & TypeString<A>
+  & AtomicGenericGenerator<E>;
 
 // Molecules
 /**
@@ -110,7 +111,7 @@ export type MolecularGenericGenerator<
   AT = unknown,
   SE extends string = "electronic",
   SV extends string = "vibrational",
-  SR extends string = "rotational"
+  SR extends string = "rotational",
 > = Children<ElectronicLevel<E, V, R, AT, SV, SR>, SE>;
 
 export type ElectronicLevel<
@@ -119,16 +120,18 @@ export type ElectronicLevel<
   R,
   AT,
   SV extends string,
-  SR extends string
+  SR extends string,
 > = AT & (UE<E, SV> | (E & Children<VibrationalLevel<V, R, AT, SR>, SV>));
 
-type VibrationalLevel<V, R, AT, SR extends string> = AT &
-  (UV<V, SR> | (V & Children<RotationalLevel<R, AT>, SR>));
+type VibrationalLevel<V, R, AT, SR extends string> =
+  & AT
+  & (UV<V, SR> | (V & Children<RotationalLevel<R, AT>, SR>));
 
 type RotationalLevel<R, AT> = AT & (UR<R> | R);
 
-export type UnknownMolecule = TypeString<string> &
-  MolecularGenericGenerator<unknown, unknown, unknown>;
+export type UnknownMolecule =
+  & TypeString<string>
+  & MolecularGenericGenerator<unknown, unknown, unknown>;
 
 /**
  * Molecular generator type used to generate the correct structure of molecular state types on input.
@@ -137,8 +140,9 @@ export type UnknownMolecule = TypeString<string> &
  * @template R Type of the rotational component.
  * @template M The string identifier of the generated molecular type.
  */
-export type MolecularGenerator<E, V, R, M extends string> = TypeString<M> &
-  MolecularGenericGenerator<E, V, R>;
+export type MolecularGenerator<E, V, R, M extends string> =
+  & TypeString<M>
+  & MolecularGenericGenerator<E, V, R>;
 
 /**
  * Helper type that defines a `summary` property that is used to store a string
@@ -162,8 +166,9 @@ export interface LatexString {
  * @template E Type of the electronic component.
  * @template A The string identifier of the generated atomic type.
  */
-export type AtomicDBGenerator<E, A extends string> = TypeString<A> &
-  AtomicGenericGenerator<E, LevelSummary & LatexString>;
+export type AtomicDBGenerator<E, A extends string> =
+  & TypeString<A>
+  & AtomicGenericGenerator<E, LevelSummary & LatexString>;
 
 /**
  * Molecular generator type used to generate the correct structure of molecular state types on output. The difference between this type and [[MolecularGenerator]] is that each component entry now includes a `summary` field as stated in [[LevelSummary]].
@@ -172,5 +177,6 @@ export type AtomicDBGenerator<E, A extends string> = TypeString<A> &
  * @template R Type of the rotational component.
  * @template M The string identifier of the generated molecular type.
  */
-export type MolecularDBGenerator<E, V, R, M extends string> = TypeString<M> &
-  MolecularGenericGenerator<E, V, R, LevelSummary & LatexString>;
+export type MolecularDBGenerator<E, V, R, M extends string> =
+  & TypeString<M>
+  & MolecularGenericGenerator<E, V, R, LevelSummary & LatexString>;

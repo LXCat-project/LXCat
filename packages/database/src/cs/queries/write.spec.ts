@@ -2,29 +2,29 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "@lxcat/schema/dist/core/util";
+import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
+import { Dict } from "@lxcat/schema/dist/core/util";
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
   loadTestUserAndOrg,
 } from "../../auth/testutils";
-import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { deepClone } from "../../css/queries/deepClone";
-import { startDbContainer } from "../../testutils";
-import { createSection, publish } from "./write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { byOwnerAndId, getVersionInfo } from "./author_read";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { historyOfSection } from "./public";
+import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { db } from "../../db";
+import { startDbContainer } from "../../testutils";
+import { byOwnerAndId, getVersionInfo } from "./author_read";
+import { historyOfSection } from "./public";
 import {
   createDraftFromPublished,
   createSampleCrossSection,
   insertSampleStateIds,
   truncateCrossSectionCollections,
 } from "./testutils";
+import { createSection, publish } from "./write";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
@@ -43,7 +43,7 @@ describe("given db with test user and organization", () => {
       return async () => {
         const collections2Truncate = ["HasDirectSubstate", "State"];
         await Promise.all(
-          collections2Truncate.map((c) => db().collection(c).truncate())
+          collections2Truncate.map((c) => db().collection(c).truncate()),
         );
       };
     });
@@ -199,7 +199,7 @@ describe("given db with test user and organization", () => {
           state_ids,
           {},
           "Some organization",
-          "draft"
+          "draft",
         );
         keycs1 = idcs1.replace("CrossSection/", "");
         return truncateCrossSectionCollections;

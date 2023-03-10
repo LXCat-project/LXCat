@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { UAtomic, UE, UR, UV } from "../generators";
 import { ShellEntry } from "../shell_entry";
-import { UE, UV, UR, UAtomic } from "../generators";
 
 export const electronic_orbital = ["s", "p", "d", "f", "g", "h"];
 export const atomic_orbital = ["S", "P", "D", "F", "G", "H"];

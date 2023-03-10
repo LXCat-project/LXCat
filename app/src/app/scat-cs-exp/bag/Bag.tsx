@@ -18,9 +18,9 @@ import { z } from "zod";
 // import { TermsOfUseCheck } from "../../../shared/TermsOfUseCheck";
 import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
 import { formatReference } from "./cite";
+import { ProcessPlot } from "./Plot";
 import { ReferenceList } from "./ReferenceList";
 import { TermsOfUseCheck } from "./TermsOfUseCheck";
-import { ProcessPlot } from "./Plot";
 // import { reactionAsText } from "../../../ScatteringCrossSection/reaction";
 // import { ReactionSummary } from "./ReactionSummary";
 
@@ -75,8 +75,9 @@ export const Bag = ({
   //   const { processes, states } = bag;
   //   return flattenReactions(processes, states);
   // }, [bag]);
-  const permaLink = `${process.env.NEXT_PUBLIC_URL
-    }/scat-cs/bag?ids=${bag.processes.map((p) => p.id).join(",")}`;
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+    bag.processes.map((p) => p.id).join(",")
+  }`;
   return (
     <>
       <h1>Bag of scattering cross sections</h1>
@@ -88,23 +89,26 @@ export const Bag = ({
         </div>
       )}
       <a
-        href={`/api/scat-cs/bag?ids=${bag.processes
-          .map((d) => d.id)
-          .join(",")}`}
+        href={`/api/scat-cs/bag?ids=${
+          bag.processes
+            .map((d) => d.id)
+            .join(",")
+        }`}
         target="_blank"
         rel="noreferrer"
         download
       >
         Download JSON format
       </a>
-      {// <h2>References</h2>
+      {
+        // <h2>References</h2>
       }
       <ReferenceList references={formattedRefs} />
       <TermsOfUseCheck references={formattedRefs} permaLink={permaLink} />
       <h2>Processes</h2>
       {
-      // <LutPlots processes={bag.processes} colors={bag.processes.map((_, index) => colorScheme[index])}/>
-      <ProcessPlot processes={flattenReactions(bag.processes, bag.states)} />
+        // <LutPlots processes={bag.processes} colors={bag.processes.map((_, index) => colorScheme[index])}/>
+        <ProcessPlot processes={flattenReactions(bag.processes, bag.states)} />
         // <div className="proceses-list" style={{ display: "flex" }}>
         //   <ol>
         //     {flatProcesses.map((p, i) => (
@@ -162,7 +166,7 @@ export const Bag = ({
 
 function flattenReactions(
   processes: CrossSectionBag["processes"],
-  states: Record<string, Omit<State, "id">>
+  states: Record<string, Omit<State, "id">>,
 ) {
   return processes.map((p) => {
     const reaction: Reaction<State> = {

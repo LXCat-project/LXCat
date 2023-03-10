@@ -36,11 +36,14 @@ const csToVegaData = (data: LUT["data"], c: string): Array<VegaData> =>
 
 const toVegaData = (
   processes: PlotableCrossSection[],
-  colors: string[]
+  colors: string[],
 ): Array<VegaData> =>
   processes.flatMap((p, i) => csToVegaData(p.data, colors[i]));
 
-function toVegaSpec(processes: PlotableCrossSection[], colors: string[]): VisualizationSpec {
+function toVegaSpec(
+  processes: PlotableCrossSection[],
+  colors: string[],
+): VisualizationSpec {
   const values = toVegaData(processes, colors);
   const markType: Mark = "line";
   const scaleType: ScaleType = "log";
@@ -78,7 +81,7 @@ function toVegaSpec(processes: PlotableCrossSection[], colors: string[]): Visual
     params: [{
       name: "grid",
       select: "interval",
-      bind: "scales"
+      bind: "scales",
     }],
     usermeta: {
       embedOptions: {

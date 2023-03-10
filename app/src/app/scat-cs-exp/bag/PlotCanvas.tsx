@@ -33,9 +33,8 @@ const lutToVega = (data: LUT["data"], color: string): Array<VegaData> =>
 
 const toVegaData = (
   processes: LUT[],
-  colors: string[]
-): Array<VegaData> =>
-  processes.flatMap((p, i) => lutToVega(p.data, colors[i]));
+  colors: string[],
+): Array<VegaData> => processes.flatMap((p, i) => lutToVega(p.data, colors[i]));
 
 const toVegaSpec = (processes: LUT[], colors: string[]): VisualizationSpec => {
   const values = toVegaData(processes, colors);
@@ -73,7 +72,7 @@ const toVegaSpec = (processes: LUT[], colors: string[]): VisualizationSpec => {
     params: [{
       name: "grid",
       select: "interval",
-      bind: "scales"
+      bind: "scales",
     }],
     usermeta: {
       embedOptions: {
@@ -86,4 +85,4 @@ const toVegaSpec = (processes: LUT[], colors: string[]): VisualizationSpec => {
       },
     },
   };
-}
+};

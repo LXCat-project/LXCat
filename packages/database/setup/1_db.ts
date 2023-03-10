@@ -5,7 +5,7 @@
 import "dotenv/config";
 import { systemDb } from "../src/systemDb";
 
-export default async function () {
+export default async function() {
   const db = systemDb();
 
   const names = await db.listDatabases();

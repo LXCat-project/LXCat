@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { CrossSectionSet } from "../collections";
 
 export interface CrossSectionSetOwned extends CrossSectionSet {

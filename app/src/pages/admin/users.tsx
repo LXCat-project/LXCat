@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../../shared/Layout";
-import { Role, User } from "@lxcat/database/dist/auth/schema";
-import { useState } from "react";
 import {
   listOrganizations,
   listUsers,
   OrganizationFromDB,
   UserFromDB,
 } from "@lxcat/database/dist/auth/queries";
-import { mustBeAdmin } from "../../auth/middleware";
+import { Role, User } from "@lxcat/database/dist/auth/schema";
 import { Button, MultiSelect } from "@mantine/core";
+import type { GetServerSideProps, NextPage } from "next";
+import { useState } from "react";
+import { mustBeAdmin } from "../../auth/middleware";
+import { Layout } from "../../shared/Layout";
 
 interface Props {
   users: UserFromDB[];
@@ -50,7 +50,7 @@ const AdminUsers: NextPage<Props> = ({
   };
   const updateOrganization = async (
     user: UserFromDB,
-    organizationKeys: string[]
+    organizationKeys: string[],
   ) => {
     const url = `/api/users/${user._key}/organizations`;
     const body = JSON.stringify(organizationKeys);

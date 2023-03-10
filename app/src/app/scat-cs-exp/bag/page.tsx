@@ -4,11 +4,11 @@
 
 // import { GetServerSideProps, NextPage } from "next";
 
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
+import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import Head from "next/head";
 
-import { z } from "zod"
+import { z } from "zod";
 import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
 import { reference2bibliography } from "../../../shared/cite";
 import { Bag } from "./Bag";
@@ -16,14 +16,16 @@ import { Bag } from "./Bag";
 interface BagProps {
   bag: CrossSectionBag;
   hasMixedCompleteSets: boolean;
-  references: {ref: string, url?: string}[];
+  references: { ref: string; url?: string }[];
 }
 
 interface URLParams {
-  searchParams?: { ids?: string }
+  searchParams?: { ids?: string };
 }
 
-const ScatteringCrossSectionSelectionPage = async ({ searchParams }: URLParams) => {
+const ScatteringCrossSectionSelectionPage = async (
+  { searchParams }: URLParams,
+) => {
   const canonicalUrl = "/scat-cs";
 
   return (
@@ -32,11 +34,9 @@ const ScatteringCrossSectionSelectionPage = async ({ searchParams }: URLParams) 
         <link rel="canonical" href={canonicalUrl} />
       </Head>
       {/* TODO add dialog how to cite */}
-      {
-        searchParams ?
-          <Bag {...(await fetchProps(searchParams.ids ?? []))} />
-          : <></>
-      }
+      {searchParams
+        ? <Bag {...(await fetchProps(searchParams.ids ?? []))} />
+        : <></>}
     </>
   );
 };
@@ -52,7 +52,9 @@ const idsSchema = z
     message: "Array should have unique elements",
   });
 
-const fetchProps = async (rawIds: string | Array<string>): Promise<BagProps> => {
+const fetchProps = async (
+  rawIds: string | Array<string>,
+): Promise<BagProps> => {
   if (typeof rawIds === "string") {
     rawIds = rawIds.split(",");
   }
@@ -63,11 +65,14 @@ const fetchProps = async (rawIds: string | Array<string>): Promise<BagProps> => 
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);
   const hasMixedCompleteSets = hasCompleteSet && hasNonCompleteSet;
 
-  const references = Object.values(bag.references).map((r) => ({ref: reference2bibliography(r), url: r.URL}));
+  const references = Object.values(bag.references).map((r) => ({
+    ref: reference2bibliography(r),
+    url: r.URL,
+  }));
 
   return {
     bag,
     hasMixedCompleteSets,
-    references
+    references,
   };
-}
+};

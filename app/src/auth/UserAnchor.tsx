@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useSession, signIn } from "next-auth/react";
-import Link from "next/link";
-import Image from "next/image";
 import { Button, createStyles } from "@mantine/core";
+import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   portrait: { borderRadius: theme.radius.sm },

@@ -2,6 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {
+  FilterOptions,
+  search,
+  SortOptions,
+} from "@lxcat/database/dist/css/queries/public";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -9,12 +15,6 @@ import {
   hasDeveloperRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import {
-  FilterOptions,
-  search,
-  SortOptions,
-} from "@lxcat/database/dist/css/queries/public";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { query2array } from "../../../shared/query2array";
 import {
   stateSelectionFromSearchParam,
@@ -26,14 +26,13 @@ const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasDeveloperRole)
   .get(async (req, res) => {
     const { contributor, tag, offset, count } = req.query;
-    const state =
-      req.query.state && !Array.isArray(req.query.state)
-        ? req.query.state
-        : stateSelectionToSearchParam({ particle: {} });
+    const state = req.query.state && !Array.isArray(req.query.state)
+      ? req.query.state
+      : stateSelectionToSearchParam({ particle: {} });
     const filter: FilterOptions = {
       contributor: query2array(contributor),
       tag: query2array(tag).filter(
-        (v): v is ReactionTypeTag => v in ReactionTypeTag
+        (v): v is ReactionTypeTag => v in ReactionTypeTag,
       ),
       state: stateSelectionFromSearchParam(state),
     };
@@ -44,10 +43,9 @@ const handler = nc<AuthRequest, NextApiResponse>()
     };
     const paging = {
       offset: offset && !Array.isArray(offset) ? parseInt(offset) : 0,
-      count:
-        count && !Array.isArray(count)
-          ? parseInt(count)
-          : Number.MAX_SAFE_INTEGER,
+      count: count && !Array.isArray(count)
+        ? parseInt(count)
+        : Number.MAX_SAFE_INTEGER,
     };
     const items = await search(filter, sort, paging);
     res.json({ items });

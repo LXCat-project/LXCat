@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 
 export const Mermaid = dynamic(
   () => import("../../../docs/Mermaid").then((mod) => mod.Mermaid),
-  { ssr: false }
+  { ssr: false },
 );
 
 const components = {

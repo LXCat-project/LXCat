@@ -10,11 +10,11 @@ import { db } from "../../../db";
 import { getStateLeaf, StateLeaf } from "../../../shared/getStateLeaf";
 import {
   CSSetTree,
-  SearchOptions,
   NestedStateArray,
   ReactionOptions,
   ReactionTemplate,
   Reversible,
+  SearchOptions,
   StateProcess,
 } from "../types";
 import { stateArrayToTree } from "../utils";
@@ -38,27 +38,31 @@ export async function getPartakingStateSelection(
   produced: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
-  setIds: Array<string>
+  setIds: Array<string>,
 ) {
   const query = !(
-    consumed.length === 0 &&
-    produced.length === 0 &&
-    typeTags.length === 0 &&
-    setIds.length === 0 &&
-    reversible === Reversible.Both
-  )
-    ? aql`LET states = (${getPartakingStateAQL(process, consumed, produced, [
+      consumed.length === 0
+      && produced.length === 0
+      && typeTags.length === 0
+      && setIds.length === 0
+      && reversible === Reversible.Both
+    )
+    ? aql`LET states = (${
+      getPartakingStateAQL(process, consumed, produced, [
         getReversibleFilterAQL(reversible),
         getTypeTagFilterAQL(typeTags),
         getCSSetFilterAQL(setIds),
-      ])})
-    ${getStateSelectionAQL(
-      process,
-      aql.literal("states"),
-      (process === StateProcess.Consumed ? consumed : produced).map(
-        (entry) => entry.id
+      ])
+    })
+    ${
+      getStateSelectionAQL(
+        process,
+        aql.literal("states"),
+        (process === StateProcess.Consumed ? consumed : produced).map(
+          (entry) => entry.id,
+        ),
       )
-    )}`
+    }`
     : getFullStateTreeAQL(process, typeTags);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
   return await cursor.all();
@@ -67,7 +71,7 @@ export async function getPartakingStateSelection(
 export async function getStateSelection(
   process: StateProcess,
   reactions: Array<string> | AqlLiteral,
-  ignoredStates: Array<string> | AqlLiteral
+  ignoredStates: Array<string> | AqlLiteral,
 ) {
   const query = getStateSelectionAQL(process, reactions, ignoredStates);
   const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
@@ -79,14 +83,14 @@ export async function getCSIdByReactionTemplate(
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
-  setIds: Array<string>
+  setIds: Array<string>,
 ) {
   const cursor: ArrayCursor<string> = await db().query(
     getReactionsAQL(consumes, produces, returnCSId(setIds), [
       getReversibleFilterAQL(reversible),
       getTypeTagFilterAQL(typeTags),
       getCSSetFilterAQL(setIds),
-    ])
+    ]),
   );
   return await cursor.all();
 }
@@ -95,13 +99,13 @@ export async function getAvailableTypeTags(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
-  setIds: Array<string>
+  setIds: Array<string>,
 ) {
   const cursor: ArrayCursor<Array<ReactionTypeTag>> = await db().query(
-    consumes.length === 0 &&
-      produces.length === 0 &&
-      setIds.length === 0 &&
-      reversible === Reversible.Both
+    consumes.length === 0
+      && produces.length === 0
+      && setIds.length === 0
+      && reversible === Reversible.Both
       ? aql`
       RETURN UNIQUE(FLATTEN(
         FOR reaction in Reaction
@@ -111,12 +115,14 @@ export async function getAvailableTypeTags(
     `
       : aql`
       RETURN UNIQUE(FLATTEN(
-        ${getReactionsAQL(consumes, produces, returnTypeTags, [
+        ${
+        getReactionsAQL(consumes, produces, returnTypeTags, [
           getReversibleFilterAQL(reversible),
           getCSSetFilterAQL(setIds),
-        ])}
+        ])
+      }
       ))
-    `
+    `,
   );
 
   return cursor.next();
@@ -126,17 +132,19 @@ export async function getReversible(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
-  setIds: Array<string>
+  setIds: Array<string>,
 ) {
   const cursor: ArrayCursor<Array<boolean>> = await db().query(
     aql`
     RETURN UNIQUE(FLATTEN(
-      ${getReactionsAQL(consumes, produces, returnReversible, [
+      ${
+      getReactionsAQL(consumes, produces, returnReversible, [
         getTypeTagFilterAQL(typeTags),
         getCSSetFilterAQL(setIds),
-      ])}
+      ])
+    }
     ))
-  `
+  `,
   );
 
   const result = (await cursor.next()) ?? [];
@@ -154,7 +162,7 @@ export async function getCSSets(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible
+  reversible: Reversible,
 ) {
   const cursor: ArrayCursor<{
     setId: string;
@@ -162,10 +170,10 @@ export async function getCSSets(
     orgId: string;
     orgName: string;
   }> = await db().query(
-    consumes.length === 0 &&
-      produces.length === 0 &&
-      typeTags.length === 0 &&
-      reversible === Reversible.Both
+    consumes.length === 0
+      && produces.length === 0
+      && typeTags.length === 0
+      && reversible === Reversible.Both
       ? aql`
         FOR org IN Organization
           FOR css IN CrossSectionSet
@@ -174,9 +182,9 @@ export async function getCSSets(
           RETURN {setId: css._id, setName: css.name, orgId: org._id, orgName: org.name}
       `
       : getCSSetAQL(consumes, produces, [
-          getReversibleFilterAQL(reversible),
-          getTypeTagFilterAQL(typeTags),
-        ])
+        getReversibleFilterAQL(reversible),
+        getTypeTagFilterAQL(typeTags),
+      ]),
   );
 
   return cursor.all().then((sets) =>
@@ -195,7 +203,7 @@ export async function getCSSets(
 }
 
 export async function getSearchOptions(
-  templates: Array<ReactionTemplate>
+  templates: Array<ReactionTemplate>,
 ): Promise<SearchOptions> {
   if (templates === undefined) {
     return [];
@@ -231,17 +239,17 @@ export async function getSearchOptions(
                   consumesPaths
                     .filter(
                       (path, currentIndex) =>
-                        consumesIndex !== currentIndex &&
-                        path.particle !== undefined
+                        consumesIndex !== currentIndex
+                        && path.particle !== undefined,
                     )
                     .map(getStateLeaf) as Array<StateLeaf>,
                   produces,
                   typeTags,
                   reversible,
-                  set
+                  set,
                 );
               return stateArrayToTree(array) ?? {};
-            })
+            }),
           ),
           Promise.all(
             producesPaths.map(async (_, producesIndex) => {
@@ -252,19 +260,19 @@ export async function getSearchOptions(
                   producesPaths
                     .filter(
                       (path, currentIndex) =>
-                        producesIndex !== currentIndex &&
-                        path.particle !== undefined
+                        producesIndex !== currentIndex
+                        && path.particle !== undefined,
                     )
                     .map(getStateLeaf) as Array<StateLeaf>,
                   typeTags,
                   reversible,
-                  set
+                  set,
                 );
               return stateArrayToTree(array) ?? {};
-            })
+            }),
           ),
           getAvailableTypeTags(consumes, produces, reversible, set).then(
-            (typeTags) => typeTags ?? []
+            (typeTags) => typeTags ?? [],
           ),
           getReversible(consumes, produces, typeTags, set),
           getCSSets(consumes, produces, typeTags, reversible),
@@ -277,7 +285,7 @@ export async function getSearchOptions(
           reversible: reversibleChoices,
           set: setChoices,
         };
-      }
-    )
+      },
+    ),
   );
 }

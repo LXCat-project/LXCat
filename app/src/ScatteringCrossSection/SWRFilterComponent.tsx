@@ -15,11 +15,11 @@ import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { Latex } from "../shared/Latex";
-import { SWRReactionPicker, StateSelectIds } from "../shared/SWRReactionPicker";
+import { StateSelectIds, SWRReactionPicker } from "../shared/SWRReactionPicker";
 
 const getLatexForReaction = (
   options: ReactionTemplate,
-  latex: { consumes: Array<string>; produces: Array<string> }
+  latex: { consumes: Array<string>; produces: Array<string> },
 ) => {
   let lhs = latex.consumes.join("+");
   if (lhs === "") {
@@ -30,12 +30,11 @@ const getLatexForReaction = (
     rhs = "*";
   }
 
-  const arrow =
-    options.reversible === Reversible.Both
-      ? "\\rightarrow \\\\ \\leftrightarrow"
-      : options.reversible === Reversible.False
-      ? "\\rightarrow"
-      : "\\leftrightarrow";
+  const arrow = options.reversible === Reversible.Both
+    ? "\\rightarrow \\\\ \\leftrightarrow"
+    : options.reversible === Reversible.False
+    ? "\\rightarrow"
+    : "\\leftrightarrow";
 
   return (
     <Group>
@@ -73,13 +72,13 @@ export const SWRFilterComponent = ({
         consumes: options.consumes.map(() => ""),
         produces: options.produces.map(() => ""),
       },
-    }))
+    })),
   );
 
   const updateReactions = async (
     callback: (
-      prevReactions: Array<ReactionInformation>
-    ) => Array<ReactionInformation>
+      prevReactions: Array<ReactionInformation>,
+    ) => Array<ReactionInformation>,
   ) => {
     setReactions((prevReactions) => {
       const newReactions = callback(prevReactions);
@@ -90,8 +89,8 @@ export const SWRFilterComponent = ({
 
   const hasAnySelection = Object.values(selection).some(
     (s) =>
-      (Array.isArray(s) && s.length > 0) ||
-      (typeof s === "object" && Object.keys(s).length > 0)
+      (Array.isArray(s) && s.length > 0)
+      || (typeof s === "object" && Object.keys(s).length > 0),
   );
 
   async function onReset() {
@@ -110,7 +109,7 @@ export const SWRFilterComponent = ({
     onChange(newReactions, "reactions");
   }
   const [editableReaction, setEditableReaction] = useState(
-    reactions.length - 1
+    reactions.length - 1,
   );
 
   return (
@@ -137,244 +136,235 @@ export const SWRFilterComponent = ({
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              options: {
-                                ...reaction.options,
-                                typeTags: selectedTags,
-                              },
-                            }
+                            ...reaction,
+                            options: {
+                              ...reaction.options,
+                              typeTags: selectedTags,
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onConsumesChange={(updatedIndex, path, latex) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              options: {
-                                ...reaction.options,
-                                consumes: reaction.options.consumes.map(
-                                  (value, currentIndex) =>
-                                    currentIndex === updatedIndex ? path : value
-                                ),
-                              },
-                              latex: {
-                                ...reaction.latex,
-                                consumes: reaction.latex.consumes.map(
-                                  (value, currentIndex) =>
-                                    currentIndex === updatedIndex
-                                      ? latex
-                                      : value
-                                ),
-                              },
-                            }
+                            ...reaction,
+                            options: {
+                              ...reaction.options,
+                              consumes: reaction.options.consumes.map(
+                                (value, currentIndex) =>
+                                  currentIndex === updatedIndex ? path : value,
+                              ),
+                            },
+                            latex: {
+                              ...reaction.latex,
+                              consumes: reaction.latex.consumes.map(
+                                (value, currentIndex) =>
+                                  currentIndex === updatedIndex
+                                    ? latex
+                                    : value,
+                              ),
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onConsumesAppend={() =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              ids: {
-                                ...reaction.ids,
-                                consumes: [...reaction.ids.consumes, nanoid()],
-                              },
-                              options: {
-                                ...reaction.options,
-                                consumes: [...reaction.options.consumes, {}],
-                              },
-                              latex: {
-                                ...reaction.latex,
-                                consumes: [...reaction.latex.consumes, ""],
-                              },
-                            }
+                            ...reaction,
+                            ids: {
+                              ...reaction.ids,
+                              consumes: [...reaction.ids.consumes, nanoid()],
+                            },
+                            options: {
+                              ...reaction.options,
+                              consumes: [...reaction.options.consumes, {}],
+                            },
+                            latex: {
+                              ...reaction.latex,
+                              consumes: [...reaction.latex.consumes, ""],
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onConsumesRemove={(indexToRemove) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              ids: {
-                                ...reaction.ids,
-                                consumes: reaction.ids.consumes.filter(
-                                  (_, j) => indexToRemove !== j
-                                ),
-                              },
-                              options: {
-                                ...reaction.options,
-                                consumes: reaction.options.consumes.filter(
-                                  (_, j) => indexToRemove !== j
-                                ),
-                              },
-                            }
+                            ...reaction,
+                            ids: {
+                              ...reaction.ids,
+                              consumes: reaction.ids.consumes.filter(
+                                (_, j) => indexToRemove !== j,
+                              ),
+                            },
+                            options: {
+                              ...reaction.options,
+                              consumes: reaction.options.consumes.filter(
+                                (_, j) => indexToRemove !== j,
+                              ),
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onProducesChange={(updatedIndex, path, latex) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              options: {
-                                ...reaction.options,
-                                produces: reaction.options.produces.map(
-                                  (value, currentIndex) =>
-                                    currentIndex === updatedIndex ? path : value
-                                ),
-                              },
-                              latex: {
-                                ...reaction.latex,
-                                produces: reaction.latex.produces.map(
-                                  (value, currentIndex) =>
-                                    currentIndex === updatedIndex
-                                      ? latex
-                                      : value
-                                ),
-                              },
-                            }
+                            ...reaction,
+                            options: {
+                              ...reaction.options,
+                              produces: reaction.options.produces.map(
+                                (value, currentIndex) =>
+                                  currentIndex === updatedIndex ? path : value,
+                              ),
+                            },
+                            latex: {
+                              ...reaction.latex,
+                              produces: reaction.latex.produces.map(
+                                (value, currentIndex) =>
+                                  currentIndex === updatedIndex
+                                    ? latex
+                                    : value,
+                              ),
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onProducesAppend={() =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              ids: {
-                                ...reaction.ids,
-                                produces: [...reaction.ids.produces, nanoid()],
-                              },
-                              options: {
-                                ...reaction.options,
-                                produces: [...reaction.options.produces, {}],
-                              },
-                              latex: {
-                                ...reaction.latex,
-                                produces: [...reaction.latex.produces, ""],
-                              },
-                            }
+                            ...reaction,
+                            ids: {
+                              ...reaction.ids,
+                              produces: [...reaction.ids.produces, nanoid()],
+                            },
+                            options: {
+                              ...reaction.options,
+                              produces: [...reaction.options.produces, {}],
+                            },
+                            latex: {
+                              ...reaction.latex,
+                              produces: [...reaction.latex.produces, ""],
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onProducesRemove={(indexToRemove) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              ids: {
-                                ...reaction.ids,
-                                produces: reaction.ids.produces.filter(
-                                  (_, j) => indexToRemove !== j
-                                ),
-                              },
-                              options: {
-                                ...reaction.options,
-                                produces: reaction.options.produces.filter(
-                                  (_, j) => indexToRemove !== j
-                                ),
-                              },
-                            }
+                            ...reaction,
+                            ids: {
+                              ...reaction.ids,
+                              produces: reaction.ids.produces.filter(
+                                (_, j) => indexToRemove !== j,
+                              ),
+                            },
+                            options: {
+                              ...reaction.options,
+                              produces: reaction.options.produces.filter(
+                                (_, j) => indexToRemove !== j,
+                              ),
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onReversibleChange={(selectedReversible) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              options: {
-                                ...reaction.options,
-                                reversible: selectedReversible,
-                              },
-                            }
+                            ...reaction,
+                            options: {
+                              ...reaction.options,
+                              reversible: selectedReversible,
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   onCSSetsChange={(selectedCSSets) =>
                     updateReactions((prevReactions) =>
                       prevReactions.map((reaction, index) =>
                         index === i
                           ? {
-                              ...reaction,
-                              options: {
-                                ...reaction.options,
-                                set: [...selectedCSSets],
-                              },
-                            }
+                            ...reaction,
+                            options: {
+                              ...reaction.options,
+                              set: [...selectedCSSets],
+                            },
+                          }
                           : reaction
                       )
-                    )
-                  }
+                    )}
                   editable={i == editableReaction}
                 />
-                {i == editableReaction ? (
-                  <>
-                    <Button.Group>
+                {i == editableReaction
+                  ? (
+                    <>
+                      <Button.Group>
+                        <Button
+                          variant="subtle"
+                          title="Remove reaction"
+                          onClick={() =>
+                            updateReactions((prevReactions) =>
+                              prevReactions.filter((_, j) => i !== j)
+                            )}
+                        >
+                          -
+                        </Button>
+                        <Button
+                          variant="subtle"
+                          title="Clone reaction"
+                          onClick={() =>
+                            updateReactions((prevReactions) => [
+                              ...prevReactions,
+                              { ...structuredClone(r), id: nanoid() },
+                            ])}
+                        >
+                          <IconCopy size={16} />
+                        </Button>
+                        <Button
+                          variant="subtle"
+                          title="Toggle view mode"
+                          onClick={() => {
+                            setEditableReaction(-1);
+                          }}
+                        >
+                          <IconEye size={16} />
+                        </Button>
+                      </Button.Group>
+                    </>
+                  )
+                  : (
+                    <>
                       <Button
                         variant="subtle"
-                        title="Remove reaction"
-                        onClick={() =>
-                          updateReactions((prevReactions) =>
-                            prevReactions.filter((_, j) => i !== j)
-                          )
-                        }
-                      >
-                        -
-                      </Button>
-                      <Button
-                        variant="subtle"
-                        title="Clone reaction"
-                        onClick={() =>
-                          updateReactions((prevReactions) => [
-                            ...prevReactions,
-                            { ...structuredClone(r), id: nanoid() },
-                          ])
-                        }
-                      >
-                        <IconCopy size={16} />
-                      </Button>
-                      <Button
-                        variant="subtle"
-                        title="Toggle view mode"
+                        title="Edit"
                         onClick={() => {
-                          setEditableReaction(-1);
+                          setEditableReaction(i);
                         }}
                       >
-                        <IconEye size={16} />
+                        <IconPencil size={16} />
                       </Button>
-                    </Button.Group>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      variant="subtle"
-                      title="Edit"
-                      onClick={() => {
-                        setEditableReaction(i);
-                      }}
-                    >
-                      <IconPencil size={16} />
-                    </Button>
-                  </>
-                )}
+                    </>
+                  )}
               </li>
             ))}
           </ul>
@@ -397,7 +387,8 @@ export const SWRFilterComponent = ({
               +
             </Button>
           </Box>
-          {/*<div>
+          {
+            /*<div>
             Examples:{" "}
             <Button
               variant="subtle"
@@ -408,7 +399,8 @@ export const SWRFilterComponent = ({
             >
               Argon
             </Button>
-          </div>*/}
+          </div>*/
+          }
         </fieldset>
       </div>
       <div>

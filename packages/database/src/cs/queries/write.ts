@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { aql } from "arangojs";
 import { Dict } from "arangojs/connection";
+import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date";
+import { db } from "../../db";
 import {
   insert_document,
   insert_edge,
   insert_reaction_with_dict,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { aql } from "arangojs";
-import { db } from "../../db";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { ArrayCursor } from "arangojs/cursor";
 
 export async function createSection(
   cs: CrossSection<string, string>,
@@ -25,7 +25,7 @@ export async function createSection(
   organizationId: string,
   status: Status = "published",
   version = "1",
-  commitMessage = ""
+  commitMessage = "",
 ): Promise<string> {
   const { reference, reaction, ...rest } = cs;
   const r_id = await insert_reaction_with_dict(state_dict, reaction);
@@ -85,7 +85,7 @@ export async function updateSection(
   message: string,
   state_dict: Dict<string>,
   ref_dict: Dict<string>,
-  organization: string
+  organization: string,
 ) {
   const info = await getVersionInfo(key);
   if (info === undefined) {
@@ -100,7 +100,7 @@ export async function updateSection(
       key,
       state_dict,
       ref_dict,
-      organization
+      organization,
     );
   } else if (status === "draft") {
     await updateDraftSection(
@@ -110,7 +110,7 @@ export async function updateSection(
       key,
       state_dict,
       ref_dict,
-      organization
+      organization,
     );
     return `CrossSection/${key}`;
   } else {
@@ -140,7 +140,7 @@ async function createDraftSection(
   key: string,
   state_dict: Dict<string>,
   ref_dict: Dict<string>,
-  organization: string
+  organization: string,
 ) {
   // check whether a draft already exists
   await isDraftless(key);
@@ -155,7 +155,7 @@ async function createDraftSection(
     organization,
     newStatus,
     newVersion,
-    message
+    message,
   );
 
   // Add previous version (published )and current version (draft) to CrossSectionHistory collection
@@ -173,7 +173,7 @@ async function updateDraftSection(
   key: string,
   state_dict: Dict<string>,
   ref_dict: Dict<string>,
-  organization: string
+  organization: string,
 ) {
   const versionInfo = {
     status: "draft",
@@ -207,7 +207,7 @@ async function updateDraftSection(
 
 async function dropReferencesFromExcluding(
   from: string,
-  excludedTos: string[]
+  excludedTos: string[],
 ) {
   await db().query(aql`
     FOR r in References
@@ -227,9 +227,11 @@ export async function deleteSection(key: string, message: string) {
     const setKeys = await isPartOf(key);
     if (setKeys.length > 0) {
       throw new Error(
-        `Can not delete cross section that belongs to set(s) ${setKeys.join(
-          ","
-        )}`
+        `Can not delete cross section that belongs to set(s) ${
+          setKeys.join(
+            ",",
+          )
+        }`,
       );
     }
     await db().query(aql`
@@ -239,9 +241,11 @@ export async function deleteSection(key: string, message: string) {
     const setKeys = await isPartOf(key);
     if (setKeys.length > 0) {
       throw new Error(
-        `Can not retract cross section that belongs to set(s) ${setKeys.join(
-          ","
-        )}`
+        `Can not retract cross section that belongs to set(s) ${
+          setKeys.join(
+            ",",
+          )
+        }`,
       );
     }
     // Change status of published section to retracted

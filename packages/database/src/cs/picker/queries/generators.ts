@@ -12,7 +12,7 @@ import { returnId } from "./return";
 
 export function getFullStateTreeAQL(
   process: StateProcess,
-  typeTags: Array<ReactionTypeTag>
+  typeTags: Array<ReactionTypeTag>,
 ) {
   return aql`
     FOR particle IN State
@@ -26,10 +26,10 @@ export function getFullStateTreeAQL(
                   LET valid = COUNT(
                     FOR reaction IN INBOUND rotational ${aql.literal(process)}
                       ${
-                        typeTags.length > 0
-                          ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
-                          : aql``
-                      }
+    typeTags.length > 0
+      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      : aql``
+  }
                       ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                       LIMIT 1
                       RETURN 1
@@ -40,10 +40,10 @@ export function getFullStateTreeAQL(
                 LET valid = COUNT(
                   FOR reaction IN INBOUND vibrational ${aql.literal(process)}
                     ${
-                      typeTags.length > 0
-                        ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
-                        : aql``
-                    }
+    typeTags.length > 0
+      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      : aql``
+  }
                     ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                     LIMIT 1
                     RETURN 1
@@ -54,10 +54,10 @@ export function getFullStateTreeAQL(
             LET valid = COUNT(
               FOR reaction IN INBOUND electronic ${aql.literal(process)}
                 ${
-                  typeTags.length > 0
-                    ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
-                    : aql``
-                }
+    typeTags.length > 0
+      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      : aql``
+  }
                 ${getCSSetFilterAQL([])(aql.literal("reaction"))}
                 LIMIT 1
                 RETURN 1
@@ -68,10 +68,10 @@ export function getFullStateTreeAQL(
         LET valid = COUNT(
           FOR reaction IN INBOUND particle ${aql.literal(process)}
             ${
-              typeTags.length > 0
-                ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
-                : aql``
-            }
+    typeTags.length > 0
+      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      : aql``
+  }
             ${getCSSetFilterAQL([])(aql.literal("reaction"))}
             LIMIT 1
             RETURN 1
@@ -85,7 +85,7 @@ export function getTreeForStateSelectionAQL(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   lhsIdentifier: AqlLiteral = aql.literal("lhs"),
-  rhsIdentifier: AqlLiteral = aql.literal("rhs")
+  rhsIdentifier: AqlLiteral = aql.literal("rhs"),
 ) {
   return aql`
     LET lhsChildren = (
@@ -124,16 +124,18 @@ export function getPartakingStateAQL(
   process: StateProcess,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
-  filters: Array<ReactionFunction>
+  filters: Array<ReactionFunction>,
 ) {
   return aql`
     UNIQUE(FLATTEN(
       ${getTreeForStateSelectionAQL(consumes, produces)}
 
       FOR reaction IN Reaction
-        ${filters
-          .map((filter) => filter(aql.literal("reaction")))
-          .reduce((total, filter) => aql`${total}\n${filter}`)}
+        ${
+    filters
+      .map((filter) => filter(aql.literal("reaction")))
+      .reduce((total, filter) => aql`${total}\n${filter}`)
+  }
 
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
@@ -157,9 +159,11 @@ export function getPartakingStateAQL(
         )
         FILTER rhsCount >= LENGTH(rhs)
 
-        RETURN ${aql.literal(
-          process === StateProcess.Consumed ? "consumed" : "produced"
-        )}
+        RETURN ${
+    aql.literal(
+      process === StateProcess.Consumed ? "consumed" : "produced",
+    )
+  }
     ))
   `;
 }
@@ -168,7 +172,7 @@ function getPartakingStateChildren(
   process: StateProcess,
   states: Array<string> | AqlLiteral,
   ignoredStates: Array<string> | AqlLiteral,
-  depth = 0
+  depth = 0,
 ): GeneratedAqlQuery {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
 
@@ -180,40 +184,42 @@ function getPartakingStateChildren(
   const latexProperty = aql.literal(
     depth == 0
       ? `${levels[depth]}.latex`
-      : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`
+      : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`,
   );
 
   return depth < 3
     ? aql`
         LET ${children} = (
           FOR ${child} IN OUTBOUND ${parent} HasDirectSubstate
-            ${getPartakingStateChildren(
-              process,
-              states,
-              ignoredStates,
-              depth + 1
-            )}
+            ${
+      getPartakingStateChildren(
+        process,
+        states,
+        ignoredStates,
+        depth + 1,
+      )
+    }
         )
         LET valid = ${parent}._id IN ${states}
         ${
-          !Array.isArray(states) || states.length > 0
-            ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND (valid OR LENGTH(${children}) > 0)`
-            : aql``
-        }
+      !Array.isArray(states) || states.length > 0
+        ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND (valid OR LENGTH(${children}) > 0)`
+        : aql``
+    }
         RETURN {id: ${parent}._id, latex: ${latexProperty}, valid, children: ${children}}`
     : aql`
         ${
-          !Array.isArray(states) || states.length > 0
-            ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND ${parent}._id IN ${states}`
-            : aql``
-        }
+      !Array.isArray(states) || states.length > 0
+        ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND ${parent}._id IN ${states}`
+        : aql``
+    }
         RETURN {id: ${parent}._id, latex: ${latexProperty}, valid: true}`;
 }
 
 export function getStateSelectionAQL(
   process: StateProcess,
   states: Array<string> | AqlLiteral,
-  ignoredStates: Array<string> | AqlLiteral
+  ignoredStates: Array<string> | AqlLiteral,
 ) {
   return aql`
     FOR particle IN State
@@ -225,15 +231,17 @@ export function getReactionsAQL(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   returnStatement: ReactionFunction = returnId,
-  filters: Array<ReactionFunction> = []
+  filters: Array<ReactionFunction> = [],
 ) {
   return aql`
       ${getTreeForStateSelectionAQL(consumes, produces)}
 
       FOR reaction IN Reaction
-        ${filters
-          .map((filter) => filter(aql.literal("reaction")))
-          .reduce((total, filter) => aql`${total}\n${filter}`)}
+        ${
+    filters
+      .map((filter) => filter(aql.literal("reaction")))
+      .reduce((total, filter) => aql`${total}\n${filter}`)
+  }
         LET consumed = (
           FOR state IN OUTBOUND reaction Consumes
             RETURN state._id
@@ -264,7 +272,7 @@ export function getReactionsAQL(
 export function getCSSetAQL(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
-  filters: Array<ReactionFunction> = []
+  filters: Array<ReactionFunction> = [],
 ) {
   const query = aql`
       ${getTreeForStateSelectionAQL(consumes, produces)}
@@ -275,9 +283,11 @@ export function getCSSetAQL(
           FOR cs IN INBOUND csSet IsPartOf
             FOR reaction IN Reaction
               FILTER cs.reaction == reaction._id
-              ${filters
-                .map((filter) => filter(aql.literal("reaction")))
-                .reduce((total, filter) => aql`${total}\n${filter}`)}
+              ${
+    filters
+      .map((filter) => filter(aql.literal("reaction")))
+      .reduce((total, filter) => aql`${total}\n${filter}`)
+  }
               LET consumed = (
                 FOR state IN OUTBOUND reaction Consumes
                   RETURN state._id

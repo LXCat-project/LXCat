@@ -43,9 +43,7 @@ const AdminOrganizations: NextPage<Props> = ({ organizations }) => {
     <Layout>
       <h2>Administrate organizations</h2>
       <ul>
-        {orgs.map((o) => (
-          <li key={o._key}>{o.name}</li>
-        ))}
+        {orgs.map((o) => <li key={o._key}>{o.name}</li>)}
       </ul>
       <form onSubmit={addOrganization}>
         <input
@@ -63,7 +61,7 @@ const AdminOrganizations: NextPage<Props> = ({ organizations }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+  context,
 ) => {
   await mustBeAdmin(context);
   const organizations = await listOrganizations();

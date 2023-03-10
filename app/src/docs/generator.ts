@@ -103,7 +103,7 @@ const makeNestedDocFile = (file: FlatDocFile): DocFile => ({
 const makeNestedEntries = (
   entries: Array<DocHeader>,
   index: number,
-  depth: number
+  depth: number,
 ): [Array<DocSection>, number] => {
   let children = [];
 
@@ -119,12 +119,12 @@ const makeNestedEntries = (
 
       result[0].length === 0
         ? children.push({
-            title: current.title,
-          })
+          title: current.title,
+        })
         : children.push({
-            title: current.title,
-            children: result[0],
-          });
+          title: current.title,
+          children: result[0],
+        });
       index = result[1];
     }
   }
@@ -143,11 +143,13 @@ const extractHeadingValue = (content: Heading["children"][0]): string => {
         .join("");
     default:
       throw new Error(
-        `Unknown syntax node in markdown heading:\n${JSON.stringify(
-          content,
-          null,
-          2
-        )}`
+        `Unknown syntax node in markdown heading:\n${
+          JSON.stringify(
+            content,
+            null,
+            2,
+          )
+        }`,
       );
   }
 };
@@ -174,10 +176,10 @@ export const extractMarkdownHeaders = async () => {
               .map((child) => extractHeadingValue(child))
               .join(""),
             depth: heading.depth,
-          })
+          }),
         );
 
       return makeNestedDocFile({ name: file.slice(0, -3), entries });
-    })
+    }),
   );
 };

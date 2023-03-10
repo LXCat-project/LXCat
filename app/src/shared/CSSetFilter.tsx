@@ -38,52 +38,48 @@ export const CSSetFilter = ({
               {
                 // FIXME: Duplicating onClick is not great, but adding Box or
                 // div introduces weird displacement of the chevron.
-                unfolded.has(id) ? (
-                  <IconChevronDown
-                    onClick={() => onOrganizationUnfolded(id, false)}
-                  />
-                ) : (
-                  <IconChevronRight
-                    onClick={() => onOrganizationUnfolded(id, true)}
-                  />
-                )
+                unfolded.has(id)
+                  ? (
+                    <IconChevronDown
+                      onClick={() => onOrganizationUnfolded(id, false)}
+                    />
+                  )
+                  : (
+                    <IconChevronRight
+                      onClick={() => onOrganizationUnfolded(id, true)}
+                    />
+                  )
               }
               <Checkbox
                 size="xs"
-                checked={
-                  numSelected > 0 &&
-                  numSelected === Object.keys(summary.sets).length
-                }
-                indeterminate={
-                  numSelected > 0 &&
-                  numSelected < Object.keys(summary.sets).length
-                }
+                checked={numSelected > 0
+                  && numSelected === Object.keys(summary.sets).length}
+                indeterminate={numSelected > 0
+                  && numSelected < Object.keys(summary.sets).length}
                 disabled={Object.keys(summary.sets).length === 0}
                 label={summary.name}
                 onChange={(event) =>
-                  onOrganizationChecked(id, event.currentTarget.checked)
-                }
+                  onOrganizationChecked(id, event.currentTarget.checked)}
               />
             </Box>
-            {unfolded.has(id) ? (
-              <Stack spacing={2}>
-                {Object.entries(summary.sets).map(([setId, setName]) => (
-                  <Box key={setId} sx={{ display: "inline-flex" }}>
-                    <Space w="md" />
-                    <Checkbox
-                      size="xs"
-                      checked={selection.has(setId)}
-                      label={setName}
-                      onChange={(event) =>
-                        onSetChecked(setId, event.currentTarget.checked)
-                      }
-                    />
-                  </Box>
-                ))}
-              </Stack>
-            ) : (
-              <></>
-            )}
+            {unfolded.has(id)
+              ? (
+                <Stack spacing={2}>
+                  {Object.entries(summary.sets).map(([setId, setName]) => (
+                    <Box key={setId} sx={{ display: "inline-flex" }}>
+                      <Space w="md" />
+                      <Checkbox
+                        size="xs"
+                        checked={selection.has(setId)}
+                        label={setName}
+                        onChange={(event) =>
+                          onSetChecked(setId, event.currentTarget.checked)}
+                      />
+                    </Box>
+                  ))}
+                </Stack>
+              )
+              : <></>}
           </Stack>
         );
       })}

@@ -8,7 +8,7 @@
     "json": "pnpm json:css",
     "build": "tsc",
     "lint": "eslint src/ --ext .ts",
-    "format": "prettier --write src/",
+    "format": "dprint fmt",
     "test": "vitest",
     "dev": "tsc --watch",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
@@ -24,8 +24,8 @@
     "@lxcat/tsconfig": "^0.1.0",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "c8": "^7.13.0",
+    "dprint": "^0.34.5",
     "eslint": "8.10.0",
-    "prettier": "^2.8.4",
     "typescript": "^4.9.5",
     "vitest": "^0.15.2"
   },

@@ -28,13 +28,12 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const consumes = parseParam<Array<StateLeaf>>(consumesParam, []);
     const produces = parseParam<Array<StateLeaf>>(producesParam, []);
     const setIds = parseParam<Array<string>>(setIdsParam, []);
-    const reversible =
-      reversibleParam && !Array.isArray(reversibleParam)
-        ? (reversibleParam as Reversible)
-        : Reversible.Both;
+    const reversible = reversibleParam && !Array.isArray(reversibleParam)
+      ? (reversibleParam as Reversible)
+      : Reversible.Both;
 
     res.json(
-      await getAvailableTypeTags(consumes, produces, reversible, setIds)
+      await getAvailableTypeTags(consumes, produces, reversible, setIds),
     );
   });
 

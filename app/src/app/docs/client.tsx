@@ -22,19 +22,19 @@ export const MarkdownLayout = ({
       navbar={
         <Navbar sx={{ zIndex: 10 }} p="xs" width={{ base: 300 }}>
           {docFiles.flatMap((file) =>
-            file.entries ? (
-              file.entries.map((section) => {
-                return (
-                  <DocEntry
-                    key={`${file.name}-${section.title}`}
-                    fileName={file.name}
-                    section={section}
-                  />
-                );
-              })
-            ) : (
-              <></>
-            )
+            file.entries
+              ? (
+                file.entries.map((section) => {
+                  return (
+                    <DocEntry
+                      key={`${file.name}-${section.title}`}
+                      fileName={file.name}
+                      section={section}
+                    />
+                  );
+                })
+              )
+              : <></>
           )}
         </Navbar>
       }

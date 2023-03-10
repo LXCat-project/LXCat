@@ -57,10 +57,10 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
 
 1. Create a new application of type `Regular Web Applications`.
 
-    - Allowed Callback URLs
-        - For dev deployment set to `http://localhost:3000/api/auth/callback/auth0`
-    - Allowed Logout URLs
-        - For dev deployment set to `http://localhost:3000`
+   - Allowed Callback URLs
+     - For dev deployment set to `http://localhost:3000/api/auth/callback/auth0`
+   - Allowed Logout URLs
+     - For dev deployment set to `http://localhost:3000`
 
 2. Make sure `disable sign ups` is disabled in auth0 authentication database settings. So users can register themselves.
 
@@ -68,51 +68,51 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
 
 1. Create a [new application](https://gitlab.com/-/profile/applications)
 
-    - Redirect URI
-        - For dev deployments set to `http://localhost:3000/api/auth/callback/gitlab`
-    - Scopes
-        - Select `read_user`, `openid`, `profile` and `email`
+   - Redirect URI
+     - For dev deployments set to `http://localhost:3000/api/auth/callback/gitlab`
+   - Scopes
+     - Select `read_user`, `openid`, `profile` and `email`
 
 ### For Orcid sandbox
 
 1. Register on [https://sandbox.orcid.org/](https://sandbox.orcid.org/)
 
-    - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
-    - Use `<something>@mailinator.com` as email, because to register app you need a verified email and Orcid sandbox only sends mails to `mailinator.com`.
+   - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
+   - Use `<something>@mailinator.com` as email, because to register app you need a verified email and Orcid sandbox only sends mails to `mailinator.com`.
 
 2. Goto [https://www.mailinator.com/v4/public/inboxes.jsp](https://www.mailinator.com/v4/public/inboxes.jsp) and search for `<something>` and verify your email adress
 3. Goto [https://sandbox.orcid.org/account](https://sandbox.orcid.org/account), make email public for everyone
 4. Goto [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools) to register for public API.
 
-    - Your website URL
-        - Does not allow localhost URL, so use `https://lxcat.net`
-    - Redirect URI
-        - For dev deployments set to `http://localhost:3000/api/auth/callback/orcidsandbox`
+   - Your website URL
+     - Does not allow localhost URL, so use `https://lxcat.net`
+   - Redirect URI
+     - For dev deployments set to `http://localhost:3000/api/auth/callback/orcidsandbox`
 
 ### For Orcid
 
 1. Register on [https://orcid.org/](https://orcid.org/)
 
-    - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
+   - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
 
 2. Goto [https://orcid.org/developer-tools](https://orcid.org/developer-tools) to register for public API.
 
-    - Your website URL
-        - Does not allow localhost URL, so use `https://lxcat.net`
-    - Redirect URI, requires https
-        - For dev deployments the nextjs server on <http://localhost:3000> has to be reversed-proxied to https
-            This can be done with [caddyserver](https://caddyserver.com/)
+   - Your website URL
+     - Does not allow localhost URL, so use `https://lxcat.net`
+   - Redirect URI, requires https
+     - For dev deployments the nextjs server on <http://localhost:3000> has to be reversed-proxied to https
+       This can be done with [caddyserver](https://caddyserver.com/)
 
-            ```sh
-            caddy run
-            # This will ask for sudo login to install a CA certificate into local trust store so browser trusts the URL
-            ```
+       ```sh
+       caddy run
+       # This will ask for sudo login to install a CA certificate into local trust store so browser trusts the URL
+       ```
 
-            This will make app available on [https://localhost:8443](https://localhost:8443).
-            In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
-            Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
-        - For production deployments set to `https://< lxcat domain >/api/auth/callback/orcid`
-            Also set `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
+       This will make app available on [https://localhost:8443](https://localhost:8443).
+       In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
+       Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
+     - For production deployments set to `https://< lxcat domain >/api/auth/callback/orcid`
+       Also set `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
 
 ### For Keycloak
 
@@ -131,31 +131,31 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
 1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-test-realm`
 2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-real/users)
-   * The password must be set in Credentials tab, dont forget to turn off `temporary` field.
-   * Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
+   - The password must be set in Credentials tab, dont forget to turn off `temporary` field.
+   - Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
 3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real). This is the oauth provider the lxcat app will authenticate against.
-   * Client ID: lxcat-test
-   * Client protocol: openid-connect
-   * Root URL: http://localhost:3000 or whatever url the application is running on.
-   * After creation edit client some more
-   * Access type: confidential
-   * To Valid Redirect URIs field add `https://localhost:3000/*` 
-   * Save it
-   * On Mappers tab create mapper to expose orcid and picture user attributes
-     * orcid mapper
-       * Name: orcid
-       * Mapper type: User Attribute
-       * User attribute: orcid
-       * Token Claim Name: orcid
-       * Claim JSON Type: string
-       * Save it
-     * picture mapper
-       * Name: picture
-       * Mapper type: User Attribute
-       * User attribute: picture
-       * Token Claim Name: picture
-       * Claim JSON Type: string
-   * On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
+   - Client ID: lxcat-test
+   - Client protocol: openid-connect
+   - Root URL: http://localhost:3000 or whatever url the application is running on.
+   - After creation edit client some more
+   - Access type: confidential
+   - To Valid Redirect URIs field add `https://localhost:3000/*`
+   - Save it
+   - On Mappers tab create mapper to expose orcid and picture user attributes
+     - orcid mapper
+       - Name: orcid
+       - Mapper type: User Attribute
+       - User attribute: orcid
+       - Token Claim Name: orcid
+       - Claim JSON Type: string
+       - Save it
+     - picture mapper
+       - Name: picture
+       - Mapper type: User Attribute
+       - User attribute: picture
+       - Token Claim Name: picture
+       - Claim JSON Type: string
+   - On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
 
 </details>
 
@@ -226,12 +226,13 @@ graph TD
     playwright -->|execute| t[tests]
 ```
 
-The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also 
-* signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`
-* has utility functions to fill or truncate database
+The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also
+
+- signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`
+- has utility functions to fill or truncate database
 
 The `e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
-a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars. 
+a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars.
 
 ## Unit Tests
 

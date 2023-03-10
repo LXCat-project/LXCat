@@ -1,18 +1,17 @@
-
 // SPDX-FileCopyrightText: LXCat team
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-import { HowToCite } from "./HowToCite";
-import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
-import { TermsOfUse } from "../../../shared/TermsOfUse";
 import { Button, Center, Modal } from "@mantine/core";
 import { usePathname } from "next/navigation";
+import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
+import { TermsOfUse } from "../../../shared/TermsOfUse";
+import { HowToCite } from "./HowToCite";
 import { FormattedReference } from "./types";
 
 interface Props {
@@ -24,10 +23,9 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
   const path = usePathname() ?? "";
   const hash = path.split("#")[1] || "";
   const hasForce = hash.includes("terms_of_use");
-  const hasDownloadToken =
-    typeof document !== "undefined"
-      ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
-      : false;
+  const hasDownloadToken = typeof document !== "undefined"
+    ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
+    : false;
   const [agreement, setAgreement] = useState(!hasForce && hasDownloadToken);
 
   async function acceptTermsOfUse() {
@@ -65,7 +63,7 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
         </p>
         <HowToCite references={references} />
         <Center>
-          <Button sx={{marginTop: 10}} onClick={acceptTermsOfUse}>
+          <Button sx={{ marginTop: 10 }} onClick={acceptTermsOfUse}>
             I agree with the terms of use
           </Button>
         </Center>

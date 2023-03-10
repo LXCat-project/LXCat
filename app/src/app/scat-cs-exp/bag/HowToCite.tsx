@@ -311,7 +311,9 @@ export const HowToCite = (
   return (
     <div>
       <h2>How to reference data</h2>
-      <ReferenceList references={[...references, ...FORMATTED_LXCAT_REFERENCES]} />
+      <ReferenceList
+        references={[...references, ...FORMATTED_LXCAT_REFERENCES]}
+      />
     </div>
   );
 };

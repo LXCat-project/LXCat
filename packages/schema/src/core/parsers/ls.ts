@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AtomParser } from "../parse";
 import { AtomLS, AtomLSImpl, LSTerm, LSTermImpl } from "../atoms/ls";
+import { AtomParser } from "../parse";
 import {
   atomic_orbital,
   parse_div_two,

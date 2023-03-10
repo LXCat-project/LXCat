@@ -4,18 +4,18 @@
 
 "use client";
 
-import { useState } from "react";
 import {
-  Group,
   Box,
   Collapse,
-  UnstyledButton,
   createStyles,
+  Group,
+  UnstyledButton,
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons";
-import { DocSection } from "../docs/generator";
 import { slug } from "github-slugger";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { DocSection } from "../docs/generator";
 
 const useStyles = createStyles((theme) => ({
   control: {
@@ -27,10 +27,9 @@ const useStyles = createStyles((theme) => ({
     fontSize: theme.fontSizes.sm,
 
     "&:hover": {
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[7]
-          : theme.colors.gray[0],
+      backgroundColor: theme.colorScheme === "dark"
+        ? theme.colors.dark[7]
+        : theme.colors.gray[0],
       color: theme.colorScheme === "dark" ? theme.white : theme.black,
       textDecoration: "none",
     },
@@ -71,9 +70,9 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
         href={!section.children || opened ? `#${sectionSlug}` : "#"}
         onClick={(event) => {
           if (
-            (!section.children || !opened) &&
-            pathName &&
-            !pathName.includes(`/docs/${fileName}`)
+            (!section.children || !opened)
+            && pathName
+            && !pathName.includes(`/docs/${fileName}`)
           ) {
             router.push(`/docs/${fileName}#${sectionSlug}`);
           }
@@ -104,28 +103,30 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
           )}
         </Group>
       </UnstyledButton>
-      {section.children ? (
-        <Collapse
-          sx={{
-            borderLeft: `1px dashed ${
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[4]
-                : theme.colors.gray[3]
-            }`,
-            marginLeft: 21,
-          }}
-          in={opened}
-        >
-          {section.children.map((child) => (
-            <DocEntry
-              key={`${fileName}-${child.title}`}
-              fileName={fileName}
-              section={child}
-              depth={depth + 1}
-            />
-          ))}
-        </Collapse>
-      ) : null}
+      {section.children
+        ? (
+          <Collapse
+            sx={{
+              borderLeft: `1px dashed ${
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[4]
+                  : theme.colors.gray[3]
+              }`,
+              marginLeft: 21,
+            }}
+            in={opened}
+          >
+            {section.children.map((child) => (
+              <DocEntry
+                key={`${fileName}-${child.title}`}
+                fileName={fileName}
+                section={child}
+                depth={depth + 1}
+              />
+            ))}
+          </Collapse>
+        )
+        : null}
     </>
   );
 }

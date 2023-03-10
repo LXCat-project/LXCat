@@ -33,7 +33,7 @@ docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 85
 The `./arangodb3` directory is used to persist the collection data.
 The container will listen on [http://localhost:8529](http://localhost:8529).
 
-The ArangoDB dashboard (built-in admin web interface) can be accessed in a web browser by visiting [http://localhost:8529](http://localhost:8529) and login with `root` as username and value of ARANGO_PASSWORD environment variable as password and select `lxcat` (or value of ARANGO_DB environment variable if set) as DB. 
+The ArangoDB dashboard (built-in admin web interface) can be accessed in a web browser by visiting [http://localhost:8529](http://localhost:8529) and login with `root` as username and value of ARANGO_PASSWORD environment variable as password and select `lxcat` (or value of ARANGO_DB environment variable if set) as DB.
 
 ## Setup
 
@@ -64,24 +64,24 @@ Each script file is a Typescript file which will be executed.
 To get a [ArangoJS Database object](https://arangodb.github.io/arangojs/7.7.0/classes/database.database-1.html) to perform database queries import `db` from the app use the following imports:
 
 ```ts
-import 'dotenv/config'
-import { db } from '../../src/db'
+import "dotenv/config";
+import { db } from "../../src/db";
 ```
 
 The code must be wrapped inside an async function which is exported as default:
 
 ```ts
 export default async function() {
-    // Call await here
-    // For example:
-    // const names = await db.listDatabases();
+  // Call await here
+  // For example:
+  // const names = await db.listDatabases();
 }
 ```
 
 To perform [schema validation](https://www.arangodb.com/docs/3.8/data-modeling-documents-schema-validation.html) on a collection, you can import a JSON schema from the app with
 
 ```ts
-import { UserJsonSchema } from '../../app/src/auth/schema'
+import { UserJsonSchema } from "../../app/src/auth/schema";
 ```
 
 To make sure the scripts are executed in the correct order when using `*`, name the scripts in an alphanumerically sorted way.

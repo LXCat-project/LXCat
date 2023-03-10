@@ -68,7 +68,7 @@ export async function truncateCrossSectionSetCollections() {
     "HasDirectSubstate",
   ];
   await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate())
+    collections2Truncate.map((c) => db().collection(c).truncate()),
   );
 }
 
@@ -187,8 +187,8 @@ export const sampleSets4Search = async () => {
           reversible: false,
         },
       ],
-      "Some organization"
-    )
+      "Some organization",
+    ),
   );
   await createSet(
     setFrom(
@@ -208,8 +208,8 @@ export const sampleSets4Search = async () => {
           reversible: false,
         },
       ],
-      "Some other organization"
-    )
+      "Some other organization",
+    ),
   );
   await createSet(
     setFrom(
@@ -229,8 +229,8 @@ export const sampleSets4Search = async () => {
           reversible: false,
         },
       ],
-      "Some organization"
-    )
+      "Some organization",
+    ),
   );
   await createSet(
     setFrom(
@@ -250,8 +250,8 @@ export const sampleSets4Search = async () => {
           reversible: false,
         },
       ],
-      "Some organization"
-    )
+      "Some organization",
+    ),
   );
 };
 
@@ -321,9 +321,9 @@ export const sampleSets4SearchWithVersions = async () => {
           reversible: false,
         },
       ],
-      "Some published organization"
+      "Some published organization",
     ),
-    "published"
+    "published",
   );
   await createSet(
     setFrom(
@@ -343,9 +343,9 @@ export const sampleSets4SearchWithVersions = async () => {
           reversible: false,
         },
       ],
-      "Some draft organization"
+      "Some draft organization",
     ),
-    "draft"
+    "draft",
   );
   const id2retract = await createSet(
     setFrom(
@@ -365,9 +365,9 @@ export const sampleSets4SearchWithVersions = async () => {
           reversible: false,
         },
       ],
-      "Some retracted organization"
+      "Some retracted organization",
     ),
-    "published"
+    "published",
   );
   await deleteSet(id2retract, "Oops");
   await createSet(
@@ -388,9 +388,9 @@ export const sampleSets4SearchWithVersions = async () => {
           reversible: false,
         },
       ],
-      "Some archived organization"
+      "Some archived organization",
     ),
-    "archived"
+    "archived",
   );
 };
 
@@ -398,7 +398,7 @@ function setFrom(
   name: string,
   states: Readonly<Dict<State<AnyAtom | AnyMolecule>>>,
   reactions: ReadonlyArray<Reaction<string>>,
-  contributor: string
+  contributor: string,
 ): CrossSectionSetInputOwned {
   return {
     complete: false,

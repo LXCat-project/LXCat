@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
-import { VersionInfo } from "../../shared/types/version_info";
-import { db } from "../../db";
-import {
-  generateStateFilterAql,
-  StateChoices,
-  generateStateChoicesAql,
-  groupStateChoices,
-  ChoiceRow,
-} from "../../shared/queries/state";
-import { PagingOptions } from "../../shared/types/search";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { aql } from "arangojs";
+import { ArrayCursor } from "arangojs/cursor";
+import { db } from "../../db";
+import {
+  ChoiceRow,
+  generateStateChoicesAql,
+  generateStateFilterAql,
+  groupStateChoices,
+  StateChoices,
+} from "../../shared/queries/state";
+import { PagingOptions } from "../../shared/types/search";
+import { VersionInfo } from "../../shared/types/version_info";
+import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
 
 export interface FilterOptions {
   contributor: string[];
@@ -32,7 +32,7 @@ export interface SortOptions {
 export async function search(
   filter: FilterOptions,
   sort: SortOptions,
-  paging: PagingOptions
+  paging: PagingOptions,
 ) {
   let contributor_aql = aql``;
   if (filter.contributor.length > 0) {
@@ -104,7 +104,7 @@ export async function search(
 }
 
 export async function searchFacets(
-  selection: FilterOptions
+  selection: FilterOptions,
 ): Promise<FilterOptions> {
   /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
   const { contributor: _c, ...nonContributorSelection } = selection;
@@ -119,7 +119,7 @@ export async function searchFacets(
 }
 
 async function searchContributors(
-  selection: Omit<FilterOptions, "contributor">
+  selection: Omit<FilterOptions, "contributor">,
 ) {
   const hasTagSelection = selection.tag.length > 0;
   const hasStateSelection = Object.keys(selection.state).length > 0;
@@ -175,7 +175,7 @@ function generateStateChoiceFilter(state: StateChoices) {
 }
 
 export async function stateChoices(
-  selection: Omit<FilterOptions, "state">
+  selection: Omit<FilterOptions, "state">,
 ): Promise<StateChoices> {
   const hasTagSelection = selection.tag.length > 0;
   const stateAql = generateStateChoicesAql();
@@ -213,7 +213,7 @@ export async function stateChoices(
 }
 
 async function tagChoices(
-  selection: Omit<FilterOptions, "tag">
+  selection: Omit<FilterOptions, "tag">,
 ): Promise<ReactionTypeTag[]> {
   const hasContributorSelection = selection.contributor.length > 0;
   const contributorFilter = hasContributorSelection

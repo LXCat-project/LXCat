@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import type {
-  User as LocalUser,
   Session as LocalSession,
+  User as LocalUser,
 } from "@lxcat/database/dist/auth/schema";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
   /**

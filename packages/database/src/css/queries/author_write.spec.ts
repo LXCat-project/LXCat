@@ -2,12 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, beforeAll, it, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
+import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { toggleRole } from "../../auth/queries";
 import {
-  loadTestUserAndOrg,
   createAuthCollections,
+  loadTestUserAndOrg,
 } from "../../auth/testutils";
 import { startDbContainer } from "../../testutils";
 import {
@@ -18,10 +19,9 @@ import {
   listOwned,
 } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
+import { deepClone } from "./deepClone";
 import { historyOfSet, KeyedVersionInfo } from "./public";
 import { createCsCollections, ISO_8601_UTC, sampleEmail } from "./testutils";
-import { deepClone } from "./deepClone";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
 describe("given filled ArangoDB container", () => {
   beforeAll(async () => {
@@ -50,7 +50,7 @@ describe("given filled ArangoDB container", () => {
         },
         "draft",
         "1",
-        "Initial version"
+        "Initial version",
       );
     });
 
@@ -293,7 +293,7 @@ describe("given filled ArangoDB container", () => {
         },
         "published",
         "1",
-        "Initial version"
+        "Initial version",
       );
       const css = await byOwnerAndId("somename@example.com", keycss1);
       if (css !== undefined) {
@@ -310,7 +310,7 @@ describe("given filled ArangoDB container", () => {
       beforeAll(async () => {
         const cssdraft = deepClone(css1);
         const stateA = Object.values(cssdraft.states).find(
-          (s) => s.particle === "A"
+          (s) => s.particle === "A",
         );
         if (stateA !== undefined) {
           stateA.charge = 99;
@@ -329,16 +329,16 @@ describe("given filled ArangoDB container", () => {
       it("draft set should have new id for state with particle A", () => {
         const expected = deepClone(css1);
         const oldStateEntry = Object.entries(css1.states).find(
-          (s) => s[1].particle === "A"
+          (s) => s[1].particle === "A",
         );
         const newStateEntry = Object.entries(css2.states).find(
-          (s) => s[1].particle === "A"
+          (s) => s[1].particle === "A",
         );
         const reactionEntry = expected.processes[0].reaction.lhs[0];
         if (
-          oldStateEntry !== undefined &&
-          newStateEntry !== undefined &&
-          reactionEntry.state === oldStateEntry[0]
+          oldStateEntry !== undefined
+          && newStateEntry !== undefined
+          && reactionEntry.state === oldStateEntry[0]
         ) {
           delete expected.states[oldStateEntry[0]];
           expected.states[newStateEntry[0]] = newStateEntry[1];

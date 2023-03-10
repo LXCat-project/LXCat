@@ -4,8 +4,8 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
 import mermaid from "mermaid";
+import { useEffect, useState } from "react";
 
 interface Props {
   chart: string;

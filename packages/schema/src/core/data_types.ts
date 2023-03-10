@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Pair } from "./util";
 import { Storage } from "./enumeration";
+import { Pair } from "./util";
 
 /**
  * @minLength 1

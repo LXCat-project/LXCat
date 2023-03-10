@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { addOrganization } from "@lxcat/database/dist/auth/queries";
+import { Organization } from "@lxcat/database/dist/auth/schema";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -9,8 +11,6 @@ import {
   hasAdminRole,
   hasSession,
 } from "../../../auth/middleware";
-import { Organization } from "@lxcat/database/dist/auth/schema";
-import { addOrganization } from "@lxcat/database/dist/auth/queries";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSession)

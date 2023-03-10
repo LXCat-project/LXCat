@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, it, beforeAll, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { createSet } from "../../css/queries/author_write";
 
+import { byOwnerAndId } from "../../css/queries/author_read";
 import {
   ISO_8601_UTC,
   sampleCrossSectionSet,
@@ -17,7 +18,6 @@ import { Status } from "../../shared/types/version_info";
 import { getVersionInfo } from "./author_read";
 import { createSampleCrossSection, insertSampleStateIds } from "./testutils";
 import { deleteSection } from "./write";
-import { byOwnerAndId } from "../../css/queries/author_read";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -78,10 +78,10 @@ describe.each(invalidDeleteStatuses)(
 
     it("should throw an error", () => {
       expect(deleteSection(keycs1, "Can I do it?")).rejects.toThrowError(
-        /Can not delete section due to invalid status/
+        /Can not delete section due to invalid status/,
       );
     });
-  }
+  },
 );
 
 describe("deleting a non-existing cross section", () => {
@@ -109,7 +109,7 @@ describe("deleting a draft cross section that is part of a draft cross section s
       await deleteSection(keycs1, "Can I do it?");
     } catch (error) {
       expect(`${error}`).toMatch(
-        `Can not delete cross section that belongs to set(s) ${keycss1}`
+        `Can not delete cross section that belongs to set(s) ${keycss1}`,
       );
     }
   });
@@ -134,7 +134,7 @@ describe("deleting a published cross section that is part of a published cross s
       await deleteSection(keycs1, "Can I do it?");
     } catch (error) {
       expect(`${error}`).toMatch(
-        `Can not retract cross section that belongs to set(s) ${keycss1}`
+        `Can not retract cross section that belongs to set(s) ${keycss1}`,
       );
     }
   });

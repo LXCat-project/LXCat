@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import fetch from "node-fetch";
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import fetch from "node-fetch";
 
 export interface OrcidProfile {
   orcid: string;
@@ -42,7 +42,8 @@ function imageFromName(name: string) {
     // Fallback to generic orcid logo
     return `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsSAAALEgHS3X78AAABnElEQVQ4y52UvUtCURjGf968lmQhFGXYEH3QUg0JhkPR4l5T0IUosMGxv6C1KdpahCZbGxscGiXBloIKo0ESEYpEM71+3NvgvXW0j3vp2c57zvPjPQ/nPWCheDrkiKdDDqtzjl/MQSAChAG/Uc4BCSCmBJKpP0HxdGgQOAY2LRo4BaJKIFn6BjIgCSDolPrQ9Caa3vwLlgLCJkwSNo6BIEBoYp8537ZVLEHD89WRkcmlWex3+WhqNeqtMrLk/nTWWxVA7wYuKYFkymksIuLO/FiEYjXDazXD6tQhJTWLLLmRezxkns+4zsfQdQ3B+wkK/9Z/Sc1yfrsFgFseYnnyAE1vcJM/QfSaGfmxoWrjhaunI2aG18WyvztsW6rUC/Q6vd/qJihnFzTuXeG5ciOWcgBmRglg9yejLLkZHVhEcrgY8SwwPbzGxcOeeCQhgmIi6LV6z5uaR20WKdYemR3ZQNMalNUs53c7vNcLIigGnS87jvVodOtUCSSV7rCjtJ+9XaUMT0fYGDMTpj2Qlp0gzFnH1UT95xuxlN2P7QOpwZChGlWkWQAAAABJRU5ErkJggg==`;
   }
-  const svg = `<svg version="1.1" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+  const svg =
+    `<svg version="1.1" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
     <circle cx="20" cy="20" r="20" fill="#a6ce39"/>
     <text x="20" y="34" font-size="36" text-anchor="middle" fill="white">${initial}</text>
   </svg>`;
@@ -51,7 +52,7 @@ function imageFromName(name: string) {
 }
 
 export function OrcidSandboxProvider<
-  P extends Record<string, any> = OrcidProfile
+  P extends Record<string, any> = OrcidProfile,
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "orcidsandbox",
@@ -82,7 +83,7 @@ export function OrcidSandboxProvider<
 }
 
 export default function OrcidProvider<
-  P extends Record<string, any> = OrcidProfile
+  P extends Record<string, any> = OrcidProfile,
 >(options: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "orcid",

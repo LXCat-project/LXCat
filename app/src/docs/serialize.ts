@@ -6,8 +6,8 @@ import type {
   MDXRemoteSerializeResult,
   SerializeOptions,
 } from "next-mdx-remote/dist/types";
-import { remove } from "unist-util-remove";
 import { Plugin } from "unified";
+import { remove } from "unist-util-remove";
 
 import { compile, CompileOptions } from "@mdx-js/mdx";
 import { VFile } from "vfile";
@@ -28,7 +28,7 @@ export function removeImportsExportsPlugin(): Plugin {
 }
 
 function getCompileOptions(
-  mdxOptions: SerializeOptions["mdxOptions"] = {}
+  mdxOptions: SerializeOptions["mdxOptions"] = {},
 ): CompileOptions {
   const areImportsEnabled = mdxOptions?.useDynamicImport;
 
@@ -56,7 +56,7 @@ export async function serialize(
     scope = {},
     mdxOptions = {},
     parseFrontmatter = false,
-  }: SerializeOptions = {}
+  }: SerializeOptions = {},
 ): Promise<MDXRemoteSerializeResult> {
   // makes frontmatter available via vfile.data.matter
   if (parseFrontmatter) {
@@ -71,8 +71,8 @@ export async function serialize(
 
   return {
     compiledSource,
-    frontmatter:
-      (vfile.data.matter as Record<string, string> | undefined) ?? {},
+    frontmatter: (vfile.data.matter as Record<string, string> | undefined)
+      ?? {},
     scope,
   };
 }

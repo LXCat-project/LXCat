@@ -2,24 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, beforeAll, afterAll, it, expect } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { startDbContainer } from "../testutils";
 import {
-  getUserByKey,
-  listUsers,
-  toggleRole,
-  makeMemberless,
-  setMembers,
-  listOrganizations,
   addOrganization,
   dropOrganization,
+  getUserByKey,
+  listOrganizations,
+  listUsers,
+  makeMemberless,
+  setMembers,
+  toggleRole,
   userMemberships,
 } from "./queries";
 import {
-  TestKeys,
-  loadTestUserAndOrg,
   createAuthCollections,
+  loadTestUserAndOrg,
+  TestKeys,
 } from "./testutils";
 
 describe("given filled ArangoDB container", () => {

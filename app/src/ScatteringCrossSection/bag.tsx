@@ -36,7 +36,7 @@ export const Bag = ({
   hasMixedCompleteSets: boolean;
 }) => {
   const [inPlot, setInPlot] = useState(
-    bag.processes.map((_d, i) => i < INITIAL_PROCESSES2PLOT)
+    bag.processes.map((_d, i) => i < INITIAL_PROCESSES2PLOT),
   );
   // Processes have state ids in their reactions,
   // replace with actual state so reaction can be rendered
@@ -44,9 +44,9 @@ export const Bag = ({
     const { processes, states } = bag;
     return flattenReactions(processes, states);
   }, [bag]);
-  const permaLink = `${
-    process.env.NEXT_PUBLIC_URL
-  }/scat-cs/bag?ids=${bag.processes.map((p) => p.id).join(",")}`;
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+    bag.processes.map((p) => p.id).join(",")
+  }`;
   return (
     <>
       <h1>Bag of scattering cross sections</h1>
@@ -58,9 +58,11 @@ export const Bag = ({
         </div>
       )}
       <a
-        href={`/api/scat-cs/bag?ids=${bag.processes
-          .map((d) => d.id)
-          .join(",")}`}
+        href={`/api/scat-cs/bag?ids=${
+          bag.processes
+            .map((d) => d.id)
+            .join(",")
+        }`}
         target="_blank"
         rel="noreferrer"
         download
@@ -136,7 +138,7 @@ export const Bag = ({
 
 function flattenReactions(
   processes: CrossSectionBag["processes"],
-  states: Record<string, Omit<State, "id">>
+  states: Record<string, Omit<State, "id">>,
 ) {
   return processes.map((p) => {
     const reaction: Reaction<State> = {

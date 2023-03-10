@@ -2,22 +2,22 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { GetServerSideProps, NextPage } from "next";
-import Link from "next/link";
+import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
 import {
   activeSetOfArchivedSet,
   byId,
 } from "@lxcat/database/dist/css/queries/public";
-import { CrossSectionSetItem } from "@lxcat/database/dist/css/public";
-import { Layout } from "../../shared/Layout";
-import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
-import { Reference } from "../../shared/Reference";
-import { useMemo } from "react";
-import Head from "next/head";
-import { Dataset, WithContext } from "schema-dts";
-import { jsonLdScriptProps } from "react-schemaorg";
 import { CSL } from "@lxcat/schema/dist/core/csl";
+import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useMemo } from "react";
+import { jsonLdScriptProps } from "react-schemaorg";
+import { Dataset, WithContext } from "schema-dts";
+import { ProcessList } from "../../ScatteringCrossSectionSet/ProcessList";
 import { reference2bibliography } from "../../shared/cite";
+import { Layout } from "../../shared/Layout";
+import { Reference } from "../../shared/Reference";
 import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 
 interface Props {
@@ -119,7 +119,8 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
         <div style={{ backgroundColor: "orange", color: "white", padding: 8 }}>
           <h2>This set is not the latest version.</h2>
           <p>
-            Visit <Link href={`/scat-css/${set.id}/history`}>history page</Link>{" "}
+            Visit <Link href={`/scat-css/${set.id}/history`}>history page</Link>
+            {" "}
             to see newer versions.
           </p>
         </div>
@@ -165,16 +166,16 @@ const ScatteringCrossSectionPage: NextPage<Props> = ({ set, canonicalId }) => {
       {/* TODO there can be a lot of processes, which would render quicker with paging */}
       <ProcessList processes={set.processes} />
 
-      {set.versionInfo.status === "published" &&
-        set.versionInfo.version !== "1" && (
-          <div>
-            <p>
-              Visit{" "}
-              <Link href={`/scat-css/${set.id}/history`}>history page</Link> to
-              see older versions.
-            </p>
-          </div>
-        )}
+      {set.versionInfo.status === "published"
+        && set.versionInfo.version !== "1" && (
+        <div>
+          <p>
+            Visit <Link href={`/scat-css/${set.id}/history`}>history page</Link>
+            {" "}
+            to see older versions.
+          </p>
+        </div>
+      )}
     </Layout>
   );
 };

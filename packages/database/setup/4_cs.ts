@@ -4,12 +4,16 @@
 
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
-import { db } from "../src/db";
 import { Relation } from "../src/cs/schema";
-import CrossSectionIndbAsJsonSchema from "../src/cs/schemas/CrossSection.schema.json" assert { type: "json" };
-import CrossSectionSetIndbAsJsonSchema from "../src/css/schemas/CrossSectionSet.schema.json" assert { type: "json" };
+import CrossSectionIndbAsJsonSchema from "../src/cs/schemas/CrossSection.schema.json" assert {
+  type: "json",
+};
+import CrossSectionSetIndbAsJsonSchema from "../src/css/schemas/CrossSectionSet.schema.json" assert {
+  type: "json",
+};
+import { db } from "../src/db";
 
-export default async function () {
+export default async function() {
   await createCrossSectionSetCollection();
   await createCrossSectionCollection();
   await createEdgeCollections();

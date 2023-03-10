@@ -16,7 +16,7 @@ export async function bibtex2csl(bibtex: string) {
     refs.map((r) => {
       const label = getReferenceLabel(r);
       return [label, r];
-    })
+    }),
   );
   return labelRefs;
 }

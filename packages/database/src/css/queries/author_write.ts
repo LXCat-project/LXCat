@@ -25,17 +25,17 @@ import {
   insert_state_dict,
   mapReaction,
 } from "../../shared/queries";
+import { upsertOrganization } from "../../shared/queries/organization";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
 import { historyOfSet } from "./public";
-import { upsertOrganization } from "../../shared/queries/organization";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
   dataset: CrossSectionSetInputOwned,
   status: Status = "published",
   version = "1",
-  commitMessage = ""
+  commitMessage = "",
 ) {
   // Reuse Organization created by cross section drafting
   const organizationId = await upsertOrganization(dataset.contributor);
@@ -75,7 +75,7 @@ export async function createSet(
             `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
             reference_ids,
-            organizationId
+            organizationId,
           );
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -87,7 +87,7 @@ export async function createSet(
           state_ids,
           reference_ids,
           organizationId,
-          status
+          status,
         );
         // Make cross sections part of set by adding to IsPartOf collection
         await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -99,7 +99,7 @@ export async function createSet(
         state_ids,
         reference_ids,
         organizationId,
-        status
+        status,
       );
       // Make cross sections part of set by adding to IsPartOf collection
       await insert_edge("IsPartOf", cs_id, cs_set_id);
@@ -157,7 +157,7 @@ export async function updateSet(
    */
   key: string,
   set: CrossSectionSetRaw,
-  message: string
+  message: string,
 ) {
   const info = await getVersionInfo(key);
   if (info === undefined) {
@@ -190,7 +190,7 @@ async function createDraftSet(
   version: string,
   set: CrossSectionSetRaw,
   message: string,
-  key: string
+  key: string,
 ) {
   // check whether a draft already exists
   await isDraftless(key);
@@ -204,7 +204,7 @@ async function createDraftSet(
   await insert_edge(
     "CrossSectionSetHistory",
     `CrossSectionSet/${keyOfDraft}`,
-    `CrossSectionSet/${key}`
+    `CrossSectionSet/${key}`,
   );
   return keyOfDraft;
 }
@@ -213,7 +213,7 @@ async function updateDraftSet(
   key: string,
   dataset: CrossSectionSetInputOwned,
   versionInfo: VersionInfo,
-  message: string
+  message: string,
 ) {
   const organizationId = await upsertOrganization(dataset.contributor);
   versionInfo.commitMessage = message;
@@ -243,7 +243,7 @@ async function updateDraftSet(
           await insert_edge(
             "IsPartOf",
             `CrossSection/${cs.id}`,
-            `CrossSectionSet/${key}`
+            `CrossSectionSet/${key}`,
           );
         } else {
           const cs_id = await updateSection(
@@ -252,7 +252,7 @@ async function updateDraftSet(
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
             reference_ids,
-            organizationId
+            organizationId,
           );
           // Make cross sections part of set by adding to IsPartOf collection
           await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
@@ -266,7 +266,7 @@ async function updateDraftSet(
           organizationId,
           "draft",
           undefined,
-          `Indirect draft by editing set ${dataset.name} / ${key}`
+          `Indirect draft by editing set ${dataset.name} / ${key}`,
         );
         // Make cross sections part of set by adding to IsPartOf collection
         await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
@@ -279,7 +279,7 @@ async function updateDraftSet(
         organizationId,
         "draft",
         undefined,
-        `Indirect draft by editing set ${dataset.name} / ${key}`
+        `Indirect draft by editing set ${dataset.name} / ${key}`,
       );
       // Make cross sections part of set by adding to IsPartOf collection
       await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
@@ -363,7 +363,7 @@ function isEqualSection(
   newCs: CrossSection<string, string, LUT>,
   prevCs: CrossSection<string, string, LUT>,
   stateLookup: Dict<string>,
-  referenceLookup: Dict<string>
+  referenceLookup: Dict<string>,
 ) {
   const newMappedCs = {
     ...newCs,
@@ -374,8 +374,8 @@ function isEqualSection(
   const prevStateLookup = Object.fromEntries(
     ([] as [string, string][]).concat(
       prevCs.reaction.lhs.map((s) => [s.state, `State/${s.state}`]),
-      prevCs.reaction.rhs.map((s) => [s.state, `State/${s.state}`])
-    )
+      prevCs.reaction.rhs.map((s) => [s.state, `State/${s.state}`]),
+    ),
   );
   const prevMappedCs = {
     ...prevCs,
@@ -387,7 +387,7 @@ function isEqualSection(
 
 function mapReference(
   referenceLookup: Dict<string>,
-  reference: string[] | undefined
+  reference: string[] | undefined,
 ) {
   if (reference === undefined) {
     return undefined;
@@ -425,7 +425,7 @@ async function doesPublishingHaveEffectOnOtherSets(key: string) {
   const result = await cursor.all();
   if (
     result.some(
-      (r) => r.publishedAs !== null && r.publishedAs.otherSetIds.length > 0
+      (r) => r.publishedAs !== null && r.publishedAs.otherSetIds.length > 0,
     )
   ) {
     const errors = result.map(
@@ -435,12 +435,12 @@ async function doesPublishingHaveEffectOnOtherSets(key: string) {
             r.publishedAs !== null && r.publishedAs._id
           }) in other cross section sets (${
             r.publishedAs !== null && r.publishedAs.otherSetIds.join(",")
-          }).`
-        )
+          }).`,
+        ),
     );
     throw new AggregateError(
       errors,
-      "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set."
+      "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set.",
     );
   }
 }

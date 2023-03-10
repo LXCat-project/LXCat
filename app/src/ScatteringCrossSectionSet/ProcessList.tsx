@@ -78,12 +78,12 @@ export const LutPlotsDynamic = dynamic(
   () => import("./LutPlots").then((m) => m.LutPlots),
   {
     ssr: false,
-  }
+  },
 );
 
 export const ProcessList = ({ processes }: Props) => {
   const [inPlot, setInPlot] = useState(
-    processes.map((d, i) => i < INITIAL_PROCESSES2PLOT)
+    processes.map((d, i) => i < INITIAL_PROCESSES2PLOT),
   );
   // TODO add paging and filtering as it can be a long list.
   return (

@@ -21,7 +21,7 @@ declare module "@citation-js/core" {
     constructor(csl: Reference, { forceType: string }?);
     format(
       format: string,
-      { format: string, template: string }?
+      { format: string, template: string }?,
     ): string | Record<string, string>;
     get(options?: OutputOptions): Array<Reference>;
     static async: (value: string, options?: InputOptions) => Promise<Cite>;

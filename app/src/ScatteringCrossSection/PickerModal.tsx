@@ -6,7 +6,7 @@ import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { Button, Modal } from "@mantine/core";
 import { useState } from "react";
-import { Picker, Picked } from "./Picker";
+import { Picked, Picker } from "./Picker";
 
 export const PickerModal = ({
   onSubmit,
@@ -20,7 +20,7 @@ export const PickerModal = ({
   const [items, setItems] = useState<Picked>([]);
 
   const getAuthorCS = async (
-    selection: Array<ReactionTemplate>
+    selection: Array<ReactionTemplate>,
   ): Promise<Picked> => {
     const query = new URLSearchParams({
       reactions: JSON.stringify(selection),
@@ -49,7 +49,7 @@ export const PickerModal = ({
   };
 
   const onChangeFilterSelection = async (
-    newSelection: Array<ReactionTemplate>
+    newSelection: Array<ReactionTemplate>,
   ) => {
     if (!open) {
       return;
