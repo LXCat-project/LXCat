@@ -49,10 +49,11 @@ export type TableRow = { key: string } & Record<string, React.ReactNode>;
 export interface GenericTableProps<Row extends TableRow> {
   data: Array<Row>;
   headers: Array<{ label: React.ReactNode; key: keyof Row }>;
+  maxHeight?: number | string;
 }
 
 export function TableScrollArea<Row extends TableRow>(
-  { data, headers }: GenericTableProps<Row>,
+  { data, headers, maxHeight }: GenericTableProps<Row>,
 ) {
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
@@ -69,7 +70,7 @@ export function TableScrollArea<Row extends TableRow>(
     <ScrollArea
       className={classes.outer}
       sx={{
-        ".mantine-ScrollArea-viewport": { maxHeight: 300 },
+        ".mantine-ScrollArea-viewport": { maxHeight: maxHeight ?? 300 },
         ".mantine-ScrollArea-thumb": { zIndex: 1 },
       }}
       onScrollPositionChange={({ y }) => setScrolled(y !== 0)}

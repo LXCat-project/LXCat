@@ -7,13 +7,25 @@
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { Checkbox } from "@mantine/core";
+import { Center, Checkbox, Group, Loader } from "@mantine/core";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
-import { colorScheme } from "../../../ScatteringCrossSectionSet/ProcessList";
 import { Latex } from "../../../shared/Latex";
-import { LutPlots } from "./PlotCanvas";
+import { colorScheme } from "./colors";
 import { TableScrollArea } from "./Table";
+
+const Chart = dynamic(
+  async () => import("./Chart").then((module) => module.Chart),
+  {
+    loading: () => (
+      <Center style={{ width: 700, height: 600 }}>
+        <Loader />
+      </Center>
+    ),
+    ssr: false,
+  },
+);
 
 interface Process extends LUT {
   id: string;
@@ -49,31 +61,34 @@ export const ProcessPlot = (
 
   return (
     <>
-      <LutPlots
-        processes={processes.filter(process => selected.has(process.id))}
-        colors={colorSelection}
-      />
-      <TableScrollArea
-        headers={[{ key: "_check", label: "" }, {
-          key: "reaction",
-          label: "Reaction",
-        }]}
-        data={processes.map((process, index) => ({
-          key: process.id,
-          reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
-          _check: (
-            <Checkbox
-              sx={{
-                ".mantine-Checkbox-input:checked": {
-                  backgroundColor: colorScheme[index % colorScheme.length],
-                },
-              }}
-              checked={selected.has(process.id)}
-              onChange={() => toggleRow(process.id)}
-            />
-          ),
-        }))}
-      />
+      <Group position="center">
+        <Chart
+          processes={processes.filter(process => selected.has(process.id))}
+          colors={colorSelection}
+        />
+        <TableScrollArea
+          headers={[{ key: "_check", label: "" }, {
+            key: "reaction",
+            label: "Reaction",
+          }]}
+          maxHeight={400}
+          data={processes.map((process, index) => ({
+            key: process.id,
+            reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
+            _check: (
+              <Checkbox
+                sx={{
+                  ".mantine-Checkbox-input:checked": {
+                    backgroundColor: colorScheme[index % colorScheme.length],
+                  },
+                }}
+                checked={selected.has(process.id)}
+                onChange={() => toggleRow(process.id)}
+              />
+            ),
+          }))}
+        />
+      </Group>
     </>
   );
 };

@@ -24,29 +24,6 @@ import { TermsOfUseCheck } from "./TermsOfUseCheck";
 // import { reactionAsText } from "../../../ScatteringCrossSection/reaction";
 // import { ReactionSummary } from "./ReactionSummary";
 
-const colorScheme = [
-  "#1f77b4",
-  "#aec7e8",
-  "#ff7f0e",
-  "#ffbb78",
-  "#2ca02c",
-  "#98df8a",
-  "#d62728",
-  "#ff9896",
-  "#9467bd",
-  "#c5b0d5",
-  "#8c564b",
-  "#c49c94",
-  "#e377c2",
-  "#f7b6d2",
-  "#7f7f7f",
-  "#c7c7c7",
-  "#bcbd22",
-  "#dbdb8d",
-  "#17becf",
-  "#9edae5",
-];
-
 export const idsSchema = z
   .array(z.string())
   .min(1)
@@ -55,7 +32,6 @@ export const idsSchema = z
     message: "Array should have unique elements",
   });
 
-// TODO: Abstract the interactive plotting widget into a separate component.
 export const Bag = ({
   bag,
   hasMixedCompleteSets,
@@ -66,15 +42,6 @@ export const Bag = ({
   const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
     formatReference(id, ref)
   );
-  // const [inPlot, setInPlot] = useState(
-  //   bag.processes.map((_d, i) => i < INITIAL_PROCESSES2PLOT)
-  // );
-  // Processes have state ids in their reactions,
-  // replace with actual state so reaction can be rendered
-  // const flatProcesses = useMemo(() => {
-  //   const { processes, states } = bag;
-  //   return flattenReactions(processes, states);
-  // }, [bag]);
   const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
     bag.processes.map((p) => p.id).join(",")
   }`;
@@ -100,15 +67,10 @@ export const Bag = ({
       >
         Download JSON format
       </a>
-      {
-        // <h2>References</h2>
-      }
       <ReferenceList references={formattedRefs} />
       <TermsOfUseCheck references={formattedRefs} permaLink={permaLink} />
-      <h2>Processes</h2>
+      <ProcessPlot processes={flattenReactions(bag.processes, bag.states)} />
       {
-        // <LutPlots processes={bag.processes} colors={bag.processes.map((_, index) => colorScheme[index])}/>
-        <ProcessPlot processes={flattenReactions(bag.processes, bag.states)} />
         // <div className="proceses-list" style={{ display: "flex" }}>
         //   <ol>
         //     {flatProcesses.map((p, i) => (

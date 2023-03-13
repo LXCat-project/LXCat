@@ -42,7 +42,9 @@ importers:
       '@types/deep-equal': ^1.0.1
       '@types/node': 17.0.21
       '@types/oidc-provider': ^7.14.0
+      '@types/plotly.js-basic-dist': ^1.54.1
       '@types/react': 18.0.27
+      '@types/react-plotly.js': ^2.6.0
       '@types/unist': ^2.0.6
       '@vitest/coverage-c8': ^0.24.5
       ajv: ^8.12.0
@@ -65,10 +67,12 @@ importers:
       node-fetch: ^3.3.0
       node-loader: ^2.0.0
       oidc-provider: ^7.14.3
+      plotly.js-basic-dist: ^2.18.2
       react: 18.2.0
       react-dom: 18.2.0
       react-hook-form: ^7.43.5
       react-latex-next: ^2.2.0
+      react-plotly.js: ^2.6.0
       react-schemaorg: ^2.0.0
       react-vega: ^7.6.0
       rehype-autolink-headings: ^6.1.1
@@ -126,10 +130,12 @@ importers:
       next-mdx-remote: 4.4.1_biqbaboplfbrettd7655fr4n2y
       nextjs-cors: 2.1.2_next@13.2.4-canary.5
       node-fetch: 3.3.0
+      plotly.js-basic-dist: 2.18.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.43.5_react@18.2.0
       react-latex-next: 2.2.0_biqbaboplfbrettd7655fr4n2y
+      react-plotly.js: 2.6.0_react@18.2.0
       react-schemaorg: 2.0.0_6bnps355to3xlx2exm773rfp4m
       react-vega: 7.6.0_2sr47ao3ucvbqxzwa62xqigqly
       rehype-autolink-headings: 6.1.1
@@ -168,7 +174,9 @@ importers:
       '@types/deep-equal': 1.0.1
       '@types/node': 17.0.21
       '@types/oidc-provider': 7.14.0
+      '@types/plotly.js-basic-dist': 1.54.1
       '@types/react': 18.0.27
+      '@types/react-plotly.js': 2.6.0
       '@types/unist': 2.0.6
       '@vitest/coverage-c8': 0.24.5
       babel-loader: 8.3.0_@babel+core@7.21.0
@@ -4781,6 +4789,16 @@ packages:
     resolution: {integrity: sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==}
     dev: true
 
+  /@types/plotly.js-basic-dist/1.54.1:
+    resolution: {integrity: sha512-PAowclM1Z9nfTGqLn2KrN3dDXF2M9TalggShN/k/6jyUZTkxfgSoJ3HGReyUqjxsRBgUZnWRIPmLOA+sDsGWFA==}
+    dependencies:
+      '@types/plotly.js': 2.12.18
+    dev: true
+
+  /@types/plotly.js/2.12.18:
+    resolution: {integrity: sha512-ff+CIEWnqZNjZqHtQZvkEAVuLs9fkm1f54QnPVmgoET7wMHdSqUka2hasVN4e5yfHD05YwGjsAtCseewJh/BMw==}
+    dev: true
+
   /@types/pretty-hrtime/1.0.1:
     resolution: {integrity: sha512-VjID5MJb1eGKthz2qUerWT8+R4b9N+CHvGCzg9fn4kWZgaF9AhdYikQio3R7wV8YY1NsQKPaCwKz1Yff+aHNUQ==}
     dev: true
@@ -4794,6 +4812,13 @@ packages:
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+    dev: true
+
+  /@types/react-plotly.js/2.6.0:
+    resolution: {integrity: sha512-nJJ57U0/CNDAO+F3dpnMgM8PtjLE/O1I3O6gq4+5Q13uKqrPnHGYOttfdzQJ4D7KYgF609miVzEYakUS2zds8w==}
+    dependencies:
+      '@types/plotly.js': 2.12.18
+      '@types/react': 18.0.27
     dev: true
 
   /@types/react/18.0.27:
@@ -13462,6 +13487,10 @@ packages:
     hasBin: true
     dev: true
 
+  /plotly.js-basic-dist/2.18.2:
+    resolution: {integrity: sha512-0eF3nteaXZMbsDaHHWdgddYdKS7VL5MyP7yaqTnS2S+aWAXHJhsKVUeuk9/Zd31cSMHOuk6Zv9NUQaPyyB9GIA==}
+    dev: false
+
   /pnp-webpack-plugin/1.6.4_typescript@4.9.5:
     resolution: {integrity: sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==}
     engines: {node: '>=6'}
@@ -14014,6 +14043,16 @@ packages:
   /react-merge-refs/1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
     dev: true
+
+  /react-plotly.js/2.6.0_react@18.2.0:
+    resolution: {integrity: sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==}
+    peerDependencies:
+      plotly.js: '>1.34.0'
+      react: '>0.13.0'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
 
   /react-property/2.0.0:
     resolution: {integrity: sha512-kzmNjIgU32mO4mmH5+iUyrqlpFQhF8K2k7eZ4fdLSOPFrD1XgEuSBv9LDEgxRXTMBqMd8ppT0x6TIzqE5pdGdw==}

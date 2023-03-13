@@ -6,7 +6,7 @@
 
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
-import Head from "next/head";
+import Script from "next/script";
 
 import { z } from "zod";
 import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
@@ -30,9 +30,21 @@ const ScatteringCrossSectionSelectionPage = async (
 
   return (
     <>
-      <Head>
-        <link rel="canonical" href={canonicalUrl} />
-      </Head>
+      <Script
+        async
+        src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
+      />
+      {
+        // <head>
+        //   <link rel="canonical" href={canonicalUrl} />
+        //   {
+        //     // <script
+        //     //   async
+        //     //   src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
+        //     // />
+        //   }
+        // </head>
+      }
       {/* TODO add dialog how to cite */}
       {searchParams
         ? <Bag {...(await fetchProps(searchParams.ids ?? []))} />
