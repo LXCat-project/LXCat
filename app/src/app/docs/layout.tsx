@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { extractMarkdownHeaders } from "../../docs/generator";
-import { MarkdownLayout } from "./client";
+import { MarkdownLayout } from "./MarkdownLayout";
 
-import "./scroll.css";
+// import "./scroll.css";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const docFiles = await extractMarkdownHeaders();

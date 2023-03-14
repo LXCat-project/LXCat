@@ -22,9 +22,11 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 500,
     display: "block",
     width: "100%",
-    padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
+    paddingTop: theme.spacing.xs,
+    paddingBottom: theme.spacing.xs,
+    marginRight: 0,
     color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
-    fontSize: theme.fontSizes.sm,
+    fontSize: theme.fontSizes.md,
 
     "&:hover": {
       backgroundColor: theme.colorScheme === "dark"
@@ -92,7 +94,7 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
           {section.children && (
             <IconChevronRight
               className={classes.chevron}
-              size={14}
+              size={18}
               stroke={1.5}
               style={{
                 transform: opened

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { NavBar } from "../shared/NavBar";
 import "../styles/globals.css";
 import { Provider } from "./provider";
 
@@ -14,7 +15,12 @@ const MyApp = ({ children }: RootLayoutProps) => {
     <html lang="en-US">
       <head />
       <body>
-        <Provider>{children}</Provider>
+        <Provider>
+          <div style={{ boxSizing: "border-box" }}>
+            <NavBar />
+            {children}
+          </div>
+        </Provider>
       </body>
     </html>
   );
