@@ -1,0 +1,51 @@
+"use client";
+
+import { Button, Menu } from "@mantine/core";
+import { IconDownload } from "@tabler/icons";
+import { LinkToggle } from "./LinkToggle";
+
+export const ButtonMultiDownload = (
+  { children, entries }: {
+    children: React.ReactNode;
+    entries: Array<
+      { text: string; link: string; icon?: React.ReactNode; disabled?: boolean }
+    >;
+  },
+) => {
+  return (
+    <Menu
+      transitionProps={{ transition: "pop" }}
+      position="top"
+      withinPortal
+    >
+      <Menu.Target>
+        <Button
+          rightIcon={<IconDownload size="1.05rem" stroke={1.5} />}
+          pr={12}
+          size="md"
+        >
+          {children}
+        </Button>
+      </Menu.Target>
+      <Menu.Dropdown>
+        {entries.map(({ text, link, icon, disabled }, index) => (
+          <LinkToggle
+            key={index}
+            style={{
+              textDecoration: "none",
+            }}
+            href={disabled ? "" : link}
+            target="_blank"
+            rel="noreferrer"
+            download
+            disabled={disabled}
+          >
+            <Menu.Item icon={icon} disabled={disabled}>
+              {text}
+            </Menu.Item>
+          </LinkToggle>
+        ))}
+      </Menu.Dropdown>
+    </Menu>
+  );
+};

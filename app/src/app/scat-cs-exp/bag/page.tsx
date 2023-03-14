@@ -37,12 +37,6 @@ const ScatteringCrossSectionSelectionPage = async (
       {
         // <head>
         //   <link rel="canonical" href={canonicalUrl} />
-        //   {
-        //     // <script
-        //     //   async
-        //     //   src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
-        //     // />
-        //   }
         // </head>
       }
       {/* TODO add dialog how to cite */}
