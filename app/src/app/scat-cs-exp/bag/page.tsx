@@ -32,7 +32,7 @@ const ScatteringCrossSectionSelectionPage = async (
     <>
       <Script
         async
-        src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       />
       {
         // <head>
