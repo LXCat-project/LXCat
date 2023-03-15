@@ -15,6 +15,7 @@ importers:
       '@citation-js/plugin-bibtex': ^0.6.6
       '@citation-js/plugin-csl': ^0.6.7
       '@citation-js/plugin-doi': ^0.6.6
+      '@citation-js/plugin-ris': ^0.6.5
       '@emotion/react': ^11.10.6
       '@emotion/server': ^11.10.0
       '@hookform/error-message': ^2.0.1
@@ -103,6 +104,7 @@ importers:
       '@citation-js/plugin-bibtex': 0.6.6_@citation-js+core@0.6.5
       '@citation-js/plugin-csl': 0.6.7_@citation-js+core@0.6.5
       '@citation-js/plugin-doi': 0.6.6_@citation-js+core@0.6.5
+      '@citation-js/plugin-ris': 0.6.5_@citation-js+core@0.6.5
       '@emotion/react': 11.10.6_3stiutgnnbnfnf3uowm5cip22i
       '@emotion/server': 11.10.0
       '@hookform/error-message': 2.0.1_onwixewhqm6cnvx5lymjpv2ekm
@@ -1769,6 +1771,17 @@ packages:
     dependencies:
       '@citation-js/core': 0.6.5
       '@citation-js/date': 0.5.1
+    dev: false
+
+  /@citation-js/plugin-ris/0.6.5_@citation-js+core@0.6.5:
+    resolution: {integrity: sha512-DEKVeSL1Da79RI4F60IUQjgoFiVxYoKzv9RsyGe4oDGNKjlKfYrJkCVkfCI5rNX6z9rh3Ei5THDy+ka8jploVw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@citation-js/core': ^0.6.0
+    dependencies:
+      '@citation-js/core': 0.6.5
+      '@citation-js/date': 0.5.1
+      '@citation-js/name': 0.4.2
     dev: false
 
   /@cnakazawa/watch/1.0.4:
