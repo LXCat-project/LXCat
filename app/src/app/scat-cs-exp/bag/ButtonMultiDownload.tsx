@@ -8,7 +8,13 @@ export const ButtonMultiDownload = (
   { children, entries }: {
     children: React.ReactNode;
     entries: Array<
-      { text: string; link: string; icon?: React.ReactNode; disabled?: boolean }
+      {
+        text: string;
+        link: string;
+        icon?: React.ReactNode;
+        disabled?: boolean;
+        fileName?: string;
+      }
     >;
   },
 ) => {
@@ -28,7 +34,7 @@ export const ButtonMultiDownload = (
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        {entries.map(({ text, link, icon, disabled }, index) => (
+        {entries.map(({ text, link, icon, disabled, fileName }, index) => (
           <LinkToggle
             key={index}
             style={{
@@ -37,7 +43,7 @@ export const ButtonMultiDownload = (
             href={disabled ? "" : link}
             target="_blank"
             rel="noreferrer"
-            download
+            download={fileName ?? true}
             disabled={disabled}
           >
             <Menu.Item icon={icon} disabled={disabled}>

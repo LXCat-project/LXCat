@@ -16,7 +16,6 @@ import {
   Group,
   Loader,
   Stack,
-  useMantineTheme,
 } from "@mantine/core";
 import { IconAlertCircle, IconCodeDots, IconFileText } from "@tabler/icons";
 import dynamic from "next/dynamic";
@@ -58,8 +57,6 @@ export const PlotPage = (
     permaLink: string;
   },
 ) => {
-  const theme = useMantineTheme();
-
   // TODO: Map a selected process to an available color instead of a fixed color.
   const [selected, setSelected] = useState(
     new Set<string>(
@@ -85,6 +82,7 @@ export const PlotPage = (
   );
 
   let idsString = processes.map(({ id }) => id).join(",");
+  let referenceIds = refs.map(({ id }) => id).join("/");
 
   return (
     <>
@@ -167,10 +165,27 @@ export const PlotPage = (
               <ReferenceList references={refs} />
               <Group>
                 <TermsOfUseCheck references={refs} permaLink={permaLink} />
+                <ButtonMultiDownload
+                  entries={[{
+                    text: "CSL-JSON",
+                    link: `/api/references/csl-json/${referenceIds}`,
+                    icon: <IconCodeDots stroke={1.5} />,
+                    fileName: "LXCat_references",
+                  }, {
+                    text: "Bibtex",
+                    link: `/api/references/bibtex/${referenceIds}`,
+                    icon: <IconFileText stroke={1.5} />,
+                    fileName: "LXCat_references.bib",
+                  }, {
+                    text: "RIS",
+                    link: `/api/references/ris/${referenceIds}`,
+                    icon: <IconFileText stroke={1.5} />,
+                    fileName: "LXCat_references.ris",
+                  }]}
+                >
+                  Download references
+                </ButtonMultiDownload>
               </Group>
-              {
-                // TODO: Button to download references.
-              }
             </Stack>
           </Stack>
         </Grid.Col>
