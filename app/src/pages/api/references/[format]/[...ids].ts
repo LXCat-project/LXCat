@@ -36,7 +36,6 @@ const handler = nc<AuthRequest, NextApiResponse>().use(hasSessionOrAPIToken)
           case "bibtex":
           case "ris":
             const cite = new Cite(references);
-            console.log(format);
             res.status(200).send(cite.format(format));
             break;
           case "csl-json":
