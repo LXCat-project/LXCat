@@ -163,8 +163,7 @@ export const PlotPage = (
             />
             <Stack>
               <ReferenceList references={refs} />
-              <Group>
-                <TermsOfUseCheck references={refs} permaLink={permaLink} />
+              <Group position="center">
                 <ButtonMultiDownload
                   entries={[{
                     text: "CSL-JSON",
@@ -185,6 +184,7 @@ export const PlotPage = (
                 >
                   Download references
                 </ButtonMultiDownload>
+                <TermsOfUseCheck references={refs} permaLink={permaLink} />
               </Group>
             </Stack>
           </Stack>
