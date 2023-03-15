@@ -8,9 +8,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button, Center, Modal } from "@mantine/core";
+import { IconLicense } from "@tabler/icons";
 import { usePathname } from "next/navigation";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
 import { TermsOfUse } from "../../../shared/TermsOfUse";
+import { ButtonClipboard } from "./ButtonClipboard";
 import { HowToCite } from "./HowToCite";
 import { FormattedReference } from "./types";
 
@@ -45,7 +47,12 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
 
   return (
     <>
-      <Button type="button" onClick={() => setAgreement(false)}>
+      <Button
+        type="button"
+        size="md"
+        rightIcon={<IconLicense size={"1.05rem"} stroke={1.5} />}
+        onClick={() => setAgreement(false)}
+      >
         Terms of use
       </Button>
       <Modal
@@ -57,15 +64,14 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
       >
         <h2>Terms of use</h2>
         <TermsOfUse />
-        <p>
-          The permalink for this data is{" "}
-          <Link href={permaLink}>{permaLink}</Link>
-        </p>
         <HowToCite references={references} />
         <Center>
-          <Button sx={{ marginTop: 10 }} onClick={acceptTermsOfUse}>
-            I agree with the terms of use
-          </Button>
+          <Button.Group sx={{ marginTop: 10 }}>
+            <ButtonClipboard link={permaLink}>Copy permalink</ButtonClipboard>
+            <Button size="md" onClick={acceptTermsOfUse}>
+              I agree with the terms of use
+            </Button>
+          </Button.Group>
         </Center>
       </Modal>
     </>
