@@ -11,7 +11,28 @@ import {
 
 test.use({ storageState: "adminStorageState.json" });
 
-test.describe("section page", () => {
+const csTest = test.extend({
+  page: async ({ page }, use) => {
+    // goto a section page
+    await page.goto("/scat-cs");
+    await page.locator("[aria-controls=\"particle-select\"]").first().click();
+    await page
+      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
+      .click();
+
+    const link = await page.locator("a[role=\"listitem\"]").getAttribute(
+      "href",
+    );
+    await page.goto(link!);
+
+    // accept tos
+    await page.locator("text=I agree with the terms of use").click();
+
+    await use(page);
+  },
+});
+
+test.describe("Cross section page", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
   });
@@ -20,29 +41,12 @@ test.describe("section page", () => {
     await truncateNonUserCollections();
   });
 
-  test.beforeEach(async ({ page }) => {
-    // goto a section page
-    await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
-      .click();
-    // TODO waiting should not be needed
-    const item = await page.waitForSelector("a[role=\"listitem\"]");
-    // TODO item.click() should have worked but did not so implemented workaround to goto href
-    const itemUrl = await item.getAttribute("href");
-    await page.goto(itemUrl ?? "");
-
-    // accept tos
-    await page.locator("text=I agree with the terms of use").click();
-  });
-
-  test("should have plot", async ({ page }) => {
+  csTest("should have plot", async ({ page }) => {
     const canvas = page.locator(".chart-wrapper");
     await expect(canvas).toBeVisible();
   });
 
-  test("should be able to download JSON format", async ({ page }) => {
+  csTest("should be able to download JSON format", async ({ page }) => {
     const [download] = await Promise.all([
       page.waitForEvent("download"),
       page.locator("text=Download JSON format").click(),
@@ -54,12 +58,12 @@ test.describe("section page", () => {
   });
 
   test.describe("Data as table", () => {
-    test.beforeEach(async ({ page }) => {
+    csTest.beforeEach(async ({ page }) => {
       // Expand table
       await page.locator("text=Data as table").click();
     });
 
-    test("should have 4 data points", async ({ page }) => {
+    csTest("should have 4 data points", async ({ page }) => {
       const rows = page.locator("table >> tr");
       await expect(rows).toHaveCount(
         4 + 1, // header row

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
   truncateNonUserCollections,
@@ -33,7 +33,6 @@ test.describe("cross section index page with Uo selected", () => {
       .click();
   });
 
-  // FIXME: How to uniquely locate consuming StateSelect and select Uo?
   test("should have 2 items listed", async ({ page }) => {
     const section1 = page.locator("text=/.*Part of \"Some name\" set.*/");
     const section2 = page.locator("text=/.*Part of \"Some other name\" set.*/");
