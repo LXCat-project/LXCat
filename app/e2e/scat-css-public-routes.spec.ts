@@ -98,12 +98,11 @@ test.describe("given 2 dummy sets", () => {
       });
     });
 
-    // TODO legacy format for dummy sets causes a fatal runtime error
-    test.describe.skip("/api/scat-css/[id]/legacy", () => {
+    test.describe("/api/scat-css/[id]/legacy", () => {
       test("should return text in bolsig+ format", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}/legacy`);
 
-        expect(res.headers()["Content-Type"]).toEqual("text/plain");
+        expect(res.headers()["content-type"]).toEqual("text/plain");
         const body = await res.text();
         expect(body).toBeTruthy();
       });
