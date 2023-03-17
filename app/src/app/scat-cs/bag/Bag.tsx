@@ -11,11 +11,7 @@ import { z } from "zod";
 // import { TermsOfUseCheck } from "../../../shared/TermsOfUseCheck";
 import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
 import { formatReference } from "./cite";
-import { ProcessPlot } from "./Plot";
-import { PlotGrid } from "./PlotGrid";
 import { PlotPage } from "./PlotPage";
-import { ReferenceList } from "./ReferenceList";
-import { TermsOfUseCheck } from "./TermsOfUseCheck";
 // import { reactionAsText } from "../../../ScatteringCrossSection/reaction";
 // import { ReactionSummary } from "./ReactionSummary";
 
