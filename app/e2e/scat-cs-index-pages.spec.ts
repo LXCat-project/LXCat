@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
   truncateNonUserCollections,
@@ -84,24 +84,32 @@ test.describe("cross section set index page", () => {
   });
 });
 
-test.describe("cross section bag page", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
-      .click();
-    await page.locator("text=Plot selection").click();
-    await page.locator("text=I agree with the terms of use").click();
+const bagTest = (first: boolean) =>
+  test.extend({
+    page: async ({ page }, use) => {
+      await page.goto("/scat-cs");
+      await page.locator("[aria-controls=\"particle-select\"]").first().click();
+      await page
+        .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
+        .click();
+      await page.locator("text=Plot selection").click();
+      // FIXME: This button needs to be clicked twice when clicked for the first time in dev mode. Maybe because its passing the pages/api boundary?
+      first && await page.locator("text=Plot selection").click();
+      await page.locator("text=I agree with the terms of use").click();
+      await use(page);
+    },
   });
 
-  test("should be able to download JSON format", async ({ page }) => {
+test.describe("cross section bag page", () => {
+  bagTest(true)("should be able to download JSON format", async ({ page }) => {
     test.setTimeout(60000);
+
+    await page.locator("text=Download data").click();
 
     // this exercises the /api/scat-cs/bag endpoint
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.locator("text=Download JSON format").click(),
+      page.locator("text=JSON").click(),
     ]);
 
     const path = await download.path();
@@ -109,17 +117,17 @@ test.describe("cross section bag page", () => {
     expect(content).toContain("Energy");
   });
 
-  test("should have plot", async ({ page }) => {
-    const canvas = page.locator(".chart-wrapper");
+  bagTest(false)("should have plot", async ({ page }) => {
+    const canvas = page.locator(".plot-container.plotly");
     await expect(canvas).toBeVisible();
   });
 
-  test("should have 2 items", async ({ page }) => {
-    const section1 = page.locator("text=Some name by Some organization");
-    const section2 = page.locator(
-      "text=Some other name by Some other organization",
-    );
-    await expect(section1).toBeVisible();
-    await expect(section2).toBeVisible();
+  bagTest(false)("should have 2 items", async ({ page }) => {
+    const table = page.locator("table:has(thead th:text(\"Reaction\"))");
+    const secondCrossSection = table.locator("td span.katex").nth(1);
+
+    table.highlight();
+
+    await expect(secondCrossSection).toBeVisible();
   });
 });
