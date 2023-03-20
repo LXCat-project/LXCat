@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 // Category20 color scheme from https://vega.github.io/vega/docs/schemes/
 export const colorScheme = [
   "#1f77b4",
