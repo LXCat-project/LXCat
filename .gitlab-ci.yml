@@ -25,6 +25,8 @@ build-dev:
   script:
     - pnpm install
     - pnpm build
+    # Remove the cache directory as it is very large and we do not need it for running the build in subsequent test jobs.
+    - rm -rf .next/cache
     - pnpm lint
     # - npm ci --cache .npm --prefer-offline
     # TODO Run prettier --check to enforce merge requests are formatted correctly
@@ -34,7 +36,8 @@ build-dev:
       - packages/schema/dist
       - packages/database/dist
       - packages/converter/dist
-  #     - app/.next
+      - app/.next
+    expire_in: 1 day
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always

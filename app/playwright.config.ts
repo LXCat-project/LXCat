@@ -3,6 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
+import dns from "node:dns";
+
+// See: https://github.com/microsoft/playwright/issues/20784
+dns.setDefaultResultOrder("ipv4first");
 
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
@@ -12,7 +16,7 @@ const config: PlaywrightTestConfig = {
   globalSetup: require.resolve("./e2e/global-setup"),
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
-    command: "pnpm dev --port 8001",
+    command: "pnpm start --port 8001",
     port: 8001,
     // timeout: 2 * 60 * 1000, // Wait for 2 minutes to spinup app dev server
     reuseExistingServer: !process.env.CI,

@@ -137,10 +137,8 @@ test.describe("given 2 dummy sets", () => {
       test.setTimeout(60000);
 
       // Open the vega action context menu aka ... icon
-      // FIXME: For some reason there are two overlapping buttons. The latter button is the correct one, hence the `nth(1)`.
       const details = page
-        .locator("details[title=\"Click to view actions\"]")
-        .nth(1);
+        .locator("details[title=\"Click to view actions\"]");
 
       await details.locator("summary").click();
 
