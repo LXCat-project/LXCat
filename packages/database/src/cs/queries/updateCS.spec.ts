@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, it, beforeAll, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import {
   ISO_8601_UTC,
@@ -52,7 +52,7 @@ describe("given published cross section has been updated", () => {
       "Updated threshold",
       updatedStateIds,
       {},
-      "Some organization"
+      "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
@@ -115,7 +115,7 @@ describe("given draft cross section has been updated", () => {
       "Updated threshold",
       updatedStateIds,
       {},
-      "Some organization"
+      "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
@@ -157,8 +157,8 @@ describe("given a key of a non-existing cross section", () => {
         "cannot update what does not exist",
         {},
         {},
-        "Some organization"
-      )
+        "Some organization",
+      ),
     ).rejects.toThrowError("Can not update cross section that does not exist");
   });
 });
@@ -183,13 +183,13 @@ describe.each(invalidDeleteStatuses)(
           "cannot update when already archived or retracted",
           {},
           {},
-          "Some organization"
-        )
+          "Some organization",
+        ),
       ).rejects.toThrowError(
-        /Can not update cross section due to invalid status/
+        /Can not update cross section due to invalid status/,
       );
     });
-  }
+  },
 );
 
 describe("given updating published section which already has draft", () => {
@@ -222,7 +222,7 @@ describe("given updating published section which already has draft", () => {
       "Updated threshold",
       updatedStateIds,
       {},
-      "Some organization"
+      "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
@@ -239,11 +239,11 @@ describe("given updating published section which already has draft", () => {
         "another draft please",
         {},
         {},
-        "Some organization"
+        "Some organization",
       );
     } catch (error) {
       expect(`${error}`).toMatch(
-        `Can not create draft, it already exists as ${keycs2}`
+        `Can not create draft, it already exists as ${keycs2}`,
       );
     }
   });

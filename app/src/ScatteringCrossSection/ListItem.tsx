@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import Link from "next/link";
 import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 
 const style = {
   boxShadow: "3px 5px 2px gray",

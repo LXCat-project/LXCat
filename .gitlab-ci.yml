@@ -7,7 +7,7 @@
 #     alias: db
 
 build-dev:
-  image: node:16-bullseye
+  image: node:18-bullseye
   stage: build
   cache:
     key:
@@ -25,6 +25,8 @@ build-dev:
   script:
     - pnpm install
     - pnpm build
+    # Remove the cache directory as it is very large and we do not need it for running the build in subsequent test jobs.
+    - rm -rf .next/cache
     - pnpm lint
     # - npm ci --cache .npm --prefer-offline
     # TODO Run prettier --check to enforce merge requests are formatted correctly
@@ -34,7 +36,8 @@ build-dev:
       - packages/schema/dist
       - packages/database/dist
       - packages/converter/dist
-  #     - app/.next
+      - app/.next
+    expire_in: 1 day
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
@@ -100,7 +103,7 @@ test-database:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -143,7 +146,7 @@ test-schema:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   before_script:
     # Install pnpm
     - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
@@ -174,7 +177,7 @@ test-converter:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   before_script:
     # Install pnpm
     - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
@@ -202,8 +205,8 @@ build-prod:
     - docker-compose build
     # TODO do stuff with build images
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-      when: always
+    # - if: '$CI_PIPELINE_SOURCE == "web"'
+    #   when: always
     - when: never
 
 reuse:

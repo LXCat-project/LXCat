@@ -16,7 +16,7 @@ export const Filter = ({ selection, onChange }: Props) => {
 
   function onFilterChange(
     newSelection: Array<ReactionTemplate>,
-    event?: string
+    event?: string,
   ) {
     const query = new URLSearchParams({
       reactions: JSON.stringify(newSelection),

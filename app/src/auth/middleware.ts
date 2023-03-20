@@ -78,7 +78,7 @@ export const hasSessionOrAPIToken: RequestHandler<
 export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (
   req,
   res,
-  next
+  next,
 ) => {
   const session = await getServerSession(req, res, options);
   if (session?.user) {
@@ -137,9 +137,9 @@ export const hasDeveloperOrDownloadRole: RequestHandler<
 > = async (req, res, next) => {
   if (req.user) {
     if (
-      "roles" in req.user &&
-      (req.user.roles!.includes(Role.enum.developer) ||
-        req.user.roles!.includes(Role.enum.download))
+      "roles" in req.user
+      && (req.user.roles!.includes(Role.enum.developer)
+        || req.user.roles!.includes(Role.enum.download))
     ) {
       next();
     } else {
@@ -170,7 +170,7 @@ export const hasAuthorRole: RequestHandler<
 };
 
 export const mustBeAdmin = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>
+  context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>,
 ) => {
   const session = await getServerSession(context.req, context.res, options);
   if (!session?.user) {
@@ -187,7 +187,7 @@ export const mustBeAdmin = async (
 };
 
 export const mustBeAuthor = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>
+  context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>,
 ) => {
   const session = await getServerSession(context.req, context.res, options);
   if (!session?.user) {

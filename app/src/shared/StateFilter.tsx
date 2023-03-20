@@ -72,23 +72,24 @@ const VibrationalFilter = ({
         <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         {label}
       </label>
-      {checked && hasRotationalChoices ? (
-        <ul style={ulStyle}>
-          <li>Rotational</li>
-          {choices.rotational.map((rotationalSummary) => (
-            <label key={`${label}-${rotationalSummary}`}>
-              <input
-                type="checkbox"
-                checked={selected.rotational.includes(rotationalSummary)}
-                onChange={() => onRotationalChange(rotationalSummary)}
-              />
-              {rotationalSummary}
-            </label>
-          ))}
-        </ul>
-      ) : (
-        <></>
-      )}
+      {checked && hasRotationalChoices
+        ? (
+          <ul style={ulStyle}>
+            <li>Rotational</li>
+            {choices.rotational.map((rotationalSummary) => (
+              <label key={`${label}-${rotationalSummary}`}>
+                <input
+                  type="checkbox"
+                  checked={selected.rotational.includes(rotationalSummary)}
+                  onChange={() =>
+                    onRotationalChange(rotationalSummary)}
+                />
+                {rotationalSummary}
+              </label>
+            ))}
+          </ul>
+        )
+        : <></>}
     </li>
   );
 };
@@ -103,7 +104,7 @@ const ElectronicFilter = ({
   selected: { vibrational: VibrationalChoices };
   choices: { vibrational: VibrationalChoices };
   onChange: (
-    newSelection: { vibrational: VibrationalChoices } | undefined
+    newSelection: { vibrational: VibrationalChoices } | undefined,
   ) => void;
 }) => {
   const checked = selected !== undefined;
@@ -119,7 +120,7 @@ const ElectronicFilter = ({
 
   function onVibrationalChange(
     vibrationalSummary: string,
-    newVibratonalSelection: { rotational: string[] } | undefined
+    newVibratonalSelection: { rotational: string[] } | undefined,
   ) {
     if (vibrationalSummary in selected.vibrational) {
       if (newVibratonalSelection === undefined) {
@@ -147,24 +148,24 @@ const ElectronicFilter = ({
         <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         <Latex>{label}</Latex>
       </label>
-      {checked && hasVibrationalChoices ? (
-        <ul style={ulStyle}>
-          <li>Vibrational</li>
-          {Object.entries(choices.vibrational).map(
-            ([vibrationalSummary, vibrationalChoices]) => (
-              <VibrationalFilter
-                key={`${label}-${vibrationalSummary}`}
-                label={vibrationalSummary}
-                selected={selected.vibrational[vibrationalSummary]}
-                choices={vibrationalChoices}
-                onChange={(n) => onVibrationalChange(vibrationalSummary, n)}
-              />
-            )
-          )}
-        </ul>
-      ) : (
-        <></>
-      )}
+      {checked && hasVibrationalChoices
+        ? (
+          <ul style={ulStyle}>
+            <li>Vibrational</li>
+            {Object.entries(choices.vibrational).map(
+              ([vibrationalSummary, vibrationalChoices]) => (
+                <VibrationalFilter
+                  key={`${label}-${vibrationalSummary}`}
+                  label={vibrationalSummary}
+                  selected={selected.vibrational[vibrationalSummary]}
+                  choices={vibrationalChoices}
+                  onChange={(n) => onVibrationalChange(vibrationalSummary, n)}
+                />
+              ),
+            )}
+          </ul>
+        )
+        : <></>}
     </li>
   );
 };
@@ -193,7 +194,7 @@ const ChargeFilter = ({
 
   function onElectonicChange(
     electronicSummary: string,
-    newElectronicSelection: { vibrational: VibrationalChoices } | undefined
+    newElectronicSelection: { vibrational: VibrationalChoices } | undefined,
   ) {
     if (electronicSummary in selected.electronic) {
       if (newElectronicSelection === undefined) {
@@ -221,24 +222,24 @@ const ChargeFilter = ({
         <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         {label}
       </label>
-      {checked && hasElectronicChoices ? (
-        <ul style={ulStyle}>
-          <li>Electronic</li>
-          {Object.entries(choices.electronic).map(
-            ([electronicSummary, electronicChoices]) => (
-              <ElectronicFilter
-                key={`${label}-${electronicSummary}`}
-                label={electronicSummary}
-                selected={selected.electronic[electronicSummary]}
-                choices={electronicChoices}
-                onChange={(n) => onElectonicChange(electronicSummary, n)}
-              />
-            )
-          )}
-        </ul>
-      ) : (
-        <></>
-      )}
+      {checked && hasElectronicChoices
+        ? (
+          <ul style={ulStyle}>
+            <li>Electronic</li>
+            {Object.entries(choices.electronic).map(
+              ([electronicSummary, electronicChoices]) => (
+                <ElectronicFilter
+                  key={`${label}-${electronicSummary}`}
+                  label={electronicSummary}
+                  selected={selected.electronic[electronicSummary]}
+                  choices={electronicChoices}
+                  onChange={(n) => onElectonicChange(electronicSummary, n)}
+                />
+              ),
+            )}
+          </ul>
+        )
+        : <></>}
     </li>
   );
 };
@@ -267,7 +268,7 @@ const ParticleFilter = ({
 
   function onChargeChange(
     charge: string,
-    newChargeSelection: ChargeChoices | undefined
+    newChargeSelection: ChargeChoices | undefined,
   ) {
     const iCharge = parseInt(charge);
 
@@ -296,24 +297,24 @@ const ParticleFilter = ({
         <input type="checkbox" checked={checked} onChange={onCheckboxChange} />
         {label}
       </label>
-      {checked && hasChargeChoices ? (
-        <ul style={ulStyle}>
-          <li>Charge</li>
-          {Object.entries(choices.charge).map(
-            ([chargeValue, chargeChoices]) => (
-              <ChargeFilter
-                key={`${label}-${chargeValue}`}
-                label={chargeValue}
-                selected={selected.charge[parseInt(chargeValue)]}
-                choices={chargeChoices}
-                onChange={(n) => onChargeChange(chargeValue, n)}
-              />
-            )
-          )}
-        </ul>
-      ) : (
-        <></>
-      )}
+      {checked && hasChargeChoices
+        ? (
+          <ul style={ulStyle}>
+            <li>Charge</li>
+            {Object.entries(choices.charge).map(
+              ([chargeValue, chargeChoices]) => (
+                <ChargeFilter
+                  key={`${label}-${chargeValue}`}
+                  label={chargeValue}
+                  selected={selected.charge[parseInt(chargeValue)]}
+                  choices={chargeChoices}
+                  onChange={(n) => onChargeChange(chargeValue, n)}
+                />
+              ),
+            )}
+          </ul>
+        )
+        : <></>}
     </li>
   );
 };
@@ -334,7 +335,7 @@ export const StateFilter = ({
 
   function onParticleChange(
     name: string,
-    newParticleSelection: ParticleChoices | undefined
+    newParticleSelection: ParticleChoices | undefined,
   ) {
     let newSelected: StateChoices;
     if (newParticleSelection === undefined) {

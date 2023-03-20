@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { VersionInfo } from "../../shared/types/version_info";
 import { db } from "../../db";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { CrossSectionItem } from "../public";
-import { defaultSearchTemplate } from "../picker/default";
 import { PagingOptions } from "../../shared/types/search";
+import { VersionInfo } from "../../shared/types/version_info";
+import { defaultSearchTemplate } from "../picker/default";
 import { ReactionTemplate } from "../picker/types";
+import { CrossSectionItem } from "../public";
 
 export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
@@ -24,7 +24,7 @@ export async function getVersionInfo(key: string) {
 export async function searchOwned(
   email: string,
   _options: Array<ReactionTemplate> = defaultSearchTemplate(),
-  paging: PagingOptions = { offset: 0, count: 100 }
+  paging: PagingOptions = { offset: 0, count: 100 },
 ) {
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;

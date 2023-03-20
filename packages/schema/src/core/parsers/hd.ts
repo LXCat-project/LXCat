@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { MoleculeParser } from "../parse";
 import { HomonuclearDiatom } from "../molecules/diatom_homonuclear";
-import { linearInversionCenterElectronicParser } from "./linear_inversion_center_electronic";
+import { MoleculeParser } from "../parse";
 import { diatomicVibrationalParser } from "./diatomic_vibrational";
+import { linearInversionCenterElectronicParser } from "./linear_inversion_center_electronic";
 import { rotationalParser } from "./rotational";
 
 export const hd_parser: MoleculeParser<HomonuclearDiatom> = {

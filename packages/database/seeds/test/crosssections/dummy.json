@@ -53,7 +53,7 @@
           }
         ],
         "reversible": false,
-        "type_tags": []
+        "type_tags": ["Electronic"]
       },
       "type": "LUT",
       "labels": ["Energy", "Cross Section"],

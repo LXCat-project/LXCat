@@ -7,13 +7,13 @@ import nc from "next-connect";
 
 import { getStateSelection } from "@lxcat/database/dist/cs/picker/queries/public";
 import {
-  StateSummary,
-  StateTree,
-} from "@lxcat/database/dist/shared/queries/state";
-import {
   NestedStateArray,
   StateProcess,
 } from "@lxcat/database/dist/cs/picker/types";
+import {
+  StateSummary,
+  StateTree,
+} from "@lxcat/database/dist/shared/queries/state";
 
 export function stateArrayToObject({
   id,
@@ -25,7 +25,7 @@ export function stateArrayToObject({
 }
 
 export function stateArrayToTree(
-  array?: Array<NestedStateArray>
+  array?: Array<NestedStateArray>,
 ): StateTree | undefined {
   return array ? Object.fromEntries(array.map(stateArrayToObject)) : undefined;
 }
@@ -33,15 +33,13 @@ export function stateArrayToTree(
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   const query = req.query;
 
-  const stateProcess =
-    query.stateProcess && !Array.isArray(query.stateProcess)
-      ? (query.stateProcess as StateProcess)
-      : undefined;
+  const stateProcess = query.stateProcess && !Array.isArray(query.stateProcess)
+    ? (query.stateProcess as StateProcess)
+    : undefined;
 
-  const reactions =
-    query.reactions && !Array.isArray(query.reactions)
-      ? (JSON.parse(query.reactions) as Array<string>)
-      : undefined;
+  const reactions = query.reactions && !Array.isArray(query.reactions)
+    ? (JSON.parse(query.reactions) as Array<string>)
+    : undefined;
 
   if (stateProcess && reactions) {
     const stateArray = await getStateSelection(stateProcess, reactions, []);

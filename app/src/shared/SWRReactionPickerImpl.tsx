@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import {
   Box,
   MantineTheme,
@@ -9,9 +10,8 @@ import {
   MultiSelectProps,
   Sx,
 } from "@mantine/core";
-import { LatexSelect, LatexSelectProps } from "./LatexSelect";
-import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
+import { LatexSelect, LatexSelectProps } from "./LatexSelect";
 import { SWRStateList, SWRStateListProps } from "./SWRStateList";
 
 interface SWRReactionPickerImplProps {
@@ -59,7 +59,7 @@ export const SWRReactionPickerImpl = ({
               choices={Object.fromEntries(
                 Object.entries(choiceMap).filter(([key, _]) =>
                   choices.includes(key as Reversible)
-                )
+                ),
               )}
               {...reversible}
             />

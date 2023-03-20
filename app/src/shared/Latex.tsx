@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "katex/dist/katex.min.css";
-import ReactLatex from "react-latex-next";
 import { Box, DefaultProps } from "@mantine/core";
+import ReactLatex from "react-latex-next";
 
 export type LatexProps = DefaultProps & { children: string };
 

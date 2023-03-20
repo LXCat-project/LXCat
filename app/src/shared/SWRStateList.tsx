@@ -19,7 +19,7 @@ export interface SWRStateListProps {
   onUpdate: (
     index: number,
     selected: StatePath,
-    latex: string
+    latex: string,
   ) => void | Promise<void>;
 }
 
@@ -46,8 +46,7 @@ export const SWRStateList = ({
               process={process}
               selected={entry.selected}
               onChange={async (selected, latex) =>
-                onUpdate(index, selected, latex)
-              }
+                onUpdate(index, selected, latex)}
               inGroup={false}
               sx={{
                 borderTopLeftRadius: 0,

@@ -30,8 +30,6 @@ This document is for someone developing the LXCat web application and its packag
 
 ## Where is the code?
 
-##
-
 Code is hosted on
 [https://gitlab.com/LXCat-project/lxcat](https://gitlab.com/LXCat-project/lxcat). Code to
 fill the database can be found in `/packages/database`. Code that runs the website can be

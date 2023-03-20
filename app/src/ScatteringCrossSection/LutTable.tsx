@@ -20,9 +20,7 @@ export const LutTable = ({ labels, units, data }: Props) => (
     <tbody>
       {data.map((r, i) => (
         <tr key={i}>
-          {r.map((c, j) => (
-            <td key={j}>{c}</td>
-          ))}
+          {r.map((c, j) => <td key={j}>{c}</td>)}
         </tr>
       ))}
     </tbody>

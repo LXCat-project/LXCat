@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Menu, Group } from "@mantine/core";
+import { Group, Menu } from "@mantine/core";
 import { IconSelector, IconX } from "@tabler/icons";
 
 import React from "react";
@@ -46,25 +46,25 @@ export const LatexSelect = ({
             },
           })}
         >
-          {value ? (
-            <Latex>{value ? choices[value] : ""}</Latex>
-          ) : (
-            <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>
-              {placeholder ?? ""}
-            </Latex>
-          )}
-          {value && clearable ? (
-            <IconX
-              size={14}
-              color="gray"
-              onClick={async (e) => {
-                e.stopPropagation();
-                await onChange();
-              }}
-            />
-          ) : (
-            <IconSelector size={16} color="gray" aria-controls={name} />
-          )}
+          {value
+            ? <Latex>{value ? choices[value] : ""}</Latex>
+            : (
+              <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>
+                {placeholder ?? ""}
+              </Latex>
+            )}
+          {value && clearable
+            ? (
+              <IconX
+                size={14}
+                color="gray"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await onChange();
+                }}
+              />
+            )
+            : <IconSelector size={16} color="gray" aria-controls={name} />}
         </Group>
       </Menu.Target>
 
@@ -80,13 +80,12 @@ export const LatexSelect = ({
             sx={(theme) =>
               choiceValue === value
                 ? {
-                    backgroundColor: theme.colors.brand[5],
-                    ":disabled": {
-                      color: "white",
-                    },
-                  }
-                : {}
-            }
+                  backgroundColor: theme.colors.brand[5],
+                  ":disabled": {
+                    color: "white",
+                  },
+                }
+                : {}}
           >
             <Latex>{label}</Latex>
           </Menu.Item>

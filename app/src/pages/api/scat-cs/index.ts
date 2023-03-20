@@ -17,8 +17,9 @@ import { parseParam } from "../../../shared/utils";
 const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
   const { reactions: reactionsParam, offset: offsetParam } = req.query;
   const reactions = parseParam<Array<ReactionTemplate>>(reactionsParam, []);
-  const offset =
-    offsetParam && !Array.isArray(offsetParam) ? parseInt(offsetParam) : 0;
+  const offset = offsetParam && !Array.isArray(offsetParam)
+    ? parseInt(offsetParam)
+    : 0;
 
   const csIdsNested = await Promise.all(
     reactions.map(
@@ -38,10 +39,10 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
 
         if (
           !(
-            consumes.length === 0 &&
-            produces.length === 0 &&
-            typeTags.length === 0 &&
-            set.length === 0
+            consumes.length === 0
+            && produces.length === 0
+            && typeTags.length === 0
+            && set.length === 0
           )
         ) {
           return getCSIdByReactionTemplate(
@@ -49,13 +50,13 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
             produces,
             typeTags,
             reversible,
-            set
+            set,
           );
         } else {
           return [];
         }
-      }
-    )
+      },
+    ),
   );
 
   const csIds = new Set(csIdsNested.flat());

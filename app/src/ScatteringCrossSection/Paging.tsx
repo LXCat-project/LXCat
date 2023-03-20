@@ -41,10 +41,13 @@ export const Paging = ({
       </Link>
     )}
     <span>
-      &nbsp;{paging.offset} - {paging.offset + nrOnPage}{" "}
+      &nbsp;{paging.offset} - {paging.offset + nrOnPage}
+      {" "}
     </span>
-    {/* TODO improve check whether a next page exists
-    currently if current page has max items then it is highly likely there is a next page */}
+    {
+      /* TODO improve check whether a next page exists
+    currently if current page has max items then it is highly likely there is a next page */
+    }
     {nrOnPage >= paging.count && (
       <Link
         href={{

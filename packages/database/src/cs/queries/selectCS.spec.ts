@@ -2,25 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   sampleSets4Search,
   sampleSets4SearchWithVersions,
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { StateSummary } from "../../shared/queries/state";
-import { CrossSectionHeading } from "../public";
-import { NestedState, removeIdsFromTree } from "./testutils";
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
+import { StateSummary } from "../../shared/queries/state";
 import { defaultSearchTemplate } from "../picker/default";
-import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
 import {
   getCSIdByReactionTemplate,
   getSearchOptions,
 } from "../picker/queries/public";
+import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
+import { CrossSectionHeading } from "../public";
 import { byId, getCSHeadings, search } from "./public";
+import { NestedState, removeIdsFromTree } from "./testutils";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -34,7 +34,7 @@ const getCSIdsFromTemplate = async (selection: ReactionTemplate) =>
       .filter((leaf): leaf is StateLeaf => leaf !== undefined),
     selection.typeTags,
     selection.reversible,
-    selection.set
+    selection.set,
   );
 
 describe("Selecting individual cross sections", () => {
@@ -69,7 +69,7 @@ describe("Selecting individual cross sections", () => {
           },
         ];
         expect(allOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -92,7 +92,7 @@ describe("Selecting individual cross sections", () => {
           },
         ];
         expect(allOptions.produces.flatMap(removeIdsFromTree)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -110,7 +110,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(allOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
     });
@@ -150,7 +150,7 @@ describe("Selecting individual cross sections", () => {
           },
         ];
         expect(removeIdsFromTree(reactionOptions.consumes[0])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -159,7 +159,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.consumes[1])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -169,7 +169,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -183,7 +183,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
 
@@ -214,7 +214,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.consumes[0])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -231,7 +231,7 @@ describe("Selecting individual cross sections", () => {
           },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -240,7 +240,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{e}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[1])).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -254,7 +254,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
 
@@ -280,7 +280,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -290,7 +290,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -308,7 +308,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
 
@@ -336,7 +336,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -346,7 +346,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -360,7 +360,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
     });
@@ -388,7 +388,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -400,7 +400,7 @@ describe("Selecting individual cross sections", () => {
           { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
-          expected
+          expected,
         );
       });
 
@@ -418,7 +418,7 @@ describe("Selecting individual cross sections", () => {
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          )
+          ),
         ).toEqual(expected);
       });
 
@@ -449,7 +449,7 @@ describe("Selecting individual cross sections", () => {
       expect(
         Object.values(publishedOptions.set).flatMap((org) =>
           Object.values(org.sets)
-        )
+        ),
       ).toEqual(expected);
     });
 
@@ -459,7 +459,7 @@ describe("Selecting individual cross sections", () => {
         { children: [], latex: "\\mathrm{e}", valid: true },
       ];
       expect(publishedOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
-        expected
+        expected,
       );
     });
 
@@ -469,7 +469,7 @@ describe("Selecting individual cross sections", () => {
         { children: [], latex: "\\mathrm{e}", valid: true },
       ];
       expect(publishedOptions.produces.flatMap(removeIdsFromTree)).toEqual(
-        expected
+        expected,
       );
     });
 

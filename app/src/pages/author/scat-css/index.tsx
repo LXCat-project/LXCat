@@ -2,19 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../../../shared/Layout";
-import { mustBeAuthor } from "../../../auth/middleware";
 import {
   CrossSectionSetOwned,
   listOwned,
 } from "@lxcat/database/dist/css/queries/author_read";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
-import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";
+import { mustBeAuthor } from "../../../auth/middleware";
+import { listSetsOfOwner } from "../../../ScatteringCrossSectionSet/client";
 import { DeleteDialog } from "../../../ScatteringCrossSectionSet/DeleteDialog";
 import { PublishDialog } from "../../../ScatteringCrossSectionSet/PublishDialog";
-import { listSetsOfOwner } from "../../../ScatteringCrossSectionSet/client";
+import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";
+import { Layout } from "../../../shared/Layout";
 
 interface Props {
   items: CrossSectionSetOwned[];
@@ -52,12 +52,10 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
           {items.map((item) => (
             <tr key={item.name}>
               <td>
-                {item.versionInfo.status === "published" ||
-                item.versionInfo.status === "retracted" ? (
-                  <Link href={`/scat-css/${item._key}`}>{item.name}</Link>
-                ) : (
-                  <>{item.name}</>
-                )}
+                {item.versionInfo.status === "published"
+                    || item.versionInfo.status === "retracted"
+                  ? <Link href={`/scat-css/${item._key}`}>{item.name}</Link>
+                  : <>{item.name}</>}
                 {/* TODO link to preview a draft + create preview page reusing components from public page */}
               </td>
               <td>{item.versionInfo.status}</td>
@@ -166,7 +164,7 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
 export default Admin;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+  context,
 ) => {
   const me = await mustBeAuthor(context);
   const items = await listOwned(me.email);

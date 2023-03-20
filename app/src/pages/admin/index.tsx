@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../../shared/Layout";
 import Link from "next/link";
 import { mustBeAdmin } from "../../auth/middleware";
+import { Layout } from "../../shared/Layout";
 
 const Admin: NextPage = () => {
   return (

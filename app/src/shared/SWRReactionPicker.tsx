@@ -24,7 +24,7 @@ export const fetchTypeTags = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
-  setIds: Set<string>
+  setIds: Set<string>,
 ): Promise<Array<ReactionTypeTag>> =>
   (
     await fetch(
@@ -33,14 +33,14 @@ export const fetchTypeTags = async (
         produces: JSON.stringify(produces),
         reversible,
         setIds: JSON.stringify([...setIds]),
-      })}`
+      })}`,
     )
   ).json();
 export const fetchReversible = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
-  setIds: Set<string>
+  setIds: Set<string>,
 ): Promise<Array<Reversible>> =>
   (
     await fetch(
@@ -49,14 +49,14 @@ export const fetchReversible = async (
         produces: JSON.stringify(produces),
         typeTags: JSON.stringify(typeTags),
         setIds: JSON.stringify([...setIds]),
-      })}`
+      })}`,
     )
   ).json();
 export const fetchCSSets = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible
+  reversible: Reversible,
 ): Promise<CSSetTree> =>
   (
     await fetch(
@@ -65,7 +65,7 @@ export const fetchCSSets = async (
         produces: JSON.stringify(produces),
         typeTags: JSON.stringify(typeTags),
         reversible,
-      })}`
+      })}`,
     )
   ).json();
 
@@ -82,14 +82,14 @@ export type SWRReactionPickerProps = {
   onConsumesChange(
     index: number,
     newSelected: StatePath,
-    newLatex: string
+    newLatex: string,
   ): void | Promise<void>;
   onConsumesAppend(): void | Promise<void>;
   onConsumesRemove(index: number): void | Promise<void>;
   onProducesChange(
     index: number,
     newSelected: StatePath,
-    newLatex: string
+    newLatex: string,
   ): void | Promise<void>;
   onProducesAppend(): void | Promise<void>;
   onProducesRemove(index: number): void | Promise<void>;
@@ -108,7 +108,7 @@ const typeTagFetcher = async ({
     getStateLeafs(consumes),
     getStateLeafs(produces),
     reversible,
-    new Set(set)
+    new Set(set),
   );
 
 const reversibleFetcher = async ({
@@ -121,7 +121,7 @@ const reversibleFetcher = async ({
     getStateLeafs(consumes),
     getStateLeafs(produces),
     typeTags,
-    new Set(set)
+    new Set(set),
   );
 
 const csSetsFetcher = async ({
@@ -134,7 +134,7 @@ const csSetsFetcher = async ({
     getStateLeafs(consumes),
     getStateLeafs(produces),
     typeTags,
-    reversible
+    reversible,
   );
 
 export const SWRReactionPicker = ({
@@ -156,17 +156,17 @@ export const SWRReactionPicker = ({
   const { data: typeTags, error: tagError } = useSWRImmutable(
     omit(selection, "typeTags"),
     typeTagFetcher,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
   const { data: reversible, error: reversibleError } = useSWRImmutable(
     omit(selection, "reversible"),
     reversibleFetcher,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
   const { data: csSets, error: csSetsError } = useSWRImmutable(
     omit(selection, "set"),
     csSetsFetcher,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
 
   // NOTE: Technically this should never equate to true, as `keepPreviousData`
@@ -181,95 +181,97 @@ export const SWRReactionPicker = ({
             csSets: csSetsError,
           },
           null,
-          2
+          2,
         )}
       </div>
     );
   }
 
-  return editable ? (
-    <SWRReactionPickerImpl
-      consumes={{
-        entries: ids.consumes.map((id, index) => ({
-          id,
-          selected: selection.consumes[index],
-          selection: {
-            consumes: getStateLeafs(
-              selection.consumes.filter((_, j) => j !== index)
-            ),
-            produces: getStateLeafs(selection.produces),
-            typeTags: selection.typeTags,
-            reversible: selection.reversible,
-            csSets: new Set(selection.set),
-          },
-        })),
-        process: StateProcess.Consumed,
-        onAppend: onConsumesAppend,
-        onRemove: onConsumesRemove,
-        onUpdate: onConsumesChange,
-      }}
-      produces={{
-        entries: ids.produces.map((id, index) => ({
-          id,
-          selected: selection.produces[index],
-          selection: {
-            consumes: getStateLeafs(selection.consumes),
-            produces: getStateLeafs(
-              selection.produces.filter((_, j) => j !== index)
-            ),
-            typeTags: selection.typeTags,
-            reversible: selection.reversible,
-            csSets: new Set(selection.set),
-          },
-        })),
-        process: StateProcess.Produced,
-        onAppend: onProducesAppend,
-        onRemove: onProducesRemove,
-        onUpdate: onProducesChange,
-      }}
-      reversible={{
-        onChange: (value) => onReversibleChange(value as Reversible),
-        choices: reversible,
-        value: selection.reversible,
-      }}
-      typeTags={{
-        data: typeTags,
-        value: selection.typeTags,
-        onChange: (newTags: Array<ReactionTypeTag>) => onTagsChange(newTags),
-      }}
-      sets={{
-        data: csSets,
-        selection: new Set(selection.set),
-        unfolded: unfoldedOrgs,
-        onSetChecked(setId, checked) {
-          const newSelectedCSSets = new Set(selection.set);
+  return editable
+    ? (
+      <SWRReactionPickerImpl
+        consumes={{
+          entries: ids.consumes.map((id, index) => ({
+            id,
+            selected: selection.consumes[index],
+            selection: {
+              consumes: getStateLeafs(
+                selection.consumes.filter((_, j) => j !== index),
+              ),
+              produces: getStateLeafs(selection.produces),
+              typeTags: selection.typeTags,
+              reversible: selection.reversible,
+              csSets: new Set(selection.set),
+            },
+          })),
+          process: StateProcess.Consumed,
+          onAppend: onConsumesAppend,
+          onRemove: onConsumesRemove,
+          onUpdate: onConsumesChange,
+        }}
+        produces={{
+          entries: ids.produces.map((id, index) => ({
+            id,
+            selected: selection.produces[index],
+            selection: {
+              consumes: getStateLeafs(selection.consumes),
+              produces: getStateLeafs(
+                selection.produces.filter((_, j) => j !== index),
+              ),
+              typeTags: selection.typeTags,
+              reversible: selection.reversible,
+              csSets: new Set(selection.set),
+            },
+          })),
+          process: StateProcess.Produced,
+          onAppend: onProducesAppend,
+          onRemove: onProducesRemove,
+          onUpdate: onProducesChange,
+        }}
+        reversible={{
+          onChange: (value) => onReversibleChange(value as Reversible),
+          choices: reversible,
+          value: selection.reversible,
+        }}
+        typeTags={{
+          data: typeTags,
+          value: selection.typeTags,
+          onChange: (newTags: Array<ReactionTypeTag>) => onTagsChange(newTags),
+        }}
+        sets={{
+          data: csSets,
+          selection: new Set(selection.set),
+          unfolded: unfoldedOrgs,
+          onSetChecked(setId, checked) {
+            const newSelectedCSSets = new Set(selection.set);
 
-          checked
-            ? newSelectedCSSets.add(setId)
-            : newSelectedCSSets.delete(setId);
-
-          onCSSetsChange(newSelectedCSSets);
-        },
-        onOrganizationChecked(id, checked) {
-          const newSelectedCSSets = new Set(selection.set);
-
-          Object.keys(csSets[id].sets).forEach((setId) => {
             checked
               ? newSelectedCSSets.add(setId)
               : newSelectedCSSets.delete(setId);
-          });
 
-          onCSSetsChange(newSelectedCSSets);
-        },
-        onOrganizationUnfolded(id, unfolded) {
-          const newUnfolded = new Set(unfoldedOrgs);
-          unfolded ? newUnfolded.add(id) : newUnfolded.delete(id);
+            onCSSetsChange(newSelectedCSSets);
+          },
+          onOrganizationChecked(id, checked) {
+            const newSelectedCSSets = new Set(selection.set);
 
-          setUnfoldedOrgs(newUnfolded);
-        },
-      }}
-    />
-  ) : (
-    latex
-  );
+            Object.keys(csSets[id].sets).forEach((setId) => {
+              checked
+                ? newSelectedCSSets.add(setId)
+                : newSelectedCSSets.delete(setId);
+            });
+
+            onCSSetsChange(newSelectedCSSets);
+          },
+          onOrganizationUnfolded(id, unfolded) {
+            const newUnfolded = new Set(unfoldedOrgs);
+            unfolded ? newUnfolded.add(id) : newUnfolded.delete(id);
+
+            setUnfoldedOrgs(newUnfolded);
+          },
+        }}
+      />
+    )
+    : (
+      latex
+    );
 };

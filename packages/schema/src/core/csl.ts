@@ -134,7 +134,7 @@ export namespace CSL {
   interface DatePartial {
     "date-parts"?: [
       [LooseNumber, LooseNumber?, LooseNumber?],
-      [LooseNumber, LooseNumber?, LooseNumber?]?
+      [LooseNumber, LooseNumber?, LooseNumber?]?,
     ];
     /**
      * Three variants:
@@ -188,29 +188,30 @@ export namespace CSL {
     sequence?: "first" | "additional";
   }
 
-  export type CSLDate = (
-    | {
+  export type CSLDate =
+    & (
+      | {
         "date-parts": [
           [LooseNumber, LooseNumber?, LooseNumber?],
-          [LooseNumber, LooseNumber?, LooseNumber?]?
+          [LooseNumber, LooseNumber?, LooseNumber?]?,
         ];
       }
-    | { raw: string }
-    | { literal: string }
-  ) &
-    DatePartial;
+      | { raw: string }
+      | { literal: string }
+    )
+    & DatePartial;
 
   export type Person =
     | ({ family: string } & PersonPartial)
     | ({ literal: string } & PersonPartial);
 
-  // prettier-ignore
   export type Data =
-          { [k in DateFieldKey]?: CSLDate } &
-          { [k in NumberFieldKey]?: string | number } &
-          { [k in PersonFieldKey]?: Person[] } &
-          { [k in StringFieldKey]?: string } & {
-              id: string;
-              type: ItemType;
-          };
+    & { [k in DateFieldKey]?: CSLDate }
+    & { [k in NumberFieldKey]?: string | number }
+    & { [k in PersonFieldKey]?: Person[] }
+    & { [k in StringFieldKey]?: string }
+    & {
+      id: string;
+      type: ItemType;
+    };
 }

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { byId } from "@lxcat/database/dist/cs/queries/public";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -9,7 +10,6 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
-import { byId } from "@lxcat/database/dist/cs/queries/public";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
@@ -23,7 +23,8 @@ const handler = nc<AuthRequest, NextApiResponse>()
         return;
       }
       data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}`;
-      data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}#terms_of_use`;
+      data.terms_of_use =
+        `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}#terms_of_use`;
       res.json(data);
     }
     throw Error("Unable to handle request");

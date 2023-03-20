@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -9,7 +10,6 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 
@@ -26,17 +26,18 @@ const handler = nc<AuthRequest, NextApiResponse>()
           Object.entries(data.references).map(([key, reference]) => {
             const bib = reference2bibliography(reference);
             return [key, bib];
-          })
+          }),
         );
 
         data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-        data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
+        data.terms_of_use =
+          `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
 
         const { convertDocument } = await import("@lxcat/converter");
         res.setHeader("Content-Type", "text/plain");
         res.setHeader(
           "Content-Disposition",
-          `attachment;filename="${data.name}.txt"`
+          `attachment;filename="${data.name}.txt"`,
         );
         res.send(convertDocument({ ...data, references }));
       } else {

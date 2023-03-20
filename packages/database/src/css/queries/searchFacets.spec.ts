@@ -137,7 +137,7 @@ describe("searchFacets()", () => {
         searchResults = await search(
           selection,
           { dir: "ASC", field: "name" },
-          { count: 100, offset: 0 }
+          { count: 100, offset: 0 },
         );
       });
 

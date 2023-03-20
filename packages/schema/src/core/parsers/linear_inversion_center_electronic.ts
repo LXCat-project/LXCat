@@ -21,13 +21,13 @@ function parse_e_lice(e: PUE<LinearInversionCenterElectronicImpl>): string {
     ref_s = "^" + e.reflection;
   }
 
-  return `${e.e}^${2 * e.S + 1}${molecular_orbital[e.Lambda]}_${
-    e.parity
-  }${ref_s}`;
+  return `${e.e}^${2 * e.S + 1}${
+    molecular_orbital[e.Lambda]
+  }_${e.parity}${ref_s}`;
 }
 
 function parse_e_lice_latex(
-  e: PUE<LinearInversionCenterElectronicImpl>
+  e: PUE<LinearInversionCenterElectronicImpl>,
 ): string {
   if (e.Lambda === undefined) {
     return e.e;

@@ -3,10 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { Node } from "unist";
-import { visit, SKIP } from "unist-util-visit";
+import { SKIP, visit } from "unist-util-visit";
 
 /**
- *
  * Converts
  * <pre>
  * ```mermaid
@@ -37,7 +36,7 @@ export function rehypeMermaid() {
       (node: any, index, parent: any) => {
         if (
           node.properties?.className?.some(
-            (d: string) => d === "language-mermaid"
+            (d: string) => d === "language-mermaid",
           )
         ) {
           const chart = node.children[0].value;
@@ -53,7 +52,7 @@ export function rehypeMermaid() {
           parent.children.splice(index, 1, newNode);
           return [SKIP, index];
         }
-      }
+      },
     );
   };
 }

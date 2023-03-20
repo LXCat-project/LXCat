@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../../../shared/Layout";
 import type { ErrorObject } from "ajv";
-import { useState, MouseEvent } from "react";
-import { mustBeAuthor } from "../../../auth/middleware";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
+import { MouseEvent, useState } from "react";
+import { mustBeAuthor } from "../../../auth/middleware";
+import { Layout } from "../../../shared/Layout";
 
 interface Props {}
 

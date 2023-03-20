@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("/", async ({ page }) => {
   await page.goto("/");

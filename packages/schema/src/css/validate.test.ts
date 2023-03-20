@@ -9,8 +9,8 @@ import { validator } from "./validate";
 
 // atom
 import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
-import data_parity_nok from "./data/Ar_C_P_Nobody_LXCat_bad_parity.json";
 import data_momenta_nok from "./data/Ar_C_P_Nobody_LXCat_bad_momenta.json";
+import data_parity_nok from "./data/Ar_C_P_Nobody_LXCat_bad_parity.json";
 
 describe("validate()", () => {
   test("minimal", () => {

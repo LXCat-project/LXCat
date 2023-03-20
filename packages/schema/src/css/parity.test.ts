@@ -4,7 +4,7 @@
 
 import { describe, expect, test } from "vitest";
 
-import { parity, combineParity } from "./parity";
+import { combineParity, parity } from "./parity";
 
 describe("parity", () => {
   test("calculation", () => {

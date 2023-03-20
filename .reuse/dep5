@@ -9,8 +9,16 @@ Source: https://gitlab.com/LXCat-project/lxcat
 # Copyright: $YEAR $NAME <$CONTACT>
 # License: ...
 
-# Having *.json.license files in root looks scary
+# Having *.license files in root looks scary
 Files: *.json
+Copyright: LXCat team
+License: AGPL-3.0-or-later
+
+Files: packages/*/*.json
+Copyright: LXCat team
+License: AGPL-3.0-or-later
+
+Files: packages/*/*.lock
 Copyright: LXCat team
 License: AGPL-3.0-or-later
 

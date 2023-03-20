@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { StateFilter } from "./StateFilter";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 const meta = {
   component: StateFilter,

@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Reference } from "../shared/Reference";
-import { ReactionSummary } from "./ReactionSummary";
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { LutTable } from "./LutTable";
+import { ReactionSummary } from "./ReactionSummary";
 
 export const LutPlotDynamic = dynamic(
   () => import("./LutPlot").then((m) => m.LutPlot),
   {
     ssr: false,
-  }
+  },
 );
 
 export const Item = (props: CrossSectionItem) => {
@@ -31,8 +31,8 @@ export const Item = (props: CrossSectionItem) => {
           <h2>This cross section is not the latest version.</h2>
           <p>
             Visit{" "}
-            <Link href={`/scat-cs/${props.id}/history`}>history page</Link> to
-            see newer versions.
+            <Link href={`/scat-cs/${props.id}/history`}>history page</Link>{" "}
+            to see newer versions.
           </p>
         </div>
       )}
@@ -47,13 +47,15 @@ export const Item = (props: CrossSectionItem) => {
             Download JSON format
           </a>
         </li>
-        {/* TODO also allow a cross section to be downloaded in txt format
+        {
+          /* TODO also allow a cross section to be downloaded in txt format
         Converter currently only understands cross section sets.
         <li>
           <a href="TODO" target="_blank" rel="noreferrer" download>
             Download txt format
           </a>
-        </li> */}
+        </li> */
+        }
       </ul>
       <h2>Reaction</h2>
       <ReactionSummary {...props.reaction} />
@@ -94,16 +96,16 @@ export const Item = (props: CrossSectionItem) => {
         ))}
       </ul>
 
-      {props.versionInfo.status === "published" &&
-        props.versionInfo.version !== "1" && (
-          <div>
-            <p>
-              Visit{" "}
-              <Link href={`/scat-cs/${props.id}/history`}>history page</Link> to
-              see older versions.
-            </p>
-          </div>
-        )}
+      {props.versionInfo.status === "published"
+        && props.versionInfo.version !== "1" && (
+        <div>
+          <p>
+            Visit{" "}
+            <Link href={`/scat-cs/${props.id}/history`}>history page</Link>{" "}
+            to see older versions.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

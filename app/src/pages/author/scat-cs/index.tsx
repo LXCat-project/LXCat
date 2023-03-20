@@ -7,13 +7,13 @@ import Link from "next/link";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 
+import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
+import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { mustBeAuthor } from "../../../auth/middleware";
+import { Paging } from "../../../ScatteringCrossSection/Paging";
 import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";
 import { Layout } from "../../../shared/Layout";
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { Paging } from "../../../ScatteringCrossSection/Paging";
-import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 
 interface Props {
   items: CrossSectionItem[];
@@ -24,16 +24,18 @@ function renderItem(item: CrossSectionItem) {
   return (
     <tr key={item.id}>
       <td>
-        {item.versionInfo.status === "published" ||
-        item.versionInfo.status === "retracted" ? (
-          <Link href={`/scat-cs/${item.id}`}>
-            <ReactionSummary {...item.reaction} />
-          </Link>
-        ) : (
-          <>
-            <ReactionSummary {...item.reaction} />
-          </>
-        )}
+        {item.versionInfo.status === "published"
+            || item.versionInfo.status === "retracted"
+          ? (
+            <Link href={`/scat-cs/${item.id}`}>
+              <ReactionSummary {...item.reaction} />
+            </Link>
+          )
+          : (
+            <>
+              <ReactionSummary {...item.reaction} />
+            </>
+          )}
         {/* TODO link to preview a draft + create preview page reusing components from public page */}
       </td>
       <td>
@@ -94,10 +96,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const me = await mustBeAuthor(context);
   const filter = defaultSearchTemplate();
   const paging = {
-    offset:
-      context.query.offset && !Array.isArray(context.query.offset)
-        ? parseInt(context.query.offset)
-        : 0,
+    offset: context.query.offset && !Array.isArray(context.query.offset)
+      ? parseInt(context.query.offset)
+      : 0,
     count: 100,
   };
   const items = await searchOwned(me.email, filter, paging);
