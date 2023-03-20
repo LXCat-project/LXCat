@@ -9,7 +9,7 @@ import { setSystemDb, systemDb } from "./systemDb";
 
 export async function startDbContainer(
   password = "testpw",
-  port: PortWithOptionalBinding = 8529
+  port: PortWithOptionalBinding = 8529,
 ) {
   const dbImage = "arangodb/arangodb:3.9.1";
   const container = await new ArangoDBContainer(dbImage, password)

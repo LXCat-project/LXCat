@@ -2,24 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { createSection, updateSection } from "./write";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { db } from "../../db";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { deepClone } from "../../css/queries/deepClone";
-import { insert_state_dict } from "../../shared/queries";
-import { byOwnerAndId } from "./author_read";
-import { Status } from "../../shared/types/version_info";
 import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
 import { InState } from "@lxcat/schema/dist/core/state";
+import { Dict } from "@lxcat/schema/dist/core/util";
+import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { deepClone } from "../../css/queries/deepClone";
+import { db } from "../../db";
+import { insert_state_dict } from "../../shared/queries";
 import { StateTree } from "../../shared/queries/state";
+import { Status } from "../../shared/types/version_info";
+import { byOwnerAndId } from "./author_read";
+import { createSection, updateSection } from "./write";
 
 export async function createSampleCrossSection(
   state_ids: Dict<string>,
-  status: Status = "published"
+  status: Status = "published",
 ) {
   const cs: CrossSection<string, string> = sampleCrossSection();
   const idcs1 = await createSection(
@@ -27,7 +27,7 @@ export async function createSampleCrossSection(
     state_ids,
     {},
     "Some organization",
-    status
+    status,
   );
   const keycs1 = idcs1.replace("CrossSection/", "");
   return {
@@ -77,7 +77,7 @@ export async function truncateCrossSectionCollections() {
     "References",
   ];
   await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate())
+    collections2Truncate.map((c) => db().collection(c).truncate()),
   );
 }
 
@@ -109,7 +109,7 @@ export function sampleStates(): Dict<InState<AnyAtomJSON | AnyMoleculeJSON>> {
 
 export async function createDraftFromPublished(
   keycs1: string,
-  alter: (cs: CrossSection<string, string, LUT>) => void
+  alter: (cs: CrossSection<string, string, LUT>) => void,
 ) {
   const cs = await byOwnerAndId("somename@example.com", keycs1);
   if (cs === undefined) {
@@ -130,7 +130,7 @@ export async function createDraftFromPublished(
     "My first update",
     draftStateIds,
     {},
-    "Some organization"
+    "Some organization",
   );
   const keycs2 = idcs2.replace("CrossSection/", "");
   return { cs1, keycs2 };

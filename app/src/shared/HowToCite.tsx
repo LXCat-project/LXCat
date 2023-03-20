@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "./Reference";
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference } from "./Reference";
 
 interface Props {
   references: ReferenceRecord[];
@@ -274,7 +274,8 @@ const LXCAT_REFERENCES: ReferenceRecord[] = [
     issued: {
       "date-parts": [[2012]],
     },
-    note: "Chemical Physics of Low-Temperature Plasmas (in honour of Prof Mario Capitelli)",
+    note:
+      "Chemical Physics of Low-Temperature Plasmas (in honour of Prof Mario Capitelli)",
     page: "148-153",
     title:
       "The LXCat project: Electron scattering cross sections and swarm parameters for low temperature plasma modeling",

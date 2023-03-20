@@ -8,7 +8,7 @@ import { InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { beforeAll, describe, it, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import {
   startDbWithUserAndCssCollections,
@@ -934,7 +934,7 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
 async function searchState(
   _description: string,
   selection: StateChoices,
-  expected: string[]
+  expected: string[],
 ) {
   const filter = generateStateFilterAql(selection);
   const cursor: ArrayCursor<string> = await db().query(aql`
@@ -1062,11 +1062,11 @@ describe("listStates()", () => {
       });
     });
 
-    describe('getIdByLabel()', () => {
-      it('given N2 should return a id', async () => {
-        const result = await getIdByLabel('N2')
-        expect(result).toMatch(/State\/\d+/)
-      })
-    })
+    describe("getIdByLabel()", () => {
+      it("given N2 should return a id", async () => {
+        const result = await getIdByLabel("N2");
+        expect(result).toMatch(/State\/\d+/);
+      });
+    });
   });
 });

@@ -14,6 +14,8 @@ import {
   SortOptions,
 } from "@lxcat/database/dist/css/queries/public";
 
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import Head from "next/head";
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";
 import { Layout } from "../../shared/Layout";
@@ -22,8 +24,6 @@ import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
 } from "../../shared/StateFilter";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import Head from "next/head";
 
 interface Props {
   items: CrossSectionSetHeading[];
@@ -52,7 +52,7 @@ const ScatteringCrossSectionSetsPage: NextPage<Props> = ({ items, facets }) => {
 export default ScatteringCrossSectionSetsPage;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+  context,
 ) => {
   const filter = query2options(context.query);
   // TODO make adjustable by user
@@ -75,16 +75,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 function query2options(query: ParsedUrlQuery): FilterOptions {
-  const state =
-    query.state && !Array.isArray(query.state)
-      ? query.state
-      : stateSelectionToSearchParam({ particle: {} });
+  const state = query.state && !Array.isArray(query.state)
+    ? query.state
+    : stateSelectionToSearchParam({ particle: {} });
 
   const options: FilterOptions = {
     contributor: query2array(query.contributor),
     state: stateSelectionFromSearchParam(state),
     tag: query2array(query.tag).filter(
-      (v): v is ReactionTypeTag => v in ReactionTypeTag
+      (v): v is ReactionTypeTag => v in ReactionTypeTag,
     ),
   };
   return options;

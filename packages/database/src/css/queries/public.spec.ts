@@ -2,9 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, beforeAll, it, expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { CrossSectionSetHeading } from "../public";
+import { FilterOptions, search, searchFacets, SortOptions } from "./public";
 import {
   emptySelection,
   loadTestSets,
@@ -12,8 +14,6 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
-import { FilterOptions, search, searchFacets, SortOptions } from "./public";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 
 beforeAll(startDbWithUserAndCssCollections);
 

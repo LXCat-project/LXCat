@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { parseState } from "@lxcat/schema/dist/core/parse";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import {
   AtomicGenerator,
   MolecularGenerator,
 } from "@lxcat/schema/dist/core/generators";
+import { parseState } from "@lxcat/schema/dist/core/parse";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { DBState, InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
@@ -16,11 +16,11 @@ import { findReactionId } from "./queries/reaction";
 
 export async function insert_document(
   collection: string,
-  object: unknown
+  object: unknown,
 ): Promise<string> {
   const result = await db().query(
     "INSERT @object INTO @@collection LET r = NEW return r._id",
-    { object, "@collection": collection }
+    { object, "@collection": collection },
   );
 
   return result.next();
@@ -29,12 +29,12 @@ export async function insert_document(
 
 export async function upsert_document(
   collection: string,
-  object: unknown
+  object: unknown,
 ): Promise<{ id: string; new: boolean }> {
   if (typeof object === "string") object = { string: object };
   const result = await db().query(
     "UPSERT @object INSERT @object UPDATE {} IN @@collection LET ret = NEW RETURN { id: ret._id, new: OLD ? false : true }",
-    { object, "@collection": collection }
+    { object, "@collection": collection },
   );
 
   return result.next();
@@ -44,7 +44,7 @@ export async function insert_edge(
   collection: string,
   from: string,
   to: string,
-  properties: Record<string, unknown> = {}
+  properties: Record<string, unknown> = {},
 ): Promise<string> {
   const edge_object = { _from: from, _to: to };
 
@@ -54,14 +54,14 @@ export async function insert_edge(
       "@collection": collection,
       from_to: edge_object,
       edge: { ...edge_object, ...properties },
-    }
+    },
   );
 
   return result.next();
 }
 
 export async function insert_state_dict(
-  states: Dict<InState<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
+  states: Dict<InState<unknown>>,
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
@@ -73,19 +73,19 @@ export async function insert_state_dict(
 }
 
 async function insert_state<T>(
-  state: DBState<T>
+  state: DBState<T>,
 ): Promise<{ id: string; new: boolean }> {
   return upsert_document("State", state);
 }
 
-async function insert_state_tree<T extends AtomicGenerator<E, any>, E>( // eslint-disable-line @typescript-eslint/no-explicit-any
-  state: InState<T>
+async function insert_state_tree<T extends AtomicGenerator<E, string>, E>(
+  state: InState<T>,
 ): Promise<string>;
 async function insert_state_tree<
-  T extends MolecularGenerator<E, V, R, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+  T extends MolecularGenerator<E, V, R, string>,
   E,
   V,
-  R
+  R,
 >(state: InState<T>): Promise<string> {
   // FIXME: This function assumes that compound states on multiple levels
   // are not supported.
@@ -121,16 +121,18 @@ async function insert_state_tree<
 
           /* console.log(state_to_string(tmp_state)); */
           const v_ret = await insert_state(parseState(tmp_state));
-          if (v_ret.new)
+          if (v_ret.new) {
             await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+          }
 
           if (vib.rotational) {
             for (const rot of vib.rotational) {
               tmp_state.electronic[0].vibrational[0].rotational = [{ ...rot }];
               /* console.log(state_to_string(tmp_state)); */
               const r_ret = await insert_state(parseState(tmp_state));
-              if (r_ret.new)
+              if (r_ret.new) {
                 await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
+              }
 
               in_compound.push(r_ret.id);
               ret_id = r_ret.id;
@@ -162,7 +164,7 @@ async function insert_state_tree<
 // TODO: Check what happens when adding a string instead of a 'Reference' object.
 
 export async function insert_reference_dict(
-  references: Dict<CSL.Data | string>
+  references: Dict<CSL.Data | string>,
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
@@ -175,7 +177,7 @@ export async function insert_reference_dict(
 
 export async function insert_reaction_with_dict(
   dict: Dict<string>,
-  reaction: Reaction<string>
+  reaction: Reaction<string>,
 ): Promise<string> {
   // Insert all states.
   // Insert the reaction and connect all states using 'Consumes'

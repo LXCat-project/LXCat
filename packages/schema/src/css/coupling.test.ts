@@ -4,7 +4,7 @@
 
 import { describe, expect, test } from "vitest";
 
-import { momentaMaxMin, momenta, momentaCouplings } from "./coupling";
+import { momenta, momentaCouplings, momentaMaxMin } from "./coupling";
 import { momentaFromShell } from "./coupling";
 
 // FIXME: try half-integer examples
@@ -25,7 +25,7 @@ describe("momenta from term", () => {
     const orbital = 2;
     const spin = 1;
     expect(momenta(orbital, spin)).toHaveLength(
-      2 * Math.min(orbital, spin) + 1
+      2 * Math.min(orbital, spin) + 1,
     );
   });
 

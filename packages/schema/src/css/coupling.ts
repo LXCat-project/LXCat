@@ -57,7 +57,7 @@ export function momenta(orbital: number, spin: number): number[] {
  */
 export function momentaCouplings(
   els: number[],
-  spin: number | number[]
+  spin: number | number[],
 ): number[] {
   let spins: number[];
   if (typeof spin === "number") {
@@ -69,15 +69,15 @@ export function momentaCouplings(
     new Set(
       spins.flatMap((_spin: number) =>
         Array.from(new Set(els.flatMap((el: number) => momenta(el, _spin))))
-      )
-    )
+      ),
+    ),
   );
 }
 
 export function checkMomenta(
   orbital: number,
   spin: number,
-  expected_J: number
+  expected_J: number,
 ) {
   const jays: number[] = momenta(orbital, spin);
   return {
@@ -90,7 +90,7 @@ export function checkCouplings(
   L1: number,
   L2: number,
   S1: number,
-  expected_K: number
+  expected_K: number,
 ) {
   // NOTE: all possible total angular momenta: jmax, jmax-1, ..., jmin
   const ls1s: number[] = momentaCouplings(momenta(L1, L2), S1);
@@ -112,7 +112,7 @@ export function checkCouplings(
  */
 export function momentaFromShell(
   orbital: number,
-  occupance: number
+  occupance: number,
 ): [number, number] {
   let L = 0;
   let S = 0;
@@ -133,7 +133,7 @@ export function momentaFromShell(
 export function checkMomentaFromShell(
   entries: ShellEntry[],
   L_expected: number,
-  S_expected: number
+  S_expected: number,
 ) {
   let L = 0;
   let S = 0;

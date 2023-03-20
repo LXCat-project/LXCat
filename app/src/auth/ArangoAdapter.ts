@@ -2,9 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { aql, Database } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { Adapter, AdapterUser } from "next-auth/adapters";
 import {
   dropUser as deleteUser,
   getUserByKey,
@@ -16,6 +13,9 @@ import {
   UserInDb,
   UserWithAccountSessionInDb,
 } from "@lxcat/database/dist/auth/schema";
+import { aql, Database } from "arangojs";
+import { ArrayCursor } from "arangojs/cursor";
+import { Adapter, AdapterUser } from "next-auth/adapters";
 
 export const ArangoAdapter = (db: Database): Adapter => {
   function toAdapterUser(profile: UserInDb | undefined): AdapterUser | null {

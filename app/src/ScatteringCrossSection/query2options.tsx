@@ -7,7 +7,7 @@ import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { ParsedUrlQuery } from "querystring";
 
 export function getTemplateFromQuery(
-  query: ParsedUrlQuery
+  query: ParsedUrlQuery,
 ): Array<ReactionTemplate> {
   return query.reactions && !Array.isArray(query.reactions)
     ? JSON.parse(query.reactions)

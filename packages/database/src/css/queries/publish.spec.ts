@@ -57,7 +57,7 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     async ({ collection, count }) => {
       const info = await db().collection(collection).count();
       expect(info.count).toEqual(count);
-    }
+    },
   );
 
   describe("and publish on of the sets", () => {
@@ -91,7 +91,7 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
       async ({ collection, count }) => {
         const info = await db().collection(collection).count();
         expect(info.count).toEqual(count);
-      }
+      },
     );
 
     it("should have 2 published cross sections", async () => {
@@ -159,7 +159,7 @@ describe("given a published cross section set and a draft cross section with a d
       } catch (error) {
         if (error instanceof AggregateError) {
           expect(error.message).toEqual(
-            "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set."
+            "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set.",
           );
           const css1 = await byOwnerAndId(sampleEmail, keycss1);
           const css2 = await byOwnerAndId(sampleEmail, keycss2);
@@ -167,7 +167,11 @@ describe("given a published cross section set and a draft cross section with a d
             expect.fail("Should have fetched sets");
           }
           const expected = [
-            `Draft cross section (CrossSection/${css2.processes[0].id}) has published version (CrossSection/${css1.processes[0].id}) in other cross section sets (CrossSectionSet/${keycss1}).`,
+            `Draft cross section (CrossSection/${
+              css2.processes[0].id
+            }) has published version (CrossSection/${
+              css1.processes[0].id
+            }) in other cross section sets (CrossSectionSet/${keycss1}).`,
           ];
           expect(error.errors.map((e) => e.message)).toEqual(expected);
         }

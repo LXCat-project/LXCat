@@ -181,22 +181,23 @@ AtomLSExcited.args = {
 };
 
 export const LinearTriatomInversionCenter = Template.bind({});
-const state4LinearTriatomInversionCenter: InState<LinearTriatomInversionCenterState> =
-  {
-    particle: "CO2",
-    charge: 0,
-    type: "LinearTriatomInversionCenter",
-    electronic: [
-      {
-        e: "X",
-        Lambda: 1,
-        S: 2,
-        parity: "g",
-        reflection: "+",
-        vibrational: [{ v: [3, 4, 5] }],
-      },
-    ],
-  };
+const state4LinearTriatomInversionCenter: InState<
+  LinearTriatomInversionCenterState
+> = {
+  particle: "CO2",
+  charge: 0,
+  type: "LinearTriatomInversionCenter",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 1,
+      S: 2,
+      parity: "g",
+      reflection: "+",
+      vibrational: [{ v: [3, 4, 5] }],
+    },
+  ],
+};
 LinearTriatomInversionCenter.args = {
   set: {
     ...setTemplate,
@@ -225,22 +226,23 @@ LinearTriatomInversionCenter.args = {
 };
 
 export const LinearTriatomInversionCenterSimpleVib = Template.bind({});
-const state4LinearTriatomInversionCenterSimpleVib: InState<LinearTriatomInversionCenterState> =
-  {
-    particle: "CO2",
-    charge: 0,
-    type: "LinearTriatomInversionCenter",
-    electronic: [
-      {
-        e: "X",
-        Lambda: 1,
-        S: 2,
-        parity: "g",
-        reflection: "+",
-        vibrational: [{ v: "n,0,n" }],
-      },
-    ],
-  };
+const state4LinearTriatomInversionCenterSimpleVib: InState<
+  LinearTriatomInversionCenterState
+> = {
+  particle: "CO2",
+  charge: 0,
+  type: "LinearTriatomInversionCenter",
+  electronic: [
+    {
+      e: "X",
+      Lambda: 1,
+      S: 2,
+      parity: "g",
+      reflection: "+",
+      vibrational: [{ v: "n,0,n" }],
+    },
+  ],
+};
 LinearTriatomInversionCenterSimpleVib.args = {
   set: {
     ...setTemplate,

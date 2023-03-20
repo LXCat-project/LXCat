@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LinearElectronicImpl } from "./linear";
 import { MolecularParity } from "../common";
+import { LinearElectronicImpl } from "./linear";
 
-export type LinearInversionCenterElectronicImpl = LinearElectronicImpl &
-  MolecularParity;
+export type LinearInversionCenterElectronicImpl =
+  & LinearElectronicImpl
+  & MolecularParity;

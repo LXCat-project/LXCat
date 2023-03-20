@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useState } from "react";
-import Link from "next/link";
 import { Reference } from "@lxcat/schema/dist/core/reference";
+import Link from "next/link";
+import { useState } from "react";
 
-import { Dialog } from "./Dialog";
-import { HowToCite } from "./HowToCite";
-import { DOWNLOAD_COOKIE_NAME } from "./download";
-import { TermsOfUse } from "./TermsOfUse";
-import { useRouter } from "next/router";
 import { Button, Center, Modal } from "@mantine/core";
+import { useRouter } from "next/router";
+import { Dialog } from "./Dialog";
+import { DOWNLOAD_COOKIE_NAME } from "./download";
+import { HowToCite } from "./HowToCite";
+import { TermsOfUse } from "./TermsOfUse";
 
 interface Props {
   references: Reference[];
@@ -22,10 +22,9 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
   const { asPath } = useRouter();
   const hash = asPath.split("#")[1] || "";
   const hasForce = hash.includes("terms_of_use");
-  const hasDownloadToken =
-    typeof document !== "undefined"
-      ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
-      : false;
+  const hasDownloadToken = typeof document !== "undefined"
+    ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
+    : false;
   const [agreement, setAgreement] = useState(!hasForce && hasDownloadToken);
 
   async function acceptTermsOfUse() {

@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Sx } from "@mantine/core";
+import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
 import {
   OMIT_CHILDREN_KEY,
   StateLeaf,
   StatePath,
 } from "@lxcat/database/dist/shared/getStateLeaf";
-import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
+import { Sx } from "@mantine/core";
 
-import useSWRImmutable from "swr/immutable";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { StateSelect } from "./StateSelect";
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
+import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import useSWRImmutable from "swr/immutable";
+import { StateSelect } from "./StateSelect";
 
 export interface SWRReactionOptions {
   consumes: Array<StateLeaf>;
@@ -29,7 +29,7 @@ export const fetchStateTreeForSelection = async (
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
-  setIds: Set<string>
+  setIds: Set<string>,
 ): Promise<StateTree> =>
   (
     await fetch(
@@ -40,7 +40,7 @@ export const fetchStateTreeForSelection = async (
         typeTags: JSON.stringify(typeTags),
         reversible,
         setIds: JSON.stringify([...setIds]),
-      })}`
+      })}`,
     )
   ).json();
 async function stateFetcher({
@@ -57,7 +57,7 @@ async function stateFetcher({
     produces,
     typeTags,
     reversible,
-    csSets
+    csSets,
   );
 }
 
@@ -68,23 +68,23 @@ const getLatexFromTree = (tree: StateTree, path: StatePath) => {
     let particle = tree[path.particle];
     latex += particle.latex;
     if (
-      particle.children &&
-      path.electronic &&
-      path.electronic !== OMIT_CHILDREN_KEY
+      particle.children
+      && path.electronic
+      && path.electronic !== OMIT_CHILDREN_KEY
     ) {
       let electronic = particle.children[path.electronic];
       latex += `\\left(${electronic.latex}`;
       if (
-        electronic.children &&
-        path.vibrational &&
-        path.vibrational !== OMIT_CHILDREN_KEY
+        electronic.children
+        && path.vibrational
+        && path.vibrational !== OMIT_CHILDREN_KEY
       ) {
         const vibrational = electronic.children[path.vibrational];
         latex += `\\left(v=${vibrational.latex}`;
         if (
-          vibrational.children &&
-          path.rotational &&
-          path.rotational !== OMIT_CHILDREN_KEY
+          vibrational.children
+          && path.rotational
+          && path.rotational !== OMIT_CHILDREN_KEY
         ) {
           latex += `\\left(J=${
             vibrational.children[path.rotational].latex
@@ -119,7 +119,7 @@ export const SWRStateSelect = ({
     stateFetcher,
     {
       keepPreviousData: true,
-    }
+    },
   );
 
   if (!tree) {
@@ -130,8 +130,7 @@ export const SWRStateSelect = ({
     <StateSelect
       data={tree}
       onChange={(selected: StatePath) =>
-        onChange(selected, getLatexFromTree(tree, selected))
-      }
+        onChange(selected, getLatexFromTree(tree, selected))}
       {...props}
     />
   );

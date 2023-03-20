@@ -5,8 +5,8 @@
 {
   /* </Text> */
 }
-import type { ErrorObject } from "ajv";
 import { Text } from "@mantine/core";
+import type { ErrorObject } from "ajv";
 
 export const ErrorList = ({ errors }: { errors: ErrorObject[] }) => {
   return (
@@ -15,10 +15,9 @@ export const ErrorList = ({ errors }: { errors: ErrorObject[] }) => {
       <ul>
         {errors.map((e, i) => (
           <li key={i}>
-            {e.message},{" "}
-            {e.params &&
-              Object.keys(e.params).length > 0 &&
-              JSON.stringify(e.params, undefined, 2)}{" "}
+            {e.message}, {e.params
+              && Object.keys(e.params).length > 0
+              && JSON.stringify(e.params, undefined, 2)}{" "}
             {e.instancePath && `@ ${e.instancePath}`}
           </li>
         ))}

@@ -13,7 +13,7 @@ import { LinearTriatomInversionCenter } from "./triatom_linear_inversion_center"
 export type MoleculeList = [
   HeteronuclearDiatom,
   HomonuclearDiatom,
-  LinearTriatomInversionCenter
+  LinearTriatomInversionCenter,
 ];
 export type AnyMolecule = XORChain<MoleculeList>;
 // TODO: We can use this definition once ts-json-schema-generator supports

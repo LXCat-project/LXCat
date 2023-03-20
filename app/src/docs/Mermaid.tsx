@@ -2,8 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useEffect, useState } from "react";
+"use client";
+
 import mermaid from "mermaid";
+import { useEffect, useState } from "react";
 
 interface Props {
   chart: string;

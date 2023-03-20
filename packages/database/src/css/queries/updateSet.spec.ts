@@ -8,8 +8,19 @@ import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 
+import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { ArangojsError } from "arangojs/lib/request.node";
 import { byOrgAndId, searchOwned } from "../../cs/queries/author_read";
+import {
+  insertSampleStateIds,
+  sampleCrossSection,
+  sampleStates,
+} from "../../cs/queries/testutils";
+import { createSection } from "../../cs/queries/write";
 import { db } from "../../db";
+import { insert_state_dict } from "../../shared/queries";
+import { upsertOrganization } from "../../shared/queries/organization";
+import { Status } from "../../shared/types/version_info";
 import { byOwnerAndId, CrossSectionSetInputOwned } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
@@ -20,17 +31,6 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
-import { ArangojsError } from "arangojs/lib/request.node";
-import { Status } from "../../shared/types/version_info";
-import { createSection } from "../../cs/queries/write";
-import { upsertOrganization } from "../../shared/queries/organization";
-import {
-  insertSampleStateIds,
-  sampleCrossSection,
-  sampleStates,
-} from "../../cs/queries/testutils";
-import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
-import { insert_state_dict } from "../../shared/queries";
 
 const email = "somename@example.com";
 
@@ -183,7 +183,8 @@ describe("given published cross section set where data of 1 published cross sect
         threshold: 42,
         type: "LUT",
         versionInfo: {
-          commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
+          commitMessage:
+            `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "draft",
           version: "2",
@@ -349,7 +350,8 @@ describe("given published cross section set where data of 1 published cross sect
           threshold: 42,
           type: "LUT",
           versionInfo: {
-            commitMessage: `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
+            commitMessage:
+              `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
             createdOn: expect.stringMatching(ISO_8601_UTC),
             status: "published",
             version: "2",
@@ -459,7 +461,7 @@ describe("given draft cross section set where its cross section data is altered"
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -577,7 +579,7 @@ describe("given draft cross section set where its cross section data is added la
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -738,7 +740,7 @@ describe("given draft cross section set where its non cross section data is alte
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -883,7 +885,7 @@ describe("given draft cross section set where its cross section state is altered
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -898,7 +900,7 @@ describe("given draft cross section set where its cross section state is altered
       keycss2 = await updateSet(
         keycss1,
         draft,
-        "Altered section from A->B to A->C"
+        "Altered section from A->B to A->C",
       );
     } catch (error) {
       console.error((error as ArangojsError).stack); // ArangoError capture stack in own prop
@@ -1006,7 +1008,7 @@ describe("given draft cross section set where a reference is added to a cross se
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -1135,7 +1137,7 @@ describe("given draft cross section set where a reference is replaced in a cross
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -1262,7 +1264,7 @@ describe("given draft cross section set where a reference is extended in a cross
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -1377,7 +1379,7 @@ describe("given updating published cross section set which already has draft", (
       await updateSet(keycss1, secondDraft, "another draft please");
     } catch (error) {
       expect(`${error}`).toMatch(
-        `Can not create draft, it already exists as ${keycss2}`
+        `Can not create draft, it already exists as ${keycss2}`,
       );
     }
   });
@@ -1389,10 +1391,10 @@ describe("given a key of a non-existing cross section set", () => {
       updateSet(
         "123456789",
         sampleCrossSectionSet(),
-        "cannot update what does not exist"
-      )
+        "cannot update what does not exist",
+      ),
     ).rejects.toThrowError(
-      "Can not update cross section set that does not exist"
+      "Can not update cross section set that does not exist",
     );
   });
 });
@@ -1412,13 +1414,13 @@ describe.each(invalidUpdateStatuses)(
         updateSet(
           keycss1,
           sampleCrossSectionSet(),
-          "cannot update when already archived or retracted"
-        )
+          "cannot update when already archived or retracted",
+        ),
       ).rejects.toThrowError(
-        /Can not update cross section set due to invalid status/
+        /Can not update cross section set due to invalid status/,
       );
     });
-  }
+  },
 );
 
 describe("given draft cross section set where a cross section is added from another organization", () => {
@@ -1441,7 +1443,7 @@ describe("given draft cross section set where a cross section is added from anot
       stateIds,
       {},
       orgId,
-      "draft"
+      "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
     const cs1 = await byOrgAndId("Some other organization", keycs1);
@@ -1474,7 +1476,7 @@ describe("given draft cross section set where a cross section is added from anot
     await updateSet(
       keycss1,
       draft2,
-      "draft with cross section from another organization"
+      "draft with cross section from another organization",
     );
 
     const css = await byOwnerAndId(sampleEmail, keycss1);
@@ -1519,7 +1521,7 @@ describe("given draft cross section set where a cross section is added from anot
     async ({ collection, count }) => {
       const info = await db().collection(collection).count();
       expect(info.count).toEqual(count);
-    }
+    },
   );
 
   it("should have very similar cross sections", async () => {
@@ -1579,7 +1581,7 @@ describe("given draft cross section set where its charge in cross section is alt
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {
@@ -1699,7 +1701,7 @@ describe("given draft cross section set where its charge in cross section is alt
       },
       "draft",
       "1",
-      "Initial draft"
+      "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
     if (draft === undefined) {

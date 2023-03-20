@@ -7,19 +7,19 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
 
+import { Dict } from "@lxcat/schema/dist/core/util";
+import { aql } from "arangojs";
+import { ArrayCursor } from "arangojs/cursor";
+import { createSection } from "../../cs/queries/write";
 import { db } from "../../db";
+import { insert_reference_dict, insert_state_dict } from "../../shared/queries";
+import { upsertOrganization } from "../../shared/queries/organization";
+import { byOwnerAndId } from "./author_read";
 import { createSet } from "./author_write";
 import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
-import { insert_reference_dict, insert_state_dict } from "../../shared/queries";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { createSection } from "../../cs/queries/write";
-import { byOwnerAndId } from "./author_read";
-import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { upsertOrganization } from "../../shared/queries/organization";
 
 const email = "somename@example.com";
 
@@ -68,7 +68,7 @@ describe("giving draft set made with existing draft cross section", () => {
       stateLookup,
       refLookup,
       organizationId,
-      "draft"
+      "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
 
@@ -98,7 +98,7 @@ describe("giving draft set made with existing draft cross section", () => {
           },
         ],
       },
-      "draft"
+      "draft",
     );
     return truncateCrossSectionSetCollections;
   });
@@ -186,7 +186,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       stateLookup,
       refLookup,
-      organizationId
+      organizationId,
     );
     keycs1 = idcs1.replace("CrossSection/", "");
     keycss1 = await createSet(
@@ -215,7 +215,7 @@ describe("giving draft set made with someone else's published cross section", ()
           },
         ],
       },
-      "draft"
+      "draft",
     );
     return truncateCrossSectionSetCollections;
   });

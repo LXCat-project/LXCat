@@ -4,7 +4,7 @@
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Vega } from "react-vega";
+import { Vega, VisualizationSpec } from "react-vega";
 import { ScaleType } from "vega";
 import { Mark } from "vega-lite/build/src/mark";
 
@@ -17,7 +17,7 @@ interface Props {
 
 export const LutPlots = ({ processes, colors }: Props) => {
   if (processes.length === 0) {
-    return <div>Nothing to plot, because zero sections are selected</div>;
+    return <div>Nothing to plot, because zero cross sections are selected</div>;
   }
   const spec = toVegaSpec(processes, colors);
   return <Vega spec={spec} />;
@@ -29,23 +29,23 @@ interface VegaData {
   c: string;
 }
 
-function sectionToVegaData(data: LUT["data"], c: string) {
-  const rows = data
-    .filter((d) => d[0] !== 0.0 && d[1] !== 0.0)
-    .map((d) => ({ x: d[0], y: d[1], c }));
-  return rows;
-}
+const csToVegaData = (data: LUT["data"], c: string): Array<VegaData> =>
+  data
+    .filter(([x, y]) => x !== 0.0 && y !== 0.0)
+    .map(([x, y]) => ({ x, y, c }));
 
-function toVegaData(processes: PlotableCrossSection[], colors: string[]) {
-  const emptyArray: VegaData[] = [];
-  return emptyArray.concat(
-    ...processes.map((p, i) => sectionToVegaData(p.data, colors[i]))
-  );
-}
+const toVegaData = (
+  processes: PlotableCrossSection[],
+  colors: string[],
+): Array<VegaData> =>
+  processes.flatMap((p, i) => csToVegaData(p.data, colors[i]));
 
-function toVegaSpec(processes: PlotableCrossSection[], colors: string[]) {
+function toVegaSpec(
+  processes: PlotableCrossSection[],
+  colors: string[],
+): VisualizationSpec {
   const values = toVegaData(processes, colors);
-  const markType: Mark = "point";
+  const markType: Mark = "line";
   const scaleType: ScaleType = "log";
   const firstProcess = processes[0];
   const labels = firstProcess.labels;
@@ -56,6 +56,7 @@ function toVegaSpec(processes: PlotableCrossSection[], colors: string[]) {
     height: 600,
     mark: {
       type: markType,
+      point: true,
     },
     encoding: {
       x: {
@@ -77,12 +78,11 @@ function toVegaSpec(processes: PlotableCrossSection[], colors: string[]) {
     data: {
       values,
     },
-    selection: {
-      grid: {
-        type: "interval",
-        bind: "scales",
-      },
-    },
+    params: [{
+      name: "grid",
+      select: "interval",
+      bind: "scales",
+    }],
     usermeta: {
       embedOptions: {
         actions: {

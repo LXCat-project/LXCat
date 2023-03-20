@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
 import { MantineProvider } from "@mantine/core";
-import { theme } from "../theme";
 import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import { theme } from "../theme";
 
 function MyApp({
   Component,

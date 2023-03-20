@@ -15,10 +15,9 @@ import { listStates } from "@lxcat/database/dist/shared/queries/state";
 const handler = nc<NextApiRequest, NextApiResponse>().get(async (req, res) => {
   // TODO exclude/include draft states from logged in user?
   // Now all states are listed
-  const q =
-    req.query.filter && !Array.isArray(req.query.filter)
-      ? req.query.filter
-      : stateSelectionToSearchParam({ particle: {} });
+  const q = req.query.filter && !Array.isArray(req.query.filter)
+    ? req.query.filter
+    : stateSelectionToSearchParam({ particle: {} });
 
   const selection = stateSelectionFromSearchParam(q);
   const result = await listStates(selection);

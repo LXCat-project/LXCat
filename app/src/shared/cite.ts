@@ -11,7 +11,7 @@ import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference"
 
 export function reference2bibliography(
   r: ReferenceRecord,
-  template = "apa"
+  template = "apa",
 ): string {
   const cite = new Cite(r, {
     forceType: "@csl/object",

@@ -2,17 +2,17 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { byId, historyOfSection } from "@lxcat/database/dist/cs/queries/public";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { Dataset, WithContext } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
-import { Layout } from "../../shared/Layout";
-import { byId, historyOfSection } from "@lxcat/database/dist/cs/queries/public";
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { Dataset, WithContext } from "schema-dts";
 import { Item } from "../../ScatteringCrossSection/Item";
-import { reference2bibliography } from "../../shared/cite";
 import { reactionAsText } from "../../ScatteringCrossSection/reaction";
+import { reference2bibliography } from "../../shared/cite";
+import { Layout } from "../../shared/Layout";
+import { TermsOfUseCheck } from "../../shared/TermsOfUseCheck";
 
 interface Props {
   section: CrossSectionItem;

@@ -2,17 +2,17 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
+import { User } from "@lxcat/database/dist/auth/schema";
+import { NextAuthOptions } from "next-auth";
 import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
 import KeycloakProvider from "next-auth/providers/keycloak";
-import { NextAuthOptions } from "next-auth";
+import { env } from "process";
+import logo from "../../public/lxcat.png";
 import { ArangoAdapter } from "./ArangoAdapter";
 import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
-import { db } from "@lxcat/database";
-import { User } from "@lxcat/database/dist/auth/schema";
-import logo from "../../public/lxcat.png";
-import { env } from "process";
 
 const providers: Provider[] = [];
 if (process.env.AUTH0_CLIENT_ID) {
@@ -21,7 +21,7 @@ if (process.env.AUTH0_CLIENT_ID) {
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET || "",
       issuer: process.env.AUTH0_ISSUER,
-    })
+    }),
   );
 }
 if (process.env.GITLAB_CLIENT_ID) {
@@ -29,7 +29,7 @@ if (process.env.GITLAB_CLIENT_ID) {
     GitlabProvider({
       clientId: process.env.GITLAB_CLIENT_ID,
       clientSecret: process.env.GITLAB_CLIENT_SECRET || "",
-    })
+    }),
   );
 }
 if (process.env.KEYCLOAK_CLIENT_ID) {
@@ -38,7 +38,7 @@ if (process.env.KEYCLOAK_CLIENT_ID) {
       clientId: process.env.KEYCLOAK_CLIENT_ID,
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
       issuer: process.env.KEYCLOAK_ISSUER,
-    })
+    }),
   );
 }
 if (process.env.ORCID_CLIENT_ID) {
@@ -47,14 +47,14 @@ if (process.env.ORCID_CLIENT_ID) {
       OrcidSandboxProvider({
         clientId: process.env.ORCID_CLIENT_ID || "",
         clientSecret: process.env.ORCID_CLIENT_SECRET || "",
-      })
+      }),
     );
   } else {
     providers.push(
       OrcidProvider({
         clientId: process.env.ORCID_CLIENT_ID || "",
         clientSecret: process.env.ORCID_CLIENT_SECRET || "",
-      })
+      }),
     );
   }
 }
@@ -62,7 +62,7 @@ if (process.env.TESTOIDC_CLIENT_ID) {
   const nextauthUrl = new URL(process.env.NEXTAUTH_URL!);
   if (nextauthUrl.hostname !== "localhost") {
     throw Error(
-      "Can not use test oidc auth provider unless NEXTAUTH_URL env var is on localhost"
+      "Can not use test oidc auth provider unless NEXTAUTH_URL env var is on localhost",
     );
   }
   providers.push({

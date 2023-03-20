@@ -4,8 +4,8 @@
 
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Organization, WithContext, WebSite } from "schema-dts";
 import { jsonLdScriptProps } from "react-schemaorg";
+import { Organization, WebSite, WithContext } from "schema-dts";
 
 import { Layout } from "../shared/Layout";
 

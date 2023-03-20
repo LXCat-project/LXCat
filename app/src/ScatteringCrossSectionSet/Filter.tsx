@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import Link from "next/link";
-import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import { FilterOptions } from "@lxcat/database/dist/css/queries/public";
 import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { CheckBoxGroup } from "../shared/CheckBoxGroup";
 import {
-  stateSelectionToSearchParam,
   StateFilter,
+  stateSelectionToSearchParam,
 } from "../shared/StateFilter";
 
 interface Props {
@@ -22,8 +22,8 @@ export const Filter = ({ facets, selection }: Props) => {
 
   const hasAnySelection = Object.values(selection).some(
     (s) =>
-      (Array.isArray(s) && s.length > 0) ||
-      (typeof s === "object" && Object.keys(s).length > 0)
+      (Array.isArray(s) && s.length > 0)
+      || (typeof s === "object" && Object.keys(s).length > 0),
   );
   function onStateChange(newStateSelection: StateChoices) {
     router.push({

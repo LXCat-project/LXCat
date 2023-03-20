@@ -8,7 +8,7 @@ export function testOidcServer(
   client_id: string,
   client_secret: string,
   redirect_uri: string,
-  port: number
+  port: number,
 ) {
   const configuration = {
     async findAccount(_ctx: any, id: string) {
@@ -48,8 +48,8 @@ export function testOidcServer(
   const { invalidate: orig } = schema;
   schema.invalidate = function invalidate(message: any, code: any) {
     if (
-      code === "implicit-force-https" ||
-      code === "implicit-forbid-localhost"
+      code === "implicit-force-https"
+      || code === "implicit-forbid-localhost"
     ) {
       return;
     }
@@ -59,7 +59,7 @@ export function testOidcServer(
 
   return provider.listen(port, () => {
     console.log(
-      `oidc-provider listening on port ${port}, check http://localhost:${port}/.well-known/openid-configuration`
+      `oidc-provider listening on port ${port}, check http://localhost:${port}/.well-known/openid-configuration`,
     );
   });
 }

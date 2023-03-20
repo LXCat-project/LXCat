@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Role } from "@lxcat/database/dist/auth/schema";
+import cookie from "cookie";
 import { NextApiResponse } from "next";
 import { encode } from "next-auth/jwt";
 import nc from "next-connect";
 import { AuthRequest } from "../../../auth/middleware";
-import cookie from "cookie";
 import {
   ANONYMOUS_EMAIL,
   DOWNLOAD_COOKIE_NAME,
@@ -40,7 +40,7 @@ const handler = nc<AuthRequest, NextApiResponse>().post(
     });
     res.setHeader("Set-Cookie", value);
     res.json({ expires });
-  }
+  },
 );
 
 export default handler;

@@ -46,10 +46,10 @@ describe.each(invalidDeleteStatuses)(
 
     it("should throw an error", () => {
       expect(deleteSet(keycss1, "Can I do it?")).rejects.toThrowError(
-        /Can not delete set due to invalid status/
+        /Can not delete set due to invalid status/,
       );
     });
-  }
+  },
 );
 
 describe("deleting a published cross section with no shared cross sections", () => {
@@ -256,7 +256,7 @@ describe("deleting a draft cross section with no shared cross sections", () => {
     async (collection) => {
       const info = await db().collection(collection).count();
       expect(info.count).toEqual(0);
-    }
+    },
   );
 });
 
@@ -302,7 +302,7 @@ describe("deleting a draft cross section with one shared cross section", () => {
     async ({ collection, count }) => {
       const info = await db().collection(collection).count();
       expect(info.count).toEqual(count);
-    }
+    },
   );
 });
 
@@ -350,6 +350,6 @@ describe("deleting a draft cross section with one published cross section", () =
     async ({ collection, count }) => {
       const info = await db().collection(collection).count();
       expect(info.count).toEqual(count);
-    }
+    },
   );
 });

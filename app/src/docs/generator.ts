@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { readdir, readFile } from "fs/promises";
+import { fromMarkdown } from "mdast-util-from-markdown";
+import { Heading } from "mdast-util-from-markdown/lib";
 import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -19,7 +21,7 @@ import { VFile } from "vfile";
 import { serialize } from "./serialize";
 import { rehypeMermaid } from "./transformer";
 
-const DOC_ROOT = join(__dirname, "../../../../../docs");
+const DOC_ROOT = join(__dirname, "../../../../../../docs");
 
 export async function listDocFiles(dir = DOC_ROOT) {
   const files = await readdir(dir, { withFileTypes: true });
@@ -72,3 +74,112 @@ export async function md2mdx(slug: string[]) {
   };
   return await serialize(vfile, options);
 }
+
+interface FlatDocFile {
+  name: string;
+  entries: Array<DocHeader>;
+}
+
+interface DocHeader {
+  depth: number;
+  title: string;
+}
+
+export interface DocFile {
+  name: string;
+  entries?: Array<DocSection>;
+}
+
+export interface DocSection {
+  title: string;
+  children?: Array<DocSection>;
+}
+
+const makeNestedDocFile = (file: FlatDocFile): DocFile => ({
+  name: file.name,
+  entries: makeNestedEntries(file.entries, 0, 0)[0],
+});
+
+const makeNestedEntries = (
+  entries: Array<DocHeader>,
+  index: number,
+  depth: number,
+): [Array<DocSection>, number] => {
+  let children = [];
+
+  while (true) {
+    if (index >= entries.length) break;
+
+    const current = entries[index];
+
+    if (current.depth <= depth) {
+      break;
+    } else {
+      const result = makeNestedEntries(entries, index + 1, current.depth);
+
+      result[0].length === 0
+        ? children.push({
+          title: current.title,
+        })
+        : children.push({
+          title: current.title,
+          children: result[0],
+        });
+      index = result[1];
+    }
+  }
+
+  return [children, index];
+};
+
+const extractHeadingValue = (content: Heading["children"][0]): string => {
+  switch (content.type) {
+    case "text":
+      return content.value;
+    case "emphasis":
+    case "strong":
+      return content.children
+        .map((child) => extractHeadingValue(child))
+        .join("");
+    default:
+      throw new Error(
+        `Unknown syntax node in markdown heading:\n${
+          JSON.stringify(
+            content,
+            null,
+            2,
+          )
+        }`,
+      );
+  }
+};
+
+// TODO: Introduce a system for ordering the documentation pages, e.g. enforce all documentation markdown files to start with a number to indicate their order.
+export const extractMarkdownHeaders = async () => {
+  const files = await readdir(DOC_ROOT).then((files) =>
+    files.filter((file) => file.endsWith(".md"))
+  );
+
+  return await Promise.all(
+    files.map(async (file): Promise<DocFile> => {
+      const content = await readFile(join(DOC_ROOT, file), {
+        encoding: "utf8",
+      });
+
+      const tree = fromMarkdown(content);
+
+      const entries = tree.children
+        .filter((child): child is Heading => child.type === "heading")
+        .map(
+          (heading): DocHeader => ({
+            title: heading.children
+              .map((child) => extractHeadingValue(child))
+              .join(""),
+            depth: heading.depth,
+          }),
+        );
+
+      return makeNestedDocFile({ name: file.slice(0, -3), entries });
+    }),
+  );
+};

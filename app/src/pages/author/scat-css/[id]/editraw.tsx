@@ -2,17 +2,17 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../../../../shared/Layout";
-import type { ErrorObject } from "ajv";
-import { useState, MouseEvent } from "react";
-import { mustBeAuthor } from "../../../../auth/middleware";
 import {
-  CrossSectionSetInputOwned,
   byOwnerAndId,
+  CrossSectionSetInputOwned,
   getVersionInfo,
 } from "@lxcat/database/dist/css/queries/author_read";
+import type { ErrorObject } from "ajv";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
+import { MouseEvent, useState } from "react";
+import { mustBeAuthor } from "../../../../auth/middleware";
+import { Layout } from "../../../../shared/Layout";
 
 interface Props {
   set: CrossSectionSetInputOwned;
@@ -124,12 +124,13 @@ export const getServerSideProps: GetServerSideProps<
   const id = context.params?.id!;
   const set = await byOwnerAndId(me.email, id);
   const info = await getVersionInfo(id);
-  const commitMessage =
-    info !== undefined && info.commitMessage ? info.commitMessage : "";
+  const commitMessage = info !== undefined && info.commitMessage
+    ? info.commitMessage
+    : "";
   if (set === undefined) {
     return {
       // TODO should return notFound when id does not exist
-      //, but should return forbidden response when not owned by user?
+      // , but should return forbidden response when not owned by user?
       // need to update query to distinguish bewteen the 2
       notFound: true,
     };

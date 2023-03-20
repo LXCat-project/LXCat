@@ -12,7 +12,7 @@ export function systemDb() {
     return setSystemDb(
       process.env.ARANGO_URL || "http://localhost:8529",
       process.env.ARANGO_PASSWORD,
-      process.env.ARANGO_USERNAME || "root"
+      process.env.ARANGO_USERNAME || "root",
     );
   }
 
@@ -22,7 +22,7 @@ export function systemDb() {
 export const setSystemDb = (
   url: string,
   password: string | undefined,
-  username = "root"
+  username = "root",
 ) => {
   _db = new Database({
     url,

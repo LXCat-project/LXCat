@@ -38,7 +38,7 @@ export type StateChoices = {
 function generateParticleFilter(
   particle: string,
   selection: ParticleChoices,
-  stateVarName: string
+  stateVarName: string,
 ) {
   const stateVarAql = aql.literal(stateVarName);
   const filters = [aql`${stateVarAql}.particle == ${particle}`];
@@ -56,7 +56,7 @@ function generateParticleFilter(
 function generateElectronicFilter(
   electronic: ElectronicChoices,
   stateVarAql: AqlLiteral,
-  electronicVarName = "se"
+  electronicVarName = "se",
 ) {
   const electronicVarAql = aql.literal(electronicVarName);
   return Object.entries(electronic).map(
@@ -72,11 +72,11 @@ function generateElectronicFilter(
 
       const vibrationalFilters = generateVibratonalFilter(
         vibrational,
-        electronicVarAql
+        electronicVarAql,
       );
       if (vibrationalFilters.length > 0) {
         electronicSubFilters.push(
-          aql`( ${aql.join(vibrationalFilters, " OR ")} )`
+          aql`( ${aql.join(vibrationalFilters, " OR ")} )`,
         );
       }
 
@@ -86,7 +86,7 @@ function generateElectronicFilter(
             FILTER ${aql.join(electronicSubFilters, " AND ")}
             RETURN 1
         ) > 0`;
-    }
+    },
   );
 }
 
@@ -94,7 +94,7 @@ function generateVibratonalFilter(
   vibrational: VibrationalChoices,
   electronicVarAql: AqlLiteral,
   vibrationalVarName = "sv",
-  rotationalVarName = "sr"
+  rotationalVarName = "sr",
 ) {
   const vibrationalVarAql = aql.literal(vibrationalVarName);
   const rotationalVarAql = aql.literal(rotationalVarName);
@@ -127,7 +127,7 @@ function generateVibratonalFilter(
       });
       if (rotationalFilters.length > 0) {
         vibrationalSubFilters.push(
-          aql`( ${aql.join(rotationalFilters, " OR ")} )`
+          aql`( ${aql.join(rotationalFilters, " OR ")} )`,
         );
       }
 
@@ -137,7 +137,7 @@ function generateVibratonalFilter(
               FILTER ${aql.join(vibrationalSubFilters, " AND ")}
               RETURN 1
           ) > 0`;
-    }
+    },
   );
 }
 
@@ -152,7 +152,7 @@ function generateVibratonalFilter(
  */
 export function generateStateFilterAql(
   selection: StateChoices,
-  stateVarName = "s"
+  stateVarName = "s",
 ) {
   if (Object.keys(selection.particle).length === 0) {
     return aql`true`;
@@ -261,9 +261,9 @@ export async function getIdByLabel(label: string) {
       FILTER s.id == ${label}
       LIMIT 1
       RETURN s._id
-  `
-  const cursor: ArrayCursor<string> = await db().query(query)
-  return cursor.next()
+  `;
+  const cursor: ArrayCursor<string> = await db().query(query);
+  return cursor.next();
 }
 
 export type StateSummary = {

@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AtomParser, MoleculeParser } from "../parse";
 import { AnyAtom } from "../atoms";
 import { ParticleType } from "../enumeration";
 import { AtomicGenerator, UnknownMolecule } from "../generators";
 import { AnyMolecule } from "../molecules";
+import { AtomParser, MoleculeParser } from "../parse";
 import { hd_parser } from "./hd";
 import { ht_parser } from "./ht";
 import { j1l2_parser } from "./j1l2";
@@ -23,11 +23,11 @@ type MoleculeParserDict<T extends UnknownMolecule> = {
 
 export type StateParserDict<
   A extends AtomicGenerator<unknown, string>,
-  M extends UnknownMolecule
+  M extends UnknownMolecule,
 > = AtomParserDict<A> & MoleculeParserDict<M>;
 
 export type ParticleTypeDict<
-  T extends AtomicGenerator<unknown, string> | UnknownMolecule
+  T extends AtomicGenerator<unknown, string> | UnknownMolecule,
 > = {
   [key in T["type"]]: ParticleType;
 };

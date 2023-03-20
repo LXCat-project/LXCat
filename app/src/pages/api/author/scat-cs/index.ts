@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import nc from "next-connect";
-import { NextApiResponse } from "next";
 import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
+import { NextApiResponse } from "next";
+import nc from "next-connect";
 
 import {
   AuthRequest,
-  hasSessionOrAPIToken,
   hasAuthorRole,
+  hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
 

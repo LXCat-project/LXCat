@@ -14,7 +14,7 @@ export interface CSParameters {
 export type CrossSection<
   StateType,
   ReferenceType = Reference,
-  StorageType = CSStorage
+  StorageType = CSStorage,
 > = {
   reaction: Reaction<StateType>;
   parameters?: CSParameters;

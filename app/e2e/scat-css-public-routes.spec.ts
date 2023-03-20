@@ -19,7 +19,7 @@ test.describe("given 2 dummy sets", () => {
     await uploadAndPublishDummySet(
       browser,
       "dummy2.json",
-      "Some other organization"
+      "Some other organization",
     );
   });
 
@@ -48,7 +48,7 @@ test.describe("given 2 dummy sets", () => {
     });
     test("given filter on a org, should list 1 sets", async ({ request }) => {
       const res = await request.get(
-        "/api/scat-css?contributor=Some+organization"
+        "/api/scat-css?contributor=Some+organization",
       );
       const { items } = await res.json();
       expect(items).toHaveLength(1);
@@ -59,7 +59,7 @@ test.describe("given 2 dummy sets", () => {
     let setId: string;
     test.beforeEach(async ({ request }) => {
       const res = await request.get(
-        "/api/scat-css?contributor=Some+organization"
+        "/api/scat-css?contributor=Some+organization",
       );
       const body: { items: CrossSectionSetHeading[] } = await res.json();
       setId = body.items[0].id;
@@ -73,9 +73,7 @@ test.describe("given 2 dummy sets", () => {
         expect(ref0.id).toEqual("SomeMainId");
       });
 
-      test("given bibtex refstyle should return bibtex string", async ({
-        request,
-      }) => {
+      test("given bibtex refstyle should return bibtex string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=bibtex`);
         const set: CrossSectionSetRaw = await res.json();
         const expected = `@article{MyFamilyNameSome,
@@ -90,9 +88,7 @@ test.describe("given 2 dummy sets", () => {
         expect(ref0).toEqual(expected);
       });
 
-      test("given apa refstyle should return apa string", async ({
-        request,
-      }) => {
+      test("given apa refstyle should return apa string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=apa`);
         const set: CrossSectionSetRaw = await res.json();
         const ref0 = Object.values(set.references)[0];
@@ -102,12 +98,11 @@ test.describe("given 2 dummy sets", () => {
       });
     });
 
-    // TODO legacy format for dummy sets causes a fatal runtime error
-    test.describe.skip("/api/scat-css/[id]/legacy", () => {
+    test.describe("/api/scat-css/[id]/legacy", () => {
       test("should return text in bolsig+ format", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}/legacy`);
 
-        expect(res.headers()["Content-Type"]).toEqual("text/plain");
+        expect(res.headers()["content-type"]).toEqual("text/plain");
         const body = await res.text();
         expect(body).toBeTruthy();
       });
@@ -119,7 +114,7 @@ test.describe("given 2 dummy sets", () => {
       await page.goto("/scat-css");
       await page.locator("text=Some name").click();
       await page.locator("text=I agree with the terms of use").click();
-      await page.waitForSelector('h2:has-text("Processes")');
+      await page.waitForSelector("h2:has-text(\"Processes\")");
     });
 
     test("should have single process listed", async ({ page }) => {
@@ -127,9 +122,7 @@ test.describe("given 2 dummy sets", () => {
       await expect(processes).toHaveCount(1);
     });
 
-    test("should have first 5 process plot checkboxes checked", async ({
-      page,
-    }) => {
+    test("should have first 5 process plot checkboxes checked", async ({ page }) => {
       const checkboxes = page.locator("input[type=checkbox]");
       await expect(checkboxes).toBeChecked();
       // TODO use set with more than 4 sections, as test set only has 1 section, which make testing toggling hard
@@ -144,10 +137,8 @@ test.describe("given 2 dummy sets", () => {
       test.setTimeout(60000);
 
       // Open the vega action context menu aka ... icon
-      // FIXME: For some reason there are two overlapping buttons. The latter button is the correct one, hence the `nth(1)`.
       const details = page
-        .locator('details[title="Click to view actions"]')
-        .nth(1);
+        .locator("details[title=\"Click to view actions\"]");
 
       await details.locator("summary").click();
 
@@ -170,8 +161,8 @@ test.describe("given 2 dummy sets", () => {
       test("should show no plot", async ({ page }) => {
         await expect(
           page.locator(
-            "text=Nothing to plot, because zero sections are selected"
-          )
+            "text=Nothing to plot, because zero cross sections are selected",
+          ),
         ).toBeVisible();
       });
     });

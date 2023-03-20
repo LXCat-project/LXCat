@@ -2,14 +2,14 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import "dotenv/config";
-import { db } from "../../src/db";
+import { EdgeCollection } from "arangojs/collection";
 import {
   Organization,
   UserWithAccountSessionInDb,
 } from "../../src/auth/schema";
-import { EdgeCollection } from "arangojs/collection";
+import { db } from "../../src/db";
 
-export default async function () {
+export default async function() {
   const users = db().collection<UserWithAccountSessionInDb>("users");
   const user = UserWithAccountSessionInDb.parse({
     name: "somename",

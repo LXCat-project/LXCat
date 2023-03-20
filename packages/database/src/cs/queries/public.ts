@@ -6,13 +6,13 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { PagingOptions } from "../../shared/types/search";
+import { KeyedVersionInfo } from "../../shared/types/version_info";
+import { ReactionTemplate } from "../picker/types";
 import {
   CrossSectionBag,
   CrossSectionHeading,
   CrossSectionItem,
 } from "../public";
-import { ReactionTemplate } from "../picker/types";
-import { KeyedVersionInfo } from "../../shared/types/version_info";
 
 export async function byId(id: string) {
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
@@ -164,7 +164,7 @@ export async function byIds(ids: string[]) {
 
 export async function getCSHeadings(
   csIds: Array<string>,
-  paging: PagingOptions
+  paging: PagingOptions,
 ) {
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const q = aql`
@@ -211,7 +211,7 @@ export async function getCSHeadings(
 // TODO: Can this function be removed?
 export async function search(
   _templates: Array<ReactionTemplate>,
-  paging: PagingOptions
+  paging: PagingOptions,
 ) {
   const reactionsAql = aql``; // TODO implement
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;

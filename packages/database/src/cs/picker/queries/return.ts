@@ -15,8 +15,7 @@ export const returnId: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}._id`;
 
 export const returnCSId =
-  (setIds: Array<string>): ReactionFunction =>
-  (reaction: AqlLiteral) =>
+  (setIds: Array<string>): ReactionFunction => (reaction: AqlLiteral) =>
     setIds.length === 0
       ? aql`
       FOR cs IN CrossSection

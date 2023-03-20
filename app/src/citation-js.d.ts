@@ -18,10 +18,10 @@ declare module "@citation-js/core" {
     lang?: string;
   }
   export declare class Cite {
-    constructor(csl: Reference, { forceType: string }?);
+    constructor(csl: Reference | Array<Reference>, { forceType: string }?);
     format(
       format: string,
-      { format: string, template: string }?
+      { format: string, template: string }?,
     ): string | Record<string, string>;
     get(options?: OutputOptions): Array<Reference>;
     static async: (value: string, options?: InputOptions) => Promise<Cite>;

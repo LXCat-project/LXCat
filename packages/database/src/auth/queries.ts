@@ -9,7 +9,7 @@ import { Organization, Role, UserInDb } from "./schema";
 
 export const toggleRole = async (
   userId: string,
-  role: Role
+  role: Role,
 ): Promise<Role[] | undefined> => {
   const cursor: ArrayCursor<Role[]> = await db().query(aql`
         LET role = ${role}

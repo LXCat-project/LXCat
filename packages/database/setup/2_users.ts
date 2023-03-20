@@ -4,14 +4,14 @@
 
 import "dotenv/config";
 import { CollectionType } from "arangojs/collection";
-import { db } from "../src/db";
 import {
   OrganizationAsJsonSchema,
   UserWithAccountSessionInDb,
   UserWithAccountSessionInDbAsJsonSchema,
 } from "../src/auth/schema";
+import { db } from "../src/db";
 
-export default async function () {
+export default async function() {
   await createUserCollection();
   await createOrganizationCollection();
   await createMemberOfCollection();
@@ -45,8 +45,9 @@ async function createUserCollection() {
 }
 
 async function createOrganizationCollection() {
-  const organizations =
-    db().collection<UserWithAccountSessionInDb>("Organization");
+  const organizations = db().collection<UserWithAccountSessionInDb>(
+    "Organization",
+  );
   if (await organizations.exists()) {
     console.log("Organization collection already exists");
     return;

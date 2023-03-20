@@ -29,10 +29,9 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const consumes = parseParam<Array<StateLeaf>>(consumesParam, []);
     const produces = parseParam<Array<StateLeaf>>(producesParam, []);
     const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
-    const reversible =
-      reversibleParam && !Array.isArray(reversibleParam)
-        ? (reversibleParam as Reversible)
-        : Reversible.Both;
+    const reversible = reversibleParam && !Array.isArray(reversibleParam)
+      ? (reversibleParam as Reversible)
+      : Reversible.Both;
 
     res.json(await getCSSets(consumes, produces, typeTags, reversible));
   });

@@ -2,27 +2,29 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Cite } from "@citation-js/core";
 import {
   Accordion,
   Button,
   Checkbox,
   FileButton,
   Group,
+  Input,
   Modal,
   MultiSelect,
   NativeSelect,
   Radio,
   Space,
+  Stack,
   Tabs,
   Text,
   Textarea,
   TextInput,
-  Stack,
-  Input,
 } from "@mantine/core";
-import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-doi";
+import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
+import { ajvResolver } from "@hookform/resolvers/ajv";
 import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
@@ -36,35 +38,33 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form";
-import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
-import { ajvResolver } from "@hookform/resolvers/ajv";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
-import { Dict, Pair } from "@lxcat/schema/dist/core/util";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
 import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { InState } from "@lxcat/schema/dist/core/state";
-import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { parseState } from "@lxcat/schema/dist/core/parse";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { InState } from "@lxcat/schema/dist/core/state";
+import { Dict, Pair } from "@lxcat/schema/dist/core/util";
+import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
 
-import { Reference } from "../shared/Reference";
-import { State } from "@lxcat/database/dist/shared/types/collections";
-import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { StatePickerModal } from "./StatePickeModal";
-import { StateDict } from "@lxcat/database/dist/shared/queries/state";
-import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
-import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { StateDict } from "@lxcat/database/dist/shared/queries/state";
+import { State } from "@lxcat/database/dist/shared/types/collections";
+import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
+import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
+import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
+import { bibtex2csl } from "../shared/bibtex2csl";
 import { getReferenceLabel, reference2bibliography } from "../shared/cite";
 import { doi2csl } from "../shared/doi2csl";
-import { bibtex2csl } from "../shared/bibtex2csl";
-import { LatexSelect } from "../shared/LatexSelect";
 import { Latex } from "../shared/Latex";
+import { LatexSelect } from "../shared/LatexSelect";
+import { Reference } from "../shared/Reference";
+import { StatePickerModal } from "./StatePickeModal";
 
 interface FieldValues {
   set: CrossSectionSetRaw;
@@ -76,22 +76,24 @@ const ErrorMessage = (props: any) => (
     {...props}
     render={
       ({ messages }) =>
-        messages ? (
-          Object.entries(messages).map(([type, message]) => (
-            <p key={type} style={{ color: "#a94442" }}>
-              ⚠ {message}
-            </p>
-          ))
-        ) : (
-          <></>
-        ) // In else when a nested parameter has error
+        messages
+          ? (
+            Object.entries(messages).map(([type, message]) => (
+              <p key={type} style={{ color: "#a94442" }}>
+                ⚠ {message}
+              </p>
+            ))
+          )
+          : (
+            <></>
+          ) // In else when a nested parameter has error
     }
   />
 );
 
 const errorMsg = (
   errors: FieldErrors<FieldValues>,
-  name: FieldPath<FieldValues>
+  name: FieldPath<FieldValues>,
 ) => {
   const error: FieldError | undefined = get(errors, name);
 
@@ -122,12 +124,11 @@ const ReactionEntryForm = ({
   const stateChoices = useMemo(() => {
     return Object.fromEntries(
       Object.entries(states).map(([value, s]) => {
-        const latex =
-          s.latex && !(s.latex === "\\mathrm{}")
-            ? s.latex
-            : parseState(s as any).latex;
+        const latex = s.latex && !(s.latex === "\\mathrm{}")
+          ? s.latex
+          : parseState(s as any).latex;
         return [value, latex];
-      })
+      }),
     );
   }, [states]);
   return (
@@ -138,13 +139,13 @@ const ReactionEntryForm = ({
           style={{ width: "4rem" }}
           error={errorMsg(
             errors,
-            `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`
+            `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`,
           )}
           {...register(
             `set.processes.${processIndex}.reaction.${side}.${entryIndex}.count`,
             {
               valueAsNumber: true,
-            }
+            },
           )}
         />
       </Stack>
@@ -221,24 +222,25 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
           name={`set.processes.${processIndex}.reaction.reversible`}
           render={({ field: { onBlur, onChange, value } }) => (
             <Radio.Group
-              orientation="vertical"
               onChange={(v) => onChange(v !== "")}
               value={value ? "reversible" : ""}
               onBlur={onBlur}
               error={errorMsg(
                 errors,
-                `set.processes.${processIndex}.reaction.reversible`
+                `set.processes.${processIndex}.reaction.reversible`,
               )}
             >
-              <Radio
-                value=""
-                label={<Text style={{ fontSize: "2em" }}>➞</Text>}
-              />
-              <Radio
-                value="reversible"
-                title="Reversible"
-                label={<Text style={{ fontSize: "2em" }}>⇄</Text>}
-              />
+              <Stack>
+                <Radio
+                  value=""
+                  label={<Text style={{ fontSize: "2em" }}>➞</Text>}
+                />
+                <Radio
+                  value="reversible"
+                  title="Reversible"
+                  label={<Text style={{ fontSize: "2em" }}>⇄</Text>}
+                />
+              </Stack>
             </Radio.Group>
           )}
         />
@@ -270,7 +272,8 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
         <ErrorMessage
           errors={errors}
           name={`set.processes.${processIndex}.reaction.lhs`}
-        />{" "}
+        />
+        {" "}
       </div>
       <div>
         <Controller
@@ -288,7 +291,7 @@ const ReactionForm = ({ index: processIndex }: { index: number }) => {
               }))}
               error={errorMsg(
                 errors,
-                `set.processes.${processIndex}.reaction.type_tags`
+                `set.processes.${processIndex}.reaction.type_tags`,
               )}
             />
           )}
@@ -522,7 +525,7 @@ const ProcessForm = ({
             label="Mass ratio"
             error={errorMsg(
               errors,
-              `set.processes.${index}.parameters.mass_ratio`
+              `set.processes.${index}.parameters.mass_ratio`,
             )}
             {...register(`set.processes.${index}.parameters.mass_ratio`, {
               setValueAs: (v) => (v ? Number(v) : undefined),
@@ -532,13 +535,13 @@ const ProcessForm = ({
             label="Statistical weight ratio"
             error={errorMsg(
               errors,
-              `set.processes.${index}.parameters.statistical_weight_ratio`
+              `set.processes.${index}.parameters.statistical_weight_ratio`,
             )}
             {...register(
               `set.processes.${index}.parameters.statistical_weight_ratio`,
               {
                 setValueAs: (v) => (v ? Number(v) : undefined),
-              }
+              },
             )}
           />
         </Group>
@@ -612,12 +615,12 @@ const AtomLSElectronicForm = ({
                 if (v === "LS") {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialAtomLSElectronic()
+                    initialAtomLSElectronic(),
                   );
                 } else {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialSimpleElectronic()
+                    initialSimpleElectronic(),
                   );
                 }
               }}
@@ -625,7 +628,7 @@ const AtomLSElectronicForm = ({
               value={value}
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.scheme`
+                `set.states.${label}.electronic.${eindex}.scheme`,
               )}
             >
               <Radio value="" label="Simple" />
@@ -634,20 +637,20 @@ const AtomLSElectronicForm = ({
           )}
         />
       </div>
-      {scheme !== "LS" ? (
-        <div>
-          <TextInput
-            label="e"
-            error={errorMsg(
-              errors,
-              `set.states.${label}.electronic.${eindex}.e`
-            )}
-            {...register(`set.states.${label}.electronic.${eindex}.e`)}
-          />
-        </div>
-      ) : (
-        <AtomLSElectronicDetailedForm label={label} eindex={eindex} />
-      )}
+      {scheme !== "LS"
+        ? (
+          <div>
+            <TextInput
+              label="e"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.e`,
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.e`)}
+            />
+          </div>
+        )
+        : <AtomLSElectronicDetailedForm label={label} eindex={eindex} />}
     </>
   );
 };
@@ -675,7 +678,7 @@ const AtomLSElectronicDetailedForm = ({
             label="L"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.L`
+              `set.states.${label}.electronic.${eindex}.term.L`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.L`, {
               valueAsNumber: true,
@@ -687,7 +690,7 @@ const AtomLSElectronicDetailedForm = ({
             label="S"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.S`
+              `set.states.${label}.electronic.${eindex}.term.S`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.S`, {
               valueAsNumber: true,
@@ -706,7 +709,7 @@ const AtomLSElectronicDetailedForm = ({
                 value={value === undefined ? 1 : value.toString()}
                 error={errorMsg(
                   errors,
-                  `set.states.${label}.electronic.${eindex}.term.P`
+                  `set.states.${label}.electronic.${eindex}.term.P`,
                 )}
               >
                 <Radio value="-1" label="-1" />
@@ -720,7 +723,7 @@ const AtomLSElectronicDetailedForm = ({
             label="J"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.J`
+              `set.states.${label}.electronic.${eindex}.term.J`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.J`, {
               valueAsNumber: true,
@@ -759,10 +762,9 @@ const AtomLSConfigArray = ({
     control,
     formState: { errors },
   } = useFormContext();
-  const prefix: FieldPath<FieldValues> =
-    side === ""
-      ? `set.states.${label}.electronic.${eindex}.config`
-      : `set.states.${label}.electronic.${eindex}.config.${side}.config`;
+  const prefix: FieldPath<FieldValues> = side === ""
+    ? `set.states.${label}.electronic.${eindex}.config`
+    : `set.states.${label}.electronic.${eindex}.config.${side}.config`;
   const array = useFieldArray({
     control,
     name: prefix,
@@ -848,13 +850,13 @@ const LSTermConfigForm = ({
             withAsterisk
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.config.${side}.term.L`
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.L`,
             )}
             {...register(
               `set.states.${label}.electronic.${eindex}.config.${side}.term.L`,
               {
                 valueAsNumber: true,
-              }
+              },
             )}
           />
         </div>
@@ -864,13 +866,13 @@ const LSTermConfigForm = ({
             withAsterisk
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.config.${side}.term.S`
+              `set.states.${label}.electronic.${eindex}.config.${side}.term.S`,
             )}
             {...register(
               `set.states.${label}.electronic.${eindex}.config.${side}.term.S`,
               {
                 valueAsNumber: true,
-              }
+              },
             )}
           />
         </div>
@@ -886,7 +888,7 @@ const LSTermConfigForm = ({
                 value={value === undefined ? undefined : value.toString()}
                 error={errorMsg(
                   errors,
-                  `set.states.${label}.electronic.${eindex}.config.${side}.term.P`
+                  `set.states.${label}.electronic.${eindex}.config.${side}.term.P`,
                 )}
               >
                 <Radio value="-1" label="-1" />
@@ -903,13 +905,13 @@ const LSTermConfigForm = ({
               withAsterisk
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.config.${side}.term.J`
+                `set.states.${label}.electronic.${eindex}.config.${side}.term.J`,
               )}
               {...register(
                 `set.states.${label}.electronic.${eindex}.config.${side}.term.J`,
                 {
                   valueAsNumber: true,
-                }
+                },
               )}
             />
           </div>
@@ -948,12 +950,12 @@ const AtomJ1L2FormElectronicForm = ({
                 if (v === "J1L2") {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialValue4AtomJIL2()
+                    initialValue4AtomJIL2(),
                   );
                 } else {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialSimpleElectronic()
+                    initialSimpleElectronic(),
                   );
                 }
               }}
@@ -961,7 +963,7 @@ const AtomJ1L2FormElectronicForm = ({
               value={value}
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.scheme`
+                `set.states.${label}.electronic.${eindex}.scheme`,
               )}
             >
               <Radio value="" label="Simple" />
@@ -970,20 +972,20 @@ const AtomJ1L2FormElectronicForm = ({
           )}
         />
       </div>
-      {scheme !== "J1L2" ? (
-        <div>
-          <TextInput
-            label="e"
-            error={errorMsg(
-              errors,
-              `set.states.${label}.electronic.${eindex}.e`
-            )}
-            {...register(`set.states.${label}.electronic.${eindex}.e`)}
-          />
-        </div>
-      ) : (
-        <AtomJ1L2FormElectronicDetailedForm label={label} eindex={eindex} />
-      )}
+      {scheme !== "J1L2"
+        ? (
+          <div>
+            <TextInput
+              label="e"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.e`,
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.e`)}
+            />
+          </div>
+        )
+        : <AtomJ1L2FormElectronicDetailedForm label={label} eindex={eindex} />}
     </>
   );
 };
@@ -1026,7 +1028,7 @@ const AtomJ1L2FormElectronicDetailedForm = ({
             label="K"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.K`
+              `set.states.${label}.electronic.${eindex}.term.K`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.K`, {
               valueAsNumber: true,
@@ -1038,7 +1040,7 @@ const AtomJ1L2FormElectronicDetailedForm = ({
             label="S"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.S`
+              `set.states.${label}.electronic.${eindex}.term.S`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.S`, {
               valueAsNumber: true,
@@ -1051,7 +1053,7 @@ const AtomJ1L2FormElectronicDetailedForm = ({
             label="P"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.P`
+              `set.states.${label}.electronic.${eindex}.term.P`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.P`, {
               valueAsNumber: true,
@@ -1063,7 +1065,7 @@ const AtomJ1L2FormElectronicDetailedForm = ({
             label="J"
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.term.J`
+              `set.states.${label}.electronic.${eindex}.term.J`,
             )}
             {...register(`set.states.${label}.electronic.${eindex}.term.J`, {
               valueAsNumber: true,
@@ -1139,19 +1141,19 @@ const AtomLS1FormElectronicForm = ({
                 if (v === "LS1") {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialValue4AtomLS1()
+                    initialValue4AtomLS1(),
                   );
                 } else {
                   setValue(
                     `set.states.${label}.electronic.${eindex}`,
-                    initialSimpleElectronic()
+                    initialSimpleElectronic(),
                   );
                 }
               }}
               value={value}
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.scheme`
+                `set.states.${label}.electronic.${eindex}.scheme`,
               )}
             >
               <Radio value="" label="Simple" />
@@ -1160,140 +1162,145 @@ const AtomLS1FormElectronicForm = ({
           )}
         />
       </div>
-      {scheme === "LS1" ? (
-        <>
-          <div>
-            <fieldset>
-              <legend>Core</legend>
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.config.core.scheme`,
-                  {
-                    value: "LS",
-                  }
-                )}
-                type="hidden"
-              />
-              <LSTermConfigForm
-                label={label}
-                eindex={eindex}
-                side="core"
-                isLS1={true}
-              />
-            </fieldset>
-            <fieldset>
-              <legend>Excited</legend>
-              <input
-                {...register(
-                  `set.states.${label}.electronic.${eindex}.config.excited.scheme`,
-                  {
-                    value: "LS",
-                  }
-                )}
-                type="hidden"
-              />
-              <LSTermConfigForm
-                label={label}
-                eindex={eindex}
-                side="excited"
-                isLS1={true}
-              />
-            </fieldset>
-          </div>
-          <div>
-            <h4>Term</h4>
-            <Group>
-              <div>
-                <TextInput
-                  label="L"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.term.L`
-                  )}
+      {scheme === "LS1"
+        ? (
+          <>
+            <div>
+              <fieldset>
+                <legend>Core</legend>
+                <input
                   {...register(
-                    `set.states.${label}.electronic.${eindex}.term.L`,
+                    `set.states.${label}.electronic.${eindex}.config.core.scheme`,
                     {
-                      valueAsNumber: true,
-                    }
+                      value: "LS",
+                    },
                   )}
+                  type="hidden"
                 />
-              </div>
-              <div>
-                <TextInput
-                  label="K"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.term.K`
-                  )}
+                <LSTermConfigForm
+                  label={label}
+                  eindex={eindex}
+                  side="core"
+                  isLS1={true}
+                />
+              </fieldset>
+              <fieldset>
+                <legend>Excited</legend>
+                <input
                   {...register(
-                    `set.states.${label}.electronic.${eindex}.term.K`,
+                    `set.states.${label}.electronic.${eindex}.config.excited.scheme`,
                     {
-                      valueAsNumber: true,
-                    }
+                      value: "LS",
+                    },
                   )}
+                  type="hidden"
                 />
-              </div>
-              <div>
-                <TextInput
-                  label="S"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.term.S`
-                  )}
-                  {...register(
-                    `set.states.${label}.electronic.${eindex}.term.S`,
-                    {
-                      valueAsNumber: true,
-                    }
-                  )}
+                <LSTermConfigForm
+                  label={label}
+                  eindex={eindex}
+                  side="excited"
+                  isLS1={true}
                 />
-              </div>
-              <div>
-                <Controller
-                  control={control}
-                  name={`set.states.${label}.electronic.${eindex}.term.P`}
-                  render={({ field: { onBlur, onChange, value } }) => (
-                    <Radio.Group
-                      label="P"
-                      onBlur={onBlur}
-                      onChange={(v) => onChange(parseInt(v))}
-                      value={value === undefined ? 1 : value.toString()}
-                      error={errorMsg(
-                        errors,
-                        `set.states.${label}.electronic.${eindex}.term.P`
-                      )}
-                    >
-                      <Radio value="-1" label="-1" />
-                      <Radio value="1" label="1" />
-                    </Radio.Group>
-                  )}
-                />
-              </div>
-              <div>
-                <TextInput
-                  label="J"
-                  error={errorMsg(
-                    errors,
-                    `set.states.${label}.electronic.${eindex}.term.J`
-                  )}
-                  {...register(
-                    `set.states.${label}.electronic.${eindex}.term.J`,
-                    {
-                      valueAsNumber: true,
-                    }
-                  )}
-                />
-              </div>
-            </Group>
-          </div>
-        </>
-      ) : (
-        <TextInput
-          label="e"
-          error={errorMsg(errors, `set.states.${label}.electronic.${eindex}.e`)}
-          {...register(`set.states.${label}.electronic.${eindex}.e`)}
-        />
-      )}
+              </fieldset>
+            </div>
+            <div>
+              <h4>Term</h4>
+              <Group>
+                <div>
+                  <TextInput
+                    label="L"
+                    error={errorMsg(
+                      errors,
+                      `set.states.${label}.electronic.${eindex}.term.L`,
+                    )}
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.term.L`,
+                      {
+                        valueAsNumber: true,
+                      },
+                    )}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="K"
+                    error={errorMsg(
+                      errors,
+                      `set.states.${label}.electronic.${eindex}.term.K`,
+                    )}
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.term.K`,
+                      {
+                        valueAsNumber: true,
+                      },
+                    )}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="S"
+                    error={errorMsg(
+                      errors,
+                      `set.states.${label}.electronic.${eindex}.term.S`,
+                    )}
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.term.S`,
+                      {
+                        valueAsNumber: true,
+                      },
+                    )}
+                  />
+                </div>
+                <div>
+                  <Controller
+                    control={control}
+                    name={`set.states.${label}.electronic.${eindex}.term.P`}
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <Radio.Group
+                        label="P"
+                        onBlur={onBlur}
+                        onChange={(v) => onChange(parseInt(v))}
+                        value={value === undefined ? 1 : value.toString()}
+                        error={errorMsg(
+                          errors,
+                          `set.states.${label}.electronic.${eindex}.term.P`,
+                        )}
+                      >
+                        <Radio value="-1" label="-1" />
+                        <Radio value="1" label="1" />
+                      </Radio.Group>
+                    )}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="J"
+                    error={errorMsg(
+                      errors,
+                      `set.states.${label}.electronic.${eindex}.term.J`,
+                    )}
+                    {...register(
+                      `set.states.${label}.electronic.${eindex}.term.J`,
+                      {
+                        valueAsNumber: true,
+                      },
+                    )}
+                  />
+                </div>
+              </Group>
+            </div>
+          </>
+        )
+        : (
+          <TextInput
+            label="e"
+            error={errorMsg(
+              errors,
+              `set.states.${label}.electronic.${eindex}.e`,
+            )}
+            {...register(`set.states.${label}.electronic.${eindex}.e`)}
+          />
+        )}
     </>
   );
 };
@@ -1356,7 +1363,7 @@ const MolecularParityField = ({
             value={value as string}
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.parity`
+              `set.states.${label}.electronic.${eindex}.parity`,
             )}
           >
             <Radio value="g" label="Gerade" />
@@ -1380,7 +1387,7 @@ const LinearTriatomVibrationalFieldItem = ({
 }) => {
   const { watch, setValue } = useFormContext();
   const v = watch(
-    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
   );
   const initialScheme = typeof v === "string" ? "simple" : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
@@ -1394,12 +1401,12 @@ const LinearTriatomVibrationalFieldItem = ({
           if (v === "simple") {
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
-              { v: "" }
+              { v: "" },
             );
           } else {
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
-              { v: [0, 0, 0], rotational: [] }
+              { v: [0, 0, 0], rotational: [] },
             );
           }
         }}
@@ -1407,19 +1414,21 @@ const LinearTriatomVibrationalFieldItem = ({
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
       </Radio.Group>
-      {scheme === "simple" ? (
-        <VibrationalSimpleFieldItem
-          label={label}
-          eindex={eindex}
-          vindex={vindex}
-        />
-      ) : (
-        <LinearTriatomVibrationalDetailedFieldItem
-          label={label}
-          eindex={eindex}
-          vindex={vindex}
-        />
-      )}
+      {scheme === "simple"
+        ? (
+          <VibrationalSimpleFieldItem
+            label={label}
+            eindex={eindex}
+            vindex={vindex}
+          />
+        )
+        : (
+          <LinearTriatomVibrationalDetailedFieldItem
+            label={label}
+            eindex={eindex}
+            vindex={vindex}
+          />
+        )}
     </div>
   );
 };
@@ -1451,7 +1460,7 @@ const VibrationalSimpleFieldItem = ({
           onBlur={onBlur}
           error={errorMsg(
             errors,
-            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+            `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
           )}
         />
       )}
@@ -1475,7 +1484,8 @@ const LinearTriatomRotationalArray = ({
   } = useFormContext();
   const array = useFieldArray({
     control,
-    name: `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
+    name:
+      `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
   });
   return (
     <fieldset>
@@ -1491,10 +1501,10 @@ const LinearTriatomRotationalArray = ({
               label="J"
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`,
               )}
               {...register(
-                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`,
                 // TODO J is always string, while it should also be able to be a number
                 // should add 'simple' | 'detailed' aka 'string' | 'number' radio group
               )}
@@ -1542,13 +1552,13 @@ const LinearTriatomVibrationalDetailedFieldItem = ({
             style={{ width: "4rem" }}
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`,
             )}
             {...register(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.0`,
               {
                 valueAsNumber: true,
-              }
+              },
             )}
           />
         </div>
@@ -1558,13 +1568,13 @@ const LinearTriatomVibrationalDetailedFieldItem = ({
             style={{ width: "4rem" }}
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.1`
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.1`,
             )}
             {...register(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.1`,
               {
                 valueAsNumber: true,
-              }
+              },
             )}
           />
         </div>
@@ -1574,13 +1584,13 @@ const LinearTriatomVibrationalDetailedFieldItem = ({
             style={{ width: "4rem" }}
             error={errorMsg(
               errors,
-              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.2`
+              `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.2`,
             )}
             {...register(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v.2`,
               {
                 valueAsNumber: true,
-              }
+              },
             )}
           />
         </div>
@@ -1644,7 +1654,7 @@ const LinearElectronicForm = ({
           label="Lambda"
           error={errorMsg(
             errors,
-            `set.states.${label}.electronic.${eindex}.Lambda`
+            `set.states.${label}.electronic.${eindex}.Lambda`,
           )}
           {...register(`set.states.${label}.electronic.${eindex}.Lambda`, {
             valueAsNumber: true,
@@ -1672,7 +1682,7 @@ const LinearElectronicForm = ({
               value={value as string}
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.reflection`
+                `set.states.${label}.electronic.${eindex}.reflection`,
               )}
             >
               <Radio value="-" label="&minus;" />
@@ -1837,7 +1847,8 @@ const RotationalArray = ({
   } = useFormContext();
   const array = useFieldArray({
     control,
-    name: `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
+    name:
+      `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational`,
   });
   return (
     <fieldset>
@@ -1853,10 +1864,10 @@ const RotationalArray = ({
               label="J"
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`,
               )}
               {...register(
-                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.rotational.${index}.J`,
                 // TODO J is always string, while it should also be able to be a number
                 // should add 'simple' | 'detailed' aka 'string' | 'number' radio group
               )}
@@ -1895,10 +1906,11 @@ const SimpleVibrational = ({
 }) => {
   const { getValues, setValue } = useFormContext();
   const av = getValues(
-    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+    `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
   );
-  const initialScheme =
-    typeof av === "string" || Number.isNaN(av) ? "simple" : "detailed";
+  const initialScheme = typeof av === "string" || Number.isNaN(av)
+    ? "simple"
+    : "detailed";
   const [scheme, setScheme] = useState<IScheme>(initialScheme);
   return (
     <div>
@@ -1910,12 +1922,12 @@ const SimpleVibrational = ({
           if (v === "simple") {
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
-              { v: "" }
+              { v: "" },
             );
           } else {
             setValue(
               `set.states.${label}.electronic.${eindex}.vibrational.${vindex}`,
-              { v: 0, rotational: [] }
+              { v: 0, rotational: [] },
             );
           }
         }}
@@ -1923,15 +1935,17 @@ const SimpleVibrational = ({
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
       </Radio.Group>
-      {scheme === "simple" ? (
-        <VibrationalSimpleFieldItem
-          label={label}
-          eindex={eindex}
-          vindex={vindex}
-        />
-      ) : (
-        children
-      )}
+      {scheme === "simple"
+        ? (
+          <VibrationalSimpleFieldItem
+            label={label}
+            eindex={eindex}
+            vindex={vindex}
+          />
+        )
+        : (
+          children
+        )}
     </div>
   );
 };
@@ -1964,13 +1978,13 @@ const DiatomicVibrationalForm = ({
               label="v"
               error={errorMsg(
                 errors,
-                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`
+                `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
               )}
               {...register(
                 `set.states.${label}.electronic.${eindex}.vibrational.${vindex}.v`,
                 {
                   valueAsNumber: true,
-                }
+                },
               )}
             />
             <RotationalArray label={label} eindex={eindex} vindex={vindex} />
@@ -2017,12 +2031,12 @@ const SimpleElectronic = ({
           if (v === "simple") {
             setValue(
               `set.states.${label}.electronic.${eindex}`,
-              initialSimpleElectronic()
+              initialSimpleElectronic(),
             );
           } else {
             setValue(
               `set.states.${label}.electronic.${eindex}`,
-              initialDetailedValue
+              initialDetailedValue,
             );
           }
         }}
@@ -2030,20 +2044,22 @@ const SimpleElectronic = ({
         <Radio value="simple" label="Simple" />
         <Radio value="detailed" label="Detailed" />
       </Radio.Group>
-      {scheme === "simple" ? (
-        <div>
-          <TextInput
-            label="e"
-            error={errorMsg(
-              errors,
-              `set.states.${label}.electronic.${eindex}.e`
-            )}
-            {...register(`set.states.${label}.electronic.${eindex}.e`)}
-          />
-        </div>
-      ) : (
-        children
-      )}
+      {scheme === "simple"
+        ? (
+          <div>
+            <TextInput
+              label="e"
+              error={errorMsg(
+                errors,
+                `set.states.${label}.electronic.${eindex}.e`,
+              )}
+              {...register(`set.states.${label}.electronic.${eindex}.e`)}
+            />
+          </div>
+        )
+        : (
+          children
+        )}
     </>
   );
 };
@@ -2140,7 +2156,7 @@ const StateForm = ({
                       if (v === "") {
                         // unset .type and .electronic
                         const { particle, charge } = getValues(
-                          `set.states.${label}`
+                          `set.states.${label}`,
                         );
                         setValue(`set.states.${label}`, {
                           particle,
@@ -2325,9 +2341,9 @@ const JSONTabPanel = ({ set }: { set: CrossSectionSetRaw }) => {
   }, [set]);
   // TODO add upload JSON button?
   // TODO make JSON editable? Would replace raw edit/add pages
+  // TODO use code highlight with https://mantine.dev/others/prism
   return (
     <pre>
-      {/* TODO use code highlight with https://mantine.dev/others/prism/ */}
       {jsonString}
     </pre>
   );
@@ -2459,7 +2475,7 @@ export const EditForm = ({
         .flatMap((p) => p.reference)
         .map((r) => {
           return [getReferenceLabel(r), r];
-        })
+        }),
     );
     addReferences(newReferences);
 
@@ -2475,7 +2491,7 @@ export const EditForm = ({
         })
         .map((s) => {
           return [getStateId(s), s];
-        })
+        }),
     );
     addStates(newStates);
 
@@ -2615,7 +2631,9 @@ export const EditForm = ({
                         index={index}
                         onRemove={() => {
                           setExpandedProcesses((expanded) =>
-                            expanded.filter((e) => e !== index.toString())
+                            expanded.filter((e) =>
+                              e !== index.toString()
+                            )
                           );
                           processesField.remove(index);
                         }}
@@ -2678,7 +2696,7 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
     Object.entries(newSet.states).map(([k, v]) => {
       const newState = pruneState(v);
       return [k, newState];
-    })
+    }),
   );
   return newSet;
 }
@@ -2738,7 +2756,7 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
 
 function mapStateToReaction(
   states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>,
-  reaction: Reaction<string>
+  reaction: Reaction<string>,
 ): Reaction<State> {
   const newReaction = {
     ...reaction,
@@ -2761,7 +2779,7 @@ function mapStateToReaction(
 }
 
 function flattenCrossSection(
-  cs: CrossSectionItem
+  cs: CrossSectionItem,
 ): CrossSectionSetRaw["processes"][0] {
   // drop some keys from cs as they are not required for the set
   // in which this cs will be placed in

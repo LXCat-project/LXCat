@@ -12,7 +12,7 @@ export interface TotalAngularSpecifier {
 export interface ConfigTerm<
   S extends CouplingScheme,
   T,
-  C = Array<ShellEntry>
+  C = Array<ShellEntry>,
 > {
   scheme: S;
   config: C;

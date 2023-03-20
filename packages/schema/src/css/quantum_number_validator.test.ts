@@ -8,15 +8,15 @@ import { readFileSync } from "fs";
 
 import { ErrorObject } from "ajv";
 
-import { CouplingScheme } from "../core/atoms/coupling_scheme";
 import { AnyAtom } from "../core/atoms";
+import { CouplingScheme } from "../core/atoms/coupling_scheme";
 import { InState } from "../core/state";
 import { Dict } from "./common";
 import {
-  checkParity,
+  checkJ1L2,
   checkLS,
   checkLS1,
-  checkJ1L2,
+  checkParity,
   getStates,
 } from "./quantum_number_validator";
 
@@ -35,10 +35,10 @@ function readExample(fn: string) {
 beforeAll(() => {
   const data_ok = readExample("src/css/data/Ar_C_P_Nobody_LXCat.json");
   const data_parity_nok = readExample(
-    "src/css/data/Ar_C_P_Nobody_LXCat_bad_parity.json"
+    "src/css/data/Ar_C_P_Nobody_LXCat_bad_parity.json",
   );
   const data_momenta_nok = readExample(
-    "src/css/data/Ar_C_P_Nobody_LXCat_bad_momenta.json"
+    "src/css/data/Ar_C_P_Nobody_LXCat_bad_momenta.json",
   );
   inputs_ok = getStates(data_ok);
   inputs_parity_nok = getStates(data_parity_nok);
@@ -55,7 +55,7 @@ describe("validate parity data", () => {
         const status: boolean = checkParity(
           `${key}/electronic/${idx}`,
           comp,
-          errors
+          errors,
         );
         expect(status).toEqual(true);
       }
@@ -77,11 +77,11 @@ describe("validate parity data", () => {
         const status: boolean = checkParity(
           `${key}/electronic/${idx}`,
           comp,
-          errors
+          errors,
         );
         if (
-          Object.prototype.hasOwnProperty.call(bad, key) &&
-          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key)
+          && Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
@@ -155,8 +155,8 @@ describe("validate angular momenta", () => {
             status = false; // why am I here!?
         }
         if (
-          Object.prototype.hasOwnProperty.call(bad, key) &&
-          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key)
+          && Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           const err = errors[errors.length - 1];
           expect(status).toEqual(false);
@@ -184,7 +184,7 @@ describe("dispatchers", () => {
         const status = checkQuantumNumbers(
           `${key}/electronic/${idx}`,
           comp,
-          errors
+          errors,
         );
         expect(status).toEqual(true);
         expect(errors).toHaveLength(0);
@@ -206,11 +206,11 @@ describe("dispatchers", () => {
         const status = checkQuantumNumbers(
           `${key}/electronic/${idx}`,
           comp,
-          errors
+          errors,
         );
         if (
-          Object.prototype.hasOwnProperty.call(bad, key) &&
-          Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
+          Object.prototype.hasOwnProperty.call(bad, key)
+          && Object.prototype.hasOwnProperty.call(bad[key], idx.toString())
         ) {
           expect(status).toEqual(false);
         } else {

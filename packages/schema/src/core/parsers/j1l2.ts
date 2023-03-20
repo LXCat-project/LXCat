@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AtomParser } from "../parse";
 import { AtomJ1L2, AtomJ1L2Impl, J1L2Term } from "../atoms/j1l2";
+import { AtomParser } from "../parse";
 import { parse_div_two, parse_shell_config, PUA } from "./common";
 import {
   parse_LS_term,
@@ -25,15 +25,15 @@ export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
   }
 
   return (
-    parse_shell_config(e.config.core.config) +
-    "{" +
-    parse_LS_term(e.config.core.term) +
-    "}" +
-    parse_shell_config(e.config.excited.config) +
-    "{" +
-    parse_LS_term_impl(e.config.excited.term) +
-    "}" +
-    parse_J1L2_term(e.term)
+    parse_shell_config(e.config.core.config)
+    + "{"
+    + parse_LS_term(e.config.core.term)
+    + "}"
+    + parse_shell_config(e.config.excited.config)
+    + "{"
+    + parse_LS_term_impl(e.config.excited.term)
+    + "}"
+    + parse_J1L2_term(e.term)
   );
 }
 
@@ -50,15 +50,15 @@ export function parse_J1L2_latex(e: PUA<AtomJ1L2Impl>): string {
   }
 
   return (
-    parse_shell_config(e.config.core.config) +
-    "(" +
-    parse_LS_term_latex(e.config.core.term) +
-    ")" +
-    parse_shell_config(e.config.excited.config) +
-    "(" +
-    parse_LS_term_impl_latex(e.config.excited.term) +
-    ")" +
-    parse_J1L2_term_latex(e.term)
+    parse_shell_config(e.config.core.config)
+    + "("
+    + parse_LS_term_latex(e.config.core.term)
+    + ")"
+    + parse_shell_config(e.config.excited.config)
+    + "("
+    + parse_LS_term_impl_latex(e.config.excited.term)
+    + ")"
+    + parse_J1L2_term_latex(e.term)
   );
 }
 

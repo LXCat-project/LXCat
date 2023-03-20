@@ -14,17 +14,15 @@ export const getTypeTagFilterAQL =
       : aql`FILTER ${reaction}.type_tags ANY IN ${typeTags}`;
 
 export const getReversibleFilterAQL =
-  (reversible: Reversible): ReactionFunction =>
-  (reaction: AqlLiteral) =>
+  (reversible: Reversible): ReactionFunction => (reaction: AqlLiteral) =>
     reversible === Reversible.Both
       ? aql``
       : aql`FILTER ${reaction}.reversible == ${
-          reversible === Reversible.False ? false : true
-        }`;
+        reversible === Reversible.False ? false : true
+      }`;
 
 export const getCSSetFilterAQL =
-  (setIds: Array<string>): ReactionFunction =>
-  (reaction: AqlLiteral) =>
+  (setIds: Array<string>): ReactionFunction => (reaction: AqlLiteral) =>
     aql`LET inSet = COUNT(
           FOR cs IN CrossSection
             FILTER cs.reaction == ${reaction}._id

@@ -46,13 +46,16 @@ Minimal.args = {
     "1": "\\mathrm{e}",
     "2": "\\mathrm{Ar}",
     "3": "\\mathrm{Ar^+}",
-    "4": "\\mathrm{Ar}\\left(3p^{5}({}^{2}\\mathrm{P}^o_{3/2})3d({}^{2}\\mathrm{D}){}^{2}[5/2]^o_{3}\\right)",
+    "4":
+      "\\mathrm{Ar}\\left(3p^{5}({}^{2}\\mathrm{P}^o_{3/2})3d({}^{2}\\mathrm{D}){}^{2}[5/2]^o_{3}\\right)",
   },
 };
 export const Many = Template.bind({});
 Many.args = {
   value: "1",
   choices: Object.fromEntries(
-    Array.from(Array(100).keys()).map((key) => [key.toString(), key.toString()])
+    Array.from(Array(100).keys()).map((
+      key,
+    ) => [key.toString(), key.toString()]),
   ),
 };

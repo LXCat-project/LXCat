@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { createSet } from "@lxcat/database/dist/css/queries/author_write";
+import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
@@ -9,9 +12,6 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { createSet } from "@lxcat/database/dist/css/queries/author_write";
-import { validator } from "@lxcat/schema/dist/css/validate";
-import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
