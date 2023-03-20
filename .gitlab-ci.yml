@@ -7,7 +7,7 @@
 #     alias: db
 
 build-dev:
-  image: node:16-bullseye
+  image: node:18-bullseye
   stage: build
   cache:
     key:
@@ -103,7 +103,7 @@ test-database:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -146,7 +146,7 @@ test-schema:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   before_script:
     # Install pnpm
     - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
@@ -177,7 +177,7 @@ test-converter:
   stage: test
   dependencies:
     - build-dev
-  image: node:16-bullseye
+  image: node:18-bullseye
   before_script:
     # Install pnpm
     - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
