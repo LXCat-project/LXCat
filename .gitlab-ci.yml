@@ -205,8 +205,8 @@ build-prod:
     - docker-compose build
     # TODO do stuff with build images
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-      when: always
+    # - if: '$CI_PIPELINE_SOURCE == "web"'
+    #   when: always
     - when: never
 
 reuse:
