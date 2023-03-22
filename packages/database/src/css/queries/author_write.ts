@@ -287,7 +287,7 @@ async function updateDraftSet(
   }
 }
 
-export async function deleteSet(key: string, message: string) {
+export async function deleteSet(key: string, message?: string) {
   const info = await getVersionInfo(key);
   if (info === undefined) {
     // Set does not exist, nothing to do
@@ -312,7 +312,7 @@ export async function deleteSet(key: string, message: string) {
             REMOVE cs IN CrossSection
     `);
     // TODO also remove history of draft cross sections belonging to set,
-    // but skip sections which are in another set
+    // but skip cross sections which are in another set
     await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
@@ -337,6 +337,13 @@ export async function deleteSet(key: string, message: string) {
     // Change status of published section to retracted
     // and Set retract message
     const newStatus: Status = "retracted";
+
+    if (message === undefined || message === "") {
+      throw new Error(
+        "Retracting a published cross section set requires a commit message.",
+      );
+    }
+
     await db().query(aql`
         FOR css IN CrossSectionSet
             FILTER css._key == ${key}

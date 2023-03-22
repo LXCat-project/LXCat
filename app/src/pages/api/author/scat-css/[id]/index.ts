@@ -20,7 +20,7 @@ import {
 // TODO: Define max length for `id` and `message`.
 const DELETE_SCHEMA = z.object({
   query: z.object({ id: z.string().min(1) }),
-  body: z.object({ message: z.string().min(1) }),
+  body: z.object({ message: z.optional(z.string().min(1)) }),
 });
 
 const handler = nc<AuthRequest, NextApiResponse>()
@@ -80,7 +80,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         res.status(403).end("Forbidden");
       }
     } else {
-      res.status(400).end(request.error.format());
+      res.status(400).json(request.error.format());
     }
   });
 
