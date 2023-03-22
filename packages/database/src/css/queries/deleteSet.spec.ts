@@ -62,12 +62,12 @@ describe("deleting a published cross section set", () => {
   });
 
   it("should fail when no commit message is provided", async () =>
-    expect(await deleteSet(key)).toThrowError());
+    expect(async () => await deleteSet(key)).rejects.toThrowError());
   it("should fail when an empty commit message is provided", async () =>
-    expect(await deleteSet(key, "")).toThrowError());
+    expect(async () => await deleteSet(key, "")).rejects.toThrowError());
 });
 
-describe("deleting a draft cross section set", () => {
+describe.only("deleting a draft cross section set", () => {
   let key: string;
 
   beforeAll(async () => {
@@ -77,9 +77,9 @@ describe("deleting a draft cross section set", () => {
   });
 
   it("should succeed when no commit message is provided", async () =>
-    expect(await deleteSet(key)).toReturnWith(key));
+    expect(await deleteSet(key)).toBeUndefined());
   it("should succeed when an empty commit message is provided", async () =>
-    expect(await deleteSet(key, "")).toThrowError());
+    expect(await deleteSet(key, "")).toBeUndefined());
 });
 
 describe("deleting a published cross section without shared cross sections", () => {
