@@ -323,14 +323,15 @@ export async function deleteSet(key: string, message: string) {
     await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
-        REMOVE css IN CrossSectionSet
+        FOR history IN CrossSectionSetHistory
+          FILTER history._from == css._id
+          REMOVE history IN CrossSectionSetHistory
     `);
     await db().query(aql`
-      FOR css IN CrossSectionSetHistory
-        FILTER css._from == ${key}
-        REMOVE css IN CrossSectionSetHistory
+      FOR css IN CrossSectionSet
+        FILTER css._key == ${key}
+        REMOVE css IN CrossSectionSet
     `);
-    return;
     // TODO remove orphaned reactions, states, references
   } else if (status === "published") {
     // Change status of published section to retracted
@@ -353,7 +354,6 @@ export async function deleteSet(key: string, message: string) {
             UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
     `);
     // TODO currently cross sections which are in another set are skipped aka not being retracted, is this OK?
-    return;
   } else {
     throw new Error("Can not delete set due to invalid status");
   }
