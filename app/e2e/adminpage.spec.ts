@@ -3,7 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { expect, Page, test } from "@playwright/test";
-import { truncateNonUserCollections } from "./global-setup";
+import {
+  truncateNonUserCollections,
+  uploadAndPublishDummySet,
+} from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -33,7 +36,7 @@ test.describe("/profile", () => {
 });
 
 // TODO should scat-css tests be here or in their own file?
-test("/api/author/scat-css", async ({ request, page }) => {
+test("/api/author/scat-css", async ({ request }) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -42,6 +45,53 @@ test("/api/author/scat-css", async ({ request, page }) => {
   expect(resp.ok()).toBeTruthy();
   const data = await resp.json();
   expect(data.items).toEqual([]);
+});
+
+test.describe.skip("/author/scat-css", () => {
+  test.beforeAll(async ({ browser }) => {
+    await uploadAndPublishDummySet(browser);
+    return truncateNonUserCollections;
+  });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/author/scat-css");
+    await page.locator("button:text-is(\"Edit\")").click();
+    await page.locator("textarea[name=\"set\\.description\"]").fill(
+      "Edited description",
+    );
+    await page.locator("button:has-text(\"Submit\")").click();
+    await page.goto("/author/scat-css");
+  });
+
+  // FIXME: Playwright is too fast in its actions, and the expect calls
+  // will receive incorrect data. We need to find a way to wait for all
+  // async calls (that e.g. reload the page data) to finish before
+  // continuing
+
+  test("A simple edit should result in a draft", async ({ page }) => {
+    const table = page.locator("table:has(thead th:text(\"Version\"))");
+
+    // Status = draft
+    expect(table.locator("td").nth(1)).toHaveText("draft");
+    // Version = 2
+    expect(table.locator("td").nth(3)).toHaveText("2");
+  });
+
+  test(
+    "Deleting a draft should revert to the previous, published version",
+    async ({ page }) => {
+      await page.locator("button:text-is(\"Delete\"):visible").click();
+      await page.locator("button[type=\"submit\"]:text-is(\"Delete\")")
+        .click();
+
+      const table = page.locator("table:has(thead th:text(\"Version\"))");
+
+      // Status = published
+      expect(table.locator("td").nth(1)).toHaveText("published");
+      // Version = 1
+      expect(table.locator("td").nth(3)).toHaveText("1");
+    },
+  );
 });
 
 test.describe("/author/scat-css/add", () => {
