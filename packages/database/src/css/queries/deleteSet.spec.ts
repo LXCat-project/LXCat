@@ -67,7 +67,7 @@ describe("deleting a published cross section set", () => {
     expect(async () => await deleteSet(key, "")).rejects.toThrowError());
 });
 
-describe.only("deleting a draft cross section set", () => {
+describe("deleting a draft cross section set", () => {
   let key: string;
 
   beforeAll(async () => {
