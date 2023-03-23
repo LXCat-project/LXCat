@@ -10,11 +10,18 @@ import {
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
+import { z } from "zod";
 import {
   AuthRequest,
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../../auth/middleware";
+
+// TODO: Define max length for `id` and `message`.
+const DELETE_SCHEMA = z.object({
+  query: z.object({ id: z.string().min(1) }),
+  body: z.object({ message: z.optional(z.string().min(1)) }),
+});
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
@@ -59,19 +66,21 @@ const handler = nc<AuthRequest, NextApiResponse>()
   })
   .delete(async (req, res) => {
     const user = req.user;
-    const { id } = req.query;
-    if (typeof id === "string") {
+    const request = DELETE_SCHEMA.safeParse(req);
+
+    if (request.success) {
+      const { query: { id }, body: { message } } = request.data;
+
       if (await isOwner(id, user.email)) {
-        await deleteSet(id, req.body.message);
+        await deleteSet(id, message);
         const data = { id };
         res.json(data);
       } else {
         // TODO distinguish between not owned by or does not exist
         res.status(403).end("Forbidden");
       }
-
-      const data = { id };
-      res.json(data);
+    } else {
+      res.status(400).json(request.error.format());
     }
   });
 
