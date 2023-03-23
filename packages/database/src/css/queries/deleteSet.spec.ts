@@ -52,8 +52,39 @@ describe.each(invalidDeleteStatuses)(
   },
 );
 
-describe("deleting a published cross section with no shared cross sections", () => {
+describe("deleting a published cross section set", () => {
+  let key: string;
+
+  beforeAll(async () => {
+    key = await createSet(sampleCrossSectionSet(), "published");
+
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should fail when no commit message is provided", async () =>
+    expect(async () => await deleteSet(key)).rejects.toThrowError());
+  it("should fail when an empty commit message is provided", async () =>
+    expect(async () => await deleteSet(key, "")).rejects.toThrowError());
+});
+
+describe("deleting a draft cross section set", () => {
+  let key: string;
+
+  beforeAll(async () => {
+    key = await createSet(sampleCrossSectionSet(), "draft");
+
+    return truncateCrossSectionSetCollections;
+  });
+
+  it("should succeed when no commit message is provided", async () =>
+    expect(await deleteSet(key)).toBeUndefined());
+  it("should succeed when an empty commit message is provided", async () =>
+    expect(await deleteSet(key, "")).toBeUndefined());
+});
+
+describe("deleting a published cross section without shared cross sections", () => {
   let keycss1: string;
+
   beforeAll(async () => {
     keycss1 = await createSet(sampleCrossSectionSet(), "published");
 
@@ -260,7 +291,7 @@ describe("deleting a draft cross section with no shared cross sections", () => {
   );
 });
 
-describe("deleting a draft cross section with one shared cross section", () => {
+describe("deleting a draft cross section set with one shared cross section", () => {
   beforeAll(async () => {
     const keycss1 = await createSet(sampleCrossSectionSet(), "draft");
     const css2 = await byOwnerAndId(sampleEmail, keycss1);
@@ -268,7 +299,7 @@ describe("deleting a draft cross section with one shared cross section", () => {
       expect.fail("Should have created first set");
     }
     css2.name = "Some other name";
-    css2.processes.pop(); // delete second section in second set
+    css2.processes.pop(); // delete second cross section in second set
     await createSet(css2, "draft");
 
     await deleteSet(keycss1, "My retract message");
@@ -283,11 +314,11 @@ describe("deleting a draft cross section with one shared cross section", () => {
     },
     {
       collection: "CrossSection",
-      count: 1, // the section shared between first and second set
+      count: 1, // the cross section shared between first and second set
     },
     {
       collection: "IsPartOf",
-      count: 1, // section of second set
+      count: 1, // cross section of second set
     },
     {
       collection: "CrossSectionSetHistory",
@@ -331,7 +362,7 @@ describe("deleting a draft cross section with one published cross section", () =
     },
     {
       collection: "CrossSection",
-      count: 1, // the published section
+      count: 1, // the published cross section
     },
     {
       collection: "IsPartOf",
