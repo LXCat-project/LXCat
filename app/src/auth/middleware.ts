@@ -159,7 +159,31 @@ export const hasAuthorRole: RequestHandler<
   NextApiResponse
 > = async (req, res, next) => {
   if (req.user) {
-    if ("roles" in req.user && req.user.roles!.includes(Role.enum.author)) {
+    if (
+      req.user.roles !== undefined && req.user.roles!.includes(Role.enum.author)
+    ) {
+      next();
+    } else {
+      res.status(403).end("Forbidden");
+    }
+  } else {
+    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+  }
+};
+
+/**
+ * API Middleware to check if user has publisher role.
+ * Returns 403 when user does not have publisher role.
+ */
+export const hasPublisherRole: RequestHandler<
+  AuthRequest,
+  NextApiResponse
+> = async (req, res, next) => {
+  if (req.user) {
+    if (
+      req.user.roles !== undefined
+      && req.user.roles.includes(Role.enum.publisher)
+    ) {
       next();
     } else {
       res.status(403).end("Forbidden");
@@ -196,6 +220,23 @@ export const mustBeAuthor = async (
     throw Error("Unauthorized");
   }
   if (session!.user!.roles!.includes(Role.enum.author)) {
+    return session.user;
+  }
+
+  context.res.statusCode = 403;
+  throw Error("Forbidden");
+};
+
+export const mustBePublisher = async (
+  context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>,
+) => {
+  const session = await getServerSession(context.req, context.res, options);
+  if (!session?.user) {
+    context.res.statusCode = 401;
+    context.res.setHeader("WWW-Authenticate", "OAuth");
+    throw Error("Unauthorized");
+  }
+  if (session!.user!.roles!.includes(Role.enum.publisher)) {
     return session.user;
   }
 
