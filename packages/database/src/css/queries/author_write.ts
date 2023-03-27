@@ -287,16 +287,9 @@ async function updateDraftSet(
   }
 }
 
-export async function deleteSet(key: string, message?: string) {
-  const info = await getVersionInfo(key);
-  if (info === undefined) {
-    // Set does not exist, nothing to do
-    return;
-  }
-  const { status } = info;
-  if (status === "draft") {
-    // Remove draft cross sections belonging to set, but skip sections which are in another set
-    await db().query(aql`
+export async function removeDraftUnchecked(key: string) {
+  // Remove draft cross sections belonging to set, but skip sections which are in another set
+  await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         FOR p IN IsPartOf
@@ -311,40 +304,34 @@ export async function deleteSet(key: string, message?: string) {
             FILTER nrOtherSets == 0
             REMOVE cs IN CrossSection
     `);
-    // TODO also remove history of draft cross sections belonging to set,
-    // but skip cross sections which are in another set
-    await db().query(aql`
+  // TODO also remove history of draft cross sections belonging to set,
+  // but skip cross sections which are in another set
+  await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         FOR p IN IsPartOf
           FILTER p._to == css._id
           REMOVE p IN IsPartOf
     `);
-    await db().query(aql`
+  await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         FOR history IN CrossSectionSetHistory
           FILTER history._from == css._id
           REMOVE history IN CrossSectionSetHistory
     `);
-    await db().query(aql`
+  await db().query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         REMOVE css IN CrossSectionSet
     `);
-    // TODO remove orphaned reactions, states, references
-  } else if (status === "published") {
-    // Change status of published section to retracted
-    // and Set retract message
-    const newStatus: Status = "retracted";
+  // TODO remove orphaned reactions, states, references
+}
 
-    if (message === undefined || message === "") {
-      throw new Error(
-        "Retracting a published cross section set requires a commit message.",
-      );
-    }
+export async function retractSetUnchecked(key: string, message: string) {
+  const newStatus: Status = "retracted";
 
-    await db().query(aql`
+  return db().query(aql`
         FOR css IN CrossSectionSet
             FILTER css._key == ${key}
             FOR p IN IsPartOf
@@ -360,7 +347,29 @@ export async function deleteSet(key: string, message?: string) {
                 UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
             UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
     `);
-    // TODO currently cross sections which are in another set are skipped aka not being retracted, is this OK?
+  // TODO currently cross sections which are in another set are skipped aka not being retracted, is this OK?
+}
+
+export async function deleteSet(key: string, message?: string) {
+  const info = await getVersionInfo(key);
+  if (info === undefined) {
+    // Set does not exist, nothing to do
+    return;
+  }
+  const { status } = info;
+  if (status === "draft") {
+    return removeDraftUnchecked(key);
+  } else if (status === "published") {
+    // Change status of published section to retracted
+    // and Set retract message
+
+    if (message === undefined || message === "") {
+      throw new Error(
+        "Retracting a published cross section set requires a commit message.",
+      );
+    }
+
+    return retractSetUnchecked(key, message);
   } else {
     throw new Error("Can not delete set due to invalid status");
   }

@@ -4,9 +4,11 @@
 
 import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
 import {
-  deleteSet,
+  removeDraftUnchecked,
+  retractSetUnchecked,
   updateSet,
 } from "@lxcat/database/dist/css/queries/author_write";
+import { getVersionInfo } from "@lxcat/database/dist/css/queries/public";
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
@@ -71,13 +73,34 @@ const handler = nc<AuthRequest, NextApiResponse>()
     if (request.success) {
       const { query: { id }, body: { message } } = request.data;
 
-      if (await isOwner(id, user.email)) {
-        await deleteSet(id, message);
+      const versionInfo = await getVersionInfo(id);
+
+      if (versionInfo === undefined) {
+        res.status(204).end(`Item with id ${id} does not exist.`);
+        return;
+      }
+
+      if (
+        await isOwner(id, user.email)
+      ) {
+        if (versionInfo.status === "draft" && user.roles?.includes("author")) {
+          await removeDraftUnchecked(id);
+        } else if (
+          versionInfo.status === "published"
+          && user.roles?.includes("publisher")
+        ) {
+          if (message === undefined || message === "") {
+            res.status(400).send(
+              "Retracting a published dataset requires a commit message.",
+            );
+            return;
+          }
+          await retractSetUnchecked(id, message);
+        }
         const data = { id };
         res.json(data);
       } else {
-        // TODO distinguish between not owned by or does not exist
-        res.status(403).end("Forbidden");
+        res.status(403).end("This cross section set is not owned by you.");
       }
     } else {
       res.status(400).json(request.error.format());
