@@ -8,16 +8,22 @@ import { deleteSet } from "./client";
 interface Props {
   isOpened: boolean;
   selectedSetId: string;
-  onClose: (confirmed: boolean) => void;
+  onClose: (error?: string) => void;
 }
 
 export const DeleteDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
   async function onSubmit(pressedButton: string) {
     const confirmed = pressedButton === "default";
+
     if (confirmed) {
-      deleteSet(selectedSetId);
+      const result = await deleteSet(selectedSetId);
+      if (typeof result === "string") {
+        onClose(result);
+        return;
+      }
     }
-    onClose(confirmed);
+
+    onClose();
   }
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>
