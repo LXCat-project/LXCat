@@ -10,18 +10,26 @@ import { deleteSet } from "./client";
 interface Props {
   isOpened: boolean;
   selectedSetId: string;
-  onClose: (confirmed: boolean) => void;
+  onClose: (error?: string) => void;
 }
 
 export const RetractDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
-  const [restractMessage, setRetractMessage] = useState("");
+  const [retractMessage, setRetractMessage] = useState("");
+
   async function onSubmit(pressedButton: string) {
     const confirmed = pressedButton === "default";
     if (confirmed) {
-      await deleteSet(selectedSetId, restractMessage);
+      const result = await deleteSet(selectedSetId, retractMessage);
+
+      if (typeof result === "string") {
+        onClose(result);
+        return;
+      }
     }
-    onClose(confirmed);
+
+    onClose();
   }
+
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>
       <form method="dialog">
@@ -33,7 +41,7 @@ export const RetractDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
         <textarea
           cols={80}
           rows={5}
-          value={restractMessage}
+          value={retractMessage}
           onChange={(event) => setRetractMessage(event.target.value)}
         >
         </textarea>

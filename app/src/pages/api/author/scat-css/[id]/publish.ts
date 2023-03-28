@@ -8,13 +8,13 @@ import { NextApiResponse } from "next";
 import nc from "next-connect";
 import {
   AuthRequest,
-  hasAuthorRole,
+  hasPublisherRole,
   hasSessionOrAPIToken,
 } from "../../../../../auth/middleware";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
-  .use(hasAuthorRole)
+  .use(hasPublisherRole)
   .post(async (req, res) => {
     const user = req.user;
     if (!user || "iat" in user) {

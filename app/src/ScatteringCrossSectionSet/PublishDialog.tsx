@@ -8,16 +8,20 @@ import { publishSet } from "./client";
 interface Props {
   isOpened: boolean;
   selectedSetId: string;
-  onClose: (confirmed: boolean) => void;
+  onClose: (error?: string) => void;
 }
 
 export const PublishDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
   async function onSubmit(pressedButton: string) {
     const confirmed = pressedButton === "default";
     if (confirmed) {
-      await publishSet(selectedSetId);
+      const result = await publishSet(selectedSetId);
+      if (typeof result === "string") {
+        onClose(result);
+        return;
+      }
     }
-    onClose(confirmed);
+    onClose();
   }
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { User } from "@lxcat/database/dist/auth/schema";
 import {
   CrossSectionSetOwned,
   listOwned,
@@ -14,18 +15,21 @@ import { listSetsOfOwner } from "../../../ScatteringCrossSectionSet/client";
 import { DeleteDialog } from "../../../ScatteringCrossSectionSet/DeleteDialog";
 import { PublishDialog } from "../../../ScatteringCrossSectionSet/PublishDialog";
 import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";
+import { ErrorDialog } from "../../../shared/ErrorDialog";
 import { Layout } from "../../../shared/Layout";
 
 interface Props {
   items: CrossSectionSetOwned[];
+  user: User;
 }
 
-const Admin: NextPage<Props> = ({ items: initialItems }) => {
+const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
   const [items, setItems] = useState(initialItems);
   const [selectedSetId, setselectedSetId] = useState("");
   const [openRestractDialog, setOpenRetractDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openPublishDialog, setOpenPublishDialog] = useState(false);
+  const [error, setError] = useState<string>();
 
   async function reloadItems() {
     // TODO instead of reloading whole list only alter the item that was changed
@@ -64,46 +68,61 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
               <td>
                 {item.versionInfo.status === "draft" && (
                   <>
-                    <Link href={`/author/scat-css/${item._key}/edit`}>
-                      <button>Edit</button>
-                    </Link>
-                    <Link href={`/author/scat-css/${item._key}/editraw`}>
-                      <button>Edit JSON</button>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setselectedSetId(item._key);
-                        setOpenDeleteDialog(true);
-                      }}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => {
-                        setselectedSetId(item._key);
-                        setOpenPublishDialog(true);
-                      }}
-                    >
-                      Publish
-                    </button>
+                    {user.roles?.includes("author") && (
+                      <>
+                        <Link href={`/author/scat-css/${item._key}/edit`}>
+                          <button>Edit</button>
+                        </Link>
+                        <Link href={`/author/scat-css/${item._key}/editraw`}>
+                          <button>Edit JSON</button>
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setselectedSetId(item._key);
+                            setOpenDeleteDialog(true);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                    {user.roles?.includes("publisher")
+                      && (
+                        <button
+                          onClick={() => {
+                            setselectedSetId(item._key);
+                            setOpenPublishDialog(true);
+                          }}
+                        >
+                          Publish
+                        </button>
+                      )}
                   </>
                 )}
                 {item.versionInfo.status === "published" && (
                   <>
-                    <Link href={`/author/scat-css/${item._key}/edit`}>
-                      <button>Edit</button>
-                    </Link>
-                    <Link href={`/author/scat-css/${item._key}/editraw`}>
-                      <button>Edit JSON</button>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setselectedSetId(item._key);
-                        setOpenRetractDialog(true);
-                      }}
-                    >
-                      Retract
-                    </button>
+                    {user.roles?.includes("author")
+                      && (
+                        <>
+                          <Link href={`/author/scat-css/${item._key}/edit`}>
+                            <button>Edit</button>
+                          </Link>
+                          <Link href={`/author/scat-css/${item._key}/editraw`}>
+                            <button>Edit JSON</button>
+                          </Link>
+                        </>
+                      )}
+                    {user.roles?.includes("publisher")
+                      && (
+                        <button
+                          onClick={() => {
+                            setselectedSetId(item._key);
+                            setOpenRetractDialog(true);
+                          }}
+                        >
+                          Retract
+                        </button>
+                      )}
                   </>
                 )}
               </td>
@@ -127,12 +146,14 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
       <RetractDialog
         isOpened={openRestractDialog}
         selectedSetId={selectedSetId}
-        onClose={(confirmed) => {
+        onClose={(error) => {
           // TODO give user feed back
           setOpenRetractDialog(false);
-          if (confirmed) {
+          if (error === undefined) {
             reloadItems();
           }
+
+          setError(error);
         }}
       />
       <DeleteDialog
@@ -149,13 +170,20 @@ const Admin: NextPage<Props> = ({ items: initialItems }) => {
       <PublishDialog
         isOpened={openPublishDialog}
         selectedSetId={selectedSetId}
-        onClose={(confirmed) => {
-          // TODO give user feed back
+        onClose={(error) => {
           setOpenPublishDialog(false);
-          if (confirmed) {
+
+          if (error === undefined) {
             reloadItems();
           }
+
+          setError(error);
         }}
+      />
+      <ErrorDialog
+        opened={error !== undefined}
+        error={error ?? ""}
+        onClose={() => setError(undefined)}
       />
     </Layout>
   );
@@ -166,11 +194,9 @@ export default Admin;
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
-  const me = await mustBeAuthor(context);
-  const items = await listOwned(me.email);
+  const user = await mustBeAuthor(context);
+  const items = await listOwned(user.email);
   return {
-    props: {
-      items,
-    },
+    props: { items, user },
   };
 };

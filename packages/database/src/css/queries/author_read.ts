@@ -41,7 +41,7 @@ export async function listOwned(email: string) {
   return await cursor.all();
 }
 
-type Process = CrossSectionSetRaw["processes"][0]; // TODO add id of reaction
+type Process = CrossSectionSetRaw["processes"][number]; // TODO add id of reaction
 
 export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
   _key?: string;
@@ -135,22 +135,19 @@ export async function byOwnerAndId(email: string, id: string) {
     `);
   return await cursor.next();
 }
+
 /**
  * Checks whether set with key is owned by user with email.
  */
-
 export async function isOwner(key: string, email: string) {
   const cursor: ArrayCursor<boolean> = await db().query(aql`
     FOR u IN users
         FILTER u.email == ${email}
-        FOR m IN MemberOf
-            FILTER m._from == u._id
-            FOR o IN Organization
-                FILTER o._id == m._to
-                FOR css IN CrossSectionSet
-                    FILTER css._key == ${key}
-                    FILTER css.organization == o._id
-                    RETURN true
+        FOR o IN OUTBOUND u MemberOf
+            FOR css IN CrossSectionSet
+                FILTER css._key == ${key}
+                FILTER css.organization == o._id
+                RETURN true
   `);
   return cursor.hasNext;
 }

@@ -45,6 +45,7 @@ export const Role = z.enum([
   "editor", // TODO remove or implement
   "developer",
   "author",
+  "publisher",
   "download",
 ]);
 export type Role = z.infer<typeof Role>;
