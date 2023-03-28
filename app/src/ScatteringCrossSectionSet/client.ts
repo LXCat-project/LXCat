@@ -18,16 +18,26 @@ export async function deleteSet(key: string, message?: string) {
   const body = JSON.stringify({ message: message });
   const init = { method: "DELETE", body, headers };
   const res = await fetch(url, init);
-  const data = await res.json();
-  return data;
+
+  // TODO: Use a library like true-myth for error handling.
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    return res.text();
+  }
 }
 
 export async function publishSet(selectedSetId: string) {
   const url = `/api/author/scat-css/${selectedSetId}/publish`;
   const init = { method: "POST", headers };
   const res = await fetch(url, init);
-  const data = await res.json();
-  return data;
+
+  // TODO: Use a library like true-myth for error handling.
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    return res.text();
+  }
 }
 
 export async function listSetsOfOwner(): Promise<CrossSectionSetOwned[]> {
