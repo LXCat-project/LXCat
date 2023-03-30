@@ -10,10 +10,10 @@ use std::{collections::HashMap, error::Error};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
-use types::{Document, Parameters, Reaction, State, StateEntry};
+use types::{Document, Mixture, Parameters, Process, Reaction, State, StateEntry};
 
 fn get_particles<'a>(
-    reaction: &'a Reaction<String>,
+    reaction: &Reaction<String>,
     state_map: &'a HashMap<String, State>,
 ) -> Vec<&'a str> {
     let mut particles: Vec<&str> = Vec::new();
@@ -32,21 +32,32 @@ fn get_particles<'a>(
     particles
 }
 
-fn get_species(entries: &Vec<StateEntry<String>>) -> Vec<&str> {
+fn get_state_id<'a>(
+    entry: &'a StateEntry<String>,
+    state_map: &'a HashMap<String, State>,
+) -> &'a str {
+    match &state_map[&entry.state].id {
+        None => &entry.state,
+        Some(id) => id,
+    }
+}
+
+fn get_species<'a>(
+    entries: &'a Vec<StateEntry<String>>,
+    state_map: &'a HashMap<String, State>,
+) -> Vec<&'a str> {
     entries
         .iter()
-        .filter_map(|entry| {
-            if entry.state != "e" {
-                Some(entry.state.as_str())
-            } else {
-                None
-            }
-        })
+        .map(|entry| get_state_id(entry, state_map))
+        .filter_map(|id| if id != "e" { Some(id) } else { None })
         .collect()
 }
 
-fn get_reaction_summary(reaction: &Reaction<String>) -> Result<String> {
-    let lhs_species = get_species(&reaction.lhs);
+fn get_reaction_summary(
+    reaction: &Reaction<String>,
+    state_map: &HashMap<String, State>,
+) -> Result<String> {
+    let lhs_species = get_species(&reaction.lhs, state_map);
 
     if reaction
         .type_tags
@@ -56,7 +67,7 @@ fn get_reaction_summary(reaction: &Reaction<String>) -> Result<String> {
         return Ok(lhs_species[0].to_string());
     }
 
-    let rhs_species = get_species(&reaction.rhs);
+    let rhs_species = get_species(&reaction.rhs, state_map);
 
     if lhs_species.len() == 0 {}
 
@@ -100,9 +111,9 @@ fn simplify_electrons(state: &str) -> &str {
     }
 }
 
-fn fold_entry(entry: &StateEntry<String>) -> String {
-    std::iter::repeat(entry.state.as_str())
-        .take(entry.count as usize)
+fn fold_entry(count: u32, state: &str) -> String {
+    std::iter::repeat(state)
+        .take(count as usize)
         .fold(String::new(), |string, elem| {
             if string.is_empty() {
                 string + simplify_electrons(elem)
@@ -112,18 +123,112 @@ fn fold_entry(entry: &StateEntry<String>) -> String {
         })
 }
 
-fn parse_entries(entries: &[StateEntry<String>]) -> String {
+fn parse_entries(entries: &[StateEntry<String>], states: &HashMap<String, State>) -> String {
     entries.iter().fold(String::new(), |expr, entry| {
+        let id = match &states[&entry.state].id {
+            None => &entry.state,
+            Some(id) => id,
+        };
+
         if expr.is_empty() {
-            fold_entry(entry)
+            fold_entry(entry.count, id)
         } else {
-            expr + " + " + fold_entry(entry).as_str()
+            expr + " + " + fold_entry(entry.count, id).as_str()
         }
     })
 }
 
 fn get_mass_ratio(parameters: &Option<Parameters>) -> Option<f64> {
     parameters.as_ref()?.mass_ratio
+}
+
+fn parse_process(
+    mut buffer: String,
+    process: &Process,
+    complete: bool,
+    states: &HashMap<String, State>,
+    references: &HashMap<String, String>,
+) -> std::result::Result<String, Box<dyn Error>> {
+    let tag = parse_tag(&process.reaction.type_tags);
+
+    write!(buffer, "\n{}", tag.to_uppercase())?;
+    write!(
+        buffer,
+        "\n{}",
+        get_reaction_summary(&process.reaction, states)?
+    )?;
+    write!(
+        buffer,
+        "\n {:.6e}",
+        match tag.to_uppercase().as_str() {
+            "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&process.parameters)
+                .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
+            _ => process.threshold,
+        }
+    )?;
+    write!(
+        buffer,
+        "\nSPECIES: {}",
+        get_particles(&process.reaction, &states).join(" / ")
+    )?;
+    write!(
+        buffer,
+        "\nPROCESS: {} {}-> {}, {}",
+        parse_entries(&process.reaction.lhs, states),
+        match process.reaction.reversible {
+            true => "<",
+            false => "",
+        },
+        parse_entries(&process.reaction.rhs, states),
+        tag
+    )?;
+
+    match tag {
+        "Effective" | "Elastic" => {
+            write!(
+                buffer,
+                "\nPARAM.:  m/M = {}",
+                get_mass_ratio(&process.parameters)
+                    .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
+            )
+        }
+        _ => {
+            write!(
+                buffer,
+                "\nPARAM.:  E = {} {}",
+                process.threshold, process.units.0
+            )
+        }
+    }?;
+
+    // TODO: It seems that supplying a statistical weight ratio is optional for
+    // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
+    // the dataset be perceived as faulty?
+    if process.reaction.reversible {
+        if let Some(params) = &process.parameters {
+            if let Some(sw_ratio) = params.statistical_weight_ratio {
+                write!(buffer, ", g1/g0 = {}", sw_ratio)?;
+            }
+        }
+    }
+    if complete {
+        write!(buffer, ", complete set")?;
+    }
+    for reference in &process.reference {
+        write!(buffer, "\nCOMMENT: {}", references[reference].trim())?;
+    }
+    write!(
+        buffer,
+        "\nCOLUMNS: {} ({}) | {} ({})",
+        process.labels.0, process.units.0, process.labels.1, process.units.1
+    )?;
+    write!(buffer, "\n-----------------------------")?;
+    for (x, y) in process.data.iter() {
+        write!(buffer, "\n {:.6e}\t{:.6e}", x, y)?;
+    }
+    writeln!(buffer, "\n-----------------------------")?;
+
+    Ok(buffer)
 }
 
 const STARS: &str = "************************************************************************************************************************";
@@ -151,99 +256,67 @@ impl std::fmt::Display for ParserError {
 impl std::error::Error for ParserError {}
 
 impl Document {
-    pub fn into_legacy(mut self) -> std::result::Result<String, Box<dyn Error>> {
+    pub fn into_legacy(self) -> std::result::Result<String, Box<dyn Error>> {
         let mut legacy = String::new();
-
-        let self_reference = format!(
-            "{}\nPERMLINK:         {}\nTERMS OF USE:     {}\n{}\n",
-            END, self.url, self.terms_of_use, END
-        );
 
         write!(
             legacy,
-            "{}\n\nCOMMENT: {}\n\n{}\n{}\n",
-            STARS, self.description, self_reference, STARS
+            "PERMLINK:     {}\nTERMS OF USE: {}\n\n",
+            self.url, self.terms_of_use
         )?;
 
-        for process in self.processes.iter_mut() {
-            let tag = parse_tag(&process.reaction.type_tags);
+        write!(
+            legacy,
+            "{}\nDATABASE:         {}\nDESCRIPTION:      {}\n{}\n\n",
+            END, self.contributor, self.description, END
+        )?;
 
-            write!(legacy, "\n{}", tag.to_uppercase())?;
-            write!(
+        for process in self.processes.into_iter() {
+            legacy = parse_process(
                 legacy,
-                "\n{}",
-                get_reaction_summary(&process.reaction).unwrap()
+                &process,
+                self.complete,
+                &self.states,
+                &self.references,
             )?;
+        }
+
+        write!(legacy, "{}", END)?;
+
+        Ok(legacy)
+    }
+}
+
+impl Mixture {
+    pub fn into_legacy(self) -> std::result::Result<String, Box<dyn Error>> {
+        let mut legacy = String::new();
+
+        write!(
+            legacy,
+            "PERMLINK:     {}\nTERMS OF USE: {}\n\n",
+            self.url, self.terms_of_use
+        )?;
+
+        for (set_key, set) in self.sets.iter() {
             write!(
                 legacy,
-                "\n {:.6e}",
-                match tag.to_uppercase().as_str() {
-                    "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&process.parameters)
-                        .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
-                    _ => process.threshold,
-                }
-            )?;
-            write!(
-                legacy,
-                "\nSPECIES: {}",
-                get_particles(&process.reaction, &self.states).join(" / ")
-            )?;
-            write!(
-                legacy,
-                "\nPROCESS: {} {}-> {}, {}",
-                parse_entries(&process.reaction.lhs),
-                match process.reaction.reversible {
-                    true => "<",
-                    false => "",
-                },
-                parse_entries(&process.reaction.rhs),
-                tag
+                "{}\nDATABASE:         {}\nDESCRIPTION:      {}\n{}\n",
+                END, set.organization, set.description, END
             )?;
 
-            match tag {
-                "Effective" | "Elastic" => {
-                    write!(
-                        legacy,
-                        "\nPARAM.:  m/M = {}",
-                        get_mass_ratio(&process.parameters)
-                            .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
-                    )
-                }
-                _ => {
-                    write!(
-                        legacy,
-                        "\nPARAM.:  E = {} {}",
-                        process.threshold, process.units.0
-                    )
-                }
-            }?;
-
-            // TODO: It seems that supplying a statistical weight ratio is optional for
-            // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
-            // the dataset be perceived as faulty?
-            if process.reaction.reversible {
-                if let Some(params) = &process.parameters {
-                    if let Some(sw_ratio) = params.statistical_weight_ratio {
-                        write!(legacy, ", g1/g0 = {}", sw_ratio)?;
-                    }
-                }
+            for process in self.processes.iter().filter(|&process| {
+                (&process.is_part_of)
+                    .as_ref()
+                    .map_or(false, |sets| sets.contains(set_key))
+            }) {
+                legacy = parse_process(
+                    legacy,
+                    process,
+                    set.complete,
+                    &self.states,
+                    &self.references,
+                )?;
             }
-            if self.complete {
-                write!(legacy, ", complete set")?;
-            }
-            for reference in &process.reference {
-                write!(legacy, "\nCOMMENT: {}", self.references[reference].as_str())?;
-            }
-            write!(
-                legacy,
-                "\nCOLUMNS: {} ({}) | {} ({})",
-                process.labels.0, process.units.0, process.labels.1, process.units.1
-            )?;
-            write!(legacy, "\n-----------------------------")?;
-            for (x, y) in process.data.iter() {
-                write!(legacy, "\n {:+.6e}\t{:.6e}", x, y)?;
-            }
-            writeln!(legacy, "\n-----------------------------")?;
         }
 
         write!(legacy, "{}", END)?;
@@ -258,6 +331,16 @@ pub fn convert_document(json_string: serde_json::Value) -> Result<String> {
         .map_err(|err| napi::Error::new(napi::Status::Unknown, err.to_string()))?;
 
     document
+        .into_legacy()
+        .map_err(|err| napi::Error::new(napi::Status::Cancelled, err.to_string()))
+}
+
+#[napi]
+pub fn convert_mixture(json_string: serde_json::Value) -> Result<String> {
+    let mixture: Mixture = serde_json::from_value(json_string)
+        .map_err(|err| napi::Error::new(napi::Status::Unknown, err.to_string()))?;
+
+    mixture
         .into_legacy()
         .map_err(|err| napi::Error::new(napi::Status::Cancelled, err.to_string()))
 }
