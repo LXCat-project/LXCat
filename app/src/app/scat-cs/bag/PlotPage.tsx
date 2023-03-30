@@ -120,11 +120,9 @@ export const PlotPage = (
                     link: `/api/scat-cs/bag?ids=${idsString}`,
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
-                    // TODO: Add option to download Bolsig+ format for arbitrary selections.
                     text: "Plaintext",
-                    link: "",
+                    link: `/api/scat-cs/bag/legacy?ids=${idsString}`,
                     icon: <IconFileText stroke={1.5} />,
-                    disabled: true,
                   }]}
                 >
                   Download data

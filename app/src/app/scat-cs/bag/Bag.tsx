@@ -7,13 +7,9 @@ import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
 import { z } from "zod";
 
-// import { Reference } from "../shared/Reference";
-// import { TermsOfUseCheck } from "../../../shared/TermsOfUseCheck";
 import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
 import { formatReference } from "./cite";
 import { PlotPage } from "./PlotPage";
-// import { reactionAsText } from "../../../ScatteringCrossSection/reaction";
-// import { ReactionSummary } from "./ReactionSummary";
 
 export const idsSchema = z
   .array(z.string())
