@@ -19,7 +19,7 @@
     "build:debug": "napi build --dts dist/index.d.ts",
     "test": "node --loader ts-node/esm --test tests/valid.test.ts",
     "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year --skip-unrecognised src tests",
-    "clean": "rm rf target dist",
+    "clean": "rm -rf target dist",
     "prepublishOnly": "pnpm build"
   },
   "author": "Daan Boer",
