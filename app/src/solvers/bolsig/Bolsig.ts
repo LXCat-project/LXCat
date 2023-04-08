@@ -1,23 +1,5 @@
-import { z } from "zod";
-import { BoltzmannOutput, BoltzmannSolver } from "./boltzmann";
-
-export const BolsigInput = z.object({
-  crossSections: z.array(z.object({ id: z.number().int() })),
-  composition: z.record(z.string().min(1), z.number().min(0).max(1.0)),
-  config: z.object({
-    maxEnergy: z.number().min(0),
-    gasTemperature: z.number().min(0),
-    gridSize: z.number().int().min(1).max(1000),
-    plasmaDensity: z.number().min(0),
-    reducedField: z.number().min(0),
-    ionizationDegree: z.number().min(0),
-  }),
-});
-
-export const BolsigOutput = BoltzmannOutput;
-
-export type BolsigInput = z.infer<typeof BolsigInput>;
-export type BolsigOutput = z.infer<typeof BoltzmannOutput>;
+import { BoltzmannSolver } from "../boltzmann";
+import { BolsigInput, BolsigOutput } from "./io";
 
 export class Bolsig
   implements BoltzmannSolver<typeof BolsigInput, typeof BolsigOutput>
