@@ -3,10 +3,10 @@
 import { Card, Select, Stack, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Latex from "react-latex-next";
-import { BolsigInput } from "./bolsig";
+import { BolsigInput } from "./io";
 import "katex/dist/katex.min.css";
-import { IntegerInput } from "../shared/IntegerInput";
-import { ScientificInput } from "../shared/ScientificInput";
+import { IntegerInput } from "../../shared/IntegerInput";
+import { ScientificInput } from "../../shared/ScientificInput";
 
 export const BolsigInputForm = () => {
   const config = useForm<BolsigInput>({ initialValues: BolsigInput.parse({}) });
