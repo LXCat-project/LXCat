@@ -5,9 +5,11 @@
 "use client";
 
 import Plotly from "plotly.js-basic-dist";
+import { CSSProperties } from "react";
 import createPlotlyComponent from "react-plotly.js/factory";
 
 interface LinePlotProps {
+  style?: CSSProperties;
   lines: Array<LineConfig>;
   xAxis: AxisConfig;
   yAxis: AxisConfig;
@@ -26,9 +28,11 @@ interface LineConfig {
 
 const Plot = createPlotlyComponent(Plotly);
 
-export const LinePlot = ({ lines, xAxis, yAxis }: LinePlotProps) => {
+export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
   return (
     <Plot
+      style={style}
+      useResizeHandler
       data={lines.map(line => (
         {
           x: line.x,
@@ -40,6 +44,7 @@ export const LinePlot = ({ lines, xAxis, yAxis }: LinePlotProps) => {
         }
       ))}
       config={{
+        responsive: true,
         toImageButtonOptions: {
           format: "svg",
         },
@@ -48,6 +53,7 @@ export const LinePlot = ({ lines, xAxis, yAxis }: LinePlotProps) => {
         displaylogo: false,
       }}
       layout={{
+        autosize: true,
         margin: {
           // l: 60,
           // b: 30,
@@ -67,8 +73,8 @@ export const LinePlot = ({ lines, xAxis, yAxis }: LinePlotProps) => {
           showline: true,
           mirror: "allticks",
         },
-        width: 700,
-        height: 600,
+        // width: 700,
+        // height: 600,
         yaxis: {
           title: yAxis.label,
           type: yAxis.type,

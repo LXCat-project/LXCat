@@ -1,19 +1,12 @@
 import { convertMixture } from "@lxcat/converter";
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
 import { mapObject } from "../../../shared/utils";
-import { BolsigComponent, BolsigInputForm } from "../../../solvers/bolsig";
 import { IdsSchema } from "../IdsSchema";
+import { BolsigPage, BolsigPageProps } from "./BolsigPage";
 
-interface ComputeProps {
-  data: CrossSectionBag;
-  references: { ref: string; url?: string }[];
-  legacy: string;
-  bolsigHost: string;
-}
 interface URLParams {
   searchParams?: { ids?: string };
 }
@@ -24,9 +17,16 @@ const ParamsSchema = z.object({
 
 export default async function ComputePage({ searchParams }: URLParams) {
   const { ids } = ParamsSchema.parse(searchParams);
-  const { data, references, legacy, bolsigHost } = await fetchProps(ids);
+  const { data, ...props } = await fetchProps(ids);
 
-  // TODO: Build Bolsig input form based on BolsigInput and selected consumed states (for gas fractions).
+  // TODO: Error handling.
+  const consumedStates = [
+    ...new Set(
+      Object.values(data.processes).flatMap(process =>
+        process.reaction.lhs.map(entry => entry.state)
+      ),
+    ),
+  ].map(stateId => data.states[stateId]).filter(state => state.id !== "e");
 
   return (
     <>
@@ -34,43 +34,14 @@ export default async function ComputePage({ searchParams }: URLParams) {
         async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       />
-      <BolsigInputForm />
-      <BolsigComponent
-        host={bolsigHost}
-        input={{
-          crossSections: [
-            {
-              id: 614584,
-            },
-            {
-              id: 757001,
-            },
-          ],
-          composition: {
-            Ar: 0.8,
-            He: 0.2,
-          },
-          config: {
-            gasTemperature: 300,
-            plasmaDensity: 1e+22,
-            reducedField: 100,
-            ionizationDegree: 0.0001,
-          },
-          numerics: {
-            grid: {
-              type: "automatic",
-              size: 64,
-            },
-          },
-        }}
-      />
+      <BolsigPage data={data} consumedStates={consumedStates} {...props} />
     </>
   );
 }
 
 const fetchProps = async (
   rawIds: string | Array<string>,
-): Promise<ComputeProps> => {
+): Promise<Omit<BolsigPageProps, "consumedStates">> => {
   if (typeof rawIds === "string") {
     rawIds = rawIds.split(",");
   }

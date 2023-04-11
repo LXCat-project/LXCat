@@ -1,28 +1,62 @@
 "use client";
 
-import { Button } from "@mantine/core";
+import { Button, Center, Loader, Stack } from "@mantine/core";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 
 import { Bolsig } from "./Bolsig";
 import { BolsigInput, BolsigOutput } from "./io";
 
 const LinePlot = dynamic(
   async () => import("../../shared/LinePlot").then(({ LinePlot }) => LinePlot),
-  { ssr: false },
+  {
+    loading: () => (
+      <div style={{ width: "100%", height: "100%" }}>
+        <Center>
+          <Loader />
+        </Center>
+      </div>
+    ),
+    ssr: false,
+  },
 );
 
 export interface BolsigProps {
   input: BolsigInput;
   host: string;
+  plotStyle?: CSSProperties;
 }
 
-export const BolsigComponent = ({ input, host }: BolsigProps) => {
+const EedfPlot = (
+  { energy, eedf, style }: {
+    energy: Array<number>;
+    eedf: Array<number>;
+    style?: CSSProperties;
+  },
+) => (
+  <LinePlot
+    style={style}
+    lines={[{ x: energy, y: eedf, color: "#1f77b4" }]}
+    xAxis={{
+      label: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+      type: "log",
+    }}
+    yAxis={{
+      label: "$\\text{EEDF } \\left(\\mathrm{eV}^{-3/2}\\right)$",
+      type: "log",
+    }}
+  />
+);
+
+export const BolsigComponent = ({ input, host, plotStyle }: BolsigProps) => {
   const [solver, setSolver] = useState<Bolsig>();
   const [results, setResults] = useState<BolsigOutput>();
 
   return (
-    <>
+    <Stack align="center">
+      {results
+        ? <EedfPlot style={plotStyle} {...results} />
+        : <EedfPlot style={plotStyle} energy={[]} eedf={[]} />}
       <Button
         onClick={async () => {
           let bolsig: Bolsig;
@@ -50,19 +84,6 @@ export const BolsigComponent = ({ input, host }: BolsigProps) => {
       >
         Compute
       </Button>
-      {results && (
-        <LinePlot
-          lines={[{ x: results.energy, y: results.eedf, color: "#1f77b4" }]}
-          xAxis={{
-            label: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
-            type: "log",
-          }}
-          yAxis={{
-            label: "$\\text{EEDF } \\left(\\mathrm{eV}^{-3/2}\\right)$",
-            type: "log",
-          }}
-        />
-      )}
-    </>
+    </Stack>
   );
 };

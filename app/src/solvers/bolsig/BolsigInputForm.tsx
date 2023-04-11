@@ -1,19 +1,25 @@
 "use client";
 
 import { Card, Select, Stack, Title } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { UseFormReturnType } from "@mantine/form";
 import Latex from "react-latex-next";
 import { BolsigInput } from "./io";
 import "katex/dist/katex.min.css";
+import { State } from "@lxcat/database/dist/shared/types/collections";
 import { IntegerInput } from "../../shared/IntegerInput";
 import { ScientificInput } from "../../shared/ScientificInput";
 
-export const BolsigInputForm = () => {
-  const config = useForm<BolsigInput>({ initialValues: BolsigInput.parse({}) });
+export interface BolsigInputFormProps {
+  consumedStates: Array<State>;
+  config: UseFormReturnType<Omit<BolsigInput, "crossSections">>;
+}
 
+export const BolsigInputForm = (
+  { config, consumedStates }: BolsigInputFormProps,
+) => {
   return (
-    <>
-      <Card withBorder padding="xs" sx={{ margin: 10, width: "50%" }}>
+    <Stack spacing="xs" sx={{ minWidth: 300, maxWidth: 500 }}>
+      <Card withBorder padding="xs">
         <Title order={3}>General</Title>
         <Stack spacing="xs">
           <ScientificInput
@@ -34,7 +40,20 @@ export const BolsigInputForm = () => {
           />
         </Stack>
       </Card>
-      <Card withBorder padding="xs" sx={{ margin: 10, width: "50%" }}>
+      <Card withBorder padding="xs">
+        <Title order={3}>Gas mole fractions</Title>
+        <Stack spacing="xs">
+          {consumedStates.map(state => (
+            <ScientificInput
+              key={state.id}
+              {...config.getInputProps(`composition.${state.id}`)}
+              value={0}
+              label={<Latex>{`$${state.latex}$`}</Latex>}
+            />
+          ))}
+        </Stack>
+      </Card>
+      <Card withBorder padding="xs">
         <Title order={3}>Numerics</Title>
         <Stack spacing="xs">
           <Select
@@ -59,13 +78,6 @@ export const BolsigInputForm = () => {
           )}
         </Stack>
       </Card>
-      <button
-        onClick={() => {
-          console.log(config.values);
-        }}
-      >
-        print
-      </button>
-    </>
+    </Stack>
   );
 };
