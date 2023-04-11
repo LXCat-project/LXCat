@@ -18,7 +18,10 @@ export const BolsigNumerics = z.object({
 });
 
 export const BolsigInput = z.object({
-  crossSections: z.array(z.object({ id: z.number().int() })).default([]),
+  crossSections: z.array(z.union([
+    z.string().min(1),
+    z.object({ id: z.number().int() }),
+  ])).default([]),
   composition: z.record(z.string().min(1), z.number().min(0).max(1.0)).default(
     {},
   ),
