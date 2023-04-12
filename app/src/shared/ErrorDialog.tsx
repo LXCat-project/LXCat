@@ -9,11 +9,13 @@ import { Dialog, Text } from "@mantine/core";
 export const ErrorDialog = (
   { opened, error, onClose }: {
     opened: boolean;
-    error: string;
+    error: string | Error;
     onClose: () => void;
   },
 ) => (
   <Dialog opened={opened} withCloseButton onClose={onClose}>
-    <Text size="md" color="red" weight={700}>{error}</Text>
+    <Text size="md" color="red" weight={700}>
+      {typeof error === "string" ? error : error.message}
+    </Text>
   </Dialog>
 );
