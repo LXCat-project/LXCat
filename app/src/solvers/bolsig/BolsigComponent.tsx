@@ -3,6 +3,7 @@
 import { Button, Center, Loader, Stack } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { CSSProperties, useState } from "react";
+import { Maybe } from "true-myth";
 
 import { Bolsig } from "./Bolsig";
 import { BolsigInput, BolsigOutput } from "./io";
@@ -51,6 +52,9 @@ const EedfPlot = (
 export const BolsigComponent = ({ input, host, plotStyle }: BolsigProps) => {
   const [solver, setSolver] = useState<Bolsig>();
   const [results, setResults] = useState<BolsigOutput>();
+  const [error, setError] = useState<Maybe<Error>>(Maybe.nothing());
+
+  if (error.isJust) throw error.value;
 
   return (
     <Stack align="center">
@@ -74,11 +78,10 @@ export const BolsigComponent = ({ input, host, plotStyle }: BolsigProps) => {
 
           let result = await bolsig.solve(input);
 
-          if (typeof result === "string") {
-            console.log(result);
+          if (result.isErr) {
+            setError(Maybe.just(result.error));
           } else {
-            setResults(result);
-            console.log(result);
+            setResults(result.value);
           }
         }}
       >

@@ -1,3 +1,4 @@
+import { Result } from "true-myth";
 import { z } from "zod";
 
 export const BoltzmannOutput = z.object({
@@ -16,5 +17,5 @@ export interface BoltzmannSolver<
 
   solve(
     input: z.infer<BoltzmannInput>,
-  ): Promise<z.infer<BoltzmannOutput> | string>;
+  ): Promise<Result<z.infer<BoltzmannOutput>, Error>>;
 }

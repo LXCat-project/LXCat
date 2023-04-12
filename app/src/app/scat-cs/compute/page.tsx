@@ -19,7 +19,6 @@ export default async function ComputePage({ searchParams }: URLParams) {
   const { ids } = ParamsSchema.parse(searchParams);
   const { data, ...props } = await fetchProps(ids);
 
-  // TODO: Error handling.
   const consumedStates = [
     ...new Set(
       Object.values(data.processes).flatMap(process =>
