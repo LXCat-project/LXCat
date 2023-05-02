@@ -1,13 +1,6 @@
 import { Result } from "true-myth";
 import { z } from "zod";
 
-export const BoltzmannOutput = z.object({
-  energy: z.array(z.number().min(0)),
-  eedf: z.array(z.number().min(0)),
-});
-
-export type BoltzmannOutput = z.infer<typeof BoltzmannOutput>;
-
 export interface BoltzmannSolver<
   BoltzmannInput extends z.ZodTypeAny,
   BoltzmannOutput extends z.ZodTypeAny,
@@ -17,5 +10,9 @@ export interface BoltzmannSolver<
 
   solve(
     input: z.infer<BoltzmannInput>,
-  ): Promise<Result<z.infer<BoltzmannOutput>, Error>>;
+  ):
+    | Promise<Result<z.infer<BoltzmannOutput>, Error>>
+    | Promise<
+      Result<Array<Promise<Result<z.infer<BoltzmannOutput>, Error>>>, Error>
+    >;
 }

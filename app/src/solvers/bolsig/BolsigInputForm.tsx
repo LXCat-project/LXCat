@@ -3,15 +3,16 @@
 import { Card, Select, Stack, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import Latex from "react-latex-next";
-import { BolsigInput } from "./io";
+import { BolsigFormInput } from "./io";
 import "katex/dist/katex.min.css";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { IntegerInput } from "../../shared/IntegerInput";
+import { RangeInput } from "../../shared/RangeInput";
 import { ScientificInput } from "../../shared/ScientificInput";
 
 export interface BolsigInputFormProps {
   consumedStates: Array<State>;
-  config: UseFormReturnType<Omit<BolsigInput, "crossSections">>;
+  config: UseFormReturnType<Omit<BolsigFormInput, "crossSections">>;
 }
 
 export const BolsigInputForm = (
@@ -22,7 +23,13 @@ export const BolsigInputForm = (
       <Card withBorder padding="xs">
         <Title order={3}>General</Title>
         <Stack spacing="xs">
-          <ScientificInput
+          {
+            // <ScientificInput
+            //   {...config.getInputProps("config.reducedField")}
+            //   label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
+            // />
+          }
+          <RangeInput
             {...config.getInputProps("config.reducedField")}
             label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
           />
@@ -47,7 +54,7 @@ export const BolsigInputForm = (
             <ScientificInput
               key={state.id}
               {...config.getInputProps(`composition.${state.id}`)}
-              value={0}
+              value={consumedStates.length == 1 ? 1 : 0}
               label={<Latex>{`$${state.latex}$`}</Latex>}
             />
           ))}

@@ -2,13 +2,10 @@
 
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Box, Grid, Group } from "@mantine/core";
+import { Grid } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import {
-  BolsigComponent,
-  BolsigInput,
-  BolsigInputForm,
-} from "../../../solvers/bolsig";
+import { BolsigComponent, BolsigInputForm } from "../../../solvers/bolsig";
+import { BolsigFormInput } from "../../../solvers/bolsig/io";
 
 export interface BolsigPageProps {
   data: CrossSectionBag;
@@ -21,8 +18,8 @@ export interface BolsigPageProps {
 export const BolsigPage = (
   { bolsigHost, consumedStates, legacy }: BolsigPageProps,
 ) => {
-  const form = useForm<Omit<BolsigInput, "crossSections">>({
-    initialValues: BolsigInput.parse({}),
+  const form = useForm<Omit<BolsigFormInput, "crossSections">>({
+    initialValues: BolsigFormInput.parse({}),
     validate: {
       composition: (composition) =>
         Object.values(composition).reduce(
@@ -38,10 +35,8 @@ export const BolsigPage = (
       sx={theme => ({ margin: theme.spacing.xs })}
       grow
     >
-      <Grid.Col span="auto">
-        <div style={{ minWidth: 300, maxWidth: 500 }}>
-          <BolsigInputForm consumedStates={consumedStates} config={form} />
-        </div>
+      <Grid.Col span="auto" style={{ minWidth: 300, maxWidth: 500 }}>
+        <BolsigInputForm consumedStates={consumedStates} config={form} />
       </Grid.Col>
       <Grid.Col span="content">
         <BolsigComponent

@@ -7,7 +7,7 @@ export type IntegerInputProps =
   & Omit<TextInputProps, "value" | "onChange">
   & {
     value?: number;
-    onChange: (value: number) => void | Promise<void>;
+    onChange: (value: number | undefined) => void | Promise<void>;
   };
 
 export const IntegerInput = (
@@ -22,7 +22,7 @@ export const IntegerInput = (
       onChange={({ currentTarget: { value } }) => {
         if (value === "") {
           setText("");
-          onChange(0);
+          onChange(undefined);
         } else if (/^\d*e?\+?\d*$/.test(value)) {
           setText(value);
 

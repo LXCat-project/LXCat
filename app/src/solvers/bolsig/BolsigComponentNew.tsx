@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Center, Loader, Stack } from "@mantine/core";
+import { Box, Button, Center, Loader, Stack, Tabs } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { CSSProperties, useState } from "react";
 import { Maybe } from "true-myth";
@@ -53,6 +53,56 @@ const EedfPlot = (
   />
 );
 
+const plotConfig: Record<
+  ParameterKeys,
+  { label: string; xLog?: boolean; yLog?: boolean }
+> = {
+  diffusion: {
+    label: "$\\text{Reduced diffusion coefficient } \\left((ms)^{-1}\\right)$",
+    xLog: true,
+    yLog: false,
+  },
+  mobility: {
+    label: "$\\text{Reduced mobility } \\left((mVs)^{-1}\\right)$",
+    xLog: true,
+    yLog: false,
+  },
+};
+
+const ParameterPlot = (
+  { parameter, values, style }: {
+    parameter: "diffusion" | "mobility";
+    values: Array<{ reducedField: number; value: number }>;
+    style?: CSSProperties;
+  },
+) => {
+  const config = plotConfig[parameter];
+
+  return (
+    <LinePlot
+      style={style}
+      lines={[{
+        x: values.map(({ reducedField }) => reducedField),
+        y: values.map(({ value }) => value),
+        color: colorScheme[0],
+      }]}
+      xAxis={{
+        label: "$\\text{Reduced electric field}\\left(\\mathrm{Td}\\right)$",
+        type: config.xLog ? "log" : "linear",
+      }}
+      yAxis={{
+        label: config.label,
+        type: config.yLog ? "log" : "linear",
+      }}
+    />
+  );
+};
+
+type OutputMode = "eedf" | ParameterKeys;
+type ParameterKeys = "diffusion" | "mobility";
+
+const OutputModes = ["eedf", "diffusion", "mobility"] as const;
+
 export const BolsigComponent = ({ input, host, plotStyle }: BolsigProps) => {
   const [solver, setSolver] = useState<Bolsig>();
   const [results, setResults] = useState<
@@ -62,22 +112,55 @@ export const BolsigComponent = ({ input, host, plotStyle }: BolsigProps) => {
     >
   >();
   const [error, setError] = useState<Maybe<Error>>(Maybe.nothing());
+  const [outputMode, setOutputMode] = useState<OutputMode>("mobility");
 
   if (error.isJust) throw error.value;
 
+  const makeOutput = (mode: OutputMode) => {
+    switch (mode) {
+      case "eedf":
+        return results
+          ? (
+            <EedfPlot
+              style={plotStyle}
+              lines={Object.values(results).map(({ output, color }) => ({
+                ...output,
+                color,
+              }))}
+            />
+          )
+          : <EedfPlot style={plotStyle} lines={[]} />;
+      default:
+        return results
+          ? (
+            <ParameterPlot
+              parameter={mode}
+              style={plotStyle}
+              values={Object.values(results).map((
+                { reducedField, output: { swarm } },
+              ) => ({ reducedField, value: swarm[mode] }))}
+            />
+          )
+          : <ParameterPlot parameter={mode} style={plotStyle} values={[]} />;
+    }
+  };
+
   return (
     <Stack align="center">
-      {results
-        ? (
-          <EedfPlot
-            style={plotStyle}
-            lines={Object.values(results).map(({ output, color }) => ({
-              ...output,
-              color,
-            }))}
-          />
-        )
-        : <EedfPlot style={plotStyle} lines={[]} />}
+      <Tabs sx={{ width: "90%", height: "100%" }}>
+        <Tabs.List>
+          {OutputModes.map((mode) => (
+            <Tabs.Tab key={`header.${mode}`} value={mode}>Test</Tabs.Tab>
+          ))}
+        </Tabs.List>
+        {OutputModes.map((mode) => (
+          <Tabs.Panel key={`content.${mode}`} value={mode}>
+            <Center>
+              {makeOutput(mode)}
+            </Center>
+          </Tabs.Panel>
+        ))}
+      </Tabs>
       <Button
         onClick={async () => {
           let bolsig: Bolsig;
