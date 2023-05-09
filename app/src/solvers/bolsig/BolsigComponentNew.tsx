@@ -1,12 +1,12 @@
 "use client";
 
-import { Box, Button, Center, Loader, Stack, Tabs } from "@mantine/core";
+import { Button, Center, Loader, Stack, Tabs } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { CSSProperties, useState } from "react";
 import { Maybe } from "true-myth";
 import { colorScheme } from "../../app/scat-cs/bag/colors";
 
-import { Bolsig } from "./Bolsig";
+import { Bolsig } from "./bolsig";
 import { BolsigFormInput, BolsigInput, BolsigOutput } from "./io";
 
 const LinePlot = dynamic(
