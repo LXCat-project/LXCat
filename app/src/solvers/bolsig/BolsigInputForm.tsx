@@ -23,12 +23,6 @@ export const BolsigInputForm = (
       <Card withBorder padding="xs">
         <Title order={3}>General</Title>
         <Stack spacing="xs">
-          {
-            // <ScientificInput
-            //   {...config.getInputProps("config.reducedField")}
-            //   label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
-            // />
-          }
           <RangeInput
             {...config.getInputProps("config.reducedField")}
             label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}

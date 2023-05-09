@@ -1,69 +1,8 @@
-import { Result, Unit } from "true-myth";
+import { Result } from "true-myth";
+import { AsyncWebSocket } from "../../shared/websocket";
 import { BoltzmannSolver } from "../boltzmann";
 import { BolsigInput, BolsigOutput } from "./io";
-
-class AsyncWebSocket {
-  private promiseQueue: Array<(data: Result<any, Error>) => void> = [];
-  private dataQueue: Array<any> = [];
-  private socket: WebSocket;
-  private connectGuard: Promise<void> | void;
-
-  connected(): boolean {
-    return this.socket.readyState === WebSocket.OPEN;
-  }
-
-  async send(data: string): Promise<Result<Unit, Error>> {
-    await this.connectGuard;
-
-    if (!this.connected()) {
-      return Result.err(
-        new Error("Cannot send message, web socket is closed."),
-      );
-    }
-
-    this.socket.send(data);
-    return Result.ok();
-  }
-
-  async recv(): Promise<Result<any, Error>> {
-    if (this.dataQueue.length > 0) {
-      return Result.ok(this.dataQueue.shift());
-    }
-
-    await this.connectGuard;
-
-    if (!this.connected()) {
-      return Result.err(
-        new Error("Cannot receive message, web socket is closed."),
-      );
-    }
-
-    return new Promise(resolve => this.promiseQueue.push(resolve));
-  }
-
-  constructor(url: string | URL) {
-    this.socket = new WebSocket(url);
-
-    this.connectGuard = new Promise(resolve => {
-      this.socket.onopen = () => resolve();
-    });
-
-    this.socket.onmessage = (event) => {
-      const resolve = this.promiseQueue.shift();
-
-      if (resolve !== undefined) {
-        resolve(Result.ok(event.data));
-        return;
-      }
-
-      this.dataQueue.push(event.data);
-    };
-  }
-
-  destructor() {
-    this.socket.close();
-  }
-}
+import { CountPacket, DataPacket } from "./networking";
 
 export class Bolsig
   implements BoltzmannSolver<typeof BolsigInput, typeof BolsigOutput>
@@ -77,8 +16,7 @@ export class Bolsig
   async solve(
     input: BolsigInput,
   ): Promise<Result<Array<Promise<Result<BolsigOutput, Error>>>, Error>> {
-    // FIXME: Set host via env variable.
-    const socket = new AsyncWebSocket("ws://localhost:3001/ws");
+    const socket = new AsyncWebSocket(this.host);
     socket.send(JSON.stringify({ type: "input", data: input }));
     const countPacketResult = await socket.recv();
 
@@ -86,23 +24,30 @@ export class Bolsig
       return Result.err(countPacketResult.error);
     }
 
-    // TODO: Use zod to parse the incoming packets.
-    const countPacket = JSON.parse(countPacketResult.value);
+    const countPacket = CountPacket.safeParse(
+      JSON.parse(countPacketResult.value),
+    );
+
+    if (!countPacket.success) {
+      return Result.err(countPacket.error);
+    }
 
     return Result.ok(
       Array.from(
-        { length: countPacket.data },
+        { length: countPacket.data.data },
         () =>
           socket.recv().then((result) => {
             if (result.isErr) {
               return Result.err(result.error);
             }
 
-            // TODO: Use zod to parse the incoming packets.
-            const packet = JSON.parse(result.value);
+            const dataPacket = DataPacket.safeParse(JSON.parse(result.value));
 
-            console.log(packet);
-            return Result.ok(packet.data);
+            if (!dataPacket.success) {
+              return Result.err(dataPacket.error);
+            }
+
+            return Result.ok(dataPacket.data.data);
           }),
       ),
     );
