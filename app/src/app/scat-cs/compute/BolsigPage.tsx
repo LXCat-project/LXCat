@@ -3,7 +3,7 @@
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Grid } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { BolsigComponent, BolsigInputForm } from "../../../solvers/bolsig";
 import { BolsigFormInput } from "../../../solvers/bolsig/io";
 
@@ -19,16 +19,15 @@ export const BolsigPage = (
   { bolsigHost, consumedStates, legacy }: BolsigPageProps,
 ) => {
   const form = useForm<Omit<BolsigFormInput, "crossSections">>({
-    initialValues: BolsigFormInput.parse({}),
-    validate: {
-      composition: (composition) =>
-        Object.values(composition).reduce(
-          (total, fraction) => total + fraction,
-          0,
-        ) == 1,
-    },
+    initialValues: BolsigFormInput.parse({
+      composition: consumedStates.length === 1
+        ? { [consumedStates[0].id]: 1 }
+        : Object.fromEntries(consumedStates.map((state) => [state.id, 0])),
+    }),
+    validate: zodResolver(BolsigFormInput.omit({ crossSections: true })),
   });
 
+  // TODO: Validate form before calling compute.
   return (
     <Grid
       align="center"

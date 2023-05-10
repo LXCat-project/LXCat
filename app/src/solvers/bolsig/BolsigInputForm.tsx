@@ -7,7 +7,7 @@ import { BolsigFormInput } from "./io";
 import "katex/dist/katex.min.css";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { IntegerInput } from "../../shared/IntegerInput";
-import { RangeInput } from "../../shared/RangeInput";
+import { RangeInputForm } from "../../shared/RangeInputForm";
 import { ScientificInput } from "../../shared/ScientificInput";
 
 export interface BolsigInputFormProps {
@@ -23,9 +23,10 @@ export const BolsigInputForm = (
       <Card withBorder padding="xs">
         <Title order={3}>General</Title>
         <Stack spacing="xs">
-          <RangeInput
-            {...config.getInputProps("config.reducedField")}
+          <RangeInputForm
             label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
+            form={config}
+            basePath="config.reducedField"
           />
           <ScientificInput
             {...config.getInputProps("config.ionizationDegree")}

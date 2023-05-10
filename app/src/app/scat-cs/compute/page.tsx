@@ -46,7 +46,7 @@ const fetchProps = async (
   }
   const idsString = rawIds.join(",");
 
-  // FIXME: We should probably use a context to share data between pages.
+  // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
   const data = await byIds(ids);
 
