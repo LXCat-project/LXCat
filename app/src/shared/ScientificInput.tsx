@@ -23,7 +23,7 @@ export const ScientificInput = (
         if (value === "") {
           setText("");
           onChange(undefined);
-        } else if (/^\d*\.?\d*e?[\-\+]?[0-9]*$/.test(value)) {
+        } else if (/^\d+\.?\d*e?[\-\+]?[0-9]*$/.test(value)) {
           setText(value);
 
           if (/^\d+(?:\.\d+)?(?:e[\-\+]?[0-9]+)?$/.test(value)) {
