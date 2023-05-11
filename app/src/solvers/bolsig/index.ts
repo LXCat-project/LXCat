@@ -1,4 +1,4 @@
 export { Bolsig } from "./bolsig";
-export { BolsigComponent, type BolsigProps } from "./BolsigComponent";
 export { BolsigInputForm } from "./BolsigInputForm";
+export { BolsigPlot, type BolsigPlotProps } from "./BolsigPlot";
 export { BolsigInput, BolsigOutput } from "./io";
