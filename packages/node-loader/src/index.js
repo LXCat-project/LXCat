@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 const { interpolateName } = require("loader-utils");
 
 const schema = require("./options.json");

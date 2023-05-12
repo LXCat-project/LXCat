@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Group, Select, Stack } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { IntegerInput } from "./IntegerInput";

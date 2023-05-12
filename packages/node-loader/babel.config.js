@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 const MIN_BABEL_VERSION = 7;
 
 module.exports = (api) => {
