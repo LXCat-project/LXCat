@@ -1,0 +1,31 @@
+{
+  "name": "@lxcat/node-loader",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "main": "dist/cjs.js",
+  "scripts": {
+    "start": "pnpm build -- -w",
+    "clean": "del-cli dist",
+    "prebuild": "pnpm clean",
+    "build": "cross-env NODE_ENV=production babel src -d dist --copy-files",
+    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "webpack": "^5.0.0"
+  },
+  "dependencies": {
+    "loader-utils": "^2.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "cross-env": "^7.0.3",
+    "del": "^6.1.1",
+    "del-cli": "^3.0.1"
+  }
+}

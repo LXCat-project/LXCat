@@ -71,6 +71,7 @@ export async function byIds(ids: string[]) {
           FILTER cs._id == p._from
           FOR css IN CrossSectionSet
             FILTER p._to == css._id
+              FILTER css.versionInfo.status != 'draft'
               RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
     )
     LET references = MERGE(
@@ -94,14 +95,14 @@ export async function byIds(ids: string[]) {
               FILTER c._from == r._id
               FOR c2s IN State
                 FILTER c2s._id == c._to
-                RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
+                RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
           )
           LET produces = (
             FOR p IN Produces
               FILTER p._from == r._id
               FOR p2s IN State
                 FILTER p2s._id == p._to
-                RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
+                RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
           )
         RETURN MERGE(UNION(consumes, produces))
     )

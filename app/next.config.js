@@ -17,7 +17,7 @@ const nextConfig = {
         ...config.module.rules,
         {
           test: /\.node$/,
-          loader: "node-loader",
+          loader: "@lxcat/node-loader",
         },
       ];
     }

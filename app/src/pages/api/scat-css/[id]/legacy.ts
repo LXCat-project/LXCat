@@ -12,6 +12,7 @@ import {
 } from "../../../../auth/middleware";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
+import { mapObject } from "../../../../shared/utils";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)
@@ -22,11 +23,9 @@ const handler = nc<AuthRequest, NextApiResponse>()
     if (typeof id === "string") {
       const data = await byIdJSON(id);
       if (data) {
-        const references = Object.fromEntries(
-          Object.entries(data.references).map(([key, reference]) => {
-            const bib = reference2bibliography(reference);
-            return [key, bib];
-          }),
+        const references = mapObject(
+          data.references,
+          ([key, reference]) => [key, reference2bibliography(reference)],
         );
 
         data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;

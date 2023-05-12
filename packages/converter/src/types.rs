@@ -26,6 +26,7 @@ pub struct Parameters {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Process {
     pub id: String,
     pub reaction: Reaction<String>,
@@ -35,11 +36,14 @@ pub struct Process {
     pub units: (String, String),
     pub threshold: f64,
     pub data: Vec<(f64, f64)>,
+    #[serde(default)]
+    pub is_part_of: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct State {
-    // pub id: String,
+    #[serde(default)]
+    pub id: Option<String>,
     pub particle: String,
     pub charge: i32,
 }
@@ -58,19 +62,19 @@ pub struct Document {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct Mixture {
+    pub sets: HashMap<String, SetHeader>,
+    pub processes: Vec<Process>,
+    pub states: HashMap<String, State>,
+    pub references: HashMap<String, String>,
+    pub url: String,
+    pub terms_of_use: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct SetHeader {
     pub name: String,
     pub description: String,
     pub complete: bool,
     pub organization: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct CSItem {
-    pub id: String,
-    pub is_part_of: Vec<SetHeader>,
-    pub parameters: Option<Parameters>,
-    pub threshold: f64,
-    pub reaction: Reaction<State>,
-    pub reference: Vec<String>,
 }

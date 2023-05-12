@@ -35,7 +35,7 @@ type CrossSectionBagItem = {
 } & Omit<CrossSection, "reaction" | "organization" | "versionInfo">;
 
 export type CrossSectionBag = {
-  states: Record<string, Omit<State, "id">>;
+  states: Record<string, State>;
   references: Record<string, Reference>;
   sets: Record<string, Omit<CrossSectionSet, "versionInfo">>;
   processes: CrossSectionBagItem[];
