@@ -10,9 +10,9 @@ import {
   AuthRequest,
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../../auth/middleware";
-import { idsSchema } from "../../../ScatteringCrossSection/bag";
-import { applyCORS } from "../../../shared/cors";
+} from "../../../../auth/middleware";
+import { idsSchema } from "../../../../ScatteringCrossSection/bag";
+import { applyCORS } from "../../../../shared/cors";
 
 const handler = nc<AuthRequest, NextApiResponse>()
   .use(applyCORS)

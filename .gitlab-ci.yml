@@ -20,7 +20,8 @@ build-dev:
     - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
     - source "$HOME/.cargo/env"
     # Install pnpm
-    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     - pnpm install
@@ -47,7 +48,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: mcr.microsoft.com/playwright:v1.27.1-focal
+  image: mcr.microsoft.com/playwright:v1.32.1-jammy
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
@@ -68,7 +69,8 @@ test-app:
       - .pnpm-store
   before_script:
     # Install pnpm
-    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     # - npm ci --cache .npm --prefer-offline
@@ -118,7 +120,8 @@ test-database:
     DOCKER_DRIVER: overlay2
   before_script:
     # Install pnpm
-    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     # - npm ci --cache .npm --prefer-offline
@@ -149,7 +152,8 @@ test-schema:
   image: node:18-bullseye
   before_script:
     # Install pnpm
-    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     # - npm ci --cache .npm --prefer-offline
@@ -180,7 +184,8 @@ test-converter:
   image: node:18-bullseye
   before_script:
     # Install pnpm
-    - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
     # - npm ci --cache .npm --prefer-offline

@@ -1,13 +1,11 @@
-************************************************************************************************************************
-
-COMMENT: An example cross section set.
+PERMLINK:     https://ng.lxcat.net/scat-css/test-id
+TERMS OF USE: https://ng.lxcat.net/scat-css/test-id#terms_of_use
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-PERMLINK:         https://ng.lxcat.net/scat-css/test-id
-TERMS OF USE:     https://ng.lxcat.net/scat-css/test-id#terms_of_use
+DATABASE:         test
+DESCRIPTION:      An example cross section set.
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-************************************************************************************************************************
 
 EFFECTIVE
 Ar{1S0}
@@ -18,9 +16,9 @@ PARAM.:  m/M = 0.0000136, complete set
 COMMENT: Test reference
 COLUMNS: Energy (eV) | Cross section (m^2)
 -----------------------------
- +0.000000e0	1.000000e-21
- +1.000000e0	2.000000e-21
- +2.000000e0	3.000000e-21
+ 0.000000e0	1.000000e-21
+ 1.000000e0	2.000000e-21
+ 2.000000e0	3.000000e-21
 -----------------------------
 
 EXCITATION
@@ -32,9 +30,9 @@ PARAM.:  E = 5 eV, complete set
 COMMENT: Test reference
 COLUMNS: Energy (eV) | Cross section (m^2)
 -----------------------------
- +0.000000e0	0.000000e0
- +5.000000e0	2.000000e-21
- +1.000000e1	3.000000e-21
+ 0.000000e0	0.000000e0
+ 5.000000e0	2.000000e-21
+ 1.000000e1	3.000000e-21
 -----------------------------
 
 IONIZATION
@@ -46,8 +44,8 @@ PARAM.:  E = 10 eV, complete set
 COMMENT: Test reference
 COLUMNS: Energy (eV) | Cross section (m^2)
 -----------------------------
- +0.000000e0	0.000000e0
- +1.000000e1	2.000000e-21
- +2.000000e1	3.000000e-21
+ 0.000000e0	0.000000e0
+ 1.000000e1	2.000000e-21
+ 2.000000e1	3.000000e-21
 -----------------------------
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

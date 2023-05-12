@@ -15,8 +15,8 @@
     "addheader": "turbo run addheader"
   },
   "devDependencies": {
-    "turbo": "^1.8.3"
+    "turbo": "^1.9.0"
   },
-  "packageManager": "pnpm",
+  "packageManager": "pnpm@8.4.0",
   "version": "0.1.0"
 }

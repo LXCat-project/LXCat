@@ -8,9 +8,8 @@ import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import Script from "next/script";
 
-import { z } from "zod";
-import { BAG_SIZE } from "../../../ScatteringCrossSection/constants";
 import { reference2bibliography } from "../../../shared/cite";
+import { IdsSchema } from "../IdsSchema";
 import { Bag } from "./Bag";
 
 interface BagProps {
@@ -50,14 +49,6 @@ const ScatteringCrossSectionSelectionPage = async (
 export default ScatteringCrossSectionSelectionPage;
 export const dynamic = "force-dynamic";
 
-const idsSchema = z
-  .array(z.string())
-  .min(1)
-  .max(BAG_SIZE)
-  .refine((e) => new Set(e).size === e.length, {
-    message: "Array should have unique elements",
-  });
-
 const fetchProps = async (
   rawIds: string | Array<string>,
 ): Promise<BagProps> => {
@@ -65,7 +56,7 @@ const fetchProps = async (
     rawIds = rawIds.split(",");
   }
 
-  const ids = idsSchema.parse(rawIds);
+  const ids = IdsSchema.parse(rawIds);
   const bag = await byIds(ids);
   const hasCompleteSet = Object.values(bag.sets).some((s) => s.complete);
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);

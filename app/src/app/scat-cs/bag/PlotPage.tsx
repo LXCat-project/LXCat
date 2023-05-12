@@ -17,8 +17,14 @@ import {
   Loader,
   Stack,
 } from "@mantine/core";
-import { IconAlertCircle, IconCodeDots, IconFileText } from "@tabler/icons";
+import {
+  IconAlertCircle,
+  IconCalculator,
+  IconCodeDots,
+  IconFileText,
+} from "@tabler/icons";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
 import { Latex } from "../../../shared/Latex";
@@ -57,6 +63,8 @@ export const PlotPage = (
     permaLink: string;
   },
 ) => {
+  const router = useRouter();
+
   // TODO: Map a selected process to an available color instead of a fixed color.
   const [selected, setSelected] = useState(
     new Set<string>(
@@ -120,11 +128,9 @@ export const PlotPage = (
                     link: `/api/scat-cs/bag?ids=${idsString}`,
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
-                    // TODO: Add option to download Bolsig+ format for arbitrary selections.
                     text: "Plaintext",
-                    link: "",
+                    link: `/api/scat-cs/bag/legacy?ids=${idsString}`,
                     icon: <IconFileText stroke={1.5} />,
-                    disabled: true,
                   }]}
                 >
                   Download data
@@ -132,6 +138,14 @@ export const PlotPage = (
                 <ButtonClipboard link={permaLink}>
                   Copy permalink
                 </ButtonClipboard>
+                <Button
+                  size="md"
+                  rightIcon={<IconCalculator size="1.2rem" stroke={1.5} />}
+                  onClick={() =>
+                    router.push(`/scat-cs/compute?ids=${idsString}`)}
+                >
+                  Compute
+                </Button>
               </Button.Group>
             </Center>
           </Stack>

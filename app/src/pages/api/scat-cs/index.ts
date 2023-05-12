@@ -61,6 +61,7 @@ const handler = nc<AuthRequest, NextApiResponse>().get(async (req, res) => {
 
   const csIds = new Set(csIdsNested.flat());
   const csHeadings = await getCSHeadings(Array.from(csIds), {
+    // FIXME: This is a magic value, maybe use PAGE_SIZE?
     count: 100,
     offset,
   });
