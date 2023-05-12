@@ -48,7 +48,7 @@ test-app:
   stage: test
   dependencies:
     - build-dev
-  image: mcr.microsoft.com/playwright:v1.27.1-focal
+  image: mcr.microsoft.com/playwright:v1.32.1-jammy
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
     - name: docker:20.10.16-dind
