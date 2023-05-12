@@ -45,16 +45,19 @@ describe("given 4 published cross sections in 2 sets", () => {
         states: {
           "528": {
             charge: 0,
+            id: "A",
             latex: "\\mathrm{A}",
             particle: "A",
           },
           "531": {
             charge: 1,
+            id: "B^+",
             latex: "\\mathrm{B^+}",
             particle: "B",
           },
           "534": {
             charge: 2,
+            id: "C^2+",
             latex: "\\mathrm{C^{2+}}",
             particle: "C",
           },
@@ -220,11 +223,13 @@ describe("given 4 published cross sections in 2 sets", () => {
         states: {
           "524": {
             charge: 0,
+            id: "A",
             latex: "\\mathrm{A}",
             particle: "A",
           },
           "527": {
             charge: 1,
+            id: "B^+",
             latex: "\\mathrm{B^+}",
             particle: "B",
           },
