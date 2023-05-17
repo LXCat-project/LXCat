@@ -35,7 +35,7 @@ function parse_e_le_latex(e: PUE<LinearElectronicImpl>): string {
     ref_s = "^" + e.reflection;
   }
 
-  return `${e.e}^{${2 * e.S + 1}}${molecular_orbital_latex[e.Lambda]}${ref_s}`;
+  return `\\mathrm{${e.e}}^{${2 * e.S + 1}}${molecular_orbital_latex[e.Lambda]}${ref_s}`;
 }
 
 export const linearElectronicParser: ComponentParser<
