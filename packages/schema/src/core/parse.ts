@@ -230,8 +230,9 @@ function parseSimpleParticle(
 // library). HOW: Add parsers as a function argument and move this to e.g.
 // library/core/parse.ts.
 export function parseState<
-  Input extends AtomicGenerator<unknown, string>,
-  Output extends AtomicDBGenerator<unknown, string>,
+  Input extends AtomicGenerator<unknown, S>,
+  Output extends AtomicDBGenerator<unknown, S>,
+  S extends keyof AtomParserDict<AnyAtom>,
 >(state: State<Input>): DBState<Output>;
 export function parseState<
   Input extends MolecularGenerator<unknown, unknown, unknown, string>,
@@ -245,7 +246,7 @@ export function parseState<
     // properties that are passed to `NOT` in `State`.
     return parseSimpleParticle(state) as DBState<Output>;
   } else if (state.type in atomParsers) {
-    return parseAtom(state as State<AnyAtom>);
+    return parseAtom(state);
   } else {
     return parseMolecule(state as State<AnyMolecule>);
   }

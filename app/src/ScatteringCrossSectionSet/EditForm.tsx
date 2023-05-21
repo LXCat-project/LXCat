@@ -41,9 +41,9 @@ import {
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
+import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
+import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
 import { parseState } from "@lxcat/schema/dist/core/parse";
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 import { InState } from "@lxcat/schema/dist/core/state";
@@ -2410,7 +2410,7 @@ export const EditForm = ({
   // States
   const [expandedStates, setExpandedStates] = useState<string[]>([]);
   const states = useWatch({ name: "set.states", control });
-  const setStates = (newStates: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>) =>
+  const setStates = (newStates: Dict<InState<AnyAtom | AnyMolecule>>) =>
     setValue("set.states", newStates);
   const addState = () => {
     const newLabel = `s${Object.keys(states).length}`;
@@ -2701,7 +2701,7 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
   return newSet;
 }
 
-function pruneState(state: InState<AnyAtomJSON | AnyMoleculeJSON>) {
+function pruneState(state: InState<AnyAtom | AnyMolecule>) {
   const newState = { ...state }; // TODO make better clone
   if (newState.electronic) {
     newState.electronic.forEach((e: any) => {
@@ -2755,7 +2755,7 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
 // TODO move utility functions to own file and reuse else where
 
 function mapStateToReaction(
-  states: Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>,
+  states: Dict<InState<AnyAtom | AnyMolecule>>,
   reaction: Reaction<string>,
 ): Reaction<State> {
   const newReaction = {

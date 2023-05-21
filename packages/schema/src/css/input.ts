@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AnyAtomJSON } from "../core/atoms";
+import { AnyAtom } from "../core/atoms";
 import { InputDocument } from "../core/document";
-import { AnyMoleculeJSON } from "../core/molecules";
+import { AnyMolecule } from "../core/molecules";
 import { CrossSection } from "../cs/cs";
 
 /**
@@ -23,6 +23,4 @@ export type CrossSectionInput<StateType> =
 /**
  * To add a cross section set to the LXCat application, the set should be valid against this schema.
  */
-export type CrossSectionSetRaw = CrossSectionInput<
-  AnyAtomJSON | AnyMoleculeJSON
->;
+export type CrossSectionSetRaw = CrossSectionInput<AnyAtom | AnyMolecule>;
