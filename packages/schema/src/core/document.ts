@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Reference } from "./reference";
-import { InState } from "./state";
+import { State } from "./state";
 import { Dict } from "./util";
 
-export interface SelfReference {
+export type SelfReference = {
   // TODO add @format uri, do later as it causes failure in
   // form resolver in /app/src/ScatteringCrossSectionSet/EditForm.tsx
   // , because the used ajvResolver does not include
@@ -30,9 +30,9 @@ export interface SelfReference {
    * @minLength 1
    */
   terms_of_use?: string;
-}
+};
 
-export interface InputDocument<StateType, ProcessType> extends SelfReference {
+export type SetHeader = {
   /**
    * @minLength 1
    */
@@ -51,13 +51,25 @@ export interface InputDocument<StateType, ProcessType> extends SelfReference {
    * A description of this dataset.
    */
   description: string;
-  // TODO for validation the keys should be unique and the values as well
-  references: Dict<Reference>;
-  // TODO for validation the keys should be unique and the values as well
-  states: Dict<InState<StateType>>;
-  /**
-   * @minItems 1
-   * @uniqueItems true
-   */
-  processes: Array<ProcessType>;
-}
+};
+
+/**
+ * @internal
+ */
+export type InputDocument<StateType, ProcessType> =
+  & SelfReference
+  & SetHeader
+  & {
+    // cite: Reference; // Should only be in output.
+    // Disabled this field as its use is currently unclear.
+    // publication?: Reference; // Should this field instead hold a key into 'references'?
+    // TODO for validation the keys should be unique and the values as well
+    references: Dict<Reference>;
+    // TODO for validation the keys should be unique and the values as well
+    states: Dict<State<StateType>>;
+    /**
+     * @minItems 1
+     * @uniqueItems true
+     */
+    processes: Array<ProcessType>;
+  };
