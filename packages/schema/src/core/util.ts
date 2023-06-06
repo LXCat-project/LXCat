@@ -2,23 +2,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * @internal
+ */
 export type Pair<T> = [T, T];
 
+/**
+ * @internal
+ */
 export interface Dict<ValueType> {
   [id: string]: ValueType;
 }
 
 export type NOT<T extends number | string | symbol> = { [key in T]?: never };
 
-export type Without<T, U> = {
-  [P in Exclude<keyof T, keyof U>]?: never;
-};
-
-// FIXME: This crashes with ts-json-schema-generator
-export type ToUnion<T extends Array<unknown>> = T extends Array<infer E> ? E
-  : never;
-
-export type Concat<A extends Array<unknown>, B extends Array<unknown>> = [
-  ...A,
-  ...B,
-];
+/**
+ * @internal
+ */
+export type OneOrMultiple<Element> =
+  | Element
+  | [Element, Element, ...Array<Element>];

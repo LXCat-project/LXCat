@@ -56,6 +56,8 @@ export type AtomicGenericGenerator<
 
 // Generators to be used for input types.
 /**
+ * @internal
+ *
  * Atomic generator type used to generate the correct structure of atomic state types on input.
  * @template E Type of the electronic component.
  * @template A The string identifier of the generated atomic type.
@@ -103,6 +105,8 @@ type Children<T, K extends string> = {
  * @template SE The name of the property storing the top level of (electronic) components.
  * @template SV The name of the property storing the second level of (vibrational) components.
  * @template SR The name of the property storing the third level of (rotational) components.
+ *
+ * @internal
  */
 export type MolecularGenericGenerator<
   E,
@@ -114,6 +118,9 @@ export type MolecularGenericGenerator<
   SR extends string = "rotational",
 > = Children<ElectronicLevel<E, V, R, AT, SV, SR>, SE>;
 
+/**
+ * @internal
+ */
 export type ElectronicLevel<
   E,
   V,
@@ -123,10 +130,16 @@ export type ElectronicLevel<
   SR extends string,
 > = AT & (UE<E, SV> | (E & Children<VibrationalLevel<V, R, AT, SR>, SV>));
 
+/**
+ * @internal
+ */
 type VibrationalLevel<V, R, AT, SR extends string> =
   & AT
   & (UV<V, SR> | (V & Children<RotationalLevel<R, AT>, SR>));
 
+/**
+ * @internal
+ */
 type RotationalLevel<R, AT> = AT & (UR<R> | R);
 
 export type UnknownMolecule =

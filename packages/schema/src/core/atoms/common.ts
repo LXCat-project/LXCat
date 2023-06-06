@@ -9,6 +9,9 @@ export interface TotalAngularSpecifier {
   J: number;
 }
 
+/**
+ * @internal
+ */
 export interface ConfigTerm<
   S extends CouplingScheme,
   T,
@@ -19,6 +22,9 @@ export interface ConfigTerm<
   term: T;
 }
 
+/**
+ * @internal
+ */
 export interface TwoTermConfig<C, E> {
   core: C;
   excited: E;
