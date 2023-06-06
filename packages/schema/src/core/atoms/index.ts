@@ -16,4 +16,7 @@ import { AtomLS1 } from "./ls1";
 // FIXME: LS coupled states should either have 0 entries or >=2 (one entry for
 // shell that provides the electron and one entry for the receiving shell).
 
+/**
+ * @discriminator type
+ */
 export type AnyAtom = AtomLS | AtomJ1L2 | AtomLS1;
