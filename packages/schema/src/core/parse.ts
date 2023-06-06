@@ -246,7 +246,7 @@ export function parseState<
     // properties that are passed to `NOT` in `State`.
     return parseSimpleParticle(state) as DBState<Output>;
   } else if (state.type in atomParsers) {
-    return parseAtom(state);
+    return parseAtom(state as State<AnyAtom>);
   } else {
     return parseMolecule(state as State<AnyMolecule>);
   }
