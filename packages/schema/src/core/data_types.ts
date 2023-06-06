@@ -13,12 +13,12 @@ type FilledString = string;
 /**
  * Lookup table type: an array of number pairs.
  */
-export interface LUT {
+export type LUT = {
   type: Storage.LUT;
   labels: Pair<FilledString>;
   units: Pair<FilledString>;
   /**
    * @minItems 1
    */
-  data: Array<Pair<number>>;
-}
+  values: Array<Pair<number>>;
+};
