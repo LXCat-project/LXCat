@@ -4,6 +4,7 @@
 
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { createSet } from "@lxcat/database/dist/css/queries/author_write";
+import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
 import nc from "next-connect";
@@ -23,9 +24,22 @@ const handler = nc<AuthRequest, NextApiResponse>()
         body = JSON.parse(body);
       }
       if (validator.validate(body)) {
-        // Add to CrossSectionSet with status=='draft' and version=='1'
-        const id = await createSet(body, "draft");
-        res.json({ id });
+        const affiliations = await getAffiliations(req.user.email);
+        if (affiliations.includes(body.contributor)) {
+          // Add to CrossSectionSet with status=='draft' and version=='1'
+          const id = await createSet(body, "draft");
+          res.json({ id });
+        } else {
+          res.statusCode = 403;
+          res.json({
+            errors: [
+              {
+                message:
+                  `You are not a member of the ${body.contributor} organization.`,
+              },
+            ],
+          });
+        }
       } else {
         const errors = validator.errors;
         res.statusCode = 500;
