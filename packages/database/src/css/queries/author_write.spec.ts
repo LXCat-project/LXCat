@@ -219,11 +219,12 @@ describe("given filled ArangoDB container", () => {
     let css1: CrossSectionSetInputOwned;
 
     beforeAll(async () => {
+      // NOTE: We do not clear the container so this set needs a different name.
       keycss1 = await createSet(
         {
           complete: true,
           contributor: "Some organization",
-          name: "Some versioned name",
+          name: "Some other versioned name",
           description: "Some description",
           references: {
             ref1: {
@@ -352,5 +353,38 @@ describe("given filled ArangoDB container", () => {
         expect(keycss2).not.toEqual(keycss1);
       });
     });
+  });
+
+  it("insertion should fail given a duplicate set", async () => {
+    await createSet(
+      {
+        complete: true,
+        contributor: "Some organization",
+        name: "Some duplicated name",
+        description: "Some description",
+        references: {},
+        states: {},
+        processes: [],
+      },
+      "draft",
+      "1",
+      "Initial version",
+    );
+    expect(
+      createSet(
+        {
+          complete: true,
+          contributor: "Some organization",
+          name: "Some duplicated name",
+          description: "Some description",
+          references: {},
+          states: {},
+          processes: [],
+        },
+        "draft",
+        "1",
+        "Initial version",
+      ),
+    ).rejects.toThrowError();
   });
 });
