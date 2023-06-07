@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database/src/db";
+import { upsertOrganization } from "@lxcat/database/src/shared/queries/organization";
 import { startDbContainer } from "@lxcat/database/src/testutils";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
@@ -130,15 +131,8 @@ export async function uploadAndPublishDummySet(
   org = "Some organization",
 ) {
   const page = await browser.newPage();
-  // Add a set
-  await page.goto("/author/scat-css/addraw");
-  const dummySet = await readFile(
-    `../packages/database/seeds/test/crosssections/${file}`,
-    { encoding: "utf8" },
-  );
-  await page.locator("textarea").fill(dummySet);
-  await page.locator("text=Upload cross section set").click();
-  await page.waitForSelector("span:has-text(\"Upload successful\")");
+
+  await upsertOrganization(org);
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
@@ -148,6 +142,16 @@ export async function uploadAndPublishDummySet(
   });
   await page.locator(`text=${org}`).click();
   await page.waitForSelector(`div:has-text("${org}")`);
+
+  // Add a set
+  await page.goto("/author/scat-css/addraw");
+  const dummySet = await readFile(
+    `../packages/database/seeds/test/crosssections/${file}`,
+    { encoding: "utf8" },
+  );
+  await page.locator("textarea").fill(dummySet);
+  await page.locator("text=Upload cross section set").click();
+  await page.waitForSelector("span:has-text(\"Upload successful\")");
 
   // Publish set
   await page.goto("/author/scat-css");
