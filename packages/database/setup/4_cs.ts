@@ -35,6 +35,11 @@ async function createCrossSectionSetCollection() {
       type: "persistent",
       fields: ["versionInfo.status"],
     }),
+    collection.ensureIndex({
+      type: "persistent",
+      fields: ["organization", "name", "versionInfo.version"],
+      unique: true,
+    }),
   ]);
   console.log("CrossSectionSet collection created");
 }
