@@ -25,6 +25,7 @@ export enum ReactionTypeTag {
 export enum Storage {
   Constant = "Constant",
   LUT = "LUT",
+  Expression = "Expression",
   HardSphere = "HardSphere",
   ESMSV = "ESMSV",
   LennardJonesLaricchiuta = "LennardJonesLaricchiuta",
