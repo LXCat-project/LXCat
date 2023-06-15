@@ -63,17 +63,21 @@ export const UserPanel = (
         <Space h="md" />
         {(roles && roles.includes(Role.enum.admin)) && (
           <>
-            <NavLink icon=<IconUsersGroup /> label="Admin" childrenOffset={28}>
+            <NavLink
+              icon=<IconUsersGroup size="1.3rem" />
+              label="Admin"
+              childrenOffset={28}
+            >
               <NavLink
                 component="a"
                 href="/admin/users"
-                icon=<IconUser />
+                icon=<IconUser size="1.3rem" />
                 label="Manage users"
               />
               <NavLink
                 component="a"
                 href="/admin/organizations"
-                icon=<IconUsers />
+                icon=<IconUsers size="1.3rem" />
                 label="Manage organizations"
               />
             </NavLink>
@@ -81,11 +85,15 @@ export const UserPanel = (
         )}
         {(roles && roles.includes(Role.enum.author)) && (
           <>
-            <NavLink icon=<IconFileUpload /> label="Author" childrenOffset={28}>
+            <NavLink
+              icon=<IconFileUpload size="1.3rem" />
+              label="Author"
+              childrenOffset={28}
+            >
               <NavLink
                 component="a"
                 href="/author/scat-css"
-                icon=<IconEdit />
+                icon=<IconEdit size="1.3rem" />
                 label="Manage cross section sets"
               />
             </NavLink>
@@ -94,14 +102,14 @@ export const UserPanel = (
         {(roles && roles.includes(Role.enum.developer)) && (
           <>
             <NavLink
-              icon=<IconTerminal2 />
+              icon=<IconTerminal2 size="1.3rem" />
               label="Developer"
               childrenOffset={28}
             >
               <NavLink
                 component="a"
                 href="/developer"
-                icon=<IconApi />
+                icon=<IconApi size="1.3rem" />
                 label="Generate API token"
               />
             </NavLink>
