@@ -1,7 +1,7 @@
 "use client";
 
 import { Role } from "@lxcat/database/dist/auth/schema";
-import { Card, Drawer, NavLink, Space } from "@mantine/core";
+import { Button, Card, Center, Drawer, NavLink, Space } from "@mantine/core";
 import {
   IconApi,
   IconEdit,
@@ -12,6 +12,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { UserInfoIcons } from "./UserInfo";
 
 export const UserPanel = (
@@ -84,6 +85,10 @@ export const UserPanel = (
             </NavLink>
           </>
         )}
+        <Space h="md" />
+        <Center>
+          <Button variant="outline" onClick={() => signOut()}>Sign out</Button>
+        </Center>
       </Card>
     </Drawer>
   );
