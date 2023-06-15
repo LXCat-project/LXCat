@@ -5,14 +5,14 @@
 import { toggleRole } from "@lxcat/database/dist/auth/queries";
 import { Role } from "@lxcat/database/dist/auth/schema";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasAdminRole,
   hasSession,
 } from "../../../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSession)
   .use(hasAdminRole)
   .post(async (req, res) => {
@@ -21,6 +21,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       const user = await toggleRole(userId, Role.parse(role));
       return res.json(user);
     }
-  });
+  })
+  .handler();
 
 export default handler;

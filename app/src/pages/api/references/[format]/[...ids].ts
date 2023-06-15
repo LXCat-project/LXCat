@@ -7,7 +7,7 @@ import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 import { getReferences } from "@lxcat/database/dist/shared/queries/reference";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import { z, ZodError } from "zod";
 import {
   AuthRequest,
@@ -26,8 +26,10 @@ const schema = z.object(
   },
 );
 
-const handler = nc<AuthRequest, NextApiResponse>().use(hasSessionOrAPIToken)
-  .use(hasDeveloperOrDownloadRole).get(async (req, res) => {
+const handler = createRouter<AuthRequest, NextApiResponse>()
+  .use(hasSessionOrAPIToken)
+  .use(hasDeveloperOrDownloadRole)
+  .get(async (req, res) => {
     try {
       const { format, ids } = schema.parse(req.query);
 
@@ -57,6 +59,7 @@ const handler = nc<AuthRequest, NextApiResponse>().use(hasSessionOrAPIToken)
 
       res.status(404).end("Unknown error, please contact the maintainers.");
     }
-  });
+  })
+  .handler();
 
 export default handler;

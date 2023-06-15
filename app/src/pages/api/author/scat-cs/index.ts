@@ -4,7 +4,7 @@
 
 import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 
 import {
   AuthRequest,
@@ -13,7 +13,7 @@ import {
 } from "../../../../auth/middleware";
 import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasAuthorRole)
   .get(async (req, res) => {
@@ -31,6 +31,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const results = await searchOwned(me.email, selection, paging);
     console.log(results);
     res.json(results);
-  });
+  })
+  .handler();
 
 export default handler;

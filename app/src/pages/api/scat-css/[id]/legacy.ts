@@ -4,7 +4,7 @@
 
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperOrDownloadRole,
@@ -14,7 +14,7 @@ import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 import { mapObject } from "../../../../shared/utils";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(applyCORS)
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperOrDownloadRole)
@@ -43,6 +43,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         res.status(404).end("Not found");
       }
     }
-  });
+  })
+  .handler();
 
 export default handler;

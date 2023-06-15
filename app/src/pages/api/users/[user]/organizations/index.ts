@@ -4,7 +4,7 @@
 
 import { makeMemberless, setMembers } from "@lxcat/database/dist/auth/queries";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import { z } from "zod";
 
 import {
@@ -13,7 +13,7 @@ import {
   hasSession,
 } from "../../../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSession)
   .use(hasAdminRole)
   .post(async (req, res) => {
@@ -31,6 +31,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       await makeMemberless(userKey);
       res.status(204).send("");
     }
-  });
+  })
+  .handler();
 
 export default handler;

@@ -4,14 +4,14 @@
 
 import { byId } from "@lxcat/database/dist/cs/queries/public";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperOrDownloadRole)
   .get(async (req, res) => {
@@ -28,6 +28,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       res.json(data);
     }
     throw Error("Unable to handle request");
-  });
+  })
+  .handler();
 
 export default handler;
