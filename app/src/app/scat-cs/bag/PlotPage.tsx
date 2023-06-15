@@ -22,7 +22,7 @@ import {
   IconCalculator,
   IconCodeDots,
   IconFileText,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

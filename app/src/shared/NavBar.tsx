@@ -13,7 +13,7 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { IconDatabase, IconFileText, IconUsers } from "@tabler/icons";
+import { IconDatabase, IconFileText, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 import { UserAnchor } from "../auth/UserAnchor";
 import { LXCatLogo } from "./Logo";

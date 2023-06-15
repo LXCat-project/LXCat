@@ -6,7 +6,7 @@
 
 import { Button, rem, Tooltip } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
-import { IconCheck, IconCopy } from "@tabler/icons";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 export const ButtonClipboard = (
   { children, link }: { children: React.ReactNode; link: string },

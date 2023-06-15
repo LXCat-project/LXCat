@@ -14,28 +14,6 @@ test.afterAll(async () => {
   await truncateNonUserCollections();
 });
 
-test.describe("/profile", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/profile");
-  });
-
-  test("should have link to admin tasks", async ({ page }) => {
-    const link = page.locator("text=Perform developer tasks");
-    await expect(link).toBeVisible();
-  });
-
-  test("should have link to author tasks", async ({ page }) => {
-    const link = page.locator("text=Perform author tasks");
-    await expect(link).toBeVisible();
-  });
-
-  test("should have link to developer tasks", async ({ page }) => {
-    const link = page.locator("text=Perform developer tasks");
-    await expect(link).toBeVisible();
-  });
-});
-
-// TODO should scat-css tests be here or in their own file?
 test("/api/author/scat-css", async ({ request }) => {
   const headers = {
     Accept: "application/json",

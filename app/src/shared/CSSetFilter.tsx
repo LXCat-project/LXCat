@@ -4,7 +4,7 @@
 
 import { CSSetTree } from "@lxcat/database/dist/cs/picker/types";
 import { Box, Checkbox, Group, Space, Stack } from "@mantine/core";
-import { IconChevronDown, IconChevronRight } from "@tabler/icons";
+import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
 export type CSSetSelection = Set<string>;
 

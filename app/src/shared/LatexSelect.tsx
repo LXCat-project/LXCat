@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Group, Menu } from "@mantine/core";
-import { IconSelector, IconX } from "@tabler/icons";
+import { IconSelector, IconX } from "@tabler/icons-react";
 
 import React from "react";
 
