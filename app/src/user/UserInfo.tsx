@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Avatar, createStyles, Group, Text } from "@mantine/core";
 import { IconAt, IconId } from "@tabler/icons-react";
 
@@ -19,6 +23,11 @@ interface UserInfoIconsProps {
   orcid?: string;
   email?: string;
 }
+
+// TODO: Make email and orcid links?
+// const orcidURL = process.env.ORCID_SANDBOX
+//   ? `https://sandbox.orcid.org/${session.user.orcid}`
+//   : `https://orcid.org/${session.user.orcid}`;
 
 export function UserInfoIcons(
   { avatar, name, orcid, email }: UserInfoIconsProps,
