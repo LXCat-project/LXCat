@@ -1,7 +1,15 @@
 "use client";
 
 import { Role } from "@lxcat/database/dist/auth/schema";
-import { Button, Card, Center, Drawer, NavLink, Space } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Center,
+  createStyles,
+  Drawer,
+  NavLink,
+  Space,
+} from "@mantine/core";
 import {
   IconApi,
   IconEdit,
@@ -15,6 +23,18 @@ import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { UserInfoIcons } from "./UserInfo";
 
+const useStyles = createStyles(() => ({
+  inner: {
+    marginTop: 59,
+    height: "100%",
+  },
+  overlay: {
+    marginTop: 59,
+    height: "100%",
+    width: "100%",
+  },
+}));
+
 export const UserPanel = (
   { session, open, onClose }: {
     session: Session;
@@ -23,6 +43,7 @@ export const UserPanel = (
   },
 ) => {
   const roles = session.user.roles;
+  const { classes } = useStyles();
 
   return (
     <Drawer
@@ -30,6 +51,7 @@ export const UserPanel = (
       onClose={onClose}
       position="right"
       size="sm"
+      classNames={{ ...classes }}
     >
       <Card withBorder>
         <UserInfoIcons
