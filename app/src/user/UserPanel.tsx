@@ -96,6 +96,12 @@ export const UserPanel = (
                 icon=<IconEdit size="1.3rem" />
                 label="Manage cross section sets"
               />
+              <NavLink
+                component="a"
+                href="/author/scat-cs"
+                icon=<IconEdit size="1.3rem" />
+                label="Manage cross sections"
+              />
             </NavLink>
           </>
         )}
