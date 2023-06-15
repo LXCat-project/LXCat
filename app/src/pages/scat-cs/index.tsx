@@ -32,7 +32,7 @@ import {
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { Button, Center, Space, Text } from "@mantine/core";
-import { IconGraph } from "@tabler/icons";
+import { IconGraph } from "@tabler/icons-react";
 import deepEqual from "deep-equal";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
