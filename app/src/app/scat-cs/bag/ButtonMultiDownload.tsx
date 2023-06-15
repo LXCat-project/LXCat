@@ -5,7 +5,7 @@
 "use client";
 
 import { Button, Menu } from "@mantine/core";
-import { IconDownload } from "@tabler/icons";
+import { IconDownload } from "@tabler/icons-react";
 import { LinkToggle } from "./LinkToggle";
 
 export const ButtonMultiDownload = (

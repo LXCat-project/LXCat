@@ -11,7 +11,7 @@ import {
   Group,
   UnstyledButton,
 } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons";
+import { IconChevronRight } from "@tabler/icons-react";
 import { slug } from "github-slugger";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";

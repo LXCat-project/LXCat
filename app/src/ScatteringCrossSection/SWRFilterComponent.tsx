@@ -11,7 +11,7 @@ import {
   Reversible,
 } from "@lxcat/database/dist/cs/picker/types";
 import { Box, Button, Group } from "@mantine/core";
-import { IconCopy, IconEye, IconPencil } from "@tabler/icons";
+import { IconCopy, IconEye, IconPencil } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { Latex } from "../shared/Latex";

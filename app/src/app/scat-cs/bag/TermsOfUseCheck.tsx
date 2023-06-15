@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button, Center, Modal } from "@mantine/core";
-import { IconLicense } from "@tabler/icons";
+import { IconLicense } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
 import { TermsOfUse } from "../../../shared/TermsOfUse";
