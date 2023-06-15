@@ -3,12 +3,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { RequestHandler } from "next-connect";
+import { RequestHandler } from "next-connect/dist/types/node";
+import { Nextable } from "next-connect/dist/types/types";
 import NextCors from "nextjs-cors";
 
-export const applyCORS: RequestHandler<
-  NextApiRequest,
-  NextApiResponse
+export const applyCORS: Nextable<
+  RequestHandler<
+    NextApiRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   await NextCors(req, res, {
     methods: ["GET", "HEAD"],
@@ -16,5 +19,5 @@ export const applyCORS: RequestHandler<
     optionsSuccessStatus: 200,
   });
 
-  next();
+  await next();
 };
