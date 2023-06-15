@@ -41,15 +41,30 @@ export const UserPanel = (
         {(roles && roles.includes(Role.enum.admin)) && (
           <>
             <NavLink icon=<IconUsersGroup /> label="Admin" childrenOffset={28}>
-              <NavLink icon=<IconUser /> label="Manage users" />
-              <NavLink icon=<IconUsers /> label="Manage organizations" />
+              <NavLink
+                component="a"
+                href="/admin/users"
+                icon=<IconUser />
+                label="Manage users"
+              />
+              <NavLink
+                component="a"
+                href="/admin/organizations"
+                icon=<IconUsers />
+                label="Manage organizations"
+              />
             </NavLink>
           </>
         )}
         {(roles && roles.includes(Role.enum.author)) && (
           <>
             <NavLink icon=<IconFileUpload /> label="Author" childrenOffset={28}>
-              <NavLink icon=<IconEdit /> label="Manage cross section sets" />
+              <NavLink
+                component="a"
+                href="/author/scat-css"
+                icon=<IconEdit />
+                label="Manage cross section sets"
+              />
             </NavLink>
           </>
         )}
@@ -60,7 +75,12 @@ export const UserPanel = (
               label="Developer"
               childrenOffset={28}
             >
-              <NavLink icon=<IconApi /> label="Generate API token" />
+              <NavLink
+                component="a"
+                href="/developer"
+                icon=<IconApi />
+                label="Generate API token"
+              />
             </NavLink>
           </>
         )}
