@@ -11,7 +11,8 @@ import {
 } from "next";
 import { getServerSession, Session } from "next-auth";
 import { decode } from "next-auth/jwt";
-import { RequestHandler } from "next-connect";
+import { RequestHandler } from "next-connect/dist/types/node";
+import { Nextable } from "next-connect/dist/types/types";
 import { ParsedUrlQuery } from "querystring";
 import { DOWNLOAD_COOKIE_NAME } from "../shared/download";
 import { options } from "./options";
@@ -29,14 +30,16 @@ export interface AuthRequest extends NextApiRequest {
  * API Middleware to check if request contains an authenticated session, a valid download token in cookie or valid API token.
  * Sets `user` property in `req` or returns 401.
  */
-export const hasSessionOrAPIToken: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasSessionOrAPIToken: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   const session = await getServerSession(req, res, options);
   if (session?.user) {
     req.user = session.user;
-    next();
+    await next();
     return;
   }
   if (DOWNLOAD_COOKIE_NAME in req.cookies) {
@@ -48,7 +51,7 @@ export const hasSessionOrAPIToken: RequestHandler<
         roles: session2.roles as Role[],
         email: session2.email as string,
       };
-      next();
+      await next();
       return;
     }
   }
@@ -61,7 +64,7 @@ export const hasSessionOrAPIToken: RequestHandler<
         roles: session1.roles as Role[],
         email: session1.email as string,
       };
-      next();
+      await next();
       return;
     }
   }
@@ -75,7 +78,9 @@ export const hasSessionOrAPIToken: RequestHandler<
  * API Middleware to check if request contains an authenticated session.
  * Sets `user` property in `req` or returns 401.
  */
-export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (
+export const hasSession: Nextable<
+  RequestHandler<AuthRequest, NextApiResponse>
+> = async (
   req,
   res,
   next,
@@ -83,7 +88,7 @@ export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (
   const session = await getServerSession(req, res, options);
   if (session?.user) {
     req.user = session.user;
-    next();
+    await next();
     return;
   }
   res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
@@ -93,13 +98,15 @@ export const hasSession: RequestHandler<AuthRequest, NextApiResponse> = async (
  * API Middleware to check if user has admin role.
  * Returns 403 when user does not have admin role.
  */
-export const hasAdminRole: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasAdminRole: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.admin)) {
-      next();
+      await next();
     } else {
       res.status(403).end("Forbidden");
     }
@@ -112,13 +119,15 @@ export const hasAdminRole: RequestHandler<
  * API Middleware to check if user has developer role.
  * Returns 403 when user does not have developer role.
  */
-export const hasDeveloperRole: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasDeveloperRole: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.developer)) {
-      next();
+      await next();
     } else {
       res.status(403).end("Forbidden");
     }
@@ -131,9 +140,11 @@ export const hasDeveloperRole: RequestHandler<
  * API Middleware to check if user has developer or download role.
  * Returns 403 when user does not have developer or download role.
  */
-export const hasDeveloperOrDownloadRole: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasDeveloperOrDownloadRole: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   if (req.user) {
     if (
@@ -141,7 +152,7 @@ export const hasDeveloperOrDownloadRole: RequestHandler<
       && (req.user.roles!.includes(Role.enum.developer)
         || req.user.roles!.includes(Role.enum.download))
     ) {
-      next();
+      await next();
     } else {
       res.status(403).end("Forbidden");
     }
@@ -154,15 +165,17 @@ export const hasDeveloperOrDownloadRole: RequestHandler<
  * API Middleware to check if user has author role.
  * Returns 403 when user does not have author role.
  */
-export const hasAuthorRole: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasAuthorRole: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   if (req.user) {
     if (
       req.user.roles !== undefined && req.user.roles!.includes(Role.enum.author)
     ) {
-      next();
+      await next();
     } else {
       res.status(403).end("Forbidden");
     }
@@ -175,16 +188,18 @@ export const hasAuthorRole: RequestHandler<
  * API Middleware to check if user has publisher role.
  * Returns 403 when user does not have publisher role.
  */
-export const hasPublisherRole: RequestHandler<
-  AuthRequest,
-  NextApiResponse
+export const hasPublisherRole: Nextable<
+  RequestHandler<
+    AuthRequest,
+    NextApiResponse
+  >
 > = async (req, res, next) => {
   if (req.user) {
     if (
       req.user.roles !== undefined
       && req.user.roles.includes(Role.enum.publisher)
     ) {
-      next();
+      await next();
     } else {
       res.status(403).end("Forbidden");
     }
