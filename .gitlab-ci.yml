@@ -79,15 +79,12 @@ test-app:
     - pnpm -C app test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit-unit.xml
     # - npx playwright install chromium
     - PLAYWRIGHT_JUNIT_OUTPUT_NAME=junit-e2e.xml pnpm -C app test:e2e --reporter=junit
-    - pnpm -C app build-storybook
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: app/coverage/cobertura-coverage.xml
       junit: [app/junit-e2e.xml, app/junit-unit.xml]
-    paths:
-      - app/storybook-static/
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
