@@ -32,7 +32,7 @@
     "collectionschema:CrossSection": "ts-json-schema-generator -f ./tsconfig.json --path src/cs/collections.ts --type CrossSection --out src/cs/schemas/CrossSection.schema.json -e none --no-top-ref",
     "collectionschema:CrossSectionSet": "ts-json-schema-generator -f ./tsconfig.json --path src/css/collections.ts --type CrossSectionSet --out src/css/schemas/CrossSectionSet.schema.json -e none --no-top-ref",
     "collectionschema": "pnpm collectionschema:shared && pnpm collectionschema:cs",
-    "addheader": "reuse addheader --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src setup"
+    "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src setup"
   },
   "dependencies": {
     "@lxcat/schema": "workspace:^",

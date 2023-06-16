@@ -11,7 +11,7 @@
     "format": "dprint fmt",
     "test": "vitest",
     "dev": "tsc --watch",
-    "addheader": "reuse addheader --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
+    "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
     "prepublishOnly": "pnpm build",
     "clean": "rm -rf dist"
   },

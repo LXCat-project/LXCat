@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "start": "turbo run start",
     "test": "turbo run test",
-    "addheader": "turbo run addheader"
+    "annotate": "turbo run annotate"
   },
   "devDependencies": {
     "turbo": "^1.10.3"
