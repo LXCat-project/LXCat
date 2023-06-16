@@ -52,10 +52,10 @@ describe("Selecting individual cross sections", () => {
     describe("without selection", () => {
       it("should consume e, Ar, H2, and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
           { children: [], latex: "\\mathrm{H2}", valid: true },
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{Ar}", valid: true },
-          { children: [], latex: "\\mathrm{e}", valid: true },
           {
             children: [
               {
@@ -75,10 +75,10 @@ describe("Selecting individual cross sections", () => {
 
       it("should produce e, Ar^+, H2, and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
           { children: [], latex: "\\mathrm{H2}", valid: true },
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{Ar^+}", valid: true },
-          { children: [], latex: "\\mathrm{e}", valid: true },
           {
             children: [
               {
@@ -133,10 +133,10 @@ describe("Selecting individual cross sections", () => {
 
       it("first select has all consumable states", () => {
         const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
           { children: [], latex: "\\mathrm{H2}", valid: true },
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{Ar}", valid: true },
-          { children: [], latex: "\\mathrm{e}", valid: true },
           {
             children: [
               {
@@ -165,8 +165,8 @@ describe("Selecting individual cross sections", () => {
 
       it("can produce e and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
-          { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{e}", valid: true },
+          { children: [], latex: "\\mathrm{N2}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
           expected,
@@ -210,8 +210,8 @@ describe("Selecting individual cross sections", () => {
 
       it("can consume e and Ar", () => {
         const expected: ReadonlyArray<NestedState> = [
-          { children: [], latex: "\\mathrm{Ar}", valid: true },
           { children: [], latex: "\\mathrm{e}", valid: true },
+          { children: [], latex: "\\mathrm{Ar}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.consumes[0])).toEqual(
           expected,
@@ -220,10 +220,10 @@ describe("Selecting individual cross sections", () => {
 
       it("first select has all producable states", () => {
         const expected: ReadonlyArray<NestedState> = [
+          { children: [], latex: "\\mathrm{e}", valid: true },
           { children: [], latex: "\\mathrm{H2}", valid: true },
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{Ar^+}", valid: true },
-          { children: [], latex: "\\mathrm{e}", valid: true },
           {
             children: [{ children: [], latex: "*", valid: true }],
             latex: "\\mathrm{He}",
@@ -276,8 +276,8 @@ describe("Selecting individual cross sections", () => {
 
       it("should consume e and Ar", () => {
         const expected: ReadonlyArray<StateSummary> = [
-          { children: {}, latex: "\\mathrm{Ar}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected,
@@ -286,8 +286,8 @@ describe("Selecting individual cross sections", () => {
 
       it("should produce e and Ar^+", () => {
         const expected: ReadonlyArray<StateSummary> = [
-          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected,
@@ -332,8 +332,8 @@ describe("Selecting individual cross sections", () => {
 
       it("should consume e and Ar", () => {
         const expected: ReadonlyArray<StateSummary> = [
-          { children: {}, latex: "\\mathrm{Ar}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected,
@@ -342,8 +342,8 @@ describe("Selecting individual cross sections", () => {
 
       it("should produce e and Ar^+", () => {
         const expected: ReadonlyArray<StateSummary> = [
-          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
           { children: {}, latex: "\\mathrm{e}", valid: true },
+          { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected,
@@ -382,10 +382,10 @@ describe("Selecting individual cross sections", () => {
 
       it("should consume e, Ar, H2, and N2", () => {
         const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{e}", valid: true },
           { children: {}, latex: "\\mathrm{H2}", valid: true },
           { children: {}, latex: "\\mathrm{N2}", valid: true },
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
-          { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
           expected,
@@ -394,10 +394,10 @@ describe("Selecting individual cross sections", () => {
 
       it("should produce e, Ar^+, H2, N2", () => {
         const expected: ReadonlyArray<StateSummary> = [
+          { children: {}, latex: "\\mathrm{e}", valid: true },
           { children: {}, latex: "\\mathrm{H2}", valid: true },
           { children: {}, latex: "\\mathrm{N2}", valid: true },
           { children: {}, latex: "\\mathrm{Ar^+}", valid: true },
-          { children: {}, latex: "\\mathrm{e}", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
           expected,
@@ -455,8 +455,8 @@ describe("Selecting individual cross sections", () => {
 
     it("should only return consumable species from published sets", () => {
       const expected: ReadonlyArray<NestedState> = [
-        { children: [], latex: "\\mathrm{H2}", valid: true },
         { children: [], latex: "\\mathrm{e}", valid: true },
+        { children: [], latex: "\\mathrm{H2}", valid: true },
       ];
       expect(publishedOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
         expected,
@@ -465,8 +465,8 @@ describe("Selecting individual cross sections", () => {
 
     it("should only return producable species from published sets", () => {
       const expected: ReadonlyArray<NestedState> = [
-        { children: [], latex: "\\mathrm{H2}", valid: true },
         { children: [], latex: "\\mathrm{e}", valid: true },
+        { children: [], latex: "\\mathrm{H2}", valid: true },
       ];
       expect(publishedOptions.produces.flatMap(removeIdsFromTree)).toEqual(
         expected,
