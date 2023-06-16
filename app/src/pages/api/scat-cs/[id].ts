@@ -26,6 +26,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       data.terms_of_use =
         `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}#terms_of_use`;
       res.json(data);
+      return;
     }
     throw Error("Unable to handle request");
   })
