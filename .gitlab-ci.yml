@@ -51,7 +51,7 @@ test-app:
   image: mcr.microsoft.com/playwright:v1.34.3-jammy
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
-    - name: docker:20.10.16-dind
+    - name: docker:24.0.2-dind
       # explicitly disable tls to avoid docker startup interruption
       command: ["--tls=false"]
   variables:
@@ -108,7 +108,7 @@ test-database:
   image: node:18-bullseye
   # Testcontainers requirements taken from https://www.testcontainers.org/supported_docker_environment/continuous_integration/gitlab_ci/#example-using-dind-docker-in-docker
   services:
-    - name: docker:20.10.16-dind
+    - name: docker:24.0.2-dind
       # explicitly disable tls to avoid docker startup interruption
       command: ["--tls=false"]
   variables:
@@ -202,7 +202,7 @@ build-prod:
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
-    - docker:20.10.16-dind
+    - docker:22.0.2-dind
   before_script:
     - apk add --no-cache docker-compose
   script:
