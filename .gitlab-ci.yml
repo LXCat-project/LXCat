@@ -123,7 +123,7 @@ test-database:
   script:
     # - npm ci --cache .npm --prefer-offline
     - pnpm install
-    - pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    - pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml --no-threads
   artifacts:
     reports:
       coverage_report:
