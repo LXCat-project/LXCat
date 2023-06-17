@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
+import { join, literal } from "arangojs/aql";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -40,17 +41,17 @@ function generateParticleFilter(
   selection: ParticleChoices,
   stateVarName: string,
 ) {
-  const stateVarAql = aql.literal(stateVarName);
+  const stateVarAql = literal(stateVarName);
   const filters = [aql`${stateVarAql}.particle == ${particle}`];
   Object.entries(selection.charge).forEach(([charge, { electronic }]) => {
     const iCharge = parseInt(charge);
     filters.push(aql`${stateVarAql}.charge == ${iCharge}`);
     const electronicFilters = generateElectronicFilter(electronic, stateVarAql);
     if (electronicFilters.length > 0) {
-      filters.push(aql.join(electronicFilters, " OR "));
+      filters.push(join(electronicFilters, " OR "));
     }
   });
-  return aql.join(filters, " AND ");
+  return join(filters, " AND ");
 }
 
 function generateElectronicFilter(
@@ -58,7 +59,7 @@ function generateElectronicFilter(
   stateVarAql: AqlLiteral,
   electronicVarName = "se",
 ) {
-  const electronicVarAql = aql.literal(electronicVarName);
+  const electronicVarAql = literal(electronicVarName);
   return Object.entries(electronic).map(
     ([electronicSummary, { vibrational }]) => {
       const electronicIsCompound = electronicSummary.includes("|");
@@ -76,14 +77,14 @@ function generateElectronicFilter(
       );
       if (vibrationalFilters.length > 0) {
         electronicSubFilters.push(
-          aql`( ${aql.join(vibrationalFilters, " OR ")} )`,
+          aql`( ${join(vibrationalFilters, " OR ")} )`,
         );
       }
 
       return aql`LENGTH(
           FILTER NOT_NULL(${stateVarAql}.electronic)
           FOR ${electronicVarAql} IN ${stateVarAql}.electronic
-            FILTER ${aql.join(electronicSubFilters, " AND ")}
+            FILTER ${join(electronicSubFilters, " AND ")}
             RETURN 1
         ) > 0`;
     },
@@ -96,8 +97,8 @@ function generateVibratonalFilter(
   vibrationalVarName = "sv",
   rotationalVarName = "sr",
 ) {
-  const vibrationalVarAql = aql.literal(vibrationalVarName);
-  const rotationalVarAql = aql.literal(rotationalVarName);
+  const vibrationalVarAql = literal(vibrationalVarName);
+  const rotationalVarAql = literal(rotationalVarName);
   return Object.entries(vibrational).map(
     ([vibrationalSummary, { rotational }]) => {
       const vibrationalIsCompound = vibrationalSummary.includes("|");
@@ -127,14 +128,14 @@ function generateVibratonalFilter(
       });
       if (rotationalFilters.length > 0) {
         vibrationalSubFilters.push(
-          aql`( ${aql.join(rotationalFilters, " OR ")} )`,
+          aql`( ${join(rotationalFilters, " OR ")} )`,
         );
       }
 
       return aql`LENGTH(
             FILTER NOT_NULL(${electronicVarAql}.vibrational)
             FOR ${vibrationalVarAql} IN ${electronicVarAql}.vibrational
-              FILTER ${aql.join(vibrationalSubFilters, " AND ")}
+              FILTER ${join(vibrationalSubFilters, " AND ")}
               RETURN 1
           ) > 0`;
     },
@@ -160,7 +161,7 @@ export function generateStateFilterAql(
   const particleFilters = Object.entries(selection.particle).map(([p, s]) =>
     generateParticleFilter(p, s, stateVarName)
   );
-  return aql.join(particleFilters, " OR ");
+  return join(particleFilters, " OR ");
 }
 
 /**

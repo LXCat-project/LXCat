@@ -4,14 +4,14 @@
 
 import { dropUser } from "@lxcat/database/dist/auth/queries";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasAdminRole,
   hasSession,
 } from "../../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSession)
   .use(hasAdminRole)
   .delete(async (req, res) => {
@@ -20,6 +20,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       await dropUser(userId);
       res.status(204).send("");
     }
-  });
+  })
+  .handler();
 
 export default handler;

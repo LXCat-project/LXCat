@@ -1,16 +1,12 @@
 // SPDX-FileCopyrightText: LXCat team
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    appDir: true,
-  },
   swcMinify: false,
-  // experimental: {
-  //   outputStandalone: true,
-  // },
+
   webpack: (config, { nextRuntime }) => {
     if (nextRuntime === "nodejs") {
       config.module.rules = [
@@ -40,4 +36,5 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: false,
 });
+
 module.exports = withBundleAnalyzer(nextConfig);

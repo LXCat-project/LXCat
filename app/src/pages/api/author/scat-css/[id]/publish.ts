@@ -5,14 +5,14 @@
 import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
 import { publish } from "@lxcat/database/dist/css/queries/author_write";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasPublisherRole,
   hasSessionOrAPIToken,
 } from "../../../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasPublisherRole)
   .post(async (req, res) => {
@@ -31,6 +31,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
         res.status(403).end("Forbidden");
       }
     }
-  });
+  })
+  .handler();
 
 export default handler;

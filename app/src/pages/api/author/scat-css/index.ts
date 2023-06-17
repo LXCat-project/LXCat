@@ -7,14 +7,14 @@ import { createSet } from "@lxcat/database/dist/css/queries/author_write";
 import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
 import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasAuthorRole)
   .post(async (req, res) => {
@@ -66,6 +66,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const items = await listOwned(user.email);
     res.json({ items });
     return;
-  });
+  })
+  .handler();
 
 export default handler;

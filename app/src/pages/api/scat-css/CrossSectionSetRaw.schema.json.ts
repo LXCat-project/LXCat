@@ -4,12 +4,14 @@
 
 import CrossSectionSetRaw from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
 import { NextApiRequest, NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 
 // Route to host JSON schema of CrossSectionSet
-const handler = nc<NextApiRequest, NextApiResponse>().get(async (_req, res) => {
-  // TODO set content type to application/schema+json
-  res.json(CrossSectionSetRaw);
-});
+const handler = createRouter<NextApiRequest, NextApiResponse>()
+  .get(async (_req, res) => {
+    // TODO set content type to application/schema+json
+    res.json(CrossSectionSetRaw);
+  })
+  .handler();
 
 export default handler;
