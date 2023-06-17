@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { ArangoDBContainer, Wait } from "testcontainers";
-import { PortWithOptionalBinding } from "testcontainers/dist/port";
+import { PortWithOptionalBinding } from "testcontainers/dist/src/port";
 import { setDb } from "./db";
 import { setSystemDb, systemDb } from "./systemDb";
 
@@ -11,7 +11,7 @@ export async function startDbContainer(
   password = "testpw",
   port: PortWithOptionalBinding = 8529,
 ) {
-  const dbImage = "arangodb/arangodb:3.9.1";
+  const dbImage = "arangodb/arangodb:3.11.0";
   const container = await new ArangoDBContainer(dbImage, password)
     .withExposedPorts(port)
     .withWaitStrategy(Wait.forLogMessage("is ready for business. Have fun"))

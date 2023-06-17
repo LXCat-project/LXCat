@@ -4,7 +4,7 @@
 
 import { NextApiResponse } from "next";
 import { encode } from "next-auth/jwt";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperRole,
@@ -13,7 +13,7 @@ import {
 
 const DEFAULT_MAX_AGE = 365 * 24 * 60 * 60; // year in seconds
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSession)
   .use(hasDeveloperRole)
   .get(async (req, res) => {
@@ -33,6 +33,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       token: apiToken,
       expires,
     });
-  });
+  })
+  .handler();
 
 export default handler;

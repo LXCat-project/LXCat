@@ -4,6 +4,7 @@
 
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
+import { literal } from "arangojs/aql";
 import { AqlLiteral } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../../db";
@@ -11,7 +12,6 @@ import { getStateLeaf, StateLeaf } from "../../../shared/getStateLeaf";
 import {
   CSSetTree,
   NestedStateArray,
-  ReactionOptions,
   ReactionTemplate,
   Reversible,
   SearchOptions,
@@ -57,7 +57,7 @@ export async function getPartakingStateSelection(
     ${
       getStateSelectionAQL(
         process,
-        aql.literal("states"),
+        literal("states"),
         (process === StateProcess.Consumed ? consumed : produced).map(
           (entry) => entry.id,
         ),
@@ -109,7 +109,7 @@ export async function getAvailableTypeTags(
       ? aql`
       RETURN UNIQUE(FLATTEN(
         FOR reaction in Reaction
-	  ${getCSSetFilterAQL(setIds)(aql.literal("reaction"))}
+	  ${getCSSetFilterAQL(setIds)(literal("reaction"))}
           RETURN reaction.type_tags
       ))
     `

@@ -23,7 +23,7 @@
     "test": {
       "outputs": []
     },
-    "addheader": {
+    "annotate": {
       "outputs": []
     }
   }

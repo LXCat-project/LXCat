@@ -4,6 +4,7 @@
 
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
+import { literal } from "arangojs/aql";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { StateLeaf } from "../../../shared/getStateLeaf";
 import { ReactionFunction, StateProcess } from "../types";
@@ -24,13 +25,13 @@ export function getFullStateTreeAQL(
                 LET vibrationalChildren = (
                   FOR rotational IN OUTBOUND vibrational HasDirectSubstate
                   LET valid = COUNT(
-                    FOR reaction IN INBOUND rotational ${aql.literal(process)}
+                    FOR reaction IN INBOUND rotational ${literal(process)}
                       ${
     typeTags.length > 0
       ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
       : aql``
   }
-                      ${getCSSetFilterAQL([])(aql.literal("reaction"))}
+                      ${getCSSetFilterAQL([])(literal("reaction"))}
                       LIMIT 1
                       RETURN 1
                   ) == 1
@@ -38,13 +39,13 @@ export function getFullStateTreeAQL(
                   RETURN {id: rotational._id, latex: rotational.electronic[0].vibrational[0].rotational[0].latex, valid}
                 )
                 LET valid = COUNT(
-                  FOR reaction IN INBOUND vibrational ${aql.literal(process)}
+                  FOR reaction IN INBOUND vibrational ${literal(process)}
                     ${
     typeTags.length > 0
       ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
       : aql``
   }
-                    ${getCSSetFilterAQL([])(aql.literal("reaction"))}
+                    ${getCSSetFilterAQL([])(literal("reaction"))}
                     LIMIT 1
                     RETURN 1
                 ) == 1
@@ -52,13 +53,13 @@ export function getFullStateTreeAQL(
                 RETURN {id: vibrational._id, latex: vibrational.electronic[0].vibrational[0].latex, valid: valid, children: vibrationalChildren}
             )
             LET valid = COUNT(
-              FOR reaction IN INBOUND electronic ${aql.literal(process)}
+              FOR reaction IN INBOUND electronic ${literal(process)}
                 ${
     typeTags.length > 0
       ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
       : aql``
   }
-                ${getCSSetFilterAQL([])(aql.literal("reaction"))}
+                ${getCSSetFilterAQL([])(literal("reaction"))}
                 LIMIT 1
                 RETURN 1
             ) == 1
@@ -66,13 +67,13 @@ export function getFullStateTreeAQL(
             RETURN {id: electronic._id, latex: electronic.electronic[0].latex, valid: valid, children: electronicChildren}
         )
         LET valid = COUNT(
-          FOR reaction IN INBOUND particle ${aql.literal(process)}
+          FOR reaction IN INBOUND particle ${literal(process)}
             ${
     typeTags.length > 0
       ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
       : aql``
   }
-            ${getCSSetFilterAQL([])(aql.literal("reaction"))}
+            ${getCSSetFilterAQL([])(literal("reaction"))}
             LIMIT 1
             RETURN 1
         ) == 1
@@ -84,8 +85,8 @@ export function getFullStateTreeAQL(
 export function getTreeForStateSelectionAQL(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
-  lhsIdentifier: AqlLiteral = aql.literal("lhs"),
-  rhsIdentifier: AqlLiteral = aql.literal("rhs"),
+  lhsIdentifier: AqlLiteral = literal("lhs"),
+  rhsIdentifier: AqlLiteral = literal("rhs"),
 ) {
   return aql`
     LET lhsChildren = (
@@ -133,7 +134,7 @@ export function getPartakingStateAQL(
       FOR reaction IN Reaction
         ${
     filters
-      .map((filter) => filter(aql.literal("reaction")))
+      .map((filter) => filter(literal("reaction")))
       .reduce((total, filter) => aql`${total}\n${filter}`)
   }
 
@@ -160,7 +161,7 @@ export function getPartakingStateAQL(
         FILTER rhsCount >= LENGTH(rhs)
 
         RETURN ${
-    aql.literal(
+    literal(
       process === StateProcess.Consumed ? "consumed" : "produced",
     )
   }
@@ -176,12 +177,12 @@ function getPartakingStateChildren(
 ): GeneratedAqlQuery {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
 
-  const parent = aql.literal(levels[depth]);
-  const child = aql.literal(levels[depth + 1]);
+  const parent = literal(levels[depth]);
+  const child = literal(levels[depth + 1]);
 
-  const children = aql.literal(`${levels[depth]}Children`);
+  const children = literal(`${levels[depth]}Children`);
 
-  const latexProperty = aql.literal(
+  const latexProperty = literal(
     depth == 0
       ? `${levels[depth]}.latex`
       : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`,
@@ -239,7 +240,7 @@ export function getReactionsAQL(
       FOR reaction IN Reaction
         ${
     filters
-      .map((filter) => filter(aql.literal("reaction")))
+      .map((filter) => filter(literal("reaction")))
       .reduce((total, filter) => aql`${total}\n${filter}`)
   }
         LET consumed = (
@@ -264,7 +265,7 @@ export function getReactionsAQL(
         )
         FILTER rhsCount >= LENGTH(rhs)
 
-        ${returnStatement(aql.literal("reaction"))}
+        ${returnStatement(literal("reaction"))}
         `;
 }
 
@@ -285,7 +286,7 @@ export function getCSSetAQL(
               FILTER cs.reaction == reaction._id
               ${
     filters
-      .map((filter) => filter(aql.literal("reaction")))
+      .map((filter) => filter(literal("reaction")))
       .reduce((total, filter) => aql`${total}\n${filter}`)
   }
               LET consumed = (

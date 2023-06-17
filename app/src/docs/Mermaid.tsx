@@ -7,11 +7,11 @@
 import mermaid from "mermaid";
 import { useEffect, useState } from "react";
 
-interface Props {
+export type MermaidProps = {
   chart: string;
-}
+};
 
-export const Mermaid = ({ chart }: Props) => {
+export const Mermaid = ({ chart }: MermaidProps) => {
   const [svg, setSvg] = useState("<svg></svg>");
   useEffect(() => {
     mermaid.render("mermaid", chart, (html: string) => {

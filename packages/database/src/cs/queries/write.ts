@@ -5,7 +5,6 @@
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { aql } from "arangojs";
-import { Dict } from "arangojs/connection";
 import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date";
 import { db } from "../../db";
@@ -20,8 +19,8 @@ import { historyOfSection } from "./public";
 
 export async function createSection(
   cs: CrossSection<string, string>,
-  state_dict: Dict<string>, // key is string used in cs and value is database id eg. State/1234
-  ref_dict: Dict<string>, // key is string used in cs and value is database id eg. Reference/1234
+  state_dict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
+  ref_dict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
   organizationId: string,
   status: Status = "published",
   version = "1",
@@ -83,8 +82,8 @@ export async function updateSection(
   key: string,
   section: CrossSection<string, string>,
   message: string,
-  state_dict: Dict<string>,
-  ref_dict: Dict<string>,
+  state_dict: Record<string, string>,
+  ref_dict: Record<string, string>,
   organization: string,
 ) {
   const info = await getVersionInfo(key);
@@ -138,8 +137,8 @@ async function createDraftSection(
    * Key of section that needs to be updated aka create a draft from
    */
   key: string,
-  state_dict: Dict<string>,
-  ref_dict: Dict<string>,
+  state_dict: Record<string, string>,
+  ref_dict: Record<string, string>,
   organization: string,
 ) {
   // check whether a draft already exists
@@ -171,8 +170,8 @@ async function updateDraftSection(
    * Key of section that needs to be updated
    */
   key: string,
-  state_dict: Dict<string>,
-  ref_dict: Dict<string>,
+  state_dict: Record<string, string>,
+  ref_dict: Record<string, string>,
   organization: string,
 ) {
   const versionInfo = {

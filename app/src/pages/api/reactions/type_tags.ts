@@ -6,7 +6,7 @@ import { getAvailableTypeTags } from "@lxcat/database/dist/cs/picker/queries/pub
 import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperRole,
@@ -14,7 +14,7 @@ import {
 } from "../../../auth/middleware";
 import { parseParam } from "../../../shared/utils";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   // .use(hasSessionOrAPIToken)
   // .use(hasDeveloperRole)
   .get(async (req, res) => {
@@ -35,6 +35,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
     res.json(
       await getAvailableTypeTags(consumes, produces, reversible, setIds),
     );
-  });
+  })
+  .handler();
 
 export default handler;

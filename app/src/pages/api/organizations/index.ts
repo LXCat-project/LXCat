@@ -5,14 +5,14 @@
 import { addOrganization } from "@lxcat/database/dist/auth/queries";
 import { Organization } from "@lxcat/database/dist/auth/schema";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasAdminRole,
   hasSession,
 } from "../../../auth/middleware";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSession)
   .use(hasAdminRole)
   .post(async (req, res) => {
@@ -22,6 +22,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       ...org,
       _key,
     });
-  });
+  })
+  .handler();
 
 export default handler;

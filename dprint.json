@@ -17,7 +17,6 @@
     "**/dist",
     "**/node_modules",
     "**/*-lock.json",
-    "./app/storybook-static",
     "./app/.next"
   ],
   "plugins": [

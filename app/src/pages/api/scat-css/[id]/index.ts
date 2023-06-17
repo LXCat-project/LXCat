@@ -5,7 +5,7 @@
 import { Cite } from "@citation-js/core";
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperOrDownloadRole,
@@ -15,7 +15,7 @@ import "@citation-js/plugin-bibtex";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(applyCORS)
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperOrDownloadRole)
@@ -57,6 +57,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
       }
       res.json(data);
     }
-  });
+  })
+  .handler();
 
 export default handler;

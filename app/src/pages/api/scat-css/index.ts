@@ -9,7 +9,7 @@ import {
 } from "@lxcat/database/dist/css/queries/public";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { NextApiResponse } from "next";
-import nc from "next-connect";
+import { createRouter } from "next-connect";
 import {
   AuthRequest,
   hasDeveloperRole,
@@ -21,7 +21,7 @@ import {
   stateSelectionToSearchParam,
 } from "../../../shared/StateFilter";
 
-const handler = nc<AuthRequest, NextApiResponse>()
+const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasDeveloperRole)
   .get(async (req, res) => {
@@ -50,6 +50,7 @@ const handler = nc<AuthRequest, NextApiResponse>()
     const items = await search(filter, sort, paging);
     res.json({ items });
     return;
-  });
+  })
+  .handler();
 
 export default handler;
