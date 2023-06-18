@@ -39,24 +39,28 @@ export async function createSet(
 ) {
   // Reuse Organization created by cross section drafting
   const organizationId = await upsertOrganization(dataset.contributor);
+
   const versionInfo: VersionInfo = {
     status,
     version,
     createdOn: now(),
   };
+
   if (commitMessage) {
     versionInfo.commitMessage = commitMessage;
   }
+
+  const state_ids = await insert_state_dict(dataset.states);
+  const reference_ids = await insert_reference_dict(dataset.references);
+
   const cs_set_id = await insert_document("CrossSectionSet", {
     name: dataset.name,
     description: dataset.description,
+    publishedIn: dataset.publishedIn && reference_ids[dataset.publishedIn],
     complete: dataset.complete,
     organization: organizationId,
     versionInfo,
   });
-
-  const state_ids = await insert_state_dict(dataset.states);
-  const reference_ids = await insert_reference_dict(dataset.references);
 
   for (const cs of dataset.processes) {
     if (cs.id !== undefined) {
