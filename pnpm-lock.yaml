@@ -85,6 +85,9 @@ importers:
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
+      immer:
+        specifier: ^10.0.2
+        version: 10.0.2
       mantine-datatable:
         specifier: ^2.6.3
         version: 2.6.3(@mantine/core@6.0.13)(@mantine/hooks@6.0.13)(react@18.2.0)
@@ -6949,6 +6952,10 @@ packages:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
     dev: true
+
+  /immer@10.0.2:
+    resolution: {integrity: sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==}
+    dev: false
 
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}

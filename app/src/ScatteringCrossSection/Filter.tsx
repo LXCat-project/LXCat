@@ -16,18 +16,13 @@ export const Filter = ({ selection, onChange }: Props) => {
 
   function onFilterChange(
     newSelection: Array<ReactionTemplate>,
-    event?: string,
   ) {
     const query = new URLSearchParams({
       reactions: JSON.stringify(newSelection),
     }).toString();
 
-    if (event?.startsWith("reactions")) {
-      router.push({ query }, undefined, { shallow: true });
-      onChange(newSelection);
-    } else {
-      router.push({ query });
-    }
+    router.push({ query }, undefined, { shallow: true });
+    onChange(newSelection);
   }
 
   return <SWRFilterComponent selection={selection} onChange={onFilterChange} />;
