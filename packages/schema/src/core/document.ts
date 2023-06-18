@@ -41,9 +41,15 @@ export interface InputDocument<StateType, ProcessType> extends SelfReference {
    * @minLength 1
    */
   name: string;
-  // cite: Reference; // Should only be in output.
-  // Disabled this field as its use is currently unclear.
-  // publication?: Reference; // Should this field instead hold a key into 'references'?
+
+  /**
+   * A key into the `references` dict. This is a reference to the paper that
+   * presents this dataset.
+   */
+  publishedIn?: string;
+  /**
+   * A description of this dataset.
+   */
   description: string;
   // TODO for validation the keys should be unique and the values as well
   references: Dict<Reference>;
