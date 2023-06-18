@@ -6,6 +6,7 @@ import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Group, Stack, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
+import { Reference } from "../shared/Reference";
 import { ListItem } from "./ListItem";
 import { ReactionSummary } from "./ReactionSummary";
 
@@ -30,8 +31,7 @@ export const CSTable = ({ items }: Props) => {
     ).values(),
   ];
 
-  const records = sets.map((set, id) => ({
-    id,
+  const records = sets.map((set) => ({
     ...set,
     cs: items.filter(({ isPartOf }) =>
       isPartOf.map(({ name }) => name).includes(set.name)
@@ -71,11 +71,21 @@ export const CSTable = ({ items }: Props) => {
           onRecordIdsChange: setExpandedSets,
         },
         content: ({ record }) => (
-          <Stack spacing={6}>
-            <Group spacing={6} p="xs">
-              <Text fw={700}>Description:</Text>
-              <Text>{record.description}</Text>
-            </Group>
+          <Stack spacing={3}>
+            <Stack spacing={3} p="xs">
+              <Group spacing={6}>
+                <Text fw={700}>Description:</Text>
+                <Text>{record.description}</Text>
+              </Group>
+              <Group spacing={6}>
+                <Text fw={700}>Published in:</Text>
+                <Text>
+                  {record.publishedIn
+                    ? <Reference {...record.publishedIn} />
+                    : "-"}
+                </Text>
+              </Group>
+            </Stack>
             <DataTable
               // noHeader
               withColumnBorders

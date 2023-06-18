@@ -197,9 +197,17 @@ export const getCSHeadings = async (
 	    LET setNames = (
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status == "published"
-          FOR org IN Organization
-            FILTER org._id == css.organization
-            RETURN MERGE(css, { "organization": org.name })
+          LET org = FIRST(
+            FOR org IN Organization
+              FILTER org._id == css.organization
+              RETURN org
+          )
+          LET ref = FIRST(
+            FOR ref IN Reference
+              FILTER ref._id == css.publishedIn
+              RETURN UNSET(ref, ["_key", "_rev", "_id"])
+          )
+          RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { "id": css._key, "organization": org.name, "publishedIn": ref })
 	    )
 	    ${limitAql}
 	    RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
