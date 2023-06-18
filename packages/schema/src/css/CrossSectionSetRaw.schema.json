@@ -17,6 +17,7 @@
       "type": "string"
     },
     "description": {
+      "description": "A description of this dataset.",
       "type": "string"
     },
     "name": {
@@ -176,6 +177,10 @@
       "minItems": 1,
       "type": "array",
       "uniqueItems": true
+    },
+    "publishedIn": {
+      "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset.",
+      "type": "string"
     },
     "references": {
       "additionalProperties": {

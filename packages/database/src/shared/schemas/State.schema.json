@@ -14,26 +14,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "config": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "scheme": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "term": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -53,7 +48,11 @@
                           "type": "number"
                         }
                       },
-                      "required": ["n", "l", "occupance"],
+                      "required": [
+                        "n",
+                        "l",
+                        "occupance"
+                      ],
                       "type": "object"
                     },
                     "type": "array"
@@ -78,18 +77,32 @@
                         "type": "number"
                       },
                       "P": {
-                        "enum": [-1, 1],
+                        "enum": [
+                          -1,
+                          1
+                        ],
                         "type": "number"
                       },
                       "S": {
                         "type": "number"
                       }
                     },
-                    "required": ["J", "L", "P", "S"],
+                    "required": [
+                      "J",
+                      "L",
+                      "P",
+                      "S"
+                    ],
                     "type": "object"
                   }
                 },
-                "required": ["config", "latex", "scheme", "summary", "term"],
+                "required": [
+                  "config",
+                  "latex",
+                  "scheme",
+                  "summary",
+                  "term"
+                ],
                 "type": "object"
               }
             ]
@@ -112,7 +125,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -128,26 +147,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "config": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "scheme": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "term": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -173,7 +187,11 @@
                                   "type": "number"
                                 }
                               },
-                              "required": ["n", "l", "occupance"],
+                              "required": [
+                                "n",
+                                "l",
+                                "occupance"
+                              ],
                               "type": "object"
                             },
                             "type": "array"
@@ -192,18 +210,30 @@
                                 "type": "number"
                               },
                               "P": {
-                                "enum": [-1, 1],
+                                "enum": [
+                                  -1,
+                                  1
+                                ],
                                 "type": "number"
                               },
                               "S": {
                                 "type": "number"
                               }
                             },
-                            "required": ["J", "L", "P", "S"],
+                            "required": [
+                              "J",
+                              "L",
+                              "P",
+                              "S"
+                            ],
                             "type": "object"
                           }
                         },
-                        "required": ["scheme", "config", "term"],
+                        "required": [
+                          "scheme",
+                          "config",
+                          "term"
+                        ],
                         "type": "object"
                       },
                       "excited": {
@@ -223,7 +253,11 @@
                                   "type": "number"
                                 }
                               },
-                              "required": ["n", "l", "occupance"],
+                              "required": [
+                                "n",
+                                "l",
+                                "occupance"
+                              ],
                               "type": "object"
                             },
                             "type": "array"
@@ -239,22 +273,36 @@
                                 "type": "number"
                               },
                               "P": {
-                                "enum": [-1, 1],
+                                "enum": [
+                                  -1,
+                                  1
+                                ],
                                 "type": "number"
                               },
                               "S": {
                                 "type": "number"
                               }
                             },
-                            "required": ["L", "S", "P"],
+                            "required": [
+                              "L",
+                              "S",
+                              "P"
+                            ],
                             "type": "object"
                           }
                         },
-                        "required": ["scheme", "config", "term"],
+                        "required": [
+                          "scheme",
+                          "config",
+                          "term"
+                        ],
                         "type": "object"
                       }
                     },
-                    "required": ["core", "excited"],
+                    "required": [
+                      "core",
+                      "excited"
+                    ],
                     "type": "object"
                   },
                   "latex": {
@@ -283,11 +331,22 @@
                         "type": "number"
                       }
                     },
-                    "required": ["J", "K", "P", "S"],
+                    "required": [
+                      "J",
+                      "K",
+                      "P",
+                      "S"
+                    ],
                     "type": "object"
                   }
                 },
-                "required": ["config", "latex", "scheme", "summary", "term"],
+                "required": [
+                  "config",
+                  "latex",
+                  "scheme",
+                  "summary",
+                  "term"
+                ],
                 "type": "object"
               }
             ]
@@ -310,7 +369,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -326,26 +391,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "config": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "scheme": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "term": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -371,7 +431,11 @@
                                   "type": "number"
                                 }
                               },
-                              "required": ["n", "l", "occupance"],
+                              "required": [
+                                "n",
+                                "l",
+                                "occupance"
+                              ],
                               "type": "object"
                             },
                             "type": "array"
@@ -387,18 +451,29 @@
                                 "type": "number"
                               },
                               "P": {
-                                "enum": [-1, 1],
+                                "enum": [
+                                  -1,
+                                  1
+                                ],
                                 "type": "number"
                               },
                               "S": {
                                 "type": "number"
                               }
                             },
-                            "required": ["L", "S", "P"],
+                            "required": [
+                              "L",
+                              "S",
+                              "P"
+                            ],
                             "type": "object"
                           }
                         },
-                        "required": ["scheme", "config", "term"],
+                        "required": [
+                          "scheme",
+                          "config",
+                          "term"
+                        ],
                         "type": "object"
                       },
                       "excited": {
@@ -418,7 +493,11 @@
                                   "type": "number"
                                 }
                               },
-                              "required": ["n", "l", "occupance"],
+                              "required": [
+                                "n",
+                                "l",
+                                "occupance"
+                              ],
                               "type": "object"
                             },
                             "type": "array"
@@ -434,22 +513,36 @@
                                 "type": "number"
                               },
                               "P": {
-                                "enum": [-1, 1],
+                                "enum": [
+                                  -1,
+                                  1
+                                ],
                                 "type": "number"
                               },
                               "S": {
                                 "type": "number"
                               }
                             },
-                            "required": ["L", "S", "P"],
+                            "required": [
+                              "L",
+                              "S",
+                              "P"
+                            ],
                             "type": "object"
                           }
                         },
-                        "required": ["scheme", "config", "term"],
+                        "required": [
+                          "scheme",
+                          "config",
+                          "term"
+                        ],
                         "type": "object"
                       }
                     },
-                    "required": ["core", "excited"],
+                    "required": [
+                      "core",
+                      "excited"
+                    ],
                     "type": "object"
                   },
                   "latex": {
@@ -475,18 +568,33 @@
                         "type": "number"
                       },
                       "P": {
-                        "enum": [-1, 1],
+                        "enum": [
+                          -1,
+                          1
+                        ],
                         "type": "number"
                       },
                       "S": {
                         "type": "number"
                       }
                     },
-                    "required": ["J", "K", "L", "P", "S"],
+                    "required": [
+                      "J",
+                      "K",
+                      "L",
+                      "P",
+                      "S"
+                    ],
                     "type": "object"
                   }
                 },
-                "required": ["config", "latex", "scheme", "summary", "term"],
+                "required": [
+                  "config",
+                  "latex",
+                  "scheme",
+                  "summary",
+                  "term"
+                ],
                 "type": "object"
               }
             ]
@@ -509,7 +617,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -525,32 +639,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "Lambda": {
-                    "not": {}
-                  },
-                  "S": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "parity": {
-                    "not": {}
-                  },
-                  "reflection": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "vibrational": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -569,11 +672,17 @@
                     "type": "string"
                   },
                   "parity": {
-                    "enum": ["g", "u"],
+                    "enum": [
+                      "g",
+                      "u"
+                    ],
                     "type": "string"
                   },
                   "reflection": {
-                    "enum": ["-", "+"],
+                    "enum": [
+                      "-",
+                      "+"
+                    ],
                     "type": "string"
                   },
                   "summary": {
@@ -589,9 +698,6 @@
                             "latex": {
                               "type": "string"
                             },
-                            "rotational": {
-                              "not": {}
-                            },
                             "summary": {
                               "type": "string"
                             },
@@ -599,7 +705,11 @@
                               "type": "string"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         },
                         {
@@ -625,7 +735,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   },
                                   {
@@ -641,7 +755,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   }
                                 ]
@@ -656,7 +774,11 @@
                               "type": "number"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         }
                       ]
@@ -665,7 +787,14 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "latex", "parity", "summary"],
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e",
+                  "latex",
+                  "parity",
+                  "summary"
+                ],
                 "type": "object"
               }
             ]
@@ -688,7 +817,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -704,29 +839,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "Lambda": {
-                    "not": {}
-                  },
-                  "S": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "reflection": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "vibrational": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -745,7 +872,10 @@
                     "type": "string"
                   },
                   "reflection": {
-                    "enum": ["-", "+"],
+                    "enum": [
+                      "-",
+                      "+"
+                    ],
                     "type": "string"
                   },
                   "summary": {
@@ -761,9 +891,6 @@
                             "latex": {
                               "type": "string"
                             },
-                            "rotational": {
-                              "not": {}
-                            },
                             "summary": {
                               "type": "string"
                             },
@@ -771,7 +898,11 @@
                               "type": "string"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         },
                         {
@@ -797,7 +928,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   },
                                   {
@@ -813,7 +948,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   }
                                 ]
@@ -828,7 +967,11 @@
                               "type": "number"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         }
                       ]
@@ -837,7 +980,13 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "latex", "summary"],
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               }
             ]
@@ -860,7 +1009,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -876,32 +1031,21 @@
               {
                 "additionalProperties": false,
                 "properties": {
-                  "Lambda": {
-                    "not": {}
-                  },
-                  "S": {
-                    "not": {}
-                  },
                   "e": {
                     "type": "string"
                   },
                   "latex": {
                     "type": "string"
                   },
-                  "parity": {
-                    "not": {}
-                  },
-                  "reflection": {
-                    "not": {}
-                  },
                   "summary": {
                     "type": "string"
-                  },
-                  "vibrational": {
-                    "not": {}
                   }
                 },
-                "required": ["e", "latex", "summary"],
+                "required": [
+                  "e",
+                  "latex",
+                  "summary"
+                ],
                 "type": "object"
               },
               {
@@ -920,11 +1064,17 @@
                     "type": "string"
                   },
                   "parity": {
-                    "enum": ["g", "u"],
+                    "enum": [
+                      "g",
+                      "u"
+                    ],
                     "type": "string"
                   },
                   "reflection": {
-                    "enum": ["-", "+"],
+                    "enum": [
+                      "-",
+                      "+"
+                    ],
                     "type": "string"
                   },
                   "summary": {
@@ -940,9 +1090,6 @@
                             "latex": {
                               "type": "string"
                             },
-                            "rotational": {
-                              "not": {}
-                            },
                             "summary": {
                               "type": "string"
                             },
@@ -950,7 +1097,11 @@
                               "type": "string"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         },
                         {
@@ -976,7 +1127,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   },
                                   {
@@ -992,7 +1147,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": ["J", "latex", "summary"],
+                                    "required": [
+                                      "J",
+                                      "latex",
+                                      "summary"
+                                    ],
                                     "type": "object"
                                   }
                                 ]
@@ -1010,7 +1169,11 @@
                               "type": "array"
                             }
                           },
-                          "required": ["latex", "summary", "v"],
+                          "required": [
+                            "latex",
+                            "summary",
+                            "v"
+                          ],
                           "type": "object"
                         }
                       ]
@@ -1019,7 +1182,14 @@
                     "type": "array"
                   }
                 },
-                "required": ["Lambda", "S", "e", "latex", "parity", "summary"],
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e",
+                  "latex",
+                  "parity",
+                  "summary"
+                ],
                 "type": "object"
               }
             ]
@@ -1042,7 +1212,13 @@
           "type": "string"
         }
       },
-      "required": ["charge", "id", "latex", "particle", "type"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle",
+        "type"
+      ],
       "type": "object"
     },
     {
@@ -1050,9 +1226,6 @@
       "properties": {
         "charge": {
           "type": "integer"
-        },
-        "electronic": {
-          "not": {}
         },
         "id": {
           "type": "string"
@@ -1063,12 +1236,14 @@
         "particle": {
           "minLength": 1,
           "type": "string"
-        },
-        "type": {
-          "not": {}
         }
       },
-      "required": ["charge", "id", "latex", "particle"],
+      "required": [
+        "charge",
+        "id",
+        "latex",
+        "particle"
+      ],
       "type": "object"
     }
   ],
