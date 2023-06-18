@@ -5,6 +5,7 @@
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
 import { Group, Stack, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
@@ -15,6 +16,7 @@ interface Props {
 
 export const CSTable = ({ items }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
+  const router = useRouter();
 
   const sets = [
     ...new Map(
@@ -92,6 +94,7 @@ export const CSTable = ({ items }: Props) => {
                 },
               ]}
               records={record.cs}
+              onRowClick={(record) => router.push(`/scat-cs/${record.id}`)}
             />
           </Stack>
         ),
