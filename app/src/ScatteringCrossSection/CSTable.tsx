@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
-import { Group, Stack, Text } from "@mantine/core";
+import { Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,6 +17,7 @@ interface Props {
 export const CSTable = ({ items }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
   const router = useRouter();
+  const theme = useMantineTheme();
 
   const sets = [
     ...new Map(
@@ -41,8 +42,14 @@ export const CSTable = ({ items }: Props) => {
     <DataTable
       withBorder
       borderRadius="md"
-      withColumnBorders
+      // withColumnBorders
       highlightOnHover
+      rowStyle={({ id }) => (expandedSets.includes(id)
+        ? {
+          backgroundColor: theme.colors.gray[1],
+          fontWeight: "bold",
+        }
+        : undefined)}
       columns={[
         { accessor: "organization", title: "Contributor" },
         { accessor: "name", title: "Set" },
@@ -64,7 +71,12 @@ export const CSTable = ({ items }: Props) => {
           onRecordIdsChange: setExpandedSets,
         },
         content: ({ record }) => (
-          <Stack spacing={3}>
+          <Stack
+            spacing={3}
+            sx={(theme) => (
+              { backgroundColor: theme.colors.gray[1] }
+            )}
+          >
             <Stack spacing={3} p="xs">
               <Group spacing={6}>
                 <Text fw={700}>Description:</Text>
