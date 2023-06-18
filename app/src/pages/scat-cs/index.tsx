@@ -42,7 +42,7 @@ import { useState } from "react";
 import { SWRConfig, unstable_serialize } from "swr";
 import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
 import { Filter } from "../../ScatteringCrossSection/Filter";
-import { List } from "../../ScatteringCrossSection/List";
+import { CSTable, List } from "../../ScatteringCrossSection/List";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
 import { Layout } from "../../shared/Layout";
@@ -264,7 +264,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
           </>
         )
         : <></>}
-      {nrItems > 0 ? <List items={items} /> : (
+      {nrItems > 0 ? <CSTable items={items} /> : (
         <Text>
           The selection is empty. Use the selection tool above to start
           searching for cross sections.
