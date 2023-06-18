@@ -7,19 +7,10 @@ import { Group, Stack, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import { Reference } from "../shared/Reference";
-import { ListItem } from "./ListItem";
 import { ReactionSummary } from "./ReactionSummary";
 
 interface Props {
   items: CrossSectionHeading[];
-}
-
-export function List({ items }: Props) {
-  return (
-    <div style={{ display: "flex", gap: "1em", flexWrap: "wrap" }} role="list">
-      {items.map((d) => <ListItem key={d.id} {...d} />)}
-    </div>
-  );
 }
 
 export const CSTable = ({ items }: Props) => {
