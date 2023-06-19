@@ -3,12 +3,27 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
-import { Group, Stack, Text, useMantineTheme } from "@mantine/core";
+import { createStyles, Group, Stack, Text } from "@mantine/core";
+import { IconChevronRight } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Reference } from "../shared/Reference";
 import { ReactionSummary } from "./ReactionSummary";
+
+const useStyles = createStyles(() => ({
+  expandIcon: {
+    transition: "transform 0.2s ease",
+  },
+  expandIconRotated: {
+    transform: "rotate(90deg)",
+  },
+  header: {
+    "& th": {
+      backgroundColor: "white",
+    },
+  },
+}));
 
 interface Props {
   items: CrossSectionHeading[];
@@ -17,7 +32,7 @@ interface Props {
 export const CSTable = ({ items }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
   const router = useRouter();
-  const theme = useMantineTheme();
+  const { cx, classes } = useStyles();
 
   const sets = [
     ...new Map(
@@ -42,16 +57,23 @@ export const CSTable = ({ items }: Props) => {
     <DataTable
       withBorder
       borderRadius="md"
-      // withColumnBorders
       highlightOnHover
-      rowStyle={({ id }) => (expandedSets.includes(id)
-        ? {
-          backgroundColor: theme.colors.gray[1],
-          fontWeight: "bold",
-        }
-        : undefined)}
       columns={[
-        { accessor: "organization", title: "Contributor" },
+        {
+          accessor: "organization",
+          title: "Contributor",
+          render: ({ id, organization }) => (
+            <Group spacing="xs">
+              <IconChevronRight
+                size="0.9em"
+                className={cx(classes.expandIcon, {
+                  [classes.expandIconRotated]: expandedSets.includes(id),
+                })}
+              />
+              <Text>{organization}</Text>
+            </Group>
+          ),
+        },
         { accessor: "name", title: "Set" },
         {
           accessor: "version",
@@ -74,7 +96,7 @@ export const CSTable = ({ items }: Props) => {
           <Stack
             spacing={3}
             sx={(theme) => (
-              { backgroundColor: theme.colors.gray[1] }
+              { backgroundColor: theme.colors.gray[0], padding: 10 }
             )}
           >
             <Stack spacing={3} p="xs">
@@ -92,12 +114,13 @@ export const CSTable = ({ items }: Props) => {
               </Group>
             </Stack>
             <DataTable
-              // noHeader
               withColumnBorders
+              withBorder
+              borderRadius="md"
+              classNames={{ header: classes.header }}
               // height={200}
               highlightOnHover={false}
               columns={[
-                { accessor: "id" },
                 { accessor: "reaction" },
                 {
                   accessor: "typeTags",
