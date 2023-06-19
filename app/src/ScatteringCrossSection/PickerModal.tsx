@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { Button, Modal } from "@mantine/core";
 import { useState } from "react";
 import { Picked, Picker } from "./Picker";
+import { emptyFilter, ReactionInformation } from "./SWRFilterComponent";
 
 export const PickerModal = ({
   onSubmit,
@@ -15,8 +15,8 @@ export const PickerModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [filterSelection, setFilterSelection] = useState<
-    Array<ReactionTemplate>
-  >(defaultSearchTemplate());
+    Array<ReactionInformation>
+  >([emptyFilter()]);
   const [items, setItems] = useState<Picked>([]);
 
   const getAuthorCS = async (
@@ -42,20 +42,22 @@ export const PickerModal = ({
 
   const toggleModal = async (open: boolean) => {
     if (open) {
-      setItems(await getAuthorCS(filterSelection));
+      setItems(
+        await getAuthorCS(filterSelection.map(({ options }) => options)),
+      );
     }
 
     setOpen(open);
   };
 
   const onChangeFilterSelection = async (
-    newSelection: Array<ReactionTemplate>,
+    newSelection: Array<ReactionInformation>,
   ) => {
     if (!open) {
       return;
     }
     setFilterSelection(newSelection);
-    setItems(await getAuthorCS(newSelection));
+    setItems(await getAuthorCS(newSelection.map(({ options }) => options)));
   };
 
   const onLocalSubmit = (picked: Picked) => {

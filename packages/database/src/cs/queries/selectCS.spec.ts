@@ -494,19 +494,19 @@ describe("Selecting individual cross sections", () => {
             rhs: [
               {
                 state: {
-                  charge: -1,
-                  id: "e",
-                  latex: "\\mathrm{e}",
-                  particle: "e",
+                  charge: 0,
+                  id: "H2",
+                  latex: "\\mathrm{H2}",
+                  particle: "H2",
                 },
                 count: 1,
               },
               {
                 state: {
-                  charge: 0,
-                  id: "H2",
-                  latex: "\\mathrm{H2}",
-                  particle: "H2",
+                  charge: -1,
+                  id: "e",
+                  latex: "\\mathrm{e}",
+                  particle: "e",
                 },
                 count: 1,
               },
@@ -514,15 +514,6 @@ describe("Selecting individual cross sections", () => {
             lhs: [
               {
                 state: {
-                  charge: -1,
-                  id: "e",
-                  latex: "\\mathrm{e}",
-                  particle: "e",
-                },
-                count: 1,
-              },
-              {
-                state: {
                   charge: 0,
                   id: "H2",
                   latex: "\\mathrm{H2}",
@@ -530,10 +521,33 @@ describe("Selecting individual cross sections", () => {
                 },
                 count: 1,
               },
+              {
+                state: {
+                  charge: -1,
+                  id: "e",
+                  latex: "\\mathrm{e}",
+                  particle: "e",
+                },
+                count: 1,
+              },
             ],
           },
           reference: [],
-          isPartOf: ["H2 set"],
+          isPartOf: [
+            {
+              complete: false,
+              description: "Some description",
+              id: expect.stringMatching(/\d+/),
+              name: "H2 set",
+              organization: "Some published organization",
+              publishedIn: null,
+              versionInfo: {
+                createdOn: expect.any(String),
+                status: "published",
+                version: "1",
+              },
+            },
+          ],
         },
       ]);
       const cs = await byId(csIds[0].split("/")[1]);
