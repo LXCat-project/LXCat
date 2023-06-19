@@ -10,11 +10,10 @@ import {
   ReactionTemplate,
   Reversible,
 } from "@lxcat/database/dist/cs/picker/types";
-import { Box, Button, Group } from "@mantine/core";
-import { IconCopy, IconEye, IconPencil } from "@tabler/icons-react";
+import { Button, Group, Stack } from "@mantine/core";
+import { IconCopy, IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { produce } from "immer";
 import { nanoid } from "nanoid";
-import { useState } from "react";
 import { Latex } from "../shared/Latex";
 import { StateSelectIds, SWRReactionPicker } from "../shared/SWRReactionPicker";
 
@@ -46,235 +45,182 @@ const getLatexForReaction = (
   );
 };
 
-type ReactionInformation = {
+export const emptyFilter = () => ({
+  id: nanoid(),
+  options: defaultReactionTemplate(),
+  ids: { consumes: [nanoid()], produces: [nanoid()] },
+  latex: { consumes: [""], produces: [""] },
+});
+
+export const informationFromTemplates = (
+  templates: Array<ReactionTemplate>,
+): Array<ReactionInformation> =>
+  templates.map((template) => ({
+    id: nanoid(),
+    options: template,
+    ids: {
+      consumes: template.consumes.map(() => nanoid()),
+      produces: template.produces.map(() => nanoid()),
+    },
+    latex: {
+      consumes: template.consumes.map(() => ""),
+      produces: template.produces.map(() => ""),
+    },
+  }));
+
+export type ReactionInformation = {
   id: string;
   options: ReactionTemplate;
   ids: StateSelectIds;
   latex: { consumes: Array<string>; produces: Array<string> };
 };
 
+export type FilterComponentProps = {
+  selection: Array<ReactionInformation>;
+  onChange: (selection: Array<ReactionInformation>) => void;
+  editableReaction: number;
+  onEditableReactionChange: (index: number) => void;
+};
+
 export const SWRFilterComponent = ({
   selection,
   onChange,
-}: {
-  selection: Array<ReactionTemplate>;
-  onChange: (selection: Array<ReactionTemplate>, event?: string) => void;
-}) => {
-  const [reactions, setReactions] = useState<Array<ReactionInformation>>(
-    selection.map((options) => ({
-      id: nanoid(),
-      options,
-      ids: {
-        consumes: options.consumes.map(() => nanoid()),
-        produces: options.produces.map(() => nanoid()),
-      },
-      // TODO: Think of a way to obtain state latex on page load.
-      latex: {
-        consumes: options.consumes.map(() => ""),
-        produces: options.produces.map(() => ""),
-      },
-    })),
-  );
-
-  const updateReactions = async (
+  editableReaction,
+  onEditableReactionChange,
+}: FilterComponentProps) => {
+  const updateSelection = async (
     callback: (
-      prevReactions: Array<ReactionInformation>,
+      prevSelection: Array<ReactionInformation>,
     ) => Array<ReactionInformation>,
   ) => {
-    setReactions((prevReactions) => {
-      const newReactions = callback(prevReactions);
-      onChange(newReactions.map((reaction) => reaction.options));
-      return newReactions;
-    });
+    onChange(callback(selection));
   };
 
-  const hasAnySelection = Object.values(selection).some(
-    (s) =>
-      (Array.isArray(s) && s.length > 0)
-      || (typeof s === "object" && Object.keys(s).length > 0),
-  );
-
-  async function onReset() {
-    updateReactions((_) => [
-      {
-        id: nanoid(),
-        options: defaultReactionTemplate(),
-        ids: { consumes: [nanoid()], produces: [nanoid()] },
-        latex: { consumes: [""], produces: [""] },
-      },
-    ]);
-    onChange(defaultSearchTemplate());
-  }
-
-  const [editableReaction, setEditableReaction] = useState(
-    reactions.length - 1,
-  );
-
   return (
-    <div>
-      <div style={{ display: "flex" }}>
-        <fieldset style={{ flexGrow: 1 }}>
-          <legend>Reaction</legend>
-          <ul>
-            {reactions.map((r, i) => (
-              <li
-                key={r.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
+    <Stack>
+      {selection.map((r, i) => (
+        <Group key={r.id} position="center">
+          <SWRReactionPicker
+            ids={r.ids}
+            selection={r.options}
+            latex={getLatexForReaction(r.options, r.latex)}
+            onTagsChange={(selectedTags) =>
+              updateSelection(produce((selection) => {
+                selection[i].options.typeTags = selectedTags;
+                return selection;
+              }))}
+            onConsumesChange={(updatedIndex, path, latex) =>
+              updateSelection(produce((selection) => {
+                selection[i].options.consumes[updatedIndex] = path;
+                selection[i].latex.consumes[updatedIndex] = latex;
+                return selection;
+              }))}
+            onConsumesAppend={() =>
+              updateSelection(produce((selection) => {
+                selection[i].ids.consumes.push(nanoid());
+                selection[i].options.consumes.push({});
+                selection[i].latex.consumes.push("");
+                return selection;
+              }))}
+            onConsumesRemove={(indexToRemove) =>
+              updateSelection(produce((selection) => {
+                selection[i].ids.consumes.splice(indexToRemove, 1);
+                selection[i].options.consumes.splice(indexToRemove, 1);
+                selection[i].latex.consumes.splice(indexToRemove, 1);
+                return selection;
+              }))}
+            onProducesChange={(updatedIndex, path, latex) =>
+              updateSelection(produce((selection) => {
+                selection[i].options.produces[updatedIndex] = path;
+                selection[i].latex.produces[updatedIndex] = latex;
+                return selection;
+              }))}
+            onProducesAppend={() =>
+              updateSelection(produce((selection) => {
+                selection[i].ids.produces.push(nanoid());
+                selection[i].options.produces.push({});
+                selection[i].latex.produces.push("");
+                return selection;
+              }))}
+            onProducesRemove={(indexToRemove) =>
+              updateSelection(produce((selection) => {
+                selection[i].ids.produces.splice(indexToRemove, 1);
+                selection[i].options.produces.splice(indexToRemove, 1);
+                selection[i].latex.produces.splice(indexToRemove, 1);
+                return selection;
+              }))}
+            onReversibleChange={(selectedReversible) =>
+              updateSelection(produce((selection) => {
+                selection[i].options.reversible = selectedReversible;
+                return selection;
+              }))}
+            onCSSetsChange={(selectedSets) =>
+              updateSelection(produce((selection) => {
+                selection[i].options.set = [...selectedSets];
+                return selection;
+              }))}
+            editable={i == editableReaction}
+          />
+          {i == editableReaction
+            ? (
+              <>
+                <Button.Group>
+                  <Button
+                    color="red"
+                    title="Remove reaction"
+                    onClick={() =>
+                      updateSelection((prevSelection) =>
+                        prevSelection.filter((_, j) => i !== j)
+                      )}
+                  >
+                    <IconTrash size={16} />
+                  </Button>
+                  <Button
+                    variant="light"
+                    title="Clone reaction"
+                    onClick={() =>
+                      updateSelection(produce((selection) => {
+                        selection.push({ ...selection[i], id: nanoid() });
+                        return selection;
+                      }))}
+                  >
+                    <IconCopy size={16} />
+                  </Button>
+                  <Button
+                    variant="filled"
+                    title="Toggle view mode"
+                    onClick={() => onEditableReactionChange(-1)}
+                  >
+                    <IconEye size={16} />
+                  </Button>
+                </Button.Group>
+              </>
+            )
+            : (
+              <Button
+                variant="subtle"
+                title="Edit"
+                onClick={() => onEditableReactionChange(i)}
               >
-                <SWRReactionPicker
-                  ids={r.ids}
-                  selection={r.options}
-                  latex={getLatexForReaction(r.options, r.latex)}
-                  onTagsChange={(selectedTags) =>
-                    updateReactions(produce((selection) => {
-                      selection[i].options.typeTags = selectedTags;
-                      return selection;
-                    }))}
-                  onConsumesChange={(updatedIndex, path, latex) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].options.consumes[updatedIndex] = path;
-                      reactions[i].latex.consumes[updatedIndex] = latex;
-                      return reactions;
-                    }))}
-                  onConsumesAppend={() =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].ids.consumes.push(nanoid());
-                      reactions[i].options.consumes.push({});
-                      reactions[i].latex.consumes.push("");
-                      return reactions;
-                    }))}
-                  onConsumesRemove={(indexToRemove) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].ids.consumes.splice(indexToRemove, 1);
-                      reactions[i].options.consumes.splice(indexToRemove, 1);
-                      reactions[i].latex.consumes.splice(indexToRemove, 1);
-                      return reactions;
-                    }))}
-                  onProducesChange={(updatedIndex, path, latex) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].options.produces[updatedIndex] = path;
-                      reactions[i].latex.produces[updatedIndex] = latex;
-                      return reactions;
-                    }))}
-                  onProducesAppend={() =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].ids.produces.push(nanoid());
-                      reactions[i].options.produces.push({});
-                      reactions[i].latex.produces.push("");
-                      return reactions;
-                    }))}
-                  onProducesRemove={(indexToRemove) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].ids.produces.splice(indexToRemove, 1);
-                      reactions[i].options.produces.splice(indexToRemove, 1);
-                      reactions[i].latex.produces.splice(indexToRemove, 1);
-                      return reactions;
-                    }))}
-                  onReversibleChange={(selectedReversible) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].options.reversible = selectedReversible;
-                      return reactions;
-                    }))}
-                  onCSSetsChange={(selectedSets) =>
-                    updateReactions(produce((reactions) => {
-                      reactions[i].options.set = [...selectedSets];
-                      return reactions;
-                    }))}
-                  editable={i == editableReaction}
-                />
-                {i == editableReaction
-                  ? (
-                    <>
-                      <Button.Group>
-                        <Button
-                          variant="subtle"
-                          title="Remove reaction"
-                          onClick={() =>
-                            updateReactions((prevReactions) =>
-                              prevReactions.filter((_, j) => i !== j)
-                            )}
-                        >
-                          -
-                        </Button>
-                        <Button
-                          variant="subtle"
-                          title="Clone reaction"
-                          onClick={() =>
-                            updateReactions(produce((reactions) => {
-                              reactions.push({ ...reactions[i], id: nanoid() });
-                              return reactions;
-                            }))}
-                        >
-                          <IconCopy size={16} />
-                        </Button>
-                        <Button
-                          variant="subtle"
-                          title="Toggle view mode"
-                          onClick={() => setEditableReaction(-1)}
-                        >
-                          <IconEye size={16} />
-                        </Button>
-                      </Button.Group>
-                    </>
-                  )
-                  : (
-                    <>
-                      <Button
-                        variant="subtle"
-                        title="Edit"
-                        onClick={() => setEditableReaction(i)}
-                      >
-                        <IconPencil size={16} />
-                      </Button>
-                    </>
-                  )}
-              </li>
-            ))}
-          </ul>
-          <Box sx={{ display: "flex", justifyContent: "end" }}>
-            <Button
-              title="Add reaction filter"
-              onClick={async () => {
-                updateReactions(produce((reactions) => {
-                  reactions.push({
-                    id: nanoid(),
-                    options: defaultReactionTemplate(),
-                    ids: { consumes: [nanoid()], produces: [nanoid()] },
-                    latex: { consumes: [""], produces: [""] },
-                  });
-                  return reactions;
-                }));
-                setEditableReaction(reactions.length);
-              }}
-            >
-              +
-            </Button>
-          </Box>
-          {
-            /*<div>
+                <IconPencil size={16} />
+              </Button>
+            )}
+        </Group>
+      ))}
+    </Stack>
+  );
+  {
+    /*<div>
             Examples:{" "}
             <Button
               variant="subtle"
               onClick={() => {
                 // TODO get reaction for Ar from db
-                onReactionsChange([]);
+                onSelectionChange([]);
               }}
             >
               Argon
             </Button>
           </div>*/
-          }
-        </fieldset>
-      </div>
-      <div>
-        <Button variant="outline" disabled={!hasAnySelection} onClick={onReset}>
-          Clear selection
-        </Button>
-      </div>
-    </div>
-  );
+  }
 };

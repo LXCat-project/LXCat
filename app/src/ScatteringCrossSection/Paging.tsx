@@ -41,7 +41,7 @@ export const Paging = ({
       </Link>
     )}
     <span>
-      &nbsp;{paging.offset + 1} - {paging.offset + nrOnPage}
+      &nbsp;{nrOnPage == 0 ? 0 : paging.offset + 1} - {paging.offset + nrOnPage}
       {" "}
     </span>
     {

@@ -31,8 +31,16 @@ import {
 } from "@lxcat/database/dist/shared/queries/state";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { Button, Center, Space, Text } from "@mantine/core";
-import { IconGraph } from "@tabler/icons-react";
+import {
+  Box,
+  Button,
+  Group,
+  MantineTheme,
+  Space,
+  Sx,
+  Text,
+} from "@mantine/core";
+import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import deepEqual from "deep-equal";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -45,7 +53,13 @@ import { CSTable } from "../../ScatteringCrossSection/CSTable";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
+import {
+  emptyFilter,
+  informationFromTemplates,
+  ReactionInformation,
+} from "../../ScatteringCrossSection/SWRFilterComponent";
 import { Layout } from "../../shared/Layout";
+import { CacheMap } from "../../shared/swr-cache-map";
 import { omit } from "../../shared/utils";
 
 interface Example {
@@ -62,6 +76,14 @@ interface Props {
   defaultReactionOptions: ReactionOptions;
   examples: Example[];
 }
+
+const listStyle: Sx = (theme: MantineTheme) => ({
+  padding: theme.spacing.xs,
+  borderStyle: "solid",
+  borderRadius: theme.radius.md,
+  borderColor: theme.colors.gray[4],
+  borderWidth: "thin",
+});
 
 async function getExample(
   label: string,
@@ -146,39 +168,6 @@ const generateCachePairs = (
   ),
 ];
 
-class CacheMap {
-  _data: Map<string, any>;
-
-  constructor(pairs: Array<[string, any]>) {
-    this._data = new Map(
-      pairs.map(([key, value]) => [
-        key,
-        { data: value, isValidating: false, isLoading: false },
-      ]),
-    );
-  }
-
-  has(key: string) {
-    return this._data.has(key);
-  }
-
-  get(key: string) {
-    return this._data.get(key);
-  }
-
-  set(key: string, value: any) {
-    return this._data.set(key, value);
-  }
-
-  delete(key: string) {
-    return this._data.delete(key);
-  }
-
-  keys() {
-    return this._data.keys();
-  }
-}
-
 const ScatteringCrossSectionsPage: NextPage<Props> = ({
   items: initialItems,
   options,
@@ -188,7 +177,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
 }) => {
   const [items, setItems] = useState(initialItems);
   const [paging, setPaging] = useState(initialPaging);
-  const [selection, setSelection] = useState(initialSelection);
+  const [selection, setSelection] = useState(
+    informationFromTemplates(initialSelection),
+  );
+  const [editableReaction, setEditableReaction] = useState(
+    initialSelection.length - 1,
+  );
 
   const router = useRouter();
 
@@ -200,10 +194,10 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
   }
 
-  const onChange = async (newSelection: Array<ReactionTemplate>) => {
+  const onChange = async (newSelection: Array<ReactionInformation>) => {
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
-        reactions: JSON.stringify(newSelection),
+        reactions: JSON.stringify(newSelection.map(({ options }) => options)),
         offset: "0",
       })}`,
     );
@@ -238,32 +232,58 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
                 defaultReactionOptions,
               ),
               ...selection.flatMap((selected, index) =>
-                generateCachePairs(selected, options[index])
+                generateCachePairs(selected.options, options[index])
               ),
             ]),
         }}
       >
-        <Filter selection={selection} onChange={onChange} />
+        <Box sx={listStyle}>
+          <Filter
+            selection={selection}
+            onChange={onChange}
+            editableReaction={editableReaction}
+            onEditableReactionChange={setEditableReaction}
+          />
+        </Box>
       </SWRConfig>
-      <hr />
-      {nrItems > 0 && nrItems <= BAG_SIZE
-        ? (
-          <>
-            <Center>
-              <Link
-                href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
-                passHref
-                legacyBehavior
-              >
-                <Button leftIcon={<IconGraph />} component="a" variant="light">
-                  Plot selection
-                </Button>
-              </Link>
-            </Center>
-            <Space h="sm" />
-          </>
-        )
-        : <></>}
+      <Space h="sm" />
+      <Group position="center">
+        <Button
+          color="red"
+          disabled={items.length == 0 && selection.length < 2}
+          onClick={() => {
+            onChange([emptyFilter()]);
+            setEditableReaction(0);
+          }}
+          leftIcon=<IconTrash />
+        >
+          Clear selection
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            onChange([...selection, emptyFilter()]);
+            setEditableReaction(selection.length);
+          }}
+          leftIcon=<IconAdjustmentsPlus />
+        >
+          Add Filter
+        </Button>
+        {nrItems > 0 && nrItems <= BAG_SIZE
+          ? (
+            <Link
+              href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
+              passHref
+              legacyBehavior
+            >
+              <Button leftIcon={<IconGraph />} component="a" variant="light">
+                Plot selection
+              </Button>
+            </Link>
+          )
+          : <></>}
+      </Group>
+      <Space h="sm" />
       {nrItems > 0 ? <CSTable items={items} /> : (
         <Text>
           The selection is empty. Use the selection tool above to start
