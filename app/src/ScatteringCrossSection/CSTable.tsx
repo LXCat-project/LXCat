@@ -118,6 +118,7 @@ export const CSTable = ({ items }: Props) => {
               withBorder
               borderRadius="md"
               classNames={{ header: classes.header }}
+              sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
               // height={200}
               highlightOnHover={false}
               columns={[
