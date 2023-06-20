@@ -11,7 +11,6 @@ import {
   Alert,
   Button,
   Center,
-  Checkbox,
   Grid,
   Group,
   Loader,
@@ -23,6 +22,7 @@ import {
   IconCodeDots,
   IconFileText,
 } from "@tabler/icons-react";
+import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,8 +31,7 @@ import { Latex } from "../../../shared/Latex";
 import { ButtonClipboard } from "./ButtonClipboard";
 import { ButtonMultiDownload } from "./ButtonMultiDownload";
 import { colorScheme } from "./colors";
-import { ReferenceList } from "./ReferenceList";
-import { TableScrollArea } from "./Table";
+import { Reference } from "./Reference";
 import { TermsOfUseCheck } from "./TermsOfUseCheck";
 import { FormattedReference } from "./types";
 
@@ -51,6 +50,8 @@ const Chart = dynamic(
 interface Process extends LUT {
   id: string;
   reaction: Reaction<State>;
+  isPartOf: Array<string>;
+  reference: Array<string>;
 }
 
 const NUM_LINES_INIT = 5;
@@ -65,29 +66,21 @@ export const PlotPage = (
 ) => {
   const router = useRouter();
 
-  // TODO: Map a selected process to an available color instead of a fixed color.
-  const [selected, setSelected] = useState(
-    new Set<string>(
-      processes.slice(0, NUM_LINES_INIT).map(process => process.id),
-    ),
+  const [selected, setSelected] = useState<Array<Process>>(
+    processes.slice(0, NUM_LINES_INIT),
   );
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
-  const toggleRow = (key: string) =>
-    setSelected((selection) => (
-      new Set(selection.delete(key) ? selection : selection.add(key))
-    ));
-
-  let colorSelection = processes.reduce<Array<string>>(
-    (prev, process, index) => {
-      if (selected.has(process.id)) {
-        prev.push(colorScheme[index % colorScheme.length]);
-      }
-      return prev;
-    },
-    [],
+  // TODO: Map a selected process to an available color instead of a fixed color.
+  let colorMap = new Map(
+    processes.map((
+      { id },
+      index,
+    ) => [id, colorScheme[index % colorScheme.length]]),
   );
+
+  let referenceMarkers = new Map(refs.map(({ id }, index) => [id, index + 1]));
 
   let idsString = processes.map(({ id }) => id).join(",");
   let referenceIds = refs.map(({ id }) => id).join("/");
@@ -117,8 +110,8 @@ export const PlotPage = (
         <Grid.Col span="content">
           <Stack>
             <Chart
-              processes={processes.filter(process => selected.has(process.id))}
-              colors={colorSelection}
+              processes={selected}
+              colors={selected.map(({ id }) => colorMap.get(id)!)}
             />
             <Center>
               <Button.Group>
@@ -152,31 +145,56 @@ export const PlotPage = (
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack>
-            <TableScrollArea
-              headers={[{ key: "_check", label: "" }, {
-                key: "reaction",
-                label: "Reaction",
-              }]}
-              maxHeight={400}
-              data={processes.map((process, index) => ({
-                key: process.id,
-                reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
-                _check: (
-                  <Checkbox
-                    sx={{
-                      ".mantine-Checkbox-input:checked": {
-                        backgroundColor:
-                          colorScheme[index % colorScheme.length],
-                      },
-                    }}
-                    checked={selected.has(process.id)}
-                    onChange={() => toggleRow(process.id)}
-                  />
+            <DataTable
+              withBorder
+              withColumnBorders
+              borderRadius="md"
+              sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 400 } }}
+              records={processes}
+              columns={[{
+                accessor: "reaction",
+                render: (record) => (
+                  <Latex>{reactionAsLatex(record.reaction)}</Latex>
                 ),
-              }))}
+                // }, {
+                //   accessor: "isPartOf",
+                //   title: "Set",
+              }, {
+                accessor: "reference",
+                title: "Source",
+                render: ({ reference }) =>
+                  `[${
+                    reference.map((rid) => referenceMarkers.get(rid)!).join(
+                      ", ",
+                    )
+                  }]`,
+              }]}
+              selectedRecords={selected}
+              onSelectedRecordsChange={setSelected}
+              getRecordSelectionCheckboxProps={({ id }) => ({
+                sx: {
+                  ".mantine-Checkbox-input:checked": {
+                    backgroundColor: colorMap.get(id),
+                  },
+                },
+              })}
             />
             <Stack>
-              <ReferenceList references={refs} />
+              <DataTable
+                withBorder
+                borderRadius="md"
+                sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
+                records={refs}
+                columns={[{
+                  accessor: "marker",
+                  title: "",
+                  render: ({ id }) => referenceMarkers.get(id)!,
+                }, {
+                  accessor: "ref",
+                  title: "Reference",
+                  render: (ref) => <Reference>{ref}</Reference>,
+                }]}
+              />
               <Group position="center">
                 <ButtonMultiDownload
                   entries={[{
