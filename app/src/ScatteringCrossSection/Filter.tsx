@@ -2,33 +2,34 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { useRouter } from "next/router";
-import { SWRFilterComponent } from "./SWRFilterComponent";
+import {
+  FilterComponentProps,
+  ReactionInformation,
+  SWRFilterComponent,
+} from "./SWRFilterComponent";
 
-interface Props {
-  selection: Array<ReactionTemplate>;
-  onChange: (newSelection: Array<ReactionTemplate>) => void | Promise<void>;
-}
-
-export const Filter = ({ selection, onChange }: Props) => {
+export const Filter = (
+  { selection, onChange, ...rest }: FilterComponentProps,
+) => {
   const router = useRouter();
 
   function onFilterChange(
-    newSelection: Array<ReactionTemplate>,
-    event?: string,
+    newSelection: Array<ReactionInformation>,
   ) {
     const query = new URLSearchParams({
-      reactions: JSON.stringify(newSelection),
+      reactions: JSON.stringify(newSelection.map(({ options }) => options)),
     }).toString();
 
-    if (event?.startsWith("reactions")) {
-      router.push({ query }, undefined, { shallow: true });
-      onChange(newSelection);
-    } else {
-      router.push({ query });
-    }
+    router.push({ query }, undefined, { shallow: true });
+    onChange(newSelection);
   }
 
-  return <SWRFilterComponent selection={selection} onChange={onFilterChange} />;
+  return (
+    <SWRFilterComponent
+      selection={selection}
+      onChange={onFilterChange}
+      {...rest}
+    />
+  );
 };

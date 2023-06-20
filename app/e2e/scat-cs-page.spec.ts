@@ -20,10 +20,13 @@ const csTest = test.extend({
       .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
       .click();
 
-    const link = await page.locator("a[role=\"listitem\"]").getAttribute(
-      "href",
-    );
-    await page.goto(link!);
+    const row = page.getByRole("row", {
+      name: "Some organization Some name 1 True",
+    });
+    await row.click();
+
+    const csRow = page.getByRole("cell", { name: "Electronic", exact: true });
+    await csRow.click();
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();

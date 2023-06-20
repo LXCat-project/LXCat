@@ -2,12 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { Button, Checkbox, Group, Space } from "@mantine/core";
 import { useState } from "react";
 import { ReactionSummary } from "./ReactionSummary";
-import { SWRFilterComponent } from "./SWRFilterComponent";
+import { ReactionInformation, SWRFilterComponent } from "./SWRFilterComponent";
 
 export type Picked = CrossSectionItem[];
 
@@ -17,8 +16,8 @@ export const Picker = ({
   choices,
   onSubmit,
 }: {
-  filterSelection: Array<ReactionTemplate>;
-  setFilterSelection: (selection: Array<ReactionTemplate>) => void;
+  filterSelection: Array<ReactionInformation>;
+  setFilterSelection: (selection: Array<ReactionInformation>) => void;
   choices: Picked;
   onSubmit: (picked: Picked) => void;
 }) => {
@@ -38,6 +37,8 @@ export const Picker = ({
         <SWRFilterComponent
           selection={filterSelection}
           onChange={setFilterSelection}
+          editableReaction={0}
+          onEditableReactionChange={() => {}}
         />
       </fieldset>
       <fieldset>

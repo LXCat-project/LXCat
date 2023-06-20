@@ -163,51 +163,58 @@ export async function byIds(ids: string[]) {
   return result;
 }
 
-export async function getCSHeadings(
+export const getCSHeadings = async (
   csIds: Array<string>,
   paging: PagingOptions,
-) {
+) => {
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
+
   const q = aql`
-	FOR cs IN CrossSection
-          FILTER cs._id IN ${csIds}
-          FILTER cs.versionInfo.status == 'published'
-	  LET refs = (
-		FOR rs IN References
-		  FILTER rs._from == cs._id
-		  FOR r IN Reference
-			FILTER r._id == rs._to
-			RETURN UNSET(r, ["_key", "_rev", "_id"])
-	  )
-	  LET reaction = FIRST(
-		FOR r in Reaction
-		  FILTER r._id == cs.reaction
-		  LET consumes = (
-			FOR c IN Consumes
-			FILTER c._from == r._id
-			  FOR c2s IN State
-			  FILTER c2s._id == c._to
-			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-		  )
-		  LET produces = (
-			FOR p IN Produces
-			FILTER p._from == r._id
-			  FOR p2s IN State
-			  FILTER p2s._id == p._to
-			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-		  )
-		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
-	  )
-	  LET setNames = (
-            FOR css IN OUTBOUND cs IsPartOf
-	      RETURN css.name
-	  )
-	  ${limitAql}
-	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
+	  FOR cs IN CrossSection
+      FILTER cs._id IN ${csIds}
+      FILTER cs.versionInfo.status == 'published'
+
+	    LET refs = (
+        FOR r IN OUTBOUND cs References
+		  	  RETURN UNSET(r, ["_key", "_rev", "_id"])
+	    )
+	    LET reaction = FIRST(
+        FOR reaction IN Reaction
+          FILTER reaction._id == cs.reaction
+          LET produces = (
+            FOR state, stoich IN OUTBOUND reaction Produces
+		  	      RETURN {state: UNSET(state, ["_key", "_rev", "_id"]), count: stoich.count}
+          )
+          LET consumes = (
+            FOR state, stoich IN OUTBOUND reaction Consumes
+		  	      RETURN {state: UNSET(state, ["_key", "_rev", "_id"]), count: stoich.count}
+          )
+		      RETURN MERGE(
+            UNSET(reaction, ["_key", "_rev", "_id"]), 
+            {"lhs":consumes, "rhs": produces}
+          )
+      )
+	    LET setNames = (
+        FOR css IN OUTBOUND cs IsPartOf
+          FILTER css.versionInfo.status == "published"
+          LET org = FIRST(
+            FOR org IN Organization
+              FILTER org._id == css.organization
+              RETURN org
+          )
+          LET ref = FIRST(
+            FOR ref IN Reference
+              FILTER ref._id == css.publishedIn
+              RETURN UNSET(ref, ["_key", "_rev", "_id"])
+          )
+          RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { "id": css._key, "organization": org.name, "publishedIn": ref })
+	    )
+	    ${limitAql}
+	    RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
   const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
   return await cursor.all();
-}
+};
 
 // TODO: Can this function be removed?
 export async function search(
@@ -260,13 +267,12 @@ export async function search(
 export async function historyOfSection(key: string) {
   const id = `CrossSection/${key}`;
   const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
-    FOR h
-    IN 0..9999999
-    ANY ${id}
-    CrossSectionHistory
-    FILTER h.versionInfo.status != 'draft'
-    SORT h.versionInfo.version DESC
-    RETURN MERGE({_key: h._key}, h.versionInfo)
+    FOR h IN 0..9999999
+      ANY ${id}
+      CrossSectionHistory
+      FILTER h.versionInfo.status != 'draft'
+      SORT h.versionInfo.version DESC
+      RETURN MERGE({_key: h._key}, h.versionInfo)
   `);
   return await cursor.all();
 }

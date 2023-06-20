@@ -34,8 +34,8 @@ test.describe("cross section index page with Uo selected", () => {
   });
 
   test("should have 2 items listed", async ({ page }) => {
-    const section1 = page.locator("text=/.*Part of \"Some name\" set.*/");
-    const section2 = page.locator("text=/.*Part of \"Some other name\" set.*/");
+    const section1 = page.locator("td:text(\"Some name\")");
+    const section2 = page.locator("td:text(\"Some other name\")");
     await expect(section1).toBeVisible();
     await expect(section2).toBeVisible();
   });
@@ -51,10 +51,10 @@ test.describe("cross section index page with Uo selected", () => {
     });
 
     test("should list single cross section", async ({ page }) => {
-      const section2 = page.locator(
-        "text=/.*Part of \"Some other name\" set.*/",
-      );
-      await expect(section2).toBeVisible();
+      const cs1 = page.locator("td:text(\"Some name\")");
+      const cs2 = page.locator("td:text(\"Some other name\")");
+      await expect(cs1).toHaveCount(0);
+      await expect(cs2).toBeVisible();
     });
   });
 });
