@@ -26,11 +26,10 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
-import { Latex } from "../../../shared/Latex";
 import { ButtonClipboard } from "./ButtonClipboard";
 import { ButtonMultiDownload } from "./ButtonMultiDownload";
 import { colorScheme } from "./colors";
+import { ProcessTable } from "./ProcessTable";
 import { Reference } from "./Reference";
 import { TermsOfUseCheck } from "./TermsOfUseCheck";
 import { FormattedReference } from "./types";
@@ -47,7 +46,7 @@ const Chart = dynamic(
   },
 );
 
-interface Process extends LUT {
+export interface Process extends LUT {
   id: string;
   reaction: Reaction<State>;
   isPartOf: Array<string>;
@@ -145,39 +144,12 @@ export const PlotPage = (
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack>
-            <DataTable
-              withBorder
-              withColumnBorders
-              borderRadius="md"
-              sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 400 } }}
-              records={processes}
-              columns={[{
-                accessor: "reaction",
-                render: (record) => (
-                  <Latex>{reactionAsLatex(record.reaction)}</Latex>
-                ),
-                // }, {
-                //   accessor: "isPartOf",
-                //   title: "Set",
-              }, {
-                accessor: "reference",
-                title: "Source",
-                render: ({ reference }) =>
-                  `[${
-                    reference.map((rid) => referenceMarkers.get(rid)!).join(
-                      ", ",
-                    )
-                  }]`,
-              }]}
-              selectedRecords={selected}
-              onSelectedRecordsChange={setSelected}
-              getRecordSelectionCheckboxProps={({ id }) => ({
-                sx: {
-                  ".mantine-Checkbox-input:checked": {
-                    backgroundColor: colorMap.get(id),
-                  },
-                },
-              })}
+            <ProcessTable
+              processes={processes}
+              referenceMarkers={referenceMarkers}
+              colorMap={colorMap}
+              selected={selected}
+              onChangeSelected={setSelected}
             />
             <Stack>
               <DataTable
