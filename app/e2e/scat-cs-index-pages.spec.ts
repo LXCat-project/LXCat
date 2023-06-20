@@ -116,8 +116,8 @@ test.describe("cross section bag page", () => {
   });
 
   test("should have 2 items", async ({ page }) => {
-    const table = page.locator("table:has(thead th:text(\"Reaction\"))");
-    const secondCrossSection = table.locator("td span.katex").nth(1);
+    const table = page.locator("table:has(thead div:text(\"Reaction\"))");
+    const secondCrossSection = table.locator("tbody tr").nth(1);
 
     table.highlight();
 
