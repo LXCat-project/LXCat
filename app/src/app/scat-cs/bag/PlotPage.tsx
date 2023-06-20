@@ -4,6 +4,7 @@
 
 "use client";
 
+import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
@@ -49,7 +50,7 @@ const Chart = dynamic(
 export interface Process extends LUT {
   id: string;
   reaction: Reaction<State>;
-  isPartOf: Array<string>;
+  isPartOf: Array<Omit<CrossSectionSet, "versionInfo">>;
   reference: Array<string>;
 }
 

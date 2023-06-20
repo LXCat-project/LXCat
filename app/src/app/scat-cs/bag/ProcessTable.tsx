@@ -53,9 +53,6 @@ export const ProcessTable = (
       columns={[{
         accessor: "reaction",
         render: (record) => <Latex>{reactionAsLatex(record.reaction)}</Latex>,
-        // }, {
-        //   accessor: "isPartOf",
-        //   title: "Set",
       }, {
         accessor: "type",
         title: "Type",
@@ -74,11 +71,19 @@ export const ProcessTable = (
         ),
         filtering: true,
       }, {
+        accessor: "isPartOf",
+        title: "Contributor",
+        render: ({ isPartOf }) => isPartOf[0].organization,
+      }, {
+        accessor: "isPartOf",
+        title: "Set",
+        render: ({ isPartOf }) => isPartOf[0].name,
+      }, {
         accessor: "reference",
         title: "Source",
         render: ({ reference }) =>
           `[${
-            reference.map((rid) => referenceMarkers.get(rid)!).join(
+            reference.map((rid) => referenceMarkers.get(rid)!).sort().join(
               ", ",
             )
           }]`,
