@@ -83,6 +83,7 @@ export const PlotPage = (
   let referenceMarkers = new Map(refs.map(({ id }, index) => [id, index + 1]));
 
   let idsString = processes.map(({ id }) => id).join(",");
+  let idsPath = processes.map(({ id }) => id).join("/");
   let referenceIds = refs.map(({ id }) => id).join("/");
 
   return (
@@ -172,17 +173,17 @@ export const PlotPage = (
                 <ButtonMultiDownload
                   entries={[{
                     text: "CSL-JSON",
-                    link: `/api/references/csl-json/${referenceIds}`,
+                    link: `/api/references/csl-json/for-selection/${idsPath}`,
                     icon: <IconCodeDots stroke={1.5} />,
                     fileName: "LXCat_references",
                   }, {
                     text: "Bibtex",
-                    link: `/api/references/bibtex/${referenceIds}`,
+                    link: `/api/references/bibtex/for-selection/${idsPath}`,
                     icon: <IconFileText stroke={1.5} />,
                     fileName: "LXCat_references.bib",
                   }, {
                     text: "RIS",
-                    link: `/api/references/ris/${referenceIds}`,
+                    link: `/api/references/ris/for-selection/${idsPath}`,
                     icon: <IconFileText stroke={1.5} />,
                     fileName: "LXCat_references.ris",
                   }]}

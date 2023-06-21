@@ -29,7 +29,7 @@ export const ProcessTable = (
 
   const availableTags = useMemo(
     () => [...new Set(records.flatMap(({ reaction }) => reaction.type_tags))],
-    [],
+    [records],
   );
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const ProcessTable = (
 
       return true;
     }));
-  }, [selectedTags]);
+  }, [processes, selectedTags]);
 
   return (
     <DataTable
@@ -71,11 +71,11 @@ export const ProcessTable = (
         ),
         filtering: true,
       }, {
-        accessor: "isPartOf",
+        accessor: "contributor",
         title: "Contributor",
         render: ({ isPartOf }) => isPartOf[0].organization,
       }, {
-        accessor: "isPartOf",
+        accessor: "set",
         title: "Set",
         render: ({ isPartOf }) => isPartOf[0].name,
       }, {
