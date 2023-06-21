@@ -6,6 +6,7 @@ import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
 
+import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { formatReference } from "./cite";
 import { PlotPage } from "./PlotPage";
 
@@ -24,7 +25,7 @@ export const Bag = ({
   }`;
   return (
     <PlotPage
-      processes={flattenReactions(bag.processes, bag.states)}
+      processes={flattenReactions(bag.processes, bag.states, bag.sets)}
       refs={formattedRefs}
       setMismatch={hasMixedCompleteSets}
       permaLink={permaLink}
@@ -35,6 +36,7 @@ export const Bag = ({
 function flattenReactions(
   processes: CrossSectionBag["processes"],
   states: Record<string, Omit<State, "id">>,
+  sets: Record<string, Omit<CrossSectionSet, "versionInfo">>,
 ) {
   return processes.map((p) => {
     const reaction: Reaction<State> = {
@@ -60,9 +62,11 @@ function flattenReactions(
         } as ReactionEntry<State>;
       }),
     };
+    const isPartOf = p.isPartOf.map((setid) => sets[setid]);
     return {
       ...p,
       reaction,
+      isPartOf,
     };
   });
 }

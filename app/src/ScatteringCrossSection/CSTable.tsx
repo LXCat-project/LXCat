@@ -61,7 +61,7 @@ export const CSTable = ({ items }: Props) => {
       columns={[
         {
           accessor: "organization",
-          title: "Contributor",
+          title: "Database",
           render: ({ id, organization }) => (
             <Group spacing="xs">
               <IconChevronRight
@@ -118,7 +118,7 @@ export const CSTable = ({ items }: Props) => {
               withBorder
               borderRadius="md"
               classNames={{ header: classes.header }}
-              // height={200}
+              sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
               highlightOnHover={false}
               columns={[
                 { accessor: "reaction" },

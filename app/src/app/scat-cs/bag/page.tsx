@@ -47,7 +47,6 @@ const ScatteringCrossSectionSelectionPage = async (
 };
 
 export default ScatteringCrossSectionSelectionPage;
-export const dynamic = "force-dynamic";
 
 const fetchProps = async (
   rawIds: string | Array<string>,
