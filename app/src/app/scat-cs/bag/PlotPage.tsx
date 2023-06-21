@@ -22,6 +22,7 @@ import {
   IconCalculator,
   IconCodeDots,
   IconFileText,
+  IconTableExport,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
@@ -84,7 +85,6 @@ export const PlotPage = (
 
   let idsString = processes.map(({ id }) => id).join(",");
   let idsPath = processes.map(({ id }) => id).join("/");
-  let referenceIds = refs.map(({ id }) => id).join("/");
 
   return (
     <>
@@ -170,26 +170,38 @@ export const PlotPage = (
                 }]}
               />
               <Group position="center">
-                <ButtonMultiDownload
-                  entries={[{
-                    text: "CSL-JSON",
-                    link: `/api/references/csl-json/for-selection/${idsPath}`,
-                    icon: <IconCodeDots stroke={1.5} />,
-                    fileName: "LXCat_references",
-                  }, {
-                    text: "Bibtex",
-                    link: `/api/references/bibtex/for-selection/${idsPath}`,
-                    icon: <IconFileText stroke={1.5} />,
-                    fileName: "LXCat_references.bib",
-                  }, {
-                    text: "RIS",
-                    link: `/api/references/ris/for-selection/${idsPath}`,
-                    icon: <IconFileText stroke={1.5} />,
-                    fileName: "LXCat_references.ris",
-                  }]}
-                >
-                  Download references
-                </ButtonMultiDownload>
+                <Button.Group>
+                  <ButtonMultiDownload
+                    entries={[{
+                      text: "CSL-JSON",
+                      link: `/api/references/csl-json/for-selection/${idsPath}`,
+                      icon: <IconCodeDots stroke={1.5} />,
+                      fileName: "LXCat_references",
+                    }, {
+                      text: "Bibtex",
+                      link: `/api/references/bibtex/for-selection/${idsPath}`,
+                      icon: <IconFileText stroke={1.5} />,
+                      fileName: "LXCat_references.bib",
+                    }, {
+                      text: "RIS",
+                      link: `/api/references/ris/for-selection/${idsPath}`,
+                      icon: <IconFileText stroke={1.5} />,
+                      fileName: "LXCat_references.ris",
+                    }]}
+                  >
+                    Download references
+                  </ButtonMultiDownload>
+                  <Button
+                    variant="light"
+                    size="md"
+                    disabled
+                    rightIcon={
+                      <IconTableExport size={"1.05rem"} stroke={1.5} />
+                    }
+                  >
+                    Export table
+                  </Button>
+                </Button.Group>
                 <TermsOfUseCheck references={refs} permaLink={permaLink} />
               </Group>
             </Stack>
