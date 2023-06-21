@@ -71,8 +71,8 @@ export const ProcessTable = (
         ),
         filtering: true,
       }, {
-        accessor: "contributor",
-        title: "Contributor",
+        accessor: "database",
+        title: "Database",
         render: ({ isPartOf }) => isPartOf[0].organization,
       }, {
         accessor: "set",

@@ -61,7 +61,7 @@ export const CSTable = ({ items }: Props) => {
       columns={[
         {
           accessor: "organization",
-          title: "Contributor",
+          title: "Database",
           render: ({ id, organization }) => (
             <Group spacing="xs">
               <IconChevronRight
