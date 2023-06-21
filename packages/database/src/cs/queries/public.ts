@@ -67,22 +67,16 @@ export async function byIds(ids: string[]) {
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
-        FOR p IN IsPartOf
-          FILTER cs._id == p._from
-          FOR css IN CrossSectionSet
-            FILTER p._to == css._id
-              FILTER css.versionInfo.status != 'draft'
-              RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
+        FOR css IN OUTBOUND cs IsPartOf
+          FILTER css.versionInfo.status != 'draft'
+          RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
     )
     LET references = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
-        FOR rs IN References
-          FILTER rs._from == cs._id
-          FOR r IN Reference
-            FILTER r._id == rs._to
-            RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
+        FOR r IN OUTBOUND cs References
+          RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
     )
     LET states = MERGE(
       FOR cs IN CrossSection
@@ -104,7 +98,7 @@ export async function byIds(ids: string[]) {
                 FILTER p2s._id == p._to
                 RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
           )
-        RETURN MERGE(UNION(consumes, produces))
+          RETURN MERGE(UNION(consumes, produces))
     )
     LET processes = (
       FOR cs IN CrossSection
@@ -130,11 +124,8 @@ export async function byIds(ids: string[]) {
             RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
         )
         LET refs2 = (
-          FOR rs IN References
-            FILTER rs._from == cs._id
-            FOR r IN Reference
-              FILTER r._id == rs._to
-              RETURN r._key
+          FOR r IN OUTBOUND cs References
+            RETURN r._key
         )
         LET sets2 = (
           FOR p IN IsPartOf
