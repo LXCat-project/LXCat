@@ -1,0 +1,27 @@
+name: CI/CD pipeline for LXCat
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install Rust
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - name: Install dependencies
+      run: pnpm install
+    - name: Build packages
+      run: pnpm build
+    - name: Cleanup & lint
+      run: rm -rf .next/cache
+      run: pnpm lint
+      
+
