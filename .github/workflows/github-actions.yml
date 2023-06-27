@@ -13,7 +13,7 @@ jobs:
         node-version: 18
         cache: 'pnpm'
     - name: Install Rust
-    - uses: actions-rs/toolchain@v1
+      uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
     - name: Install dependencies
