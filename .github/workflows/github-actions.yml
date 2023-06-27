@@ -11,6 +11,7 @@ jobs:
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
         restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
@@ -60,3 +61,34 @@ jobs:
       run: pnpm install
     - name: Test @lxcat/database
       run: pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml --no-threads
+
+  test-schema:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ${{ github.workspace }}/packages/schema/dist
+          ${{ github.workspace }}/packages/database/dist
+          ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/app/.next/
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install
+    - name: Test @lxcat/schema
+      run: pnpm -C packages/schema test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+    - name: Create coverage report
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: packages/schema/coverage/cobertura-coverage.xml
+        minimum_coverage: 0
