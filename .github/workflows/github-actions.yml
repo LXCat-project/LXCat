@@ -21,8 +21,9 @@ jobs:
       run: pnpm install
     - name: Build packages
       run: pnpm build
-    - name: Cleanup & lint
+    - name: Cleanup
       run: rm -rf .next/cache
+    - name: Lint
       run: pnpm lint
       
 
