@@ -5,6 +5,15 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ${{ github.workspace }}/packages/schema/dist
+          ${{ github.workspace }}/packages/database/dist
+          ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/app/.next/
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+        restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
     - uses: pnpm/action-setup@v2
       with:
         version: 8
