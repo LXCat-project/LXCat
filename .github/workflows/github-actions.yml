@@ -1,5 +1,5 @@
 name: CI/CD pipeline for LXCat
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-20.04
