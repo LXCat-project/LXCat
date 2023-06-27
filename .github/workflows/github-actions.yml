@@ -25,5 +25,29 @@ jobs:
       run: rm -rf .next/cache
     - name: Lint
       run: pnpm lint
-      
 
+  test-database:
+    needs: build
+    runs-on: ubuntu-20.04
+    services:
+      dind:
+        image: docker:24.0.2-dind
+        options: --tls=false
+    env:
+      DOCKER_HOST: "tcp://docker:2375"
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_DRIVER: overlay2
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install
+    - name: Test @lxcat/database
+      run: pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml --no-threads
