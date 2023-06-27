@@ -38,13 +38,6 @@ jobs:
   test-database:
     needs: build
     runs-on: ubuntu-20.04
-    services:
-      dind:
-        image: docker:24.0.2-dind
-    env:
-      DOCKER_HOST: "tcp://docker:2375"
-      DOCKER_TLS_CERTDIR: ""
-      DOCKER_DRIVER: overlay2
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache@v3
