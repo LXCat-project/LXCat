@@ -7,7 +7,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     coverage: {
-      reporter: ["text", "cobertura", "html"],
+      reporter: ["text", "json-summary", "json"],
       exclude: ["**/*{.,-}spec.ts", "**/*{.,-}test.ts"],
     },
   },
