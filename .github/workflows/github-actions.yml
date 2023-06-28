@@ -34,6 +34,43 @@ jobs:
     - name: Lint
       run: pnpm lint
 
+  test-app:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ${{ github.workspace }}/packages/schema/dist
+          ${{ github.workspace }}/packages/database/dist
+          ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/packages/converter/target
+          ${{ github.workspace }}/app/.next/
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    - name: Install playwright browsers
+      run: pnpm playwright install --with-deps
+    - name: Run unit tests
+      run: pnpm test
+    - name: Create coverage report for unit tests
+      if: always()
+      uses: davelosert/vitest-coverage-report-action@v2
+      with:
+        working-directory: app
+    # See https://playwright.dev/docs/ci-intro for how to upload report as artifact.
+    - name: Run end-to-end tests
+      run: pnpm test:e2e
+
   test-database:
     needs: build
     runs-on: ubuntu-20.04

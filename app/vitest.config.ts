@@ -15,7 +15,7 @@ export default defineConfig({
       "**/e2e/**",
     ],
     coverage: {
-      reporter: ["text", "cobertura", "html"],
+      reporter: ["text", "json-summary", "json"],
       exclude: ["**/*{.,-}test.ts"],
     },
   },
