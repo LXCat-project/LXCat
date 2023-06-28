@@ -9,7 +9,7 @@ export default defineConfig({
     testTimeout: 180_000, // Docker containers are being started, the default 5s is not enough
     hookTimeout: 180_000, // Docker containers are being started, the default 5s is not enough
     coverage: {
-      reporter: ["text", "cobertura", "html"],
+      reporter: ["text", "json-summary", "json"],
       exclude: ["**/*{.,-}spec.ts"],
     },
   },

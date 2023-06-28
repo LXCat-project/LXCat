@@ -61,7 +61,12 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/database
-      run: pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml --no-threads
+      run: pnpm -C packages/database test -- run --coverage --no-threads
+    - name: Create coverage report
+      if: always()
+      uses: davelosert/vitest-coverage-report-action@v2
+      with:
+        working-directory: packages/database
 
   test-schema:
     needs: build
