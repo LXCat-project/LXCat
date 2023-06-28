@@ -31,8 +31,6 @@ jobs:
       run: pnpm install --frozen-lockfile
     - name: Build packages
       run: pnpm build
-    # - name: Cleanup
-    #   run: rm -rf .next/cache
     - name: Lint
       run: pnpm lint
 
@@ -99,3 +97,10 @@ jobs:
       uses: davelosert/vitest-coverage-report-action@v2
       with:
         working-directory: packages/schema
+
+  reuse:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: REUSE compliance check
+      uses: fsfe/reuse-action@v1
