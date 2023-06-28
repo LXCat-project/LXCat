@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7381573.svg)](https://doi.org/10.5281/zenodo.7381573)
-[![Pipeline Status](https://gitlab.com/LXCat-project/LXCat/badges/main/pipeline.svg)](https://gitlab.com/LXCat-project/LXCat/-/commits/main)
+[![Test Pipeline Status](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml)
 
 ## Installation
 
