@@ -47,6 +47,7 @@ jobs:
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v2
@@ -73,6 +74,7 @@ jobs:
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v2
