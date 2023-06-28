@@ -86,9 +86,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/schema
-      run: pnpm -C packages/schema test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
+      run: pnpm -C packages/schema test -- run --coverage
     - name: Create coverage report
-      uses: 5monkeys/cobertura-action@master
-      with:
-        path: packages/schema/coverage/cobertura-coverage.xml
-        minimum_coverage: 0
+      if: always()
+      uses: davelosert/vitest-coverage-report-action@v2
