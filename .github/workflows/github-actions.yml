@@ -28,11 +28,11 @@ jobs:
       with:
         toolchain: stable
     - name: Install dependencies
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
     - name: Build packages
       run: pnpm build
-    - name: Cleanup
-      run: rm -rf .next/cache
+    # - name: Cleanup
+    #   run: rm -rf .next/cache
     - name: Lint
       run: pnpm lint
 
@@ -58,7 +58,7 @@ jobs:
         node-version: 18
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
     - name: Test @lxcat/database
       run: pnpm -C packages/database test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml --no-threads
 
@@ -84,7 +84,7 @@ jobs:
         node-version: 18
         cache: 'pnpm'
     - name: Install dependencies
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
     - name: Test @lxcat/schema
       run: pnpm -C packages/schema test -- run --coverage --reporter=default --reporter=junit --outputFile.junit=./junit.xml
     - name: Create coverage report
