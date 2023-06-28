@@ -31,7 +31,7 @@ This document is for someone developing the LXCat web application and its packag
 ## Where is the code?
 
 Code is hosted on
-[https://gitlab.com/LXCat-project/lxcat](https://gitlab.com/LXCat-project/lxcat). Code to
+[https://github.com/LXCat-project/lxcat](https://github.com/LXCat-project/lxcat). Code to
 fill the database can be found in `/packages/database`. Code that runs the website can be
 found in `/app`. Code that describes the shape of LXCat documents can be found in
 `/packages/schema`. Code that can convert LXCat documents to txt format can be found in
@@ -39,20 +39,18 @@ found in `/app`. Code that describes the shape of LXCat documents can be found i
 
 ## How to perform local deployment with test data?
 
-See
-[/packages/database](https://gitlab.com/LXCat-project/lxcat/-/blob/main/packages/database/README.md)
-how to seed the database with test data.
+See [/packages/database](packages/database/README.md) how to seed the database with test data.
 
 ## How to make a merge request
 
 See
-[https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html](https://docs.gitlab.com/ee/user/project/merge_requests/getting_started.html)
-how to create a merge request in [repository](https://gitlab.com/LXCat-project/lxcat).
+[the GitHub documentation on pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+how to create a pull request in [repository](https://github.com/LXCat-project/lxcat).
 
 ## Documentation
 
 The documentation is formatted in
-[GitLab flavored Markdown](https://docs.gitlab.com/ee/user/markdown.html) files in the
+[GitHub flavored Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) files in the
 `/docs` directory.
 
 The documentation is also hosted on the website at
@@ -273,6 +271,7 @@ erDiagram
 
 The diagram can be edited on https://mermaid.live/ by copying the code block text.
 
+<!--
 ## React component development
 
 The React components can be developed in isolation with
@@ -293,6 +292,7 @@ This will open a web browser where stories of components can be seen.
 The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing
 the job artifacts to `/app/storybook-static/index.html`. This can be useful for other
 people to test your component without having to install anything.
+-->
 
 ## Unit Tests
 
@@ -349,6 +349,6 @@ To create a new DOI:
 
 1. Bump package versions in package.json files, rerun `pnpm install`, commit & push to main
    branch.
-2. Create a new [GitLab release](https://gitlab.com/LXCat-project/lxcat/-/releases/new).
+2. Create a new [GitHub release](https://github.com/LXCat-project/LXCat/releases/new).
 3. On Zenodo page for LXCat, a new version needs to be created with the tarball of the new
    release.
