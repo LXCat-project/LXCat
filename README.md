@@ -6,9 +6,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # LXCat
 
-An open-access website for collecting, displaying, and downloading electron and ion scattering cross sections for modeling low temperature plasmas.
+LXCat is an open-access website for collecting, displaying, and downloading electron
+and ion scattering cross sections, swarm parameters, reaction rates, energy distribution
+functions, and other data required for modeling low temperature plasmas.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7381573.svg)](https://doi.org/10.5281/zenodo.7381573)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8095107.svg)](https://doi.org/10.5281/zenodo.8095107)
 [![Test Pipeline Status](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml)
 
 ## Installation
@@ -59,15 +61,19 @@ If you use LXCat in your project or in a scientific publication, we would
 appreciate if you cite our project.
 
 ```bibtex
-@software{lxcat2022,
-  author       = {Verhoeven, Stefan and Boer, Daan and Ali, Suvayu and Graef, Wouter and van Dijk, Jan},
+@software{LXCatLatest,
+  author       = {Boer, Daan and
+                  Verhoeven, Stefan and
+                  Ali, Suvayu and
+                  Graef, Wouter and
+                  van Dijk, Jan},  
   title        = {LXCat},
-  month        = nov,
-  year         = 2022,
+  month        = jun,
+  year         = 2023,
   publisher    = {Zenodo},
   version      = {latest},
-  doi          = {10.5281/zenodo.7381573},
-  url          = {https://doi.org/10.5281/zenodo.7381573}
+  doi          = {10.5281/zenodo.8095107},
+  url          = {https://doi.org/10.5281/zenodo.8095107}
 }
 ```
 
@@ -78,4 +84,4 @@ Except for the schema (packages/schema) and converter (packages/converter) packa
 
 ## Copyright
 
-The LXCat team wrote the LXCat code. The LXCat team members are listend in [CITATION.cff](CITATION.cff).
+The LXCat team wrote the LXCat code. The LXCat team members are listed in [CITATION.cff](CITATION.cff).
