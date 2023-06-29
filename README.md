@@ -6,7 +6,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # LXCat
 
-An open-access website for collecting, displaying, and downloading electron and ion scattering data for modeling low temperature plasmas.
+LXCat is an open-access website for collecting, displaying, and downloading electron
+and ion scattering cross sections, swarm parameters, reaction rates, energy distribution
+functions, and other data required for modeling low temperature plasmas.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8095107.svg)](https://doi.org/10.5281/zenodo.8095107)
 [![Test Pipeline Status](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml)
