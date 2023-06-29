@@ -11,6 +11,11 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   workflow_dispatch:
 
 permissions:
@@ -21,6 +26,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache@v3
@@ -55,6 +61,7 @@ jobs:
   test-app:
     needs: build
     runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache/restore@v3
@@ -93,6 +100,7 @@ jobs:
   test-database:
     needs: build
     runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache/restore@v3
@@ -125,6 +133,7 @@ jobs:
   test-schema:
     needs: build
     runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache/restore@v3
@@ -156,6 +165,7 @@ jobs:
 
   reuse:
     runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - name: REUSE compliance check
