@@ -60,7 +60,11 @@ appreciate if you cite our project.
 
 ```bibtex
 @software{LXCatLatest,
-  author       = {Verhoeven, Stefan and Boer, Daan and Ali, Suvayu and Graef, Wouter and van Dijk, Jan},
+  author       = {Boer, Daan and
+                  Verhoeven, Stefan and
+                  Ali, Suvayu and
+                  Graef, Wouter and
+                  van Dijk, Jan},  
   title        = {LXCat},
   month        = jun,
   year         = 2023,
