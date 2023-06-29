@@ -82,4 +82,4 @@ Except for the schema (packages/schema) and converter (packages/converter) packa
 
 ## Copyright
 
-The LXCat team wrote the LXCat code. The LXCat team members are listend in [CITATION.cff](CITATION.cff).
+The LXCat team wrote the LXCat code. The LXCat team members are listed in [CITATION.cff](CITATION.cff).
