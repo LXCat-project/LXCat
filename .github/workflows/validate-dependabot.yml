@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Validate dependabot
+
+on:
+  pull_request:
+    paths:
+      - '.github/dependabot.yml'
+      - '.github/workflows/validate-dependabot.yml'
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: marocchino/validate-dependabot@v2
+        id: validate
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: always()
+        with:
+          header: validate-dependabot
+          message: ${{ steps.validate.outputs.markdown }}

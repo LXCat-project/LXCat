@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    versioning-strategy: increase
+    labels:
+      - "dependencies: node"
+
+  - package-ecosystem: cargo
+    directory: /packages/converter
+    schedule:
+      interval: weekly
+      day: sunday
+    labels:
+      - "dependencies: rust"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - "dependencies: github actions"
