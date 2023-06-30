@@ -1359,7 +1359,7 @@ const MolecularParityField = ({
           <Radio.Group
             label="Reflection"
             onBlur={onBlur}
-            onChange={onChange}
+            onChange={(value) => onChange(value as "u" | "g")}
             value={value as string}
             error={errorMsg(
               errors,
@@ -1678,7 +1678,7 @@ const LinearElectronicForm = ({
             <Radio.Group
               label="Reflection"
               onBlur={onBlur}
-              onChange={onChange}
+              onChange={(value) => onChange(value as "+" | "-")}
               value={value as string}
               error={errorMsg(
                 errors,
