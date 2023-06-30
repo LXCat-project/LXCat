@@ -2,42 +2,24 @@ version: 2
 
 updates:
   - package-ecosystem: npm
-    directory: /packages/schema
+    directory: /
     schedule:
       interval: weekly
       day: sunday
+    versioning-strategy: increase
     labels:
-      - "dependencies: schema"
-  - package-ecosystem: npm
-    directory: /packages/database
-    schedule:
-      interval: weekly
-      day: sunday
-    labels:
-      - "dependencies: database"
-  - package-ecosystem: npm
-    directory: /packages/converter
-    schedule:
-      interval: weekly
-      day: sunday
-    labels:
-      - "dependencies: converter"
+      - "dependencies: node"
+
   - package-ecosystem: cargo
     directory: /packages/converter
     schedule:
       interval: weekly
       day: sunday
     labels:
-      - "dependencies: converter"
-  - package-ecosystem: npm
-    directory: /app
-    schedule:
-      interval: weekly
-      day: sunday
-    labels:
-      - "dependencies: application"
+      - "dependencies: rust"
+
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
       interval: daily
     labels:
