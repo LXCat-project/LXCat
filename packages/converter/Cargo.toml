@@ -20,4 +20,4 @@ napi = { version = "2", features = ["serde-json"] }
 napi-derive = "2"
 
 [build-dependencies]
-napi-build = "1"
+napi-build = "2"
