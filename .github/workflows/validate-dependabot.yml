@@ -5,6 +5,12 @@ on:
     paths:
       - '.github/dependabot.yml'
       - '.github/workflows/validate-dependabot.yml'
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
 jobs:
   validate:
     runs-on: ubuntu-20.04
