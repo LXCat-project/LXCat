@@ -249,8 +249,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2(@babel/core@7.22.5)(webpack@5.87.0)
       dprint:
-        specifier: ^0.37.1
-        version: 0.37.1
+        specifier: ^0.38.0
+        version: 0.38.0
       eslint:
         specifier: ^8.42.0
         version: 8.42.0
@@ -322,8 +322,8 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0(vitest@0.32.0)
       dprint:
-        specifier: ^0.37.1
-        version: 0.37.1
+        specifier: ^0.38.0
+        version: 0.38.0
       eslint:
         specifier: 8.42.0
         version: 8.42.0
@@ -390,8 +390,8 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0(vitest@0.32.0)
       dprint:
-        specifier: ^0.37.1
-        version: 0.37.1
+        specifier: ^0.38.0
+        version: 0.38.0
       eslint:
         specifier: 8.42.0
         version: 8.42.0
@@ -1708,6 +1708,60 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
+
+  /@dprint/darwin-arm64@0.38.0:
+    resolution: {integrity: sha512-yS8oIYhLrOgVuBZq6qAWjaIGS1FrjwWvU+CU8rVP8r/n5xy2VPCl60zfOGpLzqT35GcdHa77FyMoZspBxRVgZA==}
+    cpu: [arm64]
+    os: [darwin]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dprint/darwin-x64@0.38.0:
+    resolution: {integrity: sha512-Hd/DOJhjfz5m0armQVAJl4b4ehqB073kvtUUyP1zo+HlG49imiTHKXc4WAtJwo5sk+k3pZKahd/oAYDA9lKTCQ==}
+    cpu: [x64]
+    os: [darwin]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dprint/linux-arm64-glibc@0.38.0:
+    resolution: {integrity: sha512-4DCgPGUaFtg7/evnuICM2oGcb0w7h1YAiocsgx44t/6141I4k8Wv2Q5n74S1hajooilO6e0D1yUNw+XWZ6dR1Q==}
+    cpu: [arm64]
+    os: [linux]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dprint/linux-x64-glibc@0.38.0:
+    resolution: {integrity: sha512-TocBhu83g4XhsnIgmir2h833rdWLoBJLZW7AM8fE8JxtvG/PxF9qyqwXaEMJ4hu++cduepZM3smtMWogZ3QWxQ==}
+    cpu: [x64]
+    os: [linux]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dprint/linux-x64-musl@0.38.0:
+    resolution: {integrity: sha512-lRxCenDCLzdKHtxdd/z1+9M6dNzgckksF1pxqHsPZpZVEBwkkgA58FNV1I6QYdy0jPE5UrmMEtl/C47bfTJ3Hw==}
+    cpu: [x64]
+    os: [linux]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dprint/win32-x64@0.38.0:
+    resolution: {integrity: sha512-iAwWDHjWbyM9WtTc35MERjoJQovExPewNlT2eAUXCxUaM74IKdE6II8p47wnRl5RMTqkkFJnByTh60AgFN0JXw==}
+    cpu: [x64]
+    os: [win32]
+    hasBin: true
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@emotion/babel-plugin@11.11.0:
     resolution: {integrity: sha512-m4HEDZleaaCH+XgDDsPF15Ht6wTLsgDTeR3WYj9Q/k76JtWhrJjcP4+/XlG8LGT/Rol9qUfOIztXeA84ATpqPQ==}
@@ -3621,15 +3675,6 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  /agent-base@6.0.2:
-    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
-    engines: {node: '>= 6.0.0'}
-    dependencies:
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /aggregate-error@3.1.0:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
     engines: {node: '>=8'}
@@ -5357,15 +5402,16 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /dprint@0.37.1:
-    resolution: {integrity: sha512-MVKIVOvk5FSiZQFFZlLv1KiB4zZXAirlZ/m8vtyKu2PTFnkD5d6jVv4aNHvd7M6f1ToganNZ/CqhSwpgadn8Ug==}
+  /dprint@0.38.0:
+    resolution: {integrity: sha512-3wRHH9aLFR34aM/vAeCi7BSKXuOXTuYKD92SPoQ6DdH7wOjJkZnmr4WQ3E5X/LXHtyowGvN60VtT8EYN3vSUiw==}
     hasBin: true
-    requiresBuild: true
-    dependencies:
-      https-proxy-agent: 5.0.1
-      yauzl: 2.10.0
-    transitivePeerDependencies:
-      - supports-color
+    optionalDependencies:
+      '@dprint/darwin-arm64': 0.38.0
+      '@dprint/darwin-x64': 0.38.0
+      '@dprint/linux-arm64-glibc': 0.38.0
+      '@dprint/linux-x64-glibc': 0.38.0
+      '@dprint/linux-x64-musl': 0.38.0
+      '@dprint/win32-x64': 0.38.0
     dev: true
 
   /draw-svg-path@1.0.0:
@@ -6089,12 +6135,6 @@ packages:
     dependencies:
       format: 0.2.2
     dev: false
-
-  /fd-slicer@1.1.0:
-    resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
-    dependencies:
-      pend: 1.2.0
-    dev: true
 
   /fetch-blob@3.2.0:
     resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
@@ -6920,16 +6960,6 @@ packages:
     dependencies:
       quick-lru: 5.1.1
       resolve-alpn: 1.2.1
-    dev: true
-
-  /https-proxy-agent@5.0.1:
-    resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
-    engines: {node: '>= 6'}
-    dependencies:
-      agent-base: 6.0.2
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /human-signals@2.1.0:
@@ -9261,10 +9291,6 @@ packages:
     resolution: {integrity: sha512-ZI3LnwUv5nOGbQzD9c2iDG6toheuXSZP5esSHBjopsXH4dg19soufvpUGA3uohi5anFtGb2lhAVdHzH6R/Evvg==}
     engines: {node: '>=8'}
     dev: false
-
-  /pend@1.2.0:
-    resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
-    dev: true
 
   /performance-now@2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
@@ -12423,13 +12449,6 @@ packages:
       y18n: 5.0.8
       yargs-parser: 21.1.1
     dev: false
-
-  /yauzl@2.10.0:
-    resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
-    dependencies:
-      buffer-crc32: 0.2.13
-      fd-slicer: 1.1.0
-    dev: true
 
   /ylru@1.3.2:
     resolution: {integrity: sha512-RXRJzMiK6U2ye0BlGGZnmpwJDPgakn6aNQ0A7gHRbD4I0uvK4TW6UqkK1V0pp9jskjJBAXd3dRrbzWkqJ+6cxA==}
