@@ -96,7 +96,7 @@
     "babel-loader": "^9.1.2",
     "dprint": "^0.38.0",
     "eslint": "^8.42.0",
-    "eslint-config-next": "13.4.5",
+    "eslint-config-next": "13.4.7",
     "oidc-provider": "^7.14.3",
     "testcontainers": "^9.9.1",
     "typescript": "^5.1.3",
