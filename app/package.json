@@ -30,7 +30,7 @@
     "@mantine/hooks": "^6.0.15",
     "@mantine/next": "^6.0.15",
     "@mdx-js/mdx": "^2.3.0",
-    "@next/bundle-analyzer": "^13.4.6",
+    "@next/bundle-analyzer": "^13.4.7",
     "@tabler/icons-react": "^2.22.0",
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",
