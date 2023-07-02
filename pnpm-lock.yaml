@@ -141,7 +141,7 @@ importers:
         version: 2.0.0(react@18.2.0)(schema-dts@1.1.2)(typescript@5.1.3)
       react-vega:
         specifier: ^7.6.0
-        version: 7.6.0(react@18.2.0)(vega-lite@5.9.3)(vega@5.25.0)
+        version: 7.6.0(react@18.2.0)(vega-lite@5.12.0)(vega@5.25.0)
       rehype-autolink-headings:
         specifier: ^6.1.1
         version: 6.1.1
@@ -194,8 +194,8 @@ importers:
         specifier: ^5.25.0
         version: 5.25.0
       vega-lite:
-        specifier: ^5.9.3
-        version: 5.9.3(vega@5.25.0)
+        specifier: ^5.12.0
+        version: 5.12.0(vega@5.25.0)
       vfile:
         specifier: ^5.3.7
         version: 5.3.7
@@ -2876,12 +2876,12 @@ packages:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
       '@types/eslint': 8.40.2
-      '@types/estree': 0.0.45
+      '@types/estree': 1.0.1
 
   /@types/eslint@8.40.2:
     resolution: {integrity: sha512-PRVjQ4Eh9z9pmmtaq8nTjZjQwKFk7YIHIud3lRoKRBgUQjgjRmoGxxGEPXQkF+lH7QkHJRNr5F4aBgYCW0lqpQ==}
     dependencies:
-      '@types/estree': 0.0.45
+      '@types/estree': 1.0.1
       '@types/json-schema': 7.0.12
 
   /@types/estree-jsx@1.0.0:
@@ -2892,6 +2892,7 @@ packages:
 
   /@types/estree@0.0.45:
     resolution: {integrity: sha512-jnqIUKDUqJbDIUxm0Uj7bnlMnRm1T/eZ9N+AVMqhPgzrba2GhGG5o/jCTwmdPK709nEZsGoMzXEDUjcXHa3W0g==}
+    dev: false
 
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
@@ -9714,7 +9715,7 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-vega@7.6.0(react@18.2.0)(vega-lite@5.9.3)(vega@5.25.0):
+  /react-vega@7.6.0(react@18.2.0)(vega-lite@5.12.0)(vega@5.25.0):
     resolution: {integrity: sha512-2oMML4wH9qWLnZPRxJm06ozwrVN/K+nkjqdI5/ofWWsrBnnH4iB9rRKrsV8px0nlWgZrwfdCH4g5RUiyyJHWSA==}
     peerDependencies:
       react: ^16 || ^17 || ^18
@@ -9726,8 +9727,8 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       vega: 5.25.0
-      vega-embed: 6.22.1(vega-lite@5.9.3)(vega@5.25.0)
-      vega-lite: 5.9.3(vega@5.25.0)
+      vega-embed: 6.22.1(vega-lite@5.12.0)(vega@5.25.0)
+      vega-lite: 5.12.0(vega@5.25.0)
     dev: false
 
   /react@18.2.0:
@@ -11587,7 +11588,7 @@ packages:
       - encoding
     dev: false
 
-  /vega-embed@6.22.1(vega-lite@5.9.3)(vega@5.25.0):
+  /vega-embed@6.22.1(vega-lite@5.12.0)(vega@5.25.0):
     resolution: {integrity: sha512-5a3SVhPwG5/Mz3JbcJV4WE38s/7AFrkANtPxoln7E8fbNLIbrurIennaAxB9+l0QOAg63lPSuJBNMUkM6yXvLA==}
     peerDependencies:
       vega: ^5.21.0
@@ -11599,9 +11600,9 @@ packages:
       tslib: 2.5.3
       vega: 5.25.0
       vega-interpreter: 1.0.5
-      vega-lite: 5.9.3(vega@5.25.0)
+      vega-lite: 5.12.0(vega@5.25.0)
       vega-schema-url-parser: 2.2.0
-      vega-themes: 2.13.0(vega-lite@5.9.3)(vega@5.25.0)
+      vega-themes: 2.13.0(vega-lite@5.12.0)(vega@5.25.0)
       vega-tooltip: 0.32.0
     dev: false
     bundledDependencies:
@@ -11708,8 +11709,8 @@ packages:
       - encoding
     dev: false
 
-  /vega-lite@5.9.3(vega@5.25.0):
-    resolution: {integrity: sha512-S1B81aOkMC/iDU2skeS7ROaIaJuxvGx1PW1LO9ECe2dsrfsaDHk20SGsEhPSKZAgSxOghJ0+AuYdU0glRNjN1Q==}
+  /vega-lite@5.12.0(vega@5.25.0):
+    resolution: {integrity: sha512-mc0vavCp77B7wJwfVbNrJTmFuAUAornyi1nTw7UjBOFlCY6S4FKpUH9OToYC1o8rzv8HZ+QAFjz6MzmxIWfH7A==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -11821,14 +11822,14 @@ packages:
       d3-array: 3.2.4
     dev: false
 
-  /vega-themes@2.13.0(vega-lite@5.9.3)(vega@5.25.0):
+  /vega-themes@2.13.0(vega-lite@5.12.0)(vega@5.25.0):
     resolution: {integrity: sha512-SVr/YDqGhkVDO2bRS62TeGyr1dVuXaNLJNCu42b1tbcnnmX2m9cyaq8G6gcputPeibArvHT1MsTF7MUzboOIWg==}
     peerDependencies:
       vega: '*'
       vega-lite: '*'
     dependencies:
       vega: 5.25.0
-      vega-lite: 5.9.3(vega@5.25.0)
+      vega-lite: 5.12.0(vega@5.25.0)
     dev: false
 
   /vega-time@2.1.1:
