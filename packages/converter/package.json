@@ -25,7 +25,7 @@
   "author": "Daan Boer",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@napi-rs/cli": "^2.14.8",
+    "@napi-rs/cli": "^2.16.1",
     "@types/node": "^20.3.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
