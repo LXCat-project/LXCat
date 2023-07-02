@@ -40,7 +40,7 @@
     "deep-equal": "^2.2.1",
     "dotenv": "^16.1.4",
     "zod": "^3.21.4",
-    "zod-to-json-schema": "^3.21.1"
+    "zod-to-json-schema": "^3.21.3"
   },
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
