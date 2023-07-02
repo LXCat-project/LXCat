@@ -353,8 +353,8 @@ importers:
         version: 5.0.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.20.7
-        version: 7.20.7(@babel/core@7.22.5)
+        specifier: ^7.22.5
+        version: 7.22.5(@babel/core@7.22.5)
       '@babel/core':
         specifier: ^7.22.5
         version: 7.22.5
@@ -413,8 +413,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
 
-  /@babel/cli@7.20.7(@babel/core@7.22.5):
-    resolution: {integrity: sha512-WylgcELHB66WwQqItxNILsMlaTd8/SO6SgTTjMp4uCI7P4QyH1r3nqgFmO3BfM4AtfniHgFMH3EpYFj/zynBkQ==}
+  /@babel/cli@7.22.5(@babel/core@7.22.5):
+    resolution: {integrity: sha512-N5d7MjzwsQ2wppwjhrsicVDhJSqF9labEP/swYiHhio4Ca2XjEehpgPmerjnLQl7BPE59BLud0PTWGYwqFl/cQ==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
