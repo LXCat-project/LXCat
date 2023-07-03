@@ -17,7 +17,7 @@ import { SWRStateList, SWRStateListProps } from "./SWRStateList";
 interface SWRReactionPickerImplProps {
   consumes: SWRStateListProps;
   produces: SWRStateListProps;
-  reversible: Omit<LatexSelectProps, "choices"> & {
+  reversible: Omit<LatexSelectProps, "data"> & {
     choices: Array<Reversible>;
   };
   typeTags: Omit<MultiSelectProps, "sx">;
@@ -56,12 +56,13 @@ export const SWRReactionPickerImpl = ({
           </td>
           <td>
             <LatexSelect
-              choices={Object.fromEntries(
+              {...reversible}
+              data={Object.fromEntries(
                 Object.entries(choiceMap).filter(([key, _]) =>
                   choices.includes(key as Reversible)
                 ),
               )}
-              {...reversible}
+              sx={{ borderStyle: "none" }}
             />
           </td>
           <td>

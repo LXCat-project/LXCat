@@ -10,7 +10,8 @@ import type {
   StateSummary,
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
-import { Button, Divider, Group, Sx } from "@mantine/core";
+import { Button, Sx } from "@mantine/core";
+import { Latex } from "./Latex";
 import { LatexSelect } from "./LatexSelect";
 import { mapObject } from "./utils";
 
@@ -18,20 +19,23 @@ function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
 }
 
-interface StateSelectProps {
+const Placeholder = (value: string) => (
+  <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>{value}</Latex>
+);
+
+type StateSelectProps = {
   data: StateTree;
   selected: StatePath;
   onChange: (selected: StatePath) => void | Promise<void>;
   inGroup?: boolean;
   sx?: Sx;
-}
+};
 
 export const StateSelect = ({
   data,
   selected: { particle, electronic, vibrational, rotational },
   onChange,
   inGroup,
-  sx,
 }: StateSelectProps) => {
   const particleChange = (newParticle?: string) =>
     onChange({ particle: newParticle });
@@ -56,41 +60,28 @@ export const StateSelect = ({
       : undefined;
 
   const component = (
-    <Group
-      spacing={0}
-      sx={[
-        (theme) => ({
-          borderRadius: 4,
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: theme.colors.gray[4],
-          overflow: "hidden",
-        }),
-        sx,
-      ]}
-    >
+    <>
       <LatexSelect
-        choices={mapObject(data, omitChildren)}
+        data={mapObject(data, omitChildren)}
         value={particle}
         onChange={particleChange}
-        placeholder={"\\mathrm{Particle}"}
-        clearable={true}
+        placeholder={Placeholder("\\mathrm{Particle}")}
         // TODO make name uniq between StateSelect instances
         name="particle-select"
+        clearable
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0
         ? (
           <>
-            <Divider orientation="vertical" color="gray.4" />
             <LatexSelect
-              choices={{
+              data={{
                 ...(data[particle!].valid ? { [OMIT_CHILDREN_KEY]: "-" } : {}),
                 ...mapObject(electronicEntries, omitChildren),
               }}
               value={electronic}
               onChange={electronicChange}
-              placeholder={"\\mathrm{Electronic}"}
-              clearable={true}
+              placeholder={Placeholder("\\mathrm{Electronic}")}
+              clearable
             />
           </>
         )
@@ -98,9 +89,8 @@ export const StateSelect = ({
       {vibrationalEntries && Object.keys(vibrationalEntries).length > 0
         ? (
           <>
-            <Divider orientation="vertical" color="gray.4" />
             <LatexSelect
-              choices={{
+              data={{
                 ...(electronicEntries![electronic!].valid
                   ? { [OMIT_CHILDREN_KEY]: "-" }
                   : {}),
@@ -108,8 +98,8 @@ export const StateSelect = ({
               }}
               value={vibrational}
               onChange={vibrationalChange}
-              placeholder={"\\mathrm{Vibrational}"}
-              clearable={true}
+              placeholder={Placeholder("\\mathrm{Vibrational}")}
+              clearable
             />
           </>
         )
@@ -117,9 +107,8 @@ export const StateSelect = ({
       {rotationalEntries && Object.keys(rotationalEntries).length > 0
         ? (
           <>
-            <Divider orientation="vertical" color="gray.4" />
             <LatexSelect
-              choices={{
+              data={{
                 ...(vibrationalEntries![vibrational!].valid
                   ? { [OMIT_CHILDREN_KEY]: "-" }
                   : {}),
@@ -127,13 +116,13 @@ export const StateSelect = ({
               }}
               value={rotational}
               onChange={rotationalChange}
-              placeholder={"\\mathrm{Rotational}"}
-              clearable={true}
+              placeholder={Placeholder("\\mathrm{Rotational}")}
+              clearable
             />
           </>
         )
         : <></>}
-    </Group>
+    </>
   );
 
   return (inGroup ?? true)
