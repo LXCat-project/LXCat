@@ -5,9 +5,12 @@
 import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import {
   Box,
+  Grid,
+  Group,
   MantineTheme,
   MultiSelect,
   MultiSelectProps,
+  Stack,
   Sx,
 } from "@mantine/core";
 import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
@@ -46,46 +49,33 @@ export const SWRReactionPickerImpl = ({
   sets,
 }: SWRReactionPickerImplProps) => {
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <Box sx={listStyle}>
-              <SWRStateList {...consumes} />
-            </Box>
-          </td>
-          <td>
-            <LatexSelect
-              {...reversible}
-              data={Object.fromEntries(
-                Object.entries(choiceMap).filter(([key, _]) =>
-                  choices.includes(key as Reversible)
-                ),
-              )}
-              sx={{ borderStyle: "none" }}
-            />
-          </td>
-          <td>
-            <Box sx={listStyle}>
-              <SWRStateList {...produces} />
-            </Box>
-          </td>
-          <td rowSpan={2} style={{ verticalAlign: "top" }}>
-            <Box sx={listStyle}>
-              <CSSetFilter {...sets} />
-            </Box>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={3}>
-            <MultiSelect
-              sx={{}}
-              placeholder="Reaction type tag(s)"
-              {...typeTags}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <Group spacing="xs">
+      <Stack spacing="xs">
+        <Group spacing="xs">
+          <Box sx={listStyle}>
+            <SWRStateList {...consumes} />
+          </Box>
+          <LatexSelect
+            {...reversible}
+            data={Object.fromEntries(
+              Object.entries(choiceMap).filter(([key, _]) =>
+                choices.includes(key as Reversible)
+              ),
+            )}
+            sx={{ borderStyle: "none" }}
+          />
+          <Box sx={listStyle}>
+            <SWRStateList {...produces} />
+          </Box>
+        </Group>
+        <MultiSelect
+          placeholder="Reaction type tag(s)"
+          {...typeTags}
+        />
+      </Stack>
+      <Box sx={listStyle}>
+        <CSSetFilter {...sets} />
+      </Box>
+    </Group>
   );
 };
