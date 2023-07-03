@@ -18,11 +18,6 @@ const useStyles = createStyles(() => ({
   expandIconRotated: {
     transform: "rotate(90deg)",
   },
-  header: {
-    "& th": {
-      backgroundColor: "white",
-    },
-  },
 }));
 
 interface Props {
@@ -117,9 +112,8 @@ export const CSTable = ({ items }: Props) => {
               withColumnBorders
               withBorder
               borderRadius="md"
-              classNames={{ header: classes.header }}
               sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
-              highlightOnHover={false}
+              highlightOnHover={true}
               columns={[
                 { accessor: "reaction" },
                 {
