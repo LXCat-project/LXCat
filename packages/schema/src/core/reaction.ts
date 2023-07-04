@@ -5,6 +5,9 @@
 import { ReactionTypeTag } from "./enumeration";
 
 // TODO: Split this in separate io and db interfaces.
+/**
+ * @internal
+ */
 export interface ReactionEntry<StateType> {
   /**
    * @minimum 1
@@ -14,6 +17,9 @@ export interface ReactionEntry<StateType> {
   state: StateType;
 }
 
+/**
+ * @internal
+ */
 export interface Reaction<StateType> {
   /**
    * @uniqueItems true

@@ -19,8 +19,13 @@ export type CrossSectionInput<StateType> =
   >
   & { complete: boolean };
 
+/**
+ * @discriminator type
+ */
+export type AnySpecies = AnyAtom | AnyMolecule;
+
 // TODO should set have own references?
 /**
  * To add a cross section set to the LXCat application, the set should be valid against this schema.
  */
-export type CrossSectionSetRaw = CrossSectionInput<AnyAtom | AnyMolecule>;
+export type CrossSectionSetRaw = CrossSectionInput<AnySpecies>;

@@ -18,18 +18,33 @@ export interface LatexString {
   latex: string;
 }
 
+/**
+ * @internal
+ */
 type RootComponent<Component, SubComponent, SubKey extends string> =
   | (Component & { [key in SubKey]?: SubComponent })
   | Array<Component>;
 
+/**
+ * @internal
+ */
 type SubComponent<Component, SubComponent, SubKey extends string> =
   | string
   | RootComponent<Component, SubComponent, SubKey>;
 
+/**
+ * @internal
+ */
 type LeafComponent<Component> = string | Component | Array<Component>;
 
+/**
+ * @internal
+ */
 export type TypeTag<Tag extends string> = { type: Tag };
 
+/**
+ * @internal
+ */
 export type Molecule<Tag extends string, Electronic, Vibrational, Rotational> =
   & TypeTag<Tag>
   & {
@@ -44,6 +59,9 @@ export type Molecule<Tag extends string, Electronic, Vibrational, Rotational> =
     >;
   };
 
+/**
+ * @internal
+ */
 export type Atom<Tag extends string, Electronic> =
   & TypeTag<Tag>
   & { electronic: Electronic | Array<Electronic> };
