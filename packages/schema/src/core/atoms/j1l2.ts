@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AtomicDBGenerator, AtomicGenerator } from "../generators";
+import { Atom } from "../generators";
 import { ConfigTerm, TotalAngularSpecifier, TwoTermConfig } from "./common";
 import { CouplingScheme } from "./coupling_scheme";
 import { AtomLSImpl, LSTermImpl } from "./ls";
@@ -20,5 +20,4 @@ export type AtomJ1L2Impl = ConfigTerm<
   TwoTermConfig<AtomLSImpl, ConfigTerm<CouplingScheme.LS, LSTermImpl>>
 >;
 
-export type AtomJ1L2 = AtomicGenerator<AtomJ1L2Impl, "AtomJ1L2">;
-export type AtomJ1L2_DB = AtomicDBGenerator<AtomJ1L2Impl, "AtomJ1L2">;
+export type AtomJ1L2 = Atom<"AtomJ1L2", AtomJ1L2Impl>;

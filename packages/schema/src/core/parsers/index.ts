@@ -4,7 +4,6 @@
 
 import { AnyAtom } from "../atoms";
 import { ParticleType } from "../enumeration";
-import { AtomicGenerator, UnknownMolecule } from "../generators";
 import { AnyMolecule } from "../molecules";
 import { AtomParser, MoleculeParser } from "../parse";
 import { hd_parser } from "./hd";
@@ -14,21 +13,18 @@ import { ls_parser } from "./ls";
 import { ls1_parser } from "./ls1";
 import { ltic_parser } from "./ltic";
 
-type AtomParserDict<T extends AtomicGenerator<unknown, string>> = {
+export type AtomParserDict<T extends AnyAtom> = {
   [key in T["type"]]: AtomParser<T>;
 };
-type MoleculeParserDict<T extends UnknownMolecule> = {
+export type MoleculeParserDict<T extends AnyMolecule> = {
   [key in T["type"]]: MoleculeParser<T>;
 };
 
-export type StateParserDict<
-  A extends AtomicGenerator<unknown, string>,
-  M extends UnknownMolecule,
-> = AtomParserDict<A> & MoleculeParserDict<M>;
+export type StateParserDict<A extends AnyAtom, M extends AnyMolecule> =
+  & AtomParserDict<A>
+  & MoleculeParserDict<M>;
 
-export type ParticleTypeDict<
-  T extends AtomicGenerator<unknown, string> | UnknownMolecule,
-> = {
+export type ParticleTypeDict<T extends AnyAtom | AnyMolecule> = {
   [key in T["type"]]: ParticleType;
 };
 
@@ -60,18 +56,4 @@ export const moleculeParsers: MoleculeParserDict<AnyMolecule> = {
 export const parsers: StateParserDict<AnyAtom, AnyMolecule> = {
   ...atomParsers,
   ...moleculeParsers,
-};
-
-// TODO: I don't like that this is defined separately, perhaps the former
-// approach was better (add the particle type as a property). However, this
-// might make it inconvenient to split the parser map in two, as it is then not
-// initially known if the type is related to an atom or a molecule (this has to
-// be checked at runtime to evaluate which parsing path to invoke).
-export const getParticleType: ParticleTypeDict<AnyAtom | AnyMolecule> = {
-  AtomLS: ParticleType.Atom,
-  AtomLS1: ParticleType.Atom,
-  AtomJ1L2: ParticleType.Atom,
-  HomonuclearDiatom: ParticleType.Molecule,
-  HeteronuclearDiatom: ParticleType.Molecule,
-  LinearTriatomInversionCenter: ParticleType.Molecule,
 };

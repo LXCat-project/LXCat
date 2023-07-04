@@ -7,10 +7,9 @@ import {
   ComponentParser,
   molecular_orbital,
   molecular_orbital_latex,
-  PUE,
 } from "./common";
 
-function parse_e_le(e: PUE<LinearElectronicImpl>): string {
+function parse_e_le(e: LinearElectronicImpl): string {
   if (e.Lambda === undefined) {
     return e.e;
   }
@@ -24,7 +23,7 @@ function parse_e_le(e: PUE<LinearElectronicImpl>): string {
   return `${e.e}^${2 * e.S + 1}${molecular_orbital[e.Lambda]}${ref_s}`;
 }
 
-function parse_e_le_latex(e: PUE<LinearElectronicImpl>): string {
+function parse_e_le_latex(e: LinearElectronicImpl): string {
   if (e.Lambda === undefined) {
     return e.e;
   }
@@ -35,12 +34,12 @@ function parse_e_le_latex(e: PUE<LinearElectronicImpl>): string {
     ref_s = "^" + e.reflection;
   }
 
-  return `\\mathrm{${e.e}}^{${2 * e.S + 1}}${molecular_orbital_latex[e.Lambda]}${ref_s}`;
+  return `\\mathrm{${e.e}}^{${2 * e.S + 1}}${
+    molecular_orbital_latex[e.Lambda]
+  }${ref_s}`;
 }
 
-export const linearElectronicParser: ComponentParser<
-  PUE<LinearElectronicImpl>
-> = {
+export const linearElectronicParser: ComponentParser<LinearElectronicImpl> = {
   id: parse_e_le,
   latex: parse_e_le_latex,
 };

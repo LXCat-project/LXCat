@@ -2,21 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { MolecularDBGenerator, MolecularGenerator } from "../generators";
+import { Molecule } from "../generators";
 import { LinearElectronicImpl } from "./components/electronic/linear";
 import { RotationalImpl } from "./components/rotational";
 import { DiatomicVibrationalImpl } from "./components/vibrational/diatomic";
 
-export type HeteronuclearDiatom = MolecularGenerator<
+export type HeteronuclearDiatom = Molecule<
+  "HeteronuclearDiatom",
   LinearElectronicImpl,
   DiatomicVibrationalImpl,
-  RotationalImpl,
-  "HeteronuclearDiatom"
->;
-
-export type HeteronuclearDiatom_DB = MolecularDBGenerator<
-  LinearElectronicImpl,
-  DiatomicVibrationalImpl,
-  RotationalImpl,
-  "HeteronuclearDiatom"
+  RotationalImpl
 >;

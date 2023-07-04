@@ -4,12 +4,7 @@
 
 import { AtomLS1, AtomLS1Impl, LS1Term } from "../atoms/ls1";
 import { AtomParser } from "../parse";
-import {
-  atomic_orbital,
-  parse_div_two,
-  parse_shell_config,
-  PUA,
-} from "./common";
+import { atomic_orbital, parse_div_two, parse_shell_config } from "./common";
 import { parse_LS_term_impl, parse_LS_term_impl_latex } from "./ls";
 
 function parse_LS1_term(term: LS1Term): string {
@@ -20,11 +15,7 @@ function parse_LS1_term(term: LS1Term): string {
   }]${term.P == -1 ? "^o" : ""}_${parse_div_two(term.J)}`;
 }
 
-export function parse_LS1(e: PUA<AtomLS1Impl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+export function parse_LS1(e: AtomLS1Impl): string {
   return (
     parse_shell_config(e.config.core.config)
     + "{"
@@ -48,11 +39,7 @@ function parse_LS1_term_latex(term: LS1Term): string {
   }}`;
 }
 
-export function parse_LS1_latex(e: PUA<AtomLS1Impl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+export function parse_LS1_latex(e: AtomLS1Impl): string {
   return (
     parse_shell_config(e.config.core.config)
     + "("

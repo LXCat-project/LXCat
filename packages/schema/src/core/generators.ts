@@ -2,161 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { NOT } from "./util";
-
-/**
- * Generic implementation interface for unspecified state components.
- * @template K The name of the property storing the unspecified state component's string identifier.
- */
-type UTImpl<K extends string> = {
-  [key in K]: string;
-};
-
-/**
- * Generic interface for unspecified state components. Forbids the definition of any properties declared in `MT`, except for the property specified by `K`.
- * @template K The key name of the property storing the unspecified state component's string identifier.
- * @template MT The state component type.
- */
-type UT<K extends string, MT> = NOT<Exclude<keyof MT, K>> & UTImpl<K>;
-
-// Atoms
-/**
- * The undefined state component type for atoms.
- * @template E The state component type.
- */
-export type UAtomic<E> = UT<"e", E>;
-
-/**
- * Helper type to define a property `type` with value `T`.
- * @template T The string value that is assigned to the `type` key.
- */
-export interface TypeString<T extends string> {
-  type: T;
-}
-
-/**
- * Helper type for defining an array with minimum size one.
- * @template T The type of the array elements.
- */
-type ArrayMinOne<T> = [T, ...Array<T>];
-
-/**
- * Generic atomic generator type, generates the correct structure for atomic types.
- * @template E Type of the electronic component.
- * @template AT Additional types to add onto each component level.
- * @template SE The name of the property storing the top level of (electronic) components.
- */
-export type AtomicGenericGenerator<
-  E,
-  AT = unknown,
-  SE extends string = "electronic",
-> = {
-  [key in SE]?: ArrayMinOne<AT & (UAtomic<E> | E)>;
-};
-
-// Generators to be used for input types.
-/**
- * @internal
- *
- * Atomic generator type used to generate the correct structure of atomic state types on input.
- * @template E Type of the electronic component.
- * @template A The string identifier of the generated atomic type.
- */
-export type AtomicGenerator<E, A extends string> =
-  & TypeString<A>
-  & AtomicGenericGenerator<E>;
-
-// Molecules
-/**
- * The undefined electronic state component for molecules.
- * @template E The electronic state component type.
- * @template CK The key name of the property storing vibrational child components of the electronic component.
- */
-export type UE<E, CK extends string> = UT<"e", E> & NOT<CK>;
-
-/**
- * The undefined vibrational state component for molecules.
- * @template V The vibrational state component type.
- * @template CK The key name of the property storing rotational child components of the vibrational component.
- */
-export type UV<V, CK extends string> = UT<"v", V> & NOT<CK>;
-
-/**
- * The undefined rotational state component for molecules.
- * @template R The rotational state component type.
- */
-export type UR<R> = UT<"J", R>;
-
-/**
- * Helper type to define the property that stores substate (child) components. Note that this property is optional, but when it is present, it requires at least one entry.
- * @template T The type of the substate components.
- * @template K The key name of the property that stores the substate components.
- */
-type Children<T, K extends string> = {
-  [key in K]?: ArrayMinOne<T>;
-};
-
-/**
- * Generic molecular generator type, generates the correct object structure for molecular types.
- * @template E Type of the electronic component.
- * @template V Type of the vibrational component.
- * @template R Type of the rotational component.
- * @template AT Additional types to add onto each component level.
- * @template SE The name of the property storing the top level of (electronic) components.
- * @template SV The name of the property storing the second level of (vibrational) components.
- * @template SR The name of the property storing the third level of (rotational) components.
- *
- * @internal
- */
-export type MolecularGenericGenerator<
-  E,
-  V,
-  R,
-  AT = unknown,
-  SE extends string = "electronic",
-  SV extends string = "vibrational",
-  SR extends string = "rotational",
-> = Children<ElectronicLevel<E, V, R, AT, SV, SR>, SE>;
-
-/**
- * @internal
- */
-export type ElectronicLevel<
-  E,
-  V,
-  R,
-  AT,
-  SV extends string,
-  SR extends string,
-> = AT & (UE<E, SV> | (E & Children<VibrationalLevel<V, R, AT, SR>, SV>));
-
-/**
- * @internal
- */
-type VibrationalLevel<V, R, AT, SR extends string> =
-  & AT
-  & (UV<V, SR> | (V & Children<RotationalLevel<R, AT>, SR>));
-
-/**
- * @internal
- */
-type RotationalLevel<R, AT> = AT & (UR<R> | R);
-
-export type UnknownMolecule =
-  & TypeString<string>
-  & MolecularGenericGenerator<unknown, unknown, unknown>;
-
-/**
- * Molecular generator type used to generate the correct structure of molecular state types on input.
- * @template E Type of the electronic component.
- * @template V Type of the vibrational component.
- * @template R Type of the rotational component.
- * @template M The string identifier of the generated molecular type.
- */
-export type MolecularGenerator<E, V, R, M extends string> =
-  & TypeString<M>
-  & MolecularGenericGenerator<E, V, R>;
-
 /**
  * Helper type that defines a `summary` property that is used to store a string
  * summary of a state component.
@@ -173,23 +18,48 @@ export interface LatexString {
   latex: string;
 }
 
-// Generators to be used for output types.
-/**
- * Atomic generator type used to generate the correct structure of atomic state types on output. The difference between this type and [[AtomicGenerator]] is that each component entry now includes a `summary` field as stated in [[LevelSummary]].
- * @template E Type of the electronic component.
- * @template A The string identifier of the generated atomic type.
- */
-export type AtomicDBGenerator<E, A extends string> =
-  & TypeString<A>
-  & AtomicGenericGenerator<E, LevelSummary & LatexString>;
+type RootComponent<Component, SubComponent, SubKey extends string> =
+  | (Component & { [key in SubKey]?: SubComponent })
+  | Array<Component>;
 
-/**
- * Molecular generator type used to generate the correct structure of molecular state types on output. The difference between this type and [[MolecularGenerator]] is that each component entry now includes a `summary` field as stated in [[LevelSummary]].
- * @template E Type of the electronic component.
- * @template V Type of the vibrational component.
- * @template R Type of the rotational component.
- * @template M The string identifier of the generated molecular type.
- */
-export type MolecularDBGenerator<E, V, R, M extends string> =
-  & TypeString<M>
-  & MolecularGenericGenerator<E, V, R, LevelSummary & LatexString>;
+type SubComponent<Component, SubComponent, SubKey extends string> =
+  | string
+  | RootComponent<Component, SubComponent, SubKey>;
+
+type LeafComponent<Component> = string | Component | Array<Component>;
+
+export type TypeTag<Tag extends string> = { type: Tag };
+
+export type Molecule<Tag extends string, Electronic, Vibrational, Rotational> =
+  & TypeTag<Tag>
+  & {
+    electronic: RootComponent<
+      Electronic,
+      SubComponent<
+        Vibrational,
+        LeafComponent<Rotational>,
+        "rotational"
+      >,
+      "vibrational"
+    >;
+  };
+
+export type Atom<Tag extends string, Electronic> =
+  & TypeTag<Tag>
+  & { electronic: Electronic | Array<Electronic> };
+
+export type UnknownMolecule = Molecule<string, unknown, unknown, unknown>;
+
+export type UnknownAtom = Atom<string, unknown>;
+
+export type TransformAtom<A extends UnknownAtom> = A extends
+  Atom<infer S, infer E> ? Atom<S, E & LevelSummary & LatexString> : never;
+
+export type TransformMolecule<M extends UnknownMolecule> = M extends
+  Molecule<infer S, infer E, infer V, infer R> ? Molecule<
+    S,
+    E & LevelSummary & LatexString,
+    V & LevelSummary & LatexString,
+    R & LevelSummary & LatexString
+  >
+  : never;

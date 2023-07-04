@@ -7,14 +7,9 @@ import {
   ComponentParser,
   molecular_orbital,
   molecular_orbital_latex,
-  PUE,
 } from "./common";
 
-function parse_e_lice(e: PUE<LinearInversionCenterElectronicImpl>): string {
-  if (e.Lambda === undefined) {
-    return e.e;
-  }
-
+function parse_e_lice(e: LinearInversionCenterElectronicImpl): string {
   let ref_s = "";
 
   if (e.reflection !== undefined) {
@@ -27,12 +22,8 @@ function parse_e_lice(e: PUE<LinearInversionCenterElectronicImpl>): string {
 }
 
 function parse_e_lice_latex(
-  e: PUE<LinearInversionCenterElectronicImpl>,
+  e: LinearInversionCenterElectronicImpl,
 ): string {
-  if (e.Lambda === undefined) {
-    return e.e;
-  }
-
   let ref_s = "";
 
   if (e.reflection !== undefined) {
@@ -45,7 +36,7 @@ function parse_e_lice_latex(
 }
 
 export const linearInversionCenterElectronicParser: ComponentParser<
-  PUE<LinearInversionCenterElectronicImpl>
+  LinearInversionCenterElectronicImpl
 > = {
   id: parse_e_lice,
   latex: parse_e_lice_latex,

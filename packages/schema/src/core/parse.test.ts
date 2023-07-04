@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { AnyAtom } from "./atoms";
 import { AnyMolecule } from "./molecules";
 import { parseCharge, parseState } from "./parse";
-import { State } from "./state";
+import { AnyParticle, State } from "./state";
 
 describe("parseCharge()", () => {
   const testCases: Array<[number, string]> = [
@@ -23,16 +23,18 @@ describe("parseCharge()", () => {
 });
 
 describe("parseState()", () => {
-  const testCases: Array<[State<AnyAtom | AnyMolecule>, string]> = [
+  const testCases: Array<[State<AnyAtom | AnyMolecule | AnyParticle>, string]> =
     [
-      {
-        particle: "Uo",
-        charge: -42,
-      },
-      "\\mathrm{Uo^{42-}}",
-    ],
-    [{ particle: "e", charge: -1 }, "\\mathrm{e}"],
-  ];
+      [
+        {
+          type: "simple",
+          particle: "Uo",
+          charge: -42,
+        },
+        "\\mathrm{Uo^{42-}}",
+      ],
+      [{ type: "simple", particle: "e", charge: -1 }, "\\mathrm{e}"],
+    ];
   it.each(testCases)("given %d should render %s", (input, expected) => {
     const result = parseState(input);
     expect(result.latex).toEqual(expected);

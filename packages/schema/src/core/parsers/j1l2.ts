@@ -4,7 +4,7 @@
 
 import { AtomJ1L2, AtomJ1L2Impl, J1L2Term } from "../atoms/j1l2";
 import { AtomParser } from "../parse";
-import { parse_div_two, parse_shell_config, PUA } from "./common";
+import { parse_div_two, parse_shell_config } from "./common";
 import {
   parse_LS_term,
   parse_LS_term_impl,
@@ -19,11 +19,7 @@ function parse_J1L2_term(term: J1L2Term): string {
   }_${parse_div_two(term.J)}`;
 }
 
-export function parse_J1L2(e: PUA<AtomJ1L2Impl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+export function parse_J1L2(e: AtomJ1L2Impl): string {
   return (
     parse_shell_config(e.config.core.config)
     + "{"
@@ -44,11 +40,7 @@ function parse_J1L2_term_latex(term: J1L2Term): string {
   }_{${parse_div_two(term.J)}}`;
 }
 
-export function parse_J1L2_latex(e: PUA<AtomJ1L2Impl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+export function parse_J1L2_latex(e: AtomJ1L2Impl): string {
   return (
     parse_shell_config(e.config.core.config)
     + "("

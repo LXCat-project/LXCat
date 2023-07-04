@@ -374,13 +374,12 @@ export function checkStates(
   errors: ErrorObject[],
 ) {
   for (const [key, atom] of states) {
-    const _type = atom["type"];
-    if (!(_type && _type.startsWith("Atom") && atom.electronic !== undefined)) {
-      continue;
-    }
-    for (const [idx, component] of atom.electronic.entries()) {
-      if (!component.scheme) continue; // some don't have scheme
-      checkQuantumNumbers(`${key}/electronic/${idx}`, component, errors);
+    if (Array.isArray(atom.electronic)) {
+      for (const [idx, component] of atom.electronic.entries()) {
+        checkQuantumNumbers(`${key}/electronic/${idx}`, component, errors);
+      }
+    } else {
+      checkQuantumNumbers(`${key}/electronic`, atom.electronic, errors);
     }
   }
   return errors;

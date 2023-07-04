@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { UAtomic, UE, UR, UV } from "../generators";
 import { ShellEntry } from "../shell_entry";
 
 export const electronic_orbital = ["s", "p", "d", "f", "g", "h"];
@@ -23,15 +22,6 @@ export interface ComponentParser<Component> {
 }
 
 // TODO: Parsing function could possibly also perform physical checks on data.
-
-// Helper types
-// Possibly Undefined Electronic/Vibrational/Rotational
-// TODO: Move these into library. Second arguments in UE and UV should probably be default.
-export type PUE<T> = T | UE<T, "vibrational">;
-export type PUV<T> = T | UV<T, "rotational">;
-export type PUR<T> = T | UR<T>;
-// Possibly Undefined Atomic
-export type PUA<T> = T | UAtomic<T>;
 
 function parse_shell_entry(entry: ShellEntry): string {
   if (entry.occupance == 0) {

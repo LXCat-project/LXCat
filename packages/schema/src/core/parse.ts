@@ -10,42 +10,26 @@ import {
   ExtractVibrational,
 } from "./extract";
 import {
-  AtomicDBGenerator,
-  AtomicGenerator,
-  LatexString,
-  MolecularDBGenerator,
-  MolecularGenerator,
+  TransformAtom,
+  TransformMolecule,
+  UnknownAtom,
   UnknownMolecule,
 } from "./generators";
 import { AnyMolecule } from "./molecules";
 import { atomParsers, parsers } from "./parsers";
-import { ComponentParser, PUA, PUE, PUR, PUV } from "./parsers/common";
-import { DBIdentifier, DBState, SimpleParticle, State } from "./state";
+import { ComponentParser } from "./parsers/common";
+import { AnyParticle, DBState, State } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
-export interface MoleculeParser<
-  M extends MolecularGenerator<unknown, unknown, unknown, string>,
-> {
-  // particle_type: ParticleType.Molecule;
-  e: ComponentParser<PUE<ExtractElectronic<M>>>;
-  v: ComponentParser<PUV<ExtractVibrational<M>>>;
-  r: ComponentParser<PUR<ExtractRotational<M>>>;
+export interface MoleculeParser<M extends UnknownMolecule> {
+  e: ComponentParser<ExtractElectronic<M>>;
+  v: ComponentParser<ExtractVibrational<M>>;
+  r: ComponentParser<ExtractRotational<M>>;
 }
 
-export type AtomParser<A extends AtomicGenerator<unknown, string>> =
-  ComponentParser<PUA<ExtractAtomic<A>>>;
-
-type AtomParserDict<T extends AtomicGenerator<unknown, string>> = {
-  [key in T["type"]]: AtomParser<T>;
-};
-type MoleculeParserDict<T extends UnknownMolecule> = {
-  [key in T["type"]]: MoleculeParser<T>;
-};
-
-export type StateParserDict<
-  A extends AtomicGenerator<unknown, string>,
-  M extends UnknownMolecule,
-> = AtomParserDict<A> & MoleculeParserDict<M>;
+export type AtomParser<A extends UnknownAtom> = ComponentParser<
+  ExtractAtomic<A> | Array<ExtractAtomic<A>>
+>;
 
 export function parseCharge(charge: number): string {
   if (charge == 0) return "";
@@ -73,12 +57,10 @@ const LATEX_RIGHT = "\\right)";
 
 const COMPOUND_SEP = "|";
 
-function parseAtom<
-  Input extends AtomicGenerator<unknown, S>,
-  Output extends AtomicDBGenerator<unknown, S>,
-  S extends keyof AtomParserDict<AnyAtom>,
->(state: State<Input>): DBState<Output> {
-  const outputState = state as DBState<Output>;
+function parseAtom<Input extends AnyAtom>(
+  state: State<Input>,
+): DBState<TransformAtom<Input>> {
+  const outputState = <unknown> state as DBState<TransformAtom<Input>>;
 
   let id = "";
   let latex = "";
@@ -86,7 +68,7 @@ function parseAtom<
   // TODO: This second check shouldn't be necessary as the length should be at
   // least one (but for now it is necessary, as the EditForm might pass empty
   // arrays).
-  if (!outputState.electronic || outputState.electronic.length === 0) {
+  if (!outputState.electronic) {
     latex = id = outputState.particle;
     if (outputState.particle !== "e") {
       latex += parseChargeLatex(outputState.charge);
@@ -106,18 +88,27 @@ function parseAtom<
     )
   }${LATEX_LEFT}`;
 
-  const parser = parsers[outputState.type] as AtomParser<Input>;
+  const parser = parsers[outputState.type];
 
-  for (const e of outputState.electronic) {
-    e.summary = parser.id(e as ExtractAtomic<Input>);
-    e.latex = parser.latex(e as ExtractAtomic<Input>);
+  if (Array.isArray(outputState.electronic)) {
+    for (const e of outputState.electronic) {
+      e.summary = parser.id(e);
+      e.latex = parser.latex(e);
 
-    id += `${e.summary}${COMPOUND_SEP}`;
-    latex += `${e.latex}${COMPOUND_SEP}`;
+      id += `${e.summary}${COMPOUND_SEP}`;
+      latex += `${e.latex}${COMPOUND_SEP}`;
+    }
+    id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
+    latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
+  } else {
+    const e = outputState.electronic;
+
+    e.summary = parser.id(e);
+    e.latex = parser.latex(e);
+
+    id += `${e.summary}${ID_RIGHT}`;
+    latex += `${e.latex}${LATEX_RIGHT}`;
   }
-
-  id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
-  latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
 
   outputState.id = id;
   outputState.latex = latex;
@@ -126,16 +117,14 @@ function parseAtom<
 }
 
 function parseMolecule<
-  Input extends MolecularGenerator<unknown, unknown, unknown, S>,
-  Output extends MolecularDBGenerator<unknown, unknown, unknown, S>,
-  S extends keyof MoleculeParserDict<AnyMolecule>,
->(state: State<Input>): DBState<Output> {
-  const outputState = state as DBState<Output>;
+  Input extends AnyMolecule,
+>(state: State<Input>): DBState<TransformMolecule<Input>> {
+  const outputState = state as unknown as DBState<TransformMolecule<Input>>;
 
   let id = "";
   let latex = "";
 
-  if (!outputState.electronic || outputState.electronic.length === 0) {
+  if (!outputState.electronic) {
     latex = id = state.particle;
     if (state.particle !== "e") {
       latex += parseChargeLatex(outputState.charge);
@@ -155,51 +144,96 @@ function parseMolecule<
     )
   }${LATEX_LEFT}`;
 
-  const parser = parsers[outputState.type] as MoleculeParser<Input>;
+  const parser = parsers[outputState.type];
 
-  for (const e of outputState.electronic) {
-    e.summary = parser.e.id(e as ExtractElectronic<Input>);
-    e.latex = parser.e.latex(e as ExtractElectronic<Input>);
+  if (Array.isArray(outputState.electronic)) {
+    for (const e of outputState.electronic) {
+      e.summary = parser.e.id(e);
+      e.latex = parser.e.latex(e);
+
+      id += `${e.summary}${COMPOUND_SEP}`;
+      latex += `${e.latex}${COMPOUND_SEP}`;
+    }
+    id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
+    latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
+  } else {
+    const e = outputState.electronic;
+
+    e.summary = parser.e.id(e);
+    e.latex = parser.e.latex(e);
 
     id += e.summary;
     latex += e.latex;
 
-    if (e.vibrational && e.vibrational.length > 0) {
+    if (e.vibrational) {
       id += `${ID_LEFT}v=`;
       latex += `${LATEX_LEFT}v=`;
 
-      for (const v of e.vibrational) {
-        v.summary = parser.v.id(v as ExtractVibrational<Input>);
-        v.latex = parser.v.latex(v as ExtractVibrational<Input>);
+      if (Array.isArray(e.vibrational)) {
+        for (const v of e.vibrational) {
+          v.summary = parser.v.id(v);
+          v.latex = parser.v.latex(v);
 
-        id += v.summary;
-        latex += v.latex;
+          id += v.summary;
+          id += COMPOUND_SEP;
 
-        if (v.rotational && v.rotational.length > 0) {
-          id += `${ID_LEFT}J=`;
-          latex += `${LATEX_LEFT}J=`;
-
-          for (const r of v.rotational) {
-            r.summary = parser.r.id(r as ExtractRotational<Input>);
-            r.latex = parser.r.latex(r as ExtractRotational<Input>);
-
-            id += `${r.summary}${COMPOUND_SEP}`;
-            latex += `${r.latex}${COMPOUND_SEP}`;
-          }
-          id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
-          latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
+          latex += v.latex;
+          latex += COMPOUND_SEP;
         }
-        id += COMPOUND_SEP;
-        latex += COMPOUND_SEP;
+        id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
+        latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
+      } else {
+        const v = e.vibrational;
+
+        if (typeof (v) === "string") {
+          id += v;
+          latex += v;
+        } else {
+          v.summary = parser.v.id(v);
+          v.latex = parser.v.latex(v);
+
+          id += v.summary;
+          latex += v.latex;
+
+          if (v.rotational) {
+            id += `${ID_LEFT}J=`;
+            latex += `${LATEX_LEFT}J=`;
+
+            if (Array.isArray(v.rotational)) {
+              for (const r of v.rotational) {
+                r.summary = parser.r.id(r);
+                r.latex = parser.r.latex(r);
+
+                id += `${r.summary}${COMPOUND_SEP}`;
+                latex += `${r.latex}${COMPOUND_SEP}`;
+              }
+              id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
+              latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
+            } else {
+              const r = v.rotational;
+
+              if (typeof (r) === "string") {
+                id += r;
+                latex += r;
+              } else {
+                r.summary = parser.r.id(r);
+                r.latex = parser.r.latex(r);
+
+                id += r.summary;
+                latex += r.latex;
+              }
+              id += ID_RIGHT;
+              latex += LATEX_RIGHT;
+            }
+          }
+        }
+        id += ID_RIGHT;
+        latex += LATEX_RIGHT;
       }
-      id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
-      latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
     }
-    id += COMPOUND_SEP;
-    latex += COMPOUND_SEP;
+    id += ID_RIGHT;
+    latex += LATEX_RIGHT;
   }
-  id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
-  latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
 
   outputState.id = id;
   outputState.latex = latex;
@@ -207,10 +241,8 @@ function parseMolecule<
   return outputState;
 }
 
-function parseSimpleParticle(
-  state: SimpleParticle,
-): SimpleParticle & LatexString & DBIdentifier {
-  const outputState = <SimpleParticle & LatexString & DBIdentifier> state;
+function parseSimpleParticle(state: State<AnyParticle>): DBState<AnyParticle> {
+  const outputState = <DBState<AnyParticle>> state;
 
   let id = state.particle;
   let latex = id;
@@ -226,28 +258,23 @@ function parseSimpleParticle(
   return outputState;
 }
 
-// FIXME: This function is in a weird position (it can be part of the central
-// library). HOW: Add parsers as a function argument and move this to e.g.
-// library/core/parse.ts.
+// NOTE: All return values are cast to `any`, as TypeScript cannot narrow a
+// generic function parameter based on type guards.
+// See: https://github.com/microsoft/TypeScript/issues/33014.
 export function parseState<
-  Input extends AtomicGenerator<unknown, S>,
-  Output extends AtomicDBGenerator<unknown, S>,
-  S extends keyof AtomParserDict<AnyAtom>,
->(state: State<Input>): DBState<Output>;
-export function parseState<
-  Input extends MolecularGenerator<unknown, unknown, unknown, string>,
-  Output extends MolecularDBGenerator<unknown, unknown, unknown, string>,
->(state: State<Input>): DBState<Output> {
-  if (!state.type) {
-    // TODO: For some reason the return type of parseSimpleParticle is not
-    // compatible with the parseState return type. That is, `SimpleParticle &
-    // DBIdentifier & LatexString` cannot be assigned to DBState<Output>. This
-    // seems to be due the possiblity for Output to contain additional
-    // properties that are passed to `NOT` in `State`.
-    return parseSimpleParticle(state) as DBState<Output>;
+  Input extends AnyAtom | AnyMolecule | AnyParticle,
+>(
+  state: State<Input>,
+): Input extends AnyAtom ? DBState<TransformAtom<Input>>
+  : Input extends AnyMolecule ? DBState<TransformMolecule<Input>>
+  : DBState<Input>
+{
+  if (state.type === "simple") {
+    return parseSimpleParticle(state) as any;
+    // NOTE: TypeScript does not narrow the type of `state` based on this check (but we know that it is correct).
   } else if (state.type in atomParsers) {
-    return parseAtom(state as State<AnyAtom>);
+    return parseAtom(state as any) as any;
   } else {
-    return parseMolecule(state as State<AnyMolecule>);
+    return parseMolecule(state as any) as any;
   }
 }

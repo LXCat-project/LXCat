@@ -4,12 +4,7 @@
 
 import { AtomLS, AtomLSImpl, LSTerm, LSTermImpl } from "../atoms/ls";
 import { AtomParser } from "../parse";
-import {
-  atomic_orbital,
-  parse_div_two,
-  parse_shell_config,
-  PUA,
-} from "./common";
+import { atomic_orbital, parse_div_two, parse_shell_config } from "./common";
 
 export function parse_LS_term_impl(term: LSTermImpl): string {
   return `^${2 * term.S + 1}${atomic_orbital[term.L]}${
@@ -21,11 +16,7 @@ export function parse_LS_term(term: LSTerm): string {
   return `${parse_LS_term_impl(term)}_${parse_div_two(term.J)}`;
 }
 
-function parse_LS(e: PUA<AtomLSImpl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+function parse_LS(e: AtomLSImpl): string {
   const config = parse_shell_config(e.config);
   return `${config}${config != "" ? ":" : ""}${parse_LS_term(e.term)}`;
 }
@@ -40,11 +31,7 @@ export function parse_LS_term_latex(term: LSTerm): string {
   return `${parse_LS_term_impl_latex(term)}_{${parse_div_two(term.J)}}`;
 }
 
-function parse_LS_latex(e: PUA<AtomLSImpl>): string {
-  if (e.term === undefined) {
-    return e.e;
-  }
-
+function parse_LS_latex(e: AtomLSImpl): string {
   const config = parse_shell_config(e.config);
   return `${config}${config != "" ? ":" : ""}${parse_LS_term_latex(e.term)}`;
 }

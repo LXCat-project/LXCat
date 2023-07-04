@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { RotationalImpl } from "../molecules/components/rotational";
-import { ComponentParser, PUR } from "./common";
+import { ComponentParser } from "./common";
 
-function parse_r_mr(r: PUR<RotationalImpl>): string {
+function parse_r_mr(r: RotationalImpl): string {
   return r.J.toString();
 }
 
-export const rotationalParser: ComponentParser<PUR<RotationalImpl>> = {
+export const rotationalParser: ComponentParser<RotationalImpl> = {
   id: parse_r_mr,
   latex: parse_r_mr,
 };

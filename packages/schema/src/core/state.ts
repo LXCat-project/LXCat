@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LatexString } from "./generators";
-import { NOT } from "./util";
+import { LatexString, TypeTag } from "./generators";
 
 export interface SimpleParticle {
   /**
@@ -22,7 +21,8 @@ export interface SimpleParticle {
 // 'electronic' are specified or neither).
 // Solved by switching to T | NOT<T>.
 // See issue: https://github.com/vega/ts-json-schema-generator/issues/348
-export type State<T> = SimpleParticle & (T | NOT<keyof T>);
+export type AnyParticle = TypeTag<"simple">;
+export type State<T> = SimpleParticle & T;
 
 export type InState<T> = State<T>;
 
