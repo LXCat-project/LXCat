@@ -5,6 +5,7 @@
 import { AnyAtom } from "../core/atoms";
 import { InputDocument } from "../core/document";
 import { AnyMolecule } from "../core/molecules";
+import { AnyParticle } from "../core/state";
 import { CrossSection } from "../cs/cs";
 
 /**
@@ -22,7 +23,7 @@ export type CrossSectionInput<StateType> =
 /**
  * @discriminator type
  */
-export type AnySpecies = AnyAtom | AnyMolecule;
+export type AnySpecies = AnyParticle | AnyAtom | AnyMolecule;
 
 // TODO should set have own references?
 /**

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { AnySpecies } from "../css/input";
 import { AnyAtom } from "./atoms";
 import {
   ExtractAtomic,
@@ -258,6 +259,10 @@ function parseSimpleParticle(state: State<AnyParticle>): DBState<AnyParticle> {
   return outputState;
 }
 
+export function stateIsAtom(state: AnySpecies): state is AnyAtom {
+  return state.type in atomParsers;
+}
+
 // NOTE: All return values are cast to `any`, as TypeScript cannot narrow a
 // generic function parameter based on type guards.
 // See: https://github.com/microsoft/TypeScript/issues/33014.
@@ -272,9 +277,9 @@ export function parseState<
   if (state.type === "simple") {
     return parseSimpleParticle(state) as any;
     // NOTE: TypeScript does not narrow the type of `state` based on this check (but we know that it is correct).
-  } else if (state.type in atomParsers) {
-    return parseAtom(state as any) as any;
+  } else if (stateIsAtom(state)) {
+    return parseAtom(state) as any;
   } else {
-    return parseMolecule(state as any) as any;
+    return parseMolecule(state) as any;
   }
 }
