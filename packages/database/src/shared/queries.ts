@@ -3,14 +3,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CSL } from "@lxcat/schema/dist/core/csl";
-import {
-  AtomicGenerator,
-  MolecularGenerator,
-} from "@lxcat/schema/dist/core/generators";
-import { parseState } from "@lxcat/schema/dist/core/parse";
+import { parseState, stateIsAtom } from "@lxcat/schema/dist/core/parse";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { DBState, InState } from "@lxcat/schema/dist/core/state";
+import { DBState, State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
+import { AnySpecies } from "@lxcat/schema/dist/css/input";
+import { produce } from "immer";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 
@@ -61,7 +59,7 @@ export async function insert_edge(
 }
 
 export async function insert_state_dict(
-  states: Dict<InState<unknown>>,
+  states: Dict<State<AnySpecies>>,
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
@@ -78,84 +76,139 @@ async function insert_state<T>(
   return upsert_document("State", state);
 }
 
-async function insert_state_tree<T extends AtomicGenerator<E, string>, E>(
-  state: InState<T>,
-): Promise<string>;
-async function insert_state_tree<
-  T extends MolecularGenerator<E, V, R, string>,
-  E,
-  V,
-  R,
->(state: InState<T>): Promise<string> {
-  // FIXME: This function assumes that compound states on multiple levels
-  // are not supported.
-  /* Strategy Add states in a top down fashion.  Compound levels should
-   * be treated differently from singular levels.
-   */
-  const in_compound: Array<string> = [];
+/**
+ * Strategy: add states in a top down fashion.
+ */
+async function insert_state_tree<T extends AnySpecies>(
+  state: State<T>,
+): Promise<string> {
   let ret_id = "";
 
-  let tmp_state = { ...state };
-  delete tmp_state.type;
-  delete tmp_state.electronic;
+  let topLevelState: State<AnySpecies> = {
+    type: "simple",
+    particle: state.particle,
+    charge: state.charge,
+  };
 
   // FIXME: Link top level states to particle.
-  const t_ret = await insert_state(parseState(tmp_state));
+  const t_ret = await insert_state(parseState(topLevelState));
   ret_id = t_ret.id;
 
-  if (state.electronic) {
-    tmp_state = { ...state };
+  if (stateIsAtom(state)) {
+    if (Array.isArray(state.electronic)) {
+      for (const electronic of state.electronic) {
+        const elec_state = { ...state, electronic };
+        const e_ret = await insert_state(parseState(elec_state));
+        if (e_ret.new) {
+          await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+        }
+      }
 
-    for (const elec of state.electronic) {
-      tmp_state.electronic = [{ ...elec }];
-      delete tmp_state.electronic[0].vibrational;
-
-      /* console.log(state_to_string(tmp_state)); */
-      const e_ret = await insert_state(parseState(tmp_state));
+      // TODO: Link compound state to its substates.
+      ret_id = (await insert_state(parseState(state))).id;
+    } else {
+      const e_ret = await insert_state(parseState(state));
       if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+      ret_id = e_ret.id;
+    }
+  } else if (state.type !== "simple") {
+    if (Array.isArray(state.electronic)) {
+      for (const electronic of state.electronic) {
+        const elec_state = { ...state, electronic };
+        const e_ret = await insert_state(parseState(elec_state));
+        if (e_ret.new) {
+          await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+        }
+      }
 
-      if (elec.vibrational) {
-        for (const vib of elec.vibrational) {
-          tmp_state.electronic[0].vibrational = [{ ...vib }];
-          delete tmp_state.electronic[0].vibrational[0].rotational;
+      // TODO: Link compound state to its substates.
+      ret_id = (await insert_state(parseState(state))).id;
+    } else {
+      const ele_state = {
+        ...state,
+        electronic: produce(state.electronic, (ele) => {
+          delete ele.vibrational;
+          return ele;
+        }),
+      };
+      const e_ret = await insert_state(parseState(ele_state));
+      if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+      ret_id = e_ret.id;
 
-          /* console.log(state_to_string(tmp_state)); */
-          const v_ret = await insert_state(parseState(tmp_state));
+      if (state.electronic.vibrational) {
+        if (typeof (state.electronic.vibrational) === "string") {
+          const v_ret = await insert_state(parseState(state));
           if (v_ret.new) {
             await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
+          ret_id = v_ret.id;
+        } else if (Array.isArray(state.electronic.vibrational)) {
+          for (const vib of state.electronic.vibrational) {
+            const vib_state = {
+              ...state,
+              electronic: produce(state.electronic, (ele) => {
+                ele.vibrational = vib;
+                return ele;
+              }),
+            };
+            const v_ret = await insert_state(parseState(vib_state));
+            if (v_ret.new) {
+              await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+            }
+          }
 
-          if (vib.rotational) {
-            for (const rot of vib.rotational) {
-              tmp_state.electronic[0].vibrational[0].rotational = [{ ...rot }];
-              /* console.log(state_to_string(tmp_state)); */
-              const r_ret = await insert_state(parseState(tmp_state));
+          // TODO: Link compound state to its substates.
+          ret_id = (await insert_state(parseState(state))).id;
+        } else {
+          // TODO: Add vibrational parent and rotational substates.
+          const vib_state = {
+            ...state,
+            electronic: {
+              ...state.electronic,
+              vibrational: produce(state.electronic.vibrational, (vib) => {
+                delete vib.rotational;
+                return vib;
+              }),
+            },
+          };
+          const v_ret = await insert_state(parseState(vib_state));
+          if (v_ret.new) {
+            await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+          }
+          ret_id = v_ret.id;
+
+          if (state.electronic.vibrational.rotational) {
+            if (Array.isArray(state.electronic.vibrational.rotational)) {
+              for (const rot of state.electronic.vibrational.rotational) {
+                const rot_state = {
+                  ...state,
+                  electronic: {
+                    ...state.electronic,
+                    vibrational: {
+                      ...state.electronic.vibrational,
+                      rotational: rot,
+                    },
+                  },
+                };
+
+                const r_ret = await insert_state(parseState(rot_state));
+                if (r_ret.new) {
+                  await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
+                }
+              }
+
+              // TODO: Link compound state to its substates.
+              ret_id = (await insert_state(parseState(state))).id;
+            } else {
+              const r_ret = await insert_state(parseState(state));
               if (r_ret.new) {
                 await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
               }
-
-              in_compound.push(r_ret.id);
               ret_id = r_ret.id;
             }
-          } else {
-            in_compound.push(v_ret.id);
-            ret_id = v_ret.id;
           }
         }
-      } else {
-        in_compound.push(e_ret.id);
-        ret_id = e_ret.id;
       }
-    }
-
-    if (in_compound.length > 1) {
-      const c_ret = await insert_state(parseState(state));
-      if (c_ret.new) {
-        for (const sub_id of in_compound) {
-          await insert_edge("InCompound", sub_id, c_ret.id);
-        }
-      }
-      return c_ret.id;
     }
   }
 
