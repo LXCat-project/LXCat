@@ -5,9 +5,9 @@
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import { parseState, stateIsAtom } from "@lxcat/schema/dist/core/parse";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { AnySpecies } from "@lxcat/schema/dist/core/species";
 import { DBState, State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { AnySpecies } from "@lxcat/schema/dist/css/input";
 import { produce } from "immer";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";

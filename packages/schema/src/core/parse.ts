@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AnySpecies } from "../css/input";
 import { AnyAtom } from "./atoms";
 import {
   ExtractAtomic,
@@ -19,6 +18,7 @@ import {
 import { AnyMolecule } from "./molecules";
 import { atomParsers, parsers } from "./parsers";
 import { ComponentParser } from "./parsers/common";
+import { AnySpecies } from "./species";
 import { AnyParticle, DBState, State } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.

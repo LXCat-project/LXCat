@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AnyAtom } from "../core/atoms";
 import { InputDocument } from "../core/document";
-import { AnyMolecule } from "../core/molecules";
-import { AnyParticle } from "../core/state";
+import { AnySpecies } from "../core/species";
 import { CrossSection } from "../cs/cs";
 
 /**
@@ -21,12 +19,7 @@ export type CrossSectionInput<StateType> =
   & { complete: boolean };
 
 /**
- * @discriminator type
- */
-export type AnySpecies = AnyParticle | AnyAtom | AnyMolecule;
-
-// TODO should set have own references?
-/**
  * To add a cross section set to the LXCat application, the set should be valid against this schema.
  */
+// TODO: Rename this.
 export type CrossSectionSetRaw = CrossSectionInput<AnySpecies>;
