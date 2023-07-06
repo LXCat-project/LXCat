@@ -3,18 +3,6 @@
   "additionalProperties": false,
   "definitions": {},
   "properties": {
-    "data": {
-      "items": {
-        "items": {
-          "type": "number"
-        },
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
     "labels": {
       "items": {
         "minLength": 1,
@@ -58,6 +46,18 @@
       "minItems": 2,
       "type": "array"
     },
+    "values": {
+      "items": {
+        "items": {
+          "type": "number"
+        },
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
     "versionInfo": {
       "additionalProperties": false,
       "properties": {
@@ -93,13 +93,13 @@
     }
   },
   "required": [
-    "data",
     "labels",
     "organization",
     "reaction",
     "threshold",
     "type",
     "units",
+    "values",
     "versionInfo"
   ],
   "type": "object"
