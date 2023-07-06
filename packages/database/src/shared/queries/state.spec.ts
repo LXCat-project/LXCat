@@ -2,21 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { InState } from "@lxcat/schema/dist/core/state";
+import { State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { AnySpecies } from "@lxcat/schema/dist/core/species";
 import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
 import { db } from "../../db";
 import { insert_state_dict } from "../queries";
-import { State } from "../types/collections";
+import { State as DBState } from "../types/collections";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -28,25 +27,29 @@ import {
   StateChoices,
 } from "./state";
 
-type InputState = Dict<InState<AnyAtomJSON | AnyMoleculeJSON>>;
+type InputState = Dict<State<AnySpecies>>;
 
 beforeAll(startDbWithUserAndCssCollections);
 
-function sample2partciles2charges() {
+function sample2particles2charges(): InputState {
   return {
     H2: {
+      type: "simple",
       particle: "H2",
       charge: 0,
     },
     H2p: {
+      type: "simple",
       particle: "H2",
       charge: 1,
     },
     N2: {
+      type: "simple",
       particle: "N2",
       charge: 0,
     },
     N2p: {
+      type: "simple",
       particle: "N2",
       charge: 1,
     },
@@ -56,7 +59,7 @@ function sample2partciles2charges() {
 describe("generateStateFilterAql()", () => {
   describe("2 particles with each 2 different charges", () => {
     beforeAll(async () => {
-      const states: InputState = sample2partciles2charges();
+      const states: InputState = sample2particles2charges();
       await insert_state_dict(states);
       return truncateCrossSectionSetCollections;
     });
@@ -214,37 +217,29 @@ describe("generateStateFilterAql()", () => {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 0,
-                },
-              ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 0,
             },
-          ],
+          },
         },
         H2v2: {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 2,
-                },
-              ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 2,
             },
-          ],
+          },
         },
       };
       await insert_state_dict(states);
@@ -312,47 +307,35 @@ describe("generateStateFilterAql()", () => {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 0,
-                  rotational: [
-                    {
-                      J: 1,
-                    },
-                  ],
-                },
-              ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 0,
+              rotational: {
+                J: 1,
+              },
             },
-          ],
+          },
         },
         H2J3: {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 0,
-                  rotational: [
-                    {
-                      J: 3,
-                    },
-                  ],
-                },
-              ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 0,
+              rotational: {
+                J: 3,
+              },
             },
-          ],
+          },
         },
       };
       await insert_state_dict(states);
@@ -487,43 +470,39 @@ describe("generateStateFilterAql()", () => {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 1,
-                },
-                {
-                  v: 2,
-                },
-              ],
-            },
-          ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: [
+              {
+                v: 1,
+              },
+              {
+                v: 2,
+              },
+            ],
+          },
         },
         H2v34: {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
-                {
-                  v: 3,
-                },
-                {
-                  v: 4,
-                },
-              ],
-            },
-          ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: [
+              {
+                v: 3,
+              },
+              {
+                v: 4,
+              },
+            ],
+          },
         },
       };
       await insert_state_dict(states);
@@ -594,53 +573,45 @@ describe("generateStateFilterAql()", () => {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 0,
+              rotational: [
                 {
-                  v: 0,
-                  rotational: [
-                    {
-                      J: 1,
-                    },
-                    {
-                      J: 2,
-                    },
-                  ],
+                  J: 1,
+                },
+                {
+                  J: 2,
                 },
               ],
             },
-          ],
+          },
         },
         H2J34: {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-              vibrational: [
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+            vibrational: {
+              v: 0,
+              rotational: [
                 {
-                  v: 0,
-                  rotational: [
-                    {
-                      J: 3,
-                    },
-                    {
-                      J: 4,
-                    },
-                  ],
+                  J: 3,
+                },
+                {
+                  J: 4,
                 },
               ],
             },
-          ],
+          },
         },
       };
       await insert_state_dict(states);
@@ -740,18 +711,22 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
       description: "2 simple particles with each 2 different charges",
       states: {
         H2: {
+          type: "simple",
           particle: "H2",
           charge: 0,
         },
         H2p: {
+          type: "simple",
           particle: "H2",
           charge: 1,
         },
         N2: {
+          type: "simple",
           particle: "N2",
           charge: 0,
         },
         N2p: {
+          type: "simple",
           particle: "N2",
           charge: 1,
         },
@@ -780,31 +755,27 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
           particle: "N2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "X",
-              Lambda: 0,
-              S: 0,
-              parity: "g",
-              reflection: "+",
-              vibrational: [{ v: 0, rotational: [{ J: 1 }] }],
-            },
-          ],
+          electronic: {
+            e: "X",
+            Lambda: 0,
+            S: 0,
+            parity: "g",
+            reflection: "+",
+            vibrational: { v: 0, rotational: { J: 1 } },
+          },
         },
         N2b: {
           particle: "N2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "X",
-              Lambda: 0,
-              S: 0,
-              parity: "g",
-              reflection: "+",
-              vibrational: [{ v: 0, rotational: [{ J: 2 }] }],
-            },
-          ],
+          electronic: {
+            e: "X",
+            Lambda: 0,
+            S: 0,
+            parity: "g",
+            reflection: "+",
+            vibrational: { v: 0, rotational: { J: 2 } },
+          },
         },
       },
       expected: {
@@ -834,16 +805,14 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
           particle: "CO2",
           charge: 0,
           type: "LinearTriatomInversionCenter",
-          electronic: [
-            {
-              e: "X",
-              Lambda: 0,
-              S: 0,
-              parity: "g",
-              reflection: "+",
-              vibrational: [{ v: [0, 0, 0] }, { v: [1, 0, 1] }],
-            },
-          ],
+          electronic: {
+            e: "X",
+            Lambda: 0,
+            S: 0,
+            parity: "g",
+            reflection: "+",
+            vibrational: [{ v: [0, 0, 0] }, { v: [1, 0, 1] }],
+          },
         },
       },
       expected: {
@@ -879,16 +848,14 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
           particle: "N2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "X",
-              Lambda: 0,
-              S: 0,
-              parity: "g",
-              reflection: "+",
-              vibrational: [{ v: 0, rotational: [{ J: 1 }, { J: 2 }] }],
-            },
-          ],
+          electronic: {
+            e: "X",
+            Lambda: 0,
+            S: 0,
+            parity: "g",
+            reflection: "+",
+            vibrational: { v: 0, rotational: [{ J: 1 }, { J: 2 }] },
+          },
         },
       },
       expected: {
@@ -962,18 +929,19 @@ describe("listStates()", () => {
 
   describe("2 simple particles with 2 different charges", () => {
     beforeAll(async () => {
-      const states: InputState = sample2partciles2charges();
+      const states: InputState = sample2particles2charges();
       await insert_state_dict(states);
       return truncateCrossSectionSetCollections;
     });
 
-    const testCases: Array<[string, StateChoices, State[]]> = [
+    const testCases: Array<[string, StateChoices, DBState[]]> = [
       ["given empty selection should return no data", { particle: {} }, []],
       [
         "given uncharged H2 selected should return H2 uncharged state",
         { particle: { H2: { charge: { "0": { electronic: {} } } } } },
         [
           {
+            type: "simple",
             particle: "H2",
             id: "H2",
             latex: "\\mathrm{H2}",
@@ -986,12 +954,14 @@ describe("listStates()", () => {
         { particle: { H2: { charge: {} } } },
         [
           {
+            type: "simple",
             particle: "H2",
             id: "H2",
             latex: "\\mathrm{H2}",
             charge: 0,
           },
           {
+            type: "simple",
             particle: "H2",
             id: "H2^+",
             latex: "\\mathrm{H2^+}",
@@ -1004,24 +974,28 @@ describe("listStates()", () => {
         { particle: { H2: { charge: {} }, N2: { charge: {} } } },
         [
           {
+            type: "simple",
             particle: "H2",
             id: "H2",
             latex: "\\mathrm{H2}",
             charge: 0,
           },
           {
+            type: "simple",
             particle: "H2",
             id: "H2^+",
             latex: "\\mathrm{H2^+}",
             charge: 1,
           },
           {
+            type: "simple",
             particle: "N2",
             id: "N2",
             latex: "\\mathrm{N2}",
             charge: 0,
           },
           {
+            type: "simple",
             particle: "N2",
             id: "N2^+",
             latex: "\\mathrm{N2^+}",
