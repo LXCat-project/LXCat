@@ -26,64 +26,54 @@
     }
   },
   "states": {
-    "e": { "particle": "e", "charge": -1 },
+    "e": { "particle": "e", "charge": -1, "type": "simple" },
     "ground": {
       "particle": "Ar",
       "charge": 0,
       "type": "AtomLS",
-      "electronic": [
-        {
-          "scheme": "LS",
-          "config": [],
-          "term": { "L": 0, "S": 0, "P": 1, "J": 0 }
-        }
-      ]
+      "electronic": { "scheme": "LS", "config": [], "term": { "L": 0, "S": 0, "P": 1, "J": 0 } }
     },
     "first": {
       "particle": "Ar",
       "charge": 0,
       "type": "AtomJ1L2",
-      "electronic": [
-        {
-          "scheme": "J1L2",
-          "config": {
-            "core": {
-              "scheme": "LS",
-              "config": [{ "n": 3, "l": 1, "occupance": 5 }],
-              "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 }
-            },
-            "excited": {
-              "scheme": "LS",
-              "config": [{ "n": 4, "l": 0, "occupance": 1 }],
-              "term": { "S": 0.5, "L": 0, "P": 1 }
-            }
+      "electronic": {
+        "scheme": "J1L2",
+        "config": {
+          "core": {
+            "scheme": "LS",
+            "config": [{ "n": 3, "l": 1, "occupance": 5 }],
+            "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 }
           },
-          "term": { "S": 0.5, "K": 1.5, "P": -1, "J": 2 }
-        }
-      ]
+          "excited": {
+            "scheme": "LS",
+            "config": [{ "n": 4, "l": 0, "occupance": 1 }],
+            "term": { "S": 0.5, "L": 0, "P": 1 }
+          }
+        },
+        "term": { "S": 0.5, "K": 1.5, "P": -1, "J": 2 }
+      }
     },
     "second": {
       "particle": "Ar",
       "charge": 0,
       "type": "AtomJ1L2",
-      "electronic": [
-        {
-          "scheme": "J1L2",
-          "config": {
-            "core": {
-              "scheme": "LS",
-              "config": [{ "n": 3, "l": 1, "occupance": 5 }],
-              "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 }
-            },
-            "excited": {
-              "scheme": "LS",
-              "config": [{ "n": 3, "l": 3, "occupance": 1 }],
-              "term": { "S": 0.5, "L": 2, "P": 1 }
-            }
+      "electronic": {
+        "scheme": "J1L2",
+        "config": {
+          "core": {
+            "scheme": "LS",
+            "config": [{ "n": 3, "l": 1, "occupance": 5 }],
+            "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 }
           },
-          "term": { "S": 0.5, "K": 1.5, "P": -1, "J": 2 }
-        }
-      ]
+          "excited": {
+            "scheme": "LS",
+            "config": [{ "n": 3, "l": 3, "occupance": 1 }],
+            "term": { "S": 0.5, "L": 2, "P": 1 }
+          }
+        },
+        "term": { "S": 0.5, "K": 1.5, "P": -1, "J": 2 }
+      }
     },
     "third": {
       "particle": "Ar",
@@ -128,52 +118,39 @@
       "particle": "C",
       "charge": 0,
       "type": "AtomLS",
-      "electronic": [
-        {
-          "scheme": "LS",
-          "config": [
-            { "n": 2, "l": 0, "occupance": 1 },
-            { "n": 2, "l": 1, "occupance": 3 }
-          ],
-          "term": { "L": 0, "S": 2, "J": 2, "P": 1 }
-        }
-      ]
+      "electronic": {
+        "scheme": "LS",
+        "config": [{ "n": 2, "l": 0, "occupance": 1 }, { "n": 2, "l": 1, "occupance": 3 }],
+        "term": { "L": 0, "S": 2, "J": 2, "P": 1 }
+      }
     },
     "phosphorus": {
       "particle": "P",
       "charge": 1,
       "type": "AtomLS1",
-      "electronic": [
-        {
-          "scheme": "LS1",
-          "config": {
-            "core": {
-              "scheme": "LS",
-              "config": [{ "n": 3, "l": 1, "occupance": 1 }],
-              "term": { "L": 1, "S": 0.5, "P": -1 }
-            },
-            "excited": {
-              "scheme": "LS",
-              "config": [{ "n": 4, "l": 3, "occupance": 1 }],
-              "term": { "L": 3, "S": 0.5, "P": -1 }
-            }
+      "electronic": {
+        "scheme": "LS1",
+        "config": {
+          "core": {
+            "scheme": "LS",
+            "config": [{ "n": 3, "l": 1, "occupance": 1 }],
+            "term": { "L": 1, "S": 0.5, "P": -1 }
           },
-          "term": { "L": 3, "S": 0.5, "K": 2.5, "P": 1, "J": 3 }
-        }
-      ]
+          "excited": {
+            "scheme": "LS",
+            "config": [{ "n": 4, "l": 3, "occupance": 1 }],
+            "term": { "L": 3, "S": 0.5, "P": -1 }
+          }
+        },
+        "term": { "L": 3, "S": 0.5, "K": 2.5, "P": 1, "J": 3 }
+      }
     }
   },
   "processes": [
     {
       "reaction": {
-        "lhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "ground" }
-        ],
-        "rhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "first" }
-        ],
+        "lhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "ground" }],
+        "rhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "first" }],
         "reversible": false,
         "type_tags": ["Electronic"]
       },
@@ -181,25 +158,13 @@
       "labels": ["Energy", "Cross section"],
       "units": ["eV", "m^2"],
       "threshold": 11.548,
-      "data": [
-        [11.548, 1.414],
-        [11.6, 1.414],
-        [11.7, 1.414],
-        [11.8, 1.414],
-        [11.9, 1.414]
-      ],
-      "reference": ["main"]
+      "reference": ["main"],
+      "values": [[11.548, 1.414], [11.6, 1.414], [11.7, 1.414], [11.8, 1.414], [11.9, 1.414]]
     },
     {
       "reaction": {
-        "lhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "ground" }
-        ],
-        "rhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "second" }
-        ],
+        "lhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "ground" }],
+        "rhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "second" }],
         "reversible": false,
         "type_tags": ["Electronic"]
       },
@@ -208,7 +173,7 @@
       "labels": ["Energy", "Cross section"],
       "units": ["eV", "m^2"],
       "threshold": 13.903,
-      "data": [
+      "values": [
         [13.903, 1.414],
         [14, 1.414],
         [14.1, 1.414],
@@ -224,14 +189,8 @@
     },
     {
       "reaction": {
-        "lhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "ground" }
-        ],
-        "rhs": [
-          { "count": 1, "state": "e" },
-          { "count": 1, "state": "third" }
-        ],
+        "lhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "ground" }],
+        "rhs": [{ "count": 1, "state": "e" }, { "count": 1, "state": "third" }],
         "reversible": false,
         "type_tags": ["Electronic"]
       },
@@ -240,7 +199,7 @@
       "labels": ["Energy", "Cross section"],
       "units": ["eV", "m^2"],
       "threshold": 14.236,
-      "data": [
+      "values": [
         [14.236, 1.414],
         [14.3, 1.414],
         [14.4, 1.414],
