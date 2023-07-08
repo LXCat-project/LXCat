@@ -30,12 +30,12 @@ type RootComponent<Component, SubComponent, SubKey extends string> =
  */
 type SubComponent<Component, SubComponent, SubKey extends string> =
   | string
-  | RootComponent<Component, SubComponent, SubKey>;
+  | RootComponent<Component | string, SubComponent, SubKey>;
 
 /**
  * @internal
  */
-type LeafComponent<Component> = string | Component | Array<Component>;
+type LeafComponent<Component> = string | Component | Array<Component | string>;
 
 /**
  * @internal

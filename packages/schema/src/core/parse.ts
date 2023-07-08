@@ -172,13 +172,18 @@ function parseMolecule<
 
       if (Array.isArray(e.vibrational)) {
         for (const v of e.vibrational) {
-          v.summary = parser.v.id(v);
-          v.latex = parser.v.latex(v);
+          if (typeof (v) === "string") {
+            id += v;
+            latex += v;
+          } else {
+            v.summary = parser.v.id(v);
+            id += v.summary;
 
-          id += v.summary;
+            v.latex = parser.v.latex(v);
+            latex += v.latex;
+          }
+
           id += COMPOUND_SEP;
-
-          latex += v.latex;
           latex += COMPOUND_SEP;
         }
         id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
@@ -202,11 +207,19 @@ function parseMolecule<
 
             if (Array.isArray(v.rotational)) {
               for (const r of v.rotational) {
-                r.summary = parser.r.id(r);
-                r.latex = parser.r.latex(r);
+                if (typeof (r) === "string") {
+                  id += r;
+                  latex += r;
+                } else {
+                  r.summary = parser.r.id(r);
+                  r.latex = parser.r.latex(r);
 
-                id += `${r.summary}${COMPOUND_SEP}`;
-                latex += `${r.latex}${COMPOUND_SEP}`;
+                  id += r.summary;
+                  latex += r.latex;
+                }
+
+                id += COMPOUND_SEP;
+                latex += COMPOUND_SEP;
               }
               id = `${id.slice(0, id.length - 1)}${ID_RIGHT}`;
               latex = `${latex.slice(0, latex.length - 1)}${LATEX_RIGHT}`;
