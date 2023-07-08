@@ -8,9 +8,9 @@ import { Storage } from "../core/enumeration";
 import { validator } from "./validate";
 
 // atom
-import data_ok from "./data/Ar_C_P_Nobody_LXCat.json";
-import data_momenta_nok from "./data/Ar_C_P_Nobody_LXCat_bad_momenta.json";
-import data_parity_nok from "./data/Ar_C_P_Nobody_LXCat_bad_parity.json";
+import values_ok from "./data/Ar_C_P_Nobody_LXCat.json";
+import values_momenta_nok from "./data/Ar_C_P_Nobody_LXCat_bad_momenta.json";
+import values_parity_nok from "./data/Ar_C_P_Nobody_LXCat_bad_parity.json";
 
 describe("validate()", () => {
   test("minimal", () => {
@@ -33,7 +33,7 @@ describe("validate()", () => {
           type: Storage.LUT,
           labels: ["Energy", "Cross Section"],
           units: ["eV", "m^2"],
-          data: [[1, 3.14e-20]],
+          values: [[1, 3.14e-20]],
           reference: [],
         },
       ],
@@ -62,7 +62,7 @@ describe("validate()", () => {
           type: Storage.LUT,
           labels: ["Energy", "Cross Section"],
           units: ["eV", "m^2"],
-          data: [[1, 3.14e-20]],
+          values: [[1, 3.14e-20]],
           reference: [],
         },
       ],
@@ -86,19 +86,19 @@ describe("validate()", () => {
 
 describe("validate() w/ examples", () => {
   test("no errors", () => {
-    const isValid = validator.validate(data_ok);
+    const isValid = validator.validate(values_ok);
     expect(isValid).toBeTruthy();
     expect(validator.errors).toHaveLength(0);
   });
 
   test("w/ parity errors", () => {
     // see quantum_number_validator.test.ts for explanation of error counts
-    const isValid = validator.validate(data_parity_nok);
+    const isValid = validator.validate(values_parity_nok);
     expect(isValid).toBeFalsy();
     const expected = [
       {
         keyword: "LS coupling",
-        instancePath: "second/electronic/0/config/excited",
+        instancePath: "second/electronic/config/excited",
         schemaPath: "",
         params: {
           scheme: "LS",
@@ -123,7 +123,7 @@ describe("validate() w/ examples", () => {
       },
       {
         keyword: "J1L2 coupling",
-        instancePath: "second/electronic/0/config/excited",
+        instancePath: "second/electronic/config/excited",
         schemaPath: "",
         params: {
           scheme: "J1L2",
@@ -250,7 +250,7 @@ describe("validate() w/ examples", () => {
       },
       {
         keyword: "LS coupling",
-        instancePath: "carbon/electronic/0",
+        instancePath: "carbon/electronic",
         schemaPath: "",
         params: {
           scheme: "LS",
@@ -284,12 +284,12 @@ describe("validate() w/ examples", () => {
   });
 
   test("w/ momenta errors", () => {
-    const isValid = validator.validate(data_momenta_nok);
+    const isValid = validator.validate(values_momenta_nok);
     expect(isValid).toBeFalsy();
     const expected = [
       {
         keyword: "LS coupling",
-        instancePath: "second/electronic/0/config/core",
+        instancePath: "second/electronic/config/core",
         schemaPath: "",
         params: {
           scheme: "LS",
@@ -419,7 +419,7 @@ describe("validate() w/ examples", () => {
       },
       {
         keyword: "LS coupling",
-        instancePath: "phosphorus/electronic/0/config/core",
+        instancePath: "phosphorus/electronic/config/core",
         schemaPath: "",
         params: {
           scheme: "LS",
@@ -444,7 +444,7 @@ describe("validate() w/ examples", () => {
       },
       {
         keyword: "LS1 coupling",
-        instancePath: "phosphorus/electronic/0/config/core",
+        instancePath: "phosphorus/electronic/config/core",
         schemaPath: "",
         params: {
           scheme: "LS1",
