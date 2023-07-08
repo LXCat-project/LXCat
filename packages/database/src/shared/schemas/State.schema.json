@@ -1047,16 +1047,23 @@
                             },
                             {
                               "items": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "J": {
-                                    "type": "number"
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "J"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "type": "string"
                                   }
-                                },
-                                "required": [
-                                  "J"
-                                ],
-                                "type": "object"
+                                ]
                               },
                               "type": "array"
                             }
@@ -1073,16 +1080,23 @@
                     },
                     {
                       "items": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "v": {
-                            "type": "number"
+                        "anyOf": [
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "v": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "v"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "type": "string"
                           }
-                        },
-                        "required": [
-                          "v"
-                        ],
-                        "type": "object"
+                        ]
                       },
                       "type": "array"
                     }
@@ -1214,16 +1228,23 @@
                             },
                             {
                               "items": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "J": {
-                                    "type": "number"
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "J"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "type": "string"
                                   }
-                                },
-                                "required": [
-                                  "J"
-                                ],
-                                "type": "object"
+                                ]
                               },
                               "type": "array"
                             }
@@ -1240,16 +1261,23 @@
                     },
                     {
                       "items": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "v": {
-                            "type": "number"
+                        "anyOf": [
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "v": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "v"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "type": "string"
                           }
-                        },
-                        "required": [
-                          "v"
-                        ],
-                        "type": "object"
+                        ]
                       },
                       "type": "array"
                     }
@@ -1390,16 +1418,23 @@
                             },
                             {
                               "items": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "J": {
-                                    "type": "number"
+                                "anyOf": [
+                                  {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "J": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "J"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  {
+                                    "type": "string"
                                   }
-                                },
-                                "required": [
-                                  "J"
-                                ],
-                                "type": "object"
+                                ]
                               },
                               "type": "array"
                             }
@@ -1419,19 +1454,26 @@
                     },
                     {
                       "items": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "v": {
-                            "items": {
-                              "type": "number"
+                        "anyOf": [
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "v": {
+                                "items": {
+                                  "type": "number"
+                                },
+                                "type": "array"
+                              }
                             },
-                            "type": "array"
+                            "required": [
+                              "v"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "type": "string"
                           }
-                        },
-                        "required": [
-                          "v"
-                        ],
-                        "type": "object"
+                        ]
                       },
                       "type": "array"
                     }
