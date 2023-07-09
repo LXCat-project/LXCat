@@ -50,8 +50,8 @@ importers:
         specifier: ^6.0.15
         version: 6.0.15(@emotion/react@11.11.1)(@mantine/hooks@6.0.15)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/form':
-        specifier: ^6.0.15
-        version: 6.0.15(react@18.2.0)
+        specifier: ^6.0.16
+        version: 6.0.16(react@18.2.0)
       '@mantine/hooks':
         specifier: ^6.0.15
         version: 6.0.15(react@18.2.0)
@@ -2263,8 +2263,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/form@6.0.15(react@18.2.0):
-    resolution: {integrity: sha512-Tz4AuZZ/ddGvEh5zJbDyi9PlGqTilJBdCjRGIgs3zn3hQsfg+ku7/NUR5zNB64dcWPJvGKc074y4iopNIl3FWQ==}
+  /@mantine/form@6.0.16(react@18.2.0):
+    resolution: {integrity: sha512-4TwxJKGQQRx7rj5yb9WgS0z/Ud8ckg0mMCiD3grKTxDCp0g8Tvk2Df7ptWFx2n+hxhBYVwMQSKggWuuDMFWBNA==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
