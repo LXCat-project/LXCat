@@ -249,8 +249,8 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2(@babel/core@7.22.5)(webpack@5.87.0)
       dprint:
-        specifier: ^0.38.0
-        version: 0.38.0
+        specifier: ^0.39.0
+        version: 0.39.0
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
@@ -322,8 +322,8 @@ importers:
         specifier: ^0.33.0
         version: 0.33.0(vitest@0.32.2)
       dprint:
-        specifier: ^0.38.0
-        version: 0.38.0
+        specifier: ^0.39.0
+        version: 0.39.0
       eslint:
         specifier: 8.44.0
         version: 8.44.0
@@ -390,8 +390,8 @@ importers:
         specifier: ^0.33.0
         version: 0.33.0(vitest@0.32.2)
       dprint:
-        specifier: ^0.38.0
-        version: 0.38.0
+        specifier: ^0.39.0
+        version: 0.39.0
       eslint:
         specifier: 8.44.0
         version: 8.44.0
@@ -1739,8 +1739,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@dprint/darwin-arm64@0.38.0:
-    resolution: {integrity: sha512-yS8oIYhLrOgVuBZq6qAWjaIGS1FrjwWvU+CU8rVP8r/n5xy2VPCl60zfOGpLzqT35GcdHa77FyMoZspBxRVgZA==}
+  /@dprint/darwin-arm64@0.39.0:
+    resolution: {integrity: sha512-LDj9m4VSGWIHtZKuSZeIP2yQCG8wcsPpFgV/L6HvCxWKquh8F02sTGnHpeIT85NhpmjQ2ejoL1eZNOhRg+TNYA==}
     cpu: [arm64]
     os: [darwin]
     hasBin: true
@@ -1748,8 +1748,8 @@ packages:
     dev: true
     optional: true
 
-  /@dprint/darwin-x64@0.38.0:
-    resolution: {integrity: sha512-Hd/DOJhjfz5m0armQVAJl4b4ehqB073kvtUUyP1zo+HlG49imiTHKXc4WAtJwo5sk+k3pZKahd/oAYDA9lKTCQ==}
+  /@dprint/darwin-x64@0.39.0:
+    resolution: {integrity: sha512-INJsTZn/Uuh2nJCqwnDRYYOFYtAWNa9mtjqVikdddIf8BvVPbAvMT4XUzVsNwhVSumnuVRoWwHN0zjyBCG2zRQ==}
     cpu: [x64]
     os: [darwin]
     hasBin: true
@@ -1757,8 +1757,8 @@ packages:
     dev: true
     optional: true
 
-  /@dprint/linux-arm64-glibc@0.38.0:
-    resolution: {integrity: sha512-4DCgPGUaFtg7/evnuICM2oGcb0w7h1YAiocsgx44t/6141I4k8Wv2Q5n74S1hajooilO6e0D1yUNw+XWZ6dR1Q==}
+  /@dprint/linux-arm64-glibc@0.39.0:
+    resolution: {integrity: sha512-G2hTDyEgC9V6RkaaDzGwwKQe4KMW0CC/gTAoLbPi31VfGKxHpPX3pSL8dyS6Me+husNV7D0ep7yxMF7GVxnqHw==}
     cpu: [arm64]
     os: [linux]
     hasBin: true
@@ -1766,8 +1766,8 @@ packages:
     dev: true
     optional: true
 
-  /@dprint/linux-x64-glibc@0.38.0:
-    resolution: {integrity: sha512-TocBhu83g4XhsnIgmir2h833rdWLoBJLZW7AM8fE8JxtvG/PxF9qyqwXaEMJ4hu++cduepZM3smtMWogZ3QWxQ==}
+  /@dprint/linux-x64-glibc@0.39.0:
+    resolution: {integrity: sha512-j4KZTWXr/W9AZdzKiVoUWSJwaacPjXeN71U56r423y4f9SNna9ZcCqnLGN1dg2J/wmWEYRAl7HTnZ+QOn4xZnQ==}
     cpu: [x64]
     os: [linux]
     hasBin: true
@@ -1775,8 +1775,8 @@ packages:
     dev: true
     optional: true
 
-  /@dprint/linux-x64-musl@0.38.0:
-    resolution: {integrity: sha512-lRxCenDCLzdKHtxdd/z1+9M6dNzgckksF1pxqHsPZpZVEBwkkgA58FNV1I6QYdy0jPE5UrmMEtl/C47bfTJ3Hw==}
+  /@dprint/linux-x64-musl@0.39.0:
+    resolution: {integrity: sha512-jXN/jD4T+2HIx29aprIswcCBwdQe/xpdngYxFIGHZmVLXnPuaHt5B4fQk1gK4gciw1Kj6MX5T5z2w3OgQo4XJA==}
     cpu: [x64]
     os: [linux]
     hasBin: true
@@ -1784,8 +1784,8 @@ packages:
     dev: true
     optional: true
 
-  /@dprint/win32-x64@0.38.0:
-    resolution: {integrity: sha512-iAwWDHjWbyM9WtTc35MERjoJQovExPewNlT2eAUXCxUaM74IKdE6II8p47wnRl5RMTqkkFJnByTh60AgFN0JXw==}
+  /@dprint/win32-x64@0.39.0:
+    resolution: {integrity: sha512-n44OQALUhI/NXosoJ5k6CbGfucFMlz5mL/4fvatzlHrTBhji5GVnMZSf/5gYmp7ND7tHFafFyu+vISFuNH9nfw==}
     cpu: [x64]
     os: [win32]
     hasBin: true
@@ -5492,16 +5492,17 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /dprint@0.38.0:
-    resolution: {integrity: sha512-3wRHH9aLFR34aM/vAeCi7BSKXuOXTuYKD92SPoQ6DdH7wOjJkZnmr4WQ3E5X/LXHtyowGvN60VtT8EYN3vSUiw==}
+  /dprint@0.39.0:
+    resolution: {integrity: sha512-DFWlIbX2nolrPIiIHyVtlw7iFZlR8Yf/7fM0d9HZhubgxPYRGIWwaCbr+TEGpBFgHkZ3YbukjMG2xCPNh/220g==}
     hasBin: true
+    requiresBuild: true
     optionalDependencies:
-      '@dprint/darwin-arm64': 0.38.0
-      '@dprint/darwin-x64': 0.38.0
-      '@dprint/linux-arm64-glibc': 0.38.0
-      '@dprint/linux-x64-glibc': 0.38.0
-      '@dprint/linux-x64-musl': 0.38.0
-      '@dprint/win32-x64': 0.38.0
+      '@dprint/darwin-arm64': 0.39.0
+      '@dprint/darwin-x64': 0.39.0
+      '@dprint/linux-arm64-glibc': 0.39.0
+      '@dprint/linux-x64-glibc': 0.39.0
+      '@dprint/linux-x64-musl': 0.39.0
+      '@dprint/win32-x64': 0.39.0
     dev: true
 
   /draw-svg-path@1.0.0:
