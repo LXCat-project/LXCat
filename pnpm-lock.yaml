@@ -141,7 +141,7 @@ importers:
         version: 2.0.0(react@18.2.0)(schema-dts@1.1.2)(typescript@5.1.6)
       react-vega:
         specifier: ^7.6.0
-        version: 7.6.0(react@18.2.0)(vega-lite@5.12.0)(vega@5.25.0)
+        version: 7.6.0(react@18.2.0)(vega-lite@5.13.0)(vega@5.25.0)
       rehype-autolink-headings:
         specifier: ^6.1.1
         version: 6.1.1
@@ -194,8 +194,8 @@ importers:
         specifier: ^5.25.0
         version: 5.25.0
       vega-lite:
-        specifier: ^5.12.0
-        version: 5.12.0(vega@5.25.0)
+        specifier: ^5.13.0
+        version: 5.13.0(vega@5.25.0)
       vfile:
         specifier: ^5.3.7
         version: 5.3.7
@@ -9771,7 +9771,7 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-vega@7.6.0(react@18.2.0)(vega-lite@5.12.0)(vega@5.25.0):
+  /react-vega@7.6.0(react@18.2.0)(vega-lite@5.13.0)(vega@5.25.0):
     resolution: {integrity: sha512-2oMML4wH9qWLnZPRxJm06ozwrVN/K+nkjqdI5/ofWWsrBnnH4iB9rRKrsV8px0nlWgZrwfdCH4g5RUiyyJHWSA==}
     peerDependencies:
       react: ^16 || ^17 || ^18
@@ -9783,8 +9783,8 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       vega: 5.25.0
-      vega-embed: 6.22.1(vega-lite@5.12.0)(vega@5.25.0)
-      vega-lite: 5.12.0(vega@5.25.0)
+      vega-embed: 6.22.1(vega-lite@5.13.0)(vega@5.25.0)
+      vega-lite: 5.13.0(vega@5.25.0)
     dev: false
 
   /react@18.2.0:
@@ -11595,7 +11595,7 @@ packages:
       - encoding
     dev: false
 
-  /vega-embed@6.22.1(vega-lite@5.12.0)(vega@5.25.0):
+  /vega-embed@6.22.1(vega-lite@5.13.0)(vega@5.25.0):
     resolution: {integrity: sha512-5a3SVhPwG5/Mz3JbcJV4WE38s/7AFrkANtPxoln7E8fbNLIbrurIennaAxB9+l0QOAg63lPSuJBNMUkM6yXvLA==}
     peerDependencies:
       vega: ^5.21.0
@@ -11607,9 +11607,9 @@ packages:
       tslib: 2.5.3
       vega: 5.25.0
       vega-interpreter: 1.0.5
-      vega-lite: 5.12.0(vega@5.25.0)
+      vega-lite: 5.13.0(vega@5.25.0)
       vega-schema-url-parser: 2.2.0
-      vega-themes: 2.13.0(vega-lite@5.12.0)(vega@5.25.0)
+      vega-themes: 2.13.0(vega-lite@5.13.0)(vega@5.25.0)
       vega-tooltip: 0.32.0
     dev: false
     bundledDependencies:
@@ -11716,8 +11716,8 @@ packages:
       - encoding
     dev: false
 
-  /vega-lite@5.12.0(vega@5.25.0):
-    resolution: {integrity: sha512-mc0vavCp77B7wJwfVbNrJTmFuAUAornyi1nTw7UjBOFlCY6S4FKpUH9OToYC1o8rzv8HZ+QAFjz6MzmxIWfH7A==}
+  /vega-lite@5.13.0(vega@5.25.0):
+    resolution: {integrity: sha512-lygGw1KfegtkELn4PbDWwV8AskmUdvDbJ/ZG+IvWiBYUhTGGLIKPy1lnNQzpJG0z6zgD1s1bafAVyO2u2k0AFQ==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -11829,14 +11829,14 @@ packages:
       d3-array: 3.2.4
     dev: false
 
-  /vega-themes@2.13.0(vega-lite@5.12.0)(vega@5.25.0):
+  /vega-themes@2.13.0(vega-lite@5.13.0)(vega@5.25.0):
     resolution: {integrity: sha512-SVr/YDqGhkVDO2bRS62TeGyr1dVuXaNLJNCu42b1tbcnnmX2m9cyaq8G6gcputPeibArvHT1MsTF7MUzboOIWg==}
     peerDependencies:
       vega: '*'
       vega-lite: '*'
     dependencies:
       vega: 5.25.0
-      vega-lite: 5.12.0(vega@5.25.0)
+      vega-lite: 5.13.0(vega@5.25.0)
     dev: false
 
   /vega-time@2.1.1:
