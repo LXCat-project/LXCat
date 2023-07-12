@@ -72,7 +72,7 @@
     "true-myth": "^6.2.0",
     "unified": "^10.1.2",
     "unist-util-remove": "^4.0.0",
-    "unist-util-visit": "^4.1.2",
+    "unist-util-visit": "^5.0.0",
     "vega": "^5.25.0",
     "vega-lite": "^5.13.0",
     "vfile": "^5.3.7",
