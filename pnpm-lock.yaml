@@ -261,8 +261,8 @@ importers:
         specifier: ^7.14.3
         version: 7.14.3
       testcontainers:
-        specifier: ^9.9.1
-        version: 9.9.1
+        specifier: ^9.10.0
+        version: 9.10.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -328,8 +328,8 @@ importers:
         specifier: 8.44.0
         version: 8.44.0
       testcontainers:
-        specifier: ^9.9.1
-        version: 9.9.1
+        specifier: ^9.10.0
+        version: 9.10.0
       ts-json-schema-generator:
         specifier: ^1.2.0
         version: 1.2.0
@@ -10911,8 +10911,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@9.9.1:
-    resolution: {integrity: sha512-44iDiyK0JzK5FbqdrKjmE/8QSZhvCFxh0d/OfG+R9fkznU5KVCYeeUsPULkVRIi210X4FAitSXra1ZU591Zlqw==}
+  /testcontainers@9.10.0:
+    resolution: {integrity: sha512-gU3fU9jNvyhSyFdeVPH3Lxq2l4o09kmIa8edGcB6EJM3M6E8m1vC5aOtqmL1Bj/aC/DNCp0m5FMehm/rRB8lhg==}
     engines: {node: '>= 10.16'}
     dependencies:
       '@balena/dockerignore': 1.0.2
