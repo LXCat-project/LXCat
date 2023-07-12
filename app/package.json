@@ -49,7 +49,7 @@
     "next-mdx-remote": "^4.4.1",
     "nextjs-cors": "^2.1.2",
     "node-fetch": "^3.3.1",
-    "plotly.js-basic-dist": "^2.24.2",
+    "plotly.js-basic-dist": "^2.24.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
