@@ -36,7 +36,7 @@
     "ajv-errors": "^3.0.0",
     "arangojs": "^8.3.0",
     "cookie": "^0.5.0",
-    "deep-equal": "^2.2.1",
+    "deep-equal": "^2.2.2",
     "github-slugger": "^2.0.0",
     "immer": "^10.0.2",
     "mantine-datatable": "^2.8.3",
