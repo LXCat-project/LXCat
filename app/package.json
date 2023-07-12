@@ -71,7 +71,7 @@
     "swr": "2.2.0",
     "true-myth": "^6.2.0",
     "unified": "^10.1.2",
-    "unist-util-remove": "^3.1.1",
+    "unist-util-remove": "^4.0.0",
     "unist-util-visit": "^4.1.2",
     "vega": "^5.25.0",
     "vega-lite": "^5.13.0",
