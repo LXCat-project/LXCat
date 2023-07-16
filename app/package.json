@@ -98,7 +98,7 @@
     "eslint": "^8.44.0",
     "eslint-config-next": "13.4.9",
     "oidc-provider": "^7.14.3",
-    "testcontainers": "^9.10.0",
+    "testcontainers": "^9.10.1",
     "typescript": "^5.1.6",
     "vitest": "^0.33.0"
   }
