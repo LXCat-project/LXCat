@@ -261,8 +261,8 @@ importers:
         specifier: ^7.14.3
         version: 7.14.3
       testcontainers:
-        specifier: ^9.10.0
-        version: 9.10.0
+        specifier: ^9.10.1
+        version: 9.10.1
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -328,8 +328,8 @@ importers:
         specifier: 8.44.0
         version: 8.44.0
       testcontainers:
-        specifier: ^9.10.0
-        version: 9.10.0
+        specifier: ^9.10.1
+        version: 9.10.1
       ts-json-schema-generator:
         specifier: ^1.2.0
         version: 1.2.0
@@ -6219,7 +6219,7 @@ packages:
   /fetch-ponyfill@7.1.0:
     resolution: {integrity: sha512-FhbbL55dj/qdVO3YNK7ZEkshvj3eQ7EuIGV2I6ic/2YiocvyWv+7jg2s4AyS0wdRU75s3tA8ZxI/xPigb0v5Aw==}
     dependencies:
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -9134,8 +9134,8 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: false
 
-  /node-fetch@2.6.11:
-    resolution: {integrity: sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==}
+  /node-fetch@2.6.12:
+    resolution: {integrity: sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -11057,7 +11057,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       buffer: 5.7.1
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -11196,8 +11196,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@9.10.0:
-    resolution: {integrity: sha512-gU3fU9jNvyhSyFdeVPH3Lxq2l4o09kmIa8edGcB6EJM3M6E8m1vC5aOtqmL1Bj/aC/DNCp0m5FMehm/rRB8lhg==}
+  /testcontainers@9.10.1:
+    resolution: {integrity: sha512-+kTLawnZCiSWTL2Iljx+CtYbWIPzfTe8KiouFbTvJ8lAYN5esAj+bT2AKWcixotV4ddKCAbL6ESn35J0jvFCNg==}
     engines: {node: '>= 10.16'}
     dependencies:
       '@balena/dockerignore': 1.0.2
@@ -11210,7 +11210,7 @@ packages:
       docker-compose: 0.24.1
       dockerode: 3.3.5
       get-port: 5.1.1
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
       properties-reader: 2.2.0
       ssh-remote-port-forward: 1.0.4
       tar-fs: 2.1.1
@@ -12062,7 +12062,7 @@ packages:
     resolution: {integrity: sha512-qy5x32SaT0YkEujQM2yKqvLGV9XWQ2aEDSugBFTdYzu/1u4bxdUSRDREOlrJ9Km3RWIOgFiCkobPmFxo47SKuA==}
     dependencies:
       d3-dsv: 3.0.1
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
       topojson-client: 3.1.0
       vega-format: 1.1.1
       vega-util: 1.17.2
