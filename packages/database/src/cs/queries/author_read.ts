@@ -8,9 +8,10 @@ import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
-import { defaultSearchTemplate } from "../picker/default";
-import { ReactionTemplate } from "../picker/types";
 import { CrossSectionItem } from "../public";
+
+// import { defaultSearchTemplate } from "../picker/default";
+// import { ReactionTemplate } from "../picker/types";
 
 export async function getVersionInfo(key: string) {
   const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
@@ -23,7 +24,7 @@ export async function getVersionInfo(key: string) {
 
 export async function searchOwned(
   email: string,
-  _options: Array<ReactionTemplate> = defaultSearchTemplate(),
+  // _options: Array<ReactionTemplate> = defaultSearchTemplate(),
   paging: PagingOptions = { offset: 0, count: 100 },
 ) {
   const reactionsAql = aql``; // TODO implement

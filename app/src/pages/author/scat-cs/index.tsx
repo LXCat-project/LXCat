@@ -94,14 +94,13 @@ export default Page;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const me = await mustBeAuthor(context);
-  const filter = defaultSearchTemplate();
   const paging = {
     offset: context.query.offset && !Array.isArray(context.query.offset)
       ? parseInt(context.query.offset)
       : 0,
     count: 100,
   };
-  const items = await searchOwned(me.email, filter, paging);
+  const items = await searchOwned(me.email, paging);
   return {
     props: {
       items,

@@ -11,14 +11,11 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)
   .use(hasAuthorRole)
   .get(async (req, res) => {
-    const query = req.query;
-    const selection = getTemplateFromQuery(query);
     // TODO retrieve paging options from URL query
     const paging = {
       offset: 0,
@@ -28,7 +25,10 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     if (me === undefined) {
       throw new Error("How did you get here?");
     }
-    const results = await searchOwned(me.email, selection, paging);
+    // FIXME: Alter `searchOwned` to accept search template argument.
+    // const query = req.query;
+    // const selection = getTemplateFromQuery(query);
+    const results = await searchOwned(me.email, paging);
     console.log(results);
     res.json(results);
   })
