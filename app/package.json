@@ -94,7 +94,7 @@
     "@types/unist": "^3.0.0",
     "@vitest/coverage-v8": "^0.33.0",
     "babel-loader": "^9.1.3",
-    "dprint": "^0.39.0",
+    "dprint": "^0.39.1",
     "eslint": "^8.44.0",
     "eslint-config-next": "13.4.9",
     "oidc-provider": "^7.14.3",
