@@ -179,8 +179,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(react@18.2.0)
       true-myth:
-        specifier: ^6.2.0
-        version: 6.2.0
+        specifier: ^7.0.1
+        version: 7.0.1
       unified:
         specifier: ^10.1.2
         version: 10.1.2
@@ -11315,9 +11315,9 @@ packages:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
     dev: false
 
-  /true-myth@6.2.0:
-    resolution: {integrity: sha512-NYvzj/h2mGXmdIBmz825c/lQhpI4bzUQEEiBCAbNOVpr6aeYa1WTpJ+OmGmj1yPqbTLPKCCSi54yDnaEup504Q==}
-    engines: {node: 14.* || 16.* || >= 18.*}
+  /true-myth@7.0.1:
+    resolution: {integrity: sha512-YYZ6Ev437+GuuPU1rfwwVw8n13BRYfG1U79uk4xy3XIxalICOujTE/EbD/l82RQ3t9Kam+1znJuFd6Qoyj6yYQ==}
+    engines: {node: 18.* || >= 20.*}
     dev: false
 
   /ts-dedent@2.2.0:
