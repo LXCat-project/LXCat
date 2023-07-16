@@ -122,9 +122,9 @@ describe("Selecting individual cross sections", () => {
       beforeAll(async () => {
         const selection = defaultSearchTemplate();
 
-        const [particle, _] = allOptions.consumes
+        const [particle] = allOptions.consumes
           .flatMap(Object.entries)
-          .find(([_, particle]) => particle.latex === "\\mathrm{N2}")!;
+          .find(([, particle]) => particle.latex === "\\mathrm{N2}")!;
         selection[0].consumes = [{ particle }, {}];
 
         reactionOptions = (await getSearchOptions(selection))[0]!;
@@ -199,9 +199,9 @@ describe("Selecting individual cross sections", () => {
       beforeAll(async () => {
         const selection = defaultSearchTemplate();
 
-        const [particle, _] = allOptions.produces
+        const [particle] = allOptions.produces
           .flatMap(Object.entries)
-          .find(([_, particle]) => particle.latex === "\\mathrm{Ar^+}")!;
+          .find(([, particle]) => particle.latex === "\\mathrm{Ar^+}")!;
         selection[0].produces = [{ particle }, {}];
 
         reactionOptions = (await getSearchOptions(selection))[0]!;
@@ -322,9 +322,9 @@ describe("Selecting individual cross sections", () => {
       beforeAll(async () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
 
-        const [setId, _] = Object.values(allOptions.set)
+        const [setId] = Object.values(allOptions.set)
           .flatMap((org) => Object.entries(org.sets))
-          .find(([_, name]) => name === "Ar set")!;
+          .find(([, name]) => name === "Ar set")!;
 
         selection[0].set = [setId];
         reactionOptions = (await getSearchOptions(selection))[0]!;
