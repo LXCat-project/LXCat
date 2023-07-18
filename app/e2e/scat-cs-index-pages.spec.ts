@@ -40,9 +40,9 @@ test.describe("cross section index page with Uo selected", () => {
     await expect(section2).toBeVisible();
   });
 
-  test("should have link to bag page", async ({ page }) => {
-    const baglink = page.locator("text=Plot selection");
-    await expect(baglink).toBeVisible();
+  test("should have link to inspect page", async ({ page }) => {
+    const inspectlink = page.locator("text=Plot selection");
+    await expect(inspectlink).toBeVisible();
   });
 
   test.describe("when filtered on set name", () => {
@@ -83,7 +83,7 @@ test.describe("cross section set index page", () => {
   });
 });
 
-test.describe("cross section bag page", () => {
+test.describe("cross section inspect page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
@@ -99,7 +99,7 @@ test.describe("cross section bag page", () => {
 
     await page.locator("text=Download data").click();
 
-    // this exercises the /api/scat-cs/bag endpoint
+    // this exercises the /api/scat-cs/inspect endpoint
     const [download] = await Promise.all([
       page.waitForEvent("download"),
       page.locator("text=JSON").click(),

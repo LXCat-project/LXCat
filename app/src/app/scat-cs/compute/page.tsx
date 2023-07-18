@@ -66,9 +66,9 @@ const fetchProps = async (
     url: r.URL,
   }));
 
-  data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${idsString}`;
+  data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
   data.terms_of_use =
-    `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${idsString}#terms_of_use`;
+    `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#terms_of_use`;
 
   let legacy: string = "";
   try {

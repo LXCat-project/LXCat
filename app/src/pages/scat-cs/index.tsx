@@ -272,7 +272,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
         {nrItems > 0 && nrItems <= BAG_SIZE
           ? (
             <Link
-              href={`/scat-cs/bag?ids=${items.map((d) => d.id).join(",")}`}
+              href={`/scat-cs/inspect?ids=${items.map((d) => d.id).join(",")}`}
               passHref
               legacyBehavior
             >

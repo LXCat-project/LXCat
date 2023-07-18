@@ -44,7 +44,7 @@ export const Bag = ({
     const { processes, states } = bag;
     return flattenReactions(processes, states);
   }, [bag]);
-  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
     bag.processes.map((p) => p.id).join(",")
   }`;
   return (
@@ -58,7 +58,7 @@ export const Bag = ({
         </div>
       )}
       <a
-        href={`/api/scat-cs/bag?ids=${
+        href={`/api/scat-cs/inspect?ids=${
           bag.processes
             .map((d) => d.id)
             .join(",")

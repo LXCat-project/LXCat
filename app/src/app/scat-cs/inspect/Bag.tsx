@@ -20,7 +20,7 @@ export const Bag = ({
   const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
     formatReference(id, ref)
   );
-  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
     bag.processes.map((p) => p.id).join(",")
   }`;
   return (
