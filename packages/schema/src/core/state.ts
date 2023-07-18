@@ -2,20 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LatexString, TypeTag } from "./generators";
+import { LatexString } from "./generators";
+import { SimpleParticle } from "./particle";
 
-export interface SimpleParticle {
-  /**
-   * @minLength 1
-   */
-  particle: string;
-  /**
-   * @asType integer
-   */
-  charge: number;
-}
-
-export type AnyParticle = TypeTag<"simple">;
 export type State<T> = SimpleParticle & T;
 
 export type InState<T> = State<T>;

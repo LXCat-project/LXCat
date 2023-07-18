@@ -18,8 +18,9 @@ import {
 import { AnyMolecule } from "./molecules";
 import { atomParsers, parsers } from "./parsers";
 import { ComponentParser } from "./parsers/common";
+import { AnyParticle } from "./particle";
 import { AnySpecies } from "./species";
-import { AnyParticle, DBState, State } from "./state";
+import { DBState, State } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
 export interface MoleculeParser<M extends UnknownMolecule> {

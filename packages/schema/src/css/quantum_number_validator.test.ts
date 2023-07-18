@@ -10,7 +10,7 @@ import { ErrorObject } from "ajv";
 
 import { AnyAtom } from "../core/atoms";
 import { CouplingScheme } from "../core/atoms/coupling_scheme";
-import { AnyParticle, State } from "../core/state";
+import { State } from "../core/state";
 import { Dict } from "./common";
 import {
   checkJ1L2,
@@ -20,6 +20,7 @@ import {
   getStates,
 } from "./quantum_number_validator";
 
+import { AnyParticle } from "../core/particle";
 import { checkQuantumNumbers, checkStates } from "./quantum_number_validator";
 
 type Flatten<Type> = Type extends Array<infer Element> ? Element : Type;
