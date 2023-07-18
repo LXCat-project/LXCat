@@ -19,7 +19,7 @@ import { AnyMolecule } from "./molecules";
 import { atomParsers, parsers } from "./parsers";
 import { ComponentParser } from "./parsers/common";
 import { AnyParticle } from "./particle";
-import { AnySpecies } from "./species";
+import { AnySpecies, KeyedSpecies } from "./species";
 import { DBState, State } from "./state";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
@@ -280,17 +280,11 @@ export function stateIsAtom(state: AnySpecies): state is AnyAtom {
 // NOTE: All return values are cast to `any`, as TypeScript cannot narrow a
 // generic function parameter based on type guards.
 // See: https://github.com/microsoft/TypeScript/issues/33014.
-export function parseState<
-  Input extends AnyAtom | AnyMolecule | AnyParticle,
->(
+export function parseState<Input extends AnySpecies>(
   state: State<Input>,
-): Input extends AnyAtom ? DBState<TransformAtom<Input>>
-  : Input extends AnyMolecule ? DBState<TransformMolecule<Input>>
-  : DBState<Input>
-{
+): DBState<KeyedSpecies<Input>> {
   if (state.type === "simple") {
     return parseSimpleParticle(state) as any;
-    // NOTE: TypeScript does not narrow the type of `state` based on this check (but we know that it is correct).
   } else if (stateIsAtom(state)) {
     return parseAtom(state) as any;
   } else {
