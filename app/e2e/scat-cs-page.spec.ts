@@ -45,14 +45,16 @@ test.describe("Cross section page", () => {
   });
 
   csTest("should have plot", async ({ page }) => {
-    const canvas = page.locator(".chart-wrapper");
+    const canvas = page.locator(".plot-container.plotly");
     await expect(canvas).toBeVisible();
   });
 
   csTest("should be able to download JSON format", async ({ page }) => {
+    await page.locator("text=Download data").click();
+
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.locator("text=Download JSON format").click(),
+      page.locator("text=JSON").click(),
     ]);
 
     const path = await download.path();
@@ -60,17 +62,46 @@ test.describe("Cross section page", () => {
     expect(content).toContain("Energy");
   });
 
-  test.describe("Data as table", () => {
-    csTest.beforeEach(async ({ page }) => {
-      // Expand table
-      await page.locator("text=Data as table").click();
-    });
+  csTest("should be able to download Plaintext format", async ({ page }) => {
+    await page.locator("text=Download data").click();
 
-    csTest("should have 4 data points", async ({ page }) => {
-      const rows = page.locator("table >> tr");
-      await expect(rows).toHaveCount(
-        4 + 1, // header row
-      );
-    });
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("text=Plaintext").click(),
+    ]);
+
+    const path = await download.path();
+    const content = await readFile(path!, { encoding: "utf8" });
+    expect(content).toContain("Energy");
+  });
+
+  csTest("should be able to download Bibtex references", async ({ page }) => {
+    await page.locator("text=Download references").click();
+
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("text=Bibtex").click(),
+    ]);
+
+    const path = await download.path();
+    const content = await readFile(path!, { encoding: "utf8" });
+
+    expect(content).toContain("Data downloaded from");
+    expect(content).toContain("Some main reference title");
+  });
+
+  csTest("should be able to download RIS references", async ({ page }) => {
+    await page.locator("text=Download references").click();
+
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("text=RIS").click(),
+    ]);
+
+    const path = await download.path();
+    const content = await readFile(path!, { encoding: "utf8" });
+
+    expect(content).toContain("Data downloaded from");
+    expect(content).toContain("Some main reference title");
   });
 });

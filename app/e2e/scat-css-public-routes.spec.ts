@@ -114,71 +114,56 @@ test.describe("given 2 dummy sets", () => {
       await page.goto("/scat-css");
       await page.locator("text=Some name").click();
       await page.locator("text=I agree with the terms of use").click();
-      await page.waitForSelector("h2:has-text(\"Processes\")");
     });
 
     test("should have single process listed", async ({ page }) => {
-      const processes = page.locator(".proceses-list li");
+      const processes = page.locator(
+        ".mantine-Table-root:has-text(\"Reaction\") tbody tr",
+      );
       await expect(processes).toHaveCount(1);
     });
 
-    test("should have first 5 process plot checkboxes checked", async ({ page }) => {
-      const checkboxes = page.locator("input[type=checkbox]");
+    // TODO: Use set with more than 5 cross sections to test whether only first 5 are checked.
+    test("only process plot checkbos should be checked", async ({ page }) => {
+      const checkboxes = page.locator("tbody input[type=checkbox]");
       await expect(checkboxes).toBeChecked();
-      // TODO use set with more than 4 sections, as test set only has 1 section, which make testing toggling hard
     });
 
     test("should have plot", async ({ page }) => {
-      const canvas = page.locator(".chart-wrapper");
+      const canvas = page.locator(".plot-container.plotly");
       await expect(canvas).toBeVisible();
     });
 
     test("should be able to download SVG", async ({ page }) => {
       test.setTimeout(60000);
 
-      // Open the vega action context menu aka ... icon
-      const details = page
-        .locator("details[title=\"Click to view actions\"]");
-
-      await details.locator("summary").click();
-
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        details.locator("text=Save as SVG").click(),
+        page.locator("a[data-title=\"Download plot\"]").click(),
       ]);
 
       const svgPath = await download.path();
       const svgContent = await readFile(svgPath!, { encoding: "utf8" });
-      expect(svgContent).toContain("Energy (eV)");
-      // TODO check multiple sections are drawn
-    });
-
-    test.describe("when all checkboxes are unchecked", () => {
-      test.beforeEach(async ({ page }) => {
-        page.locator("input[type=checkbox]").uncheck();
-      });
-
-      test("should show no plot", async ({ page }) => {
-        await expect(
-          page.locator(
-            "text=Nothing to plot, because zero cross sections are selected",
-          ),
-        ).toBeVisible();
-      });
+      expect(svgContent).toContain(
+        "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+      );
+      // TODO: Check that all cross sections are drawn.
     });
 
     test.describe("visit details page with #terms_of_use hash", () => {
       let urlWithHash = "";
       test.beforeEach(async ({ page }) => {
+        await page.locator("text=Download data").click();
         const download = await page
-          .locator("text=Download JSON format")
+          .locator("text=JSON")
           .getAttribute("href");
         if (download === null) {
           test.fail();
           return;
         }
-        const id = download.replace("/api/scat-css/", "");
-        urlWithHash = `/scat-css/${id}#terms_of_use`;
+        // TODO: Links should point to `/api/scat-css`.
+        const ids = download.replace("/api/scat-cs/inspect", "");
+        urlWithHash = `/scat-cs/inspect/${ids}#terms_of_use`;
       });
 
       test("should show terms of use dialog", async ({ context }) => {

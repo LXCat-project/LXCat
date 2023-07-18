@@ -32,6 +32,7 @@ const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       />
       {params
+        // FIXME: Use a specialized component to render a single set.
         ? <Bag {...(await fetchProps(params.id))} />
         : <></>}
     </>
