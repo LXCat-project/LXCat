@@ -22,9 +22,9 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
         res.status(404).end("Not found");
         return;
       }
-      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}`;
+      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`;
       data.terms_of_use =
-        `${process.env.NEXT_PUBLIC_URL}/scat-cs/${id}#terms_of_use`;
+        `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}#terms_of_use`;
       res.json(data);
       return;
     }

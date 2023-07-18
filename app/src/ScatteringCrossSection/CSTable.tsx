@@ -123,7 +123,8 @@ export const CSTable = ({ items }: Props) => {
                 },
               ]}
               records={record.cs}
-              onRowClick={(record) => router.push(`/scat-cs/${record.id}`)}
+              onRowClick={(record) =>
+                router.push(`/scat-cs/inspect?ids=${record.id}`)}
             />
           </Stack>
         ),
