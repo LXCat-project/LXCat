@@ -11,7 +11,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { idsSchema } from "../../../../ScatteringCrossSection/bag";
+import { idsSchema } from "../../../../ScatteringCrossSection/ids-schema";
 import { applyCORS } from "../../../../shared/cors";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
