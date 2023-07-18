@@ -2,16 +2,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LatexString } from "./generators";
+import { LatexString, TypeTag } from "./generators";
 import { SimpleParticle } from "./particle";
 
-export type State<T> = SimpleParticle & T;
+/**
+ * @discriminator type
+ */
+export type State<T extends TypeTag<string>> = SimpleParticle & T;
 
-export type InState<T> = State<T>;
+/**
+ * @discriminator type
+ */
+export type InState<T extends TypeTag<string>> = State<T>;
 
 // TODO: This belongs to the database package.
 export interface DBIdentifier {
   id: string; // TODO rename to summary, having db item with _id and _key props, makes id confusing
 }
 
-export type DBState<StateType> = DBIdentifier & LatexString & State<StateType>;
+/**
+ * @discriminator type
+ */
+export type DBState<StateType extends TypeTag<string>> =
+  & DBIdentifier
+  & LatexString
+  & State<StateType>;

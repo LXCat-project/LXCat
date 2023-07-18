@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Atom, Molecule, UnknownAtom, UnknownMolecule } from "./generators";
-import { State } from "./state";
 
 export type ExtractElectronic<M extends UnknownMolecule> = M extends
   Molecule<string, infer E, unknown, unknown> ? E
@@ -17,8 +16,3 @@ export type ExtractRotational<M extends UnknownMolecule> = M extends
 
 export type ExtractAtomic<A extends UnknownAtom> = A extends
   Atom<string, infer E> ? E : never;
-
-export type ExtractGenerator<S extends State<unknown>> = S extends State<
-  infer G
-> ? G
-  : never;

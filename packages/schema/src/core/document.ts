@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { TypeTag } from "./generators";
 import { Reference } from "./reference";
 import { State } from "./state";
 import { Dict } from "./util";
@@ -56,7 +57,7 @@ export type SetHeader = {
 /**
  * @internal
  */
-export type InputDocument<StateType, ProcessType> =
+export type InputDocument<StateType extends TypeTag<string>, ProcessType> =
   & SelfReference
   & SetHeader
   & {

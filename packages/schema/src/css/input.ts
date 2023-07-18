@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { InputDocument } from "../core/document";
+import { TypeTag } from "../core/generators";
 import { AnySpecies } from "../core/species";
 import { CrossSection } from "../cs/cs";
 
@@ -11,7 +12,7 @@ import { CrossSection } from "../cs/cs";
  */
 type LookupString = string;
 
-export type CrossSectionInput<StateType> =
+export type CrossSectionInput<StateType extends TypeTag<string>> =
   & InputDocument<
     StateType,
     CrossSection<LookupString, LookupString> & { id?: string }
