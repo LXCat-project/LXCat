@@ -5,7 +5,7 @@
 import { CSL } from "@lxcat/schema/dist/core/csl";
 import { parseState, stateIsAtom } from "@lxcat/schema/dist/core/parse";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { AnySpecies } from "@lxcat/schema/dist/core/species";
+import { AnySpecies, KeyedSpecies } from "@lxcat/schema/dist/core/species";
 import { DBState, State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
 import { produce } from "immer";
@@ -70,8 +70,8 @@ export async function insert_state_dict(
   return id_dict;
 }
 
-async function insert_state<T>(
-  state: DBState<T>,
+async function insert_state<T extends AnySpecies>(
+  state: DBState<KeyedSpecies<T>>,
 ): Promise<{ id: string; new: boolean }> {
   return upsert_document("State", state);
 }
