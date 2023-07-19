@@ -581,7 +581,7 @@ const SimpleParticleForm = ({ label }: { label: string }) => {
   );
 };
 
-const initialSimpleElectronic = () => ({ e: "" });
+const initialSimpleElectronic = () => "";
 const initialAtomLSElectronic = () => ({
   scheme: "LS",
   config: [],
@@ -2032,7 +2032,7 @@ const SimpleElectronic = ({
           setScheme(v);
           if (v === "simple") {
             setValue(
-              `set.states.${label}.electronic.${eindex}`,
+              `set.states.${label}.electronic`,
               initialSimpleElectronic(),
             );
           } else {
@@ -2704,33 +2704,34 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
   return newSet;
 }
 
+// FIXME: This is in a broken state since schema changes.
 function pruneState(state: InState<AnySpecies>) {
   const newState = { ...state }; // TODO make better clone
-  if (newState.type !== "simple" && newState.electronic) {
-    newState.electronic.forEach((e: any) => {
-      delete e.latex;
-      if (Array.isArray(e.vibrational)) {
-        if (e.vibrational.length > 0) {
-          e.vibrational.forEach((v: any) => {
-            delete v.summary;
-            delete v.latex;
-            if (Array.isArray(v.rotational)) {
-              if (v.rotational.length > 0) {
-                v.rotational.forEach((r: Record<string, any>) => {
-                  delete r.summary;
-                  delete r.latex;
-                });
-              } else {
-                delete v.rotational;
-              }
-            }
-          });
-        } else {
-          delete e.vibrational;
-        }
-      }
-    });
-  }
+  // if (newState.type !== "simple" && newState.electronic) {
+  //   newState.electronic.forEach((e: any) => {
+  //     delete e.latex;
+  //     if (Array.isArray(e.vibrational)) {
+  //       if (e.vibrational.length > 0) {
+  //         e.vibrational.forEach((v: any) => {
+  //           delete v.summary;
+  //           delete v.latex;
+  //           if (Array.isArray(v.rotational)) {
+  //             if (v.rotational.length > 0) {
+  //               v.rotational.forEach((r: Record<string, any>) => {
+  //                 delete r.summary;
+  //                 delete r.latex;
+  //               });
+  //             } else {
+  //               delete v.rotational;
+  //             }
+  //           }
+  //         });
+  //       } else {
+  //         delete e.vibrational;
+  //       }
+  //     }
+  //   });
+  // }
   // TODO use type|schema where id is allowed
   delete (newState as any).id;
   delete (newState as any).latex;
