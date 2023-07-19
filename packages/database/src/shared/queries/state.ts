@@ -83,7 +83,8 @@ function generateElectronicFilter(
 
       return aql`LENGTH(
           FILTER NOT_NULL(${stateVarAql}.electronic)
-          FOR ${electronicVarAql} IN ${stateVarAql}.electronic
+          LET electronic = IS_ARRAY(${stateVarAql}.electronic) ? ${stateVarAql}.electronic : [${stateVarAql}.electronic]
+          FOR ${electronicVarAql} IN electronic
             FILTER ${join(electronicSubFilters, " AND ")}
             RETURN 1
         ) > 0`;
@@ -120,7 +121,8 @@ function generateVibratonalFilter(
         rotationalFilters.push(aql`
                 LENGTH(
                   FILTER NOT_NULL(${vibrationalVarAql}.rotational)
-                  FOR ${rotationalVarAql} IN ${vibrationalVarAql}.rotational
+                  LET rotational = IS_ARRAY(${vibrationalVarAql}.rotational) ? ${vibrationalVarAql}.rotational : [${vibrationalVarAql}.rotational]
+                  FOR ${rotationalVarAql} IN rotational
                     FILTER ${rotationalVarAql}.summary == ${rotationalSummary}
                     RETURN 1
                 ) > 0
@@ -134,7 +136,8 @@ function generateVibratonalFilter(
 
       return aql`LENGTH(
             FILTER NOT_NULL(${electronicVarAql}.vibrational)
-            FOR ${vibrationalVarAql} IN ${electronicVarAql}.vibrational
+            LET vibrational = IS_ARRAY(${electronicVarAql}.vibrational) ? ${electronicVarAql}.vibrational : [${electronicVarAql}.vibrational]
+            FOR ${vibrationalVarAql} IN vibrational
               FILTER ${join(vibrationalSubFilters, " AND ")}
               RETURN 1
           ) > 0`;

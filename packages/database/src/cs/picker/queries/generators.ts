@@ -36,7 +36,9 @@ export function getFullStateTreeAQL(
                       RETURN 1
                   ) == 1
                   FILTER valid
-                  RETURN {id: rotational._id, latex: rotational.electronic[0].vibrational[0].rotational[0].latex, valid}
+                  LET rot_desc = rotational.electronic.vibrational.rotational
+                  LET latex = IS_STRING(rot_desc) ? rot_desc : rot_desc.latex
+                  RETURN {id: rotational._id, latex, valid}
                 )
                 LET valid = COUNT(
                   FOR reaction IN INBOUND vibrational ${literal(process)}
@@ -50,7 +52,9 @@ export function getFullStateTreeAQL(
                     RETURN 1
                 ) == 1
                 FILTER valid OR LENGTH(vibrationalChildren) > 0
-                RETURN {id: vibrational._id, latex: vibrational.electronic[0].vibrational[0].latex, valid: valid, children: vibrationalChildren}
+                LET vib_desc = vibrational.electronic.vibrational
+                LET latex = IS_STRING(vib_desc) ? vib_desc : vib_desc.latex
+                RETURN {id: vibrational._id, latex, valid: valid, children: vibrationalChildren}
             )
             LET valid = COUNT(
               FOR reaction IN INBOUND electronic ${literal(process)}
@@ -64,7 +68,9 @@ export function getFullStateTreeAQL(
                 RETURN 1
             ) == 1
             FILTER valid OR LENGTH(electronicChildren) > 0
-            RETURN {id: electronic._id, latex: electronic.electronic[0].latex, valid: valid, children: electronicChildren}
+            LET ele_desc = electronic.electronic
+            LET latex = IS_STRING(ele_desc) ? ele_desc : ele_desc.latex
+            RETURN {id: electronic._id, latex, valid, children: electronicChildren}
         )
         LET valid = COUNT(
           FOR reaction IN INBOUND particle ${literal(process)}
@@ -185,8 +191,20 @@ function getPartakingStateChildren(
   const latexProperty = literal(
     depth == 0
       ? `${levels[depth]}.latex`
-      : `${levels[depth]}.${levels.slice(1, depth + 1).join("[0].")}[0].latex`,
+      : `${levels[depth]}.${levels.slice(1, depth + 1).join(".")}.latex`,
   );
+
+  const levelPath = literal(
+    `${levels[depth]}.${levels.slice(1, depth + 1).join(".")}`,
+  );
+
+  const extractLatex = depth === 0
+    ? aql`
+        LET latex = ${literal(levels[0])}.latex
+      `
+    : aql`
+        LET latex = IS_STRING(${levelPath}) ? ${levelPath} : ${levelPath}.latex
+      `;
 
   return depth < 3
     ? aql`
@@ -207,14 +225,16 @@ function getPartakingStateChildren(
         ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND (valid OR LENGTH(${children}) > 0)`
         : aql``
     }
-        RETURN {id: ${parent}._id, latex: ${latexProperty}, valid, children: ${children}}`
+        ${extractLatex}
+        RETURN {id: ${parent}._id, latex, valid, children: ${children}}`
     : aql`
         ${
       !Array.isArray(states) || states.length > 0
         ? aql`FILTER ${parent}._id NOT IN ${ignoredStates} AND ${parent}._id IN ${states}`
         : aql``
     }
-        RETURN {id: ${parent}._id, latex: ${latexProperty}, valid: true}`;
+        ${extractLatex}
+        RETURN {id: ${parent}._id, latex, valid: true}`;
 }
 
 export function getStateSelectionAQL(

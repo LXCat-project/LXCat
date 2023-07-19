@@ -8,7 +8,6 @@ import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import { AnySpecies, KeyedSpecies } from "@lxcat/schema/dist/core/species";
 import { DBState, State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { produce } from "immer";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 
@@ -128,12 +127,11 @@ async function insert_state_tree<T extends AnySpecies>(
       // TODO: Link compound state to its substates.
       ret_id = (await insert_state(parseState(state))).id;
     } else {
+      // Copy electronic discriptor without vibrational description.
+      const { vibrational, ...electronic } = state.electronic;
       const ele_state = {
         ...state,
-        electronic: produce(state.electronic, (ele) => {
-          delete ele.vibrational;
-          return ele;
-        }),
+        electronic,
       };
       const e_ret = await insert_state(parseState(ele_state));
       if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
@@ -147,13 +145,11 @@ async function insert_state_tree<T extends AnySpecies>(
           }
           ret_id = v_ret.id;
         } else if (Array.isArray(state.electronic.vibrational)) {
-          for (const vib of state.electronic.vibrational) {
+          const { vibrational, ...electronic } = state.electronic;
+          for (const vib of vibrational) {
             const vib_state = {
               ...state,
-              electronic: produce(state.electronic, (ele) => {
-                ele.vibrational = vib;
-                return ele;
-              }),
+              electronic: { ...electronic, vibrational: vib },
             };
             const v_ret = await insert_state(parseState(vib_state));
             if (v_ret.new) {
@@ -164,16 +160,10 @@ async function insert_state_tree<T extends AnySpecies>(
           // TODO: Link compound state to its substates.
           ret_id = (await insert_state(parseState(state))).id;
         } else {
-          // TODO: Add vibrational parent and rotational substates.
+          const { rotational, ...vibrational } = state.electronic.vibrational;
           const vib_state = {
             ...state,
-            electronic: {
-              ...state.electronic,
-              vibrational: produce(state.electronic.vibrational, (vib) => {
-                delete vib.rotational;
-                return vib;
-              }),
-            },
+            electronic: { ...state.electronic, vibrational },
           };
           const v_ret = await insert_state(parseState(vib_state));
           if (v_ret.new) {

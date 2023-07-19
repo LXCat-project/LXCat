@@ -137,27 +137,23 @@ describe("generateStateFilterAql()", () => {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "g",
-            },
-          ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "g",
+          },
         },
         H2u: {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: [
-            {
-              e: "I",
-              Lambda: 1,
-              S: 0,
-              parity: "u",
-            },
-          ],
+          electronic: {
+            e: "I",
+            Lambda: 1,
+            S: 0,
+            parity: "u",
+          },
         },
       };
       await insert_state_dict(states);
