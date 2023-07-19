@@ -85,35 +85,6 @@ const listStyle: Sx = (theme: MantineTheme) => ({
   borderWidth: "thin",
 });
 
-async function getExample(
-  label: string,
-  particle: string,
-): Promise<Example | undefined> {
-  const stateId = await getIdByLabel(particle);
-  if (stateId === undefined) {
-    return undefined;
-  }
-  const selection: Array<ReactionTemplate> = [
-    {
-      consumes: [
-        {
-          particle: stateId,
-        },
-      ],
-      produces: [],
-      reversible: Reversible.Both,
-      typeTags: [],
-      set: [],
-    },
-  ];
-  const options = await getSearchOptions(selection);
-  return {
-    label,
-    selection,
-    options: options,
-  };
-}
-
 const generateCachePairs = (
   selection: ReactionTemplate,
   options: ReactionOptions,
@@ -360,14 +331,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         getCSHeadings([...new Set(csIdsNested.flat())], paging)
       ),
     ]);
-  // }
-
-  // TODO: implement and cache examples
-  // const examples = [];
-  // const argonExample = await getExample("Argon", "Ar");
-  // if (argonExample !== undefined) {
-  //   examples.push(argonExample);
-  // }
 
   return {
     props: {
