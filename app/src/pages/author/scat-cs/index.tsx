@@ -7,7 +7,6 @@ import Link from "next/link";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 
-import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
 import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { mustBeAuthor } from "../../../auth/middleware";
@@ -27,7 +26,7 @@ function renderItem(item: CrossSectionItem) {
         {item.versionInfo.status === "published"
             || item.versionInfo.status === "retracted"
           ? (
-            <Link href={`/scat-cs/${item.id}`}>
+            <Link href={`/scat-cs/inspect?ids=${item.id}`}>
               <ReactionSummary {...item.reaction} />
             </Link>
           )

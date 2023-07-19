@@ -12,7 +12,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { idsSchema } from "../../../../ScatteringCrossSection/bag";
+import { idsSchema } from "../../../../ScatteringCrossSection/ids-schema";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 import { mapObject } from "../../../../shared/utils";
@@ -33,9 +33,10 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       ([key, reference]) => [key, reference2bibliography(reference)],
     );
 
-    data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${idsString}`;
+    data.url =
+      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
     data.terms_of_use =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${idsString}#terms_of_use`;
+      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#terms_of_use`;
 
     const { convertMixture } = await import("@lxcat/converter");
     res.setHeader("Content-Type", "text/plain");

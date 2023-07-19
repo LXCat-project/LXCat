@@ -119,11 +119,11 @@ export const PlotPage = (
                 <ButtonMultiDownload
                   entries={[{
                     text: "JSON",
-                    link: `/api/scat-cs/bag?ids=${idsString}`,
+                    link: `/api/scat-cs/inspect?ids=${idsString}`,
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
                     text: "Plaintext",
-                    link: `/api/scat-cs/bag/legacy?ids=${idsString}`,
+                    link: `/api/scat-cs/inspect/legacy?ids=${idsString}`,
                     icon: <IconFileText stroke={1.5} />,
                   }]}
                 >

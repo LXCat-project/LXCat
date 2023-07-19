@@ -11,7 +11,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { idsSchema } from "../../../../ScatteringCrossSection/bag";
+import { idsSchema } from "../../../../ScatteringCrossSection/ids-schema";
 import { applyCORS } from "../../../../shared/cors";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
@@ -25,12 +25,12 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     }
     const ids = idsSchema.parse(rawIds);
     const data = await byIds(ids);
-    data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+    data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
       ids.join(
         ",",
       )
     }`;
-    data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-cs/bag?ids=${
+    data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
       ids.join(",")
     }#terms_of_use`;
     res.json(data);

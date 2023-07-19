@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CSSProperties } from "react";
-import { colorScheme } from "../../ScatteringCrossSectionSet/ProcessList";
+import { colorScheme } from "../../app/scat-cs/inspect/colors";
 import { LinePlot } from "../../shared/LinePlot";
 
 const plotConfig: Record<

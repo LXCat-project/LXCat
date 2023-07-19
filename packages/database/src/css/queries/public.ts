@@ -240,8 +240,18 @@ async function tagChoices(
               RETURN tt
   `;
   const cursor: ArrayCursor<ReactionTypeTag> = await db().query(q);
-  return await cursor.all();
+  return cursor.all();
 }
+
+export const getCSIdsInSet = async (setId: string) => {
+  const cursor: ArrayCursor<string> = await db().query(aql`
+      FOR css IN CrossSectionSet
+        FILTER css._key == ${setId}
+        FOR cs IN INBOUND css IsPartOf
+          RETURN cs._key
+    `);
+  return cursor.all();
+};
 
 // TODO: Merge byId and byIdJSON.
 export async function byIdJSON(id: string) {
@@ -327,7 +337,7 @@ export async function byIdJSON(id: string) {
         )
         RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
     `);
-  return await cursor.next();
+  return cursor.next();
 }
 /**
  * Checks whether set with key is owned by user with email.
@@ -407,7 +417,7 @@ export async function byId(id: string) {
           RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id", "organization"]))
       `);
 
-  return await cursor.next();
+  return cursor.next();
 }
 
 export interface KeyedVersionInfo extends VersionInfo {
@@ -429,7 +439,7 @@ export async function historyOfSet(key: string) {
       SORT h.versionInfo.version DESC
       RETURN MERGE({_key: h._key, name: h.name}, h.versionInfo)
   `);
-  return await cursor.all();
+  return cursor.all();
 }
 
 /**
@@ -445,5 +455,5 @@ export async function activeSetOfArchivedSet(key: string) {
       FILTER ['published' ,'retracted'] ANY == h.versionInfo.status
       RETURN MERGE({_key: h._key, name: h.name}, h.versionInfo)
   `);
-  return await cursor.next();
+  return cursor.next();
 }
