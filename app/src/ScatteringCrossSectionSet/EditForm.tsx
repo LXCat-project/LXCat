@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Cite } from "@citation-js/core";
+import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
+import { ajvResolver } from "@hookform/resolvers/ajv";
 import {
   Accordion,
   Button,
@@ -21,10 +22,6 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import "@citation-js/plugin-bibtex";
-import "@citation-js/plugin-doi";
-import { ErrorMessage as PlainErrorMessage } from "@hookform/error-message";
-import { ajvResolver } from "@hookform/resolvers/ajv";
 import { ReactNode, useMemo, useState } from "react";
 import {
   Controller,
@@ -41,9 +38,7 @@ import {
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
 import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
 import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
 import { parseState } from "@lxcat/schema/dist/core/parse";
 import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
 import { InState } from "@lxcat/schema/dist/core/state";
@@ -55,6 +50,7 @@ import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
 import { State } from "@lxcat/database/dist/shared/types/collections";
 import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { AnySpecies } from "@lxcat/schema/dist/core/species";
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
@@ -152,7 +148,7 @@ const ReactionEntryForm = ({
       <Controller
         control={control}
         name={`set.processes.${processIndex}.reaction.${side}.${entryIndex}.state`}
-        render={({ field: { onChange, value, name } }) => (
+        render={({ field: { onChange, value } }) => (
           <Stack>
             <Input.Label>State</Input.Label>
             <LatexSelect
@@ -416,12 +412,15 @@ const LUTForm = ({ index }: { index: number }) => {
           </tr>
         </thead>
         <tbody>
-          {dataRows.fields.map((r, i) => (
+          {dataRows.fields.map((_, i) => (
             <tr key={i}>
               <td>
                 <TextInput
                   style={{ width: "11rem" }}
-                  error={errorMsg(errors, `set.processes.${index}.data.${i}.0`)}
+                  error={errorMsg(
+                    errors,
+                    `set.processes.${index}.values.${i}.0`,
+                  )}
                   {...register(`set.processes.${index}.data.${i}.0`, {
                     valueAsNumber: true,
                   })}
@@ -430,7 +429,10 @@ const LUTForm = ({ index }: { index: number }) => {
               <td>
                 <TextInput
                   style={{ width: "11rem" }}
-                  error={errorMsg(errors, `set.processes.${index}.data.${i}.1`)}
+                  error={errorMsg(
+                    errors,
+                    `set.processes.${index}.values.${i}.1`,
+                  )}
                   {...register(`set.processes.${index}.data.${i}.1`, {
                     valueAsNumber: true,
                   })}
@@ -1491,7 +1493,7 @@ const LinearTriatomRotationalArray = ({
     <fieldset>
       <legend>Rotational</legend>
       <ol>
-        {array.fields.map((field, index) => (
+        {array.fields.map((_, index) => (
           <ArrayItem
             removeTitle="Remove rotational part"
             key={index}
@@ -1805,7 +1807,7 @@ const VibrationalArray = ({
     <fieldset>
       <legend>Vibrational</legend>
       <ol>
-        {array.fields.map((field, index) => (
+        {array.fields.map((_, index) => (
           <ArrayItem
             removeTitle="Remove vibrational part"
             key={index}
@@ -1854,7 +1856,7 @@ const RotationalArray = ({
     <fieldset>
       <legend>Rotational</legend>
       <ol>
-        {array.fields.map((field, index) => (
+        {array.fields.map((_, index) => (
           <ArrayItem
             removeTitle="Remove rotational part"
             key={index}
@@ -2410,15 +2412,16 @@ export const EditForm = ({
   // States
   const [expandedStates, setExpandedStates] = useState<string[]>([]);
   const states = useWatch({ name: "set.states", control });
-  const setStates = (newStates: Dict<InState<AnyAtom | AnyMolecule>>) =>
+  const setStates = (newStates: Dict<InState<AnySpecies>>) =>
     setValue("set.states", newStates);
   const addState = () => {
     const newLabel = `s${Object.keys(states).length}`;
-    const newStates = {
+    const newStates: Dict<InState<AnySpecies>> = {
       ...states,
       [newLabel]: {
         particle: "",
         charge: 0,
+        type: "simple",
       },
     };
     setStates(newStates);
@@ -2429,7 +2432,7 @@ export const EditForm = ({
       ...states,
       ...newStates,
     };
-    setStates(newNewStates as any);
+    setStates(newNewStates);
     setExpandedStates((expanded) => [...expanded, ...Object.keys(newStates)]);
   };
   const removeState = (label: string) => {
@@ -2503,7 +2506,7 @@ export const EditForm = ({
     processesField.append(newProcesses);
     setExpandedProcesses((expanded) => [
       ...expanded,
-      ...newProcesses.map((d, i) => (i + currentMaxIndex).toString()),
+      ...newProcesses.map((_, i) => (i + currentMaxIndex).toString()),
     ]);
   };
 
@@ -2701,13 +2704,10 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
   return newSet;
 }
 
-function pruneState(state: InState<AnyAtom | AnyMolecule>) {
+function pruneState(state: InState<AnySpecies>) {
   const newState = { ...state }; // TODO make better clone
-  if (newState.electronic) {
+  if (newState.type !== "simple" && newState.electronic) {
     newState.electronic.forEach((e: any) => {
-      if (e.scheme === "") {
-        delete e.scheme;
-      }
       delete e.latex;
       if (Array.isArray(e.vibrational)) {
         if (e.vibrational.length > 0) {
@@ -2734,10 +2734,6 @@ function pruneState(state: InState<AnyAtom | AnyMolecule>) {
   // TODO use type|schema where id is allowed
   delete (newState as any).id;
   delete (newState as any).latex;
-  if (newState.type === undefined) {
-    // Simple particle does not have type
-    delete newState.type;
-  }
   return newState;
 }
 
@@ -2748,14 +2744,14 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
     type: Storage.LUT,
     labels: ["Energy", "CrossSection"],
     units: ["eV", "m^2"],
-    data: [],
+    values: [],
   };
 }
 
 // TODO move utility functions to own file and reuse else where
 
 function mapStateToReaction(
-  states: Dict<InState<AnyAtom | AnyMolecule>>,
+  states: Dict<InState<AnySpecies>>,
   reaction: Reaction<string>,
 ): Reaction<State> {
   const newReaction = {
