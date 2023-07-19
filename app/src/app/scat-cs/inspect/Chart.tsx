@@ -19,8 +19,8 @@ export const Chart = ({ processes, colors }: ChartProps) => {
   return (
     <Plot
       data={processes.map((process, index) => ({
-        x: process.data.map(([x, _]) => x),
-        y: process.data.map(([_, y]) => y),
+        x: process.values.map(([x, _]) => x),
+        y: process.values.map(([_, y]) => y),
         mode: "lines+markers",
         line: { shape: "linear", width: 3 },
         marker: { color: colors[index % colors.length], size: 8 },
