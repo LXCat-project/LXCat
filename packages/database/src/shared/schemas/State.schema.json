@@ -1,112 +1,64 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
+  "allOf": [
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "simple",
-          "type": "string"
+      "if": {
+        "properties": {
+          "type": {
+            "const": "simple",
+            "type": "string"
+          }
         }
       },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "simple",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "config": {
-                  "items": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "l": {
-                        "type": "number"
-                      },
-                      "n": {
-                        "type": "number"
-                      },
-                      "occupance": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "n",
-                      "l",
-                      "occupance"
-                    ],
-                    "type": "object"
-                  },
-                  "type": "array"
-                },
-                "scheme": {
-                  "const": "LS",
-                  "type": "string"
-                },
-                "term": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "J": {
-                      "type": "number"
-                    },
-                    "L": {
-                      "type": "number"
-                    },
-                    "P": {
-                      "enum": [
-                        -1,
-                        1
-                      ],
-                      "type": "number"
-                    },
-                    "S": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "J",
-                    "L",
-                    "P",
-                    "S"
-                  ],
-                  "type": "object"
-                }
-              },
-              "required": [
-                "scheme",
-                "config",
-                "term"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomLS",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
                 "additionalProperties": false,
                 "properties": {
                   "config": {
@@ -172,222 +124,121 @@
                 ],
                 "type": "object"
               },
-              "type": "array"
-            }
-          ]
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "l": {
+                            "type": "number"
+                          },
+                          "n": {
+                            "type": "number"
+                          },
+                          "occupance": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "n",
+                          "l",
+                          "occupance"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "scheme": {
+                      "const": "LS",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
+                        },
+                        "L": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "enum": [
+                            -1,
+                            1
+                          ],
+                          "type": "number"
+                        },
+                        "S": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "J",
+                        "L",
+                        "P",
+                        "S"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomLS",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomLS",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "config": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "core": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "config": {
-                          "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "l": {
-                                "type": "number"
-                              },
-                              "n": {
-                                "type": "number"
-                              },
-                              "occupance": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "n",
-                              "l",
-                              "occupance"
-                            ],
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "scheme": {
-                          "const": "LS",
-                          "type": "string"
-                        },
-                        "term": {
-                          "additionalProperties": false,
-                          "properties": {
-                            "J": {
-                              "type": "number"
-                            },
-                            "L": {
-                              "type": "number"
-                            },
-                            "P": {
-                              "enum": [
-                                -1,
-                                1
-                              ],
-                              "type": "number"
-                            },
-                            "S": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "J",
-                            "L",
-                            "P",
-                            "S"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "scheme",
-                        "config",
-                        "term"
-                      ],
-                      "type": "object"
-                    },
-                    "excited": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "config": {
-                          "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "l": {
-                                "type": "number"
-                              },
-                              "n": {
-                                "type": "number"
-                              },
-                              "occupance": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "n",
-                              "l",
-                              "occupance"
-                            ],
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "scheme": {
-                          "const": "LS",
-                          "type": "string"
-                        },
-                        "term": {
-                          "additionalProperties": false,
-                          "properties": {
-                            "L": {
-                              "type": "number"
-                            },
-                            "P": {
-                              "enum": [
-                                -1,
-                                1
-                              ],
-                              "type": "number"
-                            },
-                            "S": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "L",
-                            "S",
-                            "P"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "scheme",
-                        "config",
-                        "term"
-                      ],
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "core",
-                    "excited"
-                  ],
-                  "type": "object"
-                },
-                "scheme": {
-                  "const": "J1L2",
-                  "type": "string"
-                },
-                "term": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "J": {
-                      "type": "number"
-                    },
-                    "K": {
-                      "type": "number"
-                    },
-                    "P": {
-                      "type": "number"
-                    },
-                    "S": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "J",
-                    "K",
-                    "P",
-                    "S"
-                  ],
-                  "type": "object"
-                }
-              },
-              "required": [
-                "scheme",
-                "config",
-                "term"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomJ1L2",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
                 "additionalProperties": false,
                 "properties": {
                   "config": {
@@ -564,226 +415,232 @@
                 ],
                 "type": "object"
               },
-              "type": "array"
-            }
-          ]
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "core": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "J": {
+                                  "type": "number"
+                                },
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "J",
+                                "L",
+                                "P",
+                                "S"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        },
+                        "excited": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ],
+                      "type": "object"
+                    },
+                    "scheme": {
+                      "const": "J1L2",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
+                        },
+                        "K": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "type": "number"
+                        },
+                        "S": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "J",
+                        "K",
+                        "P",
+                        "S"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomJ1L2",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomJ1L2",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "config": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "core": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "config": {
-                          "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "l": {
-                                "type": "number"
-                              },
-                              "n": {
-                                "type": "number"
-                              },
-                              "occupance": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "n",
-                              "l",
-                              "occupance"
-                            ],
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "scheme": {
-                          "const": "LS",
-                          "type": "string"
-                        },
-                        "term": {
-                          "additionalProperties": false,
-                          "properties": {
-                            "L": {
-                              "type": "number"
-                            },
-                            "P": {
-                              "enum": [
-                                -1,
-                                1
-                              ],
-                              "type": "number"
-                            },
-                            "S": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "L",
-                            "S",
-                            "P"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "scheme",
-                        "config",
-                        "term"
-                      ],
-                      "type": "object"
-                    },
-                    "excited": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "config": {
-                          "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "l": {
-                                "type": "number"
-                              },
-                              "n": {
-                                "type": "number"
-                              },
-                              "occupance": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "n",
-                              "l",
-                              "occupance"
-                            ],
-                            "type": "object"
-                          },
-                          "type": "array"
-                        },
-                        "scheme": {
-                          "const": "LS",
-                          "type": "string"
-                        },
-                        "term": {
-                          "additionalProperties": false,
-                          "properties": {
-                            "L": {
-                              "type": "number"
-                            },
-                            "P": {
-                              "enum": [
-                                -1,
-                                1
-                              ],
-                              "type": "number"
-                            },
-                            "S": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "L",
-                            "S",
-                            "P"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "scheme",
-                        "config",
-                        "term"
-                      ],
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "core",
-                    "excited"
-                  ],
-                  "type": "object"
-                },
-                "scheme": {
-                  "const": "LS1",
-                  "type": "string"
-                },
-                "term": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "J": {
-                      "type": "number"
-                    },
-                    "K": {
-                      "type": "number"
-                    },
-                    "L": {
-                      "type": "number"
-                    },
-                    "P": {
-                      "enum": [
-                        -1,
-                        1
-                      ],
-                      "type": "number"
-                    },
-                    "S": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "J",
-                    "K",
-                    "L",
-                    "P",
-                    "S"
-                  ],
-                  "type": "object"
-                }
-              },
-              "required": [
-                "scheme",
-                "config",
-                "term"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomLS1",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
                 "additionalProperties": false,
                 "properties": {
                   "config": {
@@ -964,154 +821,236 @@
                 ],
                 "type": "object"
               },
-              "type": "array"
-            }
-          ]
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomLS1",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "Lambda": {
-                  "type": "number"
-                },
-                "S": {
-                  "type": "number"
-                },
-                "e": {
-                  "type": "string"
-                },
-                "reflection": {
-                  "enum": [
-                    "-",
-                    "+"
-                  ],
-                  "type": "string"
-                },
-                "vibrational": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
                       "additionalProperties": false,
                       "properties": {
-                        "rotational": {
-                          "anyOf": [
-                            {
+                        "core": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
                               "type": "string"
                             },
-                            {
+                            "term": {
                               "additionalProperties": false,
                               "properties": {
-                                "J": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
                                   "type": "number"
                                 }
                               },
                               "required": [
-                                "J"
+                                "L",
+                                "S",
+                                "P"
                               ],
                               "type": "object"
-                            },
-                            {
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        },
+                        "excited": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
                               "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      }
-                                    },
-                                    "required": [
-                                      "J"
-                                    ],
-                                    "type": "object"
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
                                   },
-                                  {
-                                    "type": "string"
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
                                   }
-                                ]
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
                               },
                               "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ],
+                              "type": "object"
                             }
-                          ]
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ],
+                      "type": "object"
+                    },
+                    "scheme": {
+                      "const": "LS1",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
                         },
-                        "v": {
+                        "K": {
+                          "type": "number"
+                        },
+                        "L": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "enum": [
+                            -1,
+                            1
+                          ],
+                          "type": "number"
+                        },
+                        "S": {
                           "type": "number"
                         }
                       },
                       "required": [
-                        "v"
+                        "J",
+                        "K",
+                        "L",
+                        "P",
+                        "S"
                       ],
                       "type": "object"
-                    },
-                    {
-                      "items": {
-                        "anyOf": [
-                          {
-                            "additionalProperties": false,
-                            "properties": {
-                              "v": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "v"
-                            ],
-                            "type": "object"
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      "type": "array"
                     }
-                  ]
-                }
-              },
-              "required": [
-                "Lambda",
-                "S",
-                "e"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomLS1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "HeteronuclearDiatom",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
                 "additionalProperties": false,
                 "properties": {
                   "Lambda": {
@@ -1129,367 +1068,173 @@
                       "+"
                     ],
                     "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "Lambda",
-                  "S"
-                ],
-                "type": "object"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "HeteronuclearDiatom",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "Lambda": {
-                  "type": "number"
-                },
-                "S": {
-                  "type": "number"
-                },
-                "e": {
-                  "type": "string"
-                },
-                "parity": {
-                  "enum": [
-                    "g",
-                    "u"
-                  ],
-                  "type": "string"
-                },
-                "reflection": {
-                  "enum": [
-                    "-",
-                    "+"
-                  ],
-                  "type": "string"
-                },
-                "vibrational": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "additionalProperties": false,
-                      "properties": {
-                        "rotational": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "additionalProperties": false,
-                              "properties": {
-                                "J": {
-                                  "type": "number"
-                                }
+                  },
+                  "vibrational": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
                               },
-                              "required": [
-                                "J"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      }
-                                    },
-                                    "required": [
-                                      "J"
-                                    ],
-                                    "type": "object"
-                                  },
-                                  {
-                                    "type": "string"
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
                                   }
-                                ]
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
                               },
-                              "type": "array"
-                            }
-                          ]
-                        },
-                        "v": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "v"
-                      ],
-                      "type": "object"
-                    },
-                    {
-                      "items": {
-                        "anyOf": [
-                          {
-                            "additionalProperties": false,
-                            "properties": {
-                              "v": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "v"
-                            ],
-                            "type": "object"
-                          },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      "type": "array"
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "Lambda",
-                "S",
-                "e",
-                "parity"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
-                "additionalProperties": false,
-                "properties": {
-                  "Lambda": {
-                    "type": "number"
-                  },
-                  "S": {
-                    "type": "number"
-                  },
-                  "e": {
-                    "type": "string"
-                  },
-                  "parity": {
-                    "enum": [
-                      "g",
-                      "u"
-                    ],
-                    "type": "string"
-                  },
-                  "reflection": {
-                    "enum": [
-                      "-",
-                      "+"
-                    ],
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "Lambda",
-                  "S",
-                  "e",
-                  "parity"
-                ],
-                "type": "object"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "HomonuclearDiatom",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "Lambda": {
-                  "type": "number"
-                },
-                "S": {
-                  "type": "number"
-                },
-                "e": {
-                  "type": "string"
-                },
-                "parity": {
-                  "enum": [
-                    "g",
-                    "u"
-                  ],
-                  "type": "string"
-                },
-                "reflection": {
-                  "enum": [
-                    "-",
-                    "+"
-                  ],
-                  "type": "string"
-                },
-                "vibrational": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "additionalProperties": false,
-                      "properties": {
-                        "rotational": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "additionalProperties": false,
-                              "properties": {
-                                "J": {
-                                  "type": "number"
-                                }
-                              },
-                              "required": [
-                                "J"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      }
-                                    },
-                                    "required": [
-                                      "J"
-                                    ],
-                                    "type": "object"
-                                  },
-                                  {
-                                    "type": "string"
-                                  }
-                                ]
-                              },
-                              "type": "array"
-                            }
-                          ]
-                        },
-                        "v": {
-                          "items": {
-                            "type": "number"
-                          },
-                          "type": "array"
-                        }
-                      },
-                      "required": [
-                        "v"
-                      ],
-                      "type": "object"
-                    },
-                    {
-                      "items": {
-                        "anyOf": [
-                          {
-                            "additionalProperties": false,
-                            "properties": {
-                              "v": {
+                              {
                                 "items": {
-                                  "type": "number"
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
                                 },
                                 "type": "array"
                               }
-                            },
-                            "required": [
-                              "v"
-                            ],
-                            "type": "object"
+                            ]
                           },
-                          {
-                            "type": "string"
+                          "v": {
+                            "type": "number"
                           }
-                        ]
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
                       },
-                      "type": "array"
-                    }
-                  ]
-                }
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e"
+                ],
+                "type": "object"
               },
-              "required": [
-                "Lambda",
-                "S",
-                "e",
-                "parity"
-              ],
-              "type": "object"
-            },
-            {
-              "items": {
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "e",
+                    "Lambda",
+                    "S"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "HeteronuclearDiatom",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "HomonuclearDiatom",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
                 "additionalProperties": false,
                 "properties": {
                   "Lambda": {
@@ -1514,6 +1259,88 @@
                       "+"
                     ],
                     "type": "string"
+                  },
+                  "vibrational": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ]
+                          },
+                          "v": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
                   }
                 },
                 "required": [
@@ -1524,35 +1351,340 @@
                 ],
                 "type": "object"
               },
-              "type": "array"
-            }
-          ]
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "parity": {
+                      "enum": [
+                        "g",
+                        "u"
+                      ],
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Lambda",
+                    "S",
+                    "e",
+                    "parity"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "HomonuclearDiatom",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "LinearTriatomInversionCenter",
-          "type": "string"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "LinearTriatomInversionCenter",
+            "type": "string"
+          }
         }
       },
-      "required": [
-        "charge",
-        "electronic",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "type": "number"
+                  },
+                  "S": {
+                    "type": "number"
+                  },
+                  "e": {
+                    "type": "string"
+                  },
+                  "parity": {
+                    "enum": [
+                      "g",
+                      "u"
+                    ],
+                    "type": "string"
+                  },
+                  "reflection": {
+                    "enum": [
+                      "-",
+                      "+"
+                    ],
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ]
+                          },
+                          "v": {
+                            "items": {
+                              "type": "number"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "type": "array"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e",
+                  "parity"
+                ],
+                "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "parity": {
+                      "enum": [
+                        "g",
+                        "u"
+                      ],
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Lambda",
+                    "S",
+                    "e",
+                    "parity"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "LinearTriatomInversionCenter",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "unspecified",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "unspecified",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     }
   ],
-  "definitions": {}
+  "definitions": {},
+  "properties": {
+    "type": {
+      "enum": [
+        "simple",
+        "AtomLS",
+        "AtomJ1L2",
+        "AtomLS1",
+        "HeteronuclearDiatom",
+        "HomonuclearDiatom",
+        "LinearTriatomInversionCenter",
+        "unspecified"
+      ]
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "type": "object"
 }
