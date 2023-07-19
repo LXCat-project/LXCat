@@ -94,7 +94,11 @@ async function insert_state_tree<T extends AnySpecies>(
   const t_ret = await insert_state(parseState(topLevelState));
   ret_id = t_ret.id;
 
-  if (stateIsAtom(state)) {
+  if (state.type === "unspecified") {
+    const e_ret = await insert_state(parseState(state));
+    if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+    ret_id = e_ret.id;
+  } else if (stateIsAtom(state)) {
     if (Array.isArray(state.electronic)) {
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };

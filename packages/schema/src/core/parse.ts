@@ -21,6 +21,7 @@ import { ComponentParser } from "./parsers/common";
 import { AnyParticle } from "./particle";
 import { AnySpecies, KeyedSpecies } from "./species";
 import { DBState, State } from "./state";
+import { Unspecified } from "./unspecified";
 
 // TODO: Types of parsing functions arguments should also incorporate undefined variants.
 export interface MoleculeParser<M extends UnknownMolecule> {
@@ -256,7 +257,9 @@ function parseMolecule<
   return outputState;
 }
 
-function parseSimpleParticle(state: State<AnyParticle>): DBState<AnyParticle> {
+function parseSimpleParticle(
+  state: State<AnyParticle | Unspecified>,
+): DBState<AnyParticle> {
   const outputState = <DBState<AnyParticle>> state;
 
   let id = state.particle;
@@ -265,6 +268,16 @@ function parseSimpleParticle(state: State<AnyParticle>): DBState<AnyParticle> {
   if (state.particle !== "e") {
     latex += parseChargeLatex(outputState.charge);
     id += parseCharge(outputState.charge);
+  }
+
+  if (state.type === "unspecified") {
+    id += ID_LEFT;
+    id += state.electronic;
+    id += ID_RIGHT;
+
+    latex += LATEX_LEFT;
+    latex += state.electronic;
+    latex += LATEX_RIGHT;
   }
 
   outputState.id = id;
@@ -283,7 +296,7 @@ export function stateIsAtom(state: AnySpecies): state is AnyAtom {
 export function parseState<Input extends AnySpecies>(
   state: State<Input>,
 ): DBState<KeyedSpecies<Input>> {
-  if (state.type === "simple") {
+  if (state.type === "simple" || state.type === "unspecified") {
     return parseSimpleParticle(state) as any;
   } else if (stateIsAtom(state)) {
     return parseAtom(state) as any;
