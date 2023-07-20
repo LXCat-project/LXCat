@@ -373,6 +373,9 @@ importers:
       zod:
         specifier: ^3.21.4
         version: 3.21.4
+      zod-to-json-schema:
+        specifier: ^3.21.4
+        version: 3.21.4(zod@3.21.4)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
