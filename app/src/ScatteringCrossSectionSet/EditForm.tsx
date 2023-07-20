@@ -2800,7 +2800,6 @@ function flattenCrossSection(
 
 function hashState(state: InState<any>): [string, string] {
   const parsed = parseState(state as InState<any>);
-  // TODO also calculate latex string
   return [parsed.id, parsed.latex];
 }
 

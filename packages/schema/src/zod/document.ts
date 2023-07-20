@@ -28,4 +28,4 @@ const DocumentBody = z.object({
   processes: z.array(AnyProcess(z.string(), z.string())),
 });
 
-export const Document = SelfReference.merge(SetHeader).merge(DocumentBody);
+export const LTPDocument = SelfReference.merge(SetHeader).merge(DocumentBody);

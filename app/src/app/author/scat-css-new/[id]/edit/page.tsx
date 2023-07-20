@@ -9,6 +9,7 @@ import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 import { options } from "../../../../../auth/options";
 import { Unauthorized } from "../../../../../shared/unauthorized";
+import { EditForm } from "./edit-form";
 
 const ArangoKey = z.string().regex(/\d+/);
 const URLParams = z.object({ params: z.object({ id: ArangoKey }) });
@@ -23,7 +24,7 @@ const EditSetPage = async (props: URLParams) => {
     return <Unauthorized />;
   }
 
-  return <div></div>;
+  return <EditForm organizations={await getAffiliations(session.user.email)} />;
 };
 
 const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
