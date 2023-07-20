@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { z } from "zod";
 import { Reference } from "./common/reference";
 import { SelfReference, SetHeader } from "./document";

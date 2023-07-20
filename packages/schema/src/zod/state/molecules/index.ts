@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { z } from "zod";
 import { HeteronuclearDiatom } from "./diatom-heteronuclear";
 import { HomonuclearDiatom } from "./diatom-homonuclear";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { z } from "zod";
 import { molecule } from "../generators";
 import { LinearElectronicImpl } from "./components/electronic/linear";

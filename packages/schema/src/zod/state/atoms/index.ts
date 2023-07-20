@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { z } from "zod";
 import { AtomJ1L2 } from "./j1l2";
 import { AtomLS } from "./ls";
