@@ -169,4 +169,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: REUSE compliance check
-      uses: fsfe/reuse-action@v1
+      uses: fsfe/reuse-action@v2
