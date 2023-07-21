@@ -4,8 +4,8 @@
 
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { LTPDocument } from "@lxcat/schema/dist/zod/document";
+import schema from "@lxcat/schema/schema.json";
 import {
   Button,
   Checkbox,
@@ -16,50 +16,82 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
+import { createFormContext, zodResolver } from "@mantine/form";
+import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
-import {
-  FieldErrors,
-  FieldPath,
-  FormProvider,
-  get,
-  useForm,
-} from "react-hook-form";
+import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
+import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 
 const EditFormValues = z.object({
   set: LTPDocument,
   commitMessage: z.string().min(1),
+  meta: z.record(z.any()),
 });
-type EditFormValues = z.input<typeof EditFormValues>;
+export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = { organizations: Array<string> };
 
-const getError = (
-  errors: FieldErrors<EditFormValues>,
-  name: FieldPath<EditFormValues>,
+export const getError = (
+  errors: FieldErrors,
+  name: FieldPath<FieldValues>,
 ): string => {
   const error = get(errors, name);
 
   return error ? error.message : "";
 };
 
+export const [FormProvider, useFormContext, useForm] = createFormContext<
+  EditFormValues
+>();
+
 export const EditForm = ({ organizations }: EditFormProps) => {
-  const form = useForm<EditFormValues>(
+  const form = useForm(
     {
-      resolver: zodResolver(EditFormValues),
+      validate: zodResolver(EditFormValues),
+      initialValues: {
+        commitMessage: "",
+        set: {
+          $schema: "",
+          url: "",
+          termsOfUse: "",
+          name: "test",
+          contributor: "TestContributor",
+          description: "",
+          complete: false,
+          references: {},
+          states: {
+            test: {
+              type: "simple",
+              particle: "He",
+              charge: 0,
+              // electronic: {
+              //   config: [],
+              //   term: {
+              //     L: 0,
+              //     S: 0,
+              //     P: 1,
+              //     J: 0,
+              //   },
+              // },
+            },
+          },
+          processes: [],
+        },
+        meta: { set: { states: { test: { electronic: "1" } } } },
+      },
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");
 
-  const { register, formState: { errors } } = form;
+  const { getInputProps } = form;
 
   return (
-    <FormProvider {...form}>
+    <FormProvider form={form}>
       <form
         style={{ margin: 10 }}
-        onSubmit={form.handleSubmit((data) => {
+        onSubmit={form.onSubmit((data) => {
           console.log(data);
-          console.log(errors);
         })}
       >
         <Tabs
@@ -79,26 +111,37 @@ export const EditForm = ({ organizations }: EditFormProps) => {
               <TextInput
                 label="Name"
                 withAsterisk
-                error={getError(errors, "set.name")}
-                {...register("set.name")}
+                {...getInputProps("set.name")}
               />
               <Textarea
                 label="Description"
                 withAsterisk
                 minRows={10}
-                error={getError(errors, "set.description")}
-                {...register("set.description")}
+                {...getInputProps("set.description")}
               />
-              {
-                // <Checkbox label="Complete" {...register("set.complete")} />
-              }
+              <Checkbox label="Complete" {...getInputProps("set.complete")} />
               <NativeSelect
                 label="Contributor"
                 data={organizations}
-                error={getError(errors, "set.contributor")}
-                {...register("set.contributor")}
+                {...getInputProps("set.contributor")}
               />
             </Stack>
+          </Tabs.Panel>
+          <Tabs.Panel value="states">
+            {getInputProps(`set.states`).value
+              && Object.entries(form.values.set.states).map(
+                ([key, _]) => (
+                  <div key={key}>
+                    <SpeciesForm
+                      typeMap={generateSpeciesForm(
+                        schema as JSONSchema7,
+                        `set.states.${key}`,
+                      )}
+                      basePath={`set.states.${key}`}
+                    />
+                  </div>
+                ),
+              )}
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
@@ -106,8 +149,7 @@ export const EditForm = ({ organizations }: EditFormProps) => {
           <TextInput
             label="Commit message"
             placeholder="Describe which changes have been made."
-            error={getError(errors, "commitMessage")}
-            {...register("commitMessage")}
+            {...getInputProps("commitMessage")}
           />
           <div>
             <Button type="submit">Submit</Button>
