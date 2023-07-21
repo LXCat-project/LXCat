@@ -22,6 +22,7 @@ export const SetHeader = z.object({
     "A key into the `references` dict. This is a reference to the paper that presents this dataset.",
   ).optional(),
   description: z.string().describe("A description of this dataset."),
+  complete: z.boolean(),
 });
 
 // TODO: Add a `refine` that checks whether the referenced state and reference
