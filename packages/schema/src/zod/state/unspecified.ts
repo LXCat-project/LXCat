@@ -6,6 +6,6 @@ import { z } from "zod";
 import { typeTag } from "./generators";
 
 export const Unspecified = typeTag("unspecified").merge(
-  z.object({ electronic: z.string() }),
+  z.object({ electronic: z.string().min(1) }),
 );
 export type Unspecified = z.infer<typeof Unspecified>;

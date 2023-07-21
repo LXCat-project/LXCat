@@ -5,7 +5,7 @@
 import { z } from "zod";
 
 export const TotalAngularSpecifier = z.object({
-  J: z.number().multipleOf(0.5),
+  J: z.number().multipleOf(0.5).nonnegative(),
 });
 
 export const buildTerm = <
@@ -20,7 +20,7 @@ export const buildTwoTerm = <
 >(core: Core, excited: Excited) => z.object({ core, excited });
 
 export const ShellEntry = z.object({
-  n: z.number().int().nonnegative(),
+  n: z.number().int().min(1),
   l: z.number().int().nonnegative(),
   occupance: z.number().int().nonnegative(),
 });
