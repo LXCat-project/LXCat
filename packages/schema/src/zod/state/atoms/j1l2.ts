@@ -20,8 +20,8 @@ const J1L2TermImpl = z.object({
 export const J1L2Term = J1L2TermImpl.merge(TotalAngularSpecifier);
 
 export const AtomJ1L2Impl = buildTerm(
-  z.array(ShellEntry),
   buildTwoTerm(LSDescriptor, buildTerm(z.array(ShellEntry), LSTermImpl)),
+  J1L2Term,
 ).transform((atom) => ({
   ...atom,
   summary: "J1L2",

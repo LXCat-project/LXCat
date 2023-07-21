@@ -22,11 +22,11 @@ export const LS1TermImpl = z.object({
 export const LS1Term = LS1TermImpl.merge(TotalAngularSpecifier);
 
 export const AtomLS1Impl = buildTerm(
-  z.array(ShellEntry),
   buildTwoTerm(
     buildTerm(z.array(ShellEntry), LSTermImpl),
     buildTerm(z.array(ShellEntry), LSTermImpl),
   ),
+  LS1Term,
 ).transform((atom) => ({
   ...atom,
   summary: "LS1",
