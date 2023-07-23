@@ -252,8 +252,8 @@ importers:
         specifier: ^7.14.3
         version: 7.14.3
       testcontainers:
-        specifier: ^9.10.1
-        version: 9.10.1
+        specifier: ^9.12.0
+        version: 9.12.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -319,8 +319,8 @@ importers:
         specifier: 8.45.0
         version: 8.45.0
       testcontainers:
-        specifier: ^9.10.1
-        version: 9.10.1
+        specifier: ^9.12.0
+        version: 9.12.0
       ts-json-schema-generator:
         specifier: ^1.2.0
         version: 1.2.0
@@ -9758,6 +9758,14 @@ packages:
       object-assign: 4.1.1
       react-is: 16.13.1
 
+  /proper-lockfile@4.1.2:
+    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
+    dependencies:
+      graceful-fs: 4.2.11
+      retry: 0.12.0
+      signal-exit: 3.0.7
+    dev: true
+
   /properties-reader@2.2.0:
     resolution: {integrity: sha512-CgVcr8MwGoBKK24r9TwHfZkLLaNFHQ6y4wgT9w/XzdpacOOi5ciH4hcuLechSDAwXsfrGQtI2JTutY2djOx2Ow==}
     engines: {node: '>=10'}
@@ -10324,6 +10332,11 @@ packages:
     resolution: {integrity: sha512-4gl03wn3hj1HP3yzgdI7d3lCkF95F21Pz4BPGvKHinyQzALR5CapwC8yIi0Rh58DEMQ/SguC03wFj2k0M/mHhw==}
     dependencies:
       lowercase-keys: 2.0.0
+    dev: true
+
+  /retry@0.12.0:
+    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
+    engines: {node: '>= 4'}
     dev: true
 
   /reusify@1.0.4:
@@ -11076,8 +11089,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@9.10.1:
-    resolution: {integrity: sha512-+kTLawnZCiSWTL2Iljx+CtYbWIPzfTe8KiouFbTvJ8lAYN5esAj+bT2AKWcixotV4ddKCAbL6ESn35J0jvFCNg==}
+  /testcontainers@9.12.0:
+    resolution: {integrity: sha512-zmjLTAUqCiDvhDq7TCwcyhI3m/cXXKGnhyLLJ9pgh53VgG9O+P+opX1pIx28aYTUQ7Yu6b5sJf0xoIuxoiclWg==}
     engines: {node: '>= 10.16'}
     dependencies:
       '@balena/dockerignore': 1.0.2
@@ -11091,6 +11104,7 @@ packages:
       dockerode: 3.3.5
       get-port: 5.1.1
       node-fetch: 2.6.12
+      proper-lockfile: 4.1.2
       properties-reader: 2.2.0
       ssh-remote-port-forward: 1.0.4
       tar-fs: 2.1.1
