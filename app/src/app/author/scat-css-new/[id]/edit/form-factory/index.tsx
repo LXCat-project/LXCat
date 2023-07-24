@@ -171,8 +171,7 @@ export const SchemaForm = (
       );
     } else if (schema.type === "string") {
       if (
-        !(propertyName
-          && (propertyName === "type" || propertyName === "electronic"))
+        !(propertyName && propertyName === "type")
       ) {
         return (
           <TextInput
@@ -209,8 +208,9 @@ export const SchemaForm = (
   } else if (schema.allOf) {
     const allOfGroup = (
       <Group>
-        {schema.allOf.map((def) => (
+        {schema.allOf.map((def, i) => (
           <SchemaForm
+            key={`${def}.${i}`}
             schema={isSchemaObject(def)}
             formPath={formPath}
             propertyName={propertyName}

@@ -35,21 +35,20 @@ export const AnyOf = (
             [{ value: "0", data: "0" }]
           }
           {...getInputProps(`meta.${formPath}`)}
+          value={getInputProps(`meta.${formPath}`).value ?? "0"}
         />
       }
-      {
-        // getInputProps(`meta.${formPath}`).value
-        //   && (
-        //     <SchemaForm
-        //       schema={isSchemaObject(
-        //         definitions[parseInt(getInputProps(`meta.${formPath}`).value)],
-        //       )}
-        //       formPath={formPath}
-        //       propertyName={propertyName}
-        //       drawBorder={false}
-        //     />
-        //   )
-      }
+      {getInputProps(`meta.${formPath}`).value
+        && (
+          <SchemaForm
+            schema={isSchemaObject(
+              definitions[parseInt(getInputProps(`meta.${formPath}`).value)],
+            )}
+            formPath={formPath}
+            propertyName={propertyName}
+            drawBorder={false}
+          />
+        )}
     </Stack>
   );
 
