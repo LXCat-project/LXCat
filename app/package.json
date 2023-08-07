@@ -21,7 +21,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@hookform/error-message": "^2.0.1",
-    "@hookform/resolvers": "^3.1.1",
+    "@hookform/resolvers": "^3.2.0",
     "@lxcat/converter": "workspace:^",
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
