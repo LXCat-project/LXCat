@@ -74,7 +74,7 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^5.3.7",
     "vfile-matter": "^4.0.1",
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
