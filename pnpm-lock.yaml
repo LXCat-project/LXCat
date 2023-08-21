@@ -252,8 +252,8 @@ importers:
         specifier: ^7.14.3
         version: 7.14.3
       testcontainers:
-        specifier: ^9.12.0
-        version: 9.12.0
+        specifier: ^10.2.1
+        version: 10.2.1
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -300,6 +300,9 @@ importers:
       '@lxcat/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@testcontainers/arangodb':
+        specifier: ^10.2.1
+        version: 10.2.1
       '@types/deep-equal':
         specifier: ^1.0.1
         version: 1.0.1
@@ -319,8 +322,8 @@ importers:
         specifier: 8.47.0
         version: 8.47.0
       testcontainers:
-        specifier: ^9.12.0
-        version: 9.12.0
+        specifier: ^10.2.1
+        version: 10.2.1
       ts-json-schema-generator:
         specifier: ^1.3.0
         version: 1.3.0
@@ -2746,6 +2749,15 @@ packages:
     resolution: {integrity: sha512-vueOF4rjM0wcYAHOq7gcQB3fU04EAfHIwP0i/DVQdopXv84uu62DvOFHhYj9d0OBiM4O0PPoXEvsT8IVZDrYXw==}
     dev: false
 
+  /@testcontainers/arangodb@10.2.1:
+    resolution: {integrity: sha512-9HPHcTnyvCQgpxQ+9WjWaS31PTRDdFkl/eNCsp0bnMp26VzPrvnHTvfo8Uea/BtDQRYhuR3KrAcsMG1KsFyREw==}
+    dependencies:
+      testcontainers: 10.2.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
   /@tokenizer/token@0.3.0:
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
     dev: false
@@ -2807,12 +2819,6 @@ packages:
     dependencies:
       '@types/estree': 1.0.1
     dev: false
-
-  /@types/archiver@5.3.2:
-    resolution: {integrity: sha512-IctHreBuWE5dvBDz/0WeKtyVKVRs4h75IblxOACL92wU66v+HGAfEYAOyXkOFphvRJMhuXdI9huDXpX0FC6lCw==}
-    dependencies:
-      '@types/readdir-glob': 1.1.1
-    dev: true
 
   /@types/body-parser@1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
@@ -2885,20 +2891,6 @@ packages:
 
   /@types/deep-equal@1.0.1:
     resolution: {integrity: sha512-mMUu4nWHLBlHtxXY17Fg6+ucS/MnndyOWyOe7MmwkoMYxvfQU2ajtRaEvqSUv+aVkMqH/C0NCI8UoVfRNQ10yg==}
-    dev: true
-
-  /@types/docker-modem@3.0.2:
-    resolution: {integrity: sha512-qC7prjoEYR2QEe6SmCVfB1x3rfcQtUr1n4x89+3e0wSTMQ/KYCyf+/RAA9n2tllkkNc6//JMUZePdFRiGIWfaQ==}
-    dependencies:
-      '@types/node': 20.5.1
-      '@types/ssh2': 1.11.11
-    dev: true
-
-  /@types/dockerode@3.3.19:
-    resolution: {integrity: sha512-7CC5yIpQi+bHXwDK43b/deYXteP3Lem9gdocVVHJPSRJJLMfbiOchQV3rDmAPkMw+n3GIVj7m1six3JW+VcwwA==}
-    dependencies:
-      '@types/docker-modem': 3.0.2
-      '@types/node': 20.5.1
     dev: true
 
   /@types/eslint-scope@3.7.4:
@@ -3050,10 +3042,6 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: false
 
-  /@types/node@18.16.18:
-    resolution: {integrity: sha512-/aNaQZD0+iSBAGnvvN2Cx92HqE5sZCPZtx2TsK+4nvV23fFe09jVDvpArXr2j9DnYlzuU9WuoykDDc6wqvpNcw==}
-    dev: true
-
   /@types/node@20.5.1:
     resolution: {integrity: sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==}
 
@@ -3106,12 +3094,6 @@ packages:
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
 
-  /@types/readdir-glob@1.1.1:
-    resolution: {integrity: sha512-ImM6TmoF8bgOwvehGviEj3tRdRBbQujr1N+0ypaln/GWjaerOB26jb93vsRHmdMtvVQZQebOlqt2HROark87mQ==}
-    dependencies:
-      '@types/node': 20.5.1
-    dev: true
-
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
@@ -3150,12 +3132,6 @@ packages:
     dependencies:
       '@types/node': 20.5.1
       '@types/ssh2-streams': 0.1.9
-    dev: true
-
-  /@types/ssh2@1.11.11:
-    resolution: {integrity: sha512-LdnE7UBpvHCgUznvn2fwLt2hkaENcKPFqOyXGkvyTLfxCXBN6roc1RmECNYuzzbHePzD3PaAov5rri9hehzx9Q==}
-    dependencies:
-      '@types/node': 18.16.18
     dev: true
 
   /@types/unist@2.0.6:
@@ -3969,7 +3945,6 @@ packages:
 
   /b4a@1.6.4:
     resolution: {integrity: sha512-fpWrvyVHEKyeEvbKZTVOeZF3VSKKWtJxFIxX/jaVPf+cLbGUSitjb49pHLqPV2BUNNZ0LcoeEGfE/YCpyDYHIw==}
-    dev: false
 
   /babel-loader@9.1.3(@babel/core@7.22.10)(webpack@5.87.0):
     resolution: {integrity: sha512-xG3ST4DglodGf8qSwv0MdeWLhrDsw/32QMdTO5T1ZIp9gQur0HkCyFs7Awskr10JKXFXwpAhiCuYX5oGXnRGbw==}
@@ -5307,8 +5282,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /docker-compose@0.24.1:
-    resolution: {integrity: sha512-CVphzCi0Hmw/0CHlAzgiwhLsJjFRqnvpBYMYbf63bz6MON69ElgrfrgQTmgPtEjbifjgaptu3+Gea62vI+9jiA==}
+  /docker-compose@0.24.2:
+    resolution: {integrity: sha512-2/WLvA7UZ6A2LDLQrYW0idKipmNBWhtfvrn2yzjC5PnHDzuFVj1zAZN6MJxVMKP0zZH8uzAK6OwVZYHGuyCmTw==}
     engines: {node: '>= 6.0.0'}
     dependencies:
       yaml: 2.3.1
@@ -6078,7 +6053,6 @@ packages:
 
   /fast-fifo@1.3.0:
     resolution: {integrity: sha512-IgfweLvEpwyA4WgiQe9Nx6VV2QkML2NkvZnk1oKnIzXgXdWxuhF7zw4DvLTPZJn6PIUneiAXPF24QmoEqHTjyw==}
-    dev: false
 
   /fast-glob@3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
@@ -9765,7 +9739,6 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
-    dev: false
 
   /quick-lru@5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
@@ -10684,7 +10657,6 @@ packages:
     dependencies:
       fast-fifo: 1.3.0
       queue-tick: 1.0.1
-    dev: false
 
   /string-split-by@1.0.0:
     resolution: {integrity: sha512-KaJKY+hfpzNyet/emP81PJA9hTVSfxNLS9SFTWxdCnnW1/zOOwiV248+EfoX7IQFcBaOp4G5YE6xTJMF+pLg6A==}
@@ -10956,6 +10928,7 @@ packages:
       mkdirp-classic: 0.5.3
       pump: 3.0.0
       tar-stream: 2.2.0
+    dev: false
 
   /tar-fs@3.0.4:
     resolution: {integrity: sha512-5AFQU8b9qLfZCX9zp2duONhPmZv0hGYiBPJsyUdqMjzq/mqVpy/rEUSeHk1+YitmxugaptgBh5oDGU3VsAJq4w==}
@@ -10963,7 +10936,6 @@ packages:
       mkdirp-classic: 0.5.3
       pump: 3.0.0
       tar-stream: 3.1.6
-    dev: false
 
   /tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
@@ -10981,7 +10953,6 @@ packages:
       b4a: 1.6.4
       fast-fifo: 1.3.0
       streamx: 2.15.0
-    dev: false
 
   /tar@6.1.15:
     resolution: {integrity: sha512-/zKt9UyngnxIT/EAGYuxaMYgOIJiP81ab9ZfkILq4oNLPFX50qyYmu7jRj9qeXoxmJHjGlbH0+cm2uy1WCs10A==}
@@ -11058,25 +11029,22 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@9.12.0:
-    resolution: {integrity: sha512-zmjLTAUqCiDvhDq7TCwcyhI3m/cXXKGnhyLLJ9pgh53VgG9O+P+opX1pIx28aYTUQ7Yu6b5sJf0xoIuxoiclWg==}
-    engines: {node: '>= 10.16'}
+  /testcontainers@10.2.1:
+    resolution: {integrity: sha512-R9LUMUEkKGSL2M4cP466Jah+Vi+ZLFlvrT4BENjEKJKNzubATOmDk26RHe8DHeFT+hnMD6fvVii+McXr0UTO7g==}
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@types/archiver': 5.3.2
-      '@types/dockerode': 3.3.19
       archiver: 5.3.1
       async-lock: 1.4.0
       byline: 5.0.0
       debug: 4.3.4
-      docker-compose: 0.24.1
+      docker-compose: 0.24.2
       dockerode: 3.3.5
       get-port: 5.1.1
       node-fetch: 2.6.12
       proper-lockfile: 4.1.2
       properties-reader: 2.2.0
       ssh-remote-port-forward: 1.0.4
-      tar-fs: 2.1.1
+      tar-fs: 3.0.4
       tmp: 0.2.1
     transitivePeerDependencies:
       - encoding
