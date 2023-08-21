@@ -65,8 +65,12 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
             summary += vibrational;
             latex += vibrational;
           } else if (Array.isArray(vibrational)) {
-            summary += vibrational.map(({ summary }) => summary).join("|");
-            latex += vibrational.map(({ latex }) => latex).join("|");
+            summary += vibrational.map(vib =>
+              typeof vib === "string" ? vib : vib.summary
+            ).join("|");
+            latex += vibrational.map(vib =>
+              typeof vib === "string" ? vib : vib.latex
+            ).join("|");
           } else {
             summary += vibrational.summary;
             latex += vibrational.latex;
@@ -81,8 +85,12 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
                 summary += rotational;
                 latex += rotational;
               } else if (Array.isArray(rotational)) {
-                summary += rotational.map(({ summary }) => summary).join("|");
-                latex += rotational.map(({ latex }) => latex).join("|");
+                summary += rotational.map(rot =>
+                  typeof rot === "string" ? rot : rot.latex
+                ).join("|");
+                latex += rotational.map(rot =>
+                  typeof rot === "string" ? rot : rot.latex
+                ).join("|");
               } else {
                 summary += rotational.summary;
                 latex += rotational.latex;

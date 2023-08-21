@@ -32,13 +32,15 @@ export const molecule = <
                     rotational: z.optional(
                       z.union([
                         rotational.describe("Singular"),
-                        z.array(rotational).describe("Compound"),
+                        z.array(z.union([rotational, z.string()]))
+                          .describe("Compound"),
                         z.string().describe("Unspecified"),
                       ]),
                     ),
                   }),
                 ).describe("Singular"),
-                z.array(vibrational).describe("Compound"),
+                z.array(z.union([vibrational, z.string()]))
+                  .describe("Compound"),
                 z.string().describe("Unspecified"),
               ]),
             ),

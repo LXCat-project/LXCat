@@ -8,4 +8,13 @@ import { CrossSectionData } from "./data-types";
 
 export const CrossSectionInfo = <ReferenceType extends z.ZodTypeAny>(
   ReferenceType: ReferenceType,
-) => ProcessInfoBase("CrossSection", CrossSectionData, ReferenceType);
+) =>
+  ProcessInfoBase("CrossSection", CrossSectionData, ReferenceType).merge(
+    z.object({
+      parameters: z.object({
+        massRatio: z.number().positive().optional(),
+        statisticalWeightRatio: z.number().positive().optional(),
+      }).optional(),
+      threshold: z.number().nonnegative(),
+    }),
+  );
