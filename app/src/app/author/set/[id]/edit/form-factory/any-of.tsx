@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Group, NativeSelect, Radio, Select, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { JSONSchema7Definition } from "json-schema";
 import { useFormContext } from "../edit-form";
 import { isSchemaObject, PropertyBox, SchemaForm } from ".";
@@ -19,30 +19,30 @@ export const AnyOf = (
 ) => {
   const { getInputProps } = useFormContext();
 
-  console.log(definitions);
-  console.log(getInputProps(`meta.${formPath}`).value);
-
   const element = (
     <Stack>
-      {
-        <Select
-          label="Type"
-          data={
-            // definitions.map((_, i) => ({
-            //     value: i.toString(),
-            //     data: i.toString(),
-            //   }))
-            [{ value: "0", data: "0" }]
-          }
-          {...getInputProps(`meta.${formPath}`)}
-          value={getInputProps(`meta.${formPath}`).value ?? "0"}
-        />
-      }
-      {getInputProps(`meta.${formPath}`).value
+      <select
+        value={getInputProps(`meta.${formPath}.anyOf`).value}
+        onChange={(value) =>
+          getInputProps(`meta.${formPath}.anyOf`).onChange(
+            value.currentTarget.value,
+          )}
+      >
+        {definitions.map((value, i) => (
+          <option key={i} value={i.toString()}>
+            {!(typeof (value) === "boolean")
+              ? value.description ?? i.toString()
+              : i.toString()}
+          </option>
+        ))}
+      </select>
+      {getInputProps(`meta.${formPath}.anyOf`).value
         && (
           <SchemaForm
             schema={isSchemaObject(
-              definitions[parseInt(getInputProps(`meta.${formPath}`).value)],
+              definitions[
+                parseInt(getInputProps(`meta.${formPath}.anyOf`).value)
+              ],
             )}
             formPath={formPath}
             propertyName={propertyName}

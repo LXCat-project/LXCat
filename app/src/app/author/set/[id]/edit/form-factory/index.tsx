@@ -53,7 +53,7 @@ export const SpeciesForm = (
         label="Type"
         data={Object.keys(typeMap).map((type) => ({
           value: type,
-          label: type.charAt(0).toUpperCase() + type.slice(1),
+          label: capitalizeFirst(type),
         }))}
         {...getInputProps(`${basePath}.type`)}
       />

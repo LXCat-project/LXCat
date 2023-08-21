@@ -45,41 +45,70 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<
   EditFormValues
 >();
 
+const emptySet = () => ({
+  commitMessage: "",
+  set: {
+    $schema: "",
+    url: "",
+    termsOfUse: "",
+    name: "",
+    contributor: "",
+    description: "",
+    complete: false,
+    references: {},
+    states: {},
+    processes: [],
+  },
+  meta: {},
+});
+
 export const EditForm = ({ organizations }: EditFormProps) => {
   const form = useForm(
     {
       validate: zodResolver(EditFormValues),
-      initialValues: {
-        commitMessage: "",
-        set: {
-          $schema: "",
-          url: "",
-          termsOfUse: "",
-          name: "test",
-          contributor: "TestContributor",
-          description: "",
-          complete: false,
-          references: {},
-          states: {
-            test: {
-              type: "simple",
-              particle: "He",
-              charge: 0,
-              // electronic: {
-              //   config: [],
-              //   term: {
-              //     L: 0,
-              //     S: 0,
-              //     P: 1,
-              //     J: 0,
-              //   },
-              // },
-            },
-          },
-          processes: [],
-        },
-        meta: { set: { states: { test: { electronic: "1" } } } },
-      },
+      initialValues: emptySet(),
+      // {
+      //   commitMessage: "",
+      //   set: {
+      //     $schema: "",
+      //     url: "",
+      //     termsOfUse: "",
+      //     name: "test",
+      //     contributor: "TestContributor",
+      //     description: "",
+      //     complete: false,
+      //     references: {},
+      //     states: {
+      //       test: {
+      //         type: "AtomLS",
+      //         particle: "He",
+      //         charge: 0,
+      //         electronic: {
+      //           config: [],
+      //           term: {
+      //             L: 0,
+      //             S: 0,
+      //             P: 1,
+      //             J: 0,
+      //           },
+      //         },
+      //       },
+      //     },
+      //     processes: [],
+      //   },
+      //   meta: {
+      //     set: {
+      //       states: {
+      //         test: {
+      //           electronic: {
+      //             anyOf: "0",
+      //             vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");

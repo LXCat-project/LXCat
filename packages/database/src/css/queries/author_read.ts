@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { LTPDocument } from "@lxcat/schema/dist/zod/document";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -48,6 +49,64 @@ export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
   processes: (Process & { id?: string })[];
 }
 
+export const byId = async (id: string) => {
+  const cursor: ArrayCursor<unknown> = await db().query(aql`
+            FOR css IN CrossSectionSet
+              FILTER css._key == ${id}
+              LET contributor = FIRST(
+                FOR org IN Organization
+                  FILTER org._id == css.organization
+                  RETURN org.name
+              )
+              FILTER ['published', 'draft', 'retracted'] ANY == css.versionInfo.status
+              LET references = MERGE(
+                FOR cs IN INBOUND css IsPartOf
+                  FOR ref IN OUTBOUND cs References
+                    RETURN {[ref._key]: UNSET(ref, ["_key", "_rev", "_id"])}
+              )
+              LET states = MERGE(
+                FOR cs IN INBOUND css IsPartOf
+                  FOR r IN Reaction
+                    FILTER r._id == cs.reaction
+                    LET consumes = (
+                      FOR state IN OUTBOUND r Consumes
+                        RETURN {[state._key]: UNSET(state, ["_key", "_rev", "_id", "id"])}
+                    )
+                    LET produces = (
+                      FOR state IN OUTBOUND r Produces
+                        RETURN {[state._key]: UNSET(state, ["_key", "_rev", "_id", "id"])}
+                    )
+                    RETURN MERGE(UNION(produces, consumes))
+              )
+              LET processes = (
+                FOR cs IN INBOUND css IsPartOf
+                  LET csRefs = (
+                    FOR ref IN OUTBOUND cs References
+                      RETURN ref._key
+                  )
+                  LET reaction = FIRST(
+                    FOR r in Reaction
+                      FILTER r._id == cs.reaction
+                      LET lhs = (
+                        FOR state, e IN OUTBOUND r Consumes
+                          RETURN {state: state._key, count: e.count}
+                      )
+                      LET rhs = (
+                        FOR state, e IN OUTBOUND r Produces
+                          RETURN {state: state._key, count: e.count}
+                      )
+                      RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {lhs, rhs})
+                  )
+                  RETURN MERGE(
+                    UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
+                    { id: cs._key, reaction, references: csRefs }
+                  )
+              )
+              RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {contributor, references, states, processes})
+        `);
+  return cursor.next().then((doc) => doc ? LTPDocument.parse(doc) : undefined);
+};
+
 export async function byOwnerAndId(email: string, id: string) {
   const cursor: ArrayCursor<CrossSectionSetInputOwned> = await db().query(aql`
   FOR u IN users
@@ -70,7 +129,7 @@ export async function byOwnerAndId(email: string, id: string) {
                                   FOR r IN Reference
                                       FILTER r._id == rs._to
                                       RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
-                              )
+              )
               LET states = MERGE(
                   FOR i IN IsPartOf
                       FILTER i._to == css._id
@@ -94,7 +153,7 @@ export async function byOwnerAndId(email: string, id: string) {
                                   )
                                   RETURN MERGE(UNION(consumes, produces))
 
-                  )
+              )
               LET processes = (
                   FOR i IN IsPartOf
                       FILTER i._to == css._id
@@ -131,7 +190,10 @@ export async function byOwnerAndId(email: string, id: string) {
                               { id: cs._key, reaction, reference: refs2}
                           )
               )
-              RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {references: refs, states, processes, contributor: o.name})
+              RETURN MERGE(
+                UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), 
+                {references: refs, states, processes, contributor: o.name}
+              )
     `);
   return await cursor.next();
 }
