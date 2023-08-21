@@ -31,20 +31,20 @@ export const molecule = <
                   z.object({
                     rotational: z.optional(
                       z.union([
-                        rotational,
-                        z.array(rotational),
-                        z.string(),
+                        rotational.describe("Singular"),
+                        z.array(rotational).describe("Compound"),
+                        z.string().describe("Unspecified"),
                       ]),
                     ),
                   }),
-                ),
-                z.array(vibrational),
-                z.string(),
+                ).describe("Singular"),
+                z.array(vibrational).describe("Compound"),
+                z.string().describe("Unspecified"),
               ]),
             ),
           }),
-        ),
-        z.array(electronic),
+        ).describe("Singular"),
+        z.array(electronic).describe("Compound"),
       ]),
     }),
   );
@@ -54,5 +54,10 @@ export const atom = <Tag extends string, Electronic extends z.ZodTypeAny>(
   electronic: Electronic,
 ) =>
   typeTag(tag).merge(
-    z.object({ electronic: z.union([electronic, z.array(electronic)]) }),
+    z.object({
+      electronic: z.union([
+        electronic.describe("Singular"),
+        z.array(electronic).describe("Compound"),
+      ]),
+    }),
   );
