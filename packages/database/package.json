@@ -15,6 +15,7 @@
     "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
     "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
     "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",
+    "drop-non-user": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_non_user.ts",
     "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
     "load-css": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/load_css.ts",
     "format": "dprint fmt",
