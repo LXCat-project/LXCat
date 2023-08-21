@@ -188,11 +188,11 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       vfile:
-        specifier: ^5.3.7
-        version: 5.3.7
+        specifier: ^6.0.0
+        version: 6.0.0
       vfile-matter:
-        specifier: ^4.0.1
-        version: 4.0.1
+        specifier: ^5.0.0
+        version: 5.0.0
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -11489,7 +11489,7 @@ packages:
       devlop: 1.1.0
       is-plain-obj: 4.1.0
       trough: 2.1.0
-      vfile: 6.0.1
+      vfile: 6.0.0
     dev: false
 
   /unique-filename@1.1.1:
@@ -11777,11 +11777,10 @@ packages:
       js-yaml: 4.1.0
     dev: false
 
-  /vfile-matter@4.0.1:
-    resolution: {integrity: sha512-ZeACdaxCOxhePpoLO4A5y/VgI9EuWBXu+sUk65aQ7lXBZDFg7X0tuOzigLJUtsQzazFt6K2m9SdlDxZdfL5vVg==}
+  /vfile-matter@5.0.0:
+    resolution: {integrity: sha512-jhPSqlj8hTSkTXOqyxbUeZAFFVq/iwu/jukcApEqc/7DOidaAth6rDc0Zgg0vWpzUnWkwFP7aK28l6nBmxMqdQ==}
     dependencies:
-      is-buffer: 2.0.5
-      vfile: 5.3.7
+      vfile: 6.0.0
       yaml: 2.3.1
     dev: false
 
@@ -11808,11 +11807,11 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /vfile@6.0.1:
-    resolution: {integrity: sha512-1bYqc7pt6NIADBJ98UiG0Bn/CHIVOoZ/IyEkqIruLg0mE1BKzkOXY2D6CSqQIcKqgadppE5lrxgWXJmXd7zZJw==}
+  /vfile@6.0.0:
+    resolution: {integrity: sha512-wx7bOMmEl8bY5WPaXTGsK8YxPLoFiUiDg+m+lBACA1QGcagj3sUyxkX0F+W/Nmn4MHH7G4sXBekpYWRxQE2eHg==}
     dependencies:
-      '@types/unist': 3.0.0
-      unist-util-stringify-position: 4.0.0
+      '@types/unist': 2.0.6
+      unist-util-stringify-position: 3.0.3
       vfile-message: 4.0.2
     dev: false
 
