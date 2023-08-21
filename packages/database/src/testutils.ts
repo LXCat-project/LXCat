@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ArangoDBContainer, Wait } from "testcontainers";
-import { PortWithOptionalBinding } from "testcontainers/dist/src/port";
+import { ArangoDBContainer } from "@testcontainers/arangodb";
+import { Wait } from "testcontainers";
+import { PortWithOptionalBinding } from "testcontainers/build/utils/port";
 import { setDb } from "./db";
 import { setSystemDb, systemDb } from "./systemDb";
 
