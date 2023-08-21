@@ -13,8 +13,8 @@ export const Reaction = <StateType extends z.ZodTypeAny>(
   StateType: StateType,
 ) =>
   z.object({
-    lhs: ReactionEntry(StateType),
-    rhs: ReactionEntry(StateType),
+    lhs: z.array(ReactionEntry(StateType)),
+    rhs: z.array(ReactionEntry(StateType)),
     reversible: z.boolean(),
     typeTags: z.array(ReactionTypeTag),
   });
