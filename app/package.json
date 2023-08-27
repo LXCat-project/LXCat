@@ -31,7 +31,7 @@
     "@mantine/next": "^6.0.19",
     "@mdx-js/mdx": "^2.3.0",
     "@next/bundle-analyzer": "^13.4.19",
-    "@tabler/icons-react": "^2.31.0",
+    "@tabler/icons-react": "^2.32.0",
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",
     "arangojs": "^8.4.0",
