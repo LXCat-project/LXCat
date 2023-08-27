@@ -362,8 +362,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       del-cli:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.0.1
+        version: 5.0.1
 
   packages/schema:
     dependencies:
@@ -5198,8 +5198,8 @@ packages:
     resolution: {integrity: sha512-hsBd2qSVCRE+5PmNdHt1uzyrFu5d3RwmFDKzyNZMFq/EwDNJF7Ee5+D5oEKF0hU6LhtoUF1macFvOe4AskQC1Q==}
     dev: false
 
-  /del-cli@5.0.0:
-    resolution: {integrity: sha512-rENFhUaYcjoMODwFhhlON+ogN7DoG+4+GFN+bsA1XeDt4w2OKQnQadFP1thHSAlK9FAtl88qgP66wOV+eFZZiQ==}
+  /del-cli@5.0.1:
+    resolution: {integrity: sha512-hCDHJd0u0jKFqizgInYXZaILsqOIA7Zl6e7M3hJwP+SlwUAgtV/EB22EPF4e2+9VAVnBDQQBE6tDRe+/UuoFhg==}
     engines: {node: '>=14.16'}
     hasBin: true
     dependencies:
