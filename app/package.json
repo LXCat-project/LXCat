@@ -97,6 +97,6 @@
     "oidc-provider": "^7.14.3",
     "testcontainers": "^10.2.1",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.2"
+    "vitest": "^0.34.3"
   }
 }
