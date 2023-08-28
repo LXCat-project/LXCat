@@ -4,15 +4,15 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { CSL } from "@lxcat/schema/dist/core/csl";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-
 import { Dict } from "@lxcat/schema/dist/core/util";
+import { Reference } from "@lxcat/schema/dist/zod/common/reference";
+import { State } from "@lxcat/schema/dist/zod/state";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { createSection } from "../../cs/queries/write";
+import { createCS } from "../../cs/queries/write";
 import { db } from "../../db";
-import { insert_reference_dict, insert_state_dict } from "../../shared/queries";
+import { insertReferenceDict, insertStateDict } from "../../shared/queries";
 import { upsertOrganization } from "../../shared/queries/organization";
 import { byOwnerAndId } from "./author_read";
 import { createSet } from "./author_write";
@@ -30,40 +30,53 @@ describe("giving draft set made with existing draft cross section", () => {
   let keycss1: string;
 
   beforeAll(async () => {
-    const states = {
+    const states: Dict<State> = {
       s1: {
+        type: "simple",
         particle: "A",
         charge: 0,
+        summary: "A",
+        latex: "A",
       },
       s2: {
+        type: "simple",
         particle: "B",
         charge: 1,
+        summary: "B^1",
+        latex: "B^1",
       },
     };
-    const references: Dict<CSL.Data> = {
+
+    const references: Dict<Reference> = {
       r1: {
         id: "1",
         type: "article",
         title: "Some article title",
       },
     };
+
     const organizationId = await upsertOrganization("Some organization");
-    const stateLookup = await insert_state_dict(states);
-    const refLookup = await insert_reference_dict(references);
-    const idcs1 = await createSection(
+    const stateLookup = await insertStateDict(states);
+    const refLookup = await insertReferenceDict(references);
+    const idcs1 = await createCS(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [{ count: 1, state: "s2" }],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: ["r1"],
+        info: {
+          type: "CrossSection",
+          references: ["r1"],
+          threshold: 42,
+          data: {
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[1, 3.14e-20]],
+          },
+        },
       },
       stateLookup,
       refLookup,
@@ -82,19 +95,24 @@ describe("giving draft set made with existing draft cross section", () => {
         states,
         processes: [
           {
-            id: keycs1,
+            _key: keycs1,
             reaction: {
               lhs: [{ count: 1, state: "s1" }],
               rhs: [{ count: 1, state: "s2" }],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: ["r1"],
+            info: {
+              type: "CrossSection",
+              references: ["r1"],
+              threshold: 42,
+              data: {
+                type: Storage.LUT,
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+            },
           },
         ],
       },
@@ -149,40 +167,53 @@ describe("giving draft set made with someone else's published cross section", ()
   let keycss1: string;
 
   beforeAll(async () => {
-    const states = {
+    const states: Dict<State> = {
       s1: {
+        type: "simple",
         particle: "A",
         charge: 0,
+        summary: "A",
+        latex: "A",
       },
       s2: {
+        type: "simple",
         particle: "B",
         charge: 1,
+        summary: "B^1",
+        latex: "B^1",
       },
     };
-    const references: Dict<CSL.Data> = {
+
+    const references: Dict<Reference> = {
       r1: {
         id: "1",
         type: "article",
         title: "Some article title",
       },
     };
+
     const organizationId = await upsertOrganization("Some other organization");
-    const stateLookup = await insert_state_dict(states);
-    const refLookup = await insert_reference_dict(references);
-    const idcs1 = await createSection(
+    const stateLookup = await insertStateDict(states);
+    const refLookup = await insertReferenceDict(references);
+    const idcs1 = await createCS(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [{ count: 1, state: "s2" }],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: ["r1"],
+        info: {
+          type: "CrossSection",
+          threshold: 42,
+          references: ["r1"],
+          data: {
+            type: Storage.LUT,
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[1, 3.14e-20]],
+          },
+        },
       },
       stateLookup,
       refLookup,
@@ -199,19 +230,24 @@ describe("giving draft set made with someone else's published cross section", ()
         states,
         processes: [
           {
-            id: keycs1,
+            _key: keycs1,
             reaction: {
               lhs: [{ count: 1, state: "s1" }],
               rhs: [{ count: 1, state: "s2" }],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: ["r1"],
+            info: {
+              type: "CrossSection",
+              references: ["r1"],
+              threshold: 42,
+              data: {
+                type: Storage.LUT,
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+            },
           },
         ],
       },
@@ -232,7 +268,7 @@ describe("giving draft set made with someone else's published cross section", ()
   });
 
   it("should have one cross section in published state and one in draft state", async () => {
-    const cursor = await db().query(aql`
+    const cursor = await db().query<[string, number]>(aql`
       FOR cs IN CrossSection
         COLLECT statusGroup = cs.versionInfo.status WITH COUNT INTO numState
         RETURN [statusGroup, numState]

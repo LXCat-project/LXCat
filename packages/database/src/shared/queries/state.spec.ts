@@ -14,7 +14,7 @@ import {
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
 import { db } from "../../db";
-import { insert_state_dict } from "../queries";
+import { insertStateDict } from "../queries";
 import { State as DBState } from "../types/collections";
 import {
   ChoiceRow,
@@ -60,7 +60,7 @@ describe("generateStateFilterAql()", () => {
   describe("2 particles with each 2 different charges", () => {
     beforeAll(async () => {
       const states: InputState = sample2particles2charges();
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -156,7 +156,7 @@ describe("generateStateFilterAql()", () => {
           },
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -238,7 +238,7 @@ describe("generateStateFilterAql()", () => {
           },
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -334,7 +334,7 @@ describe("generateStateFilterAql()", () => {
           },
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -431,7 +431,7 @@ describe("generateStateFilterAql()", () => {
           ],
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -501,7 +501,7 @@ describe("generateStateFilterAql()", () => {
           },
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -610,7 +610,7 @@ describe("generateStateFilterAql()", () => {
           },
         },
       };
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -877,7 +877,7 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
   ];
   describe.each(testCases)("$description", ({ states, expected }) => {
     beforeAll(async () => {
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
@@ -926,7 +926,7 @@ describe("listStates()", () => {
   describe("2 simple particles with 2 different charges", () => {
     beforeAll(async () => {
       const states: InputState = sample2particles2charges();
-      await insert_state_dict(states);
+      await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 

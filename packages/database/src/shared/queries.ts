@@ -2,16 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CSL } from "@lxcat/schema/dist/core/csl";
-import { parseState, stateIsAtom } from "@lxcat/schema/dist/core/parse";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { AnySpecies, KeyedSpecies } from "@lxcat/schema/dist/core/species";
-import { DBState, State } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
+import { Reference } from "@lxcat/schema/dist/zod/common/reference";
+import { Reaction } from "@lxcat/schema/dist/zod/process/reaction";
+import { isAtom, State } from "@lxcat/schema/dist/zod/state";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 
-export async function insert_document(
+export async function insertDocument(
   collection: string,
   object: unknown,
 ): Promise<string> {
@@ -24,7 +22,7 @@ export async function insert_document(
   /* return result.toArray()[0]; */
 }
 
-export async function upsert_document(
+export async function upsertDocument(
   collection: string,
   object: unknown,
 ): Promise<{ id: string; new: boolean }> {
@@ -37,7 +35,7 @@ export async function upsert_document(
   return result.next();
 }
 
-export async function insert_edge(
+export async function insertEdge(
   collection: string,
   from: string,
   to: string,
@@ -57,91 +55,94 @@ export async function insert_edge(
   return result.next();
 }
 
-export async function insert_state_dict(
-  states: Dict<State<AnySpecies>>,
+export async function insertStateDict(
+  states: Dict<State>,
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
   for (const [id, state] of Object.entries(states)) {
-    id_dict[id] = await insert_state_tree(state);
+    id_dict[id] = await insertStateTree(state);
   }
 
   return id_dict;
 }
 
-async function insert_state<T extends AnySpecies>(
-  state: DBState<KeyedSpecies<T>>,
+async function insertState(
+  state: State,
 ): Promise<{ id: string; new: boolean }> {
-  return upsert_document("State", state);
+  console.log(state);
+  return upsertDocument("State", state);
 }
 
 /**
  * Strategy: add states in a top down fashion.
  */
-async function insert_state_tree<T extends AnySpecies>(
-  state: State<T>,
+async function insertStateTree(
+  state: State,
 ): Promise<string> {
   let ret_id = "";
 
-  let topLevelState: State<AnySpecies> = {
+  let topLevelState: State = {
     type: "simple",
     particle: state.particle,
     charge: state.charge,
+    summary: state.summary,
+    latex: state.latex,
   };
 
   // FIXME: Link top level states to particle.
-  const t_ret = await insert_state(parseState(topLevelState));
+  const t_ret = await insertState(topLevelState);
   ret_id = t_ret.id;
 
   if (state.type === "unspecified") {
-    const e_ret = await insert_state(parseState(state));
-    if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+    const e_ret = await insertState(state);
+    if (e_ret.new) await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
     ret_id = e_ret.id;
-  } else if (stateIsAtom(state)) {
+  } else if (isAtom(state)) {
     if (Array.isArray(state.electronic)) {
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };
-        const e_ret = await insert_state(parseState(elec_state));
+        const e_ret = await insertState(State.parse(elec_state));
         if (e_ret.new) {
-          await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+          await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
         }
       }
 
       // TODO: Link compound state to its substates.
-      ret_id = (await insert_state(parseState(state))).id;
+      ret_id = (await insertState(state)).id;
     } else {
-      const e_ret = await insert_state(parseState(state));
-      if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+      const e_ret = await insertState(state);
+      if (e_ret.new) await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
       ret_id = e_ret.id;
     }
   } else if (state.type !== "simple") {
     if (Array.isArray(state.electronic)) {
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };
-        const e_ret = await insert_state(parseState(elec_state));
+        const e_ret = await insertState(State.parse(elec_state));
         if (e_ret.new) {
-          await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+          await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
         }
       }
 
       // TODO: Link compound state to its substates.
-      ret_id = (await insert_state(parseState(state))).id;
+      ret_id = (await insertState(state)).id;
     } else {
-      // Copy electronic discriptor without vibrational description.
+      // Copy electronic descriptor without vibrational description.
       const { vibrational, ...electronic } = state.electronic;
       const ele_state = {
         ...state,
         electronic,
       };
-      const e_ret = await insert_state(parseState(ele_state));
-      if (e_ret.new) await insert_edge("HasDirectSubstate", t_ret.id, e_ret.id);
+      const e_ret = await insertState(State.parse(ele_state));
+      if (e_ret.new) await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
       ret_id = e_ret.id;
 
       if (state.electronic.vibrational) {
         if (typeof (state.electronic.vibrational) === "string") {
-          const v_ret = await insert_state(parseState(state));
+          const v_ret = await insertState(state);
           if (v_ret.new) {
-            await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+            await insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
           ret_id = v_ret.id;
         } else if (Array.isArray(state.electronic.vibrational)) {
@@ -151,23 +152,23 @@ async function insert_state_tree<T extends AnySpecies>(
               ...state,
               electronic: { ...electronic, vibrational: vib },
             };
-            const v_ret = await insert_state(parseState(vib_state));
+            const v_ret = await insertState(State.parse(vib_state));
             if (v_ret.new) {
-              await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+              await insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
             }
           }
 
           // TODO: Link compound state to its substates.
-          ret_id = (await insert_state(parseState(state))).id;
+          ret_id = (await insertState(state)).id;
         } else {
           const { rotational, ...vibrational } = state.electronic.vibrational;
           const vib_state = {
             ...state,
             electronic: { ...state.electronic, vibrational },
           };
-          const v_ret = await insert_state(parseState(vib_state));
+          const v_ret = await insertState(State.parse(vib_state));
           if (v_ret.new) {
-            await insert_edge("HasDirectSubstate", e_ret.id, v_ret.id);
+            await insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
           ret_id = v_ret.id;
 
@@ -185,18 +186,18 @@ async function insert_state_tree<T extends AnySpecies>(
                   },
                 };
 
-                const r_ret = await insert_state(parseState(rot_state));
+                const r_ret = await insertState(State.parse(rot_state));
                 if (r_ret.new) {
-                  await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
+                  await insertEdge("HasDirectSubstate", v_ret.id, r_ret.id);
                 }
               }
 
               // TODO: Link compound state to its substates.
-              ret_id = (await insert_state(parseState(state))).id;
+              ret_id = (await insertState(state)).id;
             } else {
-              const r_ret = await insert_state(parseState(state));
+              const r_ret = await insertState(state);
               if (r_ret.new) {
-                await insert_edge("HasDirectSubstate", v_ret.id, r_ret.id);
+                await insertEdge("HasDirectSubstate", v_ret.id, r_ret.id);
               }
               ret_id = r_ret.id;
             }
@@ -208,21 +209,21 @@ async function insert_state_tree<T extends AnySpecies>(
 
   return ret_id;
 }
-// TODO: Check what happens when adding a string instead of a 'Reference' object.
 
-export async function insert_reference_dict(
-  references: Dict<CSL.Data | string>,
+// TODO: Check what happens when adding a string instead of a 'Reference' object.
+export async function insertReferenceDict(
+  references: Dict<Reference>,
 ): Promise<Dict<string>> {
   const id_dict: Dict<string> = {};
 
   for (const [id, reference] of Object.entries(references)) {
-    id_dict[id] = (await upsert_document("Reference", reference)).id;
+    id_dict[id] = (await upsertDocument("Reference", reference)).id;
   }
 
   return id_dict;
 }
 
-export async function insert_reaction_with_dict(
+export async function insertReactionWithDict(
   dict: Dict<string>,
   reaction: Reaction<string>,
 ): Promise<string> {
@@ -235,18 +236,18 @@ export async function insert_reaction_with_dict(
     return reactionIdFromDb;
   }
 
-  const r_id = await insert_document("Reaction", {
+  const r_id = await insertDocument("Reaction", {
     reversible: reaction.reversible,
-    type_tags: reaction.type_tags,
+    typeTags: reaction.typeTags,
   });
 
   for (const entry of mappedReaction.lhs) {
-    await insert_edge("Consumes", r_id, entry.state, {
+    await insertEdge("Consumes", r_id, entry.state, {
       count: entry.count,
     });
   }
   for (const entry of mappedReaction.rhs) {
-    await insert_edge("Produces", r_id, entry.state, {
+    await insertEdge("Produces", r_id, entry.state, {
       count: entry.count,
     });
   }

@@ -5,34 +5,34 @@
 import { aql } from "arangojs";
 import deepEqual from "deep-equal";
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { AnyProcess } from "@lxcat/schema/dist/zod/process";
 import { ArrayCursor } from "arangojs/cursor";
 import { byOrgAndId } from "../../cs/queries/author_read";
 import {
-  createSection,
+  createCS,
   publish as publishSection,
-  updateSection,
+  updateCS,
 } from "../../cs/queries/write";
 import { now } from "../../date";
 import { db } from "../../db";
+import type { KeyedDocument } from "../../schema/document";
+import { KeyedProcess } from "../../schema/process";
 import {
-  insert_document,
-  insert_edge,
-  insert_reference_dict,
-  insert_state_dict,
+  insertDocument,
+  insertEdge,
+  insertReferenceDict,
+  insertStateDict,
   mapReaction,
 } from "../../shared/queries";
 import { upsertOrganization } from "../../shared/queries/organization";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetInputOwned, getVersionInfo } from "./author_read";
+import { getVersionInfo } from "./author_read";
 import { historyOfSet } from "./public";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
-  dataset: CrossSectionSetInputOwned,
+  dataset: KeyedDocument,
   status: Status = "published",
   version = "1",
   commitMessage = "",
@@ -50,10 +50,10 @@ export async function createSet(
     versionInfo.commitMessage = commitMessage;
   }
 
-  const state_ids = await insert_state_dict(dataset.states);
-  const reference_ids = await insert_reference_dict(dataset.references);
+  const state_ids = await insertStateDict(dataset.states);
+  const reference_ids = await insertReferenceDict(dataset.references);
 
-  const cs_set_id = await insert_document("CrossSectionSet", {
+  const cs_set_id = await insertDocument("CrossSectionSet", {
     name: dataset.name,
     description: dataset.description,
     publishedIn: dataset.publishedIn && reference_ids[dataset.publishedIn],
@@ -63,18 +63,18 @@ export async function createSet(
   });
 
   for (const cs of dataset.processes) {
-    if (cs.id !== undefined) {
+    if (cs._key !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const { id: prevCsId, ...newCs } = cs;
+      const { _key: prevCsId, ...newCs } = cs;
       const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", `CrossSection/${cs.id}`, cs_set_id);
+          await insertEdge("IsPartOf", `CrossSection/${cs._key}`, cs_set_id);
         } else {
-          const cs_id = await updateSection(
-            cs.id,
+          const cs_id = await updateCS(
+            cs._key,
             newCs,
             `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
@@ -82,11 +82,11 @@ export async function createSet(
             organizationId,
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", cs_id, cs_set_id);
+          await insertEdge("IsPartOf", cs_id, cs_set_id);
         }
       } else {
         // handle id which is not owned by organization, or does not exist.
-        const cs_id = await createSection(
+        const cs_id = await createCS(
           newCs,
           state_ids,
           reference_ids,
@@ -94,11 +94,11 @@ export async function createSet(
           status,
         );
         // Make cross sections part of set by adding to IsPartOf collection
-        await insert_edge("IsPartOf", cs_id, cs_set_id);
+        await insertEdge("IsPartOf", cs_id, cs_set_id);
       }
     } else {
-      delete cs.id; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
-      const cs_id = await createSection(
+      delete cs._key; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
+      const cs_id = await createCS(
         cs,
         state_ids,
         reference_ids,
@@ -106,7 +106,7 @@ export async function createSet(
         status,
       );
       // Make cross sections part of set by adding to IsPartOf collection
-      await insert_edge("IsPartOf", cs_id, cs_set_id);
+      await insertEdge("IsPartOf", cs_id, cs_set_id);
     }
   }
   return cs_set_id.replace("CrossSectionSet/", "");
@@ -160,7 +160,7 @@ export async function updateSet(
    * Key of set that needs to be updated aka create a draft from
    */
   key: string,
-  set: CrossSectionSetRaw,
+  set: KeyedDocument,
   message: string,
 ) {
   const info = await getVersionInfo(key);
@@ -192,7 +192,7 @@ async function isDraftless(key: string) {
 
 async function createDraftSet(
   version: string,
-  set: CrossSectionSetRaw,
+  set: KeyedDocument,
   message: string,
   key: string,
 ) {
@@ -205,7 +205,7 @@ async function createDraftSet(
   // TODO perform createSet+insert_edge inside single transaction
   const keyOfDraft = await createSet(set, newStatus, newVersion, message);
   // Add previous version (published )and current version (draft) to CrossSectionSetHistory collection
-  await insert_edge(
+  await insertEdge(
     "CrossSectionSetHistory",
     `CrossSectionSet/${keyOfDraft}`,
     `CrossSectionSet/${key}`,
@@ -215,7 +215,7 @@ async function createDraftSet(
 
 async function updateDraftSet(
   key: string,
-  dataset: CrossSectionSetInputOwned,
+  dataset: KeyedDocument,
   versionInfo: VersionInfo,
   message: string,
 ) {
@@ -232,26 +232,26 @@ async function updateDraftSet(
   await db().query(aql`
     REPLACE { _key: ${key} } WITH ${set} IN CrossSectionSet
   `);
-  const state_ids = await insert_state_dict(dataset.states);
-  const reference_ids = await insert_reference_dict(dataset.references);
+  const state_ids = await insertStateDict(dataset.states);
+  const reference_ids = await insertReferenceDict(dataset.references);
 
   for (const cs of dataset.processes) {
-    if (cs.id !== undefined) {
-      const { id: prevCsId, ...newCs } = cs;
+    if (cs._key !== undefined) {
+      const { _key: prevCsId, ...newCs } = cs;
       // check so a crosssection can only be in sets from same organization
       const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
       if (prevCs !== undefined) {
         if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge(
+          await insertEdge(
             "IsPartOf",
-            `CrossSection/${cs.id}`,
+            `CrossSection/${cs._key}`,
             `CrossSectionSet/${key}`,
           );
         } else {
-          const cs_id = await updateSection(
-            cs.id,
+          const cs_id = await updateCS(
+            cs._key,
             newCs,
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
@@ -259,11 +259,11 @@ async function updateDraftSet(
             organizationId,
           );
           // Make cross sections part of set by adding to IsPartOf collection
-          await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
+          await insertEdge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
         }
       } else {
         // when id is not owned by organization, or does not exist just create it with a new id.
-        const cs_id = await createSection(
+        const cs_id = await createCS(
           newCs,
           state_ids,
           reference_ids,
@@ -273,10 +273,10 @@ async function updateDraftSet(
           `Indirect draft by editing set ${dataset.name} / ${key}`,
         );
         // Make cross sections part of set by adding to IsPartOf collection
-        await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
+        await insertEdge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
       }
     } else {
-      const cs_id = await createSection(
+      const cs_id = await createCS(
         cs,
         state_ids,
         reference_ids,
@@ -286,7 +286,7 @@ async function updateDraftSet(
         `Indirect draft by editing set ${dataset.name} / ${key}`,
       );
       // Make cross sections part of set by adding to IsPartOf collection
-      await insert_edge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
+      await insertEdge("IsPartOf", cs_id, `CrossSectionSet/${key}`);
     }
   }
 }
@@ -380,32 +380,49 @@ export async function deleteSet(key: string, message?: string) {
 }
 
 function isEqualSection(
-  newCs: CrossSection<string, string, LUT>,
-  prevCs: CrossSection<string, string, LUT>,
+  newCS: AnyProcess<string, string>,
+  prevCS: KeyedProcess<string, string>,
   stateLookup: Dict<string>,
   referenceLookup: Dict<string>,
 ) {
-  const newMappedCs = {
-    ...newCs,
-    reaction: mapReaction(stateLookup, newCs.reaction),
-    reference: mapReference(referenceLookup, newCs.reference),
+  const newMappedCS = {
+    reaction: mapReaction(stateLookup, newCS.reaction),
+    info: Array.isArray(newCS.info)
+      ? newCS.info.map((info) => ({
+        ...info,
+        references: mapReferences(referenceLookup, info.references),
+      }))
+      : {
+        ...newCS.info,
+        references: mapReferences(referenceLookup, newCS.info.references),
+      },
   };
-  // Previous is always has key from db
+
+  // Previous always has _key from db.
   const prevStateLookup = Object.fromEntries(
     ([] as [string, string][]).concat(
-      prevCs.reaction.lhs.map((s) => [s.state, `State/${s.state}`]),
-      prevCs.reaction.rhs.map((s) => [s.state, `State/${s.state}`]),
+      prevCS.reaction.lhs.map((s) => [s.state, `State/${s.state}`]),
+      prevCS.reaction.rhs.map((s) => [s.state, `State/${s.state}`]),
     ),
   );
-  const prevMappedCs = {
-    ...prevCs,
-    reaction: mapReaction(prevStateLookup, prevCs.reaction),
-    reference: prevCs.reference?.map((r) => `Reference/${r}`), // Previous is always has key from db
+
+  const prevMappedCS = {
+    reaction: mapReaction(prevStateLookup, newCS.reaction),
+    info: Array.isArray(prevCS.info)
+      ? prevCS.info.map((info) => ({
+        ...info,
+        references: info.references.map((r) => `Reference/${r}`),
+      }))
+      : {
+        ...prevCS.info,
+        references: prevCS.info.references.map((r) => `Reference/${r}`),
+      },
   };
-  return deepEqual(newMappedCs, prevMappedCs);
+
+  return deepEqual(newMappedCS, prevMappedCS);
 }
 
-function mapReference(
+function mapReferences(
   referenceLookup: Dict<string>,
   reference: string[] | undefined,
 ) {

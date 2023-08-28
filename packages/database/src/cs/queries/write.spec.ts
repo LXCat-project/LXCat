@@ -24,7 +24,7 @@ import {
   insertSampleStateIds,
   truncateCrossSectionCollections,
 } from "./testutils";
-import { createSection, publish } from "./write";
+import { createCS, publish } from "./write";
 
 describe("given db with test user and organization", () => {
   beforeAll(async () => {
@@ -194,7 +194,7 @@ describe("given db with test user and organization", () => {
           data: [[1, 3.14e-20]],
           reference: [],
         };
-        const idcs1 = await createSection(
+        const idcs1 = await createCS(
           cs,
           state_ids,
           {},

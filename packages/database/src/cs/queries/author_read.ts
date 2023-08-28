@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { KeyedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionItem } from "../public";
@@ -90,7 +90,7 @@ export async function searchOwned(
 }
 
 export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<CrossSection<string, string>> = await db()
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await db()
     .query(aql`
     FOR u IN users
     FILTER u.email == ${email}
@@ -128,13 +128,13 @@ export async function byOwnerAndId(email: string, id: string) {
                       )
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                 )
-                RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
+                RETURN MERGE(UNSET(cs, ["_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
       `);
   return await cursor.next();
 }
 
 export async function byOrgAndId(org: string, key: string) {
-  const cursor: ArrayCursor<CrossSection<string, string>> = await db()
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await db()
     .query(aql`
         FOR o IN Organization
             FILTER o.name == ${org}

@@ -18,7 +18,7 @@ import {
   insertSampleStateIds,
   sampleCrossSection,
 } from "./testutils";
-import { updateSection } from "./write";
+import { updateCS } from "./write";
 
 beforeAll(startDbWithUserAndCssCollections);
 
@@ -46,7 +46,7 @@ describe("given published cross section has been updated", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateSection(
+    const idcs2 = await updateCS(
       keycs1,
       draft,
       "Updated threshold",
@@ -109,7 +109,7 @@ describe("given draft cross section has been updated", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateSection(
+    const idcs2 = await updateCS(
       keycs1,
       draft,
       "Updated threshold",
@@ -151,7 +151,7 @@ describe("given draft cross section has been updated", () => {
 describe("given a key of a non-existing cross section", () => {
   it("should throw error", () => {
     expect(
-      updateSection(
+      updateCS(
         "123456789",
         sampleCrossSection(),
         "cannot update what does not exist",
@@ -177,7 +177,7 @@ describe.each(invalidDeleteStatuses)(
 
     it("should throw an error", () => {
       expect(
-        updateSection(
+        updateCS(
           keycs1,
           sampleCrossSection(),
           "cannot update when already archived or retracted",
@@ -216,7 +216,7 @@ describe("given updating published section which already has draft", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateSection(
+    const idcs2 = await updateCS(
       keycs1,
       draft,
       "Updated threshold",
@@ -233,7 +233,7 @@ describe("given updating published section which already has draft", () => {
     // expect.toThrowError() assert did not work with async db queries so use try/catch
     expect.assertions(1);
     try {
-      await updateSection(
+      await updateCS(
         keycs1,
         sampleCrossSection(),
         "another draft please",

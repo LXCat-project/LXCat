@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "../../db";
-import { upsert_document } from "../queries";
+import { upsertDocument } from "../queries";
 
 export async function upsertOrganization(name: string) {
-  const organization = await upsert_document("Organization", {
+  const organization = await upsertDocument("Organization", {
     name,
   });
   return organization.id;

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import type { Reaction } from "@lxcat/schema/dist/zod/process/reaction";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -11,6 +11,7 @@ export async function findReactionId(reaction: Reaction<string>) {
   // TODO optimize naive query,
   // instead of denormalizing every reaction in db and comparing it to the query reaction
   // do something more efficient
+  console.log(reaction);
   const cursor: ArrayCursor<string> = await db().query(aql`
             FOR r IN Reaction
                 LET lhs = (
@@ -24,7 +25,7 @@ export async function findReactionId(reaction: Reaction<string>) {
                         RETURN {state: s._to, count: s.count}
                 )
                 FILTER r.reversible == ${reaction.reversible} 
-                AND r.type_tags ALL IN ${reaction.type_tags}
+                AND r.type_tags ALL IN ${reaction.typeTags}
                 AND lhs ALL IN ${reaction.lhs}
                 AND rhs ALL IN ${reaction.rhs}
                 LIMIT 1 // Stop when found

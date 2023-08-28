@@ -16,9 +16,9 @@ import {
   sampleCrossSection,
   sampleStates,
 } from "../../cs/queries/testutils";
-import { createSection } from "../../cs/queries/write";
+import { createCS } from "../../cs/queries/write";
 import { db } from "../../db";
-import { insert_state_dict } from "../../shared/queries";
+import { insertStateDict } from "../../shared/queries";
 import { upsertOrganization } from "../../shared/queries/organization";
 import { Status } from "../../shared/types/version_info";
 import { byOwnerAndId, CrossSectionSetInputOwned } from "./author_read";
@@ -1438,7 +1438,7 @@ describe("given draft cross section set where a cross section is added from anot
     // Create cross section in another organization
     const orgId = await upsertOrganization("Some other organization");
     const stateIds = await insertSampleStateIds();
-    const idcs1 = await createSection(
+    const idcs1 = await createCS(
       sampleCrossSection(),
       stateIds,
       {},
@@ -1659,7 +1659,7 @@ describe("given draft cross section set where its charge in cross section is alt
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    await insert_state_dict({
+    await insertStateDict({
       a0: {
         particle: "A",
         charge: -13,

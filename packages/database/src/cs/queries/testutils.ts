@@ -2,27 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtomJSON } from "@lxcat/schema/dist/core/atoms";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
 import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMoleculeJSON } from "@lxcat/schema/dist/core/molecules";
-import { InState } from "@lxcat/schema/dist/core/state";
 import { Dict } from "@lxcat/schema/dist/core/util";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { AnyProcess } from "@lxcat/schema/dist/zod/process";
+import { State } from "@lxcat/schema/dist/zod/state";
 import { deepClone } from "../../css/queries/deepClone";
 import { db } from "../../db";
-import { insert_state_dict } from "../../shared/queries";
+import { KeyedProcess } from "../../schema/process";
+import { insertStateDict } from "../../shared/queries";
 import { StateTree } from "../../shared/queries/state";
 import { Status } from "../../shared/types/version_info";
 import { byOwnerAndId } from "./author_read";
-import { createSection, updateSection } from "./write";
+import { createCS, updateCS } from "./write";
 
 export async function createSampleCrossSection(
   state_ids: Dict<string>,
   status: Status = "published",
 ) {
-  const cs: CrossSection<string, string> = sampleCrossSection();
-  const idcs1 = await createSection(
+  const cs = sampleCrossSection();
+  const idcs1 = await createCS(
     cs,
     state_ids,
     {},
@@ -49,20 +47,25 @@ export function removeIdsFromTree(tree: StateTree): Array<NestedState> {
   }));
 }
 
-export function sampleCrossSection(): CrossSection<string, string, LUT> {
+export function sampleCrossSection(): AnyProcess<string, string> {
   return {
     reaction: {
       lhs: [{ count: 1, state: "s1" }],
       rhs: [{ count: 1, state: "s2" }],
       reversible: false,
-      type_tags: [],
+      typeTags: [],
     },
-    threshold: 42,
-    type: Storage.LUT,
-    labels: ["Energy", "Cross Section"],
-    units: ["eV", "m^2"],
-    data: [[1, 3.14e-20]],
-    reference: [],
+    info: {
+      threshold: 42,
+      type: "CrossSection",
+      references: [],
+      data: {
+        type: Storage.LUT,
+        labels: ["Energy", "Cross Section"],
+        units: ["eV", "m^2"],
+        values: [[1, 3.14e-20]],
+      },
+    },
   };
 }
 
@@ -83,33 +86,45 @@ export async function truncateCrossSectionCollections() {
 
 export async function insertSampleStateIds() {
   const states = sampleStates();
-  return await insert_state_dict(states);
+  return await insertStateDict(states);
 }
 
-export function sampleStates(): Dict<InState<AnyAtomJSON | AnyMoleculeJSON>> {
+export function sampleStates(): Dict<State> {
   return {
     s1: {
+      type: "simple",
       particle: "A",
       charge: 0,
+      summary: "A",
+      latex: "A",
     },
     s2: {
+      type: "simple",
       particle: "B",
       charge: 1,
+      summary: "B^+",
+      latex: "B^+",
     },
     s3: {
+      type: "simple",
       particle: "C",
       charge: 2,
+      summary: "C^2+",
+      latex: "C^{2+}",
     },
     s4: {
+      type: "simple",
       particle: "D",
       charge: 3,
+      summary: "D^3+",
+      latex: "D^{3+}",
     },
   };
 }
 
 export async function createDraftFromPublished(
   keycs1: string,
-  alter: (cs: CrossSection<string, string, LUT>) => void,
+  alter: (cs: KeyedProcess<string, string>) => void,
 ) {
   const cs = await byOwnerAndId("somename@example.com", keycs1);
   if (cs === undefined) {
@@ -124,7 +139,7 @@ export async function createDraftFromPublished(
     [lhs0]: `State/${lhs0}`,
     [rhs0]: `State/${rhs0}`,
   };
-  const idcs2 = await updateSection(
+  const idcs2 = await updateCS(
     keycs1,
     draftcs,
     "My first update",

@@ -2,33 +2,42 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { AnyProcess } from "@lxcat/schema/dist/zod/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date";
 import { db } from "../../db";
 import {
-  insert_document,
-  insert_edge,
-  insert_reaction_with_dict,
+  insertDocument,
+  insertEdge,
+  insertReactionWithDict,
 } from "../../shared/queries";
 import { Status, VersionInfo } from "../../shared/types/version_info";
 import { getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
 
-export async function createSection(
-  cs: CrossSection<string, string>,
-  state_dict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
-  ref_dict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
+export async function createCS(
+  cs: AnyProcess<string, string>,
+  stateDict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
+  refDict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
   organizationId: string,
   status: Status = "published",
   version = "1",
   commitMessage = "",
 ): Promise<string> {
-  const { reference, reaction, ...rest } = cs;
-  const r_id = await insert_reaction_with_dict(state_dict, reaction);
-  const ref_ids = reference?.map((value: string) => ref_dict[value]);
+  const { reaction, info } = cs;
+
+  const reactionId = await insertReactionWithDict(stateDict, reaction);
+
+  if (Array.isArray(info)) {
+    throw Error(
+      "Cannot upload a cross section object with multiple info sections.",
+    );
+  }
+
+  const { references, ...infoBody } = info;
+
+  const refIds = references.map((value: string) => refDict[value]);
 
   const versionInfo: VersionInfo = {
     status,
@@ -36,20 +45,21 @@ export async function createSection(
     createdOn: now(),
     commitMessage,
   };
-  const cs_id = await insert_document("CrossSection", {
-    ...rest,
-    reaction: r_id,
+
+  const csId = await insertDocument("CrossSection", {
     versionInfo,
     organization: organizationId,
+    reaction: reactionId,
+    info: infoBody,
   });
 
-  if (ref_ids) {
-    for (const id of ref_ids) {
-      await insert_edge("References", cs_id, id);
+  if (refIds) {
+    for (const id of refIds) {
+      await insertEdge("References", csId, id);
     }
   }
 
-  return cs_id;
+  return csId;
 }
 
 async function updateVersionStatus(key: string, status: Status) {
@@ -70,52 +80,56 @@ export async function publish(key: string) {
   }
   await updateVersionStatus(key, "published");
 }
+
 /**
  * Update a draft cross section or create a draft from a published cross section.
  *
  * @returns id of CrossSection
  */
-export async function updateSection(
+export const updateCS = async (
   /**
-   * Key of section that needs to be updated aka create a draft from
+   * Key of the cross section item that serves as the base for the draft.
    */
   key: string,
-  section: CrossSection<string, string>,
+  cs: AnyProcess<string, string>,
   message: string,
-  state_dict: Record<string, string>,
-  ref_dict: Record<string, string>,
+  stateDict: Record<string, string>,
+  refDict: Record<string, string>,
   organization: string,
-) {
+) => {
   const info = await getVersionInfo(key);
+
   if (info === undefined) {
     throw Error("Can not update cross section that does not exist");
   }
+
   const { status, version } = info;
+
   if (status === "published") {
-    return await createDraftSection(
+    return await createDraftCS(
       version,
-      section,
+      cs,
       message,
       key,
-      state_dict,
-      ref_dict,
+      stateDict,
+      refDict,
       organization,
     );
   } else if (status === "draft") {
-    await updateDraftSection(
+    await updateDraftCS(
       version,
-      section,
+      cs,
       message,
       key,
-      state_dict,
-      ref_dict,
+      stateDict,
+      refDict,
       organization,
     );
     return `CrossSection/${key}`;
   } else {
     throw Error("Can not update cross section due to invalid status");
   }
-}
+};
 
 async function isDraftless(key: string) {
   const cursor: ArrayCursor<string> = await db().query(aql`
@@ -129,16 +143,13 @@ async function isDraftless(key: string) {
   }
 }
 
-async function createDraftSection(
+async function createDraftCS(
   version: string,
-  section: CrossSection<string, string, LUT>,
+  process: AnyProcess<string, string>,
   message: string,
-  /**
-   * Key of section that needs to be updated aka create a draft from
-   */
   key: string,
-  state_dict: Record<string, string>,
-  ref_dict: Record<string, string>,
+  stateDict: Record<string, string>,
+  refDict: Record<string, string>,
   organization: string,
 ) {
   // check whether a draft already exists
@@ -147,10 +158,10 @@ async function createDraftSection(
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
-  const idOfDraft = await createSection(
-    section,
-    state_dict,
-    ref_dict,
+  const idOfDraft = await createCS(
+    process,
+    stateDict,
+    refDict,
     organization,
     newStatus,
     newVersion,
@@ -158,35 +169,40 @@ async function createDraftSection(
   );
 
   // Add previous version (published )and current version (draft) to CrossSectionHistory collection
-  await insert_edge("CrossSectionHistory", idOfDraft, `CrossSection/${key}`);
+  await insertEdge("CrossSectionHistory", idOfDraft, `CrossSection/${key}`);
   return idOfDraft;
 }
 
-async function updateDraftSection(
+async function updateDraftCS(
   version: string,
-  section: CrossSection<string, string, LUT>,
-  message: string,
-  /**
-   * Key of section that needs to be updated
-   */
+  processItem: AnyProcess<string, string>,
+  commitMessage: string,
   key: string,
-  state_dict: Record<string, string>,
-  ref_dict: Record<string, string>,
+  stateDict: Record<string, string>,
+  refDict: Record<string, string>,
   organization: string,
 ) {
   const versionInfo = {
     status: "draft",
     version,
-    commitMessage: message,
+    commitMessage,
     createdOn: now(),
   };
 
-  const { reference, reaction, ...draftSection } = section;
+  const { reaction, info } = processItem;
 
-  const reactionId = await insert_reaction_with_dict(state_dict, reaction);
+  if (Array.isArray(info)) {
+    throw Error(
+      `Cannot update process item ${key}, as the provided value contains multiple info objects.`,
+    );
+  }
+
+  const { references, ...draftCS } = info;
+
+  const reactionId = await insertReactionWithDict(stateDict, reaction);
   // TODO remove orphaned reaction?
   const doc = {
-    ...draftSection,
+    ...draftCS,
     reaction: reactionId,
     versionInfo,
     organization,
@@ -194,10 +210,10 @@ async function updateDraftSection(
   await db().collection("CrossSection").replace({ _key: key }, doc);
 
   // handle updated refs
-  const ref_ids = reference?.map((value: string) => ref_dict[value]);
+  const ref_ids = references.map((value: string) => refDict[value]);
   if (ref_ids) {
     for (const id of ref_ids) {
-      await insert_edge("References", `CrossSection/${key}`, id);
+      await insertEdge("References", `CrossSection/${key}`, id);
     }
     await dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
     // TODO remove orphaned references?

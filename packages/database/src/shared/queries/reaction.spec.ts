@@ -8,7 +8,7 @@ import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { insert_reaction_with_dict, insert_state_dict } from "../queries";
+import { insertReactionWithDict, insertStateDict } from "../queries";
 
 describe("given db with test user and organization", () => {
   beforeAll(startDbWithUserAndCssCollections);
@@ -22,14 +22,14 @@ describe("given db with test user and organization", () => {
           charge: 0,
         },
       };
-      state_ids = await insert_state_dict(states);
+      state_ids = await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
     describe("given reaction", () => {
       let reactionId: string;
       beforeAll(async () => {
-        const id = await insert_reaction_with_dict(state_ids, {
+        const id = await insertReactionWithDict(state_ids, {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,
@@ -46,7 +46,7 @@ describe("given db with test user and organization", () => {
       });
 
       it("adding same again should return same id", async () => {
-        const id = await insert_reaction_with_dict(state_ids, {
+        const id = await insertReactionWithDict(state_ids, {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,
