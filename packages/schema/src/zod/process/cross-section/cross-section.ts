@@ -15,6 +15,7 @@ export const CrossSectionInfo = <ReferenceType extends z.ZodTypeAny>(
         massRatio: z.number().positive().optional(),
         statisticalWeightRatio: z.number().positive().optional(),
       }).optional(),
-      threshold: z.number().nonnegative(),
+      // TODO: Should this be nonnegative, i.e. how do we treat reverse processes?
+      threshold: z.number(),
     }),
   );

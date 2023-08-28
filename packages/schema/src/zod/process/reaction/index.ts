@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { z, ZodType } from "zod";
 import { ReactionTypeTag } from "./type-tags";
 
 export const ReactionEntry = <StateType extends z.ZodTypeAny>(
@@ -18,3 +18,9 @@ export const Reaction = <StateType extends z.ZodTypeAny>(
     reversible: z.boolean(),
     typeTags: z.array(ReactionTypeTag),
   });
+
+type ReactionType<StateType extends z.ZodTypeAny> = ReturnType<
+  typeof Reaction<StateType>
+>;
+
+export type Reaction<StateType> = z.infer<ReactionType<ZodType<StateType>>>;

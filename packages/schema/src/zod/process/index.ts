@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { z, ZodType } from "zod";
 import { OneOrMultiple } from "../common/util";
 import { ProcessInfo } from "./process-info";
 import { Reaction } from "./reaction";
@@ -21,3 +21,12 @@ export const AnyProcess = <
   ReferenceType extends z.ZodTypeAny,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
   Process(StateType, ProcessInfo(ReferenceType));
+
+type AnyProcessType<
+  StateType extends z.ZodTypeAny,
+  ReferenceType extends z.ZodTypeAny,
+> = ReturnType<typeof AnyProcess<StateType, ReferenceType>>;
+
+export type AnyProcess<StateType, ReferenceType> = z.infer<
+  AnyProcessType<ZodType<StateType>, ZodType<ReferenceType>>
+>;

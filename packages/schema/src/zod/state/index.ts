@@ -112,7 +112,7 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
     return { ...state, summary, latex };
   },
 );
-export type State = z.input<typeof State>;
+export type State = z.output<typeof State>;
 
 export const isAtom = (
   state: SimpleParticle & AnySpecies,

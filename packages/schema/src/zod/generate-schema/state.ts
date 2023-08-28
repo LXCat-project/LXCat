@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import zodToJsonSchema from "zod-to-json-schema";
-import { AnySpecies } from "../state/species";
+import { State } from "../state";
 
-const schema = zodToJsonSchema(AnySpecies, { $refStrategy: "none" });
+const schema = zodToJsonSchema(State, { $refStrategy: "none" });
 
 console.log(JSON.stringify(schema, null, 2));

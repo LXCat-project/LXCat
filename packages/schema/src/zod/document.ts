@@ -34,4 +34,4 @@ const DocumentBody = z.object({
 });
 
 export const LTPDocument = SelfReference.merge(SetHeader).merge(DocumentBody);
-export type LTPDocument = z.input<typeof LTPDocument>;
+export type LTPDocument = z.output<typeof LTPDocument>;
