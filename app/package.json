@@ -84,7 +84,7 @@
     "@types/cookie": "^0.5.1",
     "@types/deep-equal": "^1.0.1",
     "@types/node": "20.5.9",
-    "@types/oidc-provider": "^7.14.0",
+    "@types/oidc-provider": "^8.2.0",
     "@types/plotly.js-basic-dist": "^1.54.1",
     "@types/react": "18.2.21",
     "@types/react-plotly.js": "^2.6.0",
@@ -94,7 +94,7 @@
     "dprint": "^0.40.2",
     "eslint": "^8.48.0",
     "eslint-config-next": "13.4.19",
-    "oidc-provider": "^7.14.3",
+    "oidc-provider": "^8.3.2",
     "testcontainers": "^10.2.1",
     "typescript": "^5.2.2",
     "vitest": "^0.34.3"
