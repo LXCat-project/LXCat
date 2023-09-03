@@ -362,8 +362,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       del-cli:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^5.1.0
+        version: 5.1.0
 
   packages/schema:
     dependencies:
@@ -5198,17 +5198,31 @@ packages:
     resolution: {integrity: sha512-hsBd2qSVCRE+5PmNdHt1uzyrFu5d3RwmFDKzyNZMFq/EwDNJF7Ee5+D5oEKF0hU6LhtoUF1macFvOe4AskQC1Q==}
     dev: false
 
-  /del-cli@5.0.1:
-    resolution: {integrity: sha512-hCDHJd0u0jKFqizgInYXZaILsqOIA7Zl6e7M3hJwP+SlwUAgtV/EB22EPF4e2+9VAVnBDQQBE6tDRe+/UuoFhg==}
+  /del-cli@5.1.0:
+    resolution: {integrity: sha512-xwMeh2acluWeccsfzE7VLsG3yTr7nWikbfw+xhMnpRrF15pGSkw+3/vJZWlGoE4I86UiLRNHicmKt4tkIX9Jtg==}
     engines: {node: '>=14.16'}
     hasBin: true
     dependencies:
-      del: 7.0.0
+      del: 7.1.0
       meow: 10.1.5
     dev: true
 
   /del@7.0.0:
     resolution: {integrity: sha512-tQbV/4u5WVB8HMJr08pgw0b6nG4RGt/tj+7Numvq+zqcvUFeMaIWWOUFltiU+6go8BSO2/ogsB4EasDaj0y68Q==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      globby: 13.1.4
+      graceful-fs: 4.2.11
+      is-glob: 4.0.3
+      is-path-cwd: 3.0.0
+      is-path-inside: 4.0.0
+      p-map: 5.5.0
+      rimraf: 3.0.2
+      slash: 4.0.0
+    dev: true
+
+  /del@7.1.0:
+    resolution: {integrity: sha512-v2KyNk7efxhlyHpjEvfyxaAihKKK0nWCuf6ZtqZcFFpQRG0bJ12Qsr0RpvsICMjAAZ8DOVCxrlqpxISlMHC4Kg==}
     engines: {node: '>=14.16'}
     dependencies:
       globby: 13.1.4
