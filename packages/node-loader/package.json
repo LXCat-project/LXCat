@@ -26,6 +26,6 @@
     "@babel/preset-env": "^7.22.10",
     "cross-env": "^7.0.3",
     "del": "^7.0.0",
-    "del-cli": "^5.0.1"
+    "del-cli": "^5.1.0"
   }
 }
