@@ -7,112 +7,184 @@ import { AnyAtom } from "./atoms";
 import { AnyMolecule } from "./molecules";
 import { SimpleParticle } from "./particle";
 import { AnySpecies } from "./species";
+import { type StateSummary } from "./summary";
 
 // TODO: It might be beneficial to move this transform to the separate
 //       constituents of State (e.g. simple, AnyAtom, AnyMolecule, etc.).
 //       Although this would require moving SimpleParticle to the separate
 //       definitions, e.g. the `atom` and `molecule` functions.
 export const State = z.intersection(SimpleParticle, AnySpecies).transform(
-  (state) => {
-    let summary = `${state.particle}^{${state.charge}}`;
-    let latex = summary;
+  (state) => ({
+    ...state,
+    serialize: (): StateSummary => {
+      const serializedParticle = `${state.particle}^{${state.charge}}`;
 
-    if (state.type === "unspecified") {
-      summary += "{";
-      latex += "\\left(";
+      const serialized: StateSummary = {
+        particle: state.particle,
+        charge: state.charge,
+        summary: serializedParticle,
+        latex: serializedParticle,
+      };
 
-      summary += state.electronic;
-      latex += state.electronic;
+      if (state.type === "unspecified") {
+        serialized.summary += "{";
+        serialized.latex += "\\left(";
 
-      summary += "}";
-      latex += "\\right)";
-    } else if (isAtom(state)) {
-      const electronic = state.electronic;
+        serialized.electronic = {
+          summary: state.electronic,
+          latex: state.electronic,
+        };
 
-      summary += "{";
-      latex += "\\left(";
+        serialized.summary += state.electronic;
+        serialized.latex += state.electronic;
 
-      if (Array.isArray(electronic)) {
-        summary += electronic.map(({ summary }) => summary()).join("|");
-        latex += electronic.map(({ latex }) => latex()).join("|");
-      } else {
-        summary += electronic.summary();
-        latex += electronic.latex();
-      }
+        serialized.summary += "}";
+        serialized.latex += "\\right)";
+      } else if (isAtom(state)) {
+        const electronic = state.electronic;
 
-      summary += "}";
-      latex += "\\right)";
-    } else if (isMolecule(state)) {
-      const electronic = state.electronic;
+        serialized.summary += "{";
+        serialized.latex += "\\left(";
 
-      summary += "{";
-      latex += "\\left(";
+        if (Array.isArray(electronic)) {
+          serialized.electronic = electronic.map(({ summary, latex }) => ({
+            summary: summary(),
+            latex: latex(),
+          }));
 
-      if (Array.isArray(electronic)) {
-        summary += electronic.map(({ summary }) => summary()).join("|");
-        latex += electronic.map(({ latex }) => latex()).join("|");
-      } else {
-        summary += electronic.summary();
-        latex += electronic.latex();
-
-        if (electronic.vibrational) {
-          const vibrational = electronic.vibrational;
-
-          summary += "{";
-          latex += "\\left(";
-
-          if (typeof vibrational === "string") {
-            summary += vibrational;
-            latex += vibrational;
-          } else if (Array.isArray(vibrational)) {
-            summary += vibrational.map(vib =>
-              typeof vib === "string" ? vib : vib.summary()
-            ).join("|");
-            latex += vibrational.map(vib =>
-              typeof vib === "string" ? vib : vib.latex()
-            ).join("|");
-          } else {
-            summary += vibrational.summary();
-            latex += vibrational.latex();
-
-            if (vibrational.rotational) {
-              const rotational = vibrational.rotational;
-
-              summary += "{";
-              latex += "\\left(";
-
-              if (typeof rotational === "string") {
-                summary += rotational;
-                latex += rotational;
-              } else if (Array.isArray(rotational)) {
-                summary += rotational.map(rot =>
-                  typeof rot === "string" ? rot : rot.summary()
-                ).join("|");
-                latex += rotational.map(rot =>
-                  typeof rot === "string" ? rot : rot.latex()
-                ).join("|");
-              } else {
-                summary += rotational.summary();
-                latex += rotational.latex();
-              }
-
-              summary += "}";
-              latex += "\\right)";
-            }
-          }
-
-          summary += "}";
-          latex += "\\right)";
+          serialized.summary += serialized.electronic
+            .map(({ summary }) => summary).join("|");
+          serialized.latex += serialized.electronic
+            .map(({ latex }) => latex).join("|");
+        } else {
+          serialized.electronic = {
+            summary: electronic.summary(),
+            latex: electronic.latex(),
+          };
+          serialized.summary += serialized.electronic.summary;
+          serialized.latex += serialized.electronic.latex;
         }
+
+        serialized.summary += "}";
+        serialized.latex += "\\right)";
+      } else if (isMolecule(state)) {
+        const electronic = state.electronic;
+
+        serialized.summary += "{";
+        serialized.latex += "\\left(";
+
+        if (Array.isArray(electronic)) {
+          serialized.electronic = electronic.map(({ summary, latex }) => ({
+            summary: summary(),
+            latex: latex(),
+          }));
+
+          serialized.summary += serialized.electronic
+            .map(({ summary }) => summary).join("|");
+          serialized.latex += serialized.electronic
+            .map(({ latex }) => latex).join("|");
+        } else {
+          serialized.electronic = {
+            summary: electronic.summary(),
+            latex: electronic.latex(),
+          };
+          serialized.summary += serialized.electronic.summary;
+          serialized.latex += serialized.electronic.latex;
+
+          if (electronic.vibrational) {
+            const vibrational = electronic.vibrational;
+
+            serialized.summary += "{";
+            serialized.latex += "\\left(";
+
+            if (typeof vibrational === "string") {
+              serialized.electronic.vibrational = {
+                summary: vibrational,
+                latex: vibrational,
+              };
+              serialized.summary += vibrational;
+              serialized.latex += vibrational;
+            } else if (Array.isArray(vibrational)) {
+              serialized.electronic.vibrational = vibrational.map((vib) =>
+                typeof vib === "string" ? { summary: vib, latex: vib } : {
+                  summary: vib.summary(),
+                  latex: vib.latex(),
+                }
+              );
+              serialized.summary += serialized.electronic.vibrational
+                .map(({ summary }) => summary).join("|");
+              serialized.latex += serialized.electronic.vibrational
+                .map(({ latex }) => latex).join("|");
+            } else {
+              serialized.electronic.vibrational = {
+                summary: vibrational.summary(),
+                latex: vibrational.latex(),
+              };
+
+              serialized.summary += serialized.electronic.vibrational.summary;
+              serialized.latex += serialized.electronic.vibrational.latex;
+
+              if (vibrational.rotational) {
+                const rotational = vibrational.rotational;
+
+                serialized.summary += "{";
+                serialized.latex += "\\left(";
+
+                if (typeof rotational === "string") {
+                  serialized.electronic.vibrational.rotational = {
+                    summary: rotational,
+                    latex: rotational,
+                  };
+                  serialized.summary += rotational;
+                  serialized.latex += rotational;
+                } else if (Array.isArray(rotational)) {
+                  serialized.electronic.vibrational.rotational = rotational.map(
+                    (rot) =>
+                      typeof rot === "string" ? { summary: rot, latex: rot } : {
+                        summary: rot.summary(),
+                        latex: rot.latex(),
+                      },
+                  );
+                  serialized.summary += serialized
+                    .electronic
+                    .vibrational
+                    .rotational
+                    .map(({ summary }) => summary).join("|");
+                  serialized.latex += serialized
+                    .electronic
+                    .vibrational
+                    .rotational
+                    .map(({ latex }) => latex).join("|");
+                } else {
+                  serialized.electronic.vibrational.rotational = {
+                    summary: rotational.summary(),
+                    latex: rotational.latex(),
+                  };
+                  serialized.summary +=
+                    serialized.electronic.vibrational.rotational.summary;
+                  serialized.latex +=
+                    serialized.electronic.vibrational.rotational.latex;
+                }
+
+                serialized.summary += "}";
+                serialized.latex += "\\right)";
+              }
+            }
+
+            serialized.summary += "}";
+            serialized.latex += "\\right)";
+          }
+        }
+
+        serialized.summary += "}";
+        serialized.latex += "\\right)";
       }
 
-      summary += "}";
-      latex += "\\right)";
-    }
-    return { ...state, summary, latex };
-  },
+      return serialized;
+    },
+  }),
 );
-export type State = z.output<typeof State>;
+export type State = z.input<typeof State>;
 
 export const isAtom = (
   state: SimpleParticle & AnySpecies,

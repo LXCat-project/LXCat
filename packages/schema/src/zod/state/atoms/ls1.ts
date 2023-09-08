@@ -39,7 +39,7 @@ type LS1DescriptorImpl = z.infer<typeof LS1DescriptorImpl>;
 export const LS1Descriptor = LS1DescriptorImpl.transform((atom) => ({
   ...atom,
   summary: () => serializeLS1(atom),
-  latex: () => serializeLatexLS1,
+  latex: () => serializeLatexLS1(atom),
 }));
 
 export const AtomLS1 = atom("AtomLS1", LS1Descriptor);
