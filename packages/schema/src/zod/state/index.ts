@@ -33,11 +33,11 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
       latex += "\\left(";
 
       if (Array.isArray(electronic)) {
-        summary += electronic.map(({ summary }) => summary).join("|");
-        latex += electronic.map(({ latex }) => latex).join("|");
+        summary += electronic.map(({ summary }) => summary()).join("|");
+        latex += electronic.map(({ latex }) => latex()).join("|");
       } else {
-        summary += electronic.summary;
-        latex += electronic.latex;
+        summary += electronic.summary();
+        latex += electronic.latex();
       }
 
       summary += "}";
@@ -49,11 +49,11 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
       latex += "\\left(";
 
       if (Array.isArray(electronic)) {
-        summary += electronic.map(({ summary }) => summary).join("|");
-        latex += electronic.map(({ latex }) => latex).join("|");
+        summary += electronic.map(({ summary }) => summary()).join("|");
+        latex += electronic.map(({ latex }) => latex()).join("|");
       } else {
-        summary += electronic.summary;
-        latex += electronic.latex;
+        summary += electronic.summary();
+        latex += electronic.latex();
 
         if (electronic.vibrational) {
           const vibrational = electronic.vibrational;
@@ -66,14 +66,14 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
             latex += vibrational;
           } else if (Array.isArray(vibrational)) {
             summary += vibrational.map(vib =>
-              typeof vib === "string" ? vib : vib.summary
+              typeof vib === "string" ? vib : vib.summary()
             ).join("|");
             latex += vibrational.map(vib =>
-              typeof vib === "string" ? vib : vib.latex
+              typeof vib === "string" ? vib : vib.latex()
             ).join("|");
           } else {
-            summary += vibrational.summary;
-            latex += vibrational.latex;
+            summary += vibrational.summary();
+            latex += vibrational.latex();
 
             if (vibrational.rotational) {
               const rotational = vibrational.rotational;
@@ -86,14 +86,14 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
                 latex += rotational;
               } else if (Array.isArray(rotational)) {
                 summary += rotational.map(rot =>
-                  typeof rot === "string" ? rot : rot.latex
+                  typeof rot === "string" ? rot : rot.summary()
                 ).join("|");
                 latex += rotational.map(rot =>
-                  typeof rot === "string" ? rot : rot.latex
+                  typeof rot === "string" ? rot : rot.latex()
                 ).join("|");
               } else {
-                summary += rotational.summary;
-                latex += rotational.latex;
+                summary += rotational.summary();
+                latex += rotational.latex();
               }
 
               summary += "}";

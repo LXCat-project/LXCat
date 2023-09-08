@@ -4,14 +4,14 @@
 
 import { z } from "zod";
 import { molecule } from "../generators";
-import { LinearElectronicImpl } from "./components/electronic/linear";
-import { RotationalImpl } from "./components/rotational";
-import { DiatomicVibrationalImpl } from "./components/vibrational/diatomic";
+import { LinearElectronic } from "./components/electronic/linear";
+import { Rotational } from "./components/rotational";
+import { DiatomicVibrational } from "./components/vibrational/diatomic";
 
 export const HeteronuclearDiatom = molecule(
   "HeteronuclearDiatom",
-  LinearElectronicImpl,
-  DiatomicVibrationalImpl,
-  RotationalImpl,
+  LinearElectronic,
+  DiatomicVibrational,
+  Rotational,
 );
 export type HeteronuclearDiatom = z.input<typeof HeteronuclearDiatom>;
