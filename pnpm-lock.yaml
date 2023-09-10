@@ -359,8 +359,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       del:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       del-cli:
         specifier: ^5.1.0
         version: 5.1.0
@@ -5180,20 +5180,6 @@ packages:
     dependencies:
       del: 7.1.0
       meow: 10.1.5
-    dev: true
-
-  /del@7.0.0:
-    resolution: {integrity: sha512-tQbV/4u5WVB8HMJr08pgw0b6nG4RGt/tj+7Numvq+zqcvUFeMaIWWOUFltiU+6go8BSO2/ogsB4EasDaj0y68Q==}
-    engines: {node: '>=14.16'}
-    dependencies:
-      globby: 13.1.4
-      graceful-fs: 4.2.11
-      is-glob: 4.0.3
-      is-path-cwd: 3.0.0
-      is-path-inside: 4.0.0
-      p-map: 5.5.0
-      rimraf: 3.0.2
-      slash: 4.0.0
     dev: true
 
   /del@7.1.0:
