@@ -27,7 +27,7 @@
     "dprint": "^0.40.2",
     "eslint": "8.48.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.4"
   },
   "main": "dist/css/validate.js",
   "types": "dist/css/validate.d.ts",
