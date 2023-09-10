@@ -10,6 +10,7 @@
     "lint": "eslint src/ --ext .ts",
     "format": "dprint fmt",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "dev": "tsc --watch",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
     "prepublishOnly": "pnpm build",

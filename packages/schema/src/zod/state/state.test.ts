@@ -38,7 +38,7 @@ describe("State serialization", () => {
       },
     ],
     [
-      "Helium ground",
+      "Helium LS ground",
       {
         type: "AtomLS",
         particle: "He",
@@ -55,7 +55,6 @@ describe("State serialization", () => {
     ],
     [
       "Argon J1L2",
-
       {
         particle: "Ar",
         charge: 0,
