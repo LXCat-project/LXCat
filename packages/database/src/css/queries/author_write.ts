@@ -2,11 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { aql } from "arangojs";
-import deepEqual from "deep-equal";
-
 import { AnyProcess } from "@lxcat/schema/dist/process";
+import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
+import deepEqual from "deep-equal";
 import { byOrgAndId } from "../../cs/queries/author_read";
 import {
   createCS,
@@ -422,7 +421,7 @@ function isEqualSection(
 }
 
 function mapReferences(
-  referenceLookup: Dict<string>,
+  referenceLookup: Record<string, string>,
   reference: string[] | undefined,
 ) {
   if (reference === undefined) {

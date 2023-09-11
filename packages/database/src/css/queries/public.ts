@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { LTPDocument } from "@lxcat/schema/dist/document";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -255,7 +255,7 @@ export const getCSIdsInSet = async (setId: string) => {
 
 // TODO: Merge byId and byIdJSON.
 export async function byIdJSON(id: string) {
-  const cursor: ArrayCursor<CrossSectionSetRaw> = await db().query(aql`
+  const cursor: ArrayCursor<LTPDocument> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
         FILTER css.versionInfo.status != 'draft'

@@ -1,4 +1,4 @@
-import { State } from "@lxcat/schema/dist/zod/state";
+import { State } from "@lxcat/schema/dist/state";
 import path from "path";
 import { z } from "zod";
 import { generateSchema } from "../shared/generate-schema";
