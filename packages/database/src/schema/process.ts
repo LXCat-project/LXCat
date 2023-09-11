@@ -1,4 +1,4 @@
-import { AnyProcess } from "@lxcat/schema/dist/zod/process";
+import { AnyProcess } from "@lxcat/schema/dist/process";
 import { output, ZodType, ZodTypeAny } from "zod";
 
 import { Keyed } from "./key";

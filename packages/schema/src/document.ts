@@ -14,6 +14,7 @@ export const SelfReference = z.object({
     "URL to the terms of use that have been accepted to download this dataset",
   ),
 });
+export type SelfReference = z.infer<typeof SelfReference>;
 
 export const SetHeader = z.object({
   contributor: z.string().min(1),

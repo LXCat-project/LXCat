@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyProcess } from "@lxcat/schema/dist/zod/process";
+import { type AnyProcess } from "@lxcat/schema/dist/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date";

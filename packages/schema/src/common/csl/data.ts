@@ -171,3 +171,4 @@ export const CSLData = z
       .optional(),
   })
   .describe("Zod schema for CSL input data");
+export type CSLData = z.infer<typeof CSLData>;

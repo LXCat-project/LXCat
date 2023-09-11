@@ -5,8 +5,7 @@
 import { aql } from "arangojs";
 import deepEqual from "deep-equal";
 
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { AnyProcess } from "@lxcat/schema/dist/zod/process";
+import { AnyProcess } from "@lxcat/schema/dist/process";
 import { ArrayCursor } from "arangojs/cursor";
 import { byOrgAndId } from "../../cs/queries/author_read";
 import {
@@ -382,8 +381,8 @@ export async function deleteSet(key: string, message?: string) {
 function isEqualSection(
   newCS: AnyProcess<string, string>,
   prevCS: KeyedProcess<string, string>,
-  stateLookup: Dict<string>,
-  referenceLookup: Dict<string>,
+  stateLookup: Record<string, string>,
+  referenceLookup: Record<string, string>,
 ) {
   const newMappedCS = {
     reaction: mapReaction(stateLookup, newCS.reaction),

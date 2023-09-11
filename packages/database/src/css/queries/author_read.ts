@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
-import { LTPDocument } from "@lxcat/schema/dist/zod/document";
+import { LTPDocument } from "@lxcat/schema/dist/document";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { KeyedDocument } from "../../schema/document";
 import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSet } from "../collections";
 
@@ -40,13 +40,6 @@ export async function listOwned(email: string) {
                         return MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
     `);
   return await cursor.all();
-}
-
-type Process = CrossSectionSetRaw["processes"][number]; // TODO add id of reaction
-
-export interface CrossSectionSetInputOwned extends CrossSectionSetRaw {
-  _key?: string;
-  processes: (Process & { id?: string })[];
 }
 
 export const byId = async (id: string) => {
@@ -108,7 +101,7 @@ export const byId = async (id: string) => {
 };
 
 export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<CrossSectionSetInputOwned> = await db().query(aql`
+  const cursor: ArrayCursor<unknown> = await db().query(aql`
   FOR u IN users
   FILTER u.email == ${email}
   FOR m IN MemberOf
@@ -195,7 +188,9 @@ export async function byOwnerAndId(email: string, id: string) {
                 {references: refs, states, processes, contributor: o.name}
               )
     `);
-  return await cursor.next();
+  return await cursor.next().then((doc) =>
+    doc ? KeyedDocument.parse(doc) : null
+  );
 }
 
 /**

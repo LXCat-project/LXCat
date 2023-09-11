@@ -13,3 +13,4 @@ export const ReactionTypeTag = z.enum([
   "Attachment",
   "Ionization",
 ]);
+export type ReactionTypeTag = z.infer<typeof ReactionTypeTag>;

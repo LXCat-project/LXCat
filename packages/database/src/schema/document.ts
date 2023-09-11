@@ -1,6 +1,6 @@
-import { Reference } from "@lxcat/schema/dist/zod/common/reference";
-import { SetHeader } from "@lxcat/schema/dist/zod/document";
-import { State } from "@lxcat/schema/dist/zod/state";
+import { Reference } from "@lxcat/schema/dist/common/reference";
+import { SetHeader } from "@lxcat/schema/dist/document";
+import { State } from "@lxcat/schema/dist/state";
 import { array, object, output, record, string } from "zod";
 
 import { Keyed } from "./key";

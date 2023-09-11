@@ -185,6 +185,7 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
   }),
 );
 export type State = z.input<typeof State>;
+export type SerializableState = z.output<typeof State>;
 
 export const isAtom = (
   state: SimpleParticle & AnySpecies,

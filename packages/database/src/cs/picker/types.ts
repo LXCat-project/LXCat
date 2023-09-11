@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { type ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
 import { StatePath } from "../../shared/getStateLeaf";
 import { StateTree } from "../../shared/queries/state";

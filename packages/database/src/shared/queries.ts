@@ -2,10 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { Reference } from "@lxcat/schema/dist/zod/common/reference";
-import { Reaction } from "@lxcat/schema/dist/zod/process/reaction";
-import { isAtom, State } from "@lxcat/schema/dist/zod/state";
+import { Reference } from "@lxcat/schema/dist/common/reference";
+import { Reaction } from "@lxcat/schema/dist/process/reaction";
+import { isAtom, SerializableState, State } from "@lxcat/schema/dist/state";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 
@@ -56,9 +55,9 @@ export async function insertEdge(
 }
 
 export async function insertStateDict(
-  states: Dict<State>,
-): Promise<Dict<string>> {
-  const id_dict: Dict<string> = {};
+  states: Record<string, SerializableState>,
+): Promise<Record<string, string>> {
+  const id_dict: Record<string, string> = {};
 
   for (const [id, state] of Object.entries(states)) {
     id_dict[id] = await insertStateTree(state);
@@ -70,8 +69,11 @@ export async function insertStateDict(
 async function insertState(
   state: State,
 ): Promise<{ id: string; new: boolean }> {
-  console.log(state);
-  return upsertDocument("State", state);
+  const dbState = {
+    detailed: state,
+    serialized: State.parse(state).serialize(),
+  };
+  return upsertDocument("State", dbState);
 }
 
 /**
@@ -86,8 +88,6 @@ async function insertStateTree(
     type: "simple",
     particle: state.particle,
     charge: state.charge,
-    summary: state.summary,
-    latex: state.latex,
   };
 
   // FIXME: Link top level states to particle.
@@ -212,9 +212,9 @@ async function insertStateTree(
 
 // TODO: Check what happens when adding a string instead of a 'Reference' object.
 export async function insertReferenceDict(
-  references: Dict<Reference>,
-): Promise<Dict<string>> {
-  const id_dict: Dict<string> = {};
+  references: Record<string, Reference>,
+): Promise<Record<string, string>> {
+  const id_dict: Record<string, string> = {};
 
   for (const [id, reference] of Object.entries(references)) {
     id_dict[id] = (await upsertDocument("Reference", reference)).id;
@@ -224,7 +224,7 @@ export async function insertReferenceDict(
 }
 
 export async function insertReactionWithDict(
-  dict: Dict<string>,
+  dict: Record<string, string>,
   reaction: Reaction<string>,
 ): Promise<string> {
   // Insert all states.
@@ -254,7 +254,10 @@ export async function insertReactionWithDict(
 
   return r_id;
 }
-export function mapReaction(dict: Dict<string>, reaction: Reaction<string>) {
+export function mapReaction(
+  dict: Record<string, string>,
+  reaction: Reaction<string>,
+) {
   const lhs = reaction.lhs.map((s) => ({ ...s, state: dict[s.state] }));
   const rhs = reaction.rhs.map((s) => ({ ...s, state: dict[s.state] }));
   return { ...reaction, lhs, rhs };
