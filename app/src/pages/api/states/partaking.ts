@@ -8,7 +8,7 @@ import { createRouter } from "next-connect";
 import { getPartakingStateSelection } from "@lxcat/database/dist/cs/picker/queries/public";
 import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import { parseParam } from "../../../shared/utils";
 import { stateArrayToTree } from "./in_reaction";
 

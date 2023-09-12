@@ -11,3 +11,4 @@ export const LUT = z.object({
   units: Pair(z.string().min(1)),
   values: z.array(Pair(z.number())),
 });
+export type LUT = z.infer<typeof LUT>;

@@ -28,7 +28,7 @@ export const ProcessTable = (
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
 
   const availableTags = useMemo(
-    () => [...new Set(records.flatMap(({ reaction }) => reaction.type_tags))],
+    () => [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
     [records],
   );
 
@@ -36,7 +36,7 @@ export const ProcessTable = (
     setRecords(processes.filter((process) => {
       if (
         selectedTags.length
-        && !process.reaction.type_tags.some((tag) => selectedTags.includes(tag))
+        && !process.reaction.typeTags.some((tag) => selectedTags.includes(tag))
       ) return false;
 
       return true;
@@ -56,7 +56,7 @@ export const ProcessTable = (
       }, {
         accessor: "type",
         title: "Type",
-        render: ({ reaction }) => reaction.type_tags.join(", "),
+        render: ({ reaction }) => reaction.typeTags.join(", "),
         filter: (
           <MultiSelect
             label="Type tags"

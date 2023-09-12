@@ -5,8 +5,8 @@
 "use client";
 
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { type LUT } from "@lxcat/schema/dist/common/data-types";
+import { type Reaction } from "@lxcat/schema/dist/process/reaction";
 import { Center, Checkbox, Grid, Loader, Stack } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { useState } from "react";

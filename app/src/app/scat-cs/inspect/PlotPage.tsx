@@ -6,8 +6,8 @@
 
 import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
+import { type LUT } from "@lxcat/schema/dist/common/data-types";
+import { type Reaction } from "@lxcat/schema/dist/process/reaction";
 import {
   Alert,
   Button,
@@ -48,6 +48,7 @@ const Chart = dynamic(
   },
 );
 
+// FIXME: This should just be a denormalized CrossSectionBagItem (e.g. with an info object).
 export interface Process extends LUT {
   id: string;
   reaction: Reaction<State>;

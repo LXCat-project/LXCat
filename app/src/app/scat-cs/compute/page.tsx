@@ -29,7 +29,9 @@ export default async function ComputePage({ searchParams }: URLParams) {
         process.reaction.lhs.map(entry => entry.state)
       ),
     ),
-  ].map(stateId => data.states[stateId]).filter(state => state.id !== "e");
+  ].map(stateId => data.states[stateId]).filter(state =>
+    state.serialized.summary !== "e"
+  );
 
   return (
     <>
@@ -67,8 +69,8 @@ const fetchProps = async (
   }));
 
   data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
-  data.terms_of_use =
-    `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#terms_of_use`;
+  data.termsOfUse =
+    `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`;
 
   let legacy: string = "";
   try {

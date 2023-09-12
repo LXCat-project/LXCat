@@ -30,7 +30,7 @@ import {
   StateTree,
 } from "@lxcat/database/dist/shared/queries/state";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import {
   Box,
   Button,

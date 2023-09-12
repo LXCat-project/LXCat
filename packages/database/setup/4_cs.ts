@@ -5,12 +5,6 @@
 import { CollectionType } from "arangojs/collection";
 import "dotenv/config";
 import { Relation } from "../src/cs/schema";
-import CrossSectionIndbAsJsonSchema from "../src/cs/schemas/CrossSection.schema.json" assert {
-  type: "json",
-};
-import CrossSectionSetIndbAsJsonSchema from "../src/css/schemas/CrossSectionSet.schema.json" assert {
-  type: "json",
-};
 import { db } from "../src/db";
 
 export default async function() {
@@ -23,11 +17,7 @@ export default async function() {
 
 async function createCrossSectionSetCollection() {
   const collection = db().collection("CrossSectionSet");
-  await collection.create({
-    schema: {
-      rule: CrossSectionSetIndbAsJsonSchema,
-    },
-  });
+  await collection.create({});
   await Promise.all([
     collection.ensureIndex({ type: "persistent", fields: ["name"] }),
     collection.ensureIndex({ type: "persistent", fields: ["organization"] }),
@@ -46,11 +36,7 @@ async function createCrossSectionSetCollection() {
 
 async function createCrossSectionCollection() {
   const collection = db().collection("CrossSection");
-  await collection.create({
-    schema: {
-      rule: CrossSectionIndbAsJsonSchema,
-    },
-  });
+  await collection.create({});
   await Promise.all([
     collection.ensureIndex({ type: "persistent", fields: ["reaction"] }),
     collection.ensureIndex({ type: "persistent", fields: ["organization"] }),

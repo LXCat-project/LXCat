@@ -32,8 +32,8 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       data.$schema =
         `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`;
       data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-      data.terms_of_use =
-        `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
+      data.termsOfUse =
+        `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`;
 
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {

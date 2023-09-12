@@ -9,6 +9,14 @@ export const ReactionEntry = <StateType extends z.ZodTypeAny>(
   StateType: StateType,
 ) => z.object({ count: z.number().int().positive(), state: StateType });
 
+type ReactionEntryType<StateType extends z.ZodTypeAny> = ReturnType<
+  typeof ReactionEntry<StateType>
+>;
+
+export type ReactionEntry<StateType> = z.infer<
+  ReactionEntryType<ZodType<StateType>>
+>;
+
 export const Reaction = <StateType extends z.ZodTypeAny>(
   StateType: StateType,
 ) =>

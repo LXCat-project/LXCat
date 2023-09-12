@@ -4,8 +4,8 @@
 
 "use client";
 
-import { LTPDocument } from "@lxcat/schema/dist/zod/document";
-import schema from "@lxcat/schema/schema.json";
+import { LTPDocument } from "@lxcat/schema/dist/document";
+import { LTPDocumentJSONSchema } from "@lxcat/schema/dist/json-schema/document";
 import {
   Button,
   Checkbox,
@@ -163,7 +163,7 @@ export const EditForm = ({ organizations }: EditFormProps) => {
                   <div key={key}>
                     <SpeciesForm
                       typeMap={generateSpeciesForm(
-                        schema as JSONSchema7,
+                        LTPDocumentJSONSchema as JSONSchema7,
                         `set.states.${key}`,
                       )}
                       basePath={`set.states.${key}`}

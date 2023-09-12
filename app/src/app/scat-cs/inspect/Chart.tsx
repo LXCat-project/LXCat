@@ -4,7 +4,7 @@
 
 "use client";
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
+import { type LUT } from "@lxcat/schema/dist/common/data-types";
 import Plotly from "plotly.js-basic-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
 

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // SPDX-FileCopyrightText: LXCat team
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -37,20 +39,22 @@ import {
 } from "react-hook-form";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { parseState } from "@lxcat/schema/dist/core/parse";
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
-import { InState } from "@lxcat/schema/dist/core/state";
-import { Dict, Pair } from "@lxcat/schema/dist/core/util";
-import schema4set from "@lxcat/schema/dist/css/CrossSectionSetRaw.schema.json";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import {
+  ReactionTypeTag,
+  Storage,
+} from "@lxcat/schema/dist/old/core/enumeration";
+import { parseState } from "@lxcat/schema/dist/old/core/parse";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/old/common/reference";
+import { InState } from "@lxcat/schema/dist/old/core/state";
+import { Dict, Pair } from "@lxcat/schema/dist/old/core/util";
+import schema4set from "@lxcat/schema/dist/old/css/CrossSectionSetRaw.schema.json";
+import { CrossSectionSetRaw } from "@lxcat/schema/dist/old/css/input";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { AnySpecies } from "@lxcat/schema/dist/core/species";
+import { Reaction } from "@lxcat/schema/dist/process/reaction";
+import { AnySpecies } from "@lxcat/schema/dist/state/species";
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";

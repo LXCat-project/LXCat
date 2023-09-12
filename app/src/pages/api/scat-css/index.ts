@@ -7,7 +7,7 @@ import {
   search,
   SortOptions,
 } from "@lxcat/database/dist/css/queries/public";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {

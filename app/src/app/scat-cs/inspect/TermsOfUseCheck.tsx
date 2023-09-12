@@ -24,7 +24,7 @@ interface Props {
 export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
   const path = usePathname() ?? "";
   const hash = path.split("#")[1] || "";
-  const hasForce = hash.includes("terms_of_use");
+  const hasForce = hash.includes("termsOfUse");
   const hasDownloadToken = typeof document !== "undefined"
     ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
     : false;

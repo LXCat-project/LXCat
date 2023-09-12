@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "@lxcat/schema/dist/core/reference";
+import { Reference } from "@lxcat/schema/dist/common/reference";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ interface Props {
 export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
   const { asPath } = useRouter();
   const hash = asPath.split("#")[1] || "";
-  const hasForce = hash.includes("terms_of_use");
+  const hasForce = hash.includes("termsOfUse");
   const hasDownloadToken = typeof document !== "undefined"
     ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
     : false;

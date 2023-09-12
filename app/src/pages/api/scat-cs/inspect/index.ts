@@ -26,13 +26,11 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     const ids = idsSchema.parse(rawIds);
     const data = await byIds(ids);
     data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
-      ids.join(
-        ",",
-      )
-    }`;
-    data.terms_of_use = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
       ids.join(",")
-    }#terms_of_use`;
+    }`;
+    data.termsOfUse = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+      ids.join(",")
+    }#termsOfUse`;
     res.json(data);
   })
   .handler();

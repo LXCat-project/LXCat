@@ -4,7 +4,7 @@
 
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction, ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { Reaction, ReactionEntry } from "@lxcat/schema/dist/process/reaction";
 
 import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { formatReference } from "./cite";
@@ -35,7 +35,7 @@ export const Bag = ({
 
 function flattenReactions(
   processes: CrossSectionBag["processes"],
-  states: Record<string, Omit<State, "id">>,
+  states: Record<string, State>,
   sets: Record<string, Omit<CrossSectionSet, "versionInfo">>,
 ) {
   return processes.map((p) => {
@@ -49,7 +49,7 @@ function flattenReactions(
             id: e.state,
             ...state,
           },
-        } as ReactionEntry<State>; // TODO do it without cast
+        };
       }),
       rhs: p.reaction.rhs.map((e) => {
         const state = states[e.state]!;
@@ -59,7 +59,7 @@ function flattenReactions(
             id: e.state,
             ...state,
           },
-        } as ReactionEntry<State>;
+        };
       }),
     };
     const isPartOf = p.isPartOf.map((setid) => sets[setid]);

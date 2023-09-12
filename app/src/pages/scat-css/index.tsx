@@ -14,7 +14,7 @@ import {
   SortOptions,
 } from "@lxcat/database/dist/css/queries/public";
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import Head from "next/head";
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
 import { List } from "../../ScatteringCrossSectionSet/List";

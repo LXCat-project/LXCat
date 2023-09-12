@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { z, ZodType } from "zod";
 import { ProcessInfoBase } from "../process-info-base";
 import { CrossSectionData } from "./data-types";
 
@@ -19,3 +19,11 @@ export const CrossSectionInfo = <ReferenceType extends z.ZodTypeAny>(
       threshold: z.number(),
     }),
   );
+
+type CrossSectionInfoType<ReferenceType extends z.ZodTypeAny> = ReturnType<
+  typeof CrossSectionInfo<ReferenceType>
+>;
+
+export type CrossSectionInfo<ReferenceType> = z.infer<
+  CrossSectionInfoType<ZodType<ReferenceType>>
+>;

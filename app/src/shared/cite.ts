@@ -7,7 +7,7 @@
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema/dist/common/reference";
 
 export function reference2bibliography(
   r: ReferenceRecord,

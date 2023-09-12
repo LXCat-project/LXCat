@@ -32,8 +32,10 @@ export const BolsigPage = (
   const form = useForm<Omit<BolsigFormInput, "crossSections">>({
     initialValues: BolsigFormInput.parse({
       composition: consumedStates.length === 1
-        ? { [consumedStates[0].id]: 1 }
-        : Object.fromEntries(consumedStates.map((state) => [state.id, 0])),
+        ? { [consumedStates[0].serialized.summary]: 1 }
+        : Object.fromEntries(
+          consumedStates.map((state) => [state.serialized.summary, 0]),
+        ),
     }),
     validate: zodResolver(BolsigFormInput.omit({ crossSections: true })),
   });

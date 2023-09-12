@@ -145,6 +145,9 @@ export async function byIds(ids: string[]) {
   const result = await cursor.next();
   if (result === undefined) {
     return {
+      $schema: "",
+      url: "",
+      termsOfUse: "",
       states: {},
       references: {},
       processes: [],

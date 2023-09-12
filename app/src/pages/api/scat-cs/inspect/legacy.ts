@@ -35,8 +35,8 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
 
     data.url =
       `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
-    data.terms_of_use =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#terms_of_use`;
+    data.termsOfUse =
+      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`;
 
     const { convertMixture } = await import("@lxcat/converter");
     res.setHeader("Content-Type", "text/plain");

@@ -29,8 +29,8 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
         );
 
         data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-        data.terms_of_use =
-          `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
+        data.termsOfUse =
+          `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`;
 
         const { convertDocument } = await import("@lxcat/converter");
         res.setHeader("Content-Type", "text/plain");

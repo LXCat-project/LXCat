@@ -13,7 +13,7 @@ import {
   StateLeaf,
   StatePath,
 } from "@lxcat/database/dist/shared/getStateLeaf";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import { useState } from "react";
 import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
 

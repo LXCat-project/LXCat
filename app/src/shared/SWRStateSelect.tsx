@@ -11,7 +11,7 @@ import {
 import { Sx } from "@mantine/core";
 
 import { StateTree } from "@lxcat/database/dist/shared/queries/state";
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
 import useSWRImmutable from "swr/immutable";
 import { StateSelect } from "./StateSelect";
 
