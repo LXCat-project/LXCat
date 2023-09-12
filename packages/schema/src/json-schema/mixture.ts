@@ -9,9 +9,13 @@ import { CSLNameVariable } from "../common/csl/name-variable";
 import { LTPMixture } from "../mixture";
 import { AnySpecies } from "../state/species";
 
-export const LTPMixtureSchema = zodToJsonSchema(LTPMixture, {
-  definitions: { CSLData, CSLNameVariable, CSLDateVariable, AnySpecies },
-  $refStrategy: "none",
+export const LTPMixtureJSONSchema = zodToJsonSchema(LTPMixture, {
+  definitions: {
+    CSLData,
+    CSLNameVariable,
+    CSLDateVariable,
+    AnySpecies,
+    ...Object.fromEntries(AnySpecies.optionsMap),
+  },
+  $refStrategy: "root",
 });
-
-console.log(JSON.stringify(LTPMixtureSchema, null, 2));

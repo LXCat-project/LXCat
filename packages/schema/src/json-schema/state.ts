@@ -5,6 +5,4 @@
 import zodToJsonSchema from "zod-to-json-schema";
 import { State } from "../state";
 
-const schema = zodToJsonSchema(State, { $refStrategy: "none" });
-
-console.log(JSON.stringify(schema, null, 2));
+export const stateJSONSchema = zodToJsonSchema(State, { $refStrategy: "none" });
