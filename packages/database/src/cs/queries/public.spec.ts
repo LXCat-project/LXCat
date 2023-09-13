@@ -75,7 +75,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
               rhs: [
                 {
                   state: matchesId,
@@ -101,7 +101,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
               rhs: [
                 {
                   state: matchesId,
@@ -127,7 +127,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
               rhs: [
                 {
                   state: matchesId,
@@ -153,7 +153,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
               rhs: [
                 {
                   state: matchesId,
@@ -247,7 +247,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
               rhs: [
                 {
                   state: matchesId,

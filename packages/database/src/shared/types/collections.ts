@@ -27,5 +27,5 @@ export type State = { detailed: RawState; serialized: StateSummary };
 // Reaction should be linked to its input/output states/particles through graph edges.
 export interface Reaction {
   reversible: boolean;
-  type_tags: Array<ReactionTypeTag>;
+  typeTags: Array<ReactionTypeTag>;
 }

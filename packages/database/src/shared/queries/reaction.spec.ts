@@ -33,7 +33,7 @@ describe("given db with test user and organization", () => {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         });
         if (id === undefined) {
           throw Error("Unable to add reaction");
@@ -50,7 +50,7 @@ describe("given db with test user and organization", () => {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         });
         expect(id).toEqual(reactionId);
       });

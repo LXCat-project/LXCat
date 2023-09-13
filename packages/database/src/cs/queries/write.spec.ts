@@ -185,7 +185,7 @@ describe("given db with test user and organization", () => {
             lhs: [{ count: 1, state: "s1" }],
             rhs: [{ count: 1, state: "s2" }],
             reversible: false,
-            type_tags: [],
+            typeTags: [],
           },
           threshold: 42,
           type: Storage.LUT,

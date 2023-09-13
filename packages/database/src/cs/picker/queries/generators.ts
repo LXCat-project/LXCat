@@ -17,7 +17,7 @@ export function getFullStateTreeAQL(
 ) {
   return aql`
     FOR particle IN State
-      FILTER NOT HAS(particle, "electronic")
+      FILTER NOT HAS(particle.detailed, "electronic")
         LET particleChildren = (
           FOR electronic in OUTBOUND particle HasDirectSubstate
             LET electronicChildren = (
@@ -28,7 +28,7 @@ export function getFullStateTreeAQL(
                     FOR reaction IN INBOUND rotational ${literal(process)}
                       ${
     typeTags.length > 0
-      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      ? aql`FILTER reaction.typeTags ANY IN ${typeTags}`
       : aql``
   }
                       ${getCSSetFilterAQL([])(literal("reaction"))}
@@ -36,15 +36,14 @@ export function getFullStateTreeAQL(
                       RETURN 1
                   ) == 1
                   FILTER valid
-                  LET rot_desc = rotational.electronic.vibrational.rotational
-                  LET latex = IS_STRING(rot_desc) ? rot_desc : rot_desc.latex
+                  LET latex = rotational.serialize.electronic.vibrational.rotational.latex
                   RETURN {id: rotational._id, latex, valid}
                 )
                 LET valid = COUNT(
                   FOR reaction IN INBOUND vibrational ${literal(process)}
                     ${
     typeTags.length > 0
-      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      ? aql`FILTER reaction.typeTags ANY IN ${typeTags}`
       : aql``
   }
                     ${getCSSetFilterAQL([])(literal("reaction"))}
@@ -52,15 +51,14 @@ export function getFullStateTreeAQL(
                     RETURN 1
                 ) == 1
                 FILTER valid OR LENGTH(vibrationalChildren) > 0
-                LET vib_desc = vibrational.electronic.vibrational
-                LET latex = IS_STRING(vib_desc) ? vib_desc : vib_desc.latex
+                LET latex = vibrational.serialized.electronic.vibrational.latex
                 RETURN {id: vibrational._id, latex, valid: valid, children: vibrationalChildren}
             )
             LET valid = COUNT(
               FOR reaction IN INBOUND electronic ${literal(process)}
                 ${
     typeTags.length > 0
-      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      ? aql`FILTER reaction.typeTags ANY IN ${typeTags}`
       : aql``
   }
                 ${getCSSetFilterAQL([])(literal("reaction"))}
@@ -68,15 +66,14 @@ export function getFullStateTreeAQL(
                 RETURN 1
             ) == 1
             FILTER valid OR LENGTH(electronicChildren) > 0
-            LET ele_desc = electronic.electronic
-            LET latex = IS_STRING(ele_desc) ? ele_desc : ele_desc.latex
+            LET latex = electronic.serialized.electronic.latex
             RETURN {id: electronic._id, latex, valid, children: electronicChildren}
         )
         LET valid = COUNT(
           FOR reaction IN INBOUND particle ${literal(process)}
             ${
     typeTags.length > 0
-      ? aql`FILTER reaction.type_tags ANY IN ${typeTags}`
+      ? aql`FILTER reaction.typeTags ANY IN ${typeTags}`
       : aql``
   }
             ${getCSSetFilterAQL([])(literal("reaction"))}
@@ -84,7 +81,7 @@ export function getFullStateTreeAQL(
             RETURN 1
         ) == 1
         FILTER valid OR LENGTH(particleChildren) > 0
-        RETURN {id: particle._id, latex: particle.latex, valid: valid, children: particleChildren}
+        RETURN {id: particle._id, latex: particle.serialized.latex, valid: valid, children: particleChildren}
   `;
 }
 
@@ -188,23 +185,13 @@ function getPartakingStateChildren(
 
   const children = literal(`${levels[depth]}Children`);
 
-  const latexProperty = literal(
-    depth == 0
-      ? `${levels[depth]}.latex`
-      : `${levels[depth]}.${levels.slice(1, depth + 1).join(".")}.latex`,
-  );
-
   const levelPath = literal(
-    `${levels[depth]}.${levels.slice(1, depth + 1).join(".")}`,
+    `${levels[depth]}.serialized.${levels.slice(1, depth + 1).join(".")}`,
   );
 
   const extractLatex = depth === 0
-    ? aql`
-        LET latex = ${literal(levels[0])}.latex
-      `
-    : aql`
-        LET latex = IS_STRING(${levelPath}) ? ${levelPath} : ${levelPath}.latex
-      `;
+    ? aql`LET latex = ${literal(levels[0])}.serialized.latex`
+    : aql`LET latex = ${levelPath}.latex`;
 
   return depth < 3
     ? aql`
@@ -244,7 +231,7 @@ export function getStateSelectionAQL(
 ) {
   return aql`
     FOR particle IN State
-      FILTER NOT HAS(particle, "electronic")
+      FILTER NOT HAS(particle.detailed, "electronic")
       ${getPartakingStateChildren(process, states, ignoredStates)}`;
 }
 

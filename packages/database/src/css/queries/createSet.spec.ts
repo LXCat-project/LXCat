@@ -146,7 +146,7 @@ describe("giving draft set made with existing draft cross section", () => {
             lhs: [{ count: 1, state: expect.stringMatching(/\d+/) }],
             rhs: [{ count: 1, state: expect.stringMatching(/\d+/) }],
             reversible: false,
-            type_tags: [],
+            typeTags: [],
           },
           threshold: 42,
           type: Storage.LUT,

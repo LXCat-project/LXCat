@@ -68,16 +68,10 @@ export const SWRReactionPickerImpl = ({
             <SWRStateList {...produces} />
           </Box>
         </Group>
-        {
-          // FIXME: This is where the scat-cs page crashes.
-
-
-            <MultiSelect
-              placeholder="Reaction type tag(s)"
-              {...typeTags}
-            />
-
-        }
+        <MultiSelect
+          placeholder="Reaction type tag(s)"
+          {...typeTags}
+        />
       </Stack>
       <Box sx={listStyle}>
         <CSSetFilter {...sets} />

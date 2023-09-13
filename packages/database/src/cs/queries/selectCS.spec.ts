@@ -490,7 +490,7 @@ describe("Selecting individual cross sections", () => {
           id: expect.stringMatching(/\d+/),
           reaction: {
             reversible: false,
-            type_tags: [ReactionTypeTag.Effective],
+            typeTags: [ReactionTypeTag.Effective],
             rhs: [
               {
                 state: {
@@ -576,7 +576,7 @@ describe("Selecting individual cross sections", () => {
             },
           ],
           reversible: false,
-          type_tags: [ReactionTypeTag.Effective],
+          typeTags: [ReactionTypeTag.Effective],
           rhs: [
             {
               state: {

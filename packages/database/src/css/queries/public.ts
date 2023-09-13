@@ -51,7 +51,7 @@ export async function search(
   let reactionAql = aql``;
   if (hasFilterOnRection) {
     const typeTagAql = hasFilterOnTag
-      ? aql`FILTER ${filter.tag} ANY IN r.type_tags`
+      ? aql`FILTER ${filter.tag} ANY IN r.typeTags`
       : aql``;
     let stateAql = aql`RETURN 1`;
     if (hasFilterOnConsumedStates) {
@@ -126,7 +126,7 @@ async function searchContributors(
   let csFilter = aql``;
   if (hasTagSelection || hasStateSelection) {
     const tagFilter = hasTagSelection
-      ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
+      ? aql`FILTER ${selection.tag} ANY IN r.typeTags`
       : aql``;
     const stateFilter = generateStateChoiceFilter(selection.state);
     csFilter = aql`
@@ -180,7 +180,7 @@ export async function stateChoices(
   const hasTagSelection = selection.tag.length > 0;
   const stateAql = generateStateChoicesAql();
   const tagFilter = hasTagSelection
-    ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
+    ? aql`FILTER ${selection.tag} ANY IN r.typeTags`
     : aql``;
   const hasContributorSelection = selection.contributor.length > 0;
   const contributorFilter = hasContributorSelection
@@ -234,7 +234,7 @@ async function tagChoices(
           FOR r in Reaction
             FILTER r._id == cs.reaction
             ${stateFilter}
-            FOR t IN r.type_tags
+            FOR t IN r.typeTags
               COLLECT tt = t
               SORT tt
               RETURN tt

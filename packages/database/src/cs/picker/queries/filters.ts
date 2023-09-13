@@ -12,7 +12,7 @@ export const getTypeTagFilterAQL =
   (reaction: AqlLiteral) =>
     typeTags.length === 0
       ? aql``
-      : aql`FILTER ${reaction}.type_tags ANY IN ${typeTags}`;
+      : aql`FILTER ${reaction}.typeTags ANY IN ${typeTags}`;
 
 export const getReversibleFilterAQL =
   (reversible: Reversible): ReactionFunction => (reaction: AqlLiteral) =>

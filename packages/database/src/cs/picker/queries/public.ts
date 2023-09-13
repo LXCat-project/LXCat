@@ -109,8 +109,8 @@ export async function getAvailableTypeTags(
       ? aql`
       RETURN UNIQUE(FLATTEN(
         FOR reaction in Reaction
-	  ${getCSSetFilterAQL(setIds)(literal("reaction"))}
-          RETURN reaction.type_tags
+	        ${getCSSetFilterAQL(setIds)(literal("reaction"))}
+          RETURN reaction.typeTags
       ))
     `
       : aql`
