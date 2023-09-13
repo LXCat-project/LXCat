@@ -2,16 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
-import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
-
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { State } from "@lxcat/schema/dist/core/state";
-import { Dict, XOR } from "@lxcat/schema/dist/core/util";
+import { Reaction } from "@lxcat/schema/dist/process/reaction";
+import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
+import { State } from "@lxcat/schema/dist/state";
 import { expect } from "vitest";
 
+import { LTPDocument } from "@lxcat/schema/dist/document";
+import { z } from "zod";
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
@@ -20,7 +17,6 @@ import {
 import { createSet, deleteSet } from "../../css/queries/author_write";
 import { db } from "../../db";
 import { startDbContainer } from "../../testutils";
-import { CrossSectionSetInputOwned } from "./author_read";
 import { FilterOptions } from "./public";
 
 export async function loadTestSets() {
@@ -72,8 +68,11 @@ export async function truncateCrossSectionSetCollections() {
   );
 }
 
-export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
+export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
   return {
+    $schema: "",
+    url: "",
+    termsOfUse: "",
     complete: false,
     contributor: "Some organization",
     name: "Some name",
@@ -81,14 +80,17 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
     references: {},
     states: {
       a: {
+        type: "simple",
         particle: "A",
         charge: 0,
       },
       b: {
+        type: "simple",
         particle: "B",
         charge: 1,
       },
       c: {
+        type: "simple",
         particle: "C",
         charge: 2,
       },
@@ -101,12 +103,17 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
           reversible: false,
           typeTags: [],
         },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: [],
+        info: {
+          type: "CrossSection",
+          threshold: 42,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[1, 3.14e-20]],
+          },
+          references: [],
+        },
       },
       {
         reaction: {
@@ -115,12 +122,17 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
           reversible: false,
           typeTags: [],
         },
-        threshold: 13,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[2, 5.12e-10]],
-        reference: [],
+        info: {
+          type: "CrossSection",
+          threshold: 13,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[2, 5.12e-10]],
+          },
+          references: [],
+        },
       },
     ],
   };
@@ -129,24 +141,29 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
 export const sampleEmail = "somename@example.com";
 
 export const sampleSets4Search = async () => {
-  const states = {
+  const states: Record<string, State> = {
     e: {
+      type: "simple",
       particle: "e",
       charge: -1,
     },
     H2: {
+      type: "simple",
       particle: "H2",
       charge: 0,
     },
     N2: {
+      type: "simple",
       particle: "N2",
       charge: 0,
     },
     Arp: {
+      type: "simple",
       particle: "Ar",
       charge: 1,
     },
     Ar: {
+      type: "simple",
       particle: "Ar",
       charge: 0,
     },
@@ -157,7 +174,6 @@ export const sampleSets4Search = async () => {
       electronic: [
         {
           config: [],
-          scheme: CouplingScheme.LS,
           term: { L: 0, S: 0, J: 0, P: 1 },
         },
       ],
@@ -165,8 +181,8 @@ export const sampleSets4Search = async () => {
     "He{*}": {
       particle: "He",
       charge: 0,
-      type: "AtomLS",
-      electronic: [{ e: "*" }],
+      type: "unspecified",
+      electronic: "*",
     },
   };
   await createSet(
@@ -183,7 +199,7 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "H2" },
           ],
-          typeTags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -204,7 +220,7 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "N2" },
           ],
-          typeTags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -225,7 +241,7 @@ export const sampleSets4Search = async () => {
             { count: 2, state: "e" },
             { count: 1, state: "Arp" },
           ],
-          typeTags: [ReactionTypeTag.Ionization],
+          typeTags: ["Ionization"],
           reversible: false,
         },
       ],
@@ -246,7 +262,7 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "He{*}" },
           ],
-          typeTags: [ReactionTypeTag.Electronic],
+          typeTags: ["Electronic"],
           reversible: false,
         },
       ],
@@ -263,24 +279,29 @@ export const sampleSets4Search = async () => {
  * 1. archived = CO2
  */
 export const sampleSets4SearchWithVersions = async () => {
-  const states: Dict<State<XOR<AnyAtom, AnyMolecule>>> = {
+  const states: Record<string, State> = {
     e: {
+      type: "simple",
       particle: "e",
       charge: -1,
     },
     H2: {
+      type: "simple",
       particle: "H2",
       charge: 0,
     },
     N2: {
+      type: "simple",
       particle: "N2",
       charge: 0,
     },
     Arp: {
+      type: "simple",
       particle: "Ar",
       charge: 1,
     },
     Ar: {
+      type: "simple",
       particle: "Ar",
       charge: 0,
     },
@@ -291,7 +312,6 @@ export const sampleSets4SearchWithVersions = async () => {
       electronic: [
         {
           config: [],
-          scheme: CouplingScheme.LS,
           term: { L: 0, S: 0, J: 0, P: 1 },
         },
       ],
@@ -299,8 +319,8 @@ export const sampleSets4SearchWithVersions = async () => {
     "He{*}": {
       particle: "He",
       charge: 0,
-      type: "AtomLS",
-      electronic: [{ e: "*" }],
+      type: "unspecified",
+      electronic: "*",
     },
   };
   await createSet(
@@ -317,7 +337,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "H2" },
           ],
-          typeTags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -339,7 +359,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "H2" },
           ],
-          typeTags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -361,7 +381,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 2, state: "e" },
             { count: 1, state: "Arp" },
           ],
-          typeTags: [ReactionTypeTag.Ionization],
+          typeTags: ["Ionization"],
           reversible: false,
         },
       ],
@@ -384,7 +404,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "He{*}" },
           ],
-          typeTags: [ReactionTypeTag.Electronic],
+          typeTags: ["Electronic"],
           reversible: false,
         },
       ],
@@ -396,27 +416,37 @@ export const sampleSets4SearchWithVersions = async () => {
 
 function setFrom(
   name: string,
-  states: Readonly<Dict<State<AnyAtom | AnyMolecule>>>,
+  states: Readonly<Record<string, State>>,
   reactions: ReadonlyArray<Reaction<string>>,
   contributor: string,
-): CrossSectionSetInputOwned {
-  return {
-    complete: false,
-    contributor,
-    name,
-    description: "Some description",
-    references: {},
-    states,
-    processes: reactions.map((reaction) => ({
-      reaction,
-      threshold: 0,
-      type: Storage.LUT,
-      labels: ["Energy", "Cross Section"],
-      units: ["eV", "m^2"],
-      data: [[0, 3.14e-20]],
-      reference: [],
-    })),
-  };
+) {
+  return LTPDocument.parse(
+    {
+      $schema: "",
+      url: "",
+      termsOfUse: "",
+      complete: false,
+      contributor,
+      name,
+      description: "Some description",
+      references: {},
+      states,
+      processes: reactions.map((reaction) => ({
+        reaction,
+        info: {
+          type: "CrossSection",
+          threshold: 0,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[0, 3.14e-20]],
+          },
+          references: [],
+        },
+      })),
+    },
+  );
 }
 
 export const emptySelection: Readonly<FilterOptions> = {

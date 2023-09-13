@@ -2,13 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { State } from "@lxcat/schema/dist/core/state";
-import { Dict } from "@lxcat/schema/dist/core/util";
+import { State } from "@lxcat/schema/dist/state";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { beforeAll, describe, expect, it } from "vitest";
-
-import { AnySpecies } from "@lxcat/schema/dist/core/species";
 import {
   startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
@@ -27,39 +24,23 @@ import {
   StateChoices,
 } from "./state";
 
-type InputState = Dict<State<AnySpecies>>;
-
 beforeAll(startDbWithUserAndCssCollections);
 
-function sample2particles2charges(): InputState {
-  return {
-    H2: {
-      type: "simple",
-      particle: "H2",
-      charge: 0,
-    },
-    H2p: {
-      type: "simple",
-      particle: "H2",
-      charge: 1,
-    },
-    N2: {
-      type: "simple",
-      particle: "N2",
-      charge: 0,
-    },
-    N2p: {
-      type: "simple",
-      particle: "N2",
-      charge: 1,
-    },
-  };
-}
+const makeStateInputs = (states: Array<[string, State]>) =>
+  Object.fromEntries(states.map(([key, state]) => [key, State.parse(state)]));
+
+const sampleTwoParticlesTwoCharges = () =>
+  makeStateInputs([
+    ["H2", { type: "simple", particle: "H2", charge: 0 }],
+    ["H2p", { type: "simple", particle: "H2", charge: 1 }],
+    ["N2", { type: "simple", particle: "N2", charge: 0 }],
+    ["N2p", { type: "simple", particle: "N2", charge: 1 }],
+  ]);
 
 describe("generateStateFilterAql()", () => {
   describe("2 particles with each 2 different charges", () => {
     beforeAll(async () => {
-      const states: InputState = sample2particles2charges();
+      const states = sampleTwoParticlesTwoCharges();
       await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
@@ -132,30 +113,20 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different electronic", () => {
     beforeAll(async () => {
-      const states: InputState = {
-        H2g: {
+      const states = makeStateInputs([
+        ["H2g", {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: {
-            e: "I",
-            Lambda: 1,
-            S: 0,
-            parity: "g",
-          },
-        },
-        H2u: {
+          electronic: { energyId: "I", Lambda: 1, S: 0, parity: "g" },
+        }],
+        ["H2u", {
           particle: "H2",
           charge: 0,
           type: "HomonuclearDiatom",
-          electronic: {
-            e: "I",
-            Lambda: 1,
-            S: 0,
-            parity: "u",
-          },
-        },
-      };
+          electronic: { energyId: "I", Lambda: 1, S: 0, parity: "u" },
+        }],
+      ]);
       await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
@@ -208,7 +179,7 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different vibrational", () => {
     beforeAll(async () => {
-      const states: InputState = {
+      const states: StateDict = {
         H2v0: {
           particle: "H2",
           charge: 0,
@@ -298,7 +269,7 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different rotational", () => {
     beforeAll(async () => {
-      const states: InputState = {
+      const states: StateDict = {
         H2J1: {
           particle: "H2",
           charge: 0,
@@ -391,7 +362,7 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different compound electronic", () => {
     beforeAll(async () => {
-      const states: InputState = {
+      const states: StateDict = {
         H212: {
           particle: "H2",
           charge: 0,
@@ -461,7 +432,7 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different compound vibrational", () => {
     beforeAll(async () => {
-      const states: InputState = {
+      const states: StateDict = {
         H2v12: {
           particle: "H2",
           charge: 0,
@@ -564,7 +535,7 @@ describe("generateStateFilterAql()", () => {
 
   describe("2 states with different compound rotational", () => {
     beforeAll(async () => {
-      const states: InputState = {
+      const states: StateDict = {
         H2J12: {
           particle: "H2",
           charge: 0,
@@ -700,7 +671,7 @@ describe("generateStateFilterAql()", () => {
 describe("generateStateChoicesAql() + groupStateChoices()", () => {
   const testCases: Array<{
     description: string;
-    states: InputState;
+    states: StateDict;
     expected: StateChoices;
   }> = [
     {
@@ -925,7 +896,7 @@ describe("listStates()", () => {
 
   describe("2 simple particles with 2 different charges", () => {
     beforeAll(async () => {
-      const states: InputState = sample2particles2charges();
+      const states = sampleTwoParticlesTwoCharges();
       await insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
@@ -937,11 +908,17 @@ describe("listStates()", () => {
         { particle: { H2: { charge: { "0": { electronic: {} } } } } },
         [
           {
-            type: "simple",
-            particle: "H2",
-            id: "H2",
-            latex: "\\mathrm{H2}",
-            charge: 0,
+            detailed: {
+              type: "simple",
+              particle: "H2",
+              charge: 0,
+            },
+            serialized: {
+              particle: "H2",
+              charge: 0,
+              summary: "H2",
+              latex: "\\mathrm{H2}",
+            },
           },
         ],
       ],
@@ -950,18 +927,30 @@ describe("listStates()", () => {
         { particle: { H2: { charge: {} } } },
         [
           {
-            type: "simple",
-            particle: "H2",
-            id: "H2",
-            latex: "\\mathrm{H2}",
-            charge: 0,
+            detailed: {
+              type: "simple",
+              particle: "H2",
+              charge: 0,
+            },
+            serialized: {
+              particle: "H2",
+              charge: 0,
+              summary: "H2",
+              latex: "\\mathrm{H2}",
+            },
           },
           {
-            type: "simple",
-            particle: "H2",
-            id: "H2^+",
-            latex: "\\mathrm{H2^+}",
-            charge: 1,
+            detailed: {
+              type: "simple",
+              particle: "H2",
+              charge: 1,
+            },
+            serialized: {
+              particle: "H2",
+              charge: 1,
+              summary: "H2^+",
+              latex: "\\mathrm{H2^+}",
+            },
           },
         ],
       ],
