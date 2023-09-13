@@ -4,6 +4,7 @@
 
 import { z } from "zod";
 import { AnyAtom } from "./atoms";
+import { parseCharge, parseChargeLatex } from "./common";
 import { AnyMolecule } from "./molecules";
 import { SimpleParticle } from "./particle";
 import { AnySpecies } from "./species";
@@ -17,13 +18,11 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
   (state) => ({
     ...state,
     serialize: (): StateSummary => {
-      const serializedParticle = `${state.particle}^{${state.charge}}`;
-
       const serialized: StateSummary = {
         particle: state.particle,
         charge: state.charge,
-        summary: serializedParticle,
-        latex: serializedParticle,
+        summary: `${state.particle}${parseCharge(state.charge)}`,
+        latex: `\\mathrm{${state.particle}}${parseChargeLatex(state.charge)}`,
       };
 
       if (state.type === "unspecified") {
