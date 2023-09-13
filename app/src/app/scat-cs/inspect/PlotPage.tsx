@@ -4,10 +4,6 @@
 
 "use client";
 
-import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
-import { State } from "@lxcat/database/dist/shared/types/collections";
-import { type LUT } from "@lxcat/schema/dist/common/data-types";
-import { type Reaction } from "@lxcat/schema/dist/process/reaction";
 import {
   Alert,
   Button,
@@ -28,6 +24,7 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./ButtonClipboard";
 import { ButtonMultiDownload } from "./ButtonMultiDownload";
 import { colorScheme } from "./colors";
@@ -48,19 +45,11 @@ const Chart = dynamic(
   },
 );
 
-// FIXME: This should just be a denormalized CrossSectionBagItem (e.g. with an info object).
-export interface Process extends LUT {
-  id: string;
-  reaction: Reaction<State>;
-  isPartOf: Array<Omit<CrossSectionSet, "versionInfo">>;
-  reference: Array<string>;
-}
-
 const NUM_LINES_INIT = 5;
 
 export const PlotPage = (
   { processes, refs, setMismatch, permaLink }: {
-    processes: Array<Process>;
+    processes: Array<DenormalizedProcess>;
     refs: Array<FormattedReference>;
     setMismatch: boolean;
     permaLink: string;
@@ -68,13 +57,12 @@ export const PlotPage = (
 ) => {
   const router = useRouter();
 
-  const [selected, setSelected] = useState<Array<Process>>(
+  const [selected, setSelected] = useState<Array<DenormalizedProcess>>(
     processes.slice(0, NUM_LINES_INIT),
   );
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
-  // TODO: Map a selected process to an available color instead of a fixed color.
   let colorMap = new Map(
     processes.map((
       { id },

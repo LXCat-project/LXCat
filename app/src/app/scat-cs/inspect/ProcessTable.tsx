@@ -2,22 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
 import { MultiSelect } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
 import { Latex } from "../../../shared/Latex";
-import { Process } from "./PlotPage";
+import { DenormalizedProcess } from "../denormalized-process";
 
 export type ProcessTableProps = {
-  processes: Array<Process>;
+  processes: Array<DenormalizedProcess>;
   referenceMarkers: Map<string, number>;
   colorMap: Map<string, string>;
-  selected: Array<Process>;
-  onChangeSelected: (selected: Array<Process>) => void;
+  selected: Array<DenormalizedProcess>;
+  onChangeSelected: (selected: Array<DenormalizedProcess>) => void;
 };
 
 export const ProcessTable = (

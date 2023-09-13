@@ -25,7 +25,7 @@ export const Bag = ({
   }`;
   return (
     <PlotPage
-      processes={flattenReactions(bag.processes, bag.states, bag.sets)}
+      processes={denormalizeProcesses(bag.processes, bag.states, bag.sets)}
       refs={formattedRefs}
       setMismatch={hasMixedCompleteSets}
       permaLink={permaLink}
@@ -33,7 +33,9 @@ export const Bag = ({
   );
 };
 
-function flattenReactions(
+const test = denormalizeProcesses([], {}, {});
+
+function denormalizeProcesses(
   processes: CrossSectionBag["processes"],
   states: Record<string, State>,
   sets: Record<string, Omit<CrossSectionSet, "versionInfo">>,

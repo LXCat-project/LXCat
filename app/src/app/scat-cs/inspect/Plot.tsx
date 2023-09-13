@@ -4,14 +4,12 @@
 
 "use client";
 
-import { State } from "@lxcat/database/dist/shared/types/collections";
-import { type LUT } from "@lxcat/schema/dist/common/data-types";
-import { type Reaction } from "@lxcat/schema/dist/process/reaction";
 import { Center, Checkbox, Grid, Loader, Stack } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
 import { Latex } from "../../../shared/Latex";
+import { DenormalizedProcess } from "../denormalized-process";
 import { colorScheme } from "./colors";
 import { TableScrollArea } from "./Table";
 
@@ -27,15 +25,10 @@ const Chart = dynamic(
   },
 );
 
-interface Process extends LUT {
-  id: string;
-  reaction: Reaction<State>;
-}
-
 const NUM_LINES_INIT = 5;
 
 export const ProcessPlot = (
-  { processes }: { processes: Array<Process> },
+  { processes }: { processes: Array<DenormalizedProcess> },
 ) => {
   // TODO: Map a selected process to an available color instead of a fixed color.
   const [selected, setSelected] = useState(

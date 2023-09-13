@@ -35,7 +35,7 @@ type CrossSectionBagItem = {
   isPartOf: string[];
   reaction: Reaction<string>;
   reference: string[];
-} & Omit<CrossSection, "reaction" | "organization" | "versionInfo">;
+} & Pick<CrossSection, "info">;
 
 export type CrossSectionBag = {
   states: Record<string, State>;
