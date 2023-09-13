@@ -12,8 +12,8 @@ describe("State serialization", () => {
       {
         particle: "e",
         charge: -1,
-        summary: "e^{-1}",
-        latex: "e^{-1}",
+        summary: "e^-",
+        latex: "\\mathrm{e}^-",
       },
     ],
     [
@@ -27,8 +27,8 @@ describe("State serialization", () => {
       {
         particle: "Ar",
         charge: 0,
-        summary: "Ar^{0}{*}",
-        latex: "Ar^{0}\\left(*\\right)",
+        summary: "Ar{*}",
+        latex: "\\mathrm{Ar}\\left(*\\right)",
         electronic: {
           summary: "*",
           latex: "*",
@@ -46,8 +46,8 @@ describe("State serialization", () => {
       {
         particle: "He",
         charge: 0,
-        summary: "He^{0}{^1S_0}",
-        latex: "He^{0}\\left({}^{1}\\mathrm{S}_{0}\\right)",
+        summary: "He{^1S_0}",
+        latex: "\\mathrm{He}\\left({}^{1}\\mathrm{S}_{0}\\right)",
         electronic: { summary: "^1S_0", latex: "{}^{1}\\mathrm{S}_{0}" },
       },
     ],
@@ -74,9 +74,9 @@ describe("State serialization", () => {
       {
         particle: "Ar",
         charge: 0,
-        summary: "Ar^{0}{3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2}",
+        summary: "Ar{3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2}",
         latex:
-          "Ar^{0}\\left(3p^{5}({}^{2}\\mathrm{P}^o_{3/2})4s({}^{2}\\mathrm{S}){}^{2}[3/2]^o_{2}\\right)",
+          "\\mathrm{Ar}\\left(3p^{5}({}^{2}\\mathrm{P}^o_{3/2})4s({}^{2}\\mathrm{S}){}^{2}[3/2]^o_{2}\\right)",
         electronic: {
           summary: "3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2",
           latex:
@@ -112,9 +112,9 @@ describe("State serialization", () => {
           summary: "3p{^2P^o}4f{^2F^o}F^2[5/2]_3",
         },
         latex:
-          "P^{1}\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
+          "\\mathrm{P}^+\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
         particle: "P",
-        summary: "P^{1}{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
+        summary: "P^+{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
       },
     ],
     [
@@ -155,9 +155,9 @@ describe("State serialization", () => {
           },
         ],
         latex:
-          "He^{0}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
+          "\\mathrm{He}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
         particle: "He",
-        summary: "He^{0}{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
+        summary: "He{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
       },
     ],
     [
@@ -190,9 +190,9 @@ describe("State serialization", () => {
           },
         },
         latex:
-          "N2^{0}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
+          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
         particle: "N2",
-        summary: "N2^{0}{X^1S_g^+{0{0}}}",
+        summary: "N2{X^1S_g^+{0{0}}}",
       },
     ],
     [
@@ -246,9 +246,9 @@ describe("State serialization", () => {
           },
         },
         latex:
-          "N2^{0}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
+          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
         particle: "N2",
-        summary: "N2^{0}{X^1S_g^+{0{1|2|3|4|5}}}",
+        summary: "N2{X^1S_g^+{0{1|2|3|4|5}}}",
       },
     ],
     [
@@ -270,9 +270,9 @@ describe("State serialization", () => {
           latex: "\\mathrm{X}^{1}\\Sigma^+",
           summary: "X^1S^+",
         },
-        latex: "CO^{0}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
+        latex: "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
         particle: "CO",
-        summary: "CO^{0}{X^1S^+}",
+        summary: "CO{X^1S^+}",
       },
     ],
     [
@@ -330,9 +330,9 @@ describe("State serialization", () => {
           ],
         },
         latex:
-          "CO2^{0}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1\\right)\\right)",
+          "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1\\right)\\right)",
         particle: "CO2",
-        summary: "CO2^{0}{X^1S_g^+{0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1}}",
+        summary: "CO2{X^1S_g^+{0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1}}",
       },
     ],
   ];
