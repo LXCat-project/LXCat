@@ -30,9 +30,12 @@ const EditSetPage = async (props: URLParams) => {
 
   if (!set) return <NotFound />;
 
-  console.log(set);
-
-  return <EditForm organizations={await getAffiliations(session.user.email)} />;
+  return (
+    <EditForm
+      initialSet={set}
+      organizations={await getAffiliations(session.user.email)}
+    />
+  );
 };
 
 const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {

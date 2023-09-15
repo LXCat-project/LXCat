@@ -4,7 +4,7 @@
 
 "use client";
 
-import { LTPDocument } from "@lxcat/schema/dist/document";
+import { KeyedDocument } from "@lxcat/database/dist/schema/document";
 import { LTPDocumentJSONSchema } from "@lxcat/schema/dist/json-schema/document";
 import {
   Button,
@@ -24,13 +24,16 @@ import { z } from "zod";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 
 const EditFormValues = z.object({
-  set: LTPDocument,
+  set: KeyedDocument,
   commitMessage: z.string().min(1),
   meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
-type EditFormProps = { organizations: Array<string> };
+type EditFormProps = {
+  initialSet: KeyedDocument;
+  organizations: Array<string>;
+};
 
 export const getError = (
   errors: FieldErrors,
@@ -62,11 +65,11 @@ const emptySet = () => ({
   meta: {},
 });
 
-export const EditForm = ({ organizations }: EditFormProps) => {
+export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
   const form = useForm(
     {
       validate: zodResolver(EditFormValues),
-      initialValues: emptySet(),
+      initialValues: { commitMessage: "", set: initialSet, meta: {} },
       // {
       //   commitMessage: "",
       //   set: {

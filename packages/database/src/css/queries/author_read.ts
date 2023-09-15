@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LTPDocument } from "@lxcat/schema/dist/document";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
@@ -63,11 +62,11 @@ export const byId = async (id: string) => {
                     FILTER r._id == cs.reaction
                     LET consumes = (
                       FOR state IN OUTBOUND r Consumes
-                        RETURN {[state._key]: UNSET(state, ["_key", "_rev", "_id", "id"])}
+                        RETURN {[state._key]: state.detailed}
                     )
                     LET produces = (
                       FOR state IN OUTBOUND r Produces
-                        RETURN {[state._key]: UNSET(state, ["_key", "_rev", "_id", "id"])}
+                        RETURN {[state._key]: state.detailed}
                     )
                     RETURN MERGE(UNION(produces, consumes))
               )
@@ -90,14 +89,17 @@ export const byId = async (id: string) => {
                       )
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {lhs, rhs})
                   )
-                  RETURN MERGE(
-                    UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                    { id: cs._key, reaction, references: csRefs }
-                  )
+                  RETURN {
+                    reaction,
+                    info: MERGE(cs.info, { _key: cs._key, versionInfo: cs.versionInfo, references: csRefs })
+                  }
               )
-              RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "versionInfo", "organization"]), {contributor, references, states, processes})
+              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), {contributor, references, states, processes})
         `);
-  return cursor.next().then((doc) => doc ? LTPDocument.parse(doc) : undefined);
+  return cursor.next().then((doc) => {
+    console.log(JSON.stringify(doc, null, 2));
+    return doc ? KeyedDocument.parse(doc) : undefined;
+  });
 };
 
 export async function byOwnerAndId(email: string, id: string) {

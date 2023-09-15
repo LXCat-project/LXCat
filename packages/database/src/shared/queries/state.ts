@@ -262,7 +262,7 @@ export async function listStateChoices(): Promise<StateChoices> {
 export async function getIdByLabel(label: string) {
   const query = aql`
     FOR s IN State
-      FILTER s.id == ${label}
+      FILTER s.serialized.summary == ${label}
       LIMIT 1
       RETURN s._id
   `;
