@@ -51,24 +51,26 @@ export const ShellEntry = z.object({
   n: z.number().int().min(1),
   l: z.number().int().nonnegative(),
   occupance: z.number().int().nonnegative(),
-}).transform(entry => ({
-  ...entry,
-  serialize: () => {
-    if (entry.occupance == 0) {
-      return "";
-    }
-
-    return `${entry.n}${electronicOrbital[entry.l]}${
-      entry.occupance > 1 ? `^{${entry.occupance}}` : ""
-    }`;
-  },
-}));
+});
 export type ShellEntry = z.infer<typeof ShellEntry>;
 
 /// Serializer functions
 
+export const serializeShellEntry = (entry: ShellEntry) => {
+  if (entry.occupance == 0) {
+    return "";
+  }
+
+  return `${entry.n}${electronicOrbital[entry.l]}${
+    entry.occupance > 1 ? `^{${entry.occupance}}` : ""
+  }`;
+};
+
 export function serializeShellConfig(config: Array<ShellEntry>): string {
-  return config.reduce((total, entry) => total + entry.serialize(), "");
+  return config.reduce(
+    (total, entry) => total + serializeShellEntry(entry),
+    "",
+  );
 }
 
 export function serializeHalfInteger(n: number): string {
