@@ -13,17 +13,17 @@ import {
   TotalAngularSpecifier,
 } from "./common";
 
-export const LSTermImpl = z.object({
+export const LSTermUncoupled = z.object({
   L: z.number().int().nonnegative(),
   S: z.number().multipleOf(0.5).nonnegative(),
   P: z.union([z.literal(-1), z.literal(1)]),
 });
-export type LSTermImpl = z.input<typeof LSTermImpl>;
+export type LSTermUncoupled = z.input<typeof LSTermUncoupled>;
 
-export const LSTerm = LSTermImpl.merge(TotalAngularSpecifier);
+export const LSTerm = LSTermUncoupled.merge(TotalAngularSpecifier);
 export type LSTerm = z.input<typeof LSTerm>;
 
-const LSDescriptorImpl = buildTerm(z.array(ShellEntry), LSTerm);
+export const LSDescriptorImpl = buildTerm(z.array(ShellEntry), LSTerm);
 type LSDescriptorImpl = z.infer<typeof LSDescriptorImpl>;
 
 export const LSDescriptor = LSDescriptorImpl.transform((atom) => ({
@@ -36,7 +36,9 @@ export type LSDescriptor = z.input<typeof LSDescriptor>;
 export const AtomLS = atom("AtomLS", LSDescriptor);
 export type AtomLS = z.input<typeof AtomLS>;
 
-export const serializeLSTermImpl = (term: LSTermImpl): string => {
+/// Serializer functions
+
+export const serializeLSTermImpl = (term: LSTermUncoupled): string => {
   return `^${2 * term.S + 1}${atomicOrbital[term.L]}${
     term.P == -1 ? "^o" : ""
   }`;
@@ -51,7 +53,7 @@ export const serializeLS = (e: LSDescriptorImpl): string => {
   return `${config}${config !== "" ? ":" : ""}${serializeLSTerm(e.term)}`;
 };
 
-export const serializeLatexLSTermImpl = (term: LSTermImpl): string => {
+export const serializeLatexLSTermImpl = (term: LSTermUncoupled): string => {
   return `{}^{${2 * term.S + 1}}\\mathrm{${atomicOrbital[term.L]}}${
     term.P == -1 ? "^o" : ""
   }`;
@@ -61,7 +63,7 @@ export const serializeLatexLSTerm = (term: LSTerm): string => {
   return `${serializeLatexLSTermImpl(term)}_{${serializeHalfInteger(term.J)}}`;
 };
 
-const serializeLatexLS = (e: LSDescriptorImpl): string => {
+export const serializeLatexLS = (e: LSDescriptorImpl): string => {
   const config = serializeShellConfig(e.config);
   return `${config}${config != "" ? ":" : ""}${serializeLatexLSTerm(e.term)}`;
 };

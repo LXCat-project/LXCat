@@ -14,7 +14,7 @@ import {
   TotalAngularSpecifier,
 } from "./common";
 import {
-  LSTermImpl,
+  LSTermUncoupled,
   serializeLatexLSTermImpl,
   serializeLSTermImpl,
 } from "./ls";
@@ -29,12 +29,12 @@ export type LS1Term = z.infer<typeof LS1Term>;
 
 export const LS1DescriptorImpl = buildTerm(
   buildTwoTerm(
-    buildTerm(z.array(ShellEntry), LSTermImpl),
-    buildTerm(z.array(ShellEntry), LSTermImpl),
+    buildTerm(z.array(ShellEntry), LSTermUncoupled),
+    buildTerm(z.array(ShellEntry), LSTermUncoupled),
   ),
   LS1Term,
 );
-type LS1DescriptorImpl = z.infer<typeof LS1DescriptorImpl>;
+export type LS1DescriptorImpl = z.infer<typeof LS1DescriptorImpl>;
 
 export const LS1Descriptor = LS1DescriptorImpl.transform((atom) => ({
   ...atom,

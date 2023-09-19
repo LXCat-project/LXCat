@@ -14,7 +14,7 @@ import {
 } from "./common";
 import {
   LSDescriptor,
-  LSTermImpl,
+  LSTermUncoupled,
   serializeLatexLSTerm,
   serializeLatexLSTermImpl,
   serializeLSTerm,
@@ -29,7 +29,7 @@ export const J1L2Term = z.object({
 export type J1L2Term = z.infer<typeof J1L2Term>;
 
 const J1L2DescriptorImpl = buildTerm(
-  buildTwoTerm(LSDescriptor, buildTerm(z.array(ShellEntry), LSTermImpl)),
+  buildTwoTerm(LSDescriptor, buildTerm(z.array(ShellEntry), LSTermUncoupled)),
   J1L2Term,
 );
 type J1L2DescriptorImpl = z.infer<typeof J1L2DescriptorImpl>;
