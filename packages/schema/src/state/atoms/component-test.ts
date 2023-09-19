@@ -3,6 +3,7 @@ import { typeTag } from "../generators";
 import { SimpleParticle } from "../particle";
 import { StateSummary } from "../summary";
 import { LSDescriptorImpl, serializeLatexLS, serializeLS } from "./ls";
+import { LS1DescriptorImpl, serializeLatexLS1, serializeLS1 } from "./ls1";
 
 type Component<SchemaType extends ZodTypeAny> = {
   schema: SchemaType;
@@ -12,7 +13,7 @@ type Component<SchemaType extends ZodTypeAny> = {
   };
 };
 
-export const atomWithComponent = <
+export const createAtomicType = <
   Tag extends string,
   SchemaType extends z.ZodTypeAny,
 >(
@@ -38,34 +39,30 @@ export const LSDescriptorComponent: Component<typeof LSDescriptorImpl> = {
   },
 };
 
-const Test = z.object({
-  a: z.string(),
-});
-type Test = z.infer<typeof Test>;
-
-export const TestComponent: Component<typeof Test> = {
-  schema: Test,
+export const LS1DescriptorComponent: Component<typeof LS1DescriptorImpl> = {
+  schema: LS1DescriptorImpl,
   serializers: {
-    summary: (test: Test) => test.a,
-    latex: (test: Test) => test.a,
+    summary: serializeLS1,
+    latex: serializeLatexLS1,
   },
 };
 
-const { schema: TestWithComponent, serializer: testSerializer } =
-  atomWithComponent("Test", TestComponent);
-
 const { schema: AtomLSWithComponent, serializer: atomLSSerializer } =
-  atomWithComponent("AtomLS", LSDescriptorComponent);
+  createAtomicType("AtomLS", LSDescriptorComponent);
 
-const parser = {
-  [atomLSSerializer.type]: atomLSSerializer,
-  [testSerializer.type]: testSerializer,
-};
+const { schema: AtomLS1WithComponent, serializer: atomLS1Serializer } =
+  createAtomicType("AtomLS1", LS1DescriptorComponent);
 
 const AnyAtom = z.discriminatedUnion("type", [
   AtomLSWithComponent,
-  TestWithComponent,
+  AtomLS1WithComponent,
 ]);
+type AnyAtom = z.infer<typeof AnyAtom>;
+
+const atomSerializers = {
+  [atomLSSerializer.type]: atomLSSerializer,
+  [atomLS1Serializer.type]: atomLS1Serializer,
+};
 
 const serializeAtom = (atom: z.infer<typeof AnyAtom>): StateSummary => {
   const serialized: StateSummary = {
@@ -84,8 +81,8 @@ const serializeAtom = (atom: z.infer<typeof AnyAtom>): StateSummary => {
 
   if (Array.isArray(electronic)) {
     serialized.electronic = electronic.map((ele) => ({
-      summary: parser[atom.type].electronic.summary(ele),
-      latex: parser[atom.type].electronic.latex(ele),
+      summary: atomSerializers[atom.type].electronic.summary(ele),
+      latex: atomSerializers[atom.type].electronic.latex(ele),
     }));
 
     serialized.summary += serialized.electronic
@@ -94,8 +91,8 @@ const serializeAtom = (atom: z.infer<typeof AnyAtom>): StateSummary => {
       .map(({ latex }) => latex).join("|");
   } else {
     serialized.electronic = {
-      summary: parser[atom.type].electronic.summary(electronic),
-      latex: parser[atom.type].electronic.latex(electronic),
+      summary: atomSerializers[atom.type].electronic.summary(electronic),
+      latex: atomSerializers[atom.type].electronic.latex(electronic),
     };
     serialized.summary += serialized.electronic.summary;
     serialized.latex += serialized.electronic.latex;
