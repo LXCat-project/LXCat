@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
+import { makeComponent } from "../common";
 import { atom } from "../generators";
+import { SimpleParticle } from "../particle";
 import {
   atomicOrbital,
   buildTerm,
@@ -27,23 +29,14 @@ export const LS1Term = z.object({
 }).merge(TotalAngularSpecifier);
 export type LS1Term = z.infer<typeof LS1Term>;
 
-export const LS1DescriptorImpl = buildTerm(
+export const LS1Descriptor = buildTerm(
   buildTwoTerm(
     buildTerm(z.array(ShellEntry), LSTermUncoupled),
     buildTerm(z.array(ShellEntry), LSTermUncoupled),
   ),
   LS1Term,
 );
-export type LS1DescriptorImpl = z.infer<typeof LS1DescriptorImpl>;
-
-export const LS1Descriptor = LS1DescriptorImpl.transform((atom) => ({
-  ...atom,
-  summary: () => serializeLS1(atom),
-  latex: () => serializeLatexLS1(atom),
-}));
-
-export const AtomLS1 = atom("AtomLS1", LS1Descriptor);
-export type AtomLS1 = z.input<typeof AtomLS1>;
+export type LS1Descriptor = z.infer<typeof LS1Descriptor>;
 
 /// Serializer functions
 
@@ -55,7 +48,7 @@ function serializeLS1Term(term: LS1Term): string {
   }]${term.P == -1 ? "^o" : ""}_${serializeHalfInteger(term.J)}`;
 }
 
-export function serializeLS1(e: LS1DescriptorImpl): string {
+export function serializeLS1(e: LS1Descriptor): string {
   return (
     serializeShellConfig(e.config.core.config)
     + "{"
@@ -75,7 +68,7 @@ function serializeLatexLS1Term(term: LS1Term): string {
   }]${term.P == -1 ? "^o" : ""}_{${serializeHalfInteger(term.J)}}`;
 }
 
-export function serializeLatexLS1(e: LS1DescriptorImpl): string {
+export function serializeLatexLS1(e: LS1Descriptor): string {
   return (
     serializeShellConfig(e.config.core.config)
     + "("
@@ -88,3 +81,12 @@ export function serializeLatexLS1(e: LS1DescriptorImpl): string {
     + serializeLatexLS1Term(e.term)
   );
 }
+
+export const LS1Component = makeComponent(
+  LS1Descriptor,
+  serializeLS1,
+  serializeLatexLS1,
+);
+
+export const AtomLS1 = atom("AtomLS1", SimpleParticle, LS1Component);
+export type AtomLS1 = z.input<typeof AtomLS1>;

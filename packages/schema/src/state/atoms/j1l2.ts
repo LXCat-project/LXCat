@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
+import { makeComponent } from "../common";
 import { atom } from "../generators";
+import { SimpleParticle } from "../particle";
 import {
   buildTerm,
   buildTwoTerm,
@@ -28,21 +30,11 @@ export const J1L2Term = z.object({
 }).merge(TotalAngularSpecifier);
 export type J1L2Term = z.infer<typeof J1L2Term>;
 
-const J1L2DescriptorImpl = buildTerm(
+const J1L2Descriptor = buildTerm(
   buildTwoTerm(LSDescriptor, buildTerm(z.array(ShellEntry), LSTermUncoupled)),
   J1L2Term,
 );
-type J1L2DescriptorImpl = z.infer<typeof J1L2DescriptorImpl>;
-
-export const J1L2Descriptor = J1L2DescriptorImpl
-  .transform((atom) => ({
-    ...atom,
-    summary: () => serializeJ1L2(atom),
-    latex: () => serializeLatexJ1L2(atom),
-  }));
-
-export const AtomJ1L2 = atom("AtomJ1L2", J1L2Descriptor);
-export type AtomJ1L2 = z.input<typeof AtomJ1L2>;
+type J1L2Descriptor = z.infer<typeof J1L2Descriptor>;
 
 // ID parsing functions
 function serializeJ1L2Term(term: J1L2Term): string {
@@ -51,7 +43,7 @@ function serializeJ1L2Term(term: J1L2Term): string {
   }_${serializeHalfInteger(term.J)}`;
 }
 
-const serializeJ1L2 = (e: J1L2DescriptorImpl): string => {
+const serializeJ1L2 = (e: J1L2Descriptor): string => {
   return (
     serializeShellConfig(e.config.core.config)
     + "{"
@@ -72,7 +64,7 @@ const serializeLatexJ1L2Term = (term: J1L2Term): string => {
   }_{${serializeHalfInteger(term.J)}}`;
 };
 
-const serializeLatexJ1L2 = (e: J1L2DescriptorImpl): string => {
+const serializeLatexJ1L2 = (e: J1L2Descriptor): string => {
   return (
     serializeShellConfig(e.config.core.config)
     + "("
@@ -85,3 +77,12 @@ const serializeLatexJ1L2 = (e: J1L2DescriptorImpl): string => {
     + serializeLatexJ1L2Term(e.term)
   );
 };
+
+export const J1L2Component = makeComponent(
+  J1L2Descriptor,
+  serializeJ1L2,
+  serializeLatexJ1L2,
+);
+
+export const AtomJ1L2 = atom("AtomJ1L2", SimpleParticle, J1L2Component);
+export type AtomJ1L2 = z.input<typeof AtomJ1L2>;

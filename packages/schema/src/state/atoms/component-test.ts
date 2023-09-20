@@ -2,8 +2,8 @@ import { input, z, ZodTypeAny } from "zod";
 import { typeTag } from "../generators";
 import { SimpleParticle } from "../particle";
 import { StateSummary } from "../summary";
-import { LSDescriptorImpl, serializeLatexLS, serializeLS } from "./ls";
-import { LS1DescriptorImpl, serializeLatexLS1, serializeLS1 } from "./ls1";
+import { LSDescriptor, serializeLatexLS, serializeLS } from "./ls";
+import { LS1Descriptor, serializeLatexLS1, serializeLS1 } from "./ls1";
 
 type Component<SchemaType extends ZodTypeAny> = {
   schema: SchemaType;
@@ -31,16 +31,16 @@ export const createAtomicType = <
   serializer: { type: tag, electronic: component.serializers },
 });
 
-export const LSDescriptorComponent: Component<typeof LSDescriptorImpl> = {
-  schema: LSDescriptorImpl,
+export const LSDescriptorComponent: Component<typeof LSDescriptor> = {
+  schema: LSDescriptor,
   serializers: {
     summary: serializeLS,
     latex: serializeLatexLS,
   },
 };
 
-export const LS1DescriptorComponent: Component<typeof LS1DescriptorImpl> = {
-  schema: LS1DescriptorImpl,
+export const LS1DescriptorComponent: Component<typeof LS1Descriptor> = {
+  schema: LS1Descriptor,
   serializers: {
     summary: serializeLS1,
     latex: serializeLatexLS1,

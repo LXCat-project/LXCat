@@ -6,7 +6,6 @@ import { z } from "zod";
 import { AnyAtom } from "./atoms";
 import { parseCharge, parseChargeLatex } from "./common";
 import { AnyMolecule } from "./molecules";
-import { SimpleParticle } from "./particle";
 import { AnySpecies } from "./species";
 import { type StateSummary } from "./summary";
 
@@ -14,10 +13,10 @@ import { type StateSummary } from "./summary";
 //       constituents of State (e.g. simple, AnyAtom, AnyMolecule, etc.).
 //       Although this would require moving SimpleParticle to the separate
 //       definitions, e.g. the `atom` and `molecule` functions.
-export const State = z.intersection(SimpleParticle, AnySpecies).transform(
+export const State = AnySpecies.transform(
   (state) => ({
     ...state,
-    serialize: (): StateSummary => {
+    serialize: () => {
       const serialized: StateSummary = {
         particle: state.particle,
         charge: state.charge,
@@ -186,12 +185,22 @@ export const State = z.intersection(SimpleParticle, AnySpecies).transform(
 export type State = z.input<typeof State>;
 export type SerializableState = z.output<typeof State>;
 
-export const isAtom = (
-  state: SimpleParticle & AnySpecies,
-): state is SimpleParticle & AnyAtom =>
+export const isAtom = (state: AnySpecies): state is AnyAtom =>
   AnyAtom.options.some((option) => option.shape.type.value === state.type);
 
-export const isMolecule = (
-  state: SimpleParticle & AnySpecies,
-): state is SimpleParticle & AnyMolecule =>
+export const isMolecule = (state: AnySpecies): state is AnyMolecule =>
   AnyMolecule.options.some((option) => option.shape.type.value === state.type);
+
+const stripFunctionsRecursive = (obj: any): any => {
+  if (typeof obj === "object") {
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value === "function") {
+        delete obj[key];
+      } else if (typeof value === "object") {
+        obj[key] = stripFunctionsRecursive(obj[key]);
+      }
+    }
+  }
+
+  return obj;
+};

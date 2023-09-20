@@ -4,12 +4,14 @@
 
 import { z } from "zod";
 import { molecule } from "../generators";
+import { SimpleParticle } from "../particle";
 import { LinearInversionCenterElectronic } from "./components/electronic/linear-inversion-center";
 import { Rotational } from "./components/rotational";
 import { LinearTriatomVibrational } from "./components/vibrational/linear-triatomic";
 
 export const LinearTriatomInversionCenter = molecule(
   "LinearTriatomInversionCenter",
+  SimpleParticle,
   LinearInversionCenterElectronic,
   LinearTriatomVibrational,
   Rotational,

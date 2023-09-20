@@ -4,8 +4,9 @@
 
 import { z } from "zod";
 import { typeTag } from "./generators";
+import { SimpleParticle } from "./particle";
 
-export const Unspecified = typeTag("unspecified").merge(
-  z.object({ electronic: z.string().min(1) }),
-);
+export const Unspecified = typeTag("unspecified")
+  .merge(SimpleParticle)
+  .merge(z.object({ electronic: z.string().min(1) }));
 export type Unspecified = z.infer<typeof Unspecified>;

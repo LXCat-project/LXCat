@@ -11,5 +11,5 @@ export const SimpleParticle = z.object({
 });
 export type SimpleParticle = z.infer<typeof SimpleParticle>;
 
-export const AnyParticle = typeTag("simple");
+export const AnyParticle = typeTag("simple").merge(SimpleParticle);
 export type AnyParticle = z.infer<typeof AnyParticle>;

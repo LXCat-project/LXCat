@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
+import { makeComponent } from "../common";
 import { atom } from "../generators";
+import { SimpleParticle } from "../particle";
 import {
   atomicOrbital,
   buildTerm,
@@ -23,18 +25,8 @@ export type LSTermUncoupled = z.input<typeof LSTermUncoupled>;
 export const LSTerm = LSTermUncoupled.merge(TotalAngularSpecifier);
 export type LSTerm = z.input<typeof LSTerm>;
 
-export const LSDescriptorImpl = buildTerm(z.array(ShellEntry), LSTerm);
-type LSDescriptorImpl = z.infer<typeof LSDescriptorImpl>;
-
-export const LSDescriptor = LSDescriptorImpl.transform((atom) => ({
-  ...atom,
-  summary: () => serializeLS(atom),
-  latex: () => serializeLatexLS(atom),
-}));
-export type LSDescriptor = z.input<typeof LSDescriptor>;
-
-export const AtomLS = atom("AtomLS", LSDescriptor);
-export type AtomLS = z.input<typeof AtomLS>;
+export const LSDescriptor = buildTerm(z.array(ShellEntry), LSTerm);
+type LSDescriptor = z.infer<typeof LSDescriptor>;
 
 /// Serializer functions
 
@@ -48,7 +40,7 @@ export const serializeLSTerm = (term: LSTerm): string => {
   return `${serializeLSTermImpl(term)}_${serializeHalfInteger(term.J)}`;
 };
 
-export const serializeLS = (e: LSDescriptorImpl): string => {
+export const serializeLS = (e: LSDescriptor): string => {
   const config = serializeShellConfig(e.config);
   return `${config}${config !== "" ? ":" : ""}${serializeLSTerm(e.term)}`;
 };
@@ -63,7 +55,17 @@ export const serializeLatexLSTerm = (term: LSTerm): string => {
   return `${serializeLatexLSTermImpl(term)}_{${serializeHalfInteger(term.J)}}`;
 };
 
-export const serializeLatexLS = (e: LSDescriptorImpl): string => {
+export const serializeLatexLS = (e: LSDescriptor): string => {
   const config = serializeShellConfig(e.config);
   return `${config}${config != "" ? ":" : ""}${serializeLatexLSTerm(e.term)}`;
 };
+
+export const LSComponent = makeComponent(
+  LSDescriptor,
+  serializeLS,
+  serializeLatexLS,
+);
+export type LSComponent = z.output<typeof LSComponent>;
+
+export const AtomLS = atom("AtomLS", SimpleParticle, LSComponent);
+export type AtomLS = z.input<typeof AtomLS>;
