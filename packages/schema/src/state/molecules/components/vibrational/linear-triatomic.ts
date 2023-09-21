@@ -2,12 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { number, object, tuple } from "zod";
+import { makeComponent } from "../../../component";
 
-export const LinearTriatomVibrational = z.object({
-  v: z.tuple([z.number().int(), z.number().int(), z.number().int()]),
-}).transform((value) => ({
-  ...value,
-  summary: () => value.v.join(","),
-  latex: () => value.v.join(","),
-}));
+const LinearTriatomVibrationalDescriptor = object({
+  v: tuple([number().int(), number().int(), number().int()]),
+});
+
+export const LinearTriatomVibrational = makeComponent(
+  LinearTriatomVibrationalDescriptor,
+  (vib) => vib.v.join(","),
+  (vib) => vib.v.join(","),
+);

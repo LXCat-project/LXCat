@@ -2,11 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { number, object } from "zod";
+import { makeComponent } from "../../../component";
 
-export const DiatomicVibrational = z.object({ v: z.number().int() })
-  .transform((value) => ({
-    ...value,
-    summary: () => value.v.toString(),
-    latex: () => value.v.toString(),
-  }));
+const DiatomicVibrationalDescriptor = object({ v: number().int() });
+
+export const DiatomicVibrational = makeComponent(
+  DiatomicVibrationalDescriptor,
+  (vib) => vib.v.toString(),
+  (vib) => vib.v.toString(),
+);

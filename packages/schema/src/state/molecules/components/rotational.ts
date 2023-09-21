@@ -2,12 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { number, object } from "zod";
+import { makeComponent } from "../../component";
 
-export const Rotational = z.object({ J: z.number().int() }).transform((
-  value,
-) => ({
-  ...value,
-  summary: () => value.J.toString(),
-  latex: () => value.J.toString(),
-}));
+const RotationalDescriptor = object({ J: number().int() });
+
+export const Rotational = makeComponent(
+  RotationalDescriptor,
+  (rot) => rot.J.toString(),
+  (rot) => rot.J.toString(),
+);

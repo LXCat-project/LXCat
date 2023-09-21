@@ -2,35 +2,36 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { molecular_orbital, molecular_orbital_latex } from "../../common";
+import { makeComponent } from "../../../component";
+import { molecularOrbital, molecularOrbitalLatex } from "../../common";
 import { MolecularParity } from "../common";
-import { LinearElectronic } from "./linear";
+import { LinearElectronicDescriptor } from "./linear";
 
-export const LinearInversionCenterElectronic = LinearElectronic
-  .innerType()
-  .merge(MolecularParity)
-  .transform((obj) => ({
-    ...obj,
-    summary: () => {
-      let ref_s = "";
+const LinearInversionCenterElectronicDescriptor = LinearElectronicDescriptor
+  .merge(MolecularParity);
 
-      if (obj.reflection !== undefined) {
-        ref_s = "^" + obj.reflection;
-      }
+export const LinearInversionCenterElectronic = makeComponent(
+  LinearInversionCenterElectronicDescriptor,
+  (ele) => {
+    let ref_s = "";
 
-      return `${obj.energyId}^${2 * obj.S + 1}${
-        molecular_orbital[obj.Lambda]
-      }_${obj.parity}${ref_s}`;
-    },
-    latex: () => {
-      let ref_s = "";
+    if (ele.reflection !== undefined) {
+      ref_s = "^" + ele.reflection;
+    }
 
-      if (obj.reflection !== undefined) {
-        ref_s = "^" + obj.reflection;
-      }
+    return `${ele.energyId}^${2 * ele.S + 1}${
+      molecularOrbital[ele.Lambda]
+    }_${ele.parity}${ref_s}`;
+  },
+  (ele) => {
+    let ref_s = "";
 
-      return `\\mathrm{${obj.energyId}}^{${2 * obj.S + 1}}${
-        molecular_orbital_latex[obj.Lambda]
-      }_\\mathrm{${obj.parity}}${ref_s}`;
-    },
-  }));
+    if (ele.reflection !== undefined) {
+      ref_s = "^" + ele.reflection;
+    }
+
+    return `\\mathrm{${ele.energyId}}^{${2 * ele.S + 1}}${
+      molecularOrbitalLatex[ele.Lambda]
+    }_\\mathrm{${ele.parity}}${ref_s}`;
+  },
+);

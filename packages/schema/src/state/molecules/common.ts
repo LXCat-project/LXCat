@@ -1,5 +1,5 @@
-export const molecular_orbital = ["S", "P", "D", "F", "G"];
-export const molecular_orbital_latex = [
+export const molecularOrbital = ["S", "P", "D", "F", "G"];
+export const molecularOrbitalLatex = [
   "\\Sigma",
   "\\Pi",
   "\\Delta",
