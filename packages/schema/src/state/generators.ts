@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { UnknownKeysParam, z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+import { type Component } from "./component";
 
 export const typeTag = <Tag extends string>(tag: Tag) =>
   z.object({ type: z.literal(tag) });
@@ -57,16 +58,16 @@ export const molecule = <
       }),
     );
 
-export const atom = <
+export const makeAtomSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  Electronic extends z.ZodTypeAny,
+  ElectronicSchema extends z.ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,
-  electronic: Electronic,
+  electronic: ElectronicSchema,
 ) =>
   typeTag(tag).merge(composition).merge(
     z.object({
@@ -76,3 +77,18 @@ export const atom = <
       ]),
     }),
   );
+
+export const makeAtom = <
+  Tag extends string,
+  Shape extends ZodRawShape,
+  UnknownKeys extends UnknownKeysParam,
+  Catchall extends ZodTypeAny,
+  ElectronicSchema extends z.ZodTypeAny,
+>(
+  tag: Tag,
+  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  electronic: Component<ElectronicSchema>,
+) => ({
+  plain: makeAtomSchema(tag, composition, electronic.innerType()),
+  serializable: makeAtomSchema(tag, composition, electronic),
+});

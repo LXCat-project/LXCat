@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { AnyAtom } from "./atoms";
+import { isAtom } from "./atoms/type-guard";
 import { parseCharge, parseChargeLatex } from "./common";
 import { AnyMolecule } from "./molecules";
 import { AnySpecies } from "./species";
@@ -184,9 +184,6 @@ export const State = AnySpecies.transform(
 );
 export type State = z.input<typeof State>;
 export type SerializableState = z.output<typeof State>;
-
-export const isAtom = (state: AnySpecies): state is AnyAtom =>
-  AnyAtom.options.some((option) => option.shape.type.value === state.type);
 
 export const isMolecule = (state: AnySpecies): state is AnyMolecule =>
   AnyMolecule.options.some((option) => option.shape.type.value === state.type);

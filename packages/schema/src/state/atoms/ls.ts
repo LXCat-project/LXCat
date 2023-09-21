@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { makeComponent } from "../common";
-import { atom } from "../generators";
+import { makeComponent } from "../component";
+import { makeAtom } from "../generators";
 import { SimpleParticle } from "../particle";
 import {
   atomicOrbital,
@@ -67,5 +67,5 @@ export const LSComponent = makeComponent(
 );
 export type LSComponent = z.output<typeof LSComponent>;
 
-export const AtomLS = atom("AtomLS", SimpleParticle, LSComponent);
-export type AtomLS = z.input<typeof AtomLS>;
+export const AtomLS = makeAtom("AtomLS", SimpleParticle, LSComponent);
+export type AtomLS = z.input<typeof AtomLS.plain>;

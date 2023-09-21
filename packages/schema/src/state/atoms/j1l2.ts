@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { makeComponent } from "../common";
-import { atom } from "../generators";
+import { makeComponent } from "../component";
+import { makeAtom } from "../generators";
 import { SimpleParticle } from "../particle";
 import {
   buildTerm,
@@ -36,7 +36,7 @@ const J1L2Descriptor = buildTerm(
 );
 type J1L2Descriptor = z.infer<typeof J1L2Descriptor>;
 
-// ID parsing functions
+// Summary serializer functions
 function serializeJ1L2Term(term: J1L2Term): string {
   return `${2 * term.S + 1}[${serializeHalfInteger(term.K)}]${
     term.P == -1 ? "^o" : ""
@@ -57,7 +57,7 @@ const serializeJ1L2 = (e: J1L2Descriptor): string => {
   );
 };
 
-// LaTeX parsing functions
+// LaTeX serializer functions
 const serializeLatexJ1L2Term = (term: J1L2Term): string => {
   return `{}^{${2 * term.S + 1}}[${serializeHalfInteger(term.K)}]${
     term.P == -1 ? "^o" : ""
@@ -84,5 +84,5 @@ export const J1L2Component = makeComponent(
   serializeLatexJ1L2,
 );
 
-export const AtomJ1L2 = atom("AtomJ1L2", SimpleParticle, J1L2Component);
-export type AtomJ1L2 = z.input<typeof AtomJ1L2>;
+export const AtomJ1L2 = makeAtom("AtomJ1L2", SimpleParticle, J1L2Component);
+export type AtomJ1L2 = z.output<typeof AtomJ1L2.plain>;
