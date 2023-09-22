@@ -7,7 +7,7 @@ import { CSLData } from "../common/csl/data";
 import { CSLDateVariable } from "../common/csl/date-variable";
 import { CSLNameVariable } from "../common/csl/name-variable";
 import { LTPDocument } from "../document";
-import { AnySpecies } from "../state/species";
+import { AnySpecies } from "../species";
 
 export const LTPDocumentJSONSchema = zodToJsonSchema(LTPDocument, {
   definitions: {

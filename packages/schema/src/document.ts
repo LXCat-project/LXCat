@@ -5,7 +5,7 @@
 import { z } from "zod";
 import { Reference } from "./common/reference";
 import { AnyProcess } from "./process";
-import { State } from "./state";
+import { AnySpecies } from "./species";
 
 export const SelfReference = z.object({
   $schema: z.string().url(),
@@ -30,7 +30,7 @@ export const SetHeader = z.object({
 //       keys actually exist in the respective objects.
 const DocumentBody = z.object({
   references: z.record(Reference),
-  states: z.record(State),
+  states: z.record(AnySpecies),
   processes: z.array(AnyProcess(z.string(), z.string())),
 });
 

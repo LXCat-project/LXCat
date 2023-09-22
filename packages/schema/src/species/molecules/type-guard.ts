@@ -1,4 +1,4 @@
-import type { AnySpecies, AnySpeciesSerializable } from "../species";
+import type { AnySpecies, AnySpeciesSerializable } from "../any-species";
 import { AnyMolecule, AnyMoleculeSerializable } from ".";
 
 export const isMolecule = (state: AnySpecies): state is AnyMolecule =>

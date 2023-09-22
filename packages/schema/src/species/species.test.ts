@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { State } from ".";
+import { type AnySpecies, AnySpeciesSerializable } from "./any-species";
 import { type StateSummary } from "./summary";
 
-type TestCases = Array<[string, State, StateSummary]>;
+type TestCases = Array<[string, AnySpecies, StateSummary]>;
 
 describe("State serialization", () => {
   const testCases: TestCases = [
@@ -338,7 +338,7 @@ describe("State serialization", () => {
   ];
 
   it.each(testCases)("%s", (_, input, summary) => {
-    const state = State.parse(input);
+    const state = AnySpeciesSerializable.parse(input);
     expect(state.serialize()).toStrictEqual(summary);
   });
 });
