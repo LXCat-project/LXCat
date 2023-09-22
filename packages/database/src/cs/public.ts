@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type Reference } from "@lxcat/schema/dist/common/reference";
-import { type SelfReference } from "@lxcat/schema/dist/document";
-import { type Reaction } from "@lxcat/schema/dist/process/reaction";
+import type { Reference, SelfReference } from "@lxcat/schema";
+import { type Reaction } from "@lxcat/schema/process";
 import { CrossSection } from "../cs/collections";
 import { CrossSectionSet } from "../css/collections";
 import { State } from "../shared/types/collections";

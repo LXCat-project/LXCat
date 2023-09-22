@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LTPDocument } from "@lxcat/schema/dist/document";
-import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
+import { type LTPDocument } from "@lxcat/schema";
+import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";

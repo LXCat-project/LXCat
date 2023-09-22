@@ -1,9 +1,9 @@
-import { State } from "@lxcat/schema/dist/state";
+import { AnySpecies } from "@lxcat/schema/species";
 import path from "path";
-import { z } from "zod";
+import { object, string } from "zod";
 import { generateSchema } from "../shared/generate-schema";
 
-const Contributor = z.object({ name: z.string() });
+const Contributor = object({ name: string() });
 
 generateSchema(
   Contributor,
@@ -11,6 +11,6 @@ generateSchema(
 );
 
 generateSchema(
-  State,
+  AnySpecies,
   path.join(process.cwd(), "src/shared/schemas/State.schema.json"),
 );

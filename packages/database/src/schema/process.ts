@@ -1,6 +1,5 @@
-import { AnyProcess } from "@lxcat/schema/dist/process";
+import { AnyProcess } from "@lxcat/schema/process";
 import { output, ZodType, ZodTypeAny } from "zod";
-
 import { Keyed } from "./key";
 
 export const KeyedProcess = <

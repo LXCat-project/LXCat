@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type CrossSectionInfo } from "@lxcat/schema/dist/process/cross-section/cross-section";
+import { type CrossSectionInfo } from "@lxcat/schema/process";
 import { VersionInfo } from "../shared/types/version_info";
 
 export type CrossSection = {

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Database abstraction layer for LXCat web application.",
   "license": "AGPL-3.0-or-later",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

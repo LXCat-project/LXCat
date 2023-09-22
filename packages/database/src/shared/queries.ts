@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "@lxcat/schema/dist/common/reference";
-import { Reaction } from "@lxcat/schema/dist/process/reaction";
-import { isAtom, SerializableState, State } from "@lxcat/schema/dist/state";
+import { type Reference } from "@lxcat/schema";
+import { Reaction } from "@lxcat/schema/process";
+import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
+import { isAtom } from "@lxcat/schema/species/atoms";
 import { db } from "../db";
 import { findReactionId } from "./queries/reaction";
 
@@ -55,7 +56,7 @@ export async function insertEdge(
 }
 
 export async function insertStateDict(
-  states: Record<string, SerializableState>,
+  states: Record<string, AnySpeciesSerializable>,
 ): Promise<Record<string, string>> {
   const id_dict: Record<string, string> = {};
 
@@ -67,11 +68,11 @@ export async function insertStateDict(
 }
 
 async function insertState(
-  state: State,
+  state: AnySpecies,
 ): Promise<{ id: string; new: boolean }> {
   const dbState = {
     detailed: state,
-    serialized: State.parse(state).serialize(),
+    serialized: AnySpeciesSerializable.parse(state).serialize(),
   };
   return upsertDocument("State", dbState);
 }
@@ -80,11 +81,11 @@ async function insertState(
  * Strategy: add states in a top down fashion.
  */
 async function insertStateTree(
-  state: State,
+  state: AnySpecies,
 ): Promise<string> {
   let ret_id = "";
 
-  let topLevelState: State = {
+  let topLevelState: AnySpecies = {
     type: "simple",
     particle: state.particle,
     charge: state.charge,
@@ -102,7 +103,8 @@ async function insertStateTree(
     if (Array.isArray(state.electronic)) {
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };
-        const e_ret = await insertState(State.parse(elec_state));
+        // FIXME: This parse should not be necessary.
+        const e_ret = await insertState(AnySpecies.parse(elec_state));
         if (e_ret.new) {
           await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
         }
@@ -119,7 +121,7 @@ async function insertStateTree(
     if (Array.isArray(state.electronic)) {
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };
-        const e_ret = await insertState(State.parse(elec_state));
+        const e_ret = await insertState(AnySpecies.parse(elec_state));
         if (e_ret.new) {
           await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
         }
@@ -134,7 +136,7 @@ async function insertStateTree(
         ...state,
         electronic,
       };
-      const e_ret = await insertState(State.parse(ele_state));
+      const e_ret = await insertState(AnySpecies.parse(ele_state));
       if (e_ret.new) await insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
       ret_id = e_ret.id;
 
@@ -152,7 +154,7 @@ async function insertStateTree(
               ...state,
               electronic: { ...electronic, vibrational: vib },
             };
-            const v_ret = await insertState(State.parse(vib_state));
+            const v_ret = await insertState(AnySpecies.parse(vib_state));
             if (v_ret.new) {
               await insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
             }
@@ -166,7 +168,7 @@ async function insertStateTree(
             ...state,
             electronic: { ...state.electronic, vibrational },
           };
-          const v_ret = await insertState(State.parse(vib_state));
+          const v_ret = await insertState(AnySpecies.parse(vib_state));
           if (v_ret.new) {
             await insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
@@ -186,7 +188,7 @@ async function insertStateTree(
                   },
                 };
 
-                const r_ret = await insertState(State.parse(rot_state));
+                const r_ret = await insertState(AnySpecies.parse(rot_state));
                 if (r_ret.new) {
                   await insertEdge("HasDirectSubstate", v_ret.id, r_ret.id);
                 }

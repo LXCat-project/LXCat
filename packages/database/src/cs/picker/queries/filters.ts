@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 // import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { type ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
+import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql, AqlLiteral } from "arangojs/aql";
 import { ReactionFunction, Reversible } from "../types";
 
