@@ -34,5 +34,26 @@ const DocumentBody = z.object({
   processes: z.array(AnyProcess(z.string(), z.string())),
 });
 
-export const LTPDocument = SelfReference.merge(SetHeader).merge(DocumentBody);
+export const LTPDocument = SelfReference
+  .merge(SetHeader)
+  .merge(DocumentBody)
+  .refine(
+    (doc) =>
+      doc.processes
+        .flatMap((process) => process.reaction.lhs)
+        .every(({ state }) => state in doc.states)
+      && doc.processes
+        .flatMap((process) => process.reaction.rhs)
+        .every(({ state }) => state in doc.states),
+    "Referenced state key is missing in states record.",
+  )
+  .refine(
+    (doc) =>
+      doc.processes
+        .flatMap(({ info }) => Array.isArray(info) ? info : [info])
+        .flatMap(({ references }) => references)
+        .every((reference) => reference in doc.references),
+    "Referenced reference key is missing in references record.",
+  );
+
 export type LTPDocument = z.output<typeof LTPDocument>;
