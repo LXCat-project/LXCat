@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { OneOrMultiple } from "../common/util";
-import { SimpleParticle } from "./particle";
+import { SimpleParticle } from "./composition/simple/particle";
 
 const SummarizedComponent = z.object({
   summary: z.string().min(1),

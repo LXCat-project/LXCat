@@ -4,8 +4,8 @@
 
 import { z } from "zod";
 import { makeComponent } from "../component";
+import { SimpleParticle } from "../composition/simple/particle";
 import { makeAtom } from "../generators";
-import { SimpleParticle } from "../particle";
 import {
   buildTerm,
   buildTwoTerm,

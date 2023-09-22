@@ -8,20 +8,20 @@ import { type Component } from "./component";
 export const typeTag = <Tag extends string>(tag: Tag) =>
   z.object({ type: z.literal(tag) });
 
-export const molecule = <
+export const makeMoleculeSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  Electronic extends z.ZodTypeAny,
-  Vibrational extends z.ZodTypeAny,
-  Rotational extends z.ZodTypeAny,
+  ElectronicSchema extends z.ZodTypeAny,
+  VibrationalSchema extends z.ZodTypeAny,
+  RotationalSchema extends z.ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,
-  electronic: Electronic,
-  vibrational: Vibrational,
-  rotational: Rotational,
+  electronic: ElectronicSchema,
+  vibrational: VibrationalSchema,
+  rotational: RotationalSchema,
 ) =>
   typeTag(tag)
     .merge(composition)
@@ -57,6 +57,37 @@ export const molecule = <
         ]),
       }),
     );
+
+export const makeMolecule = <
+  Tag extends string,
+  Shape extends ZodRawShape,
+  UnknownKeys extends UnknownKeysParam,
+  Catchall extends ZodTypeAny,
+  ElectronicSchema extends z.ZodTypeAny,
+  VibrationalSchema extends z.ZodTypeAny,
+  RotationalSchema extends z.ZodTypeAny,
+>(
+  tag: Tag,
+  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  electronic: Component<ElectronicSchema>,
+  vibrational: Component<VibrationalSchema>,
+  rotational: Component<RotationalSchema>,
+) => ({
+  plain: makeMoleculeSchema(
+    tag,
+    composition,
+    electronic.innerType(),
+    vibrational.innerType(),
+    rotational.innerType(),
+  ),
+  serializable: makeMoleculeSchema(
+    tag,
+    composition,
+    electronic,
+    vibrational,
+    rotational,
+  ),
+});
 
 export const makeAtomSchema = <
   Tag extends string,

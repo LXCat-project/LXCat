@@ -1,6 +1,6 @@
 import { input, z, ZodTypeAny } from "zod";
+import { SimpleParticle } from "../composition/simple/particle";
 import { typeTag } from "../generators";
-import { SimpleParticle } from "../particle";
 import { StateSummary } from "../summary";
 import { LSDescriptor, serializeLatexLS, serializeLS } from "./ls";
 import { LS1Descriptor, serializeLatexLS1, serializeLS1 } from "./ls1";
