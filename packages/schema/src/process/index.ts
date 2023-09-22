@@ -2,31 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z, ZodType } from "zod";
-import { OneOrMultiple } from "../common/util";
-import { ProcessInfo } from "./process-info";
-import { Reaction } from "./reaction";
-
-const Process = <
-  StateType extends z.ZodTypeAny,
-  ProcessInfoType extends z.ZodTypeAny,
->(StateType: StateType, ProcessInfoType: ProcessInfoType) =>
-  z.object({
-    reaction: Reaction(StateType),
-    info: OneOrMultiple(ProcessInfoType),
-  });
-
-export const AnyProcess = <
-  StateType extends z.ZodTypeAny,
-  ReferenceType extends z.ZodTypeAny,
->(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, ProcessInfo(ReferenceType));
-
-type AnyProcessType<
-  StateType extends z.ZodTypeAny,
-  ReferenceType extends z.ZodTypeAny,
-> = ReturnType<typeof AnyProcess<StateType, ReferenceType>>;
-
-export type AnyProcess<StateType, ReferenceType> = z.infer<
-  AnyProcessType<ZodType<StateType>, ZodType<ReferenceType>>
->;
+export { AnyProcess } from "./any-process";
+export { CrossSectionInfo } from "./cross-section/cross-section";
+export { Reaction } from "./reaction";
+export { ReactionTypeTag } from "./reaction/type-tags";

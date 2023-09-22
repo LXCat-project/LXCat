@@ -2,6 +2,7 @@
   "name": "@lxcat/schema",
   "version": "0.1.0",
   "description": "Schema and validator for LXCat",
+  "license": "Apache-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "json:css": "ts-json-schema-generator -f ./tsconfig.json --no-top-ref --path src/css/input.ts --type CrossSectionSetRaw --out src/css/CrossSectionSetRaw.schema.json -e none",
@@ -16,7 +17,6 @@
     "prepublishOnly": "pnpm build",
     "clean": "rm -rf dist"
   },
-  "license": "Apache-2.0",
   "dependencies": {
     "ajv": "^8.12.0",
     "ts-json-schema-generator": "^1.3.0",
@@ -32,8 +32,36 @@
     "typescript": "^5.1.6",
     "vitest": "^0.34.2"
   },
-  "main": "dist/css/validate.js",
-  "types": "dist/css/validate.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./species": {
+      "types": "./dist/species/index.d.ts",
+      "default": "./dist/species/index.js"
+    },
+    "./species/atoms": {
+      "types": "./dist/species/atoms/index.d.ts",
+      "default": "./dist/species/atoms/index.js"
+    },
+    "./species/molecules": {
+      "types": "./dist/species/molecules/index.d.ts",
+      "default": "./dist/species/molecules/index.js"
+    },
+    "./process": {
+      "types": "./dist/process/index.d.ts",
+      "default": "./dist/process/index.js"
+    },
+    "./data-types": {
+      "types": "./dist/commons/data-types.d.ts",
+      "default": "./dist/commons/data-types.js"
+    },
+    "./json-schema": {
+      "types": "./dist/json-schema/index.js",
+      "default": "./dist/json-schema/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
