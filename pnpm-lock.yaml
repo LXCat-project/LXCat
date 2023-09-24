@@ -152,8 +152,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       remark-embed-images:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^4.0.0
+        version: 4.0.0
       remark-gfm:
         specifier: ^3.0.1
         version: 3.0.1
@@ -7071,9 +7071,9 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
-  /is-absolute-url@3.0.3:
-    resolution: {integrity: sha512-opmNIX7uFnS96NtPmhWQgQx6/NYFgsUXYMllcfzwWKUMwfo8kku1TvE6hkNcH+Q1ts5cMVrsY7j0bxXQDciu9Q==}
-    engines: {node: '>=8'}
+  /is-absolute-url@4.0.1:
+    resolution: {integrity: sha512-/51/TKE88Lmm7Gc4/8btclNXWS+g50wXhYJq8HWIBAGUBnoAdRu1aXeh364t/O7wXDAcTJDP8PNuNKWUDWie+A==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
   /is-alphabetical@2.0.1:
@@ -7297,11 +7297,11 @@ packages:
       call-bind: 1.0.2
       has-tostringtag: 1.0.0
 
-  /is-relative-url@3.0.0:
-    resolution: {integrity: sha512-U1iSYRlY2GIMGuZx7gezlB5dp1Kheaym7zKzO1PV06mOihiWTXejLwm4poEJysPyXF+HtK/BEd0DVlcCh30pEA==}
-    engines: {node: '>=8'}
+  /is-relative-url@4.0.0:
+    resolution: {integrity: sha512-PkzoL1qKAYXNFct5IKdKRH/iBQou/oCC85QhXj6WKtUQBliZ4Yfd3Zk27RHu9KQG8r6zgvAA2AQKC9p+rqTszg==}
+    engines: {node: '>=14.16'}
     dependencies:
-      is-absolute-url: 3.0.3
+      is-absolute-url: 4.0.1
     dev: false
 
   /is-set@2.0.2:
@@ -10290,14 +10290,14 @@ packages:
       unist-util-visit: 5.0.0
     dev: false
 
-  /remark-embed-images@3.1.0:
-    resolution: {integrity: sha512-vAXukFExSWXRXYMTHc3Y4k358PGPwjkcF1z6Kq9d6zj93OT+7+/nVsHT1q4kOmR2I/qegD6eKk7xcugfZvu1rw==}
+  /remark-embed-images@4.0.0:
+    resolution: {integrity: sha512-c8qQMdhNTSO9TMMfbvf5CWI+HhIX5UZPTBVNaNSpxaEuRt0KCLFk68s5CQ7szbSERLnpos+c9K6xZoILWRh+eQ==}
     dependencies:
-      '@types/mdast': 3.0.11
-      is-relative-url: 3.0.0
+      '@types/mdast': 4.0.0
+      is-relative-url: 4.0.0
       mime: 3.0.0
-      unified: 10.1.2
-      unist-util-visit: 4.1.2
+      unist-util-visit: 5.0.0
+      vfile: 6.0.1
     dev: false
 
   /remark-gfm@3.0.1:
