@@ -62,8 +62,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       '@next/bundle-analyzer':
-        specifier: ^13.4.19
-        version: 13.4.19
+        specifier: ^13.5.3
+        version: 13.5.3
       '@tabler/icons-react':
         specifier: ^2.35.0
         version: 2.35.0(react@18.2.0)
@@ -2367,8 +2367,8 @@ packages:
     hasBin: true
     dev: true
 
-  /@next/bundle-analyzer@13.4.19:
-    resolution: {integrity: sha512-nXKHz63dM0Kn3XPFOKrv2wK+hP9rdBg2iR1PsxuXLHVBoZhMyS1/ldRcX80YFsm2VUws9zM4a0E/1HlLI+P92g==}
+  /@next/bundle-analyzer@13.5.3:
+    resolution: {integrity: sha512-AUHl9hu/0SNo2TCu9awOGY5hJdQHTPThYbjKk3rmjL04GfYAotn5i5pFQGqe209mbCxtu+QnvMEHLXU4GdFi1Q==}
     dependencies:
       webpack-bundle-analyzer: 4.7.0
     transitivePeerDependencies:
