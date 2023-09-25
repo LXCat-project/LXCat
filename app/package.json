@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@citation-js/core": "^0.6.8",
-    "@citation-js/plugin-bibtex": "^0.6.8",
+    "@citation-js/plugin-bibtex": "^0.7.1",
     "@citation-js/plugin-csl": "^0.7.1",
     "@citation-js/plugin-doi": "^0.6.9",
     "@citation-js/plugin-ris": "^0.6.8",
