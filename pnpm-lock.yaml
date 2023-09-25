@@ -23,8 +23,8 @@ importers:
         specifier: ^0.6.9
         version: 0.6.9(@citation-js/core@0.6.8)
       '@citation-js/plugin-ris':
-        specifier: ^0.6.8
-        version: 0.6.8(@citation-js/core@0.6.8)
+        specifier: ^0.7.1
+        version: 0.7.1(@citation-js/core@0.6.8)
       '@emotion/react':
         specifier: ^11.11.1
         version: 11.11.1(@types/react@18.2.22)(react@18.2.0)
@@ -1638,11 +1638,11 @@ packages:
       '@citation-js/date': 0.5.1
     dev: false
 
-  /@citation-js/plugin-ris@0.6.8(@citation-js/core@0.6.8):
-    resolution: {integrity: sha512-pDHdOjdrn25riXEwF3XK1fcU2o5/lxV2vbK+CxiFCiV2C2bRtNJRBN/97xIkHBWuqI5mr8ts93b3ijHvp3576Q==}
-    engines: {node: '>=14.0.0'}
+  /@citation-js/plugin-ris@0.7.1(@citation-js/core@0.6.8):
+    resolution: {integrity: sha512-u18gC1bsX7JrT4i3BUeQkGZSq+UQ+AIjRs/zX35/F5Vi7OYTBcrfWWcZSJj1GJatin6vNXxaHZrwaVHq8LJuww==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@citation-js/core': ^0.6.0
+      '@citation-js/core': ^0.7.0
     dependencies:
       '@citation-js/core': 0.6.8
       '@citation-js/date': 0.5.1
