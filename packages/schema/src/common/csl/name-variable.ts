@@ -17,4 +17,8 @@ export const CSLNameVariable = z
       .optional(),
     literal: z.string().optional(),
     "parse-names": z.union([z.string(), z.number(), z.boolean()]).optional(),
+    ORCID: z.string().url().optional(),
+    "authenticated-orcid": z.boolean().optional(),
+    sequence: z.enum(["first", "additional"]).optional(),
+    affiliation: z.array(z.string().min(1)).optional(),
   });
