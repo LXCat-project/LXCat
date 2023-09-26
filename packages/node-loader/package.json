@@ -21,11 +21,11 @@
     "loader-utils": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.22.10",
-    "@babel/core": "^7.22.10",
-    "@babel/preset-env": "^7.22.10",
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.22.20",
+    "@babel/preset-env": "^7.22.20",
     "cross-env": "^7.0.3",
-    "del": "^7.0.0",
-    "del-cli": "^5.0.0"
+    "del": "^7.1.0",
+    "del-cli": "^5.1.0"
   }
 }
