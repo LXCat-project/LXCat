@@ -5,7 +5,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
 
   webpack: (config, { nextRuntime }) => {
     if (nextRuntime === "nodejs") {
