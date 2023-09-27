@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LTPDocumentJSONSchema } from "@lxcat/schema/dist/json-schema/document";
+import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 

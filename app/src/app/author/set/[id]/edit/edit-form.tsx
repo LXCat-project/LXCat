@@ -5,7 +5,7 @@
 "use client";
 
 import { KeyedDocument } from "@lxcat/database/dist/schema/document";
-import { LTPDocumentJSONSchema } from "@lxcat/schema/dist/json-schema/document";
+import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 import {
   Button,
   Checkbox,

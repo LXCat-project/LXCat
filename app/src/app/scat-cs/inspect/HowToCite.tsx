@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "@lxcat/schema/dist/common/reference";
+import { Reference } from "@lxcat/schema";
 import { ReferenceList } from "./ReferenceList";
 import { FormattedReference } from "./types";
 

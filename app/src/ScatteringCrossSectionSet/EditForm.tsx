@@ -39,22 +39,17 @@ import {
 } from "react-hook-form";
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
-import {
-  ReactionTypeTag,
-  Storage,
-} from "@lxcat/schema/dist/old/core/enumeration";
-import { parseState } from "@lxcat/schema/dist/old/core/parse";
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/old/common/reference";
-import { InState } from "@lxcat/schema/dist/old/core/state";
-import { Dict, Pair } from "@lxcat/schema/dist/old/core/util";
-import schema4set from "@lxcat/schema/dist/old/css/CrossSectionSetRaw.schema.json";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/old/css/input";
+import { Reference as ReferenceRecord } from "@lxcat/schema";
+import { LTPDocument } from "@lxcat/schema";
+import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
+import { ReactionTypeTag } from "@lxcat/schema/process";
+import { AnySpecies } from "@lxcat/schema/species";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction } from "@lxcat/schema/dist/process/reaction";
-import { AnySpecies } from "@lxcat/schema/dist/state/species";
+import { Reaction } from "@lxcat/schema/process";
+import { AnySpecies } from "@lxcat/schema/species";
 import { Picked as PickedCrossSections } from "../ScatteringCrossSection/Picker";
 import { PickerModal as CrossSectionPickerModal } from "../ScatteringCrossSection/PickerModal";
 import { ReactionSummary } from "../ScatteringCrossSection/ReactionSummary";
@@ -67,7 +62,7 @@ import { Reference } from "../shared/Reference";
 import { StatePickerModal } from "./StatePickeModal";
 
 interface FieldValues {
-  set: CrossSectionSetRaw;
+  set: LTPDocument;
   commitMessage: string;
 }
 
@@ -2341,7 +2336,7 @@ const ImportBibTeXDOIButton = ({
   );
 };
 
-const JSONTabPanel = ({ set }: { set: CrossSectionSetRaw }) => {
+const JSONTabPanel = ({ set }: { set: LTPDocument }) => {
   const jsonString = useMemo(() => {
     return JSON.stringify(pruneSet(set), undefined, 2);
   }, [set]);
@@ -2358,7 +2353,7 @@ const JSONTabPanel = ({ set }: { set: CrossSectionSetRaw }) => {
 const schema4form = {
   type: "object",
   properties: {
-    set: schema4set,
+    set: LTPDocumentJSONSchema,
     commitMessage: {
       type: "string",
     },
@@ -2368,7 +2363,7 @@ const schema4form = {
 };
 
 interface Props {
-  set: CrossSectionSetRaw; // TODO should be CrossSectionSetInputOwned, but gives type error
+  set: LTPDocument; // TODO should be CrossSectionSetInputOwned, but gives type error
   commitMessage: string;
   onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
   organizations: OrganizationFromDB[];
@@ -2416,11 +2411,11 @@ export const EditForm = ({
   // States
   const [expandedStates, setExpandedStates] = useState<string[]>([]);
   const states = useWatch({ name: "set.states", control });
-  const setStates = (newStates: Dict<InState<AnySpecies>>) =>
+  const setStates = (newStates: Dict<AnySpecies<AnySpecies>>) =>
     setValue("set.states", newStates);
   const addState = () => {
     const newLabel = `s${Object.keys(states).length}`;
-    const newStates: Dict<InState<AnySpecies>> = {
+    const newStates: Dict<AnySpecies<AnySpecies>> = {
       ...states,
       [newLabel]: {
         particle: "",
@@ -2695,7 +2690,7 @@ function pruneFieldValues(values: FieldValues) {
   return { commitMessage: values.commitMessage, set: pruneSet(values.set) };
 }
 
-function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
+function pruneSet(set: LTPDocument): LTPDocument {
   // TODO get rid of keys which have undefined value in recursive way
   // for now just set.states
   const newSet = { ...set };
@@ -2709,7 +2704,7 @@ function pruneSet(set: CrossSectionSetRaw): CrossSectionSetRaw {
 }
 
 // FIXME: This is in a broken state since schema changes.
-function pruneState(state: InState<AnySpecies>) {
+function pruneState(state: AnySpecies<AnySpecies>) {
   const newState = { ...state }; // TODO make better clone
   // if (newState.type !== "simple" && newState.electronic) {
   //   newState.electronic.forEach((e: any) => {
@@ -2742,7 +2737,7 @@ function pruneState(state: InState<AnySpecies>) {
   return newState;
 }
 
-function initialProcess(): CrossSectionSetRaw["processes"][0] {
+function initialProcess(): LTPDocument["processes"][0] {
   return {
     reaction: { lhs: [], rhs: [], reversible: false, type_tags: [] },
     threshold: 0,
@@ -2756,7 +2751,7 @@ function initialProcess(): CrossSectionSetRaw["processes"][0] {
 // TODO move utility functions to own file and reuse else where
 
 function mapStateToReaction(
-  states: Dict<InState<AnySpecies>>,
+  states: Dict<AnySpecies<AnySpecies>>,
   reaction: Reaction<string>,
 ): Reaction<State> {
   const newReaction = {
@@ -2781,7 +2776,7 @@ function mapStateToReaction(
 
 function flattenCrossSection(
   cs: CrossSectionItem,
-): CrossSectionSetRaw["processes"][0] {
+): LTPDocument["processes"][0] {
   // drop some keys from cs as they are not required for the set
   // in which this cs will be placed in
   const { isPartOf, organization, versionInfo, ...rest } = cs;
@@ -2802,15 +2797,15 @@ function flattenCrossSection(
   };
 }
 
-function hashState(state: InState<any>): [string, string] {
-  const parsed = parseState(state as InState<any>);
+function hashState(state: AnySpecies<any>): [string, string] {
+  const parsed = parseState(state as AnySpecies<any>);
   return [parsed.id, parsed.latex];
 }
 
-function getStateId(state: InState<any>): string {
+function getStateId(state: AnySpecies<any>): string {
   return hashState(state)[0];
 }
 
-function getStateLatex(state: InState<any>): string {
+function getStateLatex(state: AnySpecies<any>): string {
   return hashState(state)[1];
 }

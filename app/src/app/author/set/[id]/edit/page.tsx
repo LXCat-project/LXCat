@@ -5,7 +5,7 @@
 import { byId } from "@lxcat/database/dist/css/queries/author_read";
 import { getSetAffiliation } from "@lxcat/database/src/css/queries/get-affiliation";
 import { getAffiliations } from "@lxcat/database/src/shared/queries/organization";
-import { Session } from "next-auth/core/types";
+import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 import { options } from "../../../../../auth/options";

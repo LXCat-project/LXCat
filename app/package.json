@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "dprint fmt",
+    "type-check": "tsc --pretty --noEmit",
     "test": "vitest",
     "test:e2e": "playwright test",
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
@@ -84,6 +85,7 @@
     "@types/cookie": "^0.5.2",
     "@types/deep-equal": "^1.0.2",
     "@types/json-schema": "^7.0.12",
+    "@types/mdast": "^4.0.0",
     "@types/node": "20.6.5",
     "@types/oidc-provider": "^7.14.0",
     "@types/plotly.js-basic-dist": "^1.54.1",

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction, ReactionEntry } from "@lxcat/schema/dist/process/reaction";
+import { Reaction, ReactionEntry } from "@lxcat/schema/process";
 
 function entryAsLatex(entry: ReactionEntry<State>) {
   if (entry.count === 1) {

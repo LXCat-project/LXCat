@@ -51,10 +51,12 @@ export const BolsigInputForm = (
         <Stack spacing="xs">
           {consumedStates.map(state => (
             <ScientificInput
-              key={state.id}
-              {...config.getInputProps(`composition.${state.id}`)}
+              key={state.serialized.summary}
+              {...config.getInputProps(
+                `composition.${state.serialized.summary}`,
+              )}
               value={consumedStates.length == 1 ? 1 : 0}
-              label={<Latex>{`$${state.latex}$`}</Latex>}
+              label={<Latex>{`$${state.serialized.latex}$`}</Latex>}
             />
           ))}
         </Stack>

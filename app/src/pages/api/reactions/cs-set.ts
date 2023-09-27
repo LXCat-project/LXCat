@@ -5,7 +5,7 @@
 import { getCSSets } from "@lxcat/database/dist/cs/picker/queries/public";
 import { Reversible } from "@lxcat/database/dist/cs/picker/types";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
-import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
+import { ReactionTypeTag } from "@lxcat/schema/process";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {

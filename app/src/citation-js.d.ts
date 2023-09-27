@@ -6,7 +6,7 @@
 // so define it minimally here
 
 declare module "@citation-js/core" {
-  import { Reference } from "@lxcat/schema/dist/common/reference";
+  import { Reference } from "@lxcat/schema";
   export declare interface InputOptions {
     forceType?: string;
     generateGraph?: boolean;

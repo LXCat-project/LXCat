@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import { OAuthConfig, OAuthUserConfig } from "next-auth/providers/oauth";
 import fetch from "node-fetch";
 
 export interface OrcidProfile {

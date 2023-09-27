@@ -5,7 +5,7 @@
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { createSet } from "@lxcat/database/dist/css/queries/author_write";
 import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
-import { LTPDocument } from "@lxcat/schema/dist/document";
+import { LTPDocument } from "@lxcat/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {

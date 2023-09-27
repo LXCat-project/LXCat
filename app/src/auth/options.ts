@@ -5,9 +5,9 @@
 import { db } from "@lxcat/database";
 import { User } from "@lxcat/database/dist/auth/schema";
 import { NextAuthOptions } from "next-auth";
-import { Provider } from "next-auth/providers";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";
+import { Provider } from "next-auth/providers/index";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { env } from "process";
 import logo from "../../public/lxcat.png";

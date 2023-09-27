@@ -4,9 +4,9 @@
 
 import {
   byOwnerAndId,
-  CrossSectionSetInputOwned,
   getVersionInfo,
 } from "@lxcat/database/dist/css/queries/author_read";
+import { type KeyedDocument } from "@lxcat/database/dist/schema/document";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import { mustBeAuthor } from "../../../../auth/middleware";
 import { Layout } from "../../../../shared/Layout";
 
 interface Props {
-  set: CrossSectionSetInputOwned;
+  set: KeyedDocument;
   setKey: string;
   commitMessage: string;
 }
@@ -127,7 +127,7 @@ export const getServerSideProps: GetServerSideProps<
   const commitMessage = info !== undefined && info.commitMessage
     ? info.commitMessage
     : "";
-  if (set === undefined) {
+  if (!set) {
     return {
       // TODO should return notFound when id does not exist
       // , but should return forbidden response when not owned by user?

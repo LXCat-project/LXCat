@@ -4,7 +4,7 @@
 
 import { getReversible } from "@lxcat/database/dist/cs/picker/queries/public";
 import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
-import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
+import { ReactionTypeTag } from "@lxcat/schema/process";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {

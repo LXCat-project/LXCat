@@ -1,7 +1,7 @@
 import { CrossSection } from "@lxcat/database/dist/cs/collections";
 import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { type Reaction } from "@lxcat/schema/dist/process/reaction";
+import { type Reaction } from "@lxcat/schema/process";
 
 export type DenormalizedProcess = {
   id: string;

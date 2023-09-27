@@ -9,7 +9,7 @@ import {
   updateSet,
 } from "@lxcat/database/dist/css/queries/author_write";
 import { getVersionInfo } from "@lxcat/database/dist/css/queries/public";
-import { LTPDocument } from "@lxcat/schema/dist/document";
+import { LTPDocument } from "@lxcat/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z } from "zod";

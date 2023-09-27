@@ -4,7 +4,7 @@
 
 import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { State } from "@lxcat/database/dist/shared/types/collections";
-import { Reaction, ReactionEntry } from "@lxcat/schema/dist/process/reaction";
+import type { Reaction } from "@lxcat/schema/process";
 
 import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
 import { formatReference } from "./cite";

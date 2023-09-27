@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
-import type { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import type { LTPDocument } from "@lxcat/schema";
 import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import {
@@ -68,14 +68,14 @@ test.describe("given 2 dummy sets", () => {
     test.describe("/api/scat-css/[id]", () => {
       test("given no refstyle should return csl", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}`);
-        const set: CrossSectionSetRaw = await res.json();
+        const set: LTPDocument = await res.json();
         const ref0 = Object.values(set.references)[0];
         expect(ref0.id).toEqual("SomeMainId");
       });
 
       test("given bibtex refstyle should return bibtex string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=bibtex`);
-        const set: CrossSectionSetRaw = await res.json();
+        const set: LTPDocument = await res.json();
         const expected = `@article{MyFamilyNameSome,
 \tauthor = {MyFamilyName, MyGivenName},
 \tjournal = {SomeJournal},
@@ -90,7 +90,7 @@ test.describe("given 2 dummy sets", () => {
 
       test("given apa refstyle should return apa string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=apa`);
-        const set: CrossSectionSetRaw = await res.json();
+        const set: LTPDocument = await res.json();
         const ref0 = Object.values(set.references)[0];
         const expected =
           "MyFamilyName, M. (n.d.). Some main reference title. In SomeJournal. https://doi.org/10.1109/5.771073\n";

@@ -6,7 +6,7 @@ import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 import { getReferencesForSelection } from "@lxcat/database/dist/shared/queries/reference";
-import { type CSLData } from "@lxcat/schema/dist/common/csl/data";
+import type { Reference } from "@lxcat/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z, ZodError } from "zod";
@@ -38,7 +38,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
 
       const bibliography = await getReferencesForSelection(unique_ids);
 
-      const selectionReference: CSLData = {
+      const selectionReference: Reference = {
         id: `LXCatData`,
         type: "dataset",
         title: "Data downloaded from the LXCat platform.",

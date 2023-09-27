@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "@lxcat/schema/dist/common/reference";
+import { Reference } from "@lxcat/schema";
 import Link from "next/link";
 import { useState } from "react";
 
 import { Button, Center, Modal } from "@mantine/core";
 import { useRouter } from "next/router";
-import { Dialog } from "./Dialog";
 import { DOWNLOAD_COOKIE_NAME } from "./download";
 import { HowToCite } from "./HowToCite";
 import { TermsOfUse } from "./TermsOfUse";
