@@ -6,6 +6,7 @@ import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 
+import { KeyedLTPMixtureReferenceable } from "@lxcat/database/dist/schema/mixture";
 import { z } from "zod";
 import {
   AuthRequest,
@@ -26,19 +27,26 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .get(async (req, res) => {
     const { ids: idsString } = querySchema.parse(req.query);
     const ids = idsSchema.parse(idsString.split(","));
-    const data = await byIds(ids);
+
+    const data: KeyedLTPMixtureReferenceable = {
+      // FIXME: Return correct $schema url.
+      $schema: "",
+      url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+        ids.join(",")
+      }`,
+      termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+        ids.join(",")
+      }#termsOfUse`,
+      ...await byIds(ids),
+    };
 
     const references = mapObject(
       data.references,
       ([key, reference]) => [key, reference2bibliography(reference)],
     );
 
-    data.url =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
-    data.termsOfUse =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`;
-
     const { convertMixture } = await import("@lxcat/converter");
+
     res.setHeader("Content-Type", "text/plain");
     res.setHeader(
       "Content-Disposition",

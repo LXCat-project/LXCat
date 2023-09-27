@@ -4,6 +4,7 @@
 
 import { convertMixture } from "@lxcat/converter";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
+import { KeyedLTPMixtureReferenceable } from "@lxcat/database/dist/schema/mixture";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
@@ -30,7 +31,7 @@ export default async function ComputePage({ searchParams }: URLParams) {
       ),
     ),
   ].map(stateId => data.states[stateId]).filter(state =>
-    state.serialized.summary !== "e"
+    state.serialized.summary !== "e^-"
   );
 
   return (
@@ -54,7 +55,14 @@ const fetchProps = async (
 
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
-  const data = await byIds(ids);
+  const data: KeyedLTPMixtureReferenceable = {
+    // FIXME: Use proper schema reference.
+    $schema: "",
+    url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
+    termsOfUse:
+      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
+    ...await byIds(ids),
+  };
 
   const references = mapObject(
     data.references,
@@ -67,10 +75,6 @@ const fetchProps = async (
     ref: references[key],
     url: r.URL,
   }));
-
-  data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`;
-  data.termsOfUse =
-    `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`;
 
   let legacy: string = "";
   try {

@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
-import { State } from "@lxcat/database/dist/shared/types/collections";
 import type { Reaction } from "@lxcat/schema/process";
 
-import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
+import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
+import type { SerializedSpecies } from "@lxcat/database/dist/schema/species";
+import { DenormalizedProcess } from "../denormalized-process";
 import { formatReference } from "./cite";
 import { PlotPage } from "./PlotPage";
 
@@ -14,18 +14,19 @@ export const Bag = ({
   bag,
   hasMixedCompleteSets,
 }: {
-  bag: CrossSectionBag;
+  bag: KeyedLTPMixture;
   hasMixedCompleteSets: boolean;
 }) => {
   const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
     formatReference(id, ref)
   );
   const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
-    bag.processes.map((p) => p.id).join(",")
+    bag.processes.flatMap(({ info }) => info).map(({ _key }) => _key).join(",")
   }`;
+  const processes = denormalizeProcesses(bag.processes, bag.states, bag.sets);
   return (
     <PlotPage
-      processes={denormalizeProcesses(bag.processes, bag.states, bag.sets)}
+      processes={processes}
       refs={formattedRefs}
       setMismatch={hasMixedCompleteSets}
       permaLink={permaLink}
@@ -33,15 +34,13 @@ export const Bag = ({
   );
 };
 
-const test = denormalizeProcesses([], {}, {});
-
 function denormalizeProcesses(
-  processes: CrossSectionBag["processes"],
-  states: Record<string, State>,
-  sets: Record<string, Omit<CrossSectionSet, "versionInfo">>,
-) {
-  return processes.map((p) => {
-    const reaction: Reaction<State> = {
+  processes: KeyedLTPMixture["processes"],
+  states: KeyedLTPMixture["states"],
+  sets: KeyedLTPMixture["sets"],
+): Array<DenormalizedProcess> {
+  return processes.flatMap((p) => {
+    const reaction: Reaction<SerializedSpecies> = {
       ...p.reaction,
       lhs: p.reaction.lhs.map((e) => {
         const state = states[e.state]!;
@@ -64,11 +63,21 @@ function denormalizeProcesses(
         };
       }),
     };
-    const isPartOf = p.isPartOf.map((setid) => sets[setid]);
-    return {
-      ...p,
-      reaction,
-      isPartOf,
-    };
+
+    return Array.isArray(p.info)
+      ? p.info.map(info => ({
+        reaction,
+        info: {
+          ...info,
+          isPartOf: info.isPartOf.map(setId => sets[setId]),
+        },
+      }))
+      : [{
+        reaction,
+        info: {
+          ...p.info,
+          isPartOf: p.info.isPartOf.map(setId => sets[setId]),
+        },
+      }];
   });
 }

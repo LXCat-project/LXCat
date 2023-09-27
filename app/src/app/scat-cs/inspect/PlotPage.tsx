@@ -65,15 +65,15 @@ export const PlotPage = (
 
   let colorMap = new Map(
     processes.map((
-      { id },
+      { info: { _key: id } },
       index,
     ) => [id, colorScheme[index % colorScheme.length]]),
   );
 
   let referenceMarkers = new Map(refs.map(({ id }, index) => [id, index + 1]));
 
-  let idsString = processes.map(({ id }) => id).join(",");
-  let idsPath = processes.map(({ id }) => id).join("/");
+  let idsString = processes.map(({ info: { _key: id } }) => id).join(",");
+  let idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
 
   return (
     <>
@@ -101,7 +101,9 @@ export const PlotPage = (
           <Stack>
             <Chart
               processes={selected}
-              colors={selected.map(({ id }) => colorMap.get(id)!)}
+              colors={selected.map(({ info: { _key: id } }) =>
+                colorMap.get(id)!
+              )}
             />
             <Center>
               <Button.Group>

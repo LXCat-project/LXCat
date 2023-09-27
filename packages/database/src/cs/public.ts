@@ -28,17 +28,3 @@ export type CrossSectionItem =
   }
   & Omit<CrossSection, "reaction">
   & SelfReference;
-
-type CrossSectionBagItem = {
-  id: string;
-  isPartOf: string[];
-  reaction: Reaction<string>;
-  reference: string[];
-} & Pick<CrossSection, "info">;
-
-export type CrossSectionBag = {
-  states: Record<string, State>;
-  references: Record<string, Reference>;
-  sets: Record<string, Omit<CrossSectionSet, "versionInfo">>;
-  processes: CrossSectionBagItem[];
-} & SelfReference;

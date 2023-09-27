@@ -5,14 +5,11 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { KeyedLTPMixture } from "../../schema/mixture";
 import { PagingOptions } from "../../shared/types/search";
 import { KeyedVersionInfo } from "../../shared/types/version_info";
 import { ReactionTemplate } from "../picker/types";
-import {
-  CrossSectionBag,
-  CrossSectionHeading,
-  CrossSectionItem,
-} from "../public";
+import { CrossSectionHeading, CrossSectionItem } from "../public";
 
 export async function byId(id: string) {
   const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
@@ -62,14 +59,14 @@ export async function byId(id: string) {
 }
 
 export async function byIds(ids: string[]) {
-  const cursor: ArrayCursor<CrossSectionBag> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedLTPMixture> = await db().query(aql`
     LET sets = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status != 'draft'
-          RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
+          RETURN {[css._key]:  MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {contributor: DOCUMENT(css.organization).name})}
     )
     LET references = MERGE(
       FOR cs IN CrossSection
@@ -89,14 +86,14 @@ export async function byIds(ids: string[]) {
               FILTER c._from == r._id
               FOR c2s IN State
                 FILTER c2s._id == c._to
-                RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
+                RETURN {[c2s._key]: UNSET(c2s, ["_rev", "_id"])}
           )
           LET produces = (
             FOR p IN Produces
               FILTER p._from == r._id
               FOR p2s IN State
                 FILTER p2s._id == p._to
-                RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
+                RETURN {[p2s._key]: UNSET(p2s, ["_rev", "_id"])}
           )
           RETURN MERGE(UNION(consumes, produces))
     )
@@ -132,7 +129,7 @@ export async function byIds(ids: string[]) {
             FILTER cs._id == p._from
             RETURN PARSE_IDENTIFIER(p._to).key
         )
-        RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),{ id: cs._key, reaction, reference: refs2, isPartOf: sets2})
+        RETURN { reaction, info: MERGE({ _key: cs._key, references: refs2, isPartOf: sets2 }, cs.info) }
     )
     RETURN {
       states,
@@ -143,17 +140,16 @@ export async function byIds(ids: string[]) {
   `);
 
   const result = await cursor.next();
+
   if (result === undefined) {
     return {
-      $schema: "",
-      url: "",
-      termsOfUse: "",
       states: {},
       references: {},
       processes: [],
       sets: {},
     };
   }
+
   return result;
 }
 

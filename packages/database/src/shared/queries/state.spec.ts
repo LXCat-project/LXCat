@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { SerializableState, State } from "@lxcat/schema/dist/state";
+import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -12,7 +12,7 @@ import {
 } from "../../css/queries/testutils";
 import { db } from "../../db";
 import { insertStateDict } from "../queries";
-import { State as DBState } from "../types/collections";
+import { State } from "../types/collections";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -26,8 +26,10 @@ import {
 
 beforeAll(startDbWithUserAndCssCollections);
 
-const makeStateInputs = (states: Array<[string, State]>) =>
-  Object.fromEntries(states.map(([key, state]) => [key, State.parse(state)]));
+const makeStateInputs = (states: Array<[string, AnySpecies]>) =>
+  Object.fromEntries(
+    states.map(([key, state]) => [key, AnySpecies.parse(state)]),
+  );
 
 const sampleTwoParticlesTwoCharges = () =>
   makeStateInputs([
@@ -670,7 +672,7 @@ describe("generateStateChoicesAql() + groupStateChoices()", () => {
   const testCases: Array<
     {
       description: string;
-      states: Record<string, SerializableState>;
+      states: Record<string, AnySpeciesSerializable>;
       expected: StateChoices;
     }
   > = [
@@ -880,7 +882,7 @@ describe("listStates()", () => {
       return truncateCrossSectionSetCollections;
     });
 
-    const testCases: Array<[string, StateChoices, DBState[]]> = [
+    const testCases: Array<[string, StateChoices, State[]]> = [
       ["given empty selection should return no data", { particle: {} }, []],
       [
         "given uncharged H2 selected should return H2 uncharged state",

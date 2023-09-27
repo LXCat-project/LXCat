@@ -9,7 +9,7 @@ import {
   updateSet,
 } from "@lxcat/database/dist/css/queries/author_write";
 import { getVersionInfo } from "@lxcat/database/dist/css/queries/public";
-import { LTPDocument } from "@lxcat/schema";
+import { KeyedDocument } from "@lxcat/database/dist/schema/document";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z } from "zod";
@@ -34,7 +34,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     if (typeof id === "string") {
       const body = req.body;
 
-      const parseResults = LTPDocument.safeParse(body.doc);
+      const parseResults = KeyedDocument.safeParse(body.doc);
 
       if (parseResults.success) {
         if (await isOwner(id, user.email)) {

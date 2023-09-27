@@ -46,6 +46,7 @@ export const ProcessTable = (
       withBorder
       withColumnBorders
       borderRadius="md"
+      idAccessor="info._key"
       sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 400 } }}
       records={records}
       columns={[{
@@ -71,27 +72,27 @@ export const ProcessTable = (
       }, {
         accessor: "database",
         title: "Database",
-        render: ({ isPartOf }) => isPartOf[0].organization,
+        render: ({ info: { isPartOf } }) => isPartOf[0].contributor,
       }, {
         accessor: "set",
         title: "Set",
-        render: ({ isPartOf }) => isPartOf[0].name,
+        render: ({ info: { isPartOf } }) => isPartOf[0].name,
       }, {
         accessor: "reference",
         title: "Source",
-        render: ({ reference }) =>
+        render: ({ info: { references } }) =>
           `[${
-            reference.map((rid) => referenceMarkers.get(rid)!).sort().join(
+            references.map((rid) => referenceMarkers.get(rid)!).sort().join(
               ", ",
             )
           }]`,
       }]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
-      getRecordSelectionCheckboxProps={({ id }) => ({
+      getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
         sx: {
           ".mantine-Checkbox-input:checked": {
-            backgroundColor: colorMap.get(id),
+            backgroundColor: colorMap.get(_key),
           },
         },
       })}

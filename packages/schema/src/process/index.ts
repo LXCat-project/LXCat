@@ -4,5 +4,8 @@
 
 export { AnyProcess } from "./any-process";
 export { CrossSectionInfo } from "./cross-section/cross-section";
-export { Reaction } from "./reaction";
+export { Process } from "./process";
+export { ProcessInfo } from "./process-info";
+export { Reaction, ReactionEntry } from "./reaction";
 export { ReactionTypeTag } from "./reaction/type-tags";
+export { SetReference } from "./set-reference";

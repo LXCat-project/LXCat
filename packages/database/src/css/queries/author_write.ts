@@ -14,7 +14,10 @@ import {
 } from "../../cs/queries/write";
 import { now } from "../../date";
 import { db } from "../../db";
-import type { KeyedDocument } from "../../schema/document";
+import type {
+  KeyedDocument,
+  PartialKeyedDocument,
+} from "../../schema/document";
 import { KeyedProcess } from "../../schema/process";
 import {
   insertDocument,
@@ -30,7 +33,7 @@ import { historyOfSet } from "./public";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
-  dataset: KeyedDocument,
+  dataset: PartialKeyedDocument,
   status: Status = "published",
   version = "1",
   commitMessage = "",
@@ -60,20 +63,29 @@ export async function createSet(
     versionInfo,
   });
 
-  for (const cs of dataset.processes) {
-    if (cs._key !== undefined) {
+  for (
+    const cs of dataset.processes.flatMap(({ reaction, info }) =>
+      Array.isArray(info)
+        ? info.map((info) => ({ reaction, info }))
+        : { reaction, info }
+    )
+  ) {
+    if (cs.info._key !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const { _key: prevCsId, ...newCs } = cs;
-      const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
+      const prevCs = await byOrgAndId(dataset.contributor, cs.info._key);
       if (prevCs !== undefined) {
-        if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
+        if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
-          await insertEdge("IsPartOf", `CrossSection/${cs._key}`, cs_set_id);
+          await insertEdge(
+            "IsPartOf",
+            `CrossSection/${cs.info._key}`,
+            cs_set_id,
+          );
         } else {
           const cs_id = await updateCS(
-            cs._key,
-            newCs,
+            cs.info._key,
+            cs,
             `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
             reference_ids,
@@ -85,7 +97,7 @@ export async function createSet(
       } else {
         // handle id which is not owned by organization, or does not exist.
         const cs_id = await createCS(
-          newCs,
+          cs,
           state_ids,
           reference_ids,
           organizationId,
@@ -95,7 +107,7 @@ export async function createSet(
         await insertEdge("IsPartOf", cs_id, cs_set_id);
       }
     } else {
-      delete cs._key; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
+      delete cs.info._key; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
       const cs_id = await createCS(
         cs,
         state_ids,
@@ -158,7 +170,7 @@ export async function updateSet(
    * Key of set that needs to be updated aka create a draft from
    */
   key: string,
-  set: KeyedDocument,
+  set: PartialKeyedDocument,
   message: string,
 ) {
   const info = await getVersionInfo(key);
@@ -190,7 +202,7 @@ async function isDraftless(key: string) {
 
 async function createDraftSet(
   version: string,
-  set: KeyedDocument,
+  set: PartialKeyedDocument,
   message: string,
   key: string,
 ) {
@@ -213,7 +225,7 @@ async function createDraftSet(
 
 async function updateDraftSet(
   key: string,
-  dataset: KeyedDocument,
+  dataset: PartialKeyedDocument,
   versionInfo: VersionInfo,
   message: string,
 ) {
@@ -233,24 +245,29 @@ async function updateDraftSet(
   const state_ids = await insertStateDict(dataset.states);
   const reference_ids = await insertReferenceDict(dataset.references);
 
-  for (const cs of dataset.processes) {
-    if (cs._key !== undefined) {
-      const { _key: prevCsId, ...newCs } = cs;
+  for (
+    const cs of dataset.processes.flatMap(({ reaction, info }) =>
+      Array.isArray(info)
+        ? info.map((info) => ({ reaction, info }))
+        : { reaction, info }
+    )
+  ) {
+    if (cs.info._key !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const prevCs = await byOrgAndId(dataset.contributor, prevCsId);
+      const prevCs = await byOrgAndId(dataset.contributor, cs.info._key);
       if (prevCs !== undefined) {
-        if (isEqualSection(newCs, prevCs, state_ids, reference_ids)) {
+        if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await insertEdge(
             "IsPartOf",
-            `CrossSection/${cs._key}`,
+            `CrossSection/${cs.info._key}`,
             `CrossSectionSet/${key}`,
           );
         } else {
           const cs_id = await updateCS(
-            cs._key,
-            newCs,
+            cs.info._key,
+            cs,
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
             reference_ids,
@@ -262,7 +279,7 @@ async function updateDraftSet(
       } else {
         // when id is not owned by organization, or does not exist just create it with a new id.
         const cs_id = await createCS(
-          newCs,
+          cs,
           state_ids,
           reference_ids,
           organizationId,

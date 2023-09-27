@@ -4,12 +4,12 @@
 
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { KeyedDocument } from "../schema/document";
+import { PartialKeyedDocument } from "../schema/document";
 import { createSet } from "./queries/author_write";
 
 export async function load_css(fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });
-  const body = KeyedDocument.parse(JSON.parse(content));
+  const body = PartialKeyedDocument.parse(JSON.parse(content));
   const cs_set_id = await createSet(body);
   console.log(`Inserted ${fn} as ${cs_set_id} into CrossSectionSet collection`);
 }

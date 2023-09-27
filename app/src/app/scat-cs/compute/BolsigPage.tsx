@@ -4,8 +4,8 @@
 
 "use client";
 
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
+import { SerializedSpecies } from "@lxcat/database/dist/schema/species";
 import { Button, Grid, Stack } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";
@@ -19,11 +19,11 @@ import {
 } from "../../../solvers/bolsig/io";
 
 export interface BolsigPageProps {
-  data: CrossSectionBag;
+  data: KeyedLTPMixture;
   references: Array<{ ref: string; url?: string }>;
   legacy: string;
   bolsigHost: string;
-  consumedStates: Array<State>;
+  consumedStates: Array<SerializedSpecies>;
 }
 
 export const BolsigPage = (

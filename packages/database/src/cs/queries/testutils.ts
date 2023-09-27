@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { AnyProcess } from "@lxcat/schema/dist/zod/process";
-import { State } from "@lxcat/schema/dist/zod/state";
+import { AnyProcess } from "@lxcat/schema/process";
+import { AnySpecies } from "@lxcat/schema/species";
 import { deepClone } from "../../css/queries/deepClone";
 import { db } from "../../db";
 import { KeyedProcess } from "../../schema/process";
@@ -16,7 +14,7 @@ import { byOwnerAndId } from "./author_read";
 import { createCS, updateCS } from "./write";
 
 export async function createSampleCrossSection(
-  state_ids: Dict<string>,
+  state_ids: Record<string, string>,
   status: Status = "published",
 ) {
   const cs = sampleCrossSection();
@@ -60,7 +58,7 @@ export function sampleCrossSection(): AnyProcess<string, string> {
       type: "CrossSection",
       references: [],
       data: {
-        type: Storage.LUT,
+        type: "LUT",
         labels: ["Energy", "Cross Section"],
         units: ["eV", "m^2"],
         values: [[1, 3.14e-20]],
@@ -89,35 +87,27 @@ export async function insertSampleStateIds() {
   return await insertStateDict(states);
 }
 
-export function sampleStates(): Dict<State> {
+export function sampleStates(): Record<string, AnySpecies> {
   return {
     s1: {
       type: "simple",
       particle: "A",
       charge: 0,
-      summary: "A",
-      latex: "A",
     },
     s2: {
       type: "simple",
       particle: "B",
       charge: 1,
-      summary: "B^+",
-      latex: "B^+",
     },
     s3: {
       type: "simple",
       particle: "C",
       charge: 2,
-      summary: "C^2+",
-      latex: "C^{2+}",
     },
     s4: {
       type: "simple",
       particle: "D",
       charge: 3,
-      summary: "D^3+",
-      latex: "D^{3+}",
     },
   };
 }

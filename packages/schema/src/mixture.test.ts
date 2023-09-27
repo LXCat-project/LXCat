@@ -4,9 +4,6 @@ import { LTPMixture } from "./mixture";
 describe("LTPMixture", () => {
   test("Should throw when referencing faulty state key", () => {
     const doc: LTPMixture = {
-      $schema: "http://schema.com",
-      url: "http://test.com",
-      termsOfUse: "http://test.com/terms-of-use",
       sets: {
         TestSet: {
           contributor: "TestOrganization",
@@ -29,6 +26,7 @@ describe("LTPMixture", () => {
             type: "CrossSection",
             references: [],
             threshold: 0,
+            isPartOf: ["TestSet"],
             data: {
               type: "LUT",
               labels: ["Energy", "Cross section"],
@@ -45,9 +43,6 @@ describe("LTPMixture", () => {
   });
   test("Should throw when referencing faulty reference key", () => {
     const doc: LTPMixture = {
-      $schema: "http://schema.com",
-      url: "http://test.com",
-      termsOfUse: "http://test.com/terms-of-use",
       sets: {
         TestSet: {
           contributor: "TestOrganization",
@@ -70,6 +65,7 @@ describe("LTPMixture", () => {
             type: "CrossSection",
             references: ["FaultyKey"],
             threshold: 0,
+            isPartOf: ["TestSet"],
             data: {
               type: "LUT",
               labels: ["Energy", "Cross section"],

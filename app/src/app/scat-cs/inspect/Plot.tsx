@@ -33,7 +33,7 @@ export const ProcessPlot = (
   // TODO: Map a selected process to an available color instead of a fixed color.
   const [selected, setSelected] = useState(
     new Set<string>(
-      processes.slice(0, NUM_LINES_INIT).map(process => process.id),
+      processes.slice(0, NUM_LINES_INIT).map(({ info: { _key: id } }) => id),
     ),
   );
 
@@ -44,7 +44,7 @@ export const ProcessPlot = (
 
   let colorSelection = processes.reduce<Array<string>>(
     (prev, process, index) => {
-      if (selected.has(process.id)) {
+      if (selected.has(process.info._key)) {
         prev.push(colorScheme[index % colorScheme.length]);
       }
       return prev;
@@ -57,7 +57,9 @@ export const ProcessPlot = (
       <Grid>
         <Grid.Col span="content">
           <Chart
-            processes={processes.filter(process => selected.has(process.id))}
+            processes={processes.filter(process =>
+              selected.has(process.info._key)
+            )}
             colors={colorSelection}
           />
         </Grid.Col>
@@ -70,7 +72,7 @@ export const ProcessPlot = (
               }]}
               maxHeight={400}
               data={processes.map((process, index) => ({
-                key: process.id,
+                key: process.info._key,
                 reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
                 _check: (
                   <Checkbox
@@ -80,8 +82,8 @@ export const ProcessPlot = (
                           colorScheme[index % colorScheme.length],
                       },
                     }}
-                    checked={selected.has(process.id)}
-                    onChange={() => toggleRow(process.id)}
+                    checked={selected.has(process.info._key)}
+                    onChange={() => toggleRow(process.info._key)}
                   />
                 ),
               }))}

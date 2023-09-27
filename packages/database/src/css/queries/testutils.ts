@@ -2,12 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reaction } from "@lxcat/schema/dist/process/reaction";
-import { ReactionTypeTag } from "@lxcat/schema/dist/process/reaction/type-tags";
-import { State } from "@lxcat/schema/dist/state";
+import { LTPDocument } from "@lxcat/schema";
+import type { Reaction } from "@lxcat/schema/process";
+import { AnySpecies } from "@lxcat/schema/species";
 import { expect } from "vitest";
-
-import { LTPDocument } from "@lxcat/schema/dist/document";
 import { z } from "zod";
 import { toggleRole } from "../../auth/queries";
 import {
@@ -141,7 +139,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
 export const sampleEmail = "somename@example.com";
 
 export const sampleSets4Search = async () => {
-  const states: Record<string, State> = {
+  const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
       particle: "e",
@@ -279,7 +277,7 @@ export const sampleSets4Search = async () => {
  * 1. archived = CO2
  */
 export const sampleSets4SearchWithVersions = async () => {
-  const states: Record<string, State> = {
+  const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
       particle: "e",
@@ -416,7 +414,7 @@ export const sampleSets4SearchWithVersions = async () => {
 
 function setFrom(
   name: string,
-  states: Readonly<Record<string, State>>,
+  states: Readonly<Record<string, AnySpecies>>,
   reactions: ReadonlyArray<Reaction<string>>,
   contributor: string,
 ) {

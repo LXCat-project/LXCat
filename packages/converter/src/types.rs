@@ -12,6 +12,7 @@ pub struct StateEntry<StateType> {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Reaction<StateType> {
     pub lhs: Vec<StateEntry<StateType>>,
     pub rhs: Vec<StateEntry<StateType>>,
@@ -20,35 +21,56 @@ pub struct Reaction<StateType> {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Parameters {
     pub mass_ratio: Option<f64>,
     pub statistical_weight_ratio: Option<f64>,
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Process {
-    pub id: String,
-    pub reaction: Reaction<String>,
-    pub parameters: Option<Parameters>,
-    pub reference: Vec<String>,
+pub struct LUT {
     pub labels: (String, String),
     pub units: (String, String),
+    pub values: Vec<(f64, f64)>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcessInfo {
+    #[serde(rename = "_key")]
+    pub id: String,
+    pub parameters: Option<Parameters>,
+    pub references: Vec<String>,
     pub threshold: f64,
-    pub data: Vec<(f64, f64)>,
     #[serde(default)]
     pub is_part_of: Option<Vec<String>>,
+    pub data: LUT,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Process {
+    pub reaction: Reaction<String>,
+    pub info: ProcessInfo,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct SerializedState {
+    pub particle: String,
+    pub charge: i32,
+    pub summary: String,
+    pub latex: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct State {
     #[serde(default)]
+    #[serde(rename = "_key")]
     pub id: Option<String>,
-    pub particle: String,
-    pub charge: i32,
+    pub serialized: SerializedState,
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Document {
     pub name: String,
     pub contributor: String,
@@ -62,6 +84,7 @@ pub struct Document {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Mixture {
     pub sets: HashMap<String, SetHeader>,
     pub processes: Vec<Process>,
@@ -76,5 +99,5 @@ pub struct SetHeader {
     pub name: String,
     pub description: String,
     pub complete: bool,
-    pub organization: String,
+    pub contributor: String,
 }

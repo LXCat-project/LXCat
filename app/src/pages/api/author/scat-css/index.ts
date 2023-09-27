@@ -4,8 +4,8 @@
 
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { createSet } from "@lxcat/database/dist/css/queries/author_write";
+import { KeyedDocument } from "@lxcat/database/dist/schema/document";
 import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
-import { LTPDocument } from "@lxcat/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -23,7 +23,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       if (typeof body === "string") {
         body = JSON.parse(body);
       }
-      const parseResult = LTPDocument.safeParse(body);
+      const parseResult = KeyedDocument.safeParse(body);
       if (parseResult.success) {
         const affiliations = await getAffiliations(req.user.email);
 

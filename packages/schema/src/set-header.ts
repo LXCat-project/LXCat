@@ -1,4 +1,4 @@
-import { boolean, object, string } from "zod";
+import { boolean, object, string, TypeOf } from "zod";
 
 export const SetHeader = object({
   contributor: string().min(1),
@@ -9,3 +9,4 @@ export const SetHeader = object({
   description: string().describe("A description of this dataset."),
   complete: boolean(),
 });
+export type SetHeader = TypeOf<typeof SetHeader>;

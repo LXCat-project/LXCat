@@ -1,4 +1,4 @@
-import { AnyProcess } from "@lxcat/schema/process";
+import { Process, ProcessInfo } from "@lxcat/schema/process";
 import { output, ZodType, ZodTypeAny } from "zod";
 import { Keyed } from "./key";
 
@@ -6,7 +6,7 @@ export const KeyedProcess = <
   StateType extends ZodTypeAny,
   ReferenceType extends ZodTypeAny,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Keyed(AnyProcess(StateType, ReferenceType));
+  Process(StateType, Keyed(ProcessInfo(ReferenceType)));
 
 type KeyedProcessType<
   StateType extends ZodTypeAny,
