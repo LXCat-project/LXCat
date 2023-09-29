@@ -56,6 +56,18 @@ export const SpeciesForm = (
           label: capitalizeFirst(type),
         }))}
         {...getInputProps(`${basePath}.type`)}
+        onChange={(type) => {
+          const baseValue = getInputProps(basePath).value;
+          if (type === "simple") {
+            delete baseValue.electronic;
+          } else {
+            if (!("electronic" in baseValue)) {
+              baseValue.electronic = { config: [], term: {} };
+            }
+          }
+          context.setFieldValue(basePath, baseValue);
+          return getInputProps(`${basePath}.type`).onChange(type);
+        }}
       />
       {typeMap[getInputProps(`${basePath}.type`).value]}
     </Stack>
