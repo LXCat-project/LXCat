@@ -4,9 +4,11 @@
 
 "use client";
 
-import { KeyedDocument } from "@lxcat/database/dist/schema/document";
-import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
+import { PartialKeyedDocument } from "@lxcat/database/dist/schema/document";
+import { stateJSONSchema } from "@lxcat/schema/json-schema";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
+  Accordion,
   Button,
   Checkbox,
   NativeSelect,
@@ -18,20 +20,22 @@ import {
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
 import { JSONSchema7 } from "json-schema";
+import { nanoid } from "nanoid";
 import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
+import { Latex } from "../../../../../shared/Latex";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 
 const EditFormValues = z.object({
-  set: KeyedDocument,
+  set: PartialKeyedDocument,
   commitMessage: z.string().min(1),
   meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = {
-  initialSet: KeyedDocument;
+  initialSet: PartialKeyedDocument;
   organizations: Array<string>;
 };
 
@@ -69,13 +73,59 @@ export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
   const form = useForm(
     {
       validate: zodResolver(EditFormValues),
-      initialValues: { commitMessage: "", set: initialSet, meta: {} },
+      initialValues: {
+        commitMessage: "",
+        set: initialSet,
+        meta: {
+          set: {
+            states: Object.fromEntries(
+              Object.entries(initialSet.states).map((
+                [key, state],
+              ) => {
+                const metaState = {
+                  electronic: {
+                    anyOf: "0",
+                    vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
+                  },
+                };
+
+                if (state.type !== "simple" && state.type !== "unspecified") {
+                  if (Array.isArray(state.electronic)) {
+                    metaState.electronic.anyOf = "1";
+                  } else if (
+                    "vibrational" in state.electronic
+                    && state.electronic.vibrational
+                  ) {
+                    if (Array.isArray(state.electronic.vibrational)) {
+                      metaState.electronic.vibrational.anyOf = "1";
+                    } else if (
+                      typeof state.electronic.vibrational === "string"
+                    ) {
+                      metaState.electronic.vibrational.anyOf = "2";
+                    } else if ("rotational" in state.electronic.vibrational) {
+                      if (
+                        Array.isArray(state.electronic.vibrational.rotational)
+                      ) {
+                        metaState.electronic.vibrational.rotational.anyOf = "1";
+                      } else if (
+                        typeof state.electronic.vibrational.rotational
+                          === "string"
+                      ) {
+                        metaState.electronic.vibrational.rotational.anyOf = "2";
+                      }
+                    }
+                  }
+                }
+
+                return [key, metaState];
+              }),
+            ),
+          },
+        },
+      },
       // {
       //   commitMessage: "",
       //   set: {
-      //     $schema: "",
-      //     url: "",
-      //     termsOfUse: "",
       //     name: "test",
       //     contributor: "TestContributor",
       //     description: "",
@@ -160,20 +210,78 @@ export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
             </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="states">
-            {getInputProps(`set.states`).value
-              && Object.entries(form.values.set.states).map(
-                ([key, _]) => (
-                  <div key={key}>
-                    <SpeciesForm
-                      typeMap={generateSpeciesForm(
-                        LTPDocumentJSONSchema as JSONSchema7,
-                        `set.states.${key}`,
-                      )}
-                      basePath={`set.states.${key}`}
-                    />
-                  </div>
-                ),
-              )}
+            <Stack>
+              <Accordion>
+                {getInputProps(`set.states`).value
+                  && Object.entries(form.values.set.states).map(
+                    ([key, state]) => {
+                      const parsed = AnySpeciesSerializable.safeParse(state);
+                      const controlNode = parsed.success
+                        ? parsed.data.serialize().latex
+                        : "...";
+
+                      return (
+                        <Accordion.Item key={key} value={key}>
+                          <Accordion.Control>
+                            <Latex>{controlNode}</Latex>
+                          </Accordion.Control>
+                          <Accordion.Panel>
+                            <SpeciesForm
+                              typeMap={generateSpeciesForm(
+                                stateJSONSchema as JSONSchema7,
+                                `set.states.${key}`,
+                              )}
+                              basePath={`set.states.${key}`}
+                            />
+                          </Accordion.Panel>
+                        </Accordion.Item>
+                      );
+                    },
+                  )}
+              </Accordion>
+              <Button.Group>
+                <Button
+                  onClick={() => {
+                    const id = nanoid();
+                    form.setFieldValue(
+                      "set.states",
+                      {
+                        ...form.values.set.states,
+                        [id]: {
+                          type: "simple",
+                          particle: "",
+                          charge: 0,
+                        },
+                      },
+                    );
+                    form.setFieldValue("meta.set.states", {
+                      ...form.values.meta.set.states,
+                      [id]: {
+                        electronic: {
+                          anyOf: "0",
+                          vibrational: {
+                            anyOf: "0",
+                            rotational: { anyOf: "0" },
+                          },
+                        },
+                      },
+                    });
+                  }}
+                >
+                  +
+                </Button>
+                <Button
+                  variant="light"
+                  onClick={() =>
+                    form.setValues((values) => {
+                      console.log(values);
+                      return values;
+                    })}
+                >
+                  Add from database
+                </Button>
+              </Button.Group>
+            </Stack>
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
