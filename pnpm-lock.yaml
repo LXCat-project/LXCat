@@ -228,8 +228,8 @@ importers:
         specifier: 18.2.22
         version: 18.2.22
       '@types/react-plotly.js':
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^2.6.1
+        version: 2.6.1
       '@types/unist':
         specifier: ^3.0.0
         version: 3.0.0
@@ -3075,8 +3075,8 @@ packages:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
     dev: true
 
-  /@types/react-plotly.js@2.6.0:
-    resolution: {integrity: sha512-nJJ57U0/CNDAO+F3dpnMgM8PtjLE/O1I3O6gq4+5Q13uKqrPnHGYOttfdzQJ4D7KYgF609miVzEYakUS2zds8w==}
+  /@types/react-plotly.js@2.6.1:
+    resolution: {integrity: sha512-vFJZRCC2Pav0NdrFm0grPMm9+67ejGZZglDBWqo+J6VFbB4CAatjoNiowfardznuujaaoDNoZ4MSCFwYyVk4aA==}
     dependencies:
       '@types/plotly.js': 2.12.18
       '@types/react': 18.2.22
