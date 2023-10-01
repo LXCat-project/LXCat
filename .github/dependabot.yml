@@ -13,7 +13,7 @@ updates:
     versioning-strategy: increase
     labels:
       - "dependencies: node"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
 
   - package-ecosystem: cargo
     directory: /packages/converter
