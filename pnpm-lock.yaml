@@ -179,8 +179,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       unified:
-        specifier: ^10.1.2
-        version: 10.1.2
+        specifier: ^11.0.3
+        version: 11.0.3
       unist-util-remove:
         specifier: ^4.0.0
         version: 4.0.0
