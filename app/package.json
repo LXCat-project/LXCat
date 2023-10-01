@@ -85,7 +85,7 @@
     "@types/deep-equal": "^1.0.2",
     "@types/node": "20.8.0",
     "@types/oidc-provider": "^7.14.0",
-    "@types/plotly.js-basic-dist": "^1.54.1",
+    "@types/plotly.js-basic-dist": "^1.54.2",
     "@types/react": "18.2.24",
     "@types/react-plotly.js": "^2.6.1",
     "@types/unist": "^3.0.0",
