@@ -213,8 +213,8 @@ importers:
         specifier: ^0.5.2
         version: 0.5.2
       '@types/deep-equal':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/node':
         specifier: 20.8.6
         version: 20.8.6
@@ -304,8 +304,8 @@ importers:
         specifier: ^10.2.1
         version: 10.2.1
       '@types/deep-equal':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.3
+        version: 1.0.3
       '@types/node':
         specifier: ^20.8.6
         version: 20.8.6
@@ -2873,8 +2873,8 @@ packages:
       '@types/ms': 0.7.31
     dev: false
 
-  /@types/deep-equal@1.0.2:
-    resolution: {integrity: sha512-pjMMQWhqEKL/rxzUWQKpnbM2oFhRIx4kJ/7mH7MtbJWOA0yrZK0h4WA+RgKa70IHS9amWT7+jvmVmEcL2nXm3A==}
+  /@types/deep-equal@1.0.3:
+    resolution: {integrity: sha512-xP1pB67eLrRdMLKpXUXhYN/3uiJN1gNalcVOSY5kdJbxhGuZTTE8awSWOD9LCJDzQZVsuZZcnMMLRrbf+nOUSQ==}
     dev: true
 
   /@types/eslint-scope@3.7.4:
