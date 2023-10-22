@@ -81,7 +81,7 @@
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",
     "@playwright/test": "1.34.3",
-    "@types/cookie": "^0.5.2",
+    "@types/cookie": "^0.5.3",
     "@types/deep-equal": "^1.0.3",
     "@types/node": "20.8.7",
     "@types/oidc-provider": "^7.14.0",
