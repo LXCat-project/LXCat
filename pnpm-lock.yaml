@@ -222,8 +222,8 @@ importers:
         specifier: ^7.14.0
         version: 7.14.0
       '@types/plotly.js-basic-dist':
-        specifier: ^1.54.2
-        version: 1.54.2
+        specifier: ^1.54.3
+        version: 1.54.3
       '@types/react':
         specifier: 18.2.28
         version: 18.2.28
@@ -3047,8 +3047,8 @@ packages:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: false
 
-  /@types/plotly.js-basic-dist@1.54.2:
-    resolution: {integrity: sha512-yTnZWTcCBi8vYTDfpfrK0qt3DvlD2T1mRBE4s9VqTZyvutPRY9QXCViGPkhcV9aokVomY7/Z2snm+xet/nmWCg==}
+  /@types/plotly.js-basic-dist@1.54.3:
+    resolution: {integrity: sha512-EPvQ7Oz2p7D7/bxD+qN9YP4DDnL0fq7Fv/xS2y9IcoQKWcusbEX86SvuEGaoY9bPgJ8pkDPwrb3ZWmLIR4CiLg==}
     dependencies:
       '@types/plotly.js': 2.12.18
     dev: true
