@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type LTPDocument } from "@lxcat/schema";
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { KeyedDocument } from "../../schema/document";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -255,7 +255,7 @@ export const getCSIdsInSet = async (setId: string) => {
 
 // TODO: Merge byId and byIdJSON.
 export async function byIdJSON(id: string) {
-  const cursor: ArrayCursor<LTPDocument> = await db().query(aql`
+  const cursor: ArrayCursor<unknown> = await db().query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
         FILTER css.versionInfo.status != 'draft'
@@ -282,14 +282,14 @@ export async function byIdJSON(id: string) {
                                 FILTER c._from == r._id
                                     FOR c2s IN State
                                     FILTER c2s._id == c._to
-                                    RETURN {[c2s.id]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
+                                    RETURN { [c2s._key]: c2s.detailed }
                             )
                             LET produces = (
                                 FOR p IN Produces
                                 FILTER p._from == r._id
                                     FOR p2s IN State
                                     FILTER p2s._id == p._to
-                                    RETURN {[p2s.id]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
+                                    RETURN { [p2s._key]: p2s.detailed }
                             )
                             RETURN MERGE(UNION(consumes, produces))
 
@@ -314,30 +314,30 @@ export async function byIdJSON(id: string) {
                                 FILTER c._from == r._id
                                     FOR c2s IN State
                                     FILTER c2s._id == c._to
-                                    RETURN {state: c2s.id, count: c.count}
+                                    RETURN {state: c2s._key, count: c.count}
                             )
                             LET produces2 = (
                                 FOR p IN Produces
                                 FILTER p._from == r._id
                                     FOR p2s IN State
                                     FILTER p2s._id == p._to
-                                    RETURN {state: p2s.id, count: p.count}
+                                    RETURN {state: p2s._key, count: p.count}
                             )
                             RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                     )
-                    RETURN MERGE(
-                        UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                        { id: cs._key, reaction, reference: refs2}
-                    )
+                    RETURN {
+                      reaction,
+                      info: MERGE({ _key: cs._key, references: refs2 }, cs.info)
+                    }
         )
         LET contributor = FIRST(
             FOR o IN Organization
                 FILTER o._id == css.organization
                 RETURN o.name
         )
-        RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
+        RETURN MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
     `);
-  return cursor.next();
+  return KeyedDocument.parseAsync(await cursor.next());
 }
 /**
  * Checks whether set with key is owned by user with email.
