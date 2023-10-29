@@ -74,8 +74,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(ajv@8.12.0)
       arangojs:
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.6.0
+        version: 8.6.0
       cookie:
         specifier: ^0.5.0
         version: 0.5.0
@@ -282,8 +282,8 @@ importers:
         specifier: workspace:^
         version: link:../schema
       arangojs:
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.6.0
+        version: 8.6.0
       deep-equal:
         specifier: ^2.2.2
         version: 2.2.2
@@ -3764,8 +3764,8 @@ packages:
     dev: true
     optional: true
 
-  /arangojs@8.5.0:
-    resolution: {integrity: sha512-aw9WC68Gxs/d1K0d5nsgHEI/DZG+0IRlZlAd5PafWD7BjNrQ1t0zdDwdRLYq66Wx8z7y5dZDEpWitHE1k4vHRg==}
+  /arangojs@8.6.0:
+    resolution: {integrity: sha512-w5pNwYBmzFuOEt6Z1/D7frWpcuq/35UJ2Vpx7pQM2ERAQx44nd/OADfKfR09+hE7onC4czJiFSefd4Rup6ldJQ==}
     engines: {node: '>=14'}
     dependencies:
       '@types/node': 20.8.7
