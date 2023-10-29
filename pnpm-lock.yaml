@@ -252,8 +252,8 @@ importers:
         specifier: ^7.14.3
         version: 7.14.3
       testcontainers:
-        specifier: ^10.2.1
-        version: 10.2.1
+        specifier: ^10.2.2
+        version: 10.2.2
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -322,8 +322,8 @@ importers:
         specifier: 8.52.0
         version: 8.52.0
       testcontainers:
-        specifier: ^10.2.1
-        version: 10.2.1
+        specifier: ^10.2.2
+        version: 10.2.2
       ts-json-schema-generator:
         specifier: ^1.4.0
         version: 1.4.0
@@ -2744,7 +2744,7 @@ packages:
   /@testcontainers/arangodb@10.2.1:
     resolution: {integrity: sha512-9HPHcTnyvCQgpxQ+9WjWaS31PTRDdFkl/eNCsp0bnMp26VzPrvnHTvfo8Uea/BtDQRYhuR3KrAcsMG1KsFyREw==}
     dependencies:
-      testcontainers: 10.2.1
+      testcontainers: 10.2.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -3791,8 +3791,8 @@ packages:
       readable-stream: 2.3.8
     dev: true
 
-  /archiver@5.3.1:
-    resolution: {integrity: sha512-8KyabkmbYrH+9ibcTScQ1xCJC/CGcugdVIwB+53f5sZziXgwUh3iXlAlANMxcZyDEfTHMe6+Z5FofV8nopXP7w==}
+  /archiver@5.3.2:
+    resolution: {integrity: sha512-+25nxyyznAXF7Nef3y0EbBeqmGZgeN/BxHX29Rs39djAfaFalmQ89SE6CWyDCHzGL0yt/ycBtNOmGTW0FyGWNw==}
     engines: {node: '>= 10'}
     dependencies:
       archiver-utils: 2.1.0
@@ -9128,6 +9128,18 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
+
+  /node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+    dependencies:
+      whatwg-url: 5.0.0
 
   /node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
@@ -9824,9 +9836,9 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
-  /properties-reader@2.2.0:
-    resolution: {integrity: sha512-CgVcr8MwGoBKK24r9TwHfZkLLaNFHQ6y4wgT9w/XzdpacOOi5ciH4hcuLechSDAwXsfrGQtI2JTutY2djOx2Ow==}
-    engines: {node: '>=10'}
+  /properties-reader@2.3.0:
+    resolution: {integrity: sha512-z597WicA7nDZxK12kZqHr2TcvwNU1GCfA5UwfDY/HDp3hXPoPlb5rlEx9bwGTiJnc0OqbBTkU975jDToth8Gxw==}
+    engines: {node: '>=14'}
     dependencies:
       mkdirp: 1.0.4
     dev: true
@@ -11046,7 +11058,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       buffer: 5.7.1
-      node-fetch: 2.6.12
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -11184,20 +11196,20 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@10.2.1:
-    resolution: {integrity: sha512-R9LUMUEkKGSL2M4cP466Jah+Vi+ZLFlvrT4BENjEKJKNzubATOmDk26RHe8DHeFT+hnMD6fvVii+McXr0UTO7g==}
+  /testcontainers@10.2.2:
+    resolution: {integrity: sha512-5GZ93rtoVXMx/s3xZjydftrKLnv1Yf+ETzGkXYRCm16LB60W48SGodxuiouYvNlVy0y0ogoQhdOw3DqsPActEA==}
     dependencies:
       '@balena/dockerignore': 1.0.2
-      archiver: 5.3.1
+      archiver: 5.3.2
       async-lock: 1.4.0
       byline: 5.0.0
       debug: 4.3.4
       docker-compose: 0.24.2
       dockerode: 3.3.5
       get-port: 5.1.1
-      node-fetch: 2.6.12
+      node-fetch: 2.7.0
       proper-lockfile: 4.1.2
-      properties-reader: 2.2.0
+      properties-reader: 2.3.0
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.0.4
       tmp: 0.2.1

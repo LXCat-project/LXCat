@@ -51,7 +51,7 @@
     "@vitest/coverage-v8": "^0.34.6",
     "dprint": "^0.42.5",
     "eslint": "8.52.0",
-    "testcontainers": "^10.2.1",
+    "testcontainers": "^10.2.2",
     "ts-json-schema-generator": "^1.4.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
