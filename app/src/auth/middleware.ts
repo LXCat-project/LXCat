@@ -15,13 +15,30 @@ import { NextHandler } from "next-connect";
 import { ParsedUrlQuery } from "querystring";
 import { DOWNLOAD_COOKIE_NAME } from "../shared/download";
 import { options } from "./options";
+import { NextRequest, NextResponse } from "next/server";
+
+const unauthorized_response = new NextResponse
+  (
+    "Unauthorized", 
+    {
+      status: 401,
+      headers: [["WWW-Authenticate", "Bearer, OAuth"]]
+  })
+
+const forbidden_response = new NextResponse 
+  (
+    "Forbidden",
+    {
+      status: 403,
+    }
+  )
 
 interface JwtPayload {
   email: string;
   roles: Role[];
 }
 
-export interface AuthRequest extends NextApiRequest {
+export interface AuthRequest extends NextRequest {
   user: Session["user"] | JwtPayload;
 }
 
@@ -31,30 +48,29 @@ export interface AuthRequest extends NextApiRequest {
  */
 export const hasSessionOrAPIToken = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
-  const session = await getServerSession(req, res, options);
+  const session = await getServerSession(options);
   if (session?.user) {
     req.user = session.user;
-    await next();
-    return;
+    return await next();
   }
   if (DOWNLOAD_COOKIE_NAME in req.cookies) {
     const secret = process.env.NEXTAUTH_SECRET!;
-    const token = req.cookies[DOWNLOAD_COOKIE_NAME];
+    const token = req.cookies.get(DOWNLOAD_COOKIE_NAME)?.value;
     const session2 = await decode({ token, secret });
     if (session2 !== null) {
       req.user = {
         roles: session2.roles as Role[],
         email: session2.email as string,
       };
-      await next();
-      return;
+      return await next();
     }
   }
-  if (req.headers.authorization?.split(" ")[0] === "Bearer") {
-    const token = req.headers.authorization.split(" ")[1];
+  let auth_header = req.headers.get('authorization')?.split(" ")
+  if (auth_header && auth_header[0] === "Bearer") {
+    const token = auth_header[1];
     const secret = process.env.NEXTAUTH_SECRET!;
     const session1 = await decode({ token, secret });
     if (session1 !== null) {
@@ -62,15 +78,11 @@ export const hasSessionOrAPIToken = async (
         roles: session1.roles as Role[],
         email: session1.email as string,
       };
-      await next();
-      return;
+      return await next();
     }
   }
-  res
-    .status(401)
-    .setHeader("WWW-Authenticate", "Bearer, OAuth")
-    .end("Unauthorized");
-};
+  return unauthorized_response.clone();
+}
 
 /**
  * API Middleware to check if request contains an authenticated session.
@@ -78,16 +90,15 @@ export const hasSessionOrAPIToken = async (
  */
 export const hasSession = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
-  const session = await getServerSession(req, res, options);
+  const session = await getServerSession(options);
   if (session?.user) {
     req.user = session.user;
-    await next();
-    return;
+    return await next();
   }
-  res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+  return unauthorized_response.clone();
 };
 
 /**
@@ -96,17 +107,17 @@ export const hasSession = async (
  */
 export const hasAdminRole = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.admin)) {
-      await next();
+      return await next();
     } else {
-      res.status(403).end("Forbidden");
+      return forbidden_response.clone();
     }
   } else {
-    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+    return unauthorized_response.clone();
   }
 };
 
@@ -116,17 +127,17 @@ export const hasAdminRole = async (
  */
 export const hasDeveloperRole = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.developer)) {
-      await next();
+      return await next();
     } else {
-      res.status(403).end("Forbidden");
+      return forbidden_response.clone();
     }
   } else {
-    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+    return unauthorized_response.clone();
   }
 };
 
@@ -136,7 +147,7 @@ export const hasDeveloperRole = async (
  */
 export const hasDeveloperOrDownloadRole = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
   if (req.user) {
@@ -145,12 +156,12 @@ export const hasDeveloperOrDownloadRole = async (
       && (req.user.roles!.includes(Role.enum.developer)
         || req.user.roles!.includes(Role.enum.download))
     ) {
-      await next();
+      return await next();
     } else {
-      res.status(403).end("Forbidden");
+      return forbidden_response.clone();
     }
   } else {
-    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+    return unauthorized_response.clone();
   }
 };
 
@@ -160,19 +171,19 @@ export const hasDeveloperOrDownloadRole = async (
  */
 export const hasAuthorRole = async (
   req: AuthRequest,
-  res: NextApiResponse,
+  ctx: unknown,
   next: NextHandler,
 ) => {
   if (req.user) {
     if (
       req.user.roles !== undefined && req.user.roles!.includes(Role.enum.author)
     ) {
-      await next();
+      return await next();
     } else {
-      res.status(403).end("Forbidden");
+      return forbidden_response.clone();
     }
   } else {
-    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+    return unauthorized_response.clone();
   }
 };
 
@@ -190,12 +201,12 @@ export const hasPublisherRole = async (
       req.user.roles !== undefined
       && req.user.roles.includes(Role.enum.publisher)
     ) {
-      await next();
+      return await next();
     } else {
-      res.status(403).end("Forbidden");
+      return forbidden_response.clone();
     }
   } else {
-    res.status(401).setHeader("WWW-Authenticate", "OAuth").end("Unauthorized");
+    return unauthorized_response.clone();
   }
 };
 
