@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { authMiddleware } from "./middleware/auth";
+import {
+  hasDeveloperOrDownloadRole,
+  hasSessionOrAPIToken,
+} from "./middleware/auth";
 import { zodMiddleware } from "./middleware/zod";
 import { RouteBuilder } from "./route-builder";
 
@@ -9,7 +12,8 @@ const ContextSchema = z.object({ searchParams: z.object({ id: z.string() }) });
 const router = RouteBuilder
   .init()
   .use(zodMiddleware(ContextSchema))
-  .use(authMiddleware())
+  .use(hasSessionOrAPIToken())
+  .use(hasDeveloperOrDownloadRole())
   .get((_, ctx, headers) => NextResponse.json(ctx, { headers }))
   .post((_, ctx, headers) => NextResponse.json(ctx, { headers }))
   .compile();
