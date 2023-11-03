@@ -6,11 +6,7 @@ import { Headers, Middleware } from "../route-builder";
 export const zodMiddleware = <Schema extends z.ZodTypeAny>(
   schema: Schema,
 ): Middleware<unknown, z.TypeOf<Schema>> =>
-(
-  _: NextRequest,
-  ctx: unknown,
-  headers: Headers,
-) => {
+(_: NextRequest, ctx: unknown, headers: Headers) => {
   const result = schema.safeParse(ctx);
 
   if (!result.success) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
+import { MaybePromise } from "./util";
 
 type BaseContext = {
   params?: Record<string, unknown>;
@@ -23,21 +24,21 @@ export type Middleware<InContext, OutContext> = (
   req: NextRequest,
   ctx: InContext,
   headers: Headers,
-) => Result<[OutContext, Headers], NextResponse>;
+) => MaybePromise<Result<[OutContext, Headers], NextResponse>>;
 
 export class RouteBuilder<Context> {
   private callchain: (
     req: NextRequest,
     ctx: BaseContext,
     headers: Headers,
-  ) => Result<[Context, Headers], NextResponse>;
+  ) => MaybePromise<Result<[Context, Headers], NextResponse>>;
 
   private constructor(
     callback: (
       req: NextRequest,
       ctx: BaseContext,
       headers: Headers,
-    ) => Result<[Context, Headers], NextResponse>,
+    ) => MaybePromise<Result<[Context, Headers], NextResponse>>,
   ) {
     this.callchain = callback;
   }
@@ -61,8 +62,11 @@ export class RouteBuilder<Context> {
   }
 
   compile() {
-    return (req: NextRequest, ctx: BaseContext): NextResponse => {
-      const result = this.callchain(req, ctx, {});
+    return async (
+      req: NextRequest,
+      ctx: BaseContext,
+    ): Promise<NextResponse> => {
+      const result = await this.callchain(req, ctx, {});
 
       // Call reached end of the chain without generating a valid response.
       if (result.isOk) {
@@ -77,8 +81,8 @@ export class RouteBuilder<Context> {
     callback: Middleware<Context, NewContext>,
   ): RouteBuilder<NewContext> {
     return new RouteBuilder(
-      (req: NextRequest, ctx: BaseContext, headers: Headers) => {
-        const result = this.callchain(req, ctx, headers);
+      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+        const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
           return err(result.error);
@@ -95,18 +99,18 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return new RouteBuilder(
-      (req: NextRequest, ctx: BaseContext, headers: Headers) => {
-        const result = this.callchain(req, ctx, headers);
+      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+        const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
           return err(result.error);
         }
 
         if (req.method === method) {
-          return err(callback(req, result.value[0], result.value[1]));
+          return err(await callback(req, result.value[0], result.value[1]));
         }
 
         return ok(result.value);
@@ -119,7 +123,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("GET", callback);
   }
@@ -129,7 +133,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("HEAD", callback);
   }
@@ -139,7 +143,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("POST", callback);
   }
@@ -149,7 +153,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("PUT", callback);
   }
@@ -159,7 +163,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("DELETE", callback);
   }
@@ -169,7 +173,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("CONNECT", callback);
   }
@@ -179,7 +183,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("OPTIONS", callback);
   }
@@ -189,7 +193,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("TRACE", callback);
   }
@@ -199,7 +203,7 @@ export class RouteBuilder<Context> {
       req: NextRequest,
       ctx: Context,
       headers: Headers,
-    ) => NextResponse,
+    ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return this.method("PATCH", callback);
   }
