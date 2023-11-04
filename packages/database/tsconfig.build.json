@@ -4,8 +4,8 @@
     "lib": ["ESNext"],
     "module": "NodeNext",
     "resolveJsonModule": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./**/*.spec.ts", "./**/testutils.ts"],
