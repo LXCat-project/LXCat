@@ -5,12 +5,14 @@
 "use client";
 
 import { PartialKeyedDocument } from "@lxcat/database/dist/schema/document";
+import { StateTree } from "@lxcat/database/dist/shared/queries/state";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
   Button,
   Checkbox,
+  Modal,
   NativeSelect,
   Space,
   Stack,
@@ -19,12 +21,14 @@ import {
   TextInput,
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { JSONSchema7 } from "json-schema";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
 import { Latex } from "../../../../../shared/Latex";
+import { StateSelect } from "../../../../../shared/StateSelect";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 
 const EditFormValues = z.object({
@@ -37,6 +41,7 @@ export type EditFormValues = z.input<typeof EditFormValues>;
 type EditFormProps = {
   initialSet: PartialKeyedDocument;
   organizations: Array<string>;
+  stateTree: StateTree;
 };
 
 export const getError = (
@@ -69,7 +74,9 @@ const emptySet = () => ({
   meta: {},
 });
 
-export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
+export const EditForm = (
+  { initialSet, organizations, stateTree }: EditFormProps,
+) => {
   const form = useForm(
     {
       validate: zodResolver(EditFormValues),
@@ -165,6 +172,10 @@ export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");
+  const [
+    speciesPickerOpened,
+    { open: openSpeciesPicker, close: closeSpeciesPicker },
+  ] = useDisclosure(false);
 
   const { getInputProps } = form;
 
@@ -272,15 +283,22 @@ export const EditForm = ({ initialSet, organizations }: EditFormProps) => {
                 </Button>
                 <Button
                   variant="light"
-                  onClick={() =>
-                    form.setValues((values) => {
-                      console.log(values);
-                      return values;
-                    })}
+                  onClick={openSpeciesPicker}
                 >
                   Add from database
                 </Button>
               </Button.Group>
+              <Modal
+                opened={speciesPickerOpened}
+                onClose={closeSpeciesPicker}
+                title="Choose existing species from database"
+              >
+                <StateSelect
+                  data={stateTree}
+                  selected={{}}
+                  onChange={(selected) => console.log(selected)}
+                />
+              </Modal>
             </Stack>
           </Tabs.Panel>
         </Tabs>

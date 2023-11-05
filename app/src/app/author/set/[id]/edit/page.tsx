@@ -34,6 +34,7 @@ const EditSetPage = async (props: URLParams) => {
     <EditForm
       initialSet={set}
       organizations={await getAffiliations(session.user.email)}
+      stateTree={{}}
     />
   );
 };
