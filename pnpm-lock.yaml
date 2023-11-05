@@ -264,8 +264,8 @@ importers:
   packages/converter:
     devDependencies:
       '@napi-rs/cli':
-        specifier: ^2.16.4
-        version: 2.16.4
+        specifier: ^2.16.5
+        version: 2.16.5
       '@types/node':
         specifier: ^20.8.10
         version: 20.8.10
@@ -2369,8 +2369,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@napi-rs/cli@2.16.4:
-    resolution: {integrity: sha512-jBIk21/mzEYV5YedH3HRP8Qk9uZOoX2wujHRiykikcmjGRYhU+EWR0pL2aGAU1fUaBS/QgYOrtDcJ+SLBNDqWw==}
+  /@napi-rs/cli@2.16.5:
+    resolution: {integrity: sha512-mFEzwrg4IOLngGd2/P6yeqIWgwQNn59Z08n1rndu6kLDq1gg954NH9cM1O9Da0RJuybt46p43lqgSsnAY2mxqA==}
     engines: {node: '>= 10'}
     hasBin: true
     dev: true
