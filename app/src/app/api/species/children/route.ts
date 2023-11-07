@@ -8,7 +8,9 @@ import { z } from "zod";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
 
-const ContextSchema = z.object({ searchParams: z.object({ id: z.string() }) });
+export const ContextSchema = z.object({
+  searchParams: z.object({ id: z.string() }),
+});
 
 const router = RouteBuilder
   .init()
