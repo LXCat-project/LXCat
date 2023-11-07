@@ -39,14 +39,24 @@ export const makeMoleculeSchema = <
                       rotational: z.optional(
                         z.union([
                           rotational.describe("Singular"),
-                          z.array(z.union([rotational, z.string()]))
+                          z.array(
+                            z.union([
+                              rotational.describe("Singular"),
+                              z.string().describe("Compound"),
+                            ]),
+                          )
                             .describe("Compound"),
                           z.string().describe("Unspecified"),
                         ]),
                       ),
                     }),
                   ).describe("Singular"),
-                  z.array(z.union([vibrational, z.string()]))
+                  z.array(
+                    z.union([
+                      vibrational.describe("Singular"),
+                      z.string().describe("Compound"),
+                    ]),
+                  )
                     .describe("Compound"),
                   z.string().describe("Unspecified"),
                 ]),
