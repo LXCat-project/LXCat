@@ -39,16 +39,6 @@ export const SpeciesForm = (
 
   return (
     <Stack spacing={1}>
-      <Group>
-        <TextInput
-          label="Particle"
-          {...getInputProps(`${basePath}.particle`)}
-        />
-        <NumberInput
-          label="Charge"
-          {...getInputProps(`${basePath}.charge`)}
-        />
-      </Group>
       <Select
         label="Type"
         data={Object.keys(typeMap).map((type) => ({
@@ -117,13 +107,18 @@ export const generateSpeciesForm = (
   }));
 
 export type SchemaFormProps = {
-  schema: JSONSchema7;
+  schema: JSONSchema7Definition | Array<JSONSchema7Definition>;
   formPath: string;
   propertyName?: string;
   drawBorder?: boolean;
 };
 
-type SchemaNumberInputProps = Omit<SchemaFormProps, "drawBorder">;
+type SchemaNumberInputProps = {
+  schema: JSONSchema7;
+  formPath: string;
+  propertyName?: string;
+};
+
 const SchemaNumberInput = (
   { schema, formPath, propertyName }: SchemaNumberInputProps,
 ) => {
@@ -140,11 +135,50 @@ const SchemaNumberInput = (
   );
 };
 
+export type SchemaArrayInputProps = {
+  elementSchema: JSONSchema7Definition | Array<JSONSchema7Definition>;
+  formPath: string;
+};
+
+const SchemaArrayInput = (
+  { elementSchema, formPath }: SchemaArrayInputProps,
+): React.ReactNode => {
+  const { getInputProps } = useFormContext();
+
+  const fields = Array.isArray(elementSchema)
+    ? elementSchema.map((elementSchema, i) => (
+      <SchemaForm
+        key={i}
+        schema={elementSchema}
+        formPath={`${formPath}.${i}`}
+      />
+    ))
+    : getInputProps(formPath).value.map(
+      (_: any, i: number) => (
+        <SchemaForm
+          key={i}
+          schema={elementSchema}
+          formPath={`${formPath}.${i}`}
+          propertyName=""
+          drawBorder={false}
+        />
+      ),
+    );
+
+  return fields;
+};
+
 export const SchemaForm = (
   { schema, formPath, propertyName, drawBorder }: SchemaFormProps,
 ): React.ReactNode => {
   const context = useFormContext();
   const { getInputProps } = context;
+
+  if (Array.isArray(schema)) {
+    return <SchemaArrayInput elementSchema={schema} formPath={formPath} />;
+  }
+
+  schema = isSchemaObject(schema);
 
   if (schema.type) {
     if (schema.type === "object") {
@@ -170,17 +204,21 @@ export const SchemaForm = (
             : objectGroup
         );
       }
-    } else if (
-      schema.type === "array" && schema.items && !Array.isArray(schema.items)
-    ) {
+    } else if (schema.type === "array" && schema.items) {
       return (
-        <SchemaForm
-          schema={isSchemaObject(schema.items)}
-          formPath={`${formPath}.0`}
-          propertyName={propertyName}
-          drawBorder={drawBorder}
+        <SchemaArrayInput
+          elementSchema={schema.items}
+          formPath={formPath}
         />
       );
+      // return (
+      //   <SchemaForm
+      //     schema={isSchemaObject(schema.items)}
+      //     formPath={`${formPath}.0`}
+      //     propertyName={propertyName}
+      //     drawBorder={drawBorder}
+      //   />
+      // );
     } else if (schema.type === "string") {
       if (
         !(propertyName && propertyName === "type")
