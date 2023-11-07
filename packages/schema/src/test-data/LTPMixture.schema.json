@@ -1,20 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "$schema": {
-      "type": "string",
-      "format": "uri"
-    },
-    "url": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL used to download this dataset."
-    },
-    "termsOfUse": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL to the terms of use that have been accepted to download this dataset"
-    },
     "sets": {
       "type": "object",
       "additionalProperties": {
@@ -58,27 +44,7 @@
     "states": {
       "type": "object",
       "additionalProperties": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "particle": {
-                "type": "string",
-                "minLength": 1
-              },
-              "charge": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "particle",
-              "charge"
-            ]
-          },
-          {
-            "$ref": "#/definitions/AnySpecies"
-          }
-        ]
+        "$ref": "#/definitions/AnySpecies"
       }
     },
     "processes": {
@@ -247,13 +213,20 @@
                   },
                   "threshold": {
                     "type": "number"
+                  },
+                  "isPartOf": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
                 "required": [
                   "type",
                   "references",
                   "data",
-                  "threshold"
+                  "threshold",
+                  "isPartOf"
                 ],
                 "additionalProperties": false
               },
@@ -276,9 +249,6 @@
     }
   },
   "required": [
-    "$schema",
-    "url",
-    "termsOfUse",
     "sets",
     "references",
     "states",
@@ -835,6 +805,27 @@
             "number",
             "boolean"
           ]
+        },
+        "ORCID": {
+          "type": "string",
+          "format": "uri"
+        },
+        "authenticated-orcid": {
+          "type": "boolean"
+        },
+        "sequence": {
+          "type": "string",
+          "enum": [
+            "first",
+            "additional"
+          ]
+        },
+        "affiliation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -915,10 +906,19 @@
         "type": {
           "type": "string",
           "const": "simple"
+        },
+        "particle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "charge": {
+          "type": "integer"
         }
       },
       "required": [
-        "type"
+        "type",
+        "particle",
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -928,6 +928,12 @@
         "type": {
           "type": "string",
           "const": "AtomLS"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1004,7 +1010,20 @@
             {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0"
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
               },
               "description": "Compound"
             }
@@ -1013,6 +1032,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1023,6 +1044,12 @@
         "type": {
           "type": "string",
           "const": "AtomLS1"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1142,7 +1169,20 @@
             {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0"
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
               },
               "description": "Compound"
             }
@@ -1151,6 +1191,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1161,6 +1203,12 @@
         "type": {
           "type": "string",
           "const": "AtomJ1L2"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1242,7 +1290,20 @@
             {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0"
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
               },
               "description": "Compound"
             }
@@ -1251,6 +1312,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1261,6 +1324,12 @@
         "type": {
           "type": "string",
           "const": "HomonuclearDiatom"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1343,10 +1412,21 @@
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0"
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Compound"
                                           }
                                         ]
                                       },
@@ -1368,10 +1448,21 @@
                           "items": {
                             "anyOf": [
                               {
-                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Compound"
                               }
                             ]
                           },
@@ -1400,6 +1491,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1410,6 +1503,12 @@
         "type": {
           "type": "string",
           "const": "HeteronuclearDiatom"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1453,7 +1552,16 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0",
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
                                       "description": "Singular"
                                     },
                                     {
@@ -1461,10 +1569,21 @@
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/1/items/anyOf/0"
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Compound"
                                           }
                                         ]
                                       },
@@ -1486,10 +1605,21 @@
                           "items": {
                             "anyOf": [
                               {
-                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Compound"
                               }
                             ]
                           },
@@ -1518,6 +1648,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1528,6 +1660,12 @@
         "type": {
           "type": "string",
           "const": "LinearTriatomInversionCenter"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
         },
         "electronic": {
           "anyOf": [
@@ -1573,7 +1711,16 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0",
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
                                       "description": "Singular"
                                     },
                                     {
@@ -1581,10 +1728,21 @@
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/1/items/anyOf/0"
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Compound"
                                           }
                                         ]
                                       },
@@ -1606,10 +1764,21 @@
                           "items": {
                             "anyOf": [
                               {
-                                "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Compound"
                               }
                             ]
                           },
@@ -1638,6 +1807,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
@@ -1649,6 +1820,12 @@
           "type": "string",
           "const": "unspecified"
         },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
         "electronic": {
           "type": "string",
           "minLength": 1
@@ -1656,6 +1833,8 @@
       },
       "required": [
         "type",
+        "particle",
+        "charge",
         "electronic"
       ],
       "additionalProperties": false
