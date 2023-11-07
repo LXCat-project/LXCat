@@ -3,6 +3,7 @@
     "moduleResolution": "bundler",
     "strict": true,
     "resolveJsonModule": true,
+    "module": "nodenext",
     "plugins": [
       {
         "name": "next"
