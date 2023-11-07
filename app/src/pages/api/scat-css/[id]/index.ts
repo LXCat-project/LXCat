@@ -12,6 +12,7 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import "@citation-js/plugin-bibtex";
+import { KeyedDocumentReferenceable } from "@lxcat/database/dist/schema/document";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 
@@ -29,11 +30,13 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
         return;
       }
 
-      data.$schema =
-        `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`;
-      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-      data.termsOfUse =
-        `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`;
+      const dataWithRef: KeyedDocumentReferenceable = {
+        $schema:
+          `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`,
+        url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`,
+        termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`,
+        ...data,
+      };
 
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {

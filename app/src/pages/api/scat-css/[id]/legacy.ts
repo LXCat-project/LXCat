@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
+import { KeyedDocumentReferenceable } from "@lxcat/database/dist/schema/document";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -28,17 +29,21 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           ([key, reference]) => [key, reference2bibliography(reference)],
         );
 
-        data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-        data.termsOfUse =
-          `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`;
+        const dataWithRef: KeyedDocumentReferenceable = {
+          $schema: "",
+          url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`,
+          termsOfUse:
+            `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`,
+          ...data,
+        };
 
         const { convertDocument } = await import("@lxcat/converter");
         res.setHeader("Content-Type", "text/plain");
         res.setHeader(
           "Content-Disposition",
-          `attachment;filename="${data.name}.txt"`,
+          `attachment;filename="${dataWithRef.name}.txt"`,
         );
-        res.send(convertDocument({ ...data, references }));
+        res.send(convertDocument({ ...dataWithRef, references }));
       } else {
         res.status(404).end("Not found");
       }

@@ -1,4 +1,4 @@
-import { Reference, SetHeader } from "@lxcat/schema";
+import { Reference, SelfReference, SetHeader } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { array, object, output, record, string } from "zod";
 
@@ -14,6 +14,11 @@ const KeyedDocumentBody = object({
 
 export const KeyedDocument = Keyed(SetHeader.merge(KeyedDocumentBody));
 export type KeyedDocument = output<typeof KeyedDocument>;
+
+export const KeyedDocumentReferenceable = KeyedDocument.merge(SelfReference);
+export type KeyedDocumentReferenceable = output<
+  typeof KeyedDocumentReferenceable
+>;
 
 const PartialKeyedDocumentBody = object({
   references: record(Reference),
