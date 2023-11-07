@@ -28,8 +28,8 @@ import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
 import { Latex } from "../../../../../shared/Latex";
-import { StateSelect } from "../../../../../shared/StateSelect";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
+import { SpeciesNode, SpeciesPicker } from "./species-picker";
 
 const EditFormValues = z.object({
   set: PartialKeyedDocument,
@@ -41,7 +41,6 @@ export type EditFormValues = z.input<typeof EditFormValues>;
 type EditFormProps = {
   initialSet: PartialKeyedDocument;
   organizations: Array<string>;
-  stateTree: StateTree;
 };
 
 export const getError = (
@@ -75,7 +74,7 @@ const emptySet = () => ({
 });
 
 export const EditForm = (
-  { initialSet, organizations, stateTree }: EditFormProps,
+  { initialSet, organizations }: EditFormProps,
 ) => {
   const form = useForm(
     {
@@ -176,6 +175,9 @@ export const EditForm = (
     speciesPickerOpened,
     { open: openSpeciesPicker, close: closeSpeciesPicker },
   ] = useDisclosure(false);
+  const [selectedSpecies, setSelectedSpecies] = useState<Array<SpeciesNode>>(
+    [],
+  );
 
   const { getInputProps } = form;
 
@@ -291,13 +293,26 @@ export const EditForm = (
               <Modal
                 opened={speciesPickerOpened}
                 onClose={closeSpeciesPicker}
-                title="Choose existing species from database"
+                title="Choose existing species from the database"
               >
-                <StateSelect
-                  data={stateTree}
-                  selected={{}}
-                  onChange={(selected) => console.log(selected)}
-                />
+                <Stack>
+                  <SpeciesPicker
+                    selected={selectedSpecies}
+                    setSelected={setSelectedSpecies}
+                  />
+                  <Button
+                    onClick={() => {
+                      for (const species of selectedSpecies) {
+                        form.values.set.states[species._key] =
+                          species.species.detailed;
+                      }
+                      closeSpeciesPicker();
+                      setSelectedSpecies([]);
+                    }}
+                  >
+                    Add
+                  </Button>
+                </Stack>
               </Modal>
             </Stack>
           </Tabs.Panel>

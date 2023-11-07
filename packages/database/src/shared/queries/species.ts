@@ -7,9 +7,20 @@ export const getTopLevelSpecies = async () => {
   const query = aql`
     FOR state IN State
       FILTER NOT HAS(state.detailed, "electronic")
-      RETURN UNSET(state, ["_id", "_rev"])
+      LET hasChildren = COUNT(
+        FOR child IN 1 OUTBOUND state HasDirectSubstate
+          LIMIT 1
+          RETURN 1
+      ) == 1
+      RETURN {
+        _key: state._key, 
+        species: UNSET(state, ["_key", "_id", "_rev"]), 
+        hasChildren
+      }
   `;
-  const cursor = await db().query(query);
+  const cursor: ArrayCursor<
+    { _key: string; species: SerializedSpecies; hasChildren: boolean }
+  > = await db().query(query);
   return cursor.all();
 };
 
@@ -19,9 +30,20 @@ export async function getSpeciesChildren(key: string) {
       FILTER s._key == ${key}
       LIMIT 1
       FOR child IN 1 OUTBOUND s HasDirectSubstate
-        RETURN UNSET(child, ["_id", "_rev"])
+        LET hasChildren = COUNT(
+          FOR grandChild IN 1 OUTBOUND child HasDirectSubstate
+            LIMIT 1
+            RETURN 1
+        ) == 1
+        RETURN {
+          _key: child._key, 
+          species: UNSET(child, ["_key", "_id", "_rev"]), 
+          hasChildren
+        }
   `;
 
-  const cursor: ArrayCursor<SerializedSpecies> = await db().query(query);
+  const cursor: ArrayCursor<
+    { _key: string; species: SerializedSpecies; hasChildren: boolean }
+  > = await db().query(query);
   return cursor.all();
 }
