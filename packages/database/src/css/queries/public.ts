@@ -45,7 +45,8 @@ export async function search(
       FILTER ${filter.contributor} ANY == contributor
     `;
   }
-  const hasFilterOnConsumedStates = Object.keys(filter.state).length > 0;
+  const hasFilterOnConsumedStates =
+    Object.keys(filter.state.particle).length > 0;
   const hasFilterOnTag = filter.tag.length > 0;
   const hasFilterOnRection = hasFilterOnConsumedStates || hasFilterOnTag;
   let reactionAql = aql``;

@@ -102,7 +102,7 @@ export async function byOwnerAndId(email: string, id: string) {
                 FILTER cs.organization == o.name
                 FILTER cs._key == ${id}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                LET reference = (
+                LET references = (
                   FOR rs IN References
                       FILTER rs._from == cs._id
                       FOR r IN Reference
@@ -128,7 +128,8 @@ export async function byOwnerAndId(email: string, id: string) {
                       )
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                 )
-                RETURN MERGE(UNSET(cs, ["_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
+                // RETURN MERGE(UNSET(cs, ["_rev", "_id", "versionInfo", "organization"]), { reaction, references })
+                RETURN { reaction, info: MERGE(cs.info, { _key: cs._key, references }) }
       `);
   return await cursor.next();
 }
@@ -142,7 +143,7 @@ export async function byOrgAndId(org: string, key: string) {
                 FILTER cs.organization == o._id
                 FILTER cs._key == ${key}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                LET reference = (
+                LET references = (
                   FOR rs IN References
                       FILTER rs._from == cs._id
                       FOR r IN Reference
@@ -151,24 +152,24 @@ export async function byOrgAndId(org: string, key: string) {
                   )
                 LET reaction = FIRST(
                   FOR r in Reaction
-                      FILTER r._id == cs.reaction
-                      LET consumes2 = (
-                          FOR c IN Consumes
-                          FILTER c._from == r._id
-                              FOR c2s IN State
-                              FILTER c2s._id == c._to
-                              RETURN {state: c2s._key, count: c.count}
-                      )
-                      LET produces2 = (
-                          FOR p IN Produces
-                          FILTER p._from == r._id
-                              FOR p2s IN State
-                              FILTER p2s._id == p._to
-                              RETURN {state: p2s._key, count: p.count}
-                      )
-                      RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
-              )
-                RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
+                    FILTER r._id == cs.reaction
+                    LET consumes2 = (
+                        FOR c IN Consumes
+                        FILTER c._from == r._id
+                            FOR c2s IN State
+                            FILTER c2s._id == c._to
+                            RETURN {state: c2s._key, count: c.count}
+                    )
+                    LET produces2 = (
+                        FOR p IN Produces
+                        FILTER p._from == r._id
+                            FOR p2s IN State
+                            FILTER p2s._id == p._to
+                            RETURN {state: p2s._key, count: p.count}
+                    )
+                    RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
+                )
+                RETURN { reaction, info: MERGE(cs.info, { _key: cs._key, references }) }
       `);
   return await cursor.next();
 }

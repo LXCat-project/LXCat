@@ -25,16 +25,24 @@ beforeAll(startDbWithUserAndCssCollections);
 describe("given published cross section has been updated", () => {
   let keycs1: string;
   let keycs2: string;
+
   beforeAll(async () => {
     const state_ids = await insertSampleStateIds();
     const res = await createSampleCrossSection(state_ids);
     keycs1 = res.keycs1;
 
     const draft = await byOwnerAndId(sampleEmail, keycs1);
+
     if (draft === undefined) {
       expect.fail("should have published section");
     }
-    draft.threshold = 999;
+
+    if (Array.isArray(draft.info)) {
+      expect.fail("info object from database cannot be an array");
+    }
+
+    draft.info.threshold = 999;
+
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [
       s.state,
@@ -94,10 +102,16 @@ describe("given draft cross section has been updated", () => {
     keycs1 = res.keycs1;
 
     const draft = await byOwnerAndId(sampleEmail, keycs1);
+
     if (draft === undefined) {
       expect.fail("should have published section");
     }
-    draft.threshold = 999;
+
+    if (Array.isArray(draft.info)) {
+      expect.fail("info object from database cannot be an array");
+    }
+
+    draft.info.threshold = 999;
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [
       s.state,
@@ -195,6 +209,7 @@ describe.each(invalidDeleteStatuses)(
 describe("given updating published section which already has draft", () => {
   let keycs1: string;
   let keycs2: string;
+
   beforeAll(async () => {
     const state_ids = await insertSampleStateIds();
     const res = await createSampleCrossSection(state_ids);
@@ -204,7 +219,13 @@ describe("given updating published section which already has draft", () => {
     if (draft === undefined) {
       expect.fail("should have published section");
     }
-    draft.threshold = 999;
+
+    if (Array.isArray(draft.info)) {
+      expect.fail("info object from database cannot be an array");
+    }
+
+    draft.info.threshold = 999;
+
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [
       s.state,

@@ -234,6 +234,7 @@ export async function insertReactionWithDict(
   // and 'Produces' edges. Annotate them with the count.
   const mappedReaction = mapReaction(dict, reaction);
   const reactionIdFromDb = await findReactionId(mappedReaction);
+
   if (reactionIdFromDb !== undefined) {
     return reactionIdFromDb;
   }

@@ -93,13 +93,18 @@ describe("deleting a non-existing cross section", () => {
 describe("deleting a draft cross section that is part of a draft cross section set", () => {
   let keycss1: string;
   let keycs1: string;
+
   beforeAll(async () => {
     keycss1 = await createSet(sampleCrossSectionSet(), "draft");
     const css1 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css1 === undefined || css1.processes[0].id === undefined) {
+
+    if (
+      css1 === null
+      || css1.processes.flatMap(({ info }) => info)[0]._key === undefined
+    ) {
       expect.fail("should have created set");
     }
-    keycs1 = css1.processes[0].id;
+    keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
     return truncateCrossSectionSetCollections;
   });
 
@@ -121,10 +126,15 @@ describe("deleting a published cross section that is part of a published cross s
   beforeAll(async () => {
     keycss1 = await createSet(sampleCrossSectionSet(), "published");
     const css1 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css1 === undefined || css1.processes[0].id === undefined) {
+
+    if (
+      css1 === null
+      || css1.processes.flatMap(({ info }) => info)[0]._key === undefined
+    ) {
       expect.fail("should have created set");
     }
-    keycs1 = css1.processes[0].id;
+    keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
+
     return truncateCrossSectionSetCollections;
   });
 

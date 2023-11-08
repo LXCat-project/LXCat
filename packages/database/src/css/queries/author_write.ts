@@ -14,10 +14,7 @@ import {
 } from "../../cs/queries/write";
 import { now } from "../../date";
 import { db } from "../../db";
-import type {
-  KeyedDocument,
-  PartialKeyedDocument,
-} from "../../schema/document";
+import type { PartialKeyedDocument } from "../../schema/document";
 import { KeyedProcess } from "../../schema/process";
 import {
   insertDocument,

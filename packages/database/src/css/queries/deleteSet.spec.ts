@@ -13,6 +13,7 @@ import { byOwnerAndId, getVersionInfo, listOwned } from "./author_read";
 import { createSet, deleteSet } from "./author_write";
 import {
   byId,
+  FilterOptions,
   historyOfSet,
   KeyedVersionInfo,
   search,
@@ -106,17 +107,15 @@ describe("deleting a published cross section without shared cross sections", () 
 
   it("should have its cross sections marked as retracted", async () => {
     const css1 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css1 === undefined) {
+
+    if (css1 === null) {
       expect.fail("set should be present");
     }
 
     expect.assertions(2); // sample has 2 cross sections
 
-    for (const { id } of css1.processes) {
-      if (id === undefined) {
-        expect.fail("section should have id");
-      }
-      const info = await getVersionInfoOfSection(id);
+    for (const { _key } of css1.processes.flatMap(({ info }) => info)) {
+      const info = await getVersionInfoOfSection(_key);
 
       const expected: VersionInfo = {
         commitMessage: "",
@@ -130,7 +129,11 @@ describe("deleting a published cross section without shared cross sections", () 
   });
 
   it("should not be in public listing", async () => {
-    const filter = { contributor: [], state: {}, tag: [] };
+    const filter: FilterOptions = {
+      contributor: [],
+      state: { particle: {} },
+      tag: [],
+    };
     const sort: SortOptions = { field: "name", dir: "DESC" };
     const paging = { offset: 0, count: 10 };
     const result = await search(filter, sort, paging);
@@ -198,9 +201,11 @@ describe("deleting a published cross section with one shared cross section", () 
   beforeAll(async () => {
     keycss1 = await createSet(sampleCrossSectionSet(), "published");
     const css2 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css2 === undefined) {
+
+    if (css2 === null) {
       expect.fail("Should have created first set");
     }
+
     css2.name = "Some other name";
     css2.processes.pop(); // delete second section in second set
     keycss2 = await createSet(css2, "published");
@@ -225,19 +230,25 @@ describe("deleting a published cross section with one shared cross section", () 
     // Find key of non shared cross section
     const css1 = await byOwnerAndId(sampleEmail, keycss1);
     const css2 = await byOwnerAndId(sampleEmail, keycss2);
-    if (css1 === undefined || css2 === undefined) {
+
+    if (css1 === null || css2 === null) {
       expect.fail("set should be present");
     }
 
-    const nonSharedcskey = css1.processes
-      .map((cs) => cs.id)
-      .find((cs) => cs !== css2.processes[0].id);
+    const csSet1Keys = css1.processes.flatMap(({ info }) => info).map((
+      { _key },
+    ) => _key);
+    const csSet2Keys = css2.processes.flatMap(({ info }) => info).map((
+      { _key },
+    ) => _key);
 
-    if (nonSharedcskey === undefined) {
+    const nonSharedCSKey = csSet1Keys.find((key) => !csSet2Keys.includes(key));
+
+    if (nonSharedCSKey === undefined) {
       expect.fail("section should have id");
     }
     // Compare version info of non shared cross section
-    const info = await getVersionInfoOfSection(nonSharedcskey);
+    const info = await getVersionInfoOfSection(nonSharedCSKey);
 
     const expected: VersionInfo = {
       commitMessage: "",
@@ -252,10 +263,12 @@ describe("deleting a published cross section with one shared cross section", () 
   it("should have its shared cross sections marked as still published", async () => {
     // Find key of shared cross section
     const css2 = await byOwnerAndId(sampleEmail, keycss2);
-    if (css2 === undefined) {
+
+    if (css2 === null) {
       expect.fail("set should be present");
     }
-    const sharedcskey = css2.processes[0].id;
+
+    const sharedcskey = css2.processes.flatMap(({ info }) => info)[0]._key;
     if (sharedcskey === undefined) {
       expect.fail("section should have id");
     }
@@ -295,11 +308,14 @@ describe("deleting a draft cross section set with one shared cross section", () 
   beforeAll(async () => {
     const keycss1 = await createSet(sampleCrossSectionSet(), "draft");
     const css2 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css2 === undefined) {
+
+    if (css2 === null) {
       expect.fail("Should have created first set");
     }
+
     css2.name = "Some other name";
     css2.processes.pop(); // delete second cross section in second set
+
     await createSet(css2, "draft");
 
     await deleteSet(keycss1, "My retract message");
@@ -339,15 +355,22 @@ describe("deleting a draft cross section set with one shared cross section", () 
 
 describe("deleting a draft cross section with one published cross section", () => {
   beforeAll(async () => {
-    const keycss1 = await createSet(sampleCrossSectionSet(), "draft");
+    const sampleSet = sampleCrossSectionSet();
+    sampleSet.name = "Some other name";
+
+    const keycss1 = await createSet(sampleSet, "draft");
     const css1 = await byOwnerAndId(sampleEmail, keycss1);
-    if (css1 === undefined) {
+
+    if (css1 === null) {
       expect.fail("Should have created set");
     }
-    const keycs1 = css1.processes[0].id;
+
+    const keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
+
     if (keycs1 === undefined) {
       expect.fail("Should have created section");
     }
+
     await publish(keycs1);
 
     await deleteSet(keycss1, "My retract message");

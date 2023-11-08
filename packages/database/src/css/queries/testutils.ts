@@ -169,12 +169,10 @@ export const sampleSets4Search = async () => {
       particle: "He",
       charge: 0,
       type: "AtomLS",
-      electronic: [
-        {
-          config: [],
-          term: { L: 0, S: 0, J: 0, P: 1 },
-        },
-      ],
+      electronic: {
+        config: [],
+        term: { L: 0, S: 0, J: 0, P: 1 },
+      },
     },
     "He{*}": {
       particle: "He",
@@ -307,12 +305,10 @@ export const sampleSets4SearchWithVersions = async () => {
       particle: "He",
       charge: 0,
       type: "AtomLS",
-      electronic: [
-        {
-          config: [],
-          term: { L: 0, S: 0, J: 0, P: 1 },
-        },
-      ],
+      electronic: {
+        config: [],
+        term: { L: 0, S: 0, J: 0, P: 1 },
+      },
     },
     "He{*}": {
       particle: "He",
@@ -351,11 +347,11 @@ export const sampleSets4SearchWithVersions = async () => {
         {
           lhs: [
             { count: 1, state: "e" },
-            { count: 1, state: "H2" },
+            { count: 1, state: "N2" },
           ],
           rhs: [
             { count: 1, state: "e" },
-            { count: 1, state: "H2" },
+            { count: 1, state: "N2" },
           ],
           typeTags: ["Effective"],
           reversible: false,
@@ -420,9 +416,9 @@ function setFrom(
 ) {
   return LTPDocument.parse(
     {
-      $schema: "",
-      url: "",
-      termsOfUse: "",
+      $schema: "http://www.schema.com",
+      url: "http://www.url.com",
+      termsOfUse: "http://www.terms-of-use.com",
       complete: false,
       contributor,
       name,
