@@ -2,10 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { Dict } from "@lxcat/schema/dist/core/util";
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
+import { AnyProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
 import { toggleRole } from "../../auth/queries";
 import {
@@ -15,6 +12,7 @@ import {
 import { deepClone } from "../../css/queries/deepClone";
 import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
 import { db } from "../../db";
+import { KeyedProcess } from "../../schema/process";
 import { startDbContainer } from "../../testutils";
 import { byOwnerAndId, getVersionInfo } from "./author_read";
 import { historyOfSection } from "./public";
@@ -37,7 +35,7 @@ describe("given db with test user and organization", () => {
   });
 
   describe("given 4 states and zero references exist", () => {
-    let state_ids: Dict<string>;
+    let state_ids: Record<string, string>;
     beforeAll(async () => {
       state_ids = await insertSampleStateIds();
       return async () => {
@@ -51,12 +49,16 @@ describe("given db with test user and organization", () => {
     describe("create draft from published cross section with changed data property", () => {
       let keycs1: string;
       let keycs2: string;
-      let cs1: CrossSection<string, string, LUT>;
+      let cs1: KeyedProcess<string, string>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
-          cs.data = [[1000, 1.2345e-20]];
+          if (Array.isArray(cs.info)) {
+            cs.info[0].data.values = [[1000, 1.2345e-20]];
+          } else {
+            cs.info.data.values = [[1000, 1.2345e-20]];
+          }
         }));
         return __return;
       });
@@ -79,7 +81,11 @@ describe("given db with test user and organization", () => {
       it("should have same ids for states", async () => {
         const draftcs = await byOwnerAndId("somename@example.com", keycs2);
         const expected = deepClone(cs1);
-        expected.data = [[1000, 1.2345e-20]];
+        if (Array.isArray(expected.info)) {
+          expected.info[0].data.values = [[1000, 1.2345e-20]];
+        } else {
+          expected.info.data.values = [[1000, 1.2345e-20]];
+        }
         expect(draftcs).toEqual(expected);
       });
 
@@ -113,7 +119,7 @@ describe("given db with test user and organization", () => {
     describe("create draft from published section with changed reversible prop in reaction", () => {
       let keycs1: string;
       let keycs2: string;
-      let cs1: CrossSection<string, string, LUT>;
+      let cs1: KeyedProcess<string, string>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
@@ -154,7 +160,7 @@ describe("given db with test user and organization", () => {
     describe("create draft from published section with changed first state in reaction", () => {
       let keycs1: string;
       let keycs2: string;
-      let cs1: CrossSection<string, string, LUT>;
+      let cs1: KeyedProcess<string, string>;
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
@@ -180,19 +186,24 @@ describe("given db with test user and organization", () => {
     describe("create draft cross section", () => {
       let keycs1: string;
       beforeAll(async () => {
-        const cs: CrossSection<string, string> = {
+        const cs: AnyProcess<string, string> = {
           reaction: {
             lhs: [{ count: 1, state: "s1" }],
             rhs: [{ count: 1, state: "s2" }],
             reversible: false,
             typeTags: [],
           },
-          threshold: 42,
-          type: Storage.LUT,
-          labels: ["Energy", "Cross Section"],
-          units: ["eV", "m^2"],
-          data: [[1, 3.14e-20]],
-          reference: [],
+          info: {
+            type: "CrossSection",
+            threshold: 42,
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              values: [[1, 3.14e-20]],
+            },
+            references: [],
+          },
         };
         const idcs1 = await createCS(
           cs,
