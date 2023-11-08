@@ -3,6 +3,12 @@ import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
 import { SerializedSpecies } from "../../schema/species";
 
+export type SpeciesNode = {
+  _key: string;
+  species: SerializedSpecies;
+  hasChildren: boolean;
+};
+
 export const getTopLevelSpecies = async () => {
   const query = aql`
     FOR state IN State
@@ -18,9 +24,7 @@ export const getTopLevelSpecies = async () => {
         hasChildren
       }
   `;
-  const cursor: ArrayCursor<
-    { _key: string; species: SerializedSpecies; hasChildren: boolean }
-  > = await db().query(query);
+  const cursor: ArrayCursor<SpeciesNode> = await db().query(query);
   return cursor.all();
 };
 
@@ -42,8 +46,6 @@ export async function getSpeciesChildren(key: string) {
         }
   `;
 
-  const cursor: ArrayCursor<
-    { _key: string; species: SerializedSpecies; hasChildren: boolean }
-  > = await db().query(query);
+  const cursor: ArrayCursor<SpeciesNode> = await db().query(query);
   return cursor.all();
 }
