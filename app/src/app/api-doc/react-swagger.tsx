@@ -3,12 +3,9 @@
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 
-type Props = {
-  spec: Record<string, any>;
-};
-
-function ReactSwagger({ spec }: Props) {
-  return <SwaggerUI spec={spec} />;
+function ReactSwagger() {
+  const url = `${process.env.NEXT_PUBLIC_URL}/api/doc/`;
+  return <SwaggerUI url={url} />;
 }
 
 export default ReactSwagger;
