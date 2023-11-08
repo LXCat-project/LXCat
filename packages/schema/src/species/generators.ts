@@ -42,9 +42,10 @@ export const makeMoleculeSchema = <
                           z.array(
                             z.union([
                               rotational.describe("Singular"),
-                              z.string().describe("Compound"),
+                              z.string().describe("Unspecified"),
                             ]),
                           )
+                            .min(2)
                             .describe("Compound"),
                           z.string().describe("Unspecified"),
                         ]),
@@ -54,16 +55,17 @@ export const makeMoleculeSchema = <
                   z.array(
                     z.union([
                       vibrational.describe("Singular"),
-                      z.string().describe("Compound"),
+                      z.string().describe("Unspecified"),
                     ]),
                   )
+                    .min(2)
                     .describe("Compound"),
                   z.string().describe("Unspecified"),
                 ]),
               ),
             }),
           ).describe("Singular"),
-          z.array(electronic).describe("Compound"),
+          z.array(electronic).min(2).describe("Compound"),
         ]),
       }),
     );
@@ -114,7 +116,7 @@ export const makeAtomSchema = <
     z.object({
       electronic: z.union([
         electronic.describe("Singular"),
-        z.array(electronic).describe("Compound"),
+        z.array(electronic).min(2).describe("Compound"),
       ]),
     }),
   );
