@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Dict } from "arangojs/connection";
+import { AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   startDbWithUserAndCssCollections,
@@ -14,12 +14,13 @@ describe("given db with test user and organization", () => {
   beforeAll(startDbWithUserAndCssCollections);
 
   describe("given 1 state exist", () => {
-    let state_ids: Dict<string>;
+    let state_ids: Record<string, string>;
     beforeAll(async () => {
-      const states = {
+      const states: Record<string, AnySpecies> = {
         s1: {
           particle: "A",
           charge: 0,
+          type: "simple",
         },
       };
       state_ids = await insertStateDict(states);
