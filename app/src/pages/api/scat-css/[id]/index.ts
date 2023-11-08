@@ -40,14 +40,14 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
 
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {
-        (data as any).references = Object.fromEntries(
+        (dataWithRef as any).references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const cite = new Cite(value);
             return [key, cite.format("bibtex")];
           }),
         );
       } else if (refstyle === "apa") {
-        (data as any).references = Object.fromEntries(
+        (dataWithRef as any).references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const bib = reference2bibliography(value);
             return [key, bib];
@@ -58,7 +58,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           `Incorrect reference style found: ${refstyle}. Expected csl or apa or bibtex.`,
         );
       }
-      res.json(data);
+      res.json(dataWithRef);
     }
   })
   .handler();
