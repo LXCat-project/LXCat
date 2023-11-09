@@ -1,21 +1,17 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { SerializedSpecies } from "@lxcat/database/dist/schema/species";
 import { z } from "zod";
-import { registry } from "../../../../docs/openapi";
-import { speciesSchema } from "../../schemas.openapi";
+import { registry } from "../../../docs/openapi";
+import { speciesSchema } from "../schemas.openapi";
 
 export default async function() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({
     method: "get",
-    path: "/species/children",
+    path: "/species",
     tags: ["species"],
-    description: "Get children belonging to a species.",
-    request: {
-      query: z.object({
-        id: z.string(),
-      }),
-    },
+    description: "Get all species.",
     responses: {
       200: {
         description: "Species objects",
