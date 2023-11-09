@@ -1,5 +1,4 @@
-import { object, ZodTypeAny } from "zod";
-import { OneOrMultiple } from "../common/util";
+import { array, object, ZodTypeAny } from "zod";
 import { Reaction } from "./reaction";
 
 export const Process = <
@@ -8,5 +7,5 @@ export const Process = <
 >(StateType: StateType, ProcessInfoType: ProcessInfoType) =>
   object({
     reaction: Reaction(StateType),
-    info: OneOrMultiple(ProcessInfoType),
+    info: array(ProcessInfoType),
   });

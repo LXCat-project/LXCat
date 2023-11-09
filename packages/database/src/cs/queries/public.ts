@@ -48,7 +48,7 @@ export async function byId(id: string) {
         )
         RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
     )
-    RETURN { reaction, info: MERGE({ _key: cs._key, references, isPartOf: sets }, cs.info) }
+    RETURN { reaction, info: [MERGE({ _key: cs._key, references, isPartOf: sets }, cs.info)] }
   `);
   return OwnedProcess.parseAsync(await cursor.next());
 }
@@ -124,7 +124,7 @@ export async function byIds(ids: string[]) {
             FILTER cs._id == p._from
             RETURN PARSE_IDENTIFIER(p._to).key
         )
-        RETURN { reaction, info: MERGE({ _key: cs._key, references: refs2, isPartOf: sets2 }, cs.info) }
+        RETURN { reaction, info: [MERGE({ _key: cs._key, references: refs2, isPartOf: sets2 }, cs.info)] }
     )
     RETURN {
       states,

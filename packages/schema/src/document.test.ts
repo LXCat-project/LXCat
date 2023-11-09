@@ -21,7 +21,7 @@ describe("LTPDocument", () => {
             reversible: false,
             typeTags: ["Elastic"],
           },
-          info: {
+          info: [{
             type: "CrossSection",
             references: [],
             threshold: 0,
@@ -31,7 +31,7 @@ describe("LTPDocument", () => {
               units: ["eV", "m^2"],
               values: [[0, 0]],
             },
-          },
+          }],
         },
       ],
     };
@@ -58,7 +58,7 @@ describe("LTPDocument", () => {
             reversible: false,
             typeTags: ["Elastic"],
           },
-          info: {
+          info: [{
             type: "CrossSection",
             references: ["FaultyKey"],
             threshold: 0,
@@ -68,7 +68,7 @@ describe("LTPDocument", () => {
               units: ["eV", "m^2"],
               values: [[0, 0]],
             },
-          },
+          }],
         },
       ],
     };

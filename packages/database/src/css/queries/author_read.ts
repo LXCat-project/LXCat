@@ -150,7 +150,7 @@ export async function byOwnerAndId(email: string, id: string) {
                   )
                   RETURN {
                     reaction,
-                    info: MERGE(cs.info, { _key: cs._key, references: csRefs })
+                    info: [MERGE(cs.info, { _key: cs._key, references: csRefs })]
                   }
               )
               RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), {contributor: org.name, references, states, processes})

@@ -2,9 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { db } from "../..";
 import {
   matchesId,
   sampleSets4Search,
@@ -15,18 +13,11 @@ import {
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
 import { StateSummary } from "../../shared/queries/state";
 import { defaultSearchTemplate } from "../picker/default";
-import { getFullStateTreeAQL } from "../picker/queries/generators";
 import {
   getCSIdByReactionTemplate,
-  getPartakingStateSelection,
   getSearchOptions,
 } from "../picker/queries/public";
-import {
-  ReactionOptions,
-  ReactionTemplate,
-  Reversible,
-  StateProcess,
-} from "../picker/types";
+import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
 import { CrossSectionHeading } from "../public";
 import { byId, getCSHeadings, search } from "./public";
 import { NestedState, removeIdsFromTree } from "./testutils";
@@ -647,7 +638,7 @@ describe("Selecting individual cross sections", () => {
             },
           ],
         },
-        info: {
+        info: [{
           type: "CrossSection",
           _key: matchesId,
           threshold: 0,
@@ -667,7 +658,7 @@ describe("Selecting individual cross sections", () => {
               complete: false,
             },
           ],
-        },
+        }],
       });
     });
   });

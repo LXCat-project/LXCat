@@ -110,7 +110,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
             },
-            info: {
+            info: [{
               _key: matchesId,
               type: "CrossSection",
               threshold: 42,
@@ -122,7 +122,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               },
               references: [],
               isPartOf: [matchesId],
-            },
+            }],
           },
           {
             reaction: {
@@ -141,7 +141,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
             },
-            info: {
+            info: [{
               _key: matchesId,
               type: "CrossSection",
               threshold: 13,
@@ -153,7 +153,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               },
               references: [],
               isPartOf: [matchesId],
-            },
+            }],
           },
           {
             reaction: {
@@ -172,7 +172,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
             },
-            info: {
+            info: [{
               _key: matchesId,
               type: "CrossSection",
               threshold: 42,
@@ -184,7 +184,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               },
               references: [],
               isPartOf: [matchesId],
-            },
+            }],
           },
           {
             reaction: {
@@ -203,7 +203,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
             },
-            info: {
+            info: [{
               _key: matchesId,
               type: "CrossSection",
               threshold: 13,
@@ -215,7 +215,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               },
               references: [],
               isPartOf: [matchesId],
-            },
+            }],
           },
         ],
         sets: {
@@ -318,7 +318,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 },
               ],
             },
-            info: {
+            info: [{
               _key: matchesId,
               type: "CrossSection",
               threshold: 42,
@@ -330,7 +330,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               },
               references: [],
               isPartOf: [matchesId],
-            },
+            }],
           },
         ],
         sets: {

@@ -34,7 +34,7 @@ export const LTPMixture = MixtureBody
   .refine(
     (doc) =>
       doc.processes
-        .flatMap(({ info }) => Array.isArray(info) ? info : [info])
+        .flatMap(({ info }) => info)
         .flatMap(({ references }) => references)
         .every((reference) => reference in doc.references),
     "Referenced reference key is missing in references record.",

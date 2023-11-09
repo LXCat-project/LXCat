@@ -101,7 +101,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
           reversible: false,
           typeTags: [],
         },
-        info: {
+        info: [{
           type: "CrossSection",
           threshold: 42,
           data: {
@@ -111,7 +111,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
             values: [[1, 3.14e-20]],
           },
           references: [],
-        },
+        }],
       },
       {
         reaction: {
@@ -120,7 +120,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
           reversible: false,
           typeTags: [],
         },
-        info: {
+        info: [{
           type: "CrossSection",
           threshold: 13,
           data: {
@@ -130,7 +130,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
             values: [[2, 5.12e-10]],
           },
           references: [],
-        },
+        }],
       },
     ],
   };
@@ -427,7 +427,7 @@ function setFrom(
       states,
       processes: reactions.map((reaction) => ({
         reaction,
-        info: {
+        info: [{
           type: "CrossSection",
           threshold: 0,
           data: {
@@ -437,7 +437,7 @@ function setFrom(
             values: [[0, 3.14e-20]],
           },
           references: [],
-        },
+        }],
       })),
     },
   );

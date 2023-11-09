@@ -10,7 +10,11 @@ import {
   loadTestUserAndOrg,
 } from "../../auth/testutils";
 import { deepClone } from "../../css/queries/deepClone";
-import { createCsCollections, ISO_8601_UTC } from "../../css/queries/testutils";
+import {
+  createCsCollections,
+  ISO_8601_UTC,
+  matchesId,
+} from "../../css/queries/testutils";
 import { db } from "../../db";
 import { KeyedProcess } from "../../schema/process";
 import { startDbContainer } from "../../testutils";
@@ -50,15 +54,12 @@ describe("given db with test user and organization", () => {
       let keycs1: string;
       let keycs2: string;
       let cs1: KeyedProcess<string, string>;
+
       beforeAll(async () => {
         let __return;
         ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
-          if (Array.isArray(cs.info)) {
-            cs.info[0].data.values = [[1000, 1.2345e-20]];
-          } else {
-            cs.info.data.values = [[1000, 1.2345e-20]];
-          }
+          cs.info[0].data.values = [[1000, 1.2345e-20]];
         }));
         return __return;
       });
@@ -81,11 +82,8 @@ describe("given db with test user and organization", () => {
       it("should have same ids for states", async () => {
         const draftcs = await byOwnerAndId("somename@example.com", keycs2);
         const expected = deepClone(cs1);
-        if (Array.isArray(expected.info)) {
-          expected.info[0].data.values = [[1000, 1.2345e-20]];
-        } else {
-          expected.info.data.values = [[1000, 1.2345e-20]];
-        }
+        expected.info[0].data.values = [[1000, 1.2345e-20]];
+        expected.info[0]._key = matchesId;
         expect(draftcs).toEqual(expected);
       });
 
@@ -148,6 +146,7 @@ describe("given db with test user and organization", () => {
         const draftcs = await byOwnerAndId("somename@example.com", keycs2);
         const expected = deepClone(cs1);
         expected.reaction.reversible = true;
+        expected.info[0]._key = matchesId;
         expect(draftcs).toEqual(expected);
       });
 
@@ -173,7 +172,10 @@ describe("given db with test user and organization", () => {
       it("should have one different state id and one same state id", async () => {
         const draftcs = await byOwnerAndId("somename@example.com", keycs2);
         const expected = deepClone(cs1);
+
         expected.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
+        expected.info[0]._key = matchesId;
+
         expect(draftcs).toEqual(expected);
       });
 
@@ -193,7 +195,7 @@ describe("given db with test user and organization", () => {
             reversible: false,
             typeTags: [],
           },
-          info: {
+          info: [{
             type: "CrossSection",
             threshold: 42,
             data: {
@@ -203,7 +205,7 @@ describe("given db with test user and organization", () => {
               values: [[1, 3.14e-20]],
             },
             references: [],
-          },
+          }],
         };
         const idcs1 = await createCS(
           cs,

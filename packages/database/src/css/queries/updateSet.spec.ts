@@ -4,11 +4,10 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { CSL } from "@lxcat/schema/dist/core/csl";
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { aql } from "arangojs";
 
-import { ReactionEntry } from "@lxcat/schema/dist/core/reaction";
+import { Reference } from "@lxcat/schema";
+import { ReactionEntry } from "@lxcat/schema/process";
 import { ArangojsError } from "arangojs/lib/request.node";
 import { byOrgAndId, searchOwned } from "../../cs/queries/author_read";
 import {
@@ -18,14 +17,18 @@ import {
 } from "../../cs/queries/testutils";
 import { createCS } from "../../cs/queries/write";
 import { db } from "../../db";
+import { KeyedDocument, PartialKeyedDocument } from "../../schema/document";
+import { OwnedProcess } from "../../schema/process";
+import { SerializedSpecies } from "../../schema/species";
 import { insertStateDict } from "../../shared/queries";
 import { upsertOrganization } from "../../shared/queries/organization";
 import { Status } from "../../shared/types/version_info";
-import { byOwnerAndId, CrossSectionSetInputOwned } from "./author_read";
+import { byOwnerAndId } from "./author_read";
 import { createSet, publish, updateSet } from "./author_write";
 import { historyOfSet } from "./public";
 import {
   ISO_8601_UTC,
+  matchesId,
   sampleCrossSectionSet,
   sampleEmail,
   startDbWithUserAndCssCollections,
@@ -50,14 +53,17 @@ describe("given published cross section set where data of 1 published cross sect
         a: {
           particle: "A",
           charge: 0,
+          type: "simple",
         },
         b: {
           particle: "B",
           charge: 1,
+          type: "simple",
         },
         c: {
           particle: "C",
           charge: 2,
+          type: "simple",
         },
       },
       processes: [
@@ -68,12 +74,17 @@ describe("given published cross section set where data of 1 published cross sect
             reversible: false,
             typeTags: [],
           },
-          threshold: 42,
-          type: Storage.LUT,
-          labels: ["Energy", "Cross Section"],
-          units: ["eV", "m^2"],
-          data: [[1, 3.14e-20]],
-          reference: [],
+          info: [{
+            type: "CrossSection",
+            threshold: 42,
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              values: [[1, 3.14e-20]],
+            },
+            references: [],
+          }],
         },
         {
           reaction: {
@@ -82,24 +93,33 @@ describe("given published cross section set where data of 1 published cross sect
             reversible: false,
             typeTags: [],
           },
-          threshold: 13,
-          type: Storage.LUT,
-          labels: ["Energy", "Cross Section"],
-          units: ["eV", "m^2"],
-          data: [[2, 5.12e-10]],
-          reference: [],
+          info: [{
+            type: "CrossSection",
+            threshold: 13,
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              values: [[2, 5.12e-10]],
+            },
+            references: [],
+          }],
         },
       ],
     });
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    draft.processes[0].data = [
+    draft.processes[1].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
     ];
-    keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
+    keycss2 = await updateSet(
+      keycss1,
+      draft,
+      "Altered data of A->B cross section",
+    );
     return truncateCrossSectionSetCollections;
   });
 
@@ -132,37 +152,26 @@ describe("given published cross section set where data of 1 published cross sect
     expect(data.count).toEqual(1);
   });
 
-  it("should list 2 sections", async () => {
+  it("should list 2 cross sections", async () => {
     const list = await searchOwned(email);
-    const expected = [
+    const expected: Array<OwnedProcess> = [
       {
-        id: expect.stringMatching(/\d+/),
-        organization: "Some organization",
-        isPartOf: [
-          {
-            id: keycss2,
-            name: "Some name",
-            versionInfo: {
-              version: "2",
-            },
-          },
-        ],
-        data: [
-          [1, 3.14e-20],
-          [2, 3.15e-20],
-        ],
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        reference: [],
         reaction: {
           lhs: [
             {
               count: 1,
               state: {
-                particle: "A",
-                charge: 0,
-                id: "A",
-                latex: "\\mathrm{A}",
+                detailed: {
+                  particle: "A",
+                  charge: 0,
+                  type: "simple",
+                },
+                serialized: {
+                  particle: "A",
+                  charge: 0,
+                  summary: "A",
+                  latex: "\\mathrm{A}",
+                },
               },
             },
           ],
@@ -170,58 +179,72 @@ describe("given published cross section set where data of 1 published cross sect
             {
               count: 2,
               state: {
-                particle: "B",
-                charge: 1,
-                id: "B^+",
-                latex: "\\mathrm{B^+}",
+                detailed: {
+                  particle: "B",
+                  charge: 1,
+                  type: "simple",
+                },
+                serialized: {
+                  particle: "B",
+                  charge: 1,
+                  summary: "B^+",
+                  latex: "\\mathrm{B}^+",
+                },
               },
             },
           ],
           reversible: false,
           typeTags: [],
         },
-        threshold: 42,
-        type: "LUT",
-        versionInfo: {
-          commitMessage:
-            `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
-          createdOn: expect.stringMatching(ISO_8601_UTC),
-          status: "draft",
-          version: "2",
-        },
+        info: [{
+          _key: matchesId,
+          type: "CrossSection",
+          threshold: 42,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [
+              [1, 3.14e-20],
+              [2, 3.15e-20],
+            ],
+          },
+          isPartOf: [
+            {
+              _key: keycss2,
+              name: "Some name",
+              contributor: "Some organization",
+              description: "Some description",
+              complete: false,
+            },
+          ],
+          references: [],
+          // versionInfo: {
+          //   commitMessage:
+          //     `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
+          //   createdOn: expect.stringMatching(ISO_8601_UTC),
+          //   status: "draft",
+          //   version: "2",
+          // },
+        }],
       },
       {
-        id: expect.stringMatching(/\d+/),
-        organization: "Some organization",
-        isPartOf: [
-          {
-            id: keycss1,
-            name: "Some name",
-            versionInfo: {
-              version: "1",
-            },
-          },
-          {
-            id: keycss2,
-            name: "Some name",
-            versionInfo: {
-              version: "2",
-            },
-          },
-        ],
-        data: [[2, 5.12e-10]],
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        reference: [],
         reaction: {
           lhs: [
             {
               count: 1,
               state: {
-                particle: "A",
-                charge: 0,
-                id: "A",
-                latex: "\\mathrm{A}",
+                detailed: {
+                  particle: "A",
+                  charge: 0,
+                  type: "simple",
+                },
+                serialized: {
+                  particle: "A",
+                  charge: 0,
+                  summary: "A",
+                  latex: "\\mathrm{A}",
+                },
               },
             },
           ],
@@ -229,24 +252,57 @@ describe("given published cross section set where data of 1 published cross sect
             {
               count: 3,
               state: {
-                particle: "C",
-                charge: 2,
-                id: "C^2+",
-                latex: "\\mathrm{C^{2+}}",
+                detailed: {
+                  particle: "C",
+                  charge: 2,
+                  type: "simple",
+                },
+                serialized: {
+                  particle: "C",
+                  charge: 2,
+                  summary: "C^2+",
+                  latex: "\\mathrm{C}^{2+}",
+                },
               },
             },
           ],
           reversible: false,
           typeTags: [],
         },
-        threshold: 13,
-        type: "LUT",
-        versionInfo: {
-          commitMessage: "",
-          createdOn: expect.stringMatching(ISO_8601_UTC),
-          status: "published",
-          version: "1",
-        },
+        info: [{
+          _key: matchesId,
+          type: "CrossSection",
+          threshold: 13,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[2, 5.12e-10]],
+          },
+          isPartOf: [
+            {
+              _key: keycss2,
+              name: "Some name",
+              contributor: "Some organization",
+              description: "Some description",
+              complete: false,
+            },
+            {
+              _key: keycss1,
+              name: "Some name",
+              contributor: "Some organization",
+              description: "Some description",
+              complete: false,
+            },
+          ],
+          references: [],
+          // versionInfo: {
+          //   commitMessage: "",
+          //   createdOn: expect.stringMatching(ISO_8601_UTC),
+          //   status: "published",
+          //   version: "1",
+          // },
+        }],
       },
     ];
     expect(list).toEqual(expected);
@@ -301,35 +357,24 @@ describe("given published cross section set where data of 1 published cross sect
 
     it("should list 2 sections", async () => {
       const list = await searchOwned(email);
-      const expected = [
+      const expected: Array<OwnedProcess> = [
         {
-          id: expect.stringMatching(/\d+/),
-          organization: "Some organization",
-          isPartOf: [
-            {
-              id: keycss2,
-              name: "Some name",
-              versionInfo: {
-                version: "2",
-              },
-            },
-          ],
-          data: [
-            [1, 3.14e-20],
-            [2, 3.15e-20],
-          ],
-          labels: ["Energy", "Cross Section"],
-          units: ["eV", "m^2"],
-          reference: [],
           reaction: {
             lhs: [
               {
                 count: 1,
                 state: {
-                  particle: "A",
-                  charge: 0,
-                  id: "A",
-                  latex: "\\mathrm{A}",
+                  detailed: {
+                    particle: "A",
+                    charge: 0,
+                    type: "simple",
+                  },
+                  serialized: {
+                    particle: "A",
+                    charge: 0,
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                 },
               },
             ],
@@ -337,25 +382,55 @@ describe("given published cross section set where data of 1 published cross sect
               {
                 count: 2,
                 state: {
-                  particle: "B",
-                  charge: 1,
-                  id: "B^+",
-                  latex: "\\mathrm{B^+}",
+                  detailed: {
+                    particle: "B",
+                    charge: 1,
+                    type: "simple",
+                  },
+                  serialized: {
+                    particle: "B",
+                    charge: 1,
+                    summary: "B^+",
+                    latex: "\\mathrm{B^+}",
+                  },
                 },
               },
             ],
             reversible: false,
             typeTags: [],
           },
-          threshold: 42,
-          type: "LUT",
-          versionInfo: {
-            commitMessage:
-              `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
-            createdOn: expect.stringMatching(ISO_8601_UTC),
-            status: "published",
-            version: "2",
-          },
+          info: [{
+            _key: matchesId,
+            type: "CrossSection",
+            threshold: 42,
+            isPartOf: [
+              {
+                _key: keycss2,
+                name: "Some name",
+                contributor: "",
+                description: "",
+                complete: false,
+              },
+            ],
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              values: [
+                [1, 3.14e-20],
+                [2, 3.15e-20],
+              ],
+            },
+            references: [],
+            // TODO: Add `VersionInfo` to `OwnedProcess`.
+            // versionInfo: {
+            //   commitMessage:
+            //     `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
+            //   createdOn: expect.stringMatching(ISO_8601_UTC),
+            //   status: "published",
+            //   version: "2",
+            // },
+          }],
         },
         {
           id: expect.stringMatching(/\d+/),
@@ -385,10 +460,17 @@ describe("given published cross section set where data of 1 published cross sect
               {
                 count: 1,
                 state: {
-                  particle: "A",
-                  charge: 0,
-                  id: "A",
-                  latex: "\\mathrm{A}",
+                  detailed: {
+                    particle: "A",
+                    charge: 0,
+                    type: "simple",
+                  },
+                  serialized: {
+                    particle: "A",
+                    charge: 0,
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                 },
               },
             ],
@@ -396,10 +478,17 @@ describe("given published cross section set where data of 1 published cross sect
               {
                 count: 3,
                 state: {
-                  particle: "C",
-                  charge: 2,
-                  id: "C^2+",
-                  latex: "\\mathrm{C^{2+}}",
+                  detailed: {
+                    particle: "C",
+                    charge: 2,
+                    type: "simple",
+                  },
+                  serialized: {
+                    particle: "C",
+                    charge: 2,
+                    summary: "C^2+",
+                    latex: "\\mathrm{C}^{2+}",
+                  },
                 },
               },
             ],
@@ -436,10 +525,12 @@ describe("given draft cross section set where its cross section data is altered"
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -450,12 +541,17 @@ describe("given draft cross section set where its cross section data is altered"
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -464,10 +560,10 @@ describe("given draft cross section set where its cross section data is altered"
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    draft.processes[0].data = [
+    draft.processes[0].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
     ];
@@ -581,18 +677,23 @@ describe("given draft cross section set where its cross section data is added la
       "1",
       "Initial draft",
     );
-    const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    const draft: PartialKeyedDocument | null = await byOwnerAndId(
+      email,
+      keycss1,
+    );
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     draft.states = {
       a: {
         particle: "A",
         charge: 0,
+        type: "simple",
       },
       b: {
         particle: "B",
         charge: 1,
+        type: "simple",
       },
     };
     draft.processes = [
@@ -603,12 +704,17 @@ describe("given draft cross section set where its cross section data is added la
           reversible: false,
           typeTags: [],
         },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: [],
+        info: [{
+          type: "CrossSection",
+          threshold: 42,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[1, 3.14e-20]],
+          },
+          references: [],
+        }],
       },
     ];
     keycss2 = await updateSet(keycss1, draft, "Added section A->B");
@@ -715,10 +821,12 @@ describe("given draft cross section set where its non cross section data is alte
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -729,12 +837,17 @@ describe("given draft cross section set where its non cross section data is alte
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -743,7 +856,7 @@ describe("given draft cross section set where its non cross section data is alte
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     draft.description = "Some altered description";
@@ -837,7 +950,7 @@ describe("given draft cross section set where its non cross section data is alte
 
   it("should have updated description", async () => {
     const set = await byOwnerAndId(email, keycss2);
-    if (set === undefined) {
+    if (set === null) {
       throw new Error("Draft should exist");
     }
 
@@ -860,10 +973,12 @@ describe("given draft cross section set where its cross section state is altered
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -874,12 +989,17 @@ describe("given draft cross section set where its cross section state is altered
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -888,12 +1008,13 @@ describe("given draft cross section set where its cross section state is altered
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     draft.states.c = {
       particle: "C",
       charge: 2,
+      type: "simple",
     };
     draft.processes[0].reaction.rhs[0].state = "c";
     try {
@@ -983,10 +1104,12 @@ describe("given draft cross section set where a reference is added to a cross se
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -997,12 +1120,17 @@ describe("given draft cross section set where a reference is added to a cross se
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -1011,10 +1139,10 @@ describe("given draft cross section set where a reference is added to a cross se
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const r1: CSL.Data = {
+    const r1: Reference = {
       type: "article",
       id: "refid1",
       title: "Some paper",
@@ -1022,7 +1150,7 @@ describe("given draft cross section set where a reference is added to a cross se
     draft.references = {
       r1,
     };
-    draft.processes[0].reference = ["r1"];
+    draft.processes[0].info[0].references = ["r1"];
     keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
@@ -1096,7 +1224,7 @@ describe("given draft cross section set where a reference is replaced in a cross
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    const r1: CSL.Data = {
+    const r1: Reference = {
       type: "article",
       id: "refid1",
       title: "Some paper",
@@ -1112,10 +1240,12 @@ describe("given draft cross section set where a reference is replaced in a cross
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -1126,12 +1256,17 @@ describe("given draft cross section set where a reference is replaced in a cross
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: ["r1"],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: ["r1"],
+            }],
           },
         ],
       },
@@ -1140,16 +1275,16 @@ describe("given draft cross section set where a reference is replaced in a cross
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const r2: CSL.Data = {
+    const r2: Reference = {
       type: "article",
       id: "refid2",
       title: "Some other paper",
     };
     draft.references.r2 = r2;
-    draft.processes[0].reference = ["r2"];
+    draft.processes[0].info[0].references = ["r2"];
     keycss2 = await updateSet(keycss1, draft, "Altered data of section A->B");
     return truncateCrossSectionSetCollections;
   });
@@ -1223,7 +1358,7 @@ describe("given draft cross section set where a reference is extended in a cross
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    const r1: CSL.Data = {
+    const r1: Reference = {
       type: "article",
       id: "refid1",
       title: "Some paper",
@@ -1239,10 +1374,12 @@ describe("given draft cross section set where a reference is extended in a cross
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -1253,12 +1390,17 @@ describe("given draft cross section set where a reference is extended in a cross
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: ["r1"],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: ["r1"],
+            }],
           },
         ],
       },
@@ -1267,12 +1409,12 @@ describe("given draft cross section set where a reference is extended in a cross
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    if (draft.processes[0] && draft.processes[0].reference) {
-      const refid = draft.processes[0].reference[0];
-      const ref = draft.references[refid] as CSL.Data;
+    if (draft.processes[0].info[0]) {
+      const refid = draft.processes[0].info[0].references[0];
+      const ref = draft.references[refid];
       ref.abstract = "Some abstract";
     } else {
       throw new Error("Unable to extend ref");
@@ -1361,7 +1503,7 @@ describe("given updating published cross section set which already has draft", (
       processes: [],
     });
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     draft.description = "Some new description";
@@ -1373,7 +1515,7 @@ describe("given updating published cross section set which already has draft", (
     expect.assertions(1);
     try {
       const secondDraft = await byOwnerAndId(sampleEmail, keycss1);
-      if (secondDraft === undefined) {
+      if (secondDraft === null) {
         throw Error(`Failed to find ${keycss1}`);
       }
       await updateSet(keycss1, secondDraft, "another draft please");
@@ -1426,7 +1568,7 @@ describe.each(invalidUpdateStatuses)(
 describe("given draft cross section set where a cross section is added from another organization", () => {
   let keycss1: string;
   let keycs1: string;
-  let css1: CrossSectionSetInputOwned;
+  let css1: KeyedDocument;
   beforeAll(async () => {
     // Create draft cross section set without cross sections
     const draft1 = sampleCrossSectionSet();
@@ -1452,10 +1594,13 @@ describe("given draft cross section set where a cross section is added from anot
     }
 
     const draft2 = await byOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === undefined) {
+    if (draft2 === null) {
       expect.fail("Unable to find draft");
     }
-    draft2.processes.push({ id: keycs1, ...cs1 });
+    draft2.processes.push({
+      reaction: cs1.reaction,
+      info: [{ ...cs1.info[0], _key: keycs1 }],
+    });
     // Add states lookup based on state ids in cs1
     const states = sampleStates();
 
@@ -1465,7 +1610,7 @@ describe("given draft cross section set where a cross section is added from anot
       const stateLabel = Object.entries(stateIds)
         .filter((e) => `State/${s.state}` === e[1])
         .map((e) => e[0])[0];
-      if (draft2 === undefined) {
+      if (draft2 === null) {
         expect.fail("Unable to find draft");
       }
       draft2.states[s.state] = states[stateLabel];
@@ -1480,7 +1625,7 @@ describe("given draft cross section set where a cross section is added from anot
     );
 
     const css = await byOwnerAndId(sampleEmail, keycss1);
-    if (css === undefined) {
+    if (css === null) {
       expect.fail("Unable to retrieve updated draft");
     }
     css1 = css;
@@ -1488,7 +1633,7 @@ describe("given draft cross section set where a cross section is added from anot
   });
 
   it("should not have reused existing cross section", () => {
-    expect(css1.processes[0].id).not.toEqual(keycs1);
+    expect(css1.processes[0].info[0]._key).not.toEqual(keycs1);
   });
 
   it.each([
@@ -1528,7 +1673,7 @@ describe("given draft cross section set where a cross section is added from anot
     const cursor = await db().query(aql`
       FOR cs IN CrossSection
         RETURN MERGE(
-          UNSET(cs, ['_key', '_id', '_rev', 'organization']), 
+          UNSET(cs, ['_key', _id', '_rev', 'organization']), 
           { 
             versionInfo: UNSET(
               cs.versionInfo, ['createdOn', 'commitMessage']
@@ -1556,10 +1701,12 @@ describe("given draft cross section set where its charge in cross section is alt
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -1570,12 +1717,17 @@ describe("given draft cross section set where its charge in cross section is alt
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -1584,7 +1736,7 @@ describe("given draft cross section set where its charge in cross section is alt
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     const stateA = Object.values(draft.states).find((s) => s.particle === "A");
@@ -1663,6 +1815,7 @@ describe("given draft cross section set where its charge in cross section is alt
       a0: {
         particle: "A",
         charge: -13,
+        type: "simple",
       },
     });
     keycss1 = await createSet(
@@ -1676,10 +1829,12 @@ describe("given draft cross section set where its charge in cross section is alt
           a: {
             particle: "A",
             charge: 0,
+            type: "simple",
           },
           b: {
             particle: "B",
             charge: 1,
+            type: "simple",
           },
         },
         processes: [
@@ -1690,12 +1845,17 @@ describe("given draft cross section set where its charge in cross section is alt
               reversible: false,
               typeTags: [],
             },
-            threshold: 42,
-            type: Storage.LUT,
-            labels: ["Energy", "Cross Section"],
-            units: ["eV", "m^2"],
-            data: [[1, 3.14e-20]],
-            reference: [],
+            info: [{
+              type: "CrossSection",
+              threshold: 42,
+              data: {
+                type: "LUT",
+                labels: ["Energy", "Cross Section"],
+                units: ["eV", "m^2"],
+                values: [[1, 3.14e-20]],
+              },
+              references: [],
+            }],
           },
         ],
       },
@@ -1704,7 +1864,7 @@ describe("given draft cross section set where its charge in cross section is alt
       "Initial draft",
     );
     const draft = await byOwnerAndId(email, keycss1);
-    if (draft === undefined) {
+    if (draft === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
     const stateA = Object.values(draft.states).find((s) => s.particle === "A");
@@ -1780,30 +1940,58 @@ describe("given draft cross section set where its charge in cross section is alt
         RETURN UNSET(s, ['_key', '_id' , '_rev'])
     `);
     const states = await cursor.all();
-    const expected = [
+    const expected: Array<SerializedSpecies> = [
       {
-        particle: "A",
-        charge: -13,
-        id: "A^13-",
-        latex: "\\mathrm{A^{13-}}",
+        detailed: {
+          particle: "A",
+          charge: -13,
+          type: "simple",
+        },
+        serialized: {
+          particle: "A",
+          charge: -13,
+          summary: "A^13-",
+          latex: "\\mathrm{A}^{13-}",
+        },
       },
       {
-        particle: "A",
-        charge: 0,
-        id: "A",
-        latex: "\\mathrm{A}",
+        detailed: {
+          particle: "A",
+          charge: 0,
+          type: "simple",
+        },
+        serialized: {
+          particle: "A",
+          charge: 0,
+          summary: "A",
+          latex: "\\mathrm{A}",
+        },
       },
       {
-        particle: "A",
-        charge: -12,
-        id: "A^12-",
-        latex: "\\mathrm{A^{12-}}",
+        detailed: {
+          particle: "B",
+          charge: 1,
+          type: "simple",
+        },
+        serialized: {
+          particle: "B",
+          charge: 1,
+          summary: "B^+",
+          latex: "\\mathrm{B}^+",
+        },
       },
       {
-        particle: "B",
-        charge: 1,
-        id: "B^+",
-        latex: "\\mathrm{B^+}",
+        detailed: {
+          particle: "A",
+          charge: -12,
+          type: "simple",
+        },
+        serialized: {
+          particle: "A",
+          charge: -12,
+          summary: "A^12-",
+          latex: "\\mathrm{A}^{12-}",
+        },
       },
     ];
     expect(new Set(states)).toEqual(new Set(expected));

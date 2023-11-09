@@ -5,10 +5,9 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
-import { KeyedProcess } from "../../schema/process";
+import { KeyedProcess, OwnedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionItem } from "../public";
 
 // import { defaultSearchTemplate } from "../picker/default";
 // import { ReactionTemplate } from "../picker/types";
@@ -29,64 +28,50 @@ export async function searchOwned(
 ) {
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-  const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
+  const cursor: ArrayCursor<unknown> = await db().query(aql`
 		FOR u IN users
 			FILTER u.email == ${email}
-			FOR m IN MemberOf
-				FILTER m._from == u._id
-				FOR o IN Organization
-					FILTER m._to == o._id
-					FOR cs IN CrossSection
-						FILTER cs.organization == o._id
-						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-            LET with_draft = FIRST(
-                FILTER cs.versionInfo.status == 'published'
-                RETURN COUNT(
-                    FOR cs_draft IN INBOUND cs CrossSectionHistory
-                        LIMIT 1
-                        return 1
-                )
+      FOR o IN OUTBOUND u MemberOf
+				FOR cs IN CrossSection
+					FILTER cs.organization == o._id
+					FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+          LET with_draft = FIRST(
+            FILTER cs.versionInfo.status == 'published'
+            RETURN COUNT(
+              FOR cs_draft IN INBOUND cs CrossSectionHistory
+                LIMIT 1
+                return 1
             )
-            FILTER with_draft != 1
-						LET sets = (
-							FOR i IN IsPartOf
-							FILTER i._from == cs._id
-							FOR css IN CrossSectionSet
-								FILTER i._to == css._id
-								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
-						)
-            ${reactionsAql}
-						LET reaction = FIRST(
-							FOR r in Reaction
-								FILTER r._id == cs.reaction
-								LET consumes = (
-									FOR c IN Consumes
-									FILTER c._from == r._id
-										FOR c2s IN State
-										FILTER c2s._id == c._to
-										RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-								)
-								LET produces = (
-									FOR p IN Produces
-									FILTER p._from == r._id
-										FOR p2s IN State
-										FILTER p2s._id == p._to
-										RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-								)
-								RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-						)
-            LET reference = (
-              FOR rs IN References
-                  FILTER rs._from == cs._id
-                  FOR r IN Reference
-                      FILTER r._id == rs._to
-                      RETURN UNSET(r, ["_key", "_rev", "_id"])
-              )
-            SORT cs.versionInfo.createdOn DESC
-            ${limit_aql}
-            RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})
+          )
+          FILTER with_draft != 1
+					LET sets = (
+						FOR css IN OUTBOUND cs IsPartOf
+              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), { contributor: DOCUMENT(css.organization).name })
+					)
+          ${reactionsAql}
+					LET reaction = FIRST(
+						FOR r in Reaction
+							FILTER r._id == cs.reaction
+							LET consumes = (
+                FOR species, c IN OUTBOUND r Consumes
+									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: c.count}
+							)
+							LET produces = (
+                FOR species, p IN OUTBOUND r Produces
+									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: p.count}
+							)
+							RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), { lhs: consumes, rhs: produces })
+					)
+          LET references = (
+            FOR r IN OUTBOUND cs References
+              RETURN UNSET(r, ["_key", "_rev", "_id"])
+          )
+          SORT cs.versionInfo.createdOn DESC
+          ${limit_aql}
+          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references, isPartOf: sets })]
+     }
 	`);
-  return await cursor.all();
+  return (await cursor.all()).map((cs) => OwnedProcess.parse(cs));
 }
 
 export async function byOwnerAndId(email: string, id: string) {
@@ -129,7 +114,7 @@ export async function byOwnerAndId(email: string, id: string) {
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                 )
                 // RETURN MERGE(UNSET(cs, ["_rev", "_id", "versionInfo", "organization"]), { reaction, references })
-                RETURN { reaction, info: MERGE(cs.info, { _key: cs._key, references }) }
+                RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
       `);
   return await cursor.next();
 }
@@ -169,7 +154,7 @@ export async function byOrgAndId(org: string, key: string) {
                     )
                     RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                 )
-                RETURN { reaction, info: MERGE(cs.info, { _key: cs._key, references }) }
+                RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
       `);
   return await cursor.next();
 }

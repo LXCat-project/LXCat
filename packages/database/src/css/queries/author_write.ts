@@ -62,26 +62,24 @@ export async function createSet(
 
   for (
     const cs of dataset.processes.flatMap(({ reaction, info }) =>
-      Array.isArray(info)
-        ? info.map((info) => ({ reaction, info }))
-        : { reaction, info }
+      info.map((info) => ({ reaction, info: [info] }))
     )
   ) {
-    if (cs.info._key !== undefined) {
+    if (cs.info[0]._key !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const prevCs = await byOrgAndId(dataset.contributor, cs.info._key);
+      const prevCs = await byOrgAndId(dataset.contributor, cs.info[0]._key);
       if (prevCs !== undefined) {
         if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await insertEdge(
             "IsPartOf",
-            `CrossSection/${cs.info._key}`,
+            `CrossSection/${cs.info[0]._key}`,
             cs_set_id,
           );
         } else {
           const cs_id = await updateCS(
-            cs.info._key,
+            cs.info[0]._key,
             cs,
             `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
             state_ids,
@@ -104,7 +102,7 @@ export async function createSet(
         await insertEdge("IsPartOf", cs_id, cs_set_id);
       }
     } else {
-      delete cs.info._key; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
+      delete cs.info[0]._key; // byOwnerAndId returns set with set.processes[*].id prop, while createSection does not need it
       const cs_id = await createCS(
         cs,
         state_ids,
@@ -244,26 +242,24 @@ async function updateDraftSet(
 
   for (
     const cs of dataset.processes.flatMap(({ reaction, info }) =>
-      Array.isArray(info)
-        ? info.map((info) => ({ reaction, info }))
-        : { reaction, info }
+      info.map((info) => ({ reaction, info: [info] }))
     )
   ) {
-    if (cs.info._key !== undefined) {
+    if (cs.info[0]._key !== undefined) {
       // check so a crosssection can only be in sets from same organization
-      const prevCs = await byOrgAndId(dataset.contributor, cs.info._key);
+      const prevCs = await byOrgAndId(dataset.contributor, cs.info[0]._key);
       if (prevCs !== undefined) {
         if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await insertEdge(
             "IsPartOf",
-            `CrossSection/${cs.info._key}`,
+            `CrossSection/${cs.info[0]._key}`,
             `CrossSectionSet/${key}`,
           );
         } else {
           const cs_id = await updateCS(
-            cs.info._key,
+            cs.info[0]._key,
             cs,
             `Indirect draft by editing set ${dataset.name} / ${key}`,
             state_ids,
@@ -399,15 +395,10 @@ function isEqualSection(
 ) {
   const newMappedCS = {
     reaction: mapReaction(stateLookup, newCS.reaction),
-    info: Array.isArray(newCS.info)
-      ? newCS.info.map((info) => ({
-        ...info,
-        references: mapReferences(referenceLookup, info.references),
-      }))
-      : {
-        ...newCS.info,
-        references: mapReferences(referenceLookup, newCS.info.references),
-      },
+    info: newCS.info.map((info) => ({
+      ...info,
+      references: mapReferences(referenceLookup, info.references),
+    })),
   };
 
   // Previous always has _key from db.
@@ -419,16 +410,11 @@ function isEqualSection(
   );
 
   const prevMappedCS = {
-    reaction: mapReaction(prevStateLookup, newCS.reaction),
-    info: Array.isArray(prevCS.info)
-      ? prevCS.info.map((info) => ({
-        ...info,
-        references: info.references.map((r) => `Reference/${r}`),
-      }))
-      : {
-        ...prevCS.info,
-        references: prevCS.info.references.map((r) => `Reference/${r}`),
-      },
+    reaction: mapReaction(prevStateLookup, prevCS.reaction),
+    info: prevCS.info.map((info) => ({
+      ...info,
+      references: info.references.map((r) => `Reference/${r}`),
+    })),
   };
 
   return deepEqual(newMappedCS, prevMappedCS);
@@ -463,10 +449,10 @@ async function doesPublishingHaveEffectOnOtherSets(key: string) {
             FILTER h._from == p._from
             // h._to is published version of p._from
             LET otherSetIds = (
-                  FOR p2 IN IsPartOf
-                    FILTER p2._from == h._to AND lineage ALL != p2._to
-                    RETURN p2._to
-              )
+                FOR p2 IN IsPartOf
+                  FILTER p2._from == h._to AND lineage ALL != p2._to
+                  RETURN p2._to
+            )
             RETURN {_id: h._to, otherSetIds }
       )
       RETURN {_id: p._from, publishedAs }

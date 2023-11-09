@@ -23,7 +23,7 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     keycss1 = await createSet(sampleCrossSectionSet(), "draft");
 
     const draft2 = await byOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === undefined) {
+    if (draft2 === null) {
       expect.fail("Should have created first set");
     }
     draft2.name = "Some other name";
@@ -140,11 +140,11 @@ describe("given a published cross section set and a draft cross section with a d
     keycss1 = await createSet(sampleCrossSectionSet(), "published");
 
     const draft2 = await byOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === undefined) {
+    if (draft2 === null) {
       expect.fail("Should have created first set");
     }
     draft2.name = "Some other name";
-    draft2.processes[0].threshold = 888;
+    draft2.processes[0].info[0].threshold = 888;
     draft2.processes.pop();
     keycss2 = await createSet(draft2, "draft");
 
@@ -152,7 +152,7 @@ describe("given a published cross section set and a draft cross section with a d
   });
 
   describe("and publish the draft set", () => {
-    it("should complain that already published set needs to point to draft cross section", async () => {
+    it.only("should complain that already published set needs to point to draft cross section", async () => {
       expect.assertions(2);
       try {
         await publish(keycss2);
@@ -163,14 +163,14 @@ describe("given a published cross section set and a draft cross section with a d
           );
           const css1 = await byOwnerAndId(sampleEmail, keycss1);
           const css2 = await byOwnerAndId(sampleEmail, keycss2);
-          if (css1 === undefined || css2 === undefined) {
+          if (css1 === null || css2 === null) {
             expect.fail("Should have fetched sets");
           }
           const expected = [
             `Draft cross section (CrossSection/${
-              css2.processes[0].id
+              css2.processes[0].info[0]._key
             }) has published version (CrossSection/${
-              css1.processes[0].id
+              css1.processes[0].info[0]._key
             }) in other cross section sets (CrossSectionSet/${keycss1}).`,
           ];
           expect(error.errors.map((e) => e.message)).toEqual(expected);

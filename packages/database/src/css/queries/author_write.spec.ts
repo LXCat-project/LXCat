@@ -4,16 +4,15 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
 import { toggleRole } from "../../auth/queries";
 import {
   createAuthCollections,
   loadTestUserAndOrg,
 } from "../../auth/testutils";
+import { KeyedDocument } from "../../schema/document";
 import { startDbContainer } from "../../testutils";
 import {
   byOwnerAndId,
-  CrossSectionSetInputOwned,
   CrossSectionSetOwned,
   isOwner,
   listOwned,
@@ -21,7 +20,12 @@ import {
 import { createSet, publish, updateSet } from "./author_write";
 import { deepClone } from "./deepClone";
 import { historyOfSet, KeyedVersionInfo } from "./public";
-import { createCsCollections, ISO_8601_UTC, sampleEmail } from "./testutils";
+import {
+  createCsCollections,
+  ISO_8601_UTC,
+  matchesId,
+  sampleEmail,
+} from "./testutils";
 
 describe("given filled ArangoDB container", () => {
   beforeAll(async () => {
@@ -109,10 +113,9 @@ describe("given filled ArangoDB container", () => {
 
         beforeAll(async () => {
           const css2 = await byOwnerAndId("somename@example.com", keycss1);
-          expect(css2).toBeDefined;
-          if (css2 !== undefined) {
+          expect(css2).toBeDefined();
+          if (css2 !== null) {
             css2.description = "Some description 1st edit";
-
             keycss2 = await updateSet(keycss1, css2, "First edit");
           }
         });
@@ -216,7 +219,7 @@ describe("given filled ArangoDB container", () => {
 
   describe("given published set with 3 refs, 4 simple particle states and 2 processes", () => {
     let keycss1: string;
-    let css1: CrossSectionSetInputOwned;
+    let css1: KeyedDocument;
 
     beforeAll(async () => {
       // NOTE: We do not clear the container so this set needs a different name.
@@ -247,18 +250,22 @@ describe("given filled ArangoDB container", () => {
             s1: {
               particle: "A",
               charge: 0,
+              type: "simple",
             },
             s2: {
               particle: "B",
               charge: 1,
+              type: "simple",
             },
             s3: {
               particle: "C",
               charge: 2,
+              type: "simple",
             },
             s4: {
               particle: "D",
               charge: 3,
+              type: "simple",
             },
           },
           processes: [
@@ -269,12 +276,17 @@ describe("given filled ArangoDB container", () => {
                 reversible: false,
                 typeTags: [],
               },
-              threshold: 42,
-              type: Storage.LUT,
-              labels: ["Energy", "Cross Section"],
-              units: ["eV", "m^2"],
-              data: [[1, 3.14e-20]],
-              reference: ["ref1", "ref2"],
+              info: [{
+                type: "CrossSection",
+                threshold: 42,
+                data: {
+                  type: "LUT",
+                  labels: ["Energy", "Cross Section"],
+                  units: ["eV", "m^2"],
+                  values: [[1, 3.14e-20]],
+                },
+                references: ["ref1", "ref2"],
+              }],
             },
             {
               reaction: {
@@ -283,12 +295,17 @@ describe("given filled ArangoDB container", () => {
                 reversible: false,
                 typeTags: [],
               },
-              threshold: 42,
-              type: Storage.LUT,
-              labels: ["Energy", "Cross Section"],
-              units: ["eV", "m^2"],
-              data: [[1, 3.14e-20]],
-              reference: ["ref3"],
+              info: [{
+                type: "CrossSection",
+                threshold: 42,
+                data: {
+                  type: "LUT",
+                  labels: ["Energy", "Cross Section"],
+                  units: ["eV", "m^2"],
+                  values: [[1, 3.14e-20]],
+                },
+                references: ["ref3"],
+              }],
             },
           ],
         },
@@ -297,7 +314,7 @@ describe("given filled ArangoDB container", () => {
         "Initial version",
       );
       const css = await byOwnerAndId("somename@example.com", keycss1);
-      if (css !== undefined) {
+      if (css !== null) {
         css1 = css;
       } else {
         throw Error(`Unable to retrieve ccs with id ${keycss1}`);
@@ -306,21 +323,24 @@ describe("given filled ArangoDB container", () => {
 
     describe("when draft is made with only change to charge of state with particle A", () => {
       let keycss2: string;
-      let css2: CrossSectionSetInputOwned;
+      let css2: KeyedDocument;
 
       beforeAll(async () => {
         const cssdraft = deepClone(css1);
         const stateA = Object.values(cssdraft.states).find(
-          (s) => s.particle === "A",
+          (species) => species.particle === "A",
         );
+
         if (stateA !== undefined) {
           stateA.charge = 99;
         } else {
           throw Error("Could not find state with particle A");
         }
+
         keycss2 = await updateSet(keycss1, cssdraft, "First edit");
         const css = await byOwnerAndId("somename@example.com", keycss2);
-        if (css !== undefined) {
+
+        if (css !== null) {
           css2 = css;
         } else {
           throw Error(`Unable to retrieve ccs with id ${keycss2}`);
@@ -328,25 +348,43 @@ describe("given filled ArangoDB container", () => {
       });
 
       it("draft set should have new id for state with particle A", () => {
-        const expected = deepClone(css1);
         const oldStateEntry = Object.entries(css1.states).find(
-          (s) => s[1].particle === "A",
+          ([, species]) => species.particle === "A",
         );
         const newStateEntry = Object.entries(css2.states).find(
-          (s) => s[1].particle === "A",
+          ([, species]) => species.particle === "A",
         );
-        const reactionEntry = expected.processes[0].reaction.lhs[0];
-        if (
-          oldStateEntry !== undefined
-          && newStateEntry !== undefined
-          && reactionEntry.state === oldStateEntry[0]
-        ) {
-          delete expected.states[oldStateEntry[0]];
-          expected.states[newStateEntry[0]] = newStateEntry[1];
-          reactionEntry.state = newStateEntry[0];
+
+        expect(oldStateEntry![0]).not.toEqual(newStateEntry![0]);
+      });
+
+      it("draft set should have a different id for the cross sections that involve particle A", () => {
+        for (const process of css1.processes) {
+          const other = css2.processes.find(({ info }) =>
+            info[0]._key === process.info[0]._key
+          );
+
+          if (other) {
+            expect(process).toEqual(other);
+          } else {
+            const other = css2.processes.find(({ reaction }) =>
+              css2.states[reaction.lhs[0].state].particle === "A"
+            )!;
+
+            expect(process.info[0]._key).not.toEqual(other.info[0]._key);
+            expect(process.info[0].references.sort()).toEqual(
+              other.info[0].references.sort(),
+            );
+
+            const expected = deepClone(other);
+            expected.info[0]._key = matchesId;
+            expected.info[0].references = expect.any(Array);
+
+            expect(process.info).toEqual(expected.info);
+          }
         }
-        expected.processes[0].id = css2.processes[0].id;
-        expect(css2).toEqual(expected);
+
+        expect.assertions(4);
       });
 
       it("draft set should have other id as published set", () => {

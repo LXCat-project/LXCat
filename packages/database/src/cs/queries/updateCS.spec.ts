@@ -37,11 +37,7 @@ describe("given published cross section has been updated", () => {
       expect.fail("should have published section");
     }
 
-    if (Array.isArray(draft.info)) {
-      expect.fail("info object from database cannot be an array");
-    }
-
-    draft.info.threshold = 999;
+    draft.info[0].threshold = 999;
 
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [
@@ -107,11 +103,7 @@ describe("given draft cross section has been updated", () => {
       expect.fail("should have published section");
     }
 
-    if (Array.isArray(draft.info)) {
-      expect.fail("info object from database cannot be an array");
-    }
-
-    draft.info.threshold = 999;
+    draft.info[0].threshold = 999;
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [
       s.state,
@@ -220,11 +212,7 @@ describe("given updating published section which already has draft", () => {
       expect.fail("should have published section");
     }
 
-    if (Array.isArray(draft.info)) {
-      expect.fail("info object from database cannot be an array");
-    }
-
-    draft.info.threshold = 999;
+    draft.info[0].threshold = 999;
 
     // Draft uses _key as state value, but state_ids uses manual values, so regenerated state lookup from draft.
     const lhsStates = draft.reaction.lhs.map((s) => [

@@ -328,7 +328,7 @@ export async function byIdJSON(id: string) {
                     )
                     RETURN {
                       reaction,
-                      info: MERGE({ _key: cs._key, references: refs2 }, cs.info)
+                      info: [MERGE({ _key: cs._key, references: refs2 }, cs.info)]
                     }
         )
         LET contributor = FIRST(

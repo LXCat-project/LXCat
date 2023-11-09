@@ -29,13 +29,14 @@ export async function createCS(
 
   const reactionId = await insertReactionWithDict(stateDict, reaction);
 
-  if (Array.isArray(info)) {
+  // TODO: Uploading a process with multiple info objects should be possible.
+  if (info.length > 1) {
     throw Error(
       "Cannot upload a cross section object with multiple info sections.",
     );
   }
 
-  const { references, ...infoBody } = info;
+  const { references, ...infoBody } = info[0];
 
   const refIds = references.map((value: string) => refDict[value]);
 
@@ -191,13 +192,13 @@ async function updateDraftCS(
 
   const { reaction, info } = processItem;
 
-  if (Array.isArray(info)) {
+  if (info.length > 1) {
     throw Error(
       `Cannot update process item ${key}, as the provided value contains multiple info objects.`,
     );
   }
 
-  const { references, ...draftCS } = info;
+  const { references, ...draftCS } = info[0];
 
   const reactionId = await insertReactionWithDict(stateDict, reaction);
   // TODO remove orphaned reaction?

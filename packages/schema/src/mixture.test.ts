@@ -22,7 +22,7 @@ describe("LTPMixture", () => {
             reversible: false,
             typeTags: ["Elastic"],
           },
-          info: {
+          info: [{
             type: "CrossSection",
             references: [],
             threshold: 0,
@@ -33,7 +33,7 @@ describe("LTPMixture", () => {
               units: ["eV", "m^2"],
               values: [[0, 0]],
             },
-          },
+          }],
         },
       ],
     };
@@ -61,7 +61,7 @@ describe("LTPMixture", () => {
             reversible: false,
             typeTags: ["Elastic"],
           },
-          info: {
+          info: [{
             type: "CrossSection",
             references: ["FaultyKey"],
             threshold: 0,
@@ -72,7 +72,7 @@ describe("LTPMixture", () => {
               units: ["eV", "m^2"],
               values: [[0, 0]],
             },
-          },
+          }],
         },
       ],
     };

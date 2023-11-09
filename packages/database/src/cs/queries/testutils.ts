@@ -53,7 +53,7 @@ export function sampleCrossSection(): AnyProcess<string, string> {
       reversible: false,
       typeTags: [],
     },
-    info: {
+    info: [{
       threshold: 42,
       type: "CrossSection",
       references: [],
@@ -63,7 +63,7 @@ export function sampleCrossSection(): AnyProcess<string, string> {
         units: ["eV", "m^2"],
         values: [[1, 3.14e-20]],
       },
-    },
+    }],
   };
 }
 
