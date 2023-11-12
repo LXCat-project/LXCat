@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { object, TypeOf } from "zod";
 

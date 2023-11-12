@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Reference, SelfReference, SetHeader } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { array, object, output, record, string } from "zod";

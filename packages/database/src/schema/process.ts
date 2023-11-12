@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Reference, SetHeader } from "@lxcat/schema";
 import { Process, ProcessInfo } from "@lxcat/schema/process";
 import { array, object, TypeOf, ZodType, ZodTypeAny } from "zod";
