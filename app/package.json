@@ -44,7 +44,7 @@
     "mermaid": "^10.6.1",
     "nanoid": "^5.0.2",
     "next": "^14.0.1",
-    "next-auth": "^4.24.4",
+    "next-auth": "^4.24.5",
     "next-connect": "^1.0.0",
     "next-mdx-remote": "^4.4.1",
     "nextjs-cors": "^2.1.2",
