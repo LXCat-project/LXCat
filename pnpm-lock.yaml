@@ -140,8 +140,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react@18.2.0)(schema-dts@1.1.2)(typescript@5.2.2)
       rehype-autolink-headings:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       rehype-highlight:
         specifier: ^6.0.0
         version: 6.0.0
@@ -10265,8 +10265,8 @@ packages:
     resolution: {integrity: sha512-oWUce/aVoEvW5l2V0LK7O5KJMzUSKeiOwFuJehzpSFd43dO5spP9r+sSUfhKtsky4u6MCqWJaRL+abzExynfTg==}
     dev: false
 
-  /rehype-autolink-headings@7.0.0:
-    resolution: {integrity: sha512-DLskejGYHQP9v7vUW85BeYIclgfMQ1IwAMx+0lm8Sr3cME2NThgy2OdTfosmuBA68fqP5o4FK+dknpUMFvlxYQ==}
+  /rehype-autolink-headings@7.1.0:
+    resolution: {integrity: sha512-rItO/pSdvnvsP4QRB1pmPiNHUskikqtPojZKJPPPAVx9Hj8i8TwMBhofrrAYRhYOOBZH9tgmG5lPqDLuIWPWmw==}
     dependencies:
       '@types/hast': 3.0.0
       '@ungap/structured-clone': 1.2.0
