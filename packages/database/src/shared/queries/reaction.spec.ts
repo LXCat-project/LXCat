@@ -4,17 +4,24 @@
 
 import { AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
-import {
-  startDbWithUserAndCssCollections,
-  truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { insertReactionWithDict, insertStateDict } from "../queries";
+import { truncateCrossSectionSetCollections } from "../../css/queries/testutils";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 
 describe("given db with test user and organization", () => {
-  beforeAll(startDbWithUserAndCssCollections);
+  let db: LXCatTestDatabase;
+
+  beforeAll(async () => {
+    db = await LXCatTestDatabase.createTestInstance(
+      systemDb(),
+      "reaction-test",
+    );
+    return async () => systemDb().dropDatabase("reaction-test");
+  });
 
   describe("given 1 state exist", () => {
     let state_ids: Record<string, string>;
+
     beforeAll(async () => {
       const states: Record<string, AnySpecies> = {
         s1: {
@@ -23,14 +30,14 @@ describe("given db with test user and organization", () => {
           type: "simple",
         },
       };
-      state_ids = await insertStateDict(states);
-      return truncateCrossSectionSetCollections;
+      state_ids = await db.insertStateDict(states);
+      return truncateCrossSectionSetCollections(db.getDB());
     });
 
     describe("given reaction", () => {
       let reactionId: string;
       beforeAll(async () => {
-        const id = await insertReactionWithDict(state_ids, {
+        const id = await db.insertReactionWithDict(state_ids, {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,
@@ -47,7 +54,7 @@ describe("given db with test user and organization", () => {
       });
 
       it("adding same again should return same id", async () => {
-        const id = await insertReactionWithDict(state_ids, {
+        const id = await db.insertReactionWithDict(state_ids, {
           lhs: [{ count: 1, state: "s1" }],
           rhs: [],
           reversible: false,

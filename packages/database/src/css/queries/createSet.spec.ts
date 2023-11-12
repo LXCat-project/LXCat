@@ -8,22 +8,23 @@ import { Reference } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { createCS } from "../../cs/queries/write";
-import { db } from "../../db";
-import { SerializedSpecies } from "../../schema/species";
-import { insertReferenceDict, insertStateDict } from "../../shared/queries";
-import { upsertOrganization } from "../../shared/queries/organization";
-import { byOwnerAndId } from "./author_read";
-import { createSet } from "./author_write";
-import {
-  matchesId,
-  startDbWithUserAndCssCollections,
-  truncateCrossSectionSetCollections,
-} from "./testutils";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
+import { matchesId, truncateCrossSectionSetCollections } from "./testutils";
 
 const email = "somename@example.com";
 
-beforeAll(startDbWithUserAndCssCollections);
+let db: LXCatTestDatabase;
+
+beforeAll(async () => {
+  db = await LXCatTestDatabase.createTestInstance(
+    systemDb(),
+    "create-set-test",
+  );
+  await db.setupTestUser();
+
+  return async () => systemDb().dropDatabase("create-set-test");
+});
 
 describe("giving draft set made with existing draft cross section", () => {
   let keycs1: string;
@@ -51,10 +52,10 @@ describe("giving draft set made with existing draft cross section", () => {
       },
     };
 
-    const organizationId = await upsertOrganization("Some organization");
-    const stateLookup = await insertStateDict(states);
-    const refLookup = await insertReferenceDict(references);
-    const idcs1 = await createCS(
+    const organizationId = await db.upsertOrganization("Some organization");
+    const stateLookup = await db.insertStateDict(states);
+    const refLookup = await db.insertReferenceDict(references);
+    const idcs1 = await db.createItem(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
@@ -81,7 +82,7 @@ describe("giving draft set made with existing draft cross section", () => {
     );
     keycs1 = idcs1.replace("CrossSection/", "");
 
-    keycss1 = await createSet(
+    keycss1 = await db.createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -114,21 +115,21 @@ describe("giving draft set made with existing draft cross section", () => {
       },
       "draft",
     );
-    return truncateCrossSectionSetCollections;
+    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it("should have a single cross section", async () => {
-    const data = await db().collection("CrossSection").count();
+    const data = await db.getDB().collection("CrossSection").count();
     expect(data.count).toEqual(1);
   });
 
   it("should have a single cross section set", async () => {
-    const data = await db().collection("CrossSectionSet").count();
+    const data = await db.getDB().collection("CrossSectionSet").count();
     expect(data.count).toEqual(1);
   });
 
   it("should have set with existing cross section", async () => {
-    const set = await byOwnerAndId(email, keycss1);
+    const set = await db.getSetByOwnerAndId(email, keycss1);
     const expected = {
       _key: matchesId,
       complete: false,
@@ -190,10 +191,12 @@ describe("giving draft set made with someone else's published cross section", ()
       },
     };
 
-    const organizationId = await upsertOrganization("Some other organization");
-    const stateLookup = await insertStateDict(states);
-    const refLookup = await insertReferenceDict(references);
-    const idcs1 = await createCS(
+    const organizationId = await db.upsertOrganization(
+      "Some other organization",
+    );
+    const stateLookup = await db.insertStateDict(states);
+    const refLookup = await db.insertReferenceDict(references);
+    const idcs1 = await db.createItem(
       {
         reaction: {
           lhs: [{ count: 1, state: "s1" }],
@@ -218,7 +221,7 @@ describe("giving draft set made with someone else's published cross section", ()
       organizationId,
     );
     keycs1 = idcs1.replace("CrossSection/", "");
-    keycss1 = await createSet(
+    keycss1 = await db.createSet(
       {
         complete: false,
         contributor: "Some organization",
@@ -251,22 +254,22 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       "draft",
     );
-    return truncateCrossSectionSetCollections;
+    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it("should have a 2 cross sections", async () => {
-    const data = await db().collection("CrossSection").count();
+    const data = await db.getDB().collection("CrossSection").count();
     expect(data.count).toEqual(2);
   });
 
   it("should have cross section in set that has different id from someone else's cross section", async () => {
-    const css1 = await byOwnerAndId(email, keycss1);
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
     const keycs2 = css1!.processes[0].info[0]._key;
     expect(keycs1).not.toEqual(keycs2);
   });
 
   it("should have one cross section in published state and one in draft state", async () => {
-    const cursor = await db().query<[string, number]>(aql`
+    const cursor = await db.getDB().query<[string, number]>(aql`
       FOR cs IN CrossSection
         COLLECT statusGroup = cs.versionInfo.status WITH COUNT INTO numState
         RETURN [statusGroup, numState]
@@ -281,7 +284,7 @@ describe("giving draft set made with someone else's published cross section", ()
   });
 
   it("should use same reaction id in both cross sections", async () => {
-    const cursor: ArrayCursor<string> = await db().query(aql`
+    const cursor: ArrayCursor<string> = await db.getDB().query(aql`
       FOR cs IN CrossSection
         RETURN cs.reaction
     `);

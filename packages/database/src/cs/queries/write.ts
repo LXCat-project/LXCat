@@ -6,17 +6,11 @@ import { type AnyProcess } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date";
-import { db } from "../../db";
-import {
-  insertDocument,
-  insertEdge,
-  insertReactionWithDict,
-} from "../../shared/queries";
+import { LXCatDatabase } from "../../lxcat-database";
 import { Status, VersionInfo } from "../../shared/types/version_info";
-import { getVersionInfo } from "./author_read";
-import { historyOfSection } from "./public";
 
 export async function createCS(
+  this: LXCatDatabase,
   cs: AnyProcess<string, string>,
   stateDict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
   refDict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
@@ -27,7 +21,7 @@ export async function createCS(
 ): Promise<string> {
   const { reaction, info } = cs;
 
-  const reactionId = await insertReactionWithDict(stateDict, reaction);
+  const reactionId = await this.insertReactionWithDict(stateDict, reaction);
 
   // TODO: Uploading a process with multiple info objects should be possible.
   if (info.length > 1) {
@@ -47,7 +41,7 @@ export async function createCS(
     commitMessage,
   };
 
-  const csId = await insertDocument("CrossSection", {
+  const csId = await this.insertDocument("CrossSection", {
     versionInfo,
     organization: organizationId,
     reaction: reactionId,
@@ -56,30 +50,37 @@ export async function createCS(
 
   if (refIds) {
     for (const id of refIds) {
-      await insertEdge("References", csId, id);
+      await this.insertEdge("References", csId, id);
     }
   }
 
   return csId;
 }
 
-async function updateVersionStatus(key: string, status: Status) {
-  await db().query(aql`
+export async function updateVersionStatus(
+  this: LXCatDatabase,
+  key: string,
+  status: Status,
+) {
+  await this.db.query(aql`
 	  FOR cs IN CrossSection
 		  FILTER cs._key == ${key}
 		  UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${status}}) } IN CrossSection
 	`);
 }
 
-export async function publish(key: string) {
-  const history = await historyOfSection(key);
+export async function publish(this: LXCatDatabase, key: string) {
+  const history = await this.itemHistory(key);
+
   const previous_published_key = history
     .filter((h) => h !== null)
     .find((h) => h.status === "published");
+
   if (previous_published_key !== undefined) {
-    await updateVersionStatus(previous_published_key._key, "archived");
+    await this.updateItemVersionStatus(previous_published_key._key, "archived");
   }
-  await updateVersionStatus(key, "published");
+
+  await this.updateItemVersionStatus(key, "published");
 }
 
 /**
@@ -87,7 +88,8 @@ export async function publish(key: string) {
  *
  * @returns id of CrossSection
  */
-export const updateCS = async (
+export async function updateCS(
+  this: LXCatDatabase,
   /**
    * Key of the cross section item that serves as the base for the draft.
    */
@@ -97,8 +99,8 @@ export const updateCS = async (
   stateDict: Record<string, string>,
   refDict: Record<string, string>,
   organization: string,
-) => {
-  const info = await getVersionInfo(key);
+) {
+  const info = await this.getItemVersionInfo(key);
 
   if (info === undefined) {
     throw Error("Can not update cross section that does not exist");
@@ -107,7 +109,7 @@ export const updateCS = async (
   const { status, version } = info;
 
   if (status === "published") {
-    return await createDraftCS(
+    return await this.createDraftItem(
       version,
       cs,
       message,
@@ -117,7 +119,7 @@ export const updateCS = async (
       organization,
     );
   } else if (status === "draft") {
-    await updateDraftCS(
+    await this.updateDraftItem(
       version,
       cs,
       message,
@@ -130,10 +132,10 @@ export const updateCS = async (
   } else {
     throw Error("Can not update cross section due to invalid status");
   }
-};
+}
 
-async function isDraftless(key: string) {
-  const cursor: ArrayCursor<string> = await db().query(aql`
+export async function isDraftless(this: LXCatDatabase, key: string) {
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
     FOR h IN CrossSectionHistory
       FILTER h._to == CONCAT('CrossSection/', ${key})
       RETURN PARSE_IDENTIFIER(h._from).key
@@ -144,7 +146,8 @@ async function isDraftless(key: string) {
   }
 }
 
-async function createDraftCS(
+export async function createDraftCS(
+  this: LXCatDatabase,
   version: string,
   process: AnyProcess<string, string>,
   message: string,
@@ -154,12 +157,12 @@ async function createDraftCS(
   organization: string,
 ) {
   // check whether a draft already exists
-  await isDraftless(key);
+  await this.isItemDraftless(key);
   // Add to CrossSection with status=='draft'
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
   const newVersion = `${parseInt(version) + 1}`;
-  const idOfDraft = await createCS(
+  const idOfDraft = await this.createItem(
     process,
     stateDict,
     refDict,
@@ -170,11 +173,16 @@ async function createDraftCS(
   );
 
   // Add previous version (published )and current version (draft) to CrossSectionHistory collection
-  await insertEdge("CrossSectionHistory", idOfDraft, `CrossSection/${key}`);
+  await this.insertEdge(
+    "CrossSectionHistory",
+    idOfDraft,
+    `CrossSection/${key}`,
+  );
   return idOfDraft;
 }
 
-async function updateDraftCS(
+export async function updateDraftCS(
+  this: LXCatDatabase,
   version: string,
   processItem: AnyProcess<string, string>,
   commitMessage: string,
@@ -198,49 +206,54 @@ async function updateDraftCS(
     );
   }
 
-  const { references, ...draftCS } = info[0];
+  const { references, ...infoBody } = info[0];
 
-  const reactionId = await insertReactionWithDict(stateDict, reaction);
+  const reactionId = await this.insertReactionWithDict(stateDict, reaction);
   // TODO remove orphaned reaction?
   const doc = {
-    ...draftCS,
-    reaction: reactionId,
     versionInfo,
     organization,
+    reaction: reactionId,
+    info: infoBody,
   };
-  await db().collection("CrossSection").replace({ _key: key }, doc);
+  await this.db.collection("CrossSection").replace({ _key: key }, doc);
 
   // handle updated refs
   const ref_ids = references.map((value: string) => refDict[value]);
   if (ref_ids) {
     for (const id of ref_ids) {
-      await insertEdge("References", `CrossSection/${key}`, id);
+      await this.insertEdge("References", `CrossSection/${key}`, id);
     }
-    await dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
+    await this.dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
     // TODO remove orphaned references?
   }
 }
 
-async function dropReferencesFromExcluding(
+export async function dropReferencesFromExcluding(
+  this: LXCatDatabase,
   from: string,
   excludedTos: string[],
 ) {
-  await db().query(aql`
+  await this.db.query(aql`
     FOR r in References
       FILTER r._from == ${from} AND ${excludedTos} ANY != r._to
       REMOVE r IN References
   `);
 }
 
-export async function deleteSection(key: string, message: string) {
-  const info = await getVersionInfo(key);
+export async function deleteCS(
+  this: LXCatDatabase,
+  key: string,
+  message: string,
+) {
+  const info = await this.getItemVersionInfo(key);
   if (info === undefined) {
     // Set does not exist, nothing to do
     return;
   }
   const { status } = info;
   if (status === "draft") {
-    const setKeys = await isPartOf(key);
+    const setKeys = await this.isPartOf(key);
     if (setKeys.length > 0) {
       throw new Error(
         `Can not delete cross section that belongs to set(s) ${
@@ -250,11 +263,11 @@ export async function deleteSection(key: string, message: string) {
         }`,
       );
     }
-    await db().query(aql`
+    await this.db.query(aql`
       REMOVE {_key: ${key}} IN CrossSection
     `);
   } else if (status === "published") {
-    const setKeys = await isPartOf(key);
+    const setKeys = await this.isPartOf(key);
     if (setKeys.length > 0) {
       throw new Error(
         `Can not retract cross section that belongs to set(s) ${
@@ -267,7 +280,7 @@ export async function deleteSection(key: string, message: string) {
     // Change status of published section to retracted
     // and Set retract message
     const newStatus: Status = "retracted";
-    await db().query(aql`
+    await this.db.query(aql`
         FOR cs IN CrossSection
             FILTER cs._key == ${key}
             UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
@@ -277,8 +290,8 @@ export async function deleteSection(key: string, message: string) {
   }
 }
 
-async function isPartOf(key: string) {
-  const cursor: ArrayCursor<string> = await db().query(aql`
+export async function isPartOf(this: LXCatDatabase, key: string) {
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
     FOR i IN IsPartOf
 			FILTER i._from == CONCAT('CrossSection/', ${key})
       RETURN PARSE_IDENTIFIER(i._to).key

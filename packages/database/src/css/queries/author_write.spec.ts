@@ -4,45 +4,32 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
 import { KeyedDocument } from "../../schema/document";
-import { startDbContainer } from "../../testutils";
-import {
-  byOwnerAndId,
-  CrossSectionSetOwned,
-  isOwner,
-  listOwned,
-} from "./author_read";
-import { createSet, publish, updateSet } from "./author_write";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
+import { CrossSectionSetOwned } from "./author_read";
 import { deepClone } from "./deepClone";
-import { historyOfSet, KeyedVersionInfo } from "./public";
-import {
-  createCsCollections,
-  ISO_8601_UTC,
-  matchesId,
-  sampleEmail,
-} from "./testutils";
+import { KeyedVersionInfo } from "./public";
+import { ISO_8601_UTC, matchesId, sampleEmail } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
+  let db: LXCatTestDatabase;
+
   beforeAll(async () => {
-    // TODO now 2 containers are started, starting container is slow so try to reuse container
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    await createCsCollections();
-    const testKeys = await loadTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
-    return stopContainer;
+    db = await LXCatTestDatabase.createTestInstance(
+      systemDb(),
+      "set-author-write-test",
+    );
+    await db.setupTestUser();
+
+    return async () => systemDb().dropDatabase("set-author-write-test");
   });
 
   describe("given initial set without references, states or processes", () => {
     let keycss1: string;
 
     beforeAll(async () => {
-      keycss1 = await createSet(
+      keycss1 = await db.createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -59,7 +46,7 @@ describe("given filled ArangoDB container", () => {
     });
 
     it("should have author list with a single draft set", async () => {
-      const result = await listOwned("somename@example.com");
+      const result = await db.listOwnedSets("somename@example.com");
       const expected: CrossSectionSetOwned[] = [
         {
           _key: keycss1,
@@ -79,17 +66,17 @@ describe("given filled ArangoDB container", () => {
     });
 
     it("should be owned", async () => {
-      const owns = await isOwner(keycss1, sampleEmail);
+      const owns = await db.isOwnerOfSet(keycss1, sampleEmail);
       expect(owns).toBeTruthy();
     });
 
     describe("given draft is published", () => {
       beforeAll(async () => {
-        await publish(keycss1);
+        await db.publishSet(keycss1);
       });
 
       it("should have author list with a single published set", async () => {
-        const result = await listOwned("somename@example.com");
+        const result = await db.listOwnedSets("somename@example.com");
         const expected: CrossSectionSetOwned[] = [
           {
             _key: keycss1,
@@ -112,16 +99,19 @@ describe("given filled ArangoDB container", () => {
         let keycss2: string;
 
         beforeAll(async () => {
-          const css2 = await byOwnerAndId("somename@example.com", keycss1);
+          const css2 = await db.getSetByOwnerAndId(
+            "somename@example.com",
+            keycss1,
+          );
           expect(css2).toBeDefined();
           if (css2 !== null) {
             css2.description = "Some description 1st edit";
-            keycss2 = await updateSet(keycss1, css2, "First edit");
+            keycss2 = await db.updateSet(keycss1, css2, "First edit");
           }
         });
 
         it("should have author list with a single draft set", async () => {
-          const result = await listOwned("somename@example.com");
+          const result = await db.listOwnedSets("somename@example.com");
           // listOwned hides published sets which have drafts
           const expected: CrossSectionSetOwned[] = [
             {
@@ -143,11 +133,11 @@ describe("given filled ArangoDB container", () => {
 
         describe("given edited draft is published", () => {
           beforeAll(async () => {
-            await publish(keycss2);
+            await db.publishSet(keycss2);
           });
 
           it("should have author list with a single published set", async () => {
-            const result = await listOwned("somename@example.com");
+            const result = await db.listOwnedSets("somename@example.com");
             // TODO publish should have made keycss1 archived and listOwned should not have returned keycss1
             const expected: CrossSectionSetOwned[] = [
               {
@@ -168,7 +158,7 @@ describe("given filled ArangoDB container", () => {
           });
 
           it("for archived key should have a history of length 2", async () => {
-            const result = await historyOfSet(keycss1);
+            const result = await db.setHistory(keycss1);
             const expected: KeyedVersionInfo[] = [
               {
                 _key: keycss2,
@@ -191,7 +181,7 @@ describe("given filled ArangoDB container", () => {
           });
 
           it("for published key should have a history of length 2", async () => {
-            const result = await historyOfSet(keycss2);
+            const result = await db.setHistory(keycss2);
             const expected: KeyedVersionInfo[] = [
               {
                 _key: keycss2,
@@ -223,7 +213,7 @@ describe("given filled ArangoDB container", () => {
 
     beforeAll(async () => {
       // NOTE: We do not clear the container so this set needs a different name.
-      keycss1 = await createSet(
+      keycss1 = await db.createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -313,7 +303,7 @@ describe("given filled ArangoDB container", () => {
         "1",
         "Initial version",
       );
-      const css = await byOwnerAndId("somename@example.com", keycss1);
+      const css = await db.getSetByOwnerAndId("somename@example.com", keycss1);
       if (css !== null) {
         css1 = css;
       } else {
@@ -337,8 +327,11 @@ describe("given filled ArangoDB container", () => {
           throw Error("Could not find state with particle A");
         }
 
-        keycss2 = await updateSet(keycss1, cssdraft, "First edit");
-        const css = await byOwnerAndId("somename@example.com", keycss2);
+        keycss2 = await db.updateSet(keycss1, cssdraft, "First edit");
+        const css = await db.getSetByOwnerAndId(
+          "somename@example.com",
+          keycss2,
+        );
 
         if (css !== null) {
           css2 = css;
@@ -394,7 +387,7 @@ describe("given filled ArangoDB container", () => {
   });
 
   it("insertion should fail given a duplicate set", async () => {
-    await createSet(
+    await db.createSet(
       {
         complete: true,
         contributor: "Some organization",
@@ -409,7 +402,7 @@ describe("given filled ArangoDB container", () => {
       "Initial version",
     );
     expect(
-      createSet(
+      db.createSet(
         {
           complete: true,
           contributor: "Some organization",

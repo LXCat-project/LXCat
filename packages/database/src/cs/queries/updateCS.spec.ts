@@ -7,31 +7,36 @@ import { beforeAll, describe, expect, it } from "vitest";
 import {
   ISO_8601_UTC,
   sampleEmail,
-  startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
-import { db } from "../../db";
 import { Status } from "../../shared/types/version_info";
-import { byOwnerAndId, getVersionInfo } from "./author_read";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 import {
   createSampleCrossSection,
   insertSampleStateIds,
   sampleCrossSection,
 } from "./testutils";
-import { updateCS } from "./write";
 
-beforeAll(startDbWithUserAndCssCollections);
+let db: LXCatTestDatabase;
+
+beforeAll(async () => {
+  db = await LXCatTestDatabase.createTestInstance(systemDb(), "update-cs-test");
+  await db.setupTestUser();
+
+  return async () => systemDb().dropDatabase("update-cs-test");
+});
 
 describe("given published cross section has been updated", () => {
   let keycs1: string;
   let keycs2: string;
 
   beforeAll(async () => {
-    const state_ids = await insertSampleStateIds();
-    const res = await createSampleCrossSection(state_ids);
+    const state_ids = await insertSampleStateIds(db);
+    const res = await createSampleCrossSection(db, state_ids);
     keycs1 = res.keycs1;
 
-    const draft = await byOwnerAndId(sampleEmail, keycs1);
+    const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
 
     if (draft === undefined) {
       expect.fail("should have published section");
@@ -50,7 +55,7 @@ describe("given published cross section has been updated", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateCS(
+    const idcs2 = await db.updateItem(
       keycs1,
       draft,
       "Updated threshold",
@@ -60,11 +65,11 @@ describe("given published cross section has been updated", () => {
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
-    return truncateCrossSectionSetCollections;
+    return () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it("should have draft version", async () => {
-    const info = await getVersionInfo(keycs2);
+    const info = await db.getItemVersionInfo(keycs2);
     const expected = {
       status: "draft",
       version: "2",
@@ -79,12 +84,12 @@ describe("given published cross section has been updated", () => {
   });
 
   it("should have an published and draft cross section in db", async () => {
-    const data = await db().collection("CrossSection").count();
+    const data = await db.getDB().collection("CrossSection").count();
     expect(data.count).toEqual(2);
   });
 
   it("should have history entry for draft cross section", async () => {
-    const data = await db().collection("CrossSectionHistory").count();
+    const data = await db.getDB().collection("CrossSectionHistory").count();
     expect(data.count).toEqual(1);
   });
 });
@@ -93,11 +98,11 @@ describe("given draft cross section has been updated", () => {
   let keycs1: string;
   let keycs2: string;
   beforeAll(async () => {
-    const state_ids = await insertSampleStateIds();
-    const res = await createSampleCrossSection(state_ids, "draft");
+    const state_ids = await insertSampleStateIds(db);
+    const res = await createSampleCrossSection(db, state_ids, "draft");
     keycs1 = res.keycs1;
 
-    const draft = await byOwnerAndId(sampleEmail, keycs1);
+    const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
 
     if (draft === undefined) {
       expect.fail("should have published section");
@@ -115,7 +120,7 @@ describe("given draft cross section has been updated", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateCS(
+    const idcs2 = await db.updateItem(
       keycs1,
       draft,
       "Updated threshold",
@@ -125,11 +130,11 @@ describe("given draft cross section has been updated", () => {
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
-    return truncateCrossSectionSetCollections;
+    return () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it("should have draft version", async () => {
-    const info = await getVersionInfo(keycs2);
+    const info = await db.getItemVersionInfo(keycs2);
     const expected = {
       status: "draft",
       version: "1",
@@ -144,12 +149,12 @@ describe("given draft cross section has been updated", () => {
   });
 
   it("should have a draft cross section in db", async () => {
-    const data = await db().collection("CrossSection").count();
+    const data = await db.getDB().collection("CrossSection").count();
     expect(data.count).toEqual(1);
   });
 
   it("should have no history for draft cross section", async () => {
-    const data = await db().collection("CrossSectionHistory").count();
+    const data = await db.getDB().collection("CrossSectionHistory").count();
     expect(data.count).toEqual(0);
   });
 });
@@ -157,7 +162,7 @@ describe("given draft cross section has been updated", () => {
 describe("given a key of a non-existing cross section", () => {
   it("should throw error", () => {
     expect(
-      updateCS(
+      db.updateItem(
         "123456789",
         sampleCrossSection(),
         "cannot update what does not exist",
@@ -175,15 +180,15 @@ describe.each(invalidDeleteStatuses)(
   (status) => {
     let keycs1: string;
     beforeAll(async () => {
-      const state_ids = await insertSampleStateIds();
-      const res = await createSampleCrossSection(state_ids, status);
+      const state_ids = await insertSampleStateIds(db);
+      const res = await createSampleCrossSection(db, state_ids, status);
       keycs1 = res.keycs1;
-      return truncateCrossSectionSetCollections;
+      return () => truncateCrossSectionSetCollections(db.getDB());
     });
 
     it("should throw an error", () => {
       expect(
-        updateCS(
+        db.updateItem(
           keycs1,
           sampleCrossSection(),
           "cannot update when already archived or retracted",
@@ -203,11 +208,11 @@ describe("given updating published section which already has draft", () => {
   let keycs2: string;
 
   beforeAll(async () => {
-    const state_ids = await insertSampleStateIds();
-    const res = await createSampleCrossSection(state_ids);
+    const state_ids = await insertSampleStateIds(db);
+    const res = await createSampleCrossSection(db, state_ids);
     keycs1 = res.keycs1;
 
-    const draft = await byOwnerAndId(sampleEmail, keycs1);
+    const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
     if (draft === undefined) {
       expect.fail("should have published section");
     }
@@ -225,7 +230,7 @@ describe("given updating published section which already has draft", () => {
     ]);
     const updatedStateIds = Object.fromEntries(rhsStates.concat(lhsStates));
 
-    const idcs2 = await updateCS(
+    const idcs2 = await db.updateItem(
       keycs1,
       draft,
       "Updated threshold",
@@ -235,14 +240,14 @@ describe("given updating published section which already has draft", () => {
     );
     keycs2 = idcs2.replace("CrossSection/", "");
 
-    return truncateCrossSectionSetCollections;
+    return () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it("should give error that published section already has an draft", async () => {
     // expect.toThrowError() assert did not work with async db queries so use try/catch
     expect.assertions(1);
     try {
-      await updateCS(
+      await db.updateItem(
         keycs1,
         sampleCrossSection(),
         "another draft please",

@@ -4,31 +4,39 @@
 
 import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { db } from "../../db";
-import { byOwnerAndId } from "./author_read";
-import { createSet, publish } from "./author_write";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 import {
   sampleCrossSectionSet,
   sampleEmail,
-  startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "./testutils";
 
-beforeAll(startDbWithUserAndCssCollections);
+let db: LXCatTestDatabase;
+
+beforeAll(async () => {
+  db = await LXCatTestDatabase.createTestInstance(
+    systemDb(),
+    "publish-set-test",
+  );
+  await db.setupTestUser();
+
+  return async () => systemDb().dropDatabase("publish-set-test");
+});
 
 describe("given 2 draft cross section sets which shares a draft cross section", () => {
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    keycss1 = await createSet(sampleCrossSectionSet(), "draft");
+    keycss1 = await db.createSet(sampleCrossSectionSet(), "draft");
 
-    const draft2 = await byOwnerAndId(sampleEmail, keycss1);
+    const draft2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (draft2 === null) {
       expect.fail("Should have created first set");
     }
     draft2.name = "Some other name";
-    keycss2 = await createSet(draft2, "draft");
-    return truncateCrossSectionSetCollections;
+    keycss2 = await db.createSet(draft2, "draft");
+    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   it.each([
@@ -55,14 +63,14 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
   ])(
     "should have $count row(s) in $collection collection",
     async ({ collection, count }) => {
-      const info = await db().collection(collection).count();
+      const info = await db.getDB().collection(collection).count();
       expect(info.count).toEqual(count);
     },
   );
 
   describe("and publish on of the sets", () => {
     beforeAll(async () => {
-      await publish(keycss1);
+      await db.publishSet(keycss1);
     });
 
     it.each([
@@ -89,13 +97,13 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     ])(
       "should have $count row(s) in $collection collection",
       async ({ collection, count }) => {
-        const info = await db().collection(collection).count();
+        const info = await db.getDB().collection(collection).count();
         expect(info.count).toEqual(count);
       },
     );
 
     it("should have 2 published cross sections", async () => {
-      const cursor = await db().query(aql`
+      const cursor = await db.getDB().query(aql`
             FOR cs IN CrossSection
               COLLECT statusGroup = cs.versionInfo.status WITH COUNT INTO numState
               RETURN [statusGroup, numState]
@@ -107,7 +115,7 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     });
 
     it("should have 1 published cross section set and 1 draft set", async () => {
-      const cursor = await db().query(aql`
+      const cursor = await db.getDB().query(aql`
         FOR css IN CrossSectionSet
           COLLECT statusGroup = css.versionInfo.status WITH COUNT INTO numState
           RETURN [statusGroup, numState]
@@ -122,12 +130,12 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     });
 
     it("should have 2 cross sections in published set", async () => {
-      const css = await byOwnerAndId(sampleEmail, keycss1);
+      const css = await db.getSetByOwnerAndId(sampleEmail, keycss1);
       expect(css?.processes).toHaveLength(2);
     });
 
     it("should have 2 cross sections in draft set", async () => {
-      const css = await byOwnerAndId(sampleEmail, keycss2);
+      const css = await db.getSetByOwnerAndId(sampleEmail, keycss2);
       expect(css?.processes).toHaveLength(2);
     });
   });
@@ -137,32 +145,32 @@ describe("given a published cross section set and a draft cross section with a d
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    keycss1 = await createSet(sampleCrossSectionSet(), "published");
+    keycss1 = await db.createSet(sampleCrossSectionSet(), "published");
 
-    const draft2 = await byOwnerAndId(sampleEmail, keycss1);
+    const draft2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (draft2 === null) {
       expect.fail("Should have created first set");
     }
     draft2.name = "Some other name";
     draft2.processes[0].info[0].threshold = 888;
     draft2.processes.pop();
-    keycss2 = await createSet(draft2, "draft");
+    keycss2 = await db.createSet(draft2, "draft");
 
-    return truncateCrossSectionSetCollections;
+    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   describe("and publish the draft set", () => {
-    it.only("should complain that already published set needs to point to draft cross section", async () => {
+    it("should complain that already published set needs to point to draft cross section", async () => {
       expect.assertions(2);
       try {
-        await publish(keycss2);
+        await db.publishSet(keycss2);
       } catch (error) {
         if (error instanceof AggregateError) {
           expect(error.message).toEqual(
             "Unable to publish due to publishing would cause sets to have archived sections. Please make draft of other sets and use same draft cross sections as this set.",
           );
-          const css1 = await byOwnerAndId(sampleEmail, keycss1);
-          const css2 = await byOwnerAndId(sampleEmail, keycss2);
+          const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
+          const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss2);
           if (css1 === null || css2 === null) {
             expect.fail("Should have fetched sets");
           }

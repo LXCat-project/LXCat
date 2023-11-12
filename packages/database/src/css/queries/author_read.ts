@@ -5,6 +5,7 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedDocument } from "../../schema/document";
 import { VersionInfo } from "../../shared/types/version_info";
 import { CrossSectionSet } from "../collections";
@@ -13,8 +14,8 @@ export interface CrossSectionSetOwned extends CrossSectionSet {
   _key: string;
 }
 
-export async function listOwned(email: string) {
-  const cursor: ArrayCursor<CrossSectionSetOwned> = await db().query(aql`
+export async function listOwnedSets(this: LXCatDatabase, email: string) {
+  const cursor: ArrayCursor<CrossSectionSetOwned> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         LIMIT 1
@@ -101,8 +102,12 @@ export const byId = async (id: string) => {
   );
 };
 
-export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<unknown> = await db().query(aql`
+export async function byOwnerAndId(
+  this: LXCatDatabase,
+  email: string,
+  id: string,
+) {
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
             FOR user IN users
               FILTER user.email == ${email}
               FOR org IN OUTBOUND user MemberOf
@@ -163,8 +168,12 @@ export async function byOwnerAndId(email: string, id: string) {
 /**
  * Checks whether set with key is owned by user with email.
  */
-export async function isOwner(key: string, email: string) {
-  const cursor: ArrayCursor<boolean> = await db().query(aql`
+export async function isOwnerOfSet(
+  this: LXCatDatabase,
+  key: string,
+  email: string,
+) {
+  const cursor: ArrayCursor<boolean> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         FOR o IN OUTBOUND u MemberOf
@@ -176,8 +185,8 @@ export async function isOwner(key: string, email: string) {
   return cursor.hasNext;
 }
 
-export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
+export async function getVersionInfo(this: LXCatDatabase, key: string) {
+  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         RETURN css.versionInfo

@@ -3,22 +3,22 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "dotenv/config";
+import { Database } from "arangojs";
 import { CollectionType } from "arangojs/collection";
 import {
   OrganizationAsJsonSchema,
   UserWithAccountSessionInDb,
   UserWithAccountSessionInDbAsJsonSchema,
-} from "../src/auth/schema";
-import { db } from "../src/db";
+} from "../auth/schema";
 
-export default async function() {
-  await createUserCollection();
-  await createOrganizationCollection();
-  await createMemberOfCollection();
-}
+export const setupUserCollections = async (db: Database) => {
+  await createUserCollection(db);
+  await createOrganizationCollection(db);
+  await createMemberOfCollection(db);
+};
 
-async function createUserCollection() {
-  const users = db().collection<UserWithAccountSessionInDb>("users");
+const createUserCollection = async (db: Database) => {
+  const users = db.collection<UserWithAccountSessionInDb>("users");
   if (await users.exists()) {
     console.log("Users collection already exists");
     return;
@@ -42,10 +42,10 @@ async function createUserCollection() {
     }),
   ]);
   console.log("Users collection created");
-}
+};
 
-async function createOrganizationCollection() {
-  const organizations = db().collection<UserWithAccountSessionInDb>(
+const createOrganizationCollection = async (db: Database) => {
+  const organizations = db.collection<UserWithAccountSessionInDb>(
     "Organization",
   );
   if (await organizations.exists()) {
@@ -63,15 +63,15 @@ async function createOrganizationCollection() {
     unique: true,
   });
   console.log("Organization collection created");
-}
+};
 
-async function createMemberOfCollection() {
+const createMemberOfCollection = async (db: Database) => {
   // Stores which Users are members of which Organization
-  const collection = db().collection("MemberOf");
+  const collection = db.collection("MemberOf");
   if (await collection.exists()) {
     console.log("MemberOf collection already exists");
     return;
   }
   await collection.create({ type: CollectionType.EDGE_COLLECTION });
   console.log("MemberOf collection created");
-}
+};

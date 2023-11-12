@@ -6,6 +6,7 @@ import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedDocument } from "../../schema/document";
 import {
   ChoiceRow,
@@ -30,6 +31,7 @@ export interface SortOptions {
 }
 
 export async function search(
+  this: LXCatDatabase,
   filter: FilterOptions,
   sort: SortOptions,
   paging: PagingOptions,
@@ -100,11 +102,12 @@ export async function search(
           RETURN {'id': css._key, name: css.name}
       `;
 
-  const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionSetHeading> = await this.db.query(q);
   return await cursor.all();
 }
 
 export async function searchFacets(
+  this: LXCatDatabase,
   selection: FilterOptions,
 ): Promise<FilterOptions> {
   /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
@@ -113,13 +116,14 @@ export async function searchFacets(
   const { tag: _t, ...nonTagSelection } = selection;
   /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
-    contributor: await searchContributors(nonContributorSelection),
-    state: await stateChoices(nonStateSelection),
-    tag: await tagChoices(nonTagSelection),
+    contributor: await this.searchContributors(nonContributorSelection),
+    state: await this.stateChoices(nonStateSelection),
+    tag: await this.tagChoices(nonTagSelection),
   };
 }
 
-async function searchContributors(
+export async function searchContributors(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "contributor">,
 ) {
   const hasTagSelection = selection.tag.length > 0;
@@ -155,7 +159,7 @@ async function searchContributors(
         SORT on
         RETURN on
   `;
-  const cursor: ArrayCursor<string> = await db().query(q);
+  const cursor: ArrayCursor<string> = await this.db.query(q);
   return await cursor.all();
 }
 
@@ -176,6 +180,7 @@ function generateStateChoiceFilter(state: StateChoices) {
 }
 
 export async function stateChoices(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "state">,
 ): Promise<StateChoices> {
   const hasTagSelection = selection.tag.length > 0;
@@ -190,7 +195,7 @@ export async function stateChoices(
     FILTER org != null AND ${selection.contributor} ANY == org.name
   `
     : aql``;
-  const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
+  const cursor: ArrayCursor<ChoiceRow> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
         ${contributorFilter}
@@ -213,7 +218,8 @@ export async function stateChoices(
   return groupStateChoices(rows);
 }
 
-async function tagChoices(
+export async function tagChoices(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "tag">,
 ): Promise<ReactionTypeTag[]> {
   const hasContributorSelection = selection.contributor.length > 0;
@@ -240,7 +246,7 @@ async function tagChoices(
               SORT tt
               RETURN tt
   `;
-  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(q);
+  const cursor: ArrayCursor<ReactionTypeTag> = await this.db.query(q);
   return cursor.all();
 }
 
@@ -255,8 +261,8 @@ export const getCSIdsInSet = async (setId: string) => {
 };
 
 // TODO: Merge byId and byIdJSON.
-export async function byIdJSON(id: string) {
-  const cursor: ArrayCursor<unknown> = await db().query(aql`
+export async function byIdJSON(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
         FILTER css.versionInfo.status != 'draft'
@@ -369,8 +375,8 @@ export async function getVersionInfo(key: string) {
   return cursor.next();
 }
 
-export async function byId(id: string) {
-  const cursor: ArrayCursor<CrossSectionSetItem> = await db().query(aql`
+export async function byId(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<CrossSectionSetItem> = await this.db.query(aql`
       FOR css IN CrossSectionSet
           FILTER css._key == ${id}
           FILTER ['published' ,'retracted', 'archived'] ANY == css.versionInfo.status
@@ -429,9 +435,9 @@ export interface KeyedVersionInfo extends VersionInfo {
 /**
  * Finds all previous versions of set with key
  */
-export async function historyOfSet(key: string) {
+export async function setHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}

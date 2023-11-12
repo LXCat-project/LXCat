@@ -5,12 +5,15 @@
 import { type Reaction } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 
-export async function findReactionId(reaction: Reaction<string>) {
+export async function findReactionId(
+  this: LXCatDatabase,
+  reaction: Reaction<string>,
+) {
   // TODO Optimize naive query, instead of denormalizing every reaction in db
   //      and comparing it to the query reaction do something more efficient.
-  const cursor: ArrayCursor<string> = await db().query(aql`
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
             FOR r IN Reaction
                 LET lhs = (
                     FOR s IN Consumes

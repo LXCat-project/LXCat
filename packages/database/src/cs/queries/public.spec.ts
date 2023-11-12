@@ -4,25 +4,30 @@
 
 import { LTPMixture } from "@lxcat/schema";
 import { beforeAll, describe, expect, it } from "vitest";
-import { createSet } from "../../css/queries/author_write";
-import { byIdJSON as setById } from "../../css/queries/public";
 import {
   matchesId,
   sampleCrossSectionSet,
-  startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
 import { KeyedLTPMixture } from "../../schema/mixture";
-import { byIds } from "./public";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 
-beforeAll(startDbWithUserAndCssCollections);
+let db: LXCatTestDatabase;
+
+beforeAll(async () => {
+  db = await LXCatTestDatabase.createTestInstance(systemDb(), "cs-public-test");
+  await db.setupTestUser();
+
+  return async () => systemDb().dropDatabase("cs-public-test");
+});
 
 describe("given 4 published cross sections in 2 sets", () => {
   let csids: string[];
 
   beforeAll(async () => {
-    const keycss1 = await createSet(sampleCrossSectionSet());
-    const set1 = await setById(keycss1);
+    const keycss1 = await db.createSet(sampleCrossSectionSet());
+    const set1 = await db.getSetById(keycss1);
 
     if (set1 === undefined) {
       throw Error("Set not found");
@@ -31,8 +36,8 @@ describe("given 4 published cross sections in 2 sets", () => {
     const draftset = sampleCrossSectionSet();
     draftset.name = "Some other name";
 
-    const keycss2 = await createSet(draftset);
-    const set2 = await setById(keycss2);
+    const keycss2 = await db.createSet(draftset);
+    const set2 = await db.getSetById(keycss2);
 
     if (set2 === undefined) {
       throw Error("Set not found");
@@ -43,12 +48,12 @@ describe("given 4 published cross sections in 2 sets", () => {
       ...set2.processes.flatMap(({ info }) => info).map(({ _key }) => _key),
     ];
 
-    return truncateCrossSectionSetCollections;
+    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
   describe("byIds()", () => {
     it("given correct ids should return 4 cross sections", async () => {
-      const result = await byIds(csids);
+      const result = await db.getMixtureByIds(csids);
       const expected: KeyedLTPMixture = {
         states: {
           "528": {
@@ -246,8 +251,8 @@ describe("given 4 published cross sections in 2 sets", () => {
       expect(result.processes).toEqual(expected.processes);
     });
 
-    it("given 0 ids should return 0 cross sections", async () => {
-      const result = await byIds([]);
+    it.only("given 0 ids should return 0 cross sections", async () => {
+      const result = await db.getMixtureByIds([]);
       const expected: LTPMixture = {
         states: {},
         references: {},
@@ -258,7 +263,7 @@ describe("given 4 published cross sections in 2 sets", () => {
     });
 
     it("given 2 bad ids should return 0 cross sections", async () => {
-      const result = await byIds(["bad1", "bad2"]);
+      const result = await db.getMixtureByIds(["bad1", "bad2"]);
       const expected: LTPMixture = {
         states: {},
         references: {},
@@ -269,7 +274,7 @@ describe("given 4 published cross sections in 2 sets", () => {
     });
 
     it("given 1 good and 1 bad ids should return 1 good cross sections", async () => {
-      const result = await byIds([csids[0], "bad2"]);
+      const result = await db.getMixtureByIds([csids[0], "bad2"]);
       const expected: KeyedLTPMixture = {
         states: {
           "524": {

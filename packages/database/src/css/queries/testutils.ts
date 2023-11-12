@@ -5,30 +5,25 @@
 import { LTPDocument } from "@lxcat/schema";
 import type { Reaction } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
+import { Database } from "arangojs";
 import { expect } from "vitest";
 import { z } from "zod";
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
-import { createSet, deleteSet } from "../../css/queries/author_write";
-import { db } from "../../db";
-import { startDbContainer } from "../../testutils";
+import { LXCatDatabase } from "../../lxcat-database";
+import { LXCatTestDatabase } from "../../testutils";
 import { FilterOptions } from "./public";
 
-export async function loadTestSets() {
+export async function loadTestSets(db: LXCatDatabase) {
   const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
-  await testCsCreator();
+  await testCsCreator(db);
 }
 
-export async function createCsCollections() {
+export async function createCsCollections(db: Database) {
   const { default: sharedCollectionsCreator } = await import(
     "../../../setup/3_shared"
   );
-  await sharedCollectionsCreator();
+  await sharedCollectionsCreator(db);
   const { default: csCollectionsCreator } = await import("../../../setup/4_cs");
-  await csCollectionsCreator();
+  await csCollectionsCreator(db);
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;
@@ -36,17 +31,7 @@ export const matches8601 = expect.stringMatching(ISO_8601_UTC);
 
 export const matchesId = expect.stringMatching(/\d+/);
 
-export async function startDbWithUserAndCssCollections() {
-  const stopContainer = await startDbContainer();
-  await createAuthCollections();
-  await createCsCollections();
-  const testKeys = await loadTestUserAndOrg();
-  await toggleRole(testKeys.testUserKey, "author");
-
-  return stopContainer;
-}
-
-export async function truncateCrossSectionSetCollections() {
+export async function truncateCrossSectionSetCollections(db: Database) {
   const collections2Truncate = [
     "Consumes",
     "CrossSectionSet",
@@ -62,7 +47,7 @@ export async function truncateCrossSectionSetCollections() {
     "HasDirectSubstate",
   ];
   await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate()),
+    collections2Truncate.map((c) => db.collection(c).truncate()),
   );
 }
 
@@ -138,7 +123,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
 
 export const sampleEmail = "somename@example.com";
 
-export const sampleSets4Search = async () => {
+export const sampleSets4Search = async (db: LXCatTestDatabase) => {
   const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
@@ -181,7 +166,7 @@ export const sampleSets4Search = async () => {
       electronic: "*",
     },
   };
-  await createSet(
+  await db.createSet(
     setFrom(
       "H2 set",
       { e: states.e, H2: states.H2 },
@@ -202,7 +187,7 @@ export const sampleSets4Search = async () => {
       "Some organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "N2 set",
       { e: states.e, N2: states.N2 },
@@ -223,7 +208,7 @@ export const sampleSets4Search = async () => {
       "Some other organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "Ar set",
       { e: states.e, Ar: states.Ar, Arp: states.Arp },
@@ -244,7 +229,7 @@ export const sampleSets4Search = async () => {
       "Some organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "He set",
       { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },
@@ -274,7 +259,7 @@ export const sampleSets4Search = async () => {
  * 1. retracted = Ar
  * 1. archived = CO2
  */
-export const sampleSets4SearchWithVersions = async () => {
+export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
   const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
@@ -317,7 +302,7 @@ export const sampleSets4SearchWithVersions = async () => {
       electronic: "*",
     },
   };
-  await createSet(
+  await db.createSet(
     setFrom(
       "H2 set",
       { e: states.e, H2: states.H2 },
@@ -339,7 +324,7 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "published",
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "N2 set",
       { e: states.e, N2: states.N2 },
@@ -361,7 +346,7 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "draft",
   );
-  const id2retract = await createSet(
+  const id2retract = await db.createSet(
     setFrom(
       "Ar set",
       { e: states.e, Ar: states.Ar, Arp: states.Arp },
@@ -383,8 +368,8 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "published",
   );
-  await deleteSet(id2retract, "Oops");
-  await createSet(
+  await db.deleteSet(id2retract, "Oops");
+  await db.createSet(
     setFrom(
       "He set",
       { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },

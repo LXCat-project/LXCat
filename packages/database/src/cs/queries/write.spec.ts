@@ -4,48 +4,38 @@
 
 import { AnyProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
 import { deepClone } from "../../css/queries/deepClone";
-import {
-  createCsCollections,
-  ISO_8601_UTC,
-  matchesId,
-} from "../../css/queries/testutils";
-import { db } from "../../db";
+import { ISO_8601_UTC, matchesId } from "../../css/queries/testutils";
 import { KeyedProcess } from "../../schema/process";
-import { startDbContainer } from "../../testutils";
-import { byOwnerAndId, getVersionInfo } from "./author_read";
-import { historyOfSection } from "./public";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 import {
   createDraftFromPublished,
   createSampleCrossSection,
   insertSampleStateIds,
   truncateCrossSectionCollections,
 } from "./testutils";
-import { createCS, publish } from "./write";
 
 describe("given db with test user and organization", () => {
+  let db: LXCatTestDatabase;
+
   beforeAll(async () => {
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    await createCsCollections();
-    const testKeys = await loadTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
-    return stopContainer;
+    db = await LXCatTestDatabase.createTestInstance(
+      systemDb(),
+      "cs-write-test",
+    );
+    await db.setupTestUser();
+    return async () => systemDb().dropDatabase("cs-write-test");
   });
 
   describe("given 4 states and zero references exist", () => {
     let state_ids: Record<string, string>;
     beforeAll(async () => {
-      state_ids = await insertSampleStateIds();
+      state_ids = await insertSampleStateIds(db);
       return async () => {
         const collections2Truncate = ["HasDirectSubstate", "State"];
         await Promise.all(
-          collections2Truncate.map((c) => db().collection(c).truncate()),
+          collections2Truncate.map((c) => db.getDB().collection(c).truncate()),
         );
       };
     });
@@ -57,15 +47,15 @@ describe("given db with test user and organization", () => {
 
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
-        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+        ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.info[0].data.values = [[1000, 1.2345e-20]];
         }));
         return __return;
       });
 
       it("should have draft status", async () => {
-        const info = await getVersionInfo(keycs2);
+        const info = await db.getItemVersionInfo(keycs2);
         const expected = {
           status: "draft",
           version: "2",
@@ -80,7 +70,10 @@ describe("given db with test user and organization", () => {
       });
 
       it("should have same ids for states", async () => {
-        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const draftcs = await db.getItemByOwnerAndId(
+          "somename@example.com",
+          keycs2,
+        );
         const expected = deepClone(cs1);
         expected.info[0].data.values = [[1000, 1.2345e-20]];
         expected.info[0]._key = matchesId;
@@ -89,11 +82,11 @@ describe("given db with test user and organization", () => {
 
       describe("publishing draft", () => {
         beforeAll(async () => {
-          await publish(keycs2);
+          await db.publishItem(keycs2);
         });
 
         it("should have 2 versions recorded in history", async () => {
-          const history = await historyOfSection(keycs2);
+          const history = await db.itemHistory(keycs2);
           const expected = [
             {
               _key: keycs2,
@@ -120,15 +113,15 @@ describe("given db with test user and organization", () => {
       let cs1: KeyedProcess<string, string>;
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
-        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+        ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.reaction.reversible = true;
         }));
         return __return;
       });
 
       it("should have draft status", async () => {
-        const info = await getVersionInfo(keycs2);
+        const info = await db.getItemVersionInfo(keycs2);
         const expected = {
           status: "draft",
           version: "2",
@@ -143,7 +136,10 @@ describe("given db with test user and organization", () => {
       });
 
       it("should have same ids for states", async () => {
-        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const draftcs = await db.getItemByOwnerAndId(
+          "somename@example.com",
+          keycs2,
+        );
         const expected = deepClone(cs1);
         expected.reaction.reversible = true;
         expected.info[0]._key = matchesId;
@@ -151,7 +147,7 @@ describe("given db with test user and organization", () => {
       });
 
       it("should have create an additional reaction row", async () => {
-        const result = await db().collection("Reaction").count();
+        const result = await db.getDB().collection("Reaction").count();
         expect(result.count).toEqual(2); // One for published and one for draft cross section
       });
     });
@@ -162,15 +158,18 @@ describe("given db with test user and organization", () => {
       let cs1: KeyedProcess<string, string>;
       beforeAll(async () => {
         let __return;
-        ({ __return, keycs1 } = await createSampleCrossSection(state_ids));
-        ({ cs1, keycs2 } = await createDraftFromPublished(keycs1, (cs) => {
+        ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
+        ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
         }));
         return __return;
       });
 
       it("should have one different state id and one same state id", async () => {
-        const draftcs = await byOwnerAndId("somename@example.com", keycs2);
+        const draftcs = await db.getItemByOwnerAndId(
+          "somename@example.com",
+          keycs2,
+        );
         const expected = deepClone(cs1);
 
         expected.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
@@ -180,7 +179,7 @@ describe("given db with test user and organization", () => {
       });
 
       it("should have create an additional reaction row", async () => {
-        const result = await db().collection("Reaction").count();
+        const result = await db.getDB().collection("Reaction").count();
         expect(result.count).toEqual(2); // One for published and one for draft cross section
       });
     });
@@ -207,7 +206,7 @@ describe("given db with test user and organization", () => {
             references: [],
           }],
         };
-        const idcs1 = await createCS(
+        const idcs1 = await db.createItem(
           cs,
           state_ids,
           {},
@@ -215,11 +214,11 @@ describe("given db with test user and organization", () => {
           "draft",
         );
         keycs1 = idcs1.replace("CrossSection/", "");
-        return truncateCrossSectionCollections;
+        return () => truncateCrossSectionCollections(db.getDB());
       });
 
       it("should have draft status", async () => {
-        const info = await getVersionInfo(keycs1);
+        const info = await db.getItemVersionInfo(keycs1);
         const expected = {
           status: "draft",
           version: "1",
@@ -231,11 +230,11 @@ describe("given db with test user and organization", () => {
 
       describe("given draft cross section is published", () => {
         beforeAll(async () => {
-          await publish(keycs1);
+          await db.publishItem(keycs1);
         });
 
         it("should have published status", async () => {
-          const info = await getVersionInfo(keycs1);
+          const info = await db.getItemVersionInfo(keycs1);
           const expected = {
             status: "published",
             version: "1",

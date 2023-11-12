@@ -4,21 +4,21 @@
 
 import { AnyProcess } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
+import { Database } from "arangojs";
 import { deepClone } from "../../css/queries/deepClone";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedProcess } from "../../schema/process";
-import { insertStateDict } from "../../shared/queries";
 import { StateTree } from "../../shared/queries/state";
 import { Status } from "../../shared/types/version_info";
-import { byOwnerAndId } from "./author_read";
-import { createCS, updateCS } from "./write";
+import { LXCatTestDatabase } from "../../testutils";
 
 export async function createSampleCrossSection(
+  db: LXCatTestDatabase,
   state_ids: Record<string, string>,
   status: Status = "published",
 ) {
   const cs = sampleCrossSection();
-  const idcs1 = await createCS(
+  const idcs1 = await db.createItem(
     cs,
     state_ids,
     {},
@@ -27,7 +27,7 @@ export async function createSampleCrossSection(
   );
   const keycs1 = idcs1.replace("CrossSection/", "");
   return {
-    __return: truncateCrossSectionCollections,
+    __return: () => truncateCrossSectionCollections(db.getDB()),
     keycs1,
   };
 }
@@ -67,7 +67,7 @@ export function sampleCrossSection(): AnyProcess<string, string> {
   };
 }
 
-export async function truncateCrossSectionCollections() {
+export async function truncateCrossSectionCollections(db: Database) {
   const collections2Truncate = [
     "Consumes",
     "CrossSection",
@@ -78,13 +78,13 @@ export async function truncateCrossSectionCollections() {
     "References",
   ];
   await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate()),
+    collections2Truncate.map((c) => db.collection(c).truncate()),
   );
 }
 
-export async function insertSampleStateIds() {
+export async function insertSampleStateIds(db: LXCatDatabase) {
   const states = sampleStates();
-  return await insertStateDict(states);
+  return await db.insertStateDict(states);
 }
 
 export function sampleStates(): Record<string, AnySpecies> {
@@ -113,10 +113,11 @@ export function sampleStates(): Record<string, AnySpecies> {
 }
 
 export async function createDraftFromPublished(
+  db: LXCatTestDatabase,
   keycs1: string,
   alter: (cs: KeyedProcess<string, string>) => void,
 ) {
-  const cs = await byOwnerAndId("somename@example.com", keycs1);
+  const cs = await db.getItemByOwnerAndId("somename@example.com", keycs1);
   if (cs === undefined) {
     throw Error(`Unable to retrieve cross section with id ${keycs1}`);
   }
@@ -129,7 +130,7 @@ export async function createDraftFromPublished(
     [lhs0]: `State/${lhs0}`,
     [rhs0]: `State/${rhs0}`,
   };
-  const idcs2 = await updateCS(
+  const idcs2 = await db.updateItem(
     keycs1,
     draftcs,
     "My first update",

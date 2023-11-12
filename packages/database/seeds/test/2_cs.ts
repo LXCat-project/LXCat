@@ -4,9 +4,10 @@
 import "dotenv/config";
 import { dirname, join } from "path";
 import { load_css_dir } from "../../src/css/loaders";
+import { LXCatDatabase } from "../../src/lxcat-database";
 
-export default async function() {
+export default async function(db: LXCatDatabase) {
   const thisfile = new URL(import.meta.url);
   const dir = join(dirname(thisfile.pathname), "crosssections");
-  await load_css_dir(dir);
+  await load_css_dir(db, dir);
 }

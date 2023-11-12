@@ -4,7 +4,7 @@
 
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedProcess, OwnedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
@@ -12,8 +12,8 @@ import { VersionInfo } from "../../shared/types/version_info";
 // import { defaultSearchTemplate } from "../picker/default";
 // import { ReactionTemplate } from "../picker/types";
 
-export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
+export async function getVersionInfo(this: LXCatDatabase, key: string) {
+  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
       FOR cs IN CrossSection
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
@@ -22,13 +22,14 @@ export async function getVersionInfo(key: string) {
 }
 
 export async function searchOwned(
+  this: LXCatDatabase,
   email: string,
   // _options: Array<ReactionTemplate> = defaultSearchTemplate(),
   paging: PagingOptions = { offset: 0, count: 100 },
 ) {
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-  const cursor: ArrayCursor<unknown> = await db().query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
 		FOR u IN users
 			FILTER u.email == ${email}
       FOR o IN OUTBOUND u MemberOf
@@ -68,14 +69,18 @@ export async function searchOwned(
           )
           SORT cs.versionInfo.createdOn DESC
           ${limit_aql}
-          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references, isPartOf: sets })]
-     }
+          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references, isPartOf: sets })] }
 	`);
   return (await cursor.all()).map((cs) => OwnedProcess.parse(cs));
 }
 
-export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<KeyedProcess<string, string>> = await db()
+export async function byOwnerAndId(
+  this: LXCatDatabase,
+  email: string,
+  id: string,
+) {
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+    .db
     .query(aql`
     FOR u IN users
     FILTER u.email == ${email}
@@ -119,8 +124,13 @@ export async function byOwnerAndId(email: string, id: string) {
   return await cursor.next();
 }
 
-export async function byOrgAndId(org: string, key: string) {
-  const cursor: ArrayCursor<KeyedProcess<string, string>> = await db()
+export async function byOrgAndId(
+  this: LXCatDatabase,
+  org: string,
+  key: string,
+) {
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+    .db
     .query(aql`
         FOR o IN Organization
             FILTER o.name == ${org}

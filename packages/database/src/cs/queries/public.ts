@@ -5,6 +5,7 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedLTPMixture } from "../../schema/mixture";
 import { OwnedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
@@ -12,8 +13,8 @@ import { KeyedVersionInfo } from "../../shared/types/version_info";
 import { ReactionTemplate } from "../picker/types";
 import { CrossSectionHeading } from "../public";
 
-export async function byId(id: string) {
-  const cursor: ArrayCursor<unknown> = await db().query(aql`
+export async function byId(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
   FOR cs IN CrossSection
     FILTER cs._key == ${id}
     FILTER cs.versionInfo.status != 'draft'
@@ -53,8 +54,8 @@ export async function byId(id: string) {
   return OwnedProcess.parseAsync(await cursor.next());
 }
 
-export async function byIds(ids: string[]) {
-  const cursor: ArrayCursor<KeyedLTPMixture> = await db().query(aql`
+export async function byIds(this: LXCatDatabase, ids: string[]) {
+  const cursor: ArrayCursor<KeyedLTPMixture> = await this.db.query(aql`
     LET sets = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
@@ -148,10 +149,11 @@ export async function byIds(ids: string[]) {
   return result;
 }
 
-export const getCSHeadings = async (
+export async function getCSHeadings(
+  this: LXCatDatabase,
   csIds: Array<string>,
   paging: PagingOptions,
-) => {
+) {
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
 
   const q = aql`
@@ -197,12 +199,13 @@ export const getCSHeadings = async (
 	    ${limitAql}
 	    RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
-};
+}
 
 // TODO: Can this function be removed?
 export async function search(
+  this: LXCatDatabase,
   _templates: Array<ReactionTemplate>,
   paging: PagingOptions,
 ) {
@@ -242,16 +245,16 @@ export async function search(
 	  ${limitAql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
 }
 
 /**
  * Finds all previous versions of set with key
  */
-export async function historyOfSection(key: string) {
+export async function csHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSection/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h IN 0..9999999
       ANY ${id}
       CrossSectionHistory

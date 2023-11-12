@@ -7,25 +7,28 @@ import {
   matchesId,
   sampleSets4Search,
   sampleSets4SearchWithVersions,
-  startDbWithUserAndCssCollections,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils";
 import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
 import { StateSummary } from "../../shared/queries/state";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
 import { defaultSearchTemplate } from "../picker/default";
-import {
-  getCSIdByReactionTemplate,
-  getSearchOptions,
-} from "../picker/queries/public";
 import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
 import { CrossSectionHeading } from "../public";
-import { byId, getCSHeadings, search } from "./public";
 import { NestedState, removeIdsFromTree } from "./testutils";
 
-beforeAll(startDbWithUserAndCssCollections);
+let db: LXCatTestDatabase;
 
-const getCSIdsFromTemplate = async (selection: ReactionTemplate) =>
-  getCSIdByReactionTemplate(
+beforeAll(async () => {
+  db = await LXCatTestDatabase.createTestInstance(systemDb(), "select-cs-test");
+  await db.setupTestUser();
+
+  return async () => systemDb().dropDatabase("select-cs-test");
+});
+
+const getItemIdsFromTemplate = async (selection: ReactionTemplate) =>
+  db.getItemIdsByReactionTemplate(
     selection.consumes
       .map(getStateLeaf)
       .filter((leaf): leaf is StateLeaf => leaf !== undefined),
@@ -42,11 +45,11 @@ describe("Selecting individual cross sections", () => {
     let allOptions: ReactionOptions;
 
     beforeAll(async () => {
-      await sampleSets4Search();
+      await sampleSets4Search(db);
 
-      allOptions = (await getSearchOptions(defaultSearchTemplate()))[0];
+      allOptions = (await db.getSearchOptions(defaultSearchTemplate()))[0];
 
-      return truncateCrossSectionSetCollections;
+      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
 
     describe("without selection", () => {
@@ -123,8 +126,8 @@ describe("Selecting individual cross sections", () => {
           .find(([, particle]) => particle.latex === "\\mathrm{N2}")!;
         selection[0].consumes = [{ particle }, {}];
 
-        reactionOptions = (await getSearchOptions(selection))[0]!;
-        searchResults = await getCSIdsFromTemplate(selection[0]!);
+        reactionOptions = (await db.getSearchOptions(selection))[0]!;
+        searchResults = await getItemIdsFromTemplate(selection[0]!);
       });
 
       it("first select has all consumable states", () => {
@@ -200,8 +203,8 @@ describe("Selecting individual cross sections", () => {
           .find(([, particle]) => particle.latex === "\\mathrm{Ar}^+")!;
         selection[0].produces = [{ particle }, {}];
 
-        reactionOptions = (await getSearchOptions(selection))[0]!;
-        searchResults = await getCSIdsFromTemplate(selection[0]!);
+        reactionOptions = (await db.getSearchOptions(selection))[0]!;
+        searchResults = await getItemIdsFromTemplate(selection[0]!);
       });
 
       it("can consume e and Ar", () => {
@@ -266,8 +269,8 @@ describe("Selecting individual cross sections", () => {
       beforeAll(async () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
         selection[0].typeTags = ["Ionization"];
-        reactionOptions = (await getSearchOptions(selection))[0]!;
-        searchResults = await getCSIdsFromTemplate(selection[0]!);
+        reactionOptions = (await db.getSearchOptions(selection))[0]!;
+        searchResults = await getItemIdsFromTemplate(selection[0]!);
       });
 
       it("should consume e and Ar", () => {
@@ -319,7 +322,7 @@ describe("Selecting individual cross sections", () => {
           .find(([, name]) => name === "Ar set")!;
 
         selection[0].set = [setId];
-        reactionOptions = (await getSearchOptions(selection))[0]!;
+        reactionOptions = (await db.getSearchOptions(selection))[0]!;
       });
 
       it("should consume e and Ar", () => {
@@ -364,9 +367,12 @@ describe("Selecting individual cross sections", () => {
       beforeAll(async () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
         selection[0].typeTags = ["Effective", "Ionization"];
-        reactionOptions = (await getSearchOptions(selection))[0]!;
+        reactionOptions = (await db.getSearchOptions(selection))[0]!;
         // FIXME: This function does not use the provided selection.
-        searchResults = await search(selection, { count: 100, offset: 0 });
+        searchResults = await db.searchItem(selection, {
+          count: 100,
+          offset: 0,
+        });
       });
 
       it("should consume e, Ar, H2, and N2", () => {
@@ -418,15 +424,15 @@ describe("Selecting individual cross sections", () => {
     let searchResults: Array<CrossSectionHeading>;
 
     beforeAll(async () => {
-      await sampleSets4SearchWithVersions();
+      await sampleSets4SearchWithVersions(db);
 
       const defaultOptions = defaultSearchTemplate();
 
-      publishedOptions = (await getSearchOptions(defaultOptions))[0]!;
-      csIds = await getCSIdsFromTemplate(defaultOptions[0]!);
-      searchResults = await getCSHeadings(csIds, { offset: 0, count: 10 });
+      publishedOptions = (await db.getSearchOptions(defaultOptions))[0]!;
+      csIds = await getItemIdsFromTemplate(defaultOptions[0]!);
+      searchResults = await db.getItemHeadings(csIds, { offset: 0, count: 10 });
 
-      return truncateCrossSectionSetCollections;
+      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
 
     it("should only return published sets", () => {
@@ -564,7 +570,7 @@ describe("Selecting individual cross sections", () => {
         },
       ]);
 
-      const cs = await byId(csIds[0].split("/")[1]);
+      const cs = await db.getItemById(csIds[0].split("/")[1]);
       expect(cs).toEqual({
         reaction: {
           lhs: [

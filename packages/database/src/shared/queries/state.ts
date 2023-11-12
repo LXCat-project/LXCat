@@ -42,10 +42,10 @@ function generateParticleFilter(
   stateVarName: string,
 ) {
   const stateVarAql = literal(stateVarName);
-  const filters = [aql`${stateVarAql}.particle == ${particle}`];
+  const filters = [aql`${stateVarAql}.detailed.particle == ${particle}`];
   Object.entries(selection.charge).forEach(([charge, { electronic }]) => {
     const iCharge = parseInt(charge);
-    filters.push(aql`${stateVarAql}.charge == ${iCharge}`);
+    filters.push(aql`${stateVarAql}.detailed.charge == ${iCharge}`);
     const electronicFilters = generateElectronicFilter(electronic, stateVarAql);
     if (electronicFilters.length > 0) {
       filters.push(join(electronicFilters, " OR "));
@@ -68,7 +68,7 @@ function generateElectronicFilter(
       }
 
       const electronicSubFilters = [
-        aql`${electronicVarAql}.summary == ${electronicSummary}`,
+        aql`${electronicVarAql}.serialized.electronic.summary == ${electronicSummary}`,
       ];
 
       const vibrationalFilters = generateVibratonalFilter(
@@ -82,8 +82,8 @@ function generateElectronicFilter(
       }
 
       return aql`LENGTH(
-          FILTER NOT_NULL(${stateVarAql}.electronic)
-          LET electronic = IS_ARRAY(${stateVarAql}.electronic) ? ${stateVarAql}.electronic : [${stateVarAql}.electronic]
+          FILTER NOT_NULL(${stateVarAql}.detailed.electronic)
+          LET electronic = IS_ARRAY(${stateVarAql}.detailed.electronic) ? ${stateVarAql}.detailed.electronic : [${stateVarAql}.detailed.electronic]
           FOR ${electronicVarAql} IN electronic
             FILTER ${join(electronicSubFilters, " AND ")}
             RETURN 1
@@ -108,7 +108,7 @@ function generateVibratonalFilter(
       }
 
       const vibrationalSubFilters = [
-        aql`${vibrationalVarAql}.summary == ${vibrationalSummary}`,
+        aql`${vibrationalVarAql}.serialized.electronic.vibrational.summary == ${vibrationalSummary}`,
       ];
 
       const rotationalFilters: GeneratedAqlQuery[] = [];

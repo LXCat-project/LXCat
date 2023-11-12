@@ -19,6 +19,7 @@ export type KeyedProcess<StateType, ReferenceType> = TypeOf<
   KeyedProcessType<ZodType<StateType>, ZodType<ReferenceType>>
 >;
 
+// TODO: Should also include versioning information.
 export const OwnedProcess = Process(
   SerializedSpecies,
   Keyed(
