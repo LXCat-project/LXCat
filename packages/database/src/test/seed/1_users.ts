@@ -4,10 +4,7 @@
 import "dotenv/config";
 import { Database } from "arangojs";
 import { EdgeCollection } from "arangojs/collection";
-import {
-  Organization,
-  UserWithAccountSessionInDb,
-} from "../../src/auth/schema";
+import { Organization, UserWithAccountSessionInDb } from "../../auth/schema";
 
 export default async (db: Database) => {
   const users = db.collection<UserWithAccountSessionInDb>("users");

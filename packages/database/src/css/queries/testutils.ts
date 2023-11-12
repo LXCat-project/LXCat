@@ -12,18 +12,10 @@ import { LXCatDatabase } from "../../lxcat-database";
 import { LXCatTestDatabase } from "../../testutils";
 import { FilterOptions } from "./public";
 
-export async function loadTestSets(db: LXCatDatabase) {
-  const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
-  await testCsCreator(db);
-}
+import testCsCreator from "../../test/seed/2_cs";
 
-export async function createCsCollections(db: Database) {
-  const { default: sharedCollectionsCreator } = await import(
-    "../../../setup/3_shared"
-  );
-  await sharedCollectionsCreator(db);
-  const { default: csCollectionsCreator } = await import("../../../setup/4_cs");
-  await csCollectionsCreator(db);
+export async function loadTestSets(db: LXCatDatabase) {
+  await testCsCreator(db);
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;

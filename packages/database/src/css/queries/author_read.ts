@@ -4,7 +4,6 @@
 
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
 import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedDocument } from "../../schema/document";
 import { VersionInfo } from "../../shared/types/version_info";
@@ -41,66 +40,6 @@ export async function listOwnedSets(this: LXCatDatabase, email: string) {
     `);
   return await cursor.all();
 }
-
-export const byId = async (id: string) => {
-  const cursor: ArrayCursor<unknown> = await db().query(aql`
-            FOR css IN CrossSectionSet
-              FILTER css._key == ${id}
-              LET contributor = FIRST(
-                FOR org IN Organization
-                  FILTER org._id == css.organization
-                  RETURN org.name
-              )
-              FILTER ['published', 'draft', 'retracted'] ANY == css.versionInfo.status
-              LET references = MERGE(
-                FOR cs IN INBOUND css IsPartOf
-                  FOR ref IN OUTBOUND cs References
-                    RETURN {[ref._key]: UNSET(ref, ["_key", "_rev", "_id"])}
-              )
-              LET states = MERGE(
-                FOR cs IN INBOUND css IsPartOf
-                  FOR r IN Reaction
-                    FILTER r._id == cs.reaction
-                    LET consumes = (
-                      FOR state IN OUTBOUND r Consumes
-                        RETURN {[state._key]: state.detailed}
-                    )
-                    LET produces = (
-                      FOR state IN OUTBOUND r Produces
-                        RETURN {[state._key]: state.detailed}
-                    )
-                    RETURN MERGE(UNION(produces, consumes))
-              )
-              LET processes = (
-                FOR cs IN INBOUND css IsPartOf
-                  LET csRefs = (
-                    FOR ref IN OUTBOUND cs References
-                      RETURN ref._key
-                  )
-                  LET reaction = FIRST(
-                    FOR r in Reaction
-                      FILTER r._id == cs.reaction
-                      LET lhs = (
-                        FOR state, e IN OUTBOUND r Consumes
-                          RETURN {state: state._key, count: e.count}
-                      )
-                      LET rhs = (
-                        FOR state, e IN OUTBOUND r Produces
-                          RETURN {state: state._key, count: e.count}
-                      )
-                      RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {lhs, rhs})
-                  )
-                  RETURN {
-                    reaction,
-                    info: MERGE(cs.info, { _key: cs._key, references: csRefs })
-                  }
-              )
-              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), {contributor, references, states, processes})
-        `);
-  return cursor.next().then((doc) =>
-    doc ? KeyedDocument.parse(doc) : undefined
-  );
-};
 
 export async function byOwnerAndId(
   this: LXCatDatabase,

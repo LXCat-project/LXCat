@@ -7,6 +7,6 @@
     "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": ["./src/**/*.ts", "./setup", "./seeds/test"],
+  "include": ["./src/**/*.ts"],
   "extends": "@lxcat/tsconfig/base.json"
 }

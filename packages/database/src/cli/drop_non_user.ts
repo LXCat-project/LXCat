@@ -5,20 +5,9 @@
 import "dotenv/config";
 import { db } from "../db";
 
-export async function truncateNonUserCollections() {
-  const collections = await db().collections(true);
-  for (const c of collections) {
-    console.log(`Truncating ${c.name}`);
-    if (c.name !== "users") {
-      // await c.truncate();
-      await c.drop();
-    }
-  }
-}
-
 (async () => {
   try {
-    await truncateNonUserCollections();
+    await db().truncateNonUserCollections();
   } catch (err) {
     console.error(err);
   }

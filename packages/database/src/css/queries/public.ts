@@ -5,7 +5,6 @@
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
 import { LXCatDatabase } from "../../lxcat-database";
 import { KeyedDocument } from "../../schema/document";
 import {
@@ -250,15 +249,15 @@ export async function tagChoices(
   return cursor.all();
 }
 
-export const getCSIdsInSet = async (setId: string) => {
-  const cursor: ArrayCursor<string> = await db().query(aql`
+export async function getItemIdsInSet(this: LXCatDatabase, setId: string) {
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${setId}
         FOR cs IN INBOUND css IsPartOf
           RETURN cs._key
     `);
   return cursor.all();
-};
+}
 
 // TODO: Merge byId and byIdJSON.
 export async function byIdJSON(this: LXCatDatabase, id: string) {
@@ -346,34 +345,6 @@ export async function byIdJSON(this: LXCatDatabase, id: string) {
     `);
   return KeyedDocument.parseAsync(await cursor.next());
 }
-/**
- * Checks whether set with key is owned by user with email.
- */
-
-export async function isOwner(key: string, email: string) {
-  const cursor: ArrayCursor<boolean> = await db().query(aql`
-    FOR u IN users
-        FILTER u.email == ${email}
-        FOR m IN MemberOf
-            FILTER m._from == u._id
-            FOR o IN Organization
-                FILTER o._id == m._to
-                FOR css IN CrossSectionSet
-                    FILTER css._key == ${key}
-                    FILTER css.organization == o._id
-                    RETURN true
-  `);
-  return cursor.hasNext;
-}
-
-export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
-    FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        RETURN css.versionInfo
-  `);
-  return cursor.next();
-}
 
 export async function byId(this: LXCatDatabase, id: string) {
   const cursor: ArrayCursor<CrossSectionSetItem> = await this.db.query(aql`
@@ -452,9 +423,9 @@ export async function setHistory(this: LXCatDatabase, key: string) {
 /**
  * Find published/retracted css of archived version
  */
-export async function activeSetOfArchivedSet(key: string) {
+export async function activeSetOfArchivedSet(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}

@@ -67,9 +67,12 @@ import {
   updateSet,
   updateVersionStatus as updateSetVersionStatus,
 } from "./css/queries/author_write";
+import { getSetAffiliation } from "./css/queries/get-affiliation";
 import {
+  activeSetOfArchivedSet,
   byId as getSetByIdOld,
   byIdJSON,
+  getItemIdsInSet,
   search as searchSet,
   searchContributors,
   searchFacets,
@@ -92,6 +95,10 @@ import {
 } from "./shared/queries";
 import { upsertOrganization } from "./shared/queries/organization";
 import { findReactionId } from "./shared/queries/reaction";
+import {
+  getReferences,
+  getReferencesForSelection,
+} from "./shared/queries/reference";
 import {
   getSpeciesChildren,
   getTopLevelSpecies,
@@ -139,6 +146,16 @@ export class LXCatDatabase {
     return this.db.name;
   }
 
+  public async truncateNonUserCollections() {
+    const collections = await this.db.collections(true);
+    for (const c of collections) {
+      console.log(`Dropping ${c.name}`);
+      if (c.name !== "users") {
+        await c.drop();
+      }
+    }
+  }
+
   // shared/queries
   protected insertDocument = insertDocument;
   protected upsertDocument = upsertDocument;
@@ -153,6 +170,10 @@ export class LXCatDatabase {
   public insertReactionWithDict = insertReactionWithDict;
 
   public upsertOrganization = upsertOrganization;
+
+  // references
+  public getReferences = getReferences;
+  public getReferencesForSelection = getReferencesForSelection;
 
   // auth/queries
   public listUsers = listUsers;
@@ -227,6 +248,11 @@ export class LXCatDatabase {
   public searchSet = searchSet;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;
+  public getItemIdsInSet = getItemIdsInSet;
+  public activeSetOfArchivedSet = activeSetOfArchivedSet;
+
+  // css/get-affiliation
+  public getSetAffiliation = getSetAffiliation;
 
   // css/picker
   public searchFacets = searchFacets;

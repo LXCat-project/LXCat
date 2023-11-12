@@ -5,25 +5,27 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 import { Bibliography } from "../types/bibliography";
 import { Reference } from "../types/collections";
 
-export const getReferences = async (
+export async function getReferences(
+  this: LXCatDatabase,
   ids: Array<string>,
-): Promise<Array<Reference>> => {
-  const cursor: ArrayCursor<Reference> = await db().query(aql`
+): Promise<Array<Reference>> {
+  const cursor: ArrayCursor<Reference> = await this.db.query(aql`
             FOR ref IN Reference
               FILTER ref._key IN ${ids}
               RETURN UNSET(ref, ["_key", "_id", "_rev"])
         `);
   return cursor.all();
-};
+}
 
-export const getReferencesForSelection = async (
+export async function getReferencesForSelection(
+  this: LXCatDatabase,
   ids: Array<string>,
-): Promise<Bibliography> => {
-  const cursor: ArrayCursor<Bibliography> = await db().query(aql`
+): Promise<Bibliography> {
+  const cursor: ArrayCursor<Bibliography> = await this.db.query(aql`
     LET sets = (
       FOR css IN CrossSectionSet
         FILTER css.versionInfo.status != 'draft'
@@ -54,4 +56,4 @@ export const getReferencesForSelection = async (
     RETURN {processes, sets, references}
     `);
   return cursor.next().then(bib => bib!);
-};
+}

@@ -4,11 +4,12 @@
 
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
 
-export const getSetAffiliation = async (
+export async function getSetAffiliation(
+  this: LXCatDatabase,
   key: string,
-): Promise<string | undefined> => {
+): Promise<string | undefined> {
   const query = aql`
     FOR set IN CrossSectionSet
       FILTER set._key == ${key}
@@ -17,6 +18,6 @@ export const getSetAffiliation = async (
         RETURN org.name
   `;
 
-  const cursor: ArrayCursor<string> = await db().query(query);
+  const cursor: ArrayCursor<string> = await this.db.query(query);
   return cursor.next();
-};
+}
