@@ -84,6 +84,70 @@ export const hasSessionOrAPIToken =
     );
   };
 
+export const hasSession =
+  <Context>(): Middleware<Context, Context> =>
+  async (_: NextRequest, ctx: Context, headers: Headers) => {
+    const session = await getServerSession(options);
+    if (session?.user) {
+      return ok([
+        {
+          ...ctx,
+          user: {
+            email: session.user.email,
+            role: session.user.roles,
+          },
+        },
+        headers,
+      ]);
+    }
+    return err(
+      new NextResponse("Unauthorized", {
+        status: 401,
+        headers: [["WWW-Authenticate", "Bearer, OAuth"]],
+      }),
+    );
+  };
+
+/**
+ * API Middleware to check if user has admin role.
+ * Returns 403 when user does not have admin role.
+ */
+export const hasAdminRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.admin))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(new NextResponse("Forbidden", { status: 403 }));
+    }
+  };
+
+/**
+ * API Middleware to check if user has developer role.
+ * Returns 403 when user does not have developer role.
+ */
+export const hasDeveloperRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.developer))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(new NextResponse("Forbidden", { status: 403 }));
+    }
+  };
+
 /**
  * API Middleware to check if user has developer or download role.
  * Returns 403 when user does not have developer or download role.
@@ -98,6 +162,46 @@ export const hasDeveloperOrDownloadRole =
     if (
       (ctx.user.roles.includes(Role.enum.developer)
         || ctx.user.roles.includes(Role.enum.download))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(new NextResponse("Forbidden", { status: 403 }));
+    }
+  };
+
+/**
+ * API Middleware to check if user has author role.
+ * Returns 403 when user does not have author role.
+ */
+export const hasAuthorRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.author))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(new NextResponse("Forbidden", { status: 403 }));
+    }
+  };
+
+/**
+ * API Middleware to check if user has publisher role.
+ * Returns 403 when user does not have publisher role.
+ */
+export const hasPublisherRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.publisher))
     ) {
       return ok([ctx, headers]);
     } else {
