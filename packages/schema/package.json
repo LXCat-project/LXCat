@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@vitest/coverage-v8": "^0.34.6",
     "dprint": "^0.42.5",
-    "eslint": "8.52.0",
+    "eslint": "8.53.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
