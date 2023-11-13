@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "dprint fmt",
+    "type-check": "tsc --pretty --noEmit",
     "test": "vitest",
     "test:e2e": "playwright test",
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
@@ -74,7 +75,7 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^5.3.7",
     "vfile-matter": "^4.0.1",
-    "zod": "^3.22.4"
+    "zod": "3.21.3"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
@@ -83,6 +84,8 @@
     "@playwright/test": "1.34.3",
     "@types/cookie": "^0.5.3",
     "@types/deep-equal": "^1.0.3",
+    "@types/json-schema": "^7.0.12",
+    "@types/mdast": "^4.0.0",
     "@types/node": "20.9.0",
     "@types/oidc-provider": "^7.14.0",
     "@types/plotly.js-basic-dist": "^1.54.3",

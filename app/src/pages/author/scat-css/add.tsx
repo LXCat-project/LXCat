@@ -6,7 +6,7 @@ import {
   OrganizationFromDB,
   userMemberships,
 } from "@lxcat/database/dist/auth/queries";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
+import { type KeyedDocument } from "@lxcat/database/dist/schema/document";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -24,7 +24,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
 
-  async function onSubmit(newSet: CrossSectionSetInputOwned) {
+  async function onSubmit(newSet: KeyedDocument) {
     const url = `/api/author/scat-css`;
     const body = JSON.stringify(newSet);
     const headers = new Headers({

@@ -8,7 +8,7 @@ import { systemDb } from "../systemDb";
 
 (async () => {
   try {
-    await systemDb().dropDatabase(db().name);
+    await systemDb().dropDatabase(db().name());
   } catch (err) {
     console.error(err);
   }

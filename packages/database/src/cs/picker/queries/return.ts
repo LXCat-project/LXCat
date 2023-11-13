@@ -6,7 +6,7 @@ import { aql, AqlLiteral } from "arangojs/aql";
 import { ReactionFunction } from "../types";
 
 export const returnTypeTags: ReactionFunction = (reaction: AqlLiteral) =>
-  aql`RETURN ${reaction}.type_tags`;
+  aql`RETURN ${reaction}.typeTags`;
 
 export const returnReversible: ReactionFunction = (reaction: AqlLiteral) =>
   aql`RETURN ${reaction}.reversible`;
@@ -59,7 +59,7 @@ export const returnCrossSectionHeading =
           lhs: ${consumed}, 
           rhs: ${produced}, 
           reversible: ${reaction}.reversible, 
-          type_tags: ${reaction}.type_tags
+          typeTags: ${reaction}.typeTags
         },
         reference: []
       }

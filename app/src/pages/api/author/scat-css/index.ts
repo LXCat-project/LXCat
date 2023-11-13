@@ -4,8 +4,8 @@
 
 import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
 import { createSet } from "@lxcat/database/dist/css/queries/author_write";
+import { KeyedDocument } from "@lxcat/database/dist/schema/document";
 import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
-import { validator } from "@lxcat/schema/dist/css/validate";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -23,11 +23,14 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       if (typeof body === "string") {
         body = JSON.parse(body);
       }
-      if (validator.validate(body)) {
+      const parseResult = KeyedDocument.safeParse(body);
+      if (parseResult.success) {
         const affiliations = await getAffiliations(req.user.email);
-        if (affiliations.includes(body.contributor)) {
+
+        const doc = parseResult.data;
+        if (affiliations.includes(doc.contributor)) {
           // Add to CrossSectionSet with status=='draft' and version=='1'
-          const id = await createSet(body, "draft");
+          const id = await createSet(doc, "draft");
           res.json({ id });
         } else {
           res.statusCode = 403;
@@ -41,7 +44,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           });
         }
       } else {
-        const errors = validator.errors;
+        const errors = parseResult.error.errors;
         res.statusCode = 500;
         res.json({ errors });
       }

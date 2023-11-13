@@ -1,0 +1,1848 @@
+{
+  "type": "object",
+  "properties": {
+    "sets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "contributor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "publishedIn": {
+            "type": "string",
+            "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset."
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of this dataset."
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "contributor",
+          "name",
+          "description",
+          "complete"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "references": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/CSLData"
+      }
+    },
+    "states": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/AnySpecies"
+      }
+    },
+    "processes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "reaction": {
+            "type": "object",
+            "properties": {
+              "lhs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "state"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "rhs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "state": {
+                      "$ref": "#/properties/processes/items/properties/reaction/properties/lhs/items/properties/state"
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "state"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "reversible": {
+                "type": "boolean"
+              },
+              "typeTags": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Elastic",
+                    "Effective",
+                    "Electronic",
+                    "Vibrational",
+                    "Rotational",
+                    "Attachment",
+                    "Ionization"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "lhs",
+              "rhs",
+              "reversible",
+              "typeTags"
+            ],
+            "additionalProperties": false
+          },
+          "info": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "CrossSection"
+                },
+                "references": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "LUT"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/labels/items/0"
+                        }
+                      ]
+                    },
+                    "units": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/units/items/0"
+                        }
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/values/items/items/0"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "labels",
+                    "units",
+                    "values"
+                  ],
+                  "additionalProperties": false
+                },
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "massRatio": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "statisticalWeightRatio": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "threshold": {
+                  "type": "number"
+                },
+                "isPartOf": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "type",
+                "references",
+                "data",
+                "threshold",
+                "isPartOf"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "reaction",
+          "info"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sets",
+    "references",
+    "states",
+    "processes"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "CSLData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "article",
+            "article-journal",
+            "article-magazine",
+            "article-newspaper",
+            "bill",
+            "book",
+            "broadcast",
+            "chapter",
+            "classic",
+            "collection",
+            "dataset",
+            "document",
+            "entry",
+            "entry-dictionary",
+            "entry-encyclopedia",
+            "event",
+            "figure",
+            "graphic",
+            "hearing",
+            "interview",
+            "legal_case",
+            "legislation",
+            "manuscript",
+            "map",
+            "motion_picture",
+            "musical_score",
+            "pamphlet",
+            "paper-conference",
+            "patent",
+            "performance",
+            "periodical",
+            "personal_communication",
+            "post",
+            "post-weblog",
+            "regulation",
+            "report",
+            "review",
+            "review-book",
+            "software",
+            "song",
+            "speech",
+            "standard",
+            "thesis",
+            "treaty",
+            "webpage"
+          ]
+        },
+        "id": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "citation-key": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language": {
+          "type": "string"
+        },
+        "journalAbbreviation": {
+          "type": "string"
+        },
+        "shortTitle": {
+          "type": "string"
+        },
+        "author": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "chair": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "collection-editor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "compiler": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "composer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "container-author": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "contributor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "curator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "director": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "editor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "editorial-director": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "executive-producer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "guest": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "host": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "interviewer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "illustrator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "narrator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "organizer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "original-author": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "performer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "producer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "recipient": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "reviewed-author": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "script-writer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "series-creator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "translator": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CSLNameVariable"
+          }
+        },
+        "accessed": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "available-date": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "event-date": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "issued": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "original-date": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "submitted": {
+          "$ref": "#/definitions/CSLDateVariable",
+          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+        },
+        "abstract": {
+          "type": "string"
+        },
+        "annote": {
+          "type": "string"
+        },
+        "archive": {
+          "type": "string"
+        },
+        "archive_collection": {
+          "type": "string"
+        },
+        "archive_location": {
+          "type": "string"
+        },
+        "archive-place": {
+          "type": "string"
+        },
+        "authority": {
+          "type": "string"
+        },
+        "call-number": {
+          "type": "string"
+        },
+        "chapter-number": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "citation-number": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "citation-label": {
+          "type": "string"
+        },
+        "collection-number": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "collection-title": {
+          "type": "string"
+        },
+        "container-title": {
+          "type": "string"
+        },
+        "container-title-short": {
+          "type": "string"
+        },
+        "dimensions": {
+          "type": "string"
+        },
+        "division": {
+          "type": "string"
+        },
+        "DOI": {
+          "type": "string"
+        },
+        "edition": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "event": {
+          "type": "string",
+          "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]"
+        },
+        "event-title": {
+          "type": "string"
+        },
+        "event-place": {
+          "type": "string"
+        },
+        "first-reference-note-number": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "genre": {
+          "type": "string"
+        },
+        "ISBN": {
+          "type": "string"
+        },
+        "ISSN": {
+          "type": "string"
+        },
+        "issue": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "keyword": {
+          "type": "string"
+        },
+        "locator": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "medium": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "number": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "number-of-pages": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "number-of-volumes": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "original-publisher": {
+          "type": "string"
+        },
+        "original-publisher-place": {
+          "type": "string"
+        },
+        "original-title": {
+          "type": "string"
+        },
+        "page": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "page-first": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "part": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "part-title": {
+          "type": "string"
+        },
+        "PMCID": {
+          "type": "string"
+        },
+        "PMID": {
+          "type": "string"
+        },
+        "printing": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "publisher-place": {
+          "type": "string"
+        },
+        "references": {
+          "type": "string"
+        },
+        "reviewed-genre": {
+          "type": "string"
+        },
+        "reviewed-title": {
+          "type": "string"
+        },
+        "scale": {
+          "type": "string"
+        },
+        "section": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "supplement": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "title-short": {
+          "type": "string"
+        },
+        "URL": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "volume": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "volume-title": {
+          "type": "string"
+        },
+        "volume-title-short": {
+          "type": "string"
+        },
+        "year-suffix": {
+          "type": "string"
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": {},
+          "description": "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles."
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Zod schema for CSL input data"
+    },
+    "CSLNameVariable": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "type": "string"
+        },
+        "given": {
+          "type": "string"
+        },
+        "dropping-particle": {
+          "type": "string"
+        },
+        "non-dropping-particle": {
+          "type": "string"
+        },
+        "suffix": {
+          "type": "string"
+        },
+        "comma-suffix": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "static-ordering": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "literal": {
+          "type": "string"
+        },
+        "parse-names": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "ORCID": {
+          "type": "string",
+          "format": "uri"
+        },
+        "authenticated-orcid": {
+          "type": "boolean"
+        },
+        "sequence": {
+          "type": "string",
+          "enum": [
+            "first",
+            "additional"
+          ]
+        },
+        "affiliation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CSLDateVariable": {
+      "type": "object",
+      "properties": {
+        "date-parts": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "season": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "circa": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "literal": {
+          "type": "string"
+        },
+        "raw": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+    },
+    "AnySpecies": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/simple"
+        },
+        {
+          "$ref": "#/definitions/AtomLS"
+        },
+        {
+          "$ref": "#/definitions/AtomLS1"
+        },
+        {
+          "$ref": "#/definitions/AtomJ1L2"
+        },
+        {
+          "$ref": "#/definitions/HomonuclearDiatom"
+        },
+        {
+          "$ref": "#/definitions/HeteronuclearDiatom"
+        },
+        {
+          "$ref": "#/definitions/LinearTriatomInversionCenter"
+        },
+        {
+          "$ref": "#/definitions/unspecified"
+        }
+      ]
+    },
+    "simple": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "simple"
+        },
+        "particle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "charge": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge"
+      ],
+      "additionalProperties": false
+    },
+    "AtomLS": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AtomLS"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "config": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "n": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "l": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "occupance": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "n",
+                      "l",
+                      "occupance"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "term": {
+                  "type": "object",
+                  "properties": {
+                    "L": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "S": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    },
+                    "P": {
+                      "type": "number",
+                      "enum": [
+                        -1,
+                        1
+                      ]
+                    },
+                    "J": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "L",
+                    "S",
+                    "P",
+                    "J"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "config",
+                "term"
+              ],
+              "additionalProperties": false,
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "AtomLS1": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AtomLS1"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "core": {
+                      "type": "object",
+                      "properties": {
+                        "config": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
+                          }
+                        },
+                        "term": {
+                          "type": "object",
+                          "properties": {
+                            "L": {
+                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/L"
+                            },
+                            "S": {
+                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/S"
+                            },
+                            "P": {
+                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/P"
+                            }
+                          },
+                          "required": [
+                            "L",
+                            "S",
+                            "P"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "config",
+                        "term"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "excited": {
+                      "type": "object",
+                      "properties": {
+                        "config": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
+                          }
+                        },
+                        "term": {
+                          "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config/properties/core/properties/term"
+                        }
+                      },
+                      "required": [
+                        "config",
+                        "term"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "core",
+                    "excited"
+                  ],
+                  "additionalProperties": false
+                },
+                "term": {
+                  "type": "object",
+                  "properties": {
+                    "L": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "K": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    },
+                    "S": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    },
+                    "P": {
+                      "type": "number",
+                      "enum": [
+                        -1,
+                        1
+                      ]
+                    },
+                    "J": {
+                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/J"
+                    }
+                  },
+                  "required": [
+                    "L",
+                    "K",
+                    "S",
+                    "P",
+                    "J"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "config",
+                "term"
+              ],
+              "additionalProperties": false,
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "AtomJ1L2": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AtomJ1L2"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "core": {
+                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/1/items"
+                    },
+                    "excited": {
+                      "type": "object",
+                      "properties": {
+                        "config": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
+                          }
+                        },
+                        "term": {
+                          "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config/properties/core/properties/term"
+                        }
+                      },
+                      "required": [
+                        "config",
+                        "term"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "core",
+                    "excited"
+                  ],
+                  "additionalProperties": false
+                },
+                "term": {
+                  "type": "object",
+                  "properties": {
+                    "K": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    },
+                    "S": {
+                      "type": "number",
+                      "multipleOf": 0.5,
+                      "minimum": 0
+                    },
+                    "P": {
+                      "type": "number",
+                      "enum": [
+                        -1,
+                        1
+                      ]
+                    },
+                    "J": {
+                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/J"
+                    }
+                  },
+                  "required": [
+                    "K",
+                    "S",
+                    "P",
+                    "J"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "config",
+                "term"
+              ],
+              "additionalProperties": false,
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "config": {
+                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/config"
+                  },
+                  "term": {
+                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/term"
+                  }
+                },
+                "required": [
+                  "config",
+                  "term"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "HomonuclearDiatom": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "HomonuclearDiatom"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "energyId": {
+                      "type": "string"
+                    },
+                    "Lambda": {
+                      "type": "number",
+                      "multipleOf": 0.5
+                    },
+                    "S": {
+                      "type": "number",
+                      "multipleOf": 0.5
+                    },
+                    "reflection": {
+                      "type": "string",
+                      "enum": [
+                        "-",
+                        "+"
+                      ]
+                    },
+                    "parity": {
+                      "type": "string",
+                      "enum": [
+                        "g",
+                        "u"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "energyId",
+                    "Lambda",
+                    "S",
+                    "parity"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "vibrational": {
+                      "anyOf": [
+                        {
+                          "allOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "v": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "rotational": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "type": "integer"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
+                                      "description": "Singular"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "description": "Unspecified"
+                                          }
+                                        ]
+                                      },
+                                      "minItems": 2,
+                                      "description": "Compound"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "description": "Unspecified"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ],
+                          "description": "Singular"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
+                              },
+                              {
+                                "type": "string",
+                                "description": "Unspecified"
+                              }
+                            ]
+                          },
+                          "minItems": 2,
+                          "description": "Compound"
+                        },
+                        {
+                          "type": "string",
+                          "description": "Unspecified"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "HeteronuclearDiatom": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "HeteronuclearDiatom"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "energyId": {
+                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/energyId"
+                    },
+                    "Lambda": {
+                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/Lambda"
+                    },
+                    "S": {
+                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/S"
+                    },
+                    "reflection": {
+                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/reflection"
+                    }
+                  },
+                  "required": [
+                    "energyId",
+                    "Lambda",
+                    "S"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "vibrational": {
+                      "anyOf": [
+                        {
+                          "allOf": [
+                            {
+                              "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "rotational": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
+                                      "description": "Singular"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "description": "Unspecified"
+                                          }
+                                        ]
+                                      },
+                                      "minItems": 2,
+                                      "description": "Compound"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "description": "Unspecified"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ],
+                          "description": "Singular"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
+                              },
+                              {
+                                "type": "string",
+                                "description": "Unspecified"
+                              }
+                            ]
+                          },
+                          "minItems": 2,
+                          "description": "Compound"
+                        },
+                        {
+                          "type": "string",
+                          "description": "Unspecified"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HeteronuclearDiatom/properties/electronic/anyOf/0/allOf/0"
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "LinearTriatomInversionCenter": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "LinearTriatomInversionCenter"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "vibrational": {
+                      "anyOf": [
+                        {
+                          "allOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "v": {
+                                  "type": "array",
+                                  "minItems": 3,
+                                  "maxItems": 3,
+                                  "items": [
+                                    {
+                                      "type": "integer"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    },
+                                    {
+                                      "type": "integer"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "rotational": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
+                                      "description": "Singular"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "description": "Unspecified"
+                                          }
+                                        ]
+                                      },
+                                      "minItems": 2,
+                                      "description": "Compound"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "description": "Unspecified"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ],
+                          "description": "Singular"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
+                              },
+                              {
+                                "type": "string",
+                                "description": "Unspecified"
+                              }
+                            ]
+                          },
+                          "minItems": 2,
+                          "description": "Compound"
+                        },
+                        {
+                          "type": "string",
+                          "description": "Unspecified"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "unspecified": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "unspecified"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

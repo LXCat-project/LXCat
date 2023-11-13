@@ -4,41 +4,32 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Storage } from "@lxcat/schema/dist/core/enumeration";
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
-import { startDbContainer } from "../../testutils";
-import {
-  byOwnerAndId,
-  CrossSectionSetInputOwned,
-  CrossSectionSetOwned,
-  isOwner,
-  listOwned,
-} from "./author_read";
-import { createSet, publish, updateSet } from "./author_write";
+import { KeyedDocument } from "../../schema/document";
+import { systemDb } from "../../systemDb";
+import { LXCatTestDatabase } from "../../testutils";
+import { CrossSectionSetOwned } from "./author_read";
 import { deepClone } from "./deepClone";
-import { historyOfSet, KeyedVersionInfo } from "./public";
-import { createCsCollections, ISO_8601_UTC, sampleEmail } from "./testutils";
+import { KeyedVersionInfo } from "./public";
+import { ISO_8601_UTC, matchesId, sampleEmail } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
+  let db: LXCatTestDatabase;
+
   beforeAll(async () => {
-    // TODO now 2 containers are started, starting container is slow so try to reuse container
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    await createCsCollections();
-    const testKeys = await loadTestUserAndOrg();
-    await toggleRole(testKeys.testUserKey, "author");
-    return stopContainer;
+    db = await LXCatTestDatabase.createTestInstance(
+      systemDb(),
+      "set-author-write-test",
+    );
+    await db.setupTestUser();
+
+    return async () => systemDb().dropDatabase("set-author-write-test");
   });
 
   describe("given initial set without references, states or processes", () => {
     let keycss1: string;
 
     beforeAll(async () => {
-      keycss1 = await createSet(
+      keycss1 = await db.createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -55,7 +46,7 @@ describe("given filled ArangoDB container", () => {
     });
 
     it("should have author list with a single draft set", async () => {
-      const result = await listOwned("somename@example.com");
+      const result = await db.listOwnedSets("somename@example.com");
       const expected: CrossSectionSetOwned[] = [
         {
           _key: keycss1,
@@ -75,17 +66,17 @@ describe("given filled ArangoDB container", () => {
     });
 
     it("should be owned", async () => {
-      const owns = await isOwner(keycss1, sampleEmail);
+      const owns = await db.isOwnerOfSet(keycss1, sampleEmail);
       expect(owns).toBeTruthy();
     });
 
     describe("given draft is published", () => {
       beforeAll(async () => {
-        await publish(keycss1);
+        await db.publishSet(keycss1);
       });
 
       it("should have author list with a single published set", async () => {
-        const result = await listOwned("somename@example.com");
+        const result = await db.listOwnedSets("somename@example.com");
         const expected: CrossSectionSetOwned[] = [
           {
             _key: keycss1,
@@ -108,17 +99,19 @@ describe("given filled ArangoDB container", () => {
         let keycss2: string;
 
         beforeAll(async () => {
-          const css2 = await byOwnerAndId("somename@example.com", keycss1);
-          expect(css2).toBeDefined;
-          if (css2 !== undefined) {
+          const css2 = await db.getSetByOwnerAndId(
+            "somename@example.com",
+            keycss1,
+          );
+          expect(css2).toBeDefined();
+          if (css2 !== null) {
             css2.description = "Some description 1st edit";
-
-            keycss2 = await updateSet(keycss1, css2, "First edit");
+            keycss2 = await db.updateSet(keycss1, css2, "First edit");
           }
         });
 
         it("should have author list with a single draft set", async () => {
-          const result = await listOwned("somename@example.com");
+          const result = await db.listOwnedSets("somename@example.com");
           // listOwned hides published sets which have drafts
           const expected: CrossSectionSetOwned[] = [
             {
@@ -140,11 +133,11 @@ describe("given filled ArangoDB container", () => {
 
         describe("given edited draft is published", () => {
           beforeAll(async () => {
-            await publish(keycss2);
+            await db.publishSet(keycss2);
           });
 
           it("should have author list with a single published set", async () => {
-            const result = await listOwned("somename@example.com");
+            const result = await db.listOwnedSets("somename@example.com");
             // TODO publish should have made keycss1 archived and listOwned should not have returned keycss1
             const expected: CrossSectionSetOwned[] = [
               {
@@ -165,7 +158,7 @@ describe("given filled ArangoDB container", () => {
           });
 
           it("for archived key should have a history of length 2", async () => {
-            const result = await historyOfSet(keycss1);
+            const result = await db.setHistory(keycss1);
             const expected: KeyedVersionInfo[] = [
               {
                 _key: keycss2,
@@ -188,7 +181,7 @@ describe("given filled ArangoDB container", () => {
           });
 
           it("for published key should have a history of length 2", async () => {
-            const result = await historyOfSet(keycss2);
+            const result = await db.setHistory(keycss2);
             const expected: KeyedVersionInfo[] = [
               {
                 _key: keycss2,
@@ -216,11 +209,11 @@ describe("given filled ArangoDB container", () => {
 
   describe("given published set with 3 refs, 4 simple particle states and 2 processes", () => {
     let keycss1: string;
-    let css1: CrossSectionSetInputOwned;
+    let css1: KeyedDocument;
 
     beforeAll(async () => {
       // NOTE: We do not clear the container so this set needs a different name.
-      keycss1 = await createSet(
+      keycss1 = await db.createSet(
         {
           complete: true,
           contributor: "Some organization",
@@ -247,18 +240,22 @@ describe("given filled ArangoDB container", () => {
             s1: {
               particle: "A",
               charge: 0,
+              type: "simple",
             },
             s2: {
               particle: "B",
               charge: 1,
+              type: "simple",
             },
             s3: {
               particle: "C",
               charge: 2,
+              type: "simple",
             },
             s4: {
               particle: "D",
               charge: 3,
+              type: "simple",
             },
           },
           processes: [
@@ -267,28 +264,38 @@ describe("given filled ArangoDB container", () => {
                 lhs: [{ count: 1, state: "s1" }],
                 rhs: [{ count: 1, state: "s2" }],
                 reversible: false,
-                type_tags: [],
+                typeTags: [],
               },
-              threshold: 42,
-              type: Storage.LUT,
-              labels: ["Energy", "Cross Section"],
-              units: ["eV", "m^2"],
-              data: [[1, 3.14e-20]],
-              reference: ["ref1", "ref2"],
+              info: [{
+                type: "CrossSection",
+                threshold: 42,
+                data: {
+                  type: "LUT",
+                  labels: ["Energy", "Cross Section"],
+                  units: ["eV", "m^2"],
+                  values: [[1, 3.14e-20]],
+                },
+                references: ["ref1", "ref2"],
+              }],
             },
             {
               reaction: {
                 lhs: [{ count: 1, state: "s3" }],
                 rhs: [{ count: 1, state: "s4" }],
                 reversible: false,
-                type_tags: [],
+                typeTags: [],
               },
-              threshold: 42,
-              type: Storage.LUT,
-              labels: ["Energy", "Cross Section"],
-              units: ["eV", "m^2"],
-              data: [[1, 3.14e-20]],
-              reference: ["ref3"],
+              info: [{
+                type: "CrossSection",
+                threshold: 42,
+                data: {
+                  type: "LUT",
+                  labels: ["Energy", "Cross Section"],
+                  units: ["eV", "m^2"],
+                  values: [[1, 3.14e-20]],
+                },
+                references: ["ref3"],
+              }],
             },
           ],
         },
@@ -296,8 +303,8 @@ describe("given filled ArangoDB container", () => {
         "1",
         "Initial version",
       );
-      const css = await byOwnerAndId("somename@example.com", keycss1);
-      if (css !== undefined) {
+      const css = await db.getSetByOwnerAndId("somename@example.com", keycss1);
+      if (css !== null) {
         css1 = css;
       } else {
         throw Error(`Unable to retrieve ccs with id ${keycss1}`);
@@ -306,21 +313,27 @@ describe("given filled ArangoDB container", () => {
 
     describe("when draft is made with only change to charge of state with particle A", () => {
       let keycss2: string;
-      let css2: CrossSectionSetInputOwned;
+      let css2: KeyedDocument;
 
       beforeAll(async () => {
         const cssdraft = deepClone(css1);
         const stateA = Object.values(cssdraft.states).find(
-          (s) => s.particle === "A",
+          (species) => species.particle === "A",
         );
+
         if (stateA !== undefined) {
           stateA.charge = 99;
         } else {
           throw Error("Could not find state with particle A");
         }
-        keycss2 = await updateSet(keycss1, cssdraft, "First edit");
-        const css = await byOwnerAndId("somename@example.com", keycss2);
-        if (css !== undefined) {
+
+        keycss2 = await db.updateSet(keycss1, cssdraft, "First edit");
+        const css = await db.getSetByOwnerAndId(
+          "somename@example.com",
+          keycss2,
+        );
+
+        if (css !== null) {
           css2 = css;
         } else {
           throw Error(`Unable to retrieve ccs with id ${keycss2}`);
@@ -328,25 +341,43 @@ describe("given filled ArangoDB container", () => {
       });
 
       it("draft set should have new id for state with particle A", () => {
-        const expected = deepClone(css1);
         const oldStateEntry = Object.entries(css1.states).find(
-          (s) => s[1].particle === "A",
+          ([, species]) => species.particle === "A",
         );
         const newStateEntry = Object.entries(css2.states).find(
-          (s) => s[1].particle === "A",
+          ([, species]) => species.particle === "A",
         );
-        const reactionEntry = expected.processes[0].reaction.lhs[0];
-        if (
-          oldStateEntry !== undefined
-          && newStateEntry !== undefined
-          && reactionEntry.state === oldStateEntry[0]
-        ) {
-          delete expected.states[oldStateEntry[0]];
-          expected.states[newStateEntry[0]] = newStateEntry[1];
-          reactionEntry.state = newStateEntry[0];
+
+        expect(oldStateEntry![0]).not.toEqual(newStateEntry![0]);
+      });
+
+      it("draft set should have a different id for the cross sections that involve particle A", () => {
+        for (const process of css1.processes) {
+          const other = css2.processes.find(({ info }) =>
+            info[0]._key === process.info[0]._key
+          );
+
+          if (other) {
+            expect(process).toEqual(other);
+          } else {
+            const other = css2.processes.find(({ reaction }) =>
+              css2.states[reaction.lhs[0].state].particle === "A"
+            )!;
+
+            expect(process.info[0]._key).not.toEqual(other.info[0]._key);
+            expect(process.info[0].references.sort()).toEqual(
+              other.info[0].references.sort(),
+            );
+
+            const expected = deepClone(other);
+            expected.info[0]._key = matchesId;
+            expected.info[0].references = expect.any(Array);
+
+            expect(process.info).toEqual(expected.info);
+          }
         }
-        expected.processes[0].id = css2.processes[0].id;
-        expect(css2).toEqual(expected);
+
+        expect.assertions(4);
       });
 
       it("draft set should have other id as published set", () => {
@@ -356,7 +387,7 @@ describe("given filled ArangoDB container", () => {
   });
 
   it("insertion should fail given a duplicate set", async () => {
-    await createSet(
+    await db.createSet(
       {
         complete: true,
         contributor: "Some organization",
@@ -371,7 +402,7 @@ describe("given filled ArangoDB container", () => {
       "Initial version",
     );
     expect(
-      createSet(
+      db.createSet(
         {
           complete: true,
           contributor: "Some organization",

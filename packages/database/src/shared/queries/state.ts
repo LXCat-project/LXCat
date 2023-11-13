@@ -2,6 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// @ts-nocheck
+
+// NOTE: Soon deprecated
+
 import { aql } from "arangojs";
 import { join, literal } from "arangojs/aql";
 import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
@@ -42,10 +46,10 @@ function generateParticleFilter(
   stateVarName: string,
 ) {
   const stateVarAql = literal(stateVarName);
-  const filters = [aql`${stateVarAql}.particle == ${particle}`];
+  const filters = [aql`${stateVarAql}.detailed.particle == ${particle}`];
   Object.entries(selection.charge).forEach(([charge, { electronic }]) => {
     const iCharge = parseInt(charge);
-    filters.push(aql`${stateVarAql}.charge == ${iCharge}`);
+    filters.push(aql`${stateVarAql}.detailed.charge == ${iCharge}`);
     const electronicFilters = generateElectronicFilter(electronic, stateVarAql);
     if (electronicFilters.length > 0) {
       filters.push(join(electronicFilters, " OR "));
@@ -68,7 +72,7 @@ function generateElectronicFilter(
       }
 
       const electronicSubFilters = [
-        aql`${electronicVarAql}.summary == ${electronicSummary}`,
+        aql`${electronicVarAql}.serialized.electronic.summary == ${electronicSummary}`,
       ];
 
       const vibrationalFilters = generateVibratonalFilter(
@@ -82,8 +86,9 @@ function generateElectronicFilter(
       }
 
       return aql`LENGTH(
-          FILTER NOT_NULL(${stateVarAql}.electronic)
-          FOR ${electronicVarAql} IN ${stateVarAql}.electronic
+          FILTER NOT_NULL(${stateVarAql}.detailed.electronic)
+          LET electronic = IS_ARRAY(${stateVarAql}.detailed.electronic) ? ${stateVarAql}.detailed.electronic : [${stateVarAql}.detailed.electronic]
+          FOR ${electronicVarAql} IN electronic
             FILTER ${join(electronicSubFilters, " AND ")}
             RETURN 1
         ) > 0`;
@@ -107,7 +112,7 @@ function generateVibratonalFilter(
       }
 
       const vibrationalSubFilters = [
-        aql`${vibrationalVarAql}.summary == ${vibrationalSummary}`,
+        aql`${vibrationalVarAql}.serialized.electronic.vibrational.summary == ${vibrationalSummary}`,
       ];
 
       const rotationalFilters: GeneratedAqlQuery[] = [];
@@ -120,7 +125,8 @@ function generateVibratonalFilter(
         rotationalFilters.push(aql`
                 LENGTH(
                   FILTER NOT_NULL(${vibrationalVarAql}.rotational)
-                  FOR ${rotationalVarAql} IN ${vibrationalVarAql}.rotational
+                  LET rotational = IS_ARRAY(${vibrationalVarAql}.rotational) ? ${vibrationalVarAql}.rotational : [${vibrationalVarAql}.rotational]
+                  FOR ${rotationalVarAql} IN rotational
                     FILTER ${rotationalVarAql}.summary == ${rotationalSummary}
                     RETURN 1
                 ) > 0
@@ -134,7 +140,8 @@ function generateVibratonalFilter(
 
       return aql`LENGTH(
             FILTER NOT_NULL(${electronicVarAql}.vibrational)
-            FOR ${vibrationalVarAql} IN ${electronicVarAql}.vibrational
+            LET vibrational = IS_ARRAY(${electronicVarAql}.vibrational) ? ${electronicVarAql}.vibrational : [${electronicVarAql}.vibrational]
+            FOR ${vibrationalVarAql} IN vibrational
               FILTER ${join(vibrationalSubFilters, " AND ")}
               RETURN 1
           ) > 0`;
@@ -259,7 +266,7 @@ export async function listStateChoices(): Promise<StateChoices> {
 export async function getIdByLabel(label: string) {
   const query = aql`
     FOR s IN State
-      FILTER s.id == ${label}
+      FILTER s.serialized.summary == ${label}
       LIMIT 1
       RETURN s._id
   `;

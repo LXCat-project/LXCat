@@ -2,20 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { SelfReference } from "@lxcat/schema/dist/core/document";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { Reference } from "@lxcat/schema/dist/core/reference";
+import type { Reference, SelfReference } from "@lxcat/schema";
+import { type Reaction } from "@lxcat/schema/process";
 import { CrossSection } from "../cs/collections";
 import { CrossSectionSet } from "../css/collections";
 import { State } from "../shared/types/collections";
 
 export interface CrossSectionHeading {
   id: string;
-  isPartOf:
-    (Omit<CrossSectionSet, "publishedIn"> & {
-      id: string;
-      publishedIn?: Reference;
-    })[];
+  isPartOf: (Omit<CrossSectionSet, "publishedIn"> & {
+    id: string;
+    publishedIn?: Reference;
+  })[];
   reaction: Reaction<State>;
   reference: Reference[];
   // TODO add CrossSection.threshold? Is it useful when searching for a section?
@@ -30,17 +28,3 @@ export type CrossSectionItem =
   }
   & Omit<CrossSection, "reaction">
   & SelfReference;
-
-type CrossSectionBagItem = {
-  id: string;
-  isPartOf: string[];
-  reaction: Reaction<string>;
-  reference: string[];
-} & Omit<CrossSection, "reaction" | "organization" | "versionInfo">;
-
-export type CrossSectionBag = {
-  states: Record<string, State>;
-  references: Record<string, Reference>;
-  sets: Record<string, Omit<CrossSectionSet, "versionInfo">>;
-  processes: CrossSectionBagItem[];
-} & SelfReference;

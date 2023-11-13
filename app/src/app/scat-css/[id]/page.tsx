@@ -7,15 +7,15 @@
 import Script from "next/script";
 import { z } from "zod";
 
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import { getCSIdsInSet } from "@lxcat/database/dist/css/queries/public";
 
+import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
 import { reference2bibliography } from "../../../shared/cite";
 import { Bag } from "../../scat-cs/inspect/Bag";
 
 interface BagProps {
-  bag: CrossSectionBag;
+  bag: KeyedLTPMixture;
   hasMixedCompleteSets: boolean;
   references: { ref: string; url?: string }[];
 }

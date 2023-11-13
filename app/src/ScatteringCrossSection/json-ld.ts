@@ -17,7 +17,7 @@ export const toJSONLD = (section: CrossSectionItem) => {
     name: `Scattering Cross Section of ${reactionAsText(section.reaction)}`,
     keywords: [
       "cross section",
-      ...section.reaction.type_tags,
+      ...section.reaction.typeTags,
       // TODO add more keywords?
     ].join(", "),
     distribution: [

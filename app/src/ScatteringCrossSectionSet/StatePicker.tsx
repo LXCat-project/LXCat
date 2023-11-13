@@ -44,7 +44,7 @@ export const StatePicker = ({
         <legend>Picks</legend>
         <Checkbox.Group value={picked} onChange={setPicked}>
           {Object.entries(choices).map(([k, v]) => (
-            <Checkbox key={k} value={k} label={v.id} />
+            <Checkbox key={k} value={k} label={v.serialized.summary} />
           ))}
         </Checkbox.Group>
       </fieldset>

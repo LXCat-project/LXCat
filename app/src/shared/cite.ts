@@ -7,10 +7,10 @@
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference } from "@lxcat/schema";
 
 export function reference2bibliography(
-  r: ReferenceRecord,
+  r: Reference,
   template = "apa",
 ): string {
   const cite = new Cite(r, {
@@ -27,7 +27,7 @@ export function reference2bibliography(
   return bib;
 }
 
-export const getReferenceLabel = (r: ReferenceRecord) => {
+export const getReferenceLabel = (r: Reference) => {
   const cite = new Cite(r, {
     forceType: "@csl/object",
   });

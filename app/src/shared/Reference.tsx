@@ -5,7 +5,7 @@
 import { useMemo } from "react";
 
 import "katex/dist/katex.min.css";
-import { Reference as ReferenceRecord } from "@lxcat/schema/dist/core/reference";
+import { Reference as ReferenceRecord } from "@lxcat/schema";
 import Latex from "react-latex-next";
 
 import { reference2bibliography } from "./cite";

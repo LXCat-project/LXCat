@@ -1,36 +1,63 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
+  "allOf": [
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
+      "if": {
+        "properties": {
+          "type": {
+            "const": "simple",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "simple",
+            "type": "string"
+          }
         },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
+        "required": [
+          "charge",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomLS",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
             "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              },
               {
                 "additionalProperties": false,
                 "properties": {
@@ -57,14 +84,8 @@
                     },
                     "type": "array"
                   },
-                  "latex": {
-                    "type": "string"
-                  },
                   "scheme": {
                     "const": "LS",
-                    "type": "string"
-                  },
-                  "summary": {
                     "type": "string"
                   },
                   "term": {
@@ -97,73 +118,126 @@
                   }
                 },
                 "required": [
-                  "config",
-                  "latex",
                   "scheme",
-                  "summary",
+                  "config",
                   "term"
                 ],
                 "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "l": {
+                            "type": "number"
+                          },
+                          "n": {
+                            "type": "number"
+                          },
+                          "occupance": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "n",
+                          "l",
+                          "occupance"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "scheme": {
+                      "const": "LS",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
+                        },
+                        "L": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "enum": [
+                            -1,
+                            1
+                          ],
+                          "type": "number"
+                        },
+                        "S": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "J",
+                        "L",
+                        "P",
+                        "S"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
               }
             ]
           },
-          "minItems": 1,
-          "type": "array"
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomLS",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomLS",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomJ1L2",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
             "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              },
               {
                 "additionalProperties": false,
                 "properties": {
@@ -305,14 +379,8 @@
                     ],
                     "type": "object"
                   },
-                  "latex": {
-                    "type": "string"
-                  },
                   "scheme": {
                     "const": "J1L2",
-                    "type": "string"
-                  },
-                  "summary": {
                     "type": "string"
                   },
                   "term": {
@@ -341,73 +409,237 @@
                   }
                 },
                 "required": [
-                  "config",
-                  "latex",
                   "scheme",
-                  "summary",
+                  "config",
                   "term"
                 ],
                 "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "core": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "J": {
+                                  "type": "number"
+                                },
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "J",
+                                "L",
+                                "P",
+                                "S"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        },
+                        "excited": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ],
+                      "type": "object"
+                    },
+                    "scheme": {
+                      "const": "J1L2",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
+                        },
+                        "K": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "type": "number"
+                        },
+                        "S": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "J",
+                        "K",
+                        "P",
+                        "S"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
               }
             ]
           },
-          "minItems": 1,
-          "type": "array"
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomJ1L2",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomJ1L2",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "AtomLS1",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
             "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              },
               {
                 "additionalProperties": false,
                 "properties": {
@@ -545,14 +777,8 @@
                     ],
                     "type": "object"
                   },
-                  "latex": {
-                    "type": "string"
-                  },
                   "scheme": {
                     "const": "LS1",
-                    "type": "string"
-                  },
-                  "summary": {
                     "type": "string"
                   },
                   "term": {
@@ -589,73 +815,241 @@
                   }
                 },
                 "required": [
-                  "config",
-                  "latex",
                   "scheme",
-                  "summary",
+                  "config",
                   "term"
                 ],
                 "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "core": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        },
+                        "excited": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "config": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "l": {
+                                    "type": "number"
+                                  },
+                                  "n": {
+                                    "type": "number"
+                                  },
+                                  "occupance": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "n",
+                                  "l",
+                                  "occupance"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "scheme": {
+                              "const": "LS",
+                              "type": "string"
+                            },
+                            "term": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "L": {
+                                  "type": "number"
+                                },
+                                "P": {
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ],
+                                  "type": "number"
+                                },
+                                "S": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "scheme",
+                            "config",
+                            "term"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ],
+                      "type": "object"
+                    },
+                    "scheme": {
+                      "const": "LS1",
+                      "type": "string"
+                    },
+                    "term": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "J": {
+                          "type": "number"
+                        },
+                        "K": {
+                          "type": "number"
+                        },
+                        "L": {
+                          "type": "number"
+                        },
+                        "P": {
+                          "enum": [
+                            -1,
+                            1
+                          ],
+                          "type": "number"
+                        },
+                        "S": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "J",
+                        "K",
+                        "L",
+                        "P",
+                        "S"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "scheme",
+                    "config",
+                    "term"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
               }
             ]
           },
-          "minItems": 1,
-          "type": "array"
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "AtomLS1",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "AtomLS1",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "HeteronuclearDiatom",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
             "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              },
               {
                 "additionalProperties": false,
                 "properties": {
@@ -668,7 +1062,188 @@
                   "e": {
                     "type": "string"
                   },
-                  "latex": {
+                  "reflection": {
+                    "enum": [
+                      "-",
+                      "+"
+                    ],
+                    "type": "string"
+                  },
+                  "vibrational": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ]
+                          },
+                          "v": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "Lambda",
+                  "S",
+                  "e"
+                ],
+                "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "e",
+                    "Lambda",
+                    "S"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "HeteronuclearDiatom",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "HomonuclearDiatom",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "Lambda": {
+                    "type": "number"
+                  },
+                  "S": {
+                    "type": "number"
+                  },
+                  "e": {
                     "type": "string"
                   },
                   "parity": {
@@ -685,177 +1260,180 @@
                     ],
                     "type": "string"
                   },
-                  "summary": {
-                    "type": "string"
-                  },
                   "vibrational": {
-                    "description": "Helper type for defining an array with minimum size one.",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "rotational": {
-                              "description": "Helper type for defining an array with minimum size one.",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "string"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
-                                  },
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
-                                  }
-                                ]
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
                               },
-                              "minItems": 1,
-                              "type": "array"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "type": "number"
-                            }
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ]
                           },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        }
-                      ]
-                    },
-                    "minItems": 1,
-                    "type": "array"
+                          "v": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
                   }
                 },
                 "required": [
                   "Lambda",
                   "S",
                   "e",
-                  "latex",
-                  "parity",
-                  "summary"
-                ],
-                "type": "object"
-              }
-            ]
-          },
-          "minItems": 1,
-          "type": "array"
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "HomonuclearDiatom",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
-            "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
+                  "parity"
                 ],
                 "type": "object"
               },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "parity": {
+                      "enum": [
+                        "g",
+                        "u"
+                      ],
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Lambda",
+                    "S",
+                    "e",
+                    "parity"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "HomonuclearDiatom",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "LinearTriatomInversionCenter",
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "anyOf": [
               {
                 "additionalProperties": false,
                 "properties": {
@@ -866,201 +1444,6 @@
                     "type": "number"
                   },
                   "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "reflection": {
-                    "enum": [
-                      "-",
-                      "+"
-                    ],
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  },
-                  "vibrational": {
-                    "description": "Helper type for defining an array with minimum size one.",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "rotational": {
-                              "description": "Helper type for defining an array with minimum size one.",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "string"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
-                                  },
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
-                                  }
-                                ]
-                              },
-                              "minItems": 1,
-                              "type": "array"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        }
-                      ]
-                    },
-                    "minItems": 1,
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "Lambda",
-                  "S",
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              }
-            ]
-          },
-          "minItems": 1,
-          "type": "array"
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "HeteronuclearDiatom",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "description": "Helper type for defining an array with minimum size one.",
-          "items": {
-            "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
-                    "type": "string"
-                  },
-                  "summary": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "e",
-                  "latex",
-                  "summary"
-                ],
-                "type": "object"
-              },
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "Lambda": {
-                    "type": "number"
-                  },
-                  "S": {
-                    "type": "number"
-                  },
-                  "e": {
-                    "type": "string"
-                  },
-                  "latex": {
                     "type": "string"
                   },
                   "parity": {
@@ -1077,175 +1460,231 @@
                     ],
                     "type": "string"
                   },
-                  "summary": {
-                    "type": "string"
-                  },
                   "vibrational": {
-                    "description": "Helper type for defining an array with minimum size one.",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "latex": {
-                              "type": "string"
-                            },
-                            "rotational": {
-                              "description": "Helper type for defining an array with minimum size one.",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "string"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
-                                  },
-                                  {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                      "J": {
-                                        "type": "number"
-                                      },
-                                      "latex": {
-                                        "type": "string"
-                                      },
-                                      "summary": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "J",
-                                      "latex",
-                                      "summary"
-                                    ],
-                                    "type": "object"
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "J": {
+                                    "type": "number"
                                   }
-                                ]
+                                },
+                                "required": [
+                                  "J"
+                                ],
+                                "type": "object"
                               },
-                              "minItems": 1,
-                              "type": "array"
-                            },
-                            "summary": {
-                              "type": "string"
-                            },
-                            "v": {
-                              "items": {
-                                "type": "number"
-                              },
-                              "type": "array"
-                            }
+                              {
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "additionalProperties": false,
+                                      "properties": {
+                                        "J": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ]
                           },
-                          "required": [
-                            "latex",
-                            "summary",
-                            "v"
-                          ],
-                          "type": "object"
-                        }
-                      ]
-                    },
-                    "minItems": 1,
-                    "type": "array"
+                          "v": {
+                            "items": {
+                              "type": "number"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "v"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "v": {
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "type": "array"
+                                }
+                              },
+                              "required": [
+                                "v"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      }
+                    ]
                   }
                 },
                 "required": [
                   "Lambda",
                   "S",
                   "e",
-                  "latex",
-                  "parity",
-                  "summary"
+                  "parity"
                 ],
                 "type": "object"
+              },
+              {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Lambda": {
+                      "type": "number"
+                    },
+                    "S": {
+                      "type": "number"
+                    },
+                    "e": {
+                      "type": "string"
+                    },
+                    "parity": {
+                      "enum": [
+                        "g",
+                        "u"
+                      ],
+                      "type": "string"
+                    },
+                    "reflection": {
+                      "enum": [
+                        "-",
+                        "+"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Lambda",
+                    "S",
+                    "e",
+                    "parity"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
               }
             ]
           },
-          "minItems": 1,
-          "type": "array"
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "LinearTriatomInversionCenter",
+            "type": "string"
+          }
         },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
-        },
-        "type": {
-          "const": "LinearTriatomInversionCenter",
-          "type": "string"
-        }
-      },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle",
-        "type"
-      ],
-      "type": "object"
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     },
     {
-      "additionalProperties": false,
-      "properties": {
-        "charge": {
-          "type": "integer"
-        },
-        "id": {
-          "type": "string"
-        },
-        "latex": {
-          "type": "string"
-        },
-        "particle": {
-          "minLength": 1,
-          "type": "string"
+      "if": {
+        "properties": {
+          "type": {
+            "const": "unspecified",
+            "type": "string"
+          }
         }
       },
-      "required": [
-        "charge",
-        "id",
-        "latex",
-        "particle"
-      ],
-      "type": "object"
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "charge": {
+            "type": "integer"
+          },
+          "electronic": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "latex": {
+            "type": "string"
+          },
+          "particle": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "const": "unspecified",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charge",
+          "electronic",
+          "id",
+          "latex",
+          "particle",
+          "type"
+        ],
+        "type": "object"
+      }
     }
   ],
-  "definitions": {}
+  "definitions": {},
+  "properties": {
+    "type": {
+      "enum": [
+        "simple",
+        "AtomLS",
+        "AtomJ1L2",
+        "AtomLS1",
+        "HeteronuclearDiatom",
+        "HomonuclearDiatom",
+        "LinearTriatomInversionCenter",
+        "unspecified"
+      ]
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "type": "object"
 }

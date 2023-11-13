@@ -11,8 +11,7 @@ import {
 } from "next";
 import { getServerSession, Session } from "next-auth";
 import { decode } from "next-auth/jwt";
-import { RequestHandler } from "next-connect/dist/types/node";
-import { Nextable } from "next-connect/dist/types/types";
+import { NextHandler } from "next-connect";
 import { ParsedUrlQuery } from "querystring";
 import { DOWNLOAD_COOKIE_NAME } from "../shared/download";
 import { options } from "./options";
@@ -30,12 +29,11 @@ export interface AuthRequest extends NextApiRequest {
  * API Middleware to check if request contains an authenticated session, a valid download token in cookie or valid API token.
  * Sets `user` property in `req` or returns 401.
  */
-export const hasSessionOrAPIToken: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasSessionOrAPIToken = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   const session = await getServerSession(req, res, options);
   if (session?.user) {
     req.user = session.user;
@@ -78,12 +76,10 @@ export const hasSessionOrAPIToken: Nextable<
  * API Middleware to check if request contains an authenticated session.
  * Sets `user` property in `req` or returns 401.
  */
-export const hasSession: Nextable<
-  RequestHandler<AuthRequest, NextApiResponse>
-> = async (
-  req,
-  res,
-  next,
+export const hasSession = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
 ) => {
   const session = await getServerSession(req, res, options);
   if (session?.user) {
@@ -98,12 +94,11 @@ export const hasSession: Nextable<
  * API Middleware to check if user has admin role.
  * Returns 403 when user does not have admin role.
  */
-export const hasAdminRole: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasAdminRole = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.admin)) {
       await next();
@@ -119,12 +114,11 @@ export const hasAdminRole: Nextable<
  * API Middleware to check if user has developer role.
  * Returns 403 when user does not have developer role.
  */
-export const hasDeveloperRole: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasDeveloperRole = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   if (req.user) {
     if ("roles" in req.user && req.user.roles!.includes(Role.enum.developer)) {
       await next();
@@ -140,12 +134,11 @@ export const hasDeveloperRole: Nextable<
  * API Middleware to check if user has developer or download role.
  * Returns 403 when user does not have developer or download role.
  */
-export const hasDeveloperOrDownloadRole: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasDeveloperOrDownloadRole = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   if (req.user) {
     if (
       "roles" in req.user
@@ -165,12 +158,11 @@ export const hasDeveloperOrDownloadRole: Nextable<
  * API Middleware to check if user has author role.
  * Returns 403 when user does not have author role.
  */
-export const hasAuthorRole: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasAuthorRole = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   if (req.user) {
     if (
       req.user.roles !== undefined && req.user.roles!.includes(Role.enum.author)
@@ -188,12 +180,11 @@ export const hasAuthorRole: Nextable<
  * API Middleware to check if user has publisher role.
  * Returns 403 when user does not have publisher role.
  */
-export const hasPublisherRole: Nextable<
-  RequestHandler<
-    AuthRequest,
-    NextApiResponse
-  >
-> = async (req, res, next) => {
+export const hasPublisherRole = async (
+  req: AuthRequest,
+  res: NextApiResponse,
+  next: NextHandler,
+) => {
   if (req.user) {
     if (
       req.user.roles !== undefined

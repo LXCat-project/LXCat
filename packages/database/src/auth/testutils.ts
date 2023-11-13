@@ -2,18 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Database } from "arangojs";
+import testUserCreator from "../test/seed/1_users";
+
 export interface TestKeys {
   testUserKey: string;
   testOrgKey: string;
 }
 
-export async function loadTestUserAndOrg(): Promise<TestKeys> {
-  const { default: testUserCreator } = await import("../../seeds/test/1_users");
-  return await testUserCreator();
-}
-export async function createAuthCollections() {
-  const { default: userCollectionCreator } = await import(
-    "../../setup/2_users"
-  );
-  await userCollectionCreator();
+export async function loadTestUserAndOrg(db: Database): Promise<TestKeys> {
+  return await testUserCreator(db);
 }

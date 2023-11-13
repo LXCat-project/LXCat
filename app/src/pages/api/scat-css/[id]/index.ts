@@ -12,6 +12,7 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import "@citation-js/plugin-bibtex";
+import { KeyedDocumentReferenceable } from "@lxcat/database/dist/schema/document";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 
@@ -29,22 +30,24 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
         return;
       }
 
-      data.$schema =
-        `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`;
-      data.url = `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`;
-      data.terms_of_use =
-        `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#terms_of_use`;
+      const dataWithRef: KeyedDocumentReferenceable = {
+        $schema:
+          `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`,
+        url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}`,
+        termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-css/${id}#termsOfUse`,
+        ...data,
+      };
 
       if (refstyle === "csl") {
       } else if (refstyle === "bibtex") {
-        (data as any).references = Object.fromEntries(
+        (dataWithRef as any).references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const cite = new Cite(value);
             return [key, cite.format("bibtex")];
           }),
         );
       } else if (refstyle === "apa") {
-        (data as any).references = Object.fromEntries(
+        (dataWithRef as any).references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const bib = reference2bibliography(value);
             return [key, bib];
@@ -55,7 +58,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           `Incorrect reference style found: ${refstyle}. Expected csl or apa or bibtex.`,
         );
       }
-      res.json(data);
+      res.json(dataWithRef);
     }
   })
   .handler();

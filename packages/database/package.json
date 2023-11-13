@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "description": "Database abstraction layer for LXCat web application.",
   "license": "AGPL-3.0-or-later",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -15,8 +18,10 @@
     "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
     "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
     "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",
+    "drop-non-user": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_non_user.ts",
     "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
     "load-css": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/load_css.ts",
+    "collection-schemas": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/collection-schemas.ts",
     "format": "dprint fmt",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
@@ -32,14 +37,14 @@
     "collectionschema:CrossSection": "ts-json-schema-generator -f ./tsconfig.json --path src/cs/collections.ts --type CrossSection --out src/cs/schemas/CrossSection.schema.json -e none --no-top-ref",
     "collectionschema:CrossSectionSet": "ts-json-schema-generator -f ./tsconfig.json --path src/css/collections.ts --type CrossSectionSet --out src/css/schemas/CrossSectionSet.schema.json -e none --no-top-ref",
     "collectionschema": "pnpm collectionschema:shared && pnpm collectionschema:cs",
-    "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src setup"
+    "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src"
   },
   "dependencies": {
     "@lxcat/schema": "workspace:^",
     "arangojs": "^8.6.0",
     "deep-equal": "^2.2.3",
     "dotenv": "^16.3.1",
-    "zod": "^3.22.4",
+    "zod": "3.21.3",
     "zod-to-json-schema": "^3.21.4"
   },
   "devDependencies": {

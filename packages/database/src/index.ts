@@ -4,3 +4,4 @@
 
 export { load_css_dir } from "./css/loaders";
 export { db } from "./db";
+export { LXCatDatabase } from "./lxcat-database";

@@ -2,22 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
 import { MultiSelect } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
 import { Latex } from "../../../shared/Latex";
-import { Process } from "./PlotPage";
+import { DenormalizedProcess } from "../denormalized-process";
 
 export type ProcessTableProps = {
-  processes: Array<Process>;
+  processes: Array<DenormalizedProcess>;
   referenceMarkers: Map<string, number>;
   colorMap: Map<string, string>;
-  selected: Array<Process>;
-  onChangeSelected: (selected: Array<Process>) => void;
+  selected: Array<DenormalizedProcess>;
+  onChangeSelected: (selected: Array<DenormalizedProcess>) => void;
 };
 
 export const ProcessTable = (
@@ -28,7 +26,7 @@ export const ProcessTable = (
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
 
   const availableTags = useMemo(
-    () => [...new Set(records.flatMap(({ reaction }) => reaction.type_tags))],
+    () => [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
     [records],
   );
 
@@ -36,7 +34,7 @@ export const ProcessTable = (
     setRecords(processes.filter((process) => {
       if (
         selectedTags.length
-        && !process.reaction.type_tags.some((tag) => selectedTags.includes(tag))
+        && !process.reaction.typeTags.some((tag) => selectedTags.includes(tag))
       ) return false;
 
       return true;
@@ -48,6 +46,7 @@ export const ProcessTable = (
       withBorder
       withColumnBorders
       borderRadius="md"
+      idAccessor="info._key"
       sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 400 } }}
       records={records}
       columns={[{
@@ -56,7 +55,7 @@ export const ProcessTable = (
       }, {
         accessor: "type",
         title: "Type",
-        render: ({ reaction }) => reaction.type_tags.join(", "),
+        render: ({ reaction }) => reaction.typeTags.join(", "),
         filter: (
           <MultiSelect
             label="Type tags"
@@ -73,27 +72,27 @@ export const ProcessTable = (
       }, {
         accessor: "database",
         title: "Database",
-        render: ({ isPartOf }) => isPartOf[0].organization,
+        render: ({ info: { isPartOf } }) => isPartOf[0].contributor,
       }, {
         accessor: "set",
         title: "Set",
-        render: ({ isPartOf }) => isPartOf[0].name,
+        render: ({ info: { isPartOf } }) => isPartOf[0].name,
       }, {
         accessor: "reference",
         title: "Source",
-        render: ({ reference }) =>
+        render: ({ info: { references } }) =>
           `[${
-            reference.map((rid) => referenceMarkers.get(rid)!).sort().join(
+            references.map((rid) => referenceMarkers.get(rid)!).sort().join(
               ", ",
             )
           }]`,
       }]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
-      getRecordSelectionCheckboxProps={({ id }) => ({
+      getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
         sx: {
           ".mantine-Checkbox-input:checked": {
-            backgroundColor: colorMap.get(id),
+            backgroundColor: colorMap.get(_key),
           },
         },
       })}

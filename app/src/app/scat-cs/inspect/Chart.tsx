@@ -4,12 +4,12 @@
 
 "use client";
 
-import { LUT } from "@lxcat/schema/dist/core/data_types";
 import Plotly from "plotly.js-basic-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
+import { DenormalizedProcess } from "../denormalized-process";
 
 interface ChartProps {
-  processes: Array<{ id: string } & LUT>;
+  processes: Array<DenormalizedProcess>;
   colors: Array<string>;
 }
 
@@ -19,8 +19,8 @@ export const Chart = ({ processes, colors }: ChartProps) => {
   return (
     <Plot
       data={processes.map((process, index) => ({
-        x: process.data.map(([x, _]) => x),
-        y: process.data.map(([_, y]) => y),
+        x: process.info.data.values.map(([x, _]) => x),
+        y: process.info.data.values.map(([_, y]) => y),
         mode: "lines+markers",
         line: { shape: "linear", width: 3 },
         marker: { color: colors[index % colors.length], size: 8 },

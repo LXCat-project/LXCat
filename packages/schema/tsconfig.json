@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
+    "target": "ES6",
+    "lib": ["ESNext", "dom"],
+    "module": "NodeNext",
     "resolveJsonModule": true,
     "rootDir": "./src",
     "outDir": "./dist"

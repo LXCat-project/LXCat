@@ -4,8 +4,6 @@
 
 import { readdir, readFile } from "fs/promises";
 import { fromMarkdown } from "mdast-util-from-markdown";
-import { Heading } from "mdast-util-from-markdown/lib";
-import { SerializeOptions } from "next-mdx-remote/dist/types";
 import { join, relative, sep } from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
@@ -18,6 +16,7 @@ import remarkToc from "remark-toc";
 
 import { VFile } from "vfile";
 
+import { Heading } from "mdast";
 import { serialize } from "./serialize";
 import { rehypeMermaid } from "./transformer";
 
@@ -53,26 +52,28 @@ export async function md2mdx(slug: string[]) {
     path: fn,
     cwd: dirname,
   });
-  const options: SerializeOptions = {
-    mdxOptions: {
-      remarkPlugins: [
-        remarkToc,
-        // TODO make image links resolve relative to md file instead of app/
-        // As workaround use ../docs/bla.png as img src.
-        remarkEmbedImages,
-        remarkMath,
-        remarkGfm,
-      ],
-      rehypePlugins: [
-        rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: "wrap" }],
-        [rehypeHighlight, { ignoreMissing: true }],
-        rehypeMermaid,
-        rehypeKatex,
-      ],
+  return await serialize(
+    vfile,
+    {
+      mdxOptions: {
+        remarkPlugins: [
+          remarkToc,
+          // TODO make image links resolve relative to md file instead of app/
+          // As workaround use ../docs/bla.png as img src.
+          remarkEmbedImages,
+          remarkMath,
+          remarkGfm,
+        ],
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          [rehypeHighlight, { ignoreMissing: true }],
+          rehypeMermaid,
+          rehypeKatex,
+        ],
+      },
     },
-  };
-  return await serialize(vfile, options);
+  );
 }
 
 interface FlatDocFile {

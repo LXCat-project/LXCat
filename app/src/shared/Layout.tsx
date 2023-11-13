@@ -31,7 +31,7 @@ export const Layout = ({ children, title = "" }: Props) => {
       <main style={{ padding: 10 }}>{children}</main>
       <footer>
         <div style={{ padding: 10 }}>
-          Copyright © 2009-2022,{" "}
+          Copyright © 2009-2023,{" "}
           <Link href="/team">the LXCat team</Link>. All Rights Reserved.
         </div>
       </footer>

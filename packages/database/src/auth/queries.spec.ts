@@ -4,35 +4,23 @@
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { startDbContainer } from "../testutils";
-import {
-  addOrganization,
-  dropOrganization,
-  getUserByKey,
-  listOrganizations,
-  listUsers,
-  makeMemberless,
-  setMembers,
-  toggleRole,
-  userMemberships,
-} from "./queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-  TestKeys,
-} from "./testutils";
+import { systemDb } from "../systemDb";
+import { LXCatTestDatabase } from "../testutils";
+import { loadTestUserAndOrg, TestKeys } from "./testutils";
 
 describe("given filled ArangoDB container", () => {
+  let db: LXCatTestDatabase;
   let testKeys: TestKeys;
+
   beforeAll(async () => {
-    const stopContainer = await startDbContainer();
-    await createAuthCollections();
-    testKeys = await loadTestUserAndOrg();
-    return stopContainer;
+    db = await LXCatTestDatabase.createTestInstance(systemDb(), "auth-test");
+    testKeys = await loadTestUserAndOrg(db.getDB());
+
+    return async () => systemDb().dropDatabase("auth-test");
   });
 
   it("should have a single user", async () => {
-    const result = await listUsers();
+    const result = await db.listUsers();
     const expected = {
       _key: testKeys.testUserKey,
       email: "somename@example.com",
@@ -44,7 +32,7 @@ describe("given filled ArangoDB container", () => {
   });
 
   it("should have a single org", async () => {
-    const result = await listOrganizations();
+    const result = await db.listOrganizations();
     const expected = {
       _key: testKeys.testOrgKey,
       name: "Some organization",
@@ -53,7 +41,7 @@ describe("given filled ArangoDB container", () => {
   });
 
   it("should list organization in users memberships", async () => {
-    const result = await userMemberships("somename@example.com");
+    const result = await db.getAffiliations("somename@example.com");
     const expected = {
       _key: testKeys.testOrgKey,
       name: "Some organization",
@@ -65,15 +53,15 @@ describe("given filled ArangoDB container", () => {
     describe("given no roles", () => {
       describe("toggle role=admin", () => {
         beforeAll(async () => {
-          await toggleRole(testKeys.testUserKey, "admin");
+          await db.toggleRole(testKeys.testUserKey, "admin");
         });
 
         afterAll(async () => {
-          await toggleRole(testKeys.testUserKey, "admin");
+          await db.toggleRole(testKeys.testUserKey, "admin");
         });
 
         it("should have admin role", async () => {
-          const user = await getUserByKey(testKeys.testUserKey);
+          const user = await db.getUserByKey(testKeys.testUserKey);
           expect(new Set(user && user.roles)).toEqual(new Set(["admin"]));
         });
       });
@@ -83,15 +71,15 @@ describe("given filled ArangoDB container", () => {
   describe("given member of some organization", () => {
     describe("makeMemberless()", () => {
       beforeAll(async () => {
-        await makeMemberless(testKeys.testUserKey);
+        await db.stripAffiliations(testKeys.testUserKey);
       });
 
       afterAll(async () => {
-        await setMembers(testKeys.testUserKey, [testKeys.testOrgKey]);
+        await db.setAffiliations(testKeys.testUserKey, [testKeys.testOrgKey]);
       });
 
       it("should have no org", async () => {
-        const users = await listUsers();
+        const users = await db.listUsers();
         const expected = {
           _key: testKeys.testUserKey,
           email: "somename@example.com",
@@ -107,17 +95,17 @@ describe("given filled ArangoDB container", () => {
   describe("addOrganization()", () => {
     let orgKey: string | undefined = "";
     beforeAll(async () => {
-      orgKey = await addOrganization({ name: "some new org" });
+      orgKey = await db.addOrganization({ name: "some new org" });
     });
 
     afterAll(async () => {
       if (orgKey) {
-        await dropOrganization(orgKey);
+        await db.dropOrganization(orgKey);
       }
     });
 
     it("after add should have new org in list", async () => {
-      const orgs = await listOrganizations();
+      const orgs = await db.listOrganizations();
       expect(orgs).toContainEqual({ name: "some new org", _key: orgKey });
     });
   });

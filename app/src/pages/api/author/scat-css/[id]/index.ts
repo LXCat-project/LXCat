@@ -9,7 +9,7 @@ import {
   updateSet,
 } from "@lxcat/database/dist/css/queries/author_write";
 import { getVersionInfo } from "@lxcat/database/dist/css/queries/public";
-import { validator } from "@lxcat/schema/dist/css/validate";
+import { KeyedDocument } from "@lxcat/database/dist/schema/document";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z } from "zod";
@@ -33,10 +33,13 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     const { id } = req.query;
     if (typeof id === "string") {
       const body = req.body;
-      if (validator.validate(body.doc)) {
+
+      const parseResults = KeyedDocument.safeParse(body.doc);
+
+      if (parseResults.success) {
         if (await isOwner(id, user.email)) {
           try {
-            const newId = await updateSet(id, body.doc, body.message);
+            const newId = await updateSet(id, parseResults.data, body.message);
             const data = { id: newId };
             res.json(data);
           } catch (error) {
@@ -59,7 +62,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           res.status(403).end("Forbidden");
         }
       } else {
-        const errors = validator.errors;
+        const errors = parseResults.error.errors;
         res.statusCode = 500;
         res.json({ errors });
         return;

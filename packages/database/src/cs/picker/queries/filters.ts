@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+// import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql, AqlLiteral } from "arangojs/aql";
 import { ReactionFunction, Reversible } from "../types";
 
@@ -11,7 +12,7 @@ export const getTypeTagFilterAQL =
   (reaction: AqlLiteral) =>
     typeTags.length === 0
       ? aql``
-      : aql`FILTER ${reaction}.type_tags ANY IN ${typeTags}`;
+      : aql`FILTER ${reaction}.typeTags ANY IN ${typeTags}`;
 
 export const getReversibleFilterAQL =
   (reversible: Reversible): ReactionFunction => (reaction: AqlLiteral) =>

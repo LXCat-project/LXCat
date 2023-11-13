@@ -43,7 +43,7 @@ export const CSTable = ({ items }: Props) => {
       { isPartOf, ...item },
     ) => ({
       ...item,
-      typeTags: item.reaction.type_tags,
+      typeTags: item.reaction.typeTags,
       reaction: <ReactionSummary {...item.reaction} />,
     })),
   }));

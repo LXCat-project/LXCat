@@ -4,10 +4,6 @@
 
 "use client";
 
-import { CrossSectionSet } from "@lxcat/database/dist/css/collections";
-import { State } from "@lxcat/database/dist/shared/types/collections";
-import { LUT } from "@lxcat/schema/dist/core/data_types";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
 import {
   Alert,
   Button,
@@ -28,6 +24,7 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./ButtonClipboard";
 import { ButtonMultiDownload } from "./ButtonMultiDownload";
 import { colorScheme } from "./colors";
@@ -48,18 +45,11 @@ const Chart = dynamic(
   },
 );
 
-export interface Process extends LUT {
-  id: string;
-  reaction: Reaction<State>;
-  isPartOf: Array<Omit<CrossSectionSet, "versionInfo">>;
-  reference: Array<string>;
-}
-
 const NUM_LINES_INIT = 5;
 
 export const PlotPage = (
   { processes, refs, setMismatch, permaLink }: {
-    processes: Array<Process>;
+    processes: Array<DenormalizedProcess>;
     refs: Array<FormattedReference>;
     setMismatch: boolean;
     permaLink: string;
@@ -67,24 +57,23 @@ export const PlotPage = (
 ) => {
   const router = useRouter();
 
-  const [selected, setSelected] = useState<Array<Process>>(
+  const [selected, setSelected] = useState<Array<DenormalizedProcess>>(
     processes.slice(0, NUM_LINES_INIT),
   );
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
-  // TODO: Map a selected process to an available color instead of a fixed color.
   let colorMap = new Map(
     processes.map((
-      { id },
+      { info: { _key: id } },
       index,
     ) => [id, colorScheme[index % colorScheme.length]]),
   );
 
   let referenceMarkers = new Map(refs.map(({ id }, index) => [id, index + 1]));
 
-  let idsString = processes.map(({ id }) => id).join(",");
-  let idsPath = processes.map(({ id }) => id).join("/");
+  let idsString = processes.map(({ info: { _key: id } }) => id).join(",");
+  let idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
 
   return (
     <>
@@ -112,7 +101,9 @@ export const PlotPage = (
           <Stack>
             <Chart
               processes={selected}
-              colors={selected.map(({ id }) => colorMap.get(id)!)}
+              colors={selected.map(({ info: { _key: id } }) =>
+                colorMap.get(id)!
+              )}
             />
             <Center>
               <Button.Group>

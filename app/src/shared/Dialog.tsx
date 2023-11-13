@@ -14,11 +14,13 @@ interface Props {
 export const Dialog = ({ isOpened, onSubmit, children, className }: Props) => {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
+    const current = ref.current;
+
     if (isOpened) {
-      ref.current?.showModal();
-      return () => ref.current?.close();
+      current?.showModal();
+      return () => current?.close();
     } else {
-      ref.current?.close();
+      current?.close();
     }
   }, [isOpened]);
   return (

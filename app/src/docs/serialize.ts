@@ -2,16 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {
-  MDXRemoteSerializeResult,
-  SerializeOptions,
-} from "next-mdx-remote/dist/types";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { Plugin } from "unified";
 import { remove } from "unist-util-remove";
 
 import { compile, CompileOptions } from "@mdx-js/mdx";
 import { VFile } from "vfile";
 import { matter } from "vfile-matter";
+
+// From "next-mdx-remote/dist/serialize".
+export type SerializeOptions = {
+  scope?: Record<string, unknown>;
+  mdxOptions?: Omit<CompileOptions, "outputFormat" | "providerImportSource">;
+  parseFrontmatter?: boolean;
+};
 
 /*
  * The next-mdx-remote serialize() uses process.cwd() as cwd, while to have links to images you need mdfile.dirname as cwd.

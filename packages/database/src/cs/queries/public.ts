@@ -5,71 +5,64 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
+import { KeyedLTPMixture } from "../../schema/mixture";
+import { OwnedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
 import { KeyedVersionInfo } from "../../shared/types/version_info";
 import { ReactionTemplate } from "../picker/types";
-import {
-  CrossSectionBag,
-  CrossSectionHeading,
-  CrossSectionItem,
-} from "../public";
+import { CrossSectionHeading } from "../public";
 
-export async function byId(id: string) {
-  const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
+export async function byId(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
   FOR cs IN CrossSection
     FILTER cs._key == ${id}
     FILTER cs.versionInfo.status != 'draft'
-    LET refs = (
+    LET references = (
       FOR rs IN References
         FILTER rs._from == cs._id
         FOR r IN Reference
           FILTER r._id == rs._to
           RETURN UNSET(r, ["_key", "_rev", "_id"])
-      )
-      LET sets = (
+    )
+    LET sets = (
       FOR p IN IsPartOf
         FILTER p._from == cs._id
         FOR s IN CrossSectionSet
           FILTER s._id == p._to
           FILTER ['published' ,'retracted'] ANY == s.versionInfo.status
-          RETURN MERGE(UNSET(s, ["_key", "_rev", "_id", "organization"]), {id: s._key, organization: DOCUMENT(s.organization).name})
-      )
-      LET reaction = (
-        FOR r in Reaction
-          FILTER r._id == cs.reaction
-          LET consumes = (
-            FOR c IN Consumes
-            FILTER c._from == r._id
-              FOR c2s IN State
-              FILTER c2s._id == c._to
-              RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-          )
-          LET produces = (
-            FOR p IN Produces
-            FILTER p._from == r._id
-              FOR p2s IN State
-              FILTER p2s._id == p._to
-              RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-          )
-          RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-      )
-      RETURN MERGE(
-        UNSET(cs, ["_key", "_rev", "_id", "organization"]),
-        { "id": cs._key, "reaction": FIRST(reaction), "reference": refs, "isPartOf": sets}
-      )
+          RETURN MERGE(UNSET(s, ["_rev", "_id", "versionInfo", "organization"]), {contributor: DOCUMENT(s.organization).name})
+    )
+    LET reaction = FIRST(
+      FOR r in Reaction
+        FILTER r._id == cs.reaction
+        LET consumes = (
+          FOR c, e IN OUTBOUND r Consumes
+            RETURN {state: UNSET(c, ["_key", "_rev", "_id"]), count: e.count}
+        )
+        LET produces = (
+          FOR p IN Produces
+          FILTER p._from == r._id
+            FOR p2s IN State
+            FILTER p2s._id == p._to
+            RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+        )
+        RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
+    )
+    RETURN { reaction, info: [MERGE({ _key: cs._key, references, isPartOf: sets }, cs.info)] }
   `);
-  return await cursor.next();
+  return OwnedProcess.parseAsync(await cursor.next());
 }
 
-export async function byIds(ids: string[]) {
-  const cursor: ArrayCursor<CrossSectionBag> = await db().query(aql`
+export async function byIds(this: LXCatDatabase, ids: string[]) {
+  const cursor: ArrayCursor<KeyedLTPMixture> = await this.db.query(aql`
     LET sets = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status != 'draft'
-          RETURN {[css._key]:  MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {organization: DOCUMENT(css.organization).name})}
+          RETURN {[css._key]:  MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {contributor: DOCUMENT(css.organization).name})}
     )
     LET references = MERGE(
       FOR cs IN CrossSection
@@ -132,7 +125,7 @@ export async function byIds(ids: string[]) {
             FILTER cs._id == p._from
             RETURN PARSE_IDENTIFIER(p._to).key
         )
-        RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),{ id: cs._key, reaction, reference: refs2, isPartOf: sets2})
+        RETURN { reaction, info: [MERGE({ _key: cs._key, references: refs2, isPartOf: sets2 }, cs.info)] }
     )
     RETURN {
       states,
@@ -143,6 +136,7 @@ export async function byIds(ids: string[]) {
   `);
 
   const result = await cursor.next();
+
   if (result === undefined) {
     return {
       states: {},
@@ -151,13 +145,15 @@ export async function byIds(ids: string[]) {
       sets: {},
     };
   }
+
   return result;
 }
 
-export const getCSHeadings = async (
+export async function getCSHeadings(
+  this: LXCatDatabase,
   csIds: Array<string>,
   paging: PagingOptions,
-) => {
+) {
   const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
 
   const q = aql`
@@ -203,12 +199,13 @@ export const getCSHeadings = async (
 	    ${limitAql}
 	    RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
-};
+}
 
 // TODO: Can this function be removed?
 export async function search(
+  this: LXCatDatabase,
   _templates: Array<ReactionTemplate>,
   paging: PagingOptions,
 ) {
@@ -248,16 +245,16 @@ export async function search(
 	  ${limitAql}
 	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
 }
 
 /**
  * Finds all previous versions of set with key
  */
-export async function historyOfSection(key: string) {
+export async function csHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSection/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h IN 0..9999999
       ANY ${id}
       CrossSectionHistory

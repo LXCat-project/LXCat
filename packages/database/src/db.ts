@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Database } from "arangojs";
+import { LXCatDatabase } from "./lxcat-database";
 
-let _db: Database | undefined = undefined;
+let _db: LXCatDatabase | undefined = undefined;
 
 export function db() {
   if (_db === undefined) {
@@ -24,16 +24,4 @@ export const setDb = (
   password: string | undefined,
   username = "root",
   databaseName = "lxcat",
-) => {
-  _db = new Database({
-    url,
-    databaseName,
-    auth: {
-      username,
-      password,
-    },
-    // Better error with https://github.com/arangodb/arangojs#error-stack-traces-contain-no-useful-information
-    precaptureStackTraces: process.env.NODE_ENV !== "production",
-  });
-  return _db;
-};
+) => LXCatDatabase.init(url, databaseName, username, password);

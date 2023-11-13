@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
+import { KeyedDocument } from "../../schema/document";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -30,6 +30,7 @@ export interface SortOptions {
 }
 
 export async function search(
+  this: LXCatDatabase,
   filter: FilterOptions,
   sort: SortOptions,
   paging: PagingOptions,
@@ -45,13 +46,14 @@ export async function search(
       FILTER ${filter.contributor} ANY == contributor
     `;
   }
-  const hasFilterOnConsumedStates = Object.keys(filter.state).length > 0;
+  const hasFilterOnConsumedStates =
+    Object.keys(filter.state.particle).length > 0;
   const hasFilterOnTag = filter.tag.length > 0;
   const hasFilterOnRection = hasFilterOnConsumedStates || hasFilterOnTag;
   let reactionAql = aql``;
   if (hasFilterOnRection) {
     const typeTagAql = hasFilterOnTag
-      ? aql`FILTER ${filter.tag} ANY IN r.type_tags`
+      ? aql`FILTER ${filter.tag} ANY IN r.typeTags`
       : aql``;
     let stateAql = aql`RETURN 1`;
     if (hasFilterOnConsumedStates) {
@@ -99,11 +101,12 @@ export async function search(
           RETURN {'id': css._key, name: css.name}
       `;
 
-  const cursor: ArrayCursor<CrossSectionSetHeading> = await db().query(q);
+  const cursor: ArrayCursor<CrossSectionSetHeading> = await this.db.query(q);
   return await cursor.all();
 }
 
 export async function searchFacets(
+  this: LXCatDatabase,
   selection: FilterOptions,
 ): Promise<FilterOptions> {
   /* eslint-disable @typescript-eslint/no-unused-vars -- use destructure and unused var to omit key */
@@ -112,13 +115,14 @@ export async function searchFacets(
   const { tag: _t, ...nonTagSelection } = selection;
   /* eslint-enable @typescript-eslint/no-unused-vars */
   return {
-    contributor: await searchContributors(nonContributorSelection),
-    state: await stateChoices(nonStateSelection),
-    tag: await tagChoices(nonTagSelection),
+    contributor: await this.searchContributors(nonContributorSelection),
+    state: await this.stateChoices(nonStateSelection),
+    tag: await this.tagChoices(nonTagSelection),
   };
 }
 
-async function searchContributors(
+export async function searchContributors(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "contributor">,
 ) {
   const hasTagSelection = selection.tag.length > 0;
@@ -126,7 +130,7 @@ async function searchContributors(
   let csFilter = aql``;
   if (hasTagSelection || hasStateSelection) {
     const tagFilter = hasTagSelection
-      ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
+      ? aql`FILTER ${selection.tag} ANY IN r.typeTags`
       : aql``;
     const stateFilter = generateStateChoiceFilter(selection.state);
     csFilter = aql`
@@ -154,7 +158,7 @@ async function searchContributors(
         SORT on
         RETURN on
   `;
-  const cursor: ArrayCursor<string> = await db().query(q);
+  const cursor: ArrayCursor<string> = await this.db.query(q);
   return await cursor.all();
 }
 
@@ -175,12 +179,13 @@ function generateStateChoiceFilter(state: StateChoices) {
 }
 
 export async function stateChoices(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "state">,
 ): Promise<StateChoices> {
   const hasTagSelection = selection.tag.length > 0;
   const stateAql = generateStateChoicesAql();
   const tagFilter = hasTagSelection
-    ? aql`FILTER ${selection.tag} ANY IN r.type_tags`
+    ? aql`FILTER ${selection.tag} ANY IN r.typeTags`
     : aql``;
   const hasContributorSelection = selection.contributor.length > 0;
   const contributorFilter = hasContributorSelection
@@ -189,7 +194,7 @@ export async function stateChoices(
     FILTER org != null AND ${selection.contributor} ANY == org.name
   `
     : aql``;
-  const cursor: ArrayCursor<ChoiceRow> = await db().query(aql`
+  const cursor: ArrayCursor<ChoiceRow> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css.versionInfo.status == 'published'
         ${contributorFilter}
@@ -212,7 +217,8 @@ export async function stateChoices(
   return groupStateChoices(rows);
 }
 
-async function tagChoices(
+export async function tagChoices(
+  this: LXCatDatabase,
   selection: Omit<FilterOptions, "tag">,
 ): Promise<ReactionTypeTag[]> {
   const hasContributorSelection = selection.contributor.length > 0;
@@ -234,28 +240,28 @@ async function tagChoices(
           FOR r in Reaction
             FILTER r._id == cs.reaction
             ${stateFilter}
-            FOR t IN r.type_tags
+            FOR t IN r.typeTags
               COLLECT tt = t
               SORT tt
               RETURN tt
   `;
-  const cursor: ArrayCursor<ReactionTypeTag> = await db().query(q);
+  const cursor: ArrayCursor<ReactionTypeTag> = await this.db.query(q);
   return cursor.all();
 }
 
-export const getCSIdsInSet = async (setId: string) => {
-  const cursor: ArrayCursor<string> = await db().query(aql`
+export async function getItemIdsInSet(this: LXCatDatabase, setId: string) {
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${setId}
         FOR cs IN INBOUND css IsPartOf
           RETURN cs._key
     `);
   return cursor.all();
-};
+}
 
 // TODO: Merge byId and byIdJSON.
-export async function byIdJSON(id: string) {
-  const cursor: ArrayCursor<CrossSectionSetRaw> = await db().query(aql`
+export async function byIdJSON(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
         FILTER css.versionInfo.status != 'draft'
@@ -282,14 +288,14 @@ export async function byIdJSON(id: string) {
                                 FILTER c._from == r._id
                                     FOR c2s IN State
                                     FILTER c2s._id == c._to
-                                    RETURN {[c2s.id]: UNSET(c2s, ["_key", "_rev", "_id", "id"])}
+                                    RETURN { [c2s._key]: c2s.detailed }
                             )
                             LET produces = (
                                 FOR p IN Produces
                                 FILTER p._from == r._id
                                     FOR p2s IN State
                                     FILTER p2s._id == p._to
-                                    RETURN {[p2s.id]: UNSET(p2s, ["_key", "_rev", "_id", "id"])}
+                                    RETURN { [p2s._key]: p2s.detailed }
                             )
                             RETURN MERGE(UNION(consumes, produces))
 
@@ -314,62 +320,34 @@ export async function byIdJSON(id: string) {
                                 FILTER c._from == r._id
                                     FOR c2s IN State
                                     FILTER c2s._id == c._to
-                                    RETURN {state: c2s.id, count: c.count}
+                                    RETURN {state: c2s._key, count: c.count}
                             )
                             LET produces2 = (
                                 FOR p IN Produces
                                 FILTER p._from == r._id
                                     FOR p2s IN State
                                     FILTER p2s._id == p._to
-                                    RETURN {state: p2s.id, count: p.count}
+                                    RETURN {state: p2s._key, count: p.count}
                             )
                             RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                     )
-                    RETURN MERGE(
-                        UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]),
-                        { id: cs._key, reaction, reference: refs2}
-                    )
+                    RETURN {
+                      reaction,
+                      info: [MERGE({ _key: cs._key, references: refs2 }, cs.info)]
+                    }
         )
         LET contributor = FIRST(
             FOR o IN Organization
                 FILTER o._id == css.organization
                 RETURN o.name
         )
-        RETURN MERGE(UNSET(css, ["_key", "_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
+        RETURN MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
     `);
-  return cursor.next();
-}
-/**
- * Checks whether set with key is owned by user with email.
- */
-
-export async function isOwner(key: string, email: string) {
-  const cursor: ArrayCursor<boolean> = await db().query(aql`
-    FOR u IN users
-        FILTER u.email == ${email}
-        FOR m IN MemberOf
-            FILTER m._from == u._id
-            FOR o IN Organization
-                FILTER o._id == m._to
-                FOR css IN CrossSectionSet
-                    FILTER css._key == ${key}
-                    FILTER css.organization == o._id
-                    RETURN true
-  `);
-  return cursor.hasNext;
+  return KeyedDocument.parseAsync(await cursor.next());
 }
 
-export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
-    FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        RETURN css.versionInfo
-  `);
-  return cursor.next();
-}
-
-export async function byId(id: string) {
-  const cursor: ArrayCursor<CrossSectionSetItem> = await db().query(aql`
+export async function byId(this: LXCatDatabase, id: string) {
+  const cursor: ArrayCursor<CrossSectionSetItem> = await this.db.query(aql`
       FOR css IN CrossSectionSet
           FILTER css._key == ${id}
           FILTER ['published' ,'retracted', 'archived'] ANY == css.versionInfo.status
@@ -428,9 +406,9 @@ export interface KeyedVersionInfo extends VersionInfo {
 /**
  * Finds all previous versions of set with key
  */
-export async function historyOfSet(key: string) {
+export async function setHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}
@@ -445,9 +423,9 @@ export async function historyOfSet(key: string) {
 /**
  * Find published/retracted css of archived version
  */
-export async function activeSetOfArchivedSet(key: string) {
+export async function activeSetOfArchivedSet(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await db().query(aql`
+  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}

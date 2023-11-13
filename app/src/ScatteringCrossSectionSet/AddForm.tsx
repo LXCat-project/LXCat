@@ -3,19 +3,22 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
-import { CrossSectionSetInputOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { CrossSectionSetRaw } from "@lxcat/schema/dist/css/input";
+import { LTPDocument } from "@lxcat/schema";
 import { useMemo } from "react";
 import { EditForm } from "./EditForm";
 
 interface Props {
-  onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
+  // onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
+  onSubmit: (newSet: any, newMessage: string) => void;
   organizations: OrganizationFromDB[];
 }
 
 export const AddForm = ({ onSubmit, organizations }: Props) => {
-  const newSet: CrossSectionSetRaw = useMemo(() => {
+  const newSet: LTPDocument = useMemo(() => {
     return {
+      $schema: "",
+      url: "",
+      termsOfUse: "",
       name: "",
       description: "",
       complete: false,

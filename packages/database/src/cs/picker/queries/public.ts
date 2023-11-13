@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
+import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { literal } from "arangojs/aql";
 import { AqlLiteral } from "arangojs/aql";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../../db";
+import { LXCatDatabase } from "../../../lxcat-database";
 import { getStateLeaf, StateLeaf } from "../../../shared/getStateLeaf";
 import {
   CSSetTree,
@@ -33,6 +33,7 @@ import {
 import { returnCSId, returnReversible, returnTypeTags } from "./return";
 
 export async function getPartakingStateSelection(
+  this: LXCatDatabase,
   process: StateProcess,
   consumed: Array<StateLeaf>,
   produced: Array<StateLeaf>,
@@ -64,28 +65,30 @@ export async function getPartakingStateSelection(
       )
     }`
     : getFullStateTreeAQL(process, typeTags);
-  const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
+  const cursor: ArrayCursor<NestedStateArray> = await this.db.query(query);
   return await cursor.all();
 }
 
 export async function getStateSelection(
+  this: LXCatDatabase,
   process: StateProcess,
   reactions: Array<string> | AqlLiteral,
   ignoredStates: Array<string> | AqlLiteral,
 ) {
   const query = getStateSelectionAQL(process, reactions, ignoredStates);
-  const cursor: ArrayCursor<NestedStateArray> = await db().query(query);
+  const cursor: ArrayCursor<NestedStateArray> = await this.db.query(query);
   return await cursor.all();
 }
 
 export async function getCSIdByReactionTemplate(
+  this: LXCatDatabase,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<string> = await db().query(
+  const cursor: ArrayCursor<string> = await this.db.query(
     getReactionsAQL(consumes, produces, returnCSId(setIds), [
       getReversibleFilterAQL(reversible),
       getTypeTagFilterAQL(typeTags),
@@ -96,12 +99,13 @@ export async function getCSIdByReactionTemplate(
 }
 
 export async function getAvailableTypeTags(
+  this: LXCatDatabase,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<Array<ReactionTypeTag>> = await db().query(
+  const cursor: ArrayCursor<Array<ReactionTypeTag>> = await this.db.query(
     consumes.length === 0
       && produces.length === 0
       && setIds.length === 0
@@ -109,8 +113,8 @@ export async function getAvailableTypeTags(
       ? aql`
       RETURN UNIQUE(FLATTEN(
         FOR reaction in Reaction
-	  ${getCSSetFilterAQL(setIds)(literal("reaction"))}
-          RETURN reaction.type_tags
+	        ${getCSSetFilterAQL(setIds)(literal("reaction"))}
+          RETURN reaction.typeTags
       ))
     `
       : aql`
@@ -129,12 +133,13 @@ export async function getAvailableTypeTags(
 }
 
 export async function getReversible(
+  this: LXCatDatabase,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<Array<boolean>> = await db().query(
+  const cursor: ArrayCursor<Array<boolean>> = await this.db.query(
     aql`
     RETURN UNIQUE(FLATTEN(
       ${
@@ -159,6 +164,7 @@ export async function getReversible(
 }
 
 export async function getCSSets(
+  this: LXCatDatabase,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
@@ -169,7 +175,7 @@ export async function getCSSets(
     setName: string;
     orgId: string;
     orgName: string;
-  }> = await db().query(
+  }> = await this.db.query(
     consumes.length === 0
       && produces.length === 0
       && typeTags.length === 0
@@ -203,6 +209,7 @@ export async function getCSSets(
 }
 
 export async function getSearchOptions(
+  this: LXCatDatabase,
   templates: Array<ReactionTemplate>,
 ): Promise<SearchOptions> {
   if (templates === undefined) {
@@ -233,8 +240,8 @@ export async function getSearchOptions(
         ] = await Promise.all([
           Promise.all(
             consumesPaths.map(async (_, consumesIndex) => {
-              const array: NestedStateArray[] =
-                await getPartakingStateSelection(
+              const array: NestedStateArray[] = await this
+                .getPartakingStateSelection(
                   StateProcess.Consumed,
                   consumesPaths
                     .filter(
@@ -253,8 +260,8 @@ export async function getSearchOptions(
           ),
           Promise.all(
             producesPaths.map(async (_, producesIndex) => {
-              const array: NestedStateArray[] =
-                await getPartakingStateSelection(
+              const array: NestedStateArray[] = await this
+                .getPartakingStateSelection(
                   StateProcess.Produced,
                   consumes,
                   producesPaths
@@ -271,11 +278,11 @@ export async function getSearchOptions(
               return stateArrayToTree(array) ?? {};
             }),
           ),
-          getAvailableTypeTags(consumes, produces, reversible, set).then(
+          this.getAvailableTypeTags(consumes, produces, reversible, set).then(
             (typeTags) => typeTags ?? [],
           ),
-          getReversible(consumes, produces, typeTags, set),
-          getCSSets(consumes, produces, typeTags, reversible),
+          this.getReversible(consumes, produces, typeTags, set),
+          this.getAvailableSets(consumes, produces, typeTags, reversible),
         ]);
 
         return {

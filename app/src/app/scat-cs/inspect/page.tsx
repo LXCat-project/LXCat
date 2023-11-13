@@ -4,16 +4,16 @@
 
 // import { GetServerSideProps, NextPage } from "next";
 
-import { CrossSectionBag } from "@lxcat/database/dist/cs/public";
 import { byIds } from "@lxcat/database/dist/cs/queries/public";
 import Script from "next/script";
 
+import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
 import { reference2bibliography } from "../../../shared/cite";
 import { IdsSchema } from "../IdsSchema";
 import { Bag } from "./Bag";
 
 interface BagProps {
-  bag: CrossSectionBag;
+  bag: KeyedLTPMixture;
   hasMixedCompleteSets: boolean;
   references: { ref: string; url?: string }[];
 }

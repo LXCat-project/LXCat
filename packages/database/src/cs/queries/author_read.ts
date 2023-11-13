@@ -2,19 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSection } from "@lxcat/schema/dist/cs/cs";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
+import { LXCatDatabase } from "../../lxcat-database";
+import { KeyedProcess, OwnedProcess } from "../../schema/process";
 import { PagingOptions } from "../../shared/types/search";
 import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionItem } from "../public";
 
 // import { defaultSearchTemplate } from "../picker/default";
 // import { ReactionTemplate } from "../picker/types";
 
-export async function getVersionInfo(key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await db().query(aql`
+export async function getVersionInfo(this: LXCatDatabase, key: string) {
+  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
       FOR cs IN CrossSection
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
@@ -23,74 +22,65 @@ export async function getVersionInfo(key: string) {
 }
 
 export async function searchOwned(
+  this: LXCatDatabase,
   email: string,
   // _options: Array<ReactionTemplate> = defaultSearchTemplate(),
   paging: PagingOptions = { offset: 0, count: 100 },
 ) {
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-  const cursor: ArrayCursor<CrossSectionItem> = await db().query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
 		FOR u IN users
 			FILTER u.email == ${email}
-			FOR m IN MemberOf
-				FILTER m._from == u._id
-				FOR o IN Organization
-					FILTER m._to == o._id
-					FOR cs IN CrossSection
-						FILTER cs.organization == o._id
-						FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-            LET with_draft = FIRST(
-                FILTER cs.versionInfo.status == 'published'
-                RETURN COUNT(
-                    FOR cs_draft IN INBOUND cs CrossSectionHistory
-                        LIMIT 1
-                        return 1
-                )
+      FOR o IN OUTBOUND u MemberOf
+				FOR cs IN CrossSection
+					FILTER cs.organization == o._id
+					FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+          LET with_draft = FIRST(
+            FILTER cs.versionInfo.status == 'published'
+            RETURN COUNT(
+              FOR cs_draft IN INBOUND cs CrossSectionHistory
+                LIMIT 1
+                return 1
             )
-            FILTER with_draft != 1
-						LET sets = (
-							FOR i IN IsPartOf
-							FILTER i._from == cs._id
-							FOR css IN CrossSectionSet
-								FILTER i._to == css._id
-								RETURN { name: css.name, id: css._key, versionInfo: { version: css.versionInfo.version}}
-						)
-            ${reactionsAql}
-						LET reaction = FIRST(
-							FOR r in Reaction
-								FILTER r._id == cs.reaction
-								LET consumes = (
-									FOR c IN Consumes
-									FILTER c._from == r._id
-										FOR c2s IN State
-										FILTER c2s._id == c._to
-										RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-								)
-								LET produces = (
-									FOR p IN Produces
-									FILTER p._from == r._id
-										FOR p2s IN State
-										FILTER p2s._id == p._to
-										RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-								)
-								RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-						)
-            LET reference = (
-              FOR rs IN References
-                  FILTER rs._from == cs._id
-                  FOR r IN Reference
-                      FILTER r._id == rs._to
-                      RETURN UNSET(r, ["_key", "_rev", "_id"])
-              )
-            SORT cs.versionInfo.createdOn DESC
-            ${limit_aql}
-            RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id"]), {"id": cs._key, organization: o.name, "isPartOf": sets, reaction, reference})
+          )
+          FILTER with_draft != 1
+					LET sets = (
+						FOR css IN OUTBOUND cs IsPartOf
+              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), { contributor: DOCUMENT(css.organization).name })
+					)
+          ${reactionsAql}
+					LET reaction = FIRST(
+						FOR r in Reaction
+							FILTER r._id == cs.reaction
+							LET consumes = (
+                FOR species, c IN OUTBOUND r Consumes
+									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: c.count}
+							)
+							LET produces = (
+                FOR species, p IN OUTBOUND r Produces
+									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: p.count}
+							)
+							RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), { lhs: consumes, rhs: produces })
+					)
+          LET references = (
+            FOR r IN OUTBOUND cs References
+              RETURN UNSET(r, ["_key", "_rev", "_id"])
+          )
+          SORT cs.versionInfo.createdOn DESC
+          ${limit_aql}
+          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references, isPartOf: sets })] }
 	`);
-  return await cursor.all();
+  return (await cursor.all()).map((cs) => OwnedProcess.parse(cs));
 }
 
-export async function byOwnerAndId(email: string, id: string) {
-  const cursor: ArrayCursor<CrossSection<string, string>> = await db()
+export async function byOwnerAndId(
+  this: LXCatDatabase,
+  email: string,
+  id: string,
+) {
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+    .db
     .query(aql`
     FOR u IN users
     FILTER u.email == ${email}
@@ -102,7 +92,7 @@ export async function byOwnerAndId(email: string, id: string) {
                 FILTER cs.organization == o.name
                 FILTER cs._key == ${id}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                LET reference = (
+                LET references = (
                   FOR rs IN References
                       FILTER rs._from == cs._id
                       FOR r IN Reference
@@ -128,13 +118,19 @@ export async function byOwnerAndId(email: string, id: string) {
                       )
                       RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
                 )
-                RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
+                // RETURN MERGE(UNSET(cs, ["_rev", "_id", "versionInfo", "organization"]), { reaction, references })
+                RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
       `);
   return await cursor.next();
 }
 
-export async function byOrgAndId(org: string, key: string) {
-  const cursor: ArrayCursor<CrossSection<string, string>> = await db()
+export async function byOrgAndId(
+  this: LXCatDatabase,
+  org: string,
+  key: string,
+) {
+  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+    .db
     .query(aql`
         FOR o IN Organization
             FILTER o.name == ${org}
@@ -142,7 +138,7 @@ export async function byOrgAndId(org: string, key: string) {
                 FILTER cs.organization == o._id
                 FILTER cs._key == ${key}
                 FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                LET reference = (
+                LET references = (
                   FOR rs IN References
                       FILTER rs._from == cs._id
                       FOR r IN Reference
@@ -151,24 +147,24 @@ export async function byOrgAndId(org: string, key: string) {
                   )
                 LET reaction = FIRST(
                   FOR r in Reaction
-                      FILTER r._id == cs.reaction
-                      LET consumes2 = (
-                          FOR c IN Consumes
-                          FILTER c._from == r._id
-                              FOR c2s IN State
-                              FILTER c2s._id == c._to
-                              RETURN {state: c2s._key, count: c.count}
-                      )
-                      LET produces2 = (
-                          FOR p IN Produces
-                          FILTER p._from == r._id
-                              FOR p2s IN State
-                              FILTER p2s._id == p._to
-                              RETURN {state: p2s._key, count: p.count}
-                      )
-                      RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
-              )
-                RETURN MERGE(UNSET(cs, ["_key", "_rev", "_id", "versionInfo", "organization"]), { reaction, reference })
+                    FILTER r._id == cs.reaction
+                    LET consumes2 = (
+                        FOR c IN Consumes
+                        FILTER c._from == r._id
+                            FOR c2s IN State
+                            FILTER c2s._id == c._to
+                            RETURN {state: c2s._key, count: c.count}
+                    )
+                    LET produces2 = (
+                        FOR p IN Produces
+                        FILTER p._from == r._id
+                            FOR p2s IN State
+                            FILTER p2s._id == p._to
+                            RETURN {state: p2s._key, count: p.count}
+                    )
+                    RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
+                )
+                RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
       `);
   return await cursor.next();
 }

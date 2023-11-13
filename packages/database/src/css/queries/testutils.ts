@@ -2,39 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyAtom } from "@lxcat/schema/dist/core/atoms";
-import { CouplingScheme } from "@lxcat/schema/dist/core/atoms/coupling_scheme";
-
-import { ReactionTypeTag, Storage } from "@lxcat/schema/dist/core/enumeration";
-import { AnyMolecule } from "@lxcat/schema/dist/core/molecules";
-import { Reaction } from "@lxcat/schema/dist/core/reaction";
-import { State } from "@lxcat/schema/dist/core/state";
-import { Dict, XOR } from "@lxcat/schema/dist/core/util";
+import { LTPDocument } from "@lxcat/schema";
+import type { Reaction } from "@lxcat/schema/process";
+import { AnySpecies } from "@lxcat/schema/species";
+import { Database } from "arangojs";
 import { expect } from "vitest";
-
-import { toggleRole } from "../../auth/queries";
-import {
-  createAuthCollections,
-  loadTestUserAndOrg,
-} from "../../auth/testutils";
-import { createSet, deleteSet } from "../../css/queries/author_write";
-import { db } from "../../db";
-import { startDbContainer } from "../../testutils";
-import { CrossSectionSetInputOwned } from "./author_read";
+import { z } from "zod";
+import { LXCatDatabase } from "../../lxcat-database";
+import { LXCatTestDatabase } from "../../testutils";
 import { FilterOptions } from "./public";
 
-export async function loadTestSets() {
-  const { default: testCsCreator } = await import("../../../seeds/test/2_cs");
-  await testCsCreator();
-}
+import testCsCreator from "../../test/seed/2_cs";
 
-export async function createCsCollections() {
-  const { default: sharedCollectionsCreator } = await import(
-    "../../../setup/3_shared"
-  );
-  await sharedCollectionsCreator();
-  const { default: csCollectionsCreator } = await import("../../../setup/4_cs");
-  await csCollectionsCreator();
+export async function loadTestSets(db: LXCatDatabase) {
+  await testCsCreator(db);
 }
 
 export const ISO_8601_UTC = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/i;
@@ -42,17 +23,7 @@ export const matches8601 = expect.stringMatching(ISO_8601_UTC);
 
 export const matchesId = expect.stringMatching(/\d+/);
 
-export async function startDbWithUserAndCssCollections() {
-  const stopContainer = await startDbContainer();
-  await createAuthCollections();
-  await createCsCollections();
-  const testKeys = await loadTestUserAndOrg();
-  await toggleRole(testKeys.testUserKey, "author");
-
-  return stopContainer;
-}
-
-export async function truncateCrossSectionSetCollections() {
+export async function truncateCrossSectionSetCollections(db: Database) {
   const collections2Truncate = [
     "Consumes",
     "CrossSectionSet",
@@ -68,12 +39,15 @@ export async function truncateCrossSectionSetCollections() {
     "HasDirectSubstate",
   ];
   await Promise.all(
-    collections2Truncate.map((c) => db().collection(c).truncate()),
+    collections2Truncate.map((c) => db.collection(c).truncate()),
   );
 }
 
-export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
+export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
   return {
+    $schema: "",
+    url: "",
+    termsOfUse: "",
     complete: false,
     contributor: "Some organization",
     name: "Some name",
@@ -81,14 +55,17 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
     references: {},
     states: {
       a: {
+        type: "simple",
         particle: "A",
         charge: 0,
       },
       b: {
+        type: "simple",
         particle: "B",
         charge: 1,
       },
       c: {
+        type: "simple",
         particle: "C",
         charge: 2,
       },
@@ -99,28 +76,38 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
           lhs: [{ count: 1, state: "a" }],
           rhs: [{ count: 2, state: "b" }],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         },
-        threshold: 42,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[1, 3.14e-20]],
-        reference: [],
+        info: [{
+          type: "CrossSection",
+          threshold: 42,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[1, 3.14e-20]],
+          },
+          references: [],
+        }],
       },
       {
         reaction: {
           lhs: [{ count: 1, state: "a" }],
           rhs: [{ count: 3, state: "c" }],
           reversible: false,
-          type_tags: [],
+          typeTags: [],
         },
-        threshold: 13,
-        type: Storage.LUT,
-        labels: ["Energy", "Cross Section"],
-        units: ["eV", "m^2"],
-        data: [[2, 5.12e-10]],
-        reference: [],
+        info: [{
+          type: "CrossSection",
+          threshold: 13,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[2, 5.12e-10]],
+          },
+          references: [],
+        }],
       },
     ],
   };
@@ -128,25 +115,30 @@ export function sampleCrossSectionSet(): CrossSectionSetInputOwned {
 
 export const sampleEmail = "somename@example.com";
 
-export const sampleSets4Search = async () => {
-  const states = {
+export const sampleSets4Search = async (db: LXCatTestDatabase) => {
+  const states: Record<string, AnySpecies> = {
     e: {
+      type: "simple",
       particle: "e",
       charge: -1,
     },
     H2: {
+      type: "simple",
       particle: "H2",
       charge: 0,
     },
     N2: {
+      type: "simple",
       particle: "N2",
       charge: 0,
     },
     Arp: {
+      type: "simple",
       particle: "Ar",
       charge: 1,
     },
     Ar: {
+      type: "simple",
       particle: "Ar",
       charge: 0,
     },
@@ -154,22 +146,19 @@ export const sampleSets4Search = async () => {
       particle: "He",
       charge: 0,
       type: "AtomLS",
-      electronic: [
-        {
-          config: [],
-          scheme: CouplingScheme.LS,
-          term: { L: 0, S: 0, J: 0, P: 1 },
-        },
-      ],
+      electronic: {
+        config: [],
+        term: { L: 0, S: 0, J: 0, P: 1 },
+      },
     },
     "He{*}": {
       particle: "He",
       charge: 0,
-      type: "AtomLS",
-      electronic: [{ e: "*" }],
+      type: "unspecified",
+      electronic: "*",
     },
   };
-  await createSet(
+  await db.createSet(
     setFrom(
       "H2 set",
       { e: states.e, H2: states.H2 },
@@ -183,14 +172,14 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "H2" },
           ],
-          type_tags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
       "Some organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "N2 set",
       { e: states.e, N2: states.N2 },
@@ -204,14 +193,14 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "N2" },
           ],
-          type_tags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
       "Some other organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "Ar set",
       { e: states.e, Ar: states.Ar, Arp: states.Arp },
@@ -225,14 +214,14 @@ export const sampleSets4Search = async () => {
             { count: 2, state: "e" },
             { count: 1, state: "Arp" },
           ],
-          type_tags: [ReactionTypeTag.Ionization],
+          typeTags: ["Ionization"],
           reversible: false,
         },
       ],
       "Some organization",
     ),
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "He set",
       { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },
@@ -246,7 +235,7 @@ export const sampleSets4Search = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "He{*}" },
           ],
-          type_tags: [ReactionTypeTag.Electronic],
+          typeTags: ["Electronic"],
           reversible: false,
         },
       ],
@@ -262,25 +251,30 @@ export const sampleSets4Search = async () => {
  * 1. retracted = Ar
  * 1. archived = CO2
  */
-export const sampleSets4SearchWithVersions = async () => {
-  const states: Dict<State<XOR<AnyAtom, AnyMolecule>>> = {
+export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
+  const states: Record<string, AnySpecies> = {
     e: {
+      type: "simple",
       particle: "e",
       charge: -1,
     },
     H2: {
+      type: "simple",
       particle: "H2",
       charge: 0,
     },
     N2: {
+      type: "simple",
       particle: "N2",
       charge: 0,
     },
     Arp: {
+      type: "simple",
       particle: "Ar",
       charge: 1,
     },
     Ar: {
+      type: "simple",
       particle: "Ar",
       charge: 0,
     },
@@ -288,22 +282,19 @@ export const sampleSets4SearchWithVersions = async () => {
       particle: "He",
       charge: 0,
       type: "AtomLS",
-      electronic: [
-        {
-          config: [],
-          scheme: CouplingScheme.LS,
-          term: { L: 0, S: 0, J: 0, P: 1 },
-        },
-      ],
+      electronic: {
+        config: [],
+        term: { L: 0, S: 0, J: 0, P: 1 },
+      },
     },
     "He{*}": {
       particle: "He",
       charge: 0,
-      type: "AtomLS",
-      electronic: [{ e: "*" }],
+      type: "unspecified",
+      electronic: "*",
     },
   };
-  await createSet(
+  await db.createSet(
     setFrom(
       "H2 set",
       { e: states.e, H2: states.H2 },
@@ -317,7 +308,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "H2" },
           ],
-          type_tags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -325,7 +316,7 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "published",
   );
-  await createSet(
+  await db.createSet(
     setFrom(
       "N2 set",
       { e: states.e, N2: states.N2 },
@@ -333,13 +324,13 @@ export const sampleSets4SearchWithVersions = async () => {
         {
           lhs: [
             { count: 1, state: "e" },
-            { count: 1, state: "H2" },
+            { count: 1, state: "N2" },
           ],
           rhs: [
             { count: 1, state: "e" },
-            { count: 1, state: "H2" },
+            { count: 1, state: "N2" },
           ],
-          type_tags: [ReactionTypeTag.Effective],
+          typeTags: ["Effective"],
           reversible: false,
         },
       ],
@@ -347,7 +338,7 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "draft",
   );
-  const id2retract = await createSet(
+  const id2retract = await db.createSet(
     setFrom(
       "Ar set",
       { e: states.e, Ar: states.Ar, Arp: states.Arp },
@@ -361,7 +352,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 2, state: "e" },
             { count: 1, state: "Arp" },
           ],
-          type_tags: [ReactionTypeTag.Ionization],
+          typeTags: ["Ionization"],
           reversible: false,
         },
       ],
@@ -369,8 +360,8 @@ export const sampleSets4SearchWithVersions = async () => {
     ),
     "published",
   );
-  await deleteSet(id2retract, "Oops");
-  await createSet(
+  await db.deleteSet(id2retract, "Oops");
+  await db.createSet(
     setFrom(
       "He set",
       { e: states.e, "He{1S0}": states["He{1S0}"], "He{*}": states["He{*}"] },
@@ -384,7 +375,7 @@ export const sampleSets4SearchWithVersions = async () => {
             { count: 1, state: "e" },
             { count: 1, state: "He{*}" },
           ],
-          type_tags: [ReactionTypeTag.Electronic],
+          typeTags: ["Electronic"],
           reversible: false,
         },
       ],
@@ -396,27 +387,37 @@ export const sampleSets4SearchWithVersions = async () => {
 
 function setFrom(
   name: string,
-  states: Readonly<Dict<State<AnyAtom | AnyMolecule>>>,
+  states: Readonly<Record<string, AnySpecies>>,
   reactions: ReadonlyArray<Reaction<string>>,
   contributor: string,
-): CrossSectionSetInputOwned {
-  return {
-    complete: false,
-    contributor,
-    name,
-    description: "Some description",
-    references: {},
-    states,
-    processes: reactions.map((reaction) => ({
-      reaction,
-      threshold: 0,
-      type: Storage.LUT,
-      labels: ["Energy", "Cross Section"],
-      units: ["eV", "m^2"],
-      data: [[0, 3.14e-20]],
-      reference: [],
-    })),
-  };
+) {
+  return LTPDocument.parse(
+    {
+      $schema: "http://www.schema.com",
+      url: "http://www.url.com",
+      termsOfUse: "http://www.terms-of-use.com",
+      complete: false,
+      contributor,
+      name,
+      description: "Some description",
+      references: {},
+      states,
+      processes: reactions.map((reaction) => ({
+        reaction,
+        info: [{
+          type: "CrossSection",
+          threshold: 0,
+          data: {
+            type: "LUT",
+            labels: ["Energy", "Cross Section"],
+            units: ["eV", "m^2"],
+            values: [[0, 3.14e-20]],
+          },
+          references: [],
+        }],
+      })),
+    },
+  );
 }
 
 export const emptySelection: Readonly<FilterOptions> = {

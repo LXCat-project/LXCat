@@ -12,5 +12,6 @@ export default defineConfig({
       reporter: ["text", "json-summary", "json"],
       exclude: ["**/*{.,-}spec.ts"],
     },
+    globalSetup: "./src/test/global-setup.ts",
   },
 });

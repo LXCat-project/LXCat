@@ -22,7 +22,7 @@ fn get_particles<'a>(
         .lhs
         .iter()
         .chain(reaction.rhs.iter())
-        .map(|entry| state_map[entry.state.as_str()].particle.as_str())
+        .map(|entry| state_map[entry.state.as_str()].serialized.particle.as_str())
         .for_each(|particle| {
             if !particles.contains(&particle) {
                 particles.push(particle);
@@ -36,10 +36,11 @@ fn get_state_id<'a>(
     entry: &'a StateEntry<String>,
     state_map: &'a HashMap<String, State>,
 ) -> &'a str {
-    match &state_map[&entry.state].id {
-        None => &entry.state,
-        Some(id) => id,
-    }
+    simplify_electrons(&state_map[&entry.state].serialized.summary)
+    // match &state_map[&entry.state].id {
+    //     None => &entry.state,
+    //     Some(id) => id,
+    // }
 }
 
 fn get_species<'a>(
@@ -125,10 +126,11 @@ fn fold_entry(count: u32, state: &str) -> String {
 
 fn parse_entries(entries: &[StateEntry<String>], states: &HashMap<String, State>) -> String {
     entries.iter().fold(String::new(), |expr, entry| {
-        let id = match &states[&entry.state].id {
-            None => &entry.state,
-            Some(id) => id,
-        };
+        let id = &states[&entry.state].serialized.summary;
+        //     match &states[&entry.state].id {
+        //     None => &entry.state,
+        //     Some(id) => id,
+        // };
 
         if expr.is_empty() {
             fold_entry(entry.count, id)
@@ -161,9 +163,9 @@ fn parse_process(
         buffer,
         "\n {:.6e}",
         match tag.to_uppercase().as_str() {
-            "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&process.parameters)
-                .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
-            _ => process.threshold,
+            "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&process.info.parameters)
+                .ok_or_else(|| ParserError::MissingMassRatio(process.info.id.clone()))?,
+            _ => process.info.threshold,
         }
     )?;
     write!(
@@ -188,15 +190,15 @@ fn parse_process(
             write!(
                 buffer,
                 "\nPARAM.:  m/M = {}",
-                get_mass_ratio(&process.parameters)
-                    .ok_or_else(|| ParserError::MissingMassRatio(process.id.clone()))?,
+                get_mass_ratio(&process.info.parameters)
+                    .ok_or_else(|| ParserError::MissingMassRatio(process.info.id.clone()))?,
             )
         }
         _ => {
             write!(
                 buffer,
                 "\nPARAM.:  E = {} {}",
-                process.threshold, process.units.0
+                process.info.threshold, process.info.data.units.0
             )
         }
     }?;
@@ -205,7 +207,7 @@ fn parse_process(
     // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
     // the dataset be perceived as faulty?
     if process.reaction.reversible {
-        if let Some(params) = &process.parameters {
+        if let Some(params) = &process.info.parameters {
             if let Some(sw_ratio) = params.statistical_weight_ratio {
                 write!(buffer, ", g1/g0 = {}", sw_ratio)?;
             }
@@ -214,16 +216,19 @@ fn parse_process(
     if complete {
         write!(buffer, ", complete set")?;
     }
-    for reference in &process.reference {
+    for reference in &process.info.references {
         write!(buffer, "\nCOMMENT: {}", references[reference].trim())?;
     }
     write!(
         buffer,
         "\nCOLUMNS: {} ({}) | {} ({})",
-        process.labels.0, process.units.0, process.labels.1, process.units.1
+        process.info.data.labels.0,
+        process.info.data.units.0,
+        process.info.data.labels.1,
+        process.info.data.units.1
     )?;
     write!(buffer, "\n-----------------------------")?;
-    for (x, y) in process.data.iter() {
+    for (x, y) in process.info.data.values.iter() {
         write!(buffer, "\n {:.6e}\t{:.6e}", x, y)?;
     }
     writeln!(buffer, "\n-----------------------------")?;
@@ -301,11 +306,11 @@ impl Mixture {
             write!(
                 legacy,
                 "{}\nDATABASE:         {}\nDESCRIPTION:      {}\n{}\n",
-                END, set.organization, set.description, END
+                END, set.contributor, set.description, END
             )?;
 
             for process in self.processes.iter().filter(|&process| {
-                (&process.is_part_of)
+                (&process.info.is_part_of)
                     .as_ref()
                     .map_or(false, |sets| sets.contains(set_key))
             }) {

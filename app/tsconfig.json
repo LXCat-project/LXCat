@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "strict": true,
     "resolveJsonModule": true,
-    "downlevelIteration": true,
     "plugins": [
       {
         "name": "next"
