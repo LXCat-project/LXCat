@@ -5,7 +5,18 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor";
 import { LXCatDatabase } from "../lxcat-database";
-import { Organization, Role, UserInDb } from "./schema";
+import type {
+  Account,
+  KeyedOrganization,
+  Organization,
+  Session,
+  SessionDiff,
+  UserDiff,
+  UserFromDB,
+  UserInDb,
+  UserWithAccountSessionInDb,
+} from "./schema";
+import { Role } from "./schema";
 
 export async function toggleRole(
   this: LXCatDatabase,
@@ -35,23 +46,149 @@ export async function makeAdmin(this: LXCatDatabase, email: string) {
   `);
 }
 
+export async function addUser(
+  this: LXCatDatabase,
+  user: UserWithAccountSessionInDb,
+) {
+  const cursor = await this.db.query<string>(aql`
+      INSERT ${user} INTO users LET r = NEW RETURN r._key
+    `);
+  return cursor.next();
+}
+
 export async function dropUser(this: LXCatDatabase, userId: string) {
   await this.stripAffiliations(userId);
   await this.db.query(aql`REMOVE { _key: ${userId} } IN users`);
 }
 
-export interface UserFromDB extends UserInDb {
-  _key: string;
-  organizations: string[];
-}
-
 export async function getUserByKey(this: LXCatDatabase, key: string) {
   const cursor: ArrayCursor<UserInDb> = await this.db.query(aql`
     FOR u IN users
-        FILTER u._key == ${key}
-        RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+      FILTER u._key == ${key}
+      RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
   `);
-  return await cursor.next();
+  return cursor.next();
+}
+
+export async function getUserByEmail(this: LXCatDatabase, email: string) {
+  const cursor = await this.db.query<UserInDb>(aql`
+    FOR u IN users
+      FILTER u.email == ${email}
+      RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+  `);
+  return cursor.next();
+}
+
+export async function getUserByAccount(
+  this: LXCatDatabase,
+  provider: string,
+  providerAccountId: string,
+) {
+  const cursor = await this.db.query<UserInDb>(aql`
+      FOR u IN users
+        FOR a IN u.accounts
+          FILTER
+            a.provider == ${provider}
+            AND a.providerAccountId == ${providerAccountId}
+          RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+    `);
+  return cursor.next();
+}
+
+export async function updateUser(this: LXCatDatabase, userDiff: UserDiff) {
+  const cursor = await this.db.query<UserInDb>(aql`
+    FOR u IN users
+      FILTER u._key == ${userDiff._key}
+      UPDATE u WITH ${userDiff} IN users
+      LET updated = NEW
+      RETURN UNSET(updated, ["_id", "_rev", "accounts", "sessions"])
+  `);
+  return cursor.next();
+}
+
+export async function linkAccount(
+  this: LXCatDatabase,
+  id: string,
+  account: Account,
+) {
+  await this.db.query(aql`
+      FOR u IN users
+        FILTER u._key == ${id}
+        UPDATE u WITH {
+            accounts: PUSH(u.accounts, ${account}, true)
+        } IN users
+    `);
+}
+
+export async function unlinkAccount(
+  this: LXCatDatabase,
+  provider: string,
+  providerAccountId: string,
+) {
+  await this.db.query(aql`
+      FOR u IN users
+        FOR a IN u.accounts
+          FILTER a.provider == ${provider}
+            AND a.providerAccountId == ${providerAccountId}
+          UPDATE u WITH {
+            accounts: REMOVE_VALUE(u.accounts, a)
+          } IN users
+    `);
+}
+
+export async function addSession(
+  this: LXCatDatabase,
+  userId: string,
+  session: Session,
+) {
+  await this.db.query(aql`
+      FOR u IN users
+        FILTER u._key == ${userId}
+        UPDATE u WITH {
+          sessions: PUSH(u.sessions, ${session}, true)
+        } IN users
+    `);
+}
+
+export async function getSessionAndUser(
+  this: LXCatDatabase,
+  sessionToken: string,
+) {
+  const cursor = await this.db.query<{ session: Session; user: UserInDb }>(aql`
+      FOR u IN users
+        FOR s IN u.sessions
+          FILTER s.sessionToken == ${sessionToken}
+      RETURN {session: s, user: UNSET(u, ["_id", "_rev", "accounts", "sessions"])}
+    `);
+  return cursor.next();
+}
+
+export async function updateSession(
+  this: LXCatDatabase,
+  sessionDiff: SessionDiff,
+) {
+  const cursor = await this.db.query<{ userId: string; session: Session }>(aql`
+      FOR u IN users
+        FOR s IN u.sessions
+          FILTER s.sessionToken == ${sessionDiff.sessionToken}
+          UPDATE u WITH {
+            sessions: PUSH(REMOVE_VALUE(u.sessions, s), ${sessionDiff})
+          } IN users
+          LET updated = NEW
+          RETURN {session: LAST(updated.session), userId: update._key}
+    `);
+  return cursor.next();
+}
+
+export async function dropSession(this: LXCatDatabase, sessionToken: string) {
+  await this.db.query(aql`
+      FOR u IN users
+        FOR s IN u.sessions
+          FILTER s.sessionToken == ${sessionToken}
+          UPDATE u WITH {
+              sessions: REMOVE_VALUE(u.sessions, s)
+          } IN users
+    `);
 }
 
 export async function listUsers(this: LXCatDatabase) {
@@ -69,12 +206,8 @@ export async function listUsers(this: LXCatDatabase) {
   return await cursor.all();
 }
 
-export interface OrganizationFromDB extends Organization {
-  _key: string;
-}
-
 export async function listOrganizations(this: LXCatDatabase) {
-  const cursor: ArrayCursor<OrganizationFromDB> = await this.db.query(aql`
+  const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
     FOR o IN Organization
         RETURN UNSET(o, ["_id", "_rev"])
   `);
@@ -82,7 +215,7 @@ export async function listOrganizations(this: LXCatDatabase) {
 }
 
 export async function getAffiliations(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<OrganizationFromDB> = await this.db.query(aql`
+  const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
     FOR u IN users
       FILTER u.email == ${email}
       FOR org IN OUTBOUND u MemberOf

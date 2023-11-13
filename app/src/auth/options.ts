@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { User } from "@lxcat/database/dist/auth/schema";
+import { User } from "@lxcat/database/auth";
 import { NextAuthOptions } from "next-auth";
 import Auth0Provider from "next-auth/providers/auth0";
 import GitlabProvider from "next-auth/providers/gitlab";

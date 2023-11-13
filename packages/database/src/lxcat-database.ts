@@ -6,16 +6,26 @@ import { Database } from "arangojs";
 import { CreateDatabaseOptions } from "arangojs/database";
 import {
   addOrganization,
+  addSession,
+  addUser,
   dropOrganization,
+  dropSession,
   dropUser,
   getAffiliations,
+  getSessionAndUser,
+  getUserByAccount,
+  getUserByEmail,
   getUserByKey,
+  linkAccount,
   listOrganizations,
   listUsers,
   makeAdmin,
   setAffiliations,
   stripAffiliations,
   toggleRole,
+  unlinkAccount,
+  updateSession,
+  updateUser,
 } from "./auth/queries";
 import {
   getAvailableTypeTags,
@@ -181,8 +191,22 @@ export class LXCatDatabase {
 
   // auth/queries
   public listUsers = listUsers;
+
   public getUserByKey = getUserByKey;
+  public getUserByEmail = getUserByEmail;
+  public getUserByAccount = getUserByAccount;
+
+  public addUser = addUser;
+  public updateUser = updateUser;
   public dropUser = dropUser;
+
+  public linkAccount = linkAccount;
+  public unlinkAccount = unlinkAccount;
+
+  public addSession = addSession;
+  public getSessionAndUser = getSessionAndUser;
+  public updateSession = updateSession;
+  public dropSession = dropSession;
 
   public listOrganizations = listOrganizations;
   public addOrganization = addOrganization;

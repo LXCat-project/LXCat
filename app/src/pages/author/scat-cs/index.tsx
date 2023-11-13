@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 
+import { db } from "@lxcat/database";
 import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { mustBeAuthor } from "../../../auth/middleware";
@@ -99,7 +100,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       : 0,
     count: 100,
   };
-  const items = await searchOwned(me.email, paging);
+  const items = await db().searchOwnedItems(me.email, paging);
   return {
     props: {
       items,
