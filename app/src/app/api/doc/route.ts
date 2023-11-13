@@ -7,7 +7,7 @@ const router = RouteBuilder
   .init()
   .use(applyCORS())
   .get(async (_, __) => {
-    return NextResponse.json(generateOpenAPI());
+    return NextResponse.json(await generateOpenAPI());
   })
   .compile();
 

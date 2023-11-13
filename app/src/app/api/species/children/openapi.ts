@@ -1,7 +1,8 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { registry } from "../../../../docs/openapi";
+import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
 import { speciesSchema } from "../../schemas.openapi";
+import { ContextSchema } from "./route";
 
 export default async function() {
   extendZodWithOpenApi(z);
@@ -11,11 +12,7 @@ export default async function() {
     path: "/species/children",
     tags: ["species"],
     description: "Get children belonging to a species.",
-    request: {
-      query: z.object({
-        id: z.string(),
-      }),
-    },
+    request: requestParamsFromSchema(ContextSchema),
     responses: {
       200: {
         description: "Species objects",
