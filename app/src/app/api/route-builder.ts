@@ -11,6 +11,11 @@ type BaseContext = {
   params?: Record<string, unknown>;
 };
 
+export type RequestBody = {
+  text: string;
+  json?: any;
+};
+
 type HttpMethods =
   | "GET"
   | "HEAD"
@@ -50,6 +55,14 @@ export class RouteBuilder<Context> {
   static init() {
     return new RouteBuilder(
       (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+        let body: undefined | RequestBody = undefined;
+        if (req.body) {
+          body = { text: String(req.body.getReader().read()) };
+          try {
+            body.json = JSON.parse(body.text);
+          } catch (e) {}
+        }
+
         return ok(
           [
             {
@@ -57,6 +70,7 @@ export class RouteBuilder<Context> {
               searchParams: Object.fromEntries(
                 req.nextUrl.searchParams.entries(),
               ),
+              body: body,
             },
             headers,
           ],
