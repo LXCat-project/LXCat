@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { input, z, ZodTypeAny } from "zod";
 import { SimpleParticle } from "../composition/simple/particle";
 import { typeTag } from "../generators";

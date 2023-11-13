@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { output, ZodType, ZodTypeAny } from "zod";
 import { Process } from "./process";
 import { ProcessInfo } from "./process-info";

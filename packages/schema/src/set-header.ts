@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { boolean, object, string, TypeOf } from "zod";
 
 export const SetHeader = object({

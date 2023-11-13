@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Role } from "@lxcat/database/dist/auth/schema";
 import { getServerSession } from "next-auth";
 import { decode } from "next-auth/jwt";

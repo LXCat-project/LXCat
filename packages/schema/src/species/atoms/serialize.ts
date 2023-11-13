@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { parseCharge, parseChargeLatex } from "../common";
 import { StateSummary } from "../summary";
 import { AnyAtomSerializable } from "./any-atom";
