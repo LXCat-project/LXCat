@@ -123,121 +123,113 @@
             "additionalProperties": false
           },
           "info": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "const": "CrossSection"
-                  },
-                  "references": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "LUT"
-                      },
-                      "labels": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2,
-                        "items": [
-                          {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          {
-                            "$ref": "#/properties/processes/items/properties/info/anyOf/0/properties/data/properties/labels/items/0"
-                          }
-                        ]
-                      },
-                      "units": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2,
-                        "items": [
-                          {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          {
-                            "$ref": "#/properties/processes/items/properties/info/anyOf/0/properties/data/properties/units/items/0"
-                          }
-                        ]
-                      },
-                      "values": {
-                        "type": "array",
-                        "items": {
-                          "type": "array",
-                          "minItems": 2,
-                          "maxItems": 2,
-                          "items": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "$ref": "#/properties/processes/items/properties/info/anyOf/0/properties/data/properties/values/items/items/0"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "labels",
-                      "units",
-                      "values"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "parameters": {
-                    "type": "object",
-                    "properties": {
-                      "massRatio": {
-                        "type": "number",
-                        "exclusiveMinimum": 0
-                      },
-                      "statisticalWeightRatio": {
-                        "type": "number",
-                        "exclusiveMinimum": 0
-                      }
-                    },
-                    "additionalProperties": false
-                  },
-                  "threshold": {
-                    "type": "number"
-                  },
-                  "isPartOf": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "CrossSection"
+                },
+                "references": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
                   }
                 },
-                "required": [
-                  "type",
-                  "references",
-                  "data",
-                  "threshold",
-                  "isPartOf"
-                ],
-                "additionalProperties": false
-              },
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/properties/processes/items/properties/info/anyOf/0"
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "LUT"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/labels/items/0"
+                        }
+                      ]
+                    },
+                    "units": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/units/items/0"
+                        }
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/values/items/items/0"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "labels",
+                    "units",
+                    "values"
+                  ],
+                  "additionalProperties": false
                 },
-                "minItems": 2
-              }
-            ]
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "massRatio": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "statisticalWeightRatio": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "threshold": {
+                  "type": "number"
+                },
+                "isPartOf": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "type",
+                "references",
+                "data",
+                "threshold",
+                "isPartOf"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [
@@ -1025,6 +1017,7 @@
                 ],
                 "additionalProperties": false
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
@@ -1184,6 +1177,7 @@
                 ],
                 "additionalProperties": false
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
@@ -1305,6 +1299,7 @@
                 ],
                 "additionalProperties": false
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
@@ -1426,10 +1421,11 @@
                                           },
                                           {
                                             "type": "string",
-                                            "description": "Compound"
+                                            "description": "Unspecified"
                                           }
                                         ]
                                       },
+                                      "minItems": 2,
                                       "description": "Compound"
                                     },
                                     {
@@ -1462,10 +1458,11 @@
                               },
                               {
                                 "type": "string",
-                                "description": "Compound"
+                                "description": "Unspecified"
                               }
                             ]
                           },
+                          "minItems": 2,
                           "description": "Compound"
                         },
                         {
@@ -1484,6 +1481,7 @@
               "items": {
                 "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
@@ -1583,10 +1581,11 @@
                                           },
                                           {
                                             "type": "string",
-                                            "description": "Compound"
+                                            "description": "Unspecified"
                                           }
                                         ]
                                       },
+                                      "minItems": 2,
                                       "description": "Compound"
                                     },
                                     {
@@ -1619,10 +1618,11 @@
                               },
                               {
                                 "type": "string",
-                                "description": "Compound"
+                                "description": "Unspecified"
                               }
                             ]
                           },
+                          "minItems": 2,
                           "description": "Compound"
                         },
                         {
@@ -1641,6 +1641,7 @@
               "items": {
                 "$ref": "#/definitions/HeteronuclearDiatom/properties/electronic/anyOf/0/allOf/0"
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
@@ -1742,10 +1743,11 @@
                                           },
                                           {
                                             "type": "string",
-                                            "description": "Compound"
+                                            "description": "Unspecified"
                                           }
                                         ]
                                       },
+                                      "minItems": 2,
                                       "description": "Compound"
                                     },
                                     {
@@ -1778,10 +1780,11 @@
                               },
                               {
                                 "type": "string",
-                                "description": "Compound"
+                                "description": "Unspecified"
                               }
                             ]
                           },
+                          "minItems": 2,
                           "description": "Compound"
                         },
                         {
@@ -1800,6 +1803,7 @@
               "items": {
                 "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
               },
+              "minItems": 2,
               "description": "Compound"
             }
           ]
