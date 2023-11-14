@@ -251,7 +251,7 @@ describe("given 4 published cross sections in 2 sets", () => {
       expect(result.processes).toEqual(expected.processes);
     });
 
-    it.only("given 0 ids should return 0 cross sections", async () => {
+    it("given 0 ids should return 0 cross sections", async () => {
       const result = await db.getMixtureByIds([]);
       const expected: LTPMixture = {
         states: {},

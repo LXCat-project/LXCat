@@ -882,7 +882,7 @@ describe.skip("listStates()", () => {
     });
   });
 
-  describe.only("2 simple particles with 2 different charges", () => {
+  describe("2 simple particles with 2 different charges", () => {
     beforeAll(async () => {
       const states = sampleTwoParticlesTwoCharges();
       await insertStateDict(states);
