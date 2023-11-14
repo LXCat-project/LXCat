@@ -13,7 +13,7 @@ const config: PlaywrightTestConfig = {
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
   workers: 1, // We only run one database so tests that need db need to be run sequentially
-  globalSetup: require.resolve("./e2e/global-setup"),
+  globalSetup: "./e2e/global-setup",
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
     command: "pnpm start --port 8001",

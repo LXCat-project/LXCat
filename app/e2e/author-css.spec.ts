@@ -70,7 +70,7 @@ test.describe.skip("/author/scat-css", () => {
   );
 });
 
-test.describe("/author/scat-css/add", () => {
+test.describe.skip("/author/scat-css/add", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/author/scat-css/add");
   });

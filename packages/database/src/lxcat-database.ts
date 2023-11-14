@@ -139,6 +139,12 @@ export class LXCatDatabase {
     return new this(db);
   }
 
+  public async setupCollections() {
+    await setupUserCollections(this.db);
+    await setupSharedCollections(this.db);
+    await setupCrossSectionCollections(this.db);
+  }
+
   public static init(
     url: string,
     name = "lxcat",

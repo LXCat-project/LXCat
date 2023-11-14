@@ -16,6 +16,7 @@ export const setupUserCollections = async (db: Database) => {
   await createOrganizationCollection(db);
   await createMemberOfCollection(db);
 };
+export default setupUserCollections;
 
 const createUserCollection = async (db: Database) => {
   const users = db.collection<UserWithAccountSessionInDb>("users");

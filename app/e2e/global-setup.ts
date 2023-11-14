@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
+import { db, LXCatDatabase, systemDb } from "@lxcat/database";
 import { startDbContainer } from "@lxcat/database/test";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
@@ -39,7 +39,9 @@ async function globalSetup(config: FullConfig) {
 
   console.log("Create collections");
   // create db collections
-  await runDbCommand("pnpm run setup");
+  // TODO: Figure out how to run setup as a cli command.
+  // await runDbCommand("pnpm run setup");
+  await LXCatDatabase.create(systemDb(), "lxcat");
   // It is up to tests to login
   // and to populate and truncate db
 
@@ -68,11 +70,13 @@ async function globalSetup(config: FullConfig) {
 export default globalSetup;
 
 export async function runDbCommand(command: string) {
+  const dir = new URL(".", import.meta.url).pathname;
+
   return new Promise((presolve, reject) => {
     exec(
       command,
       {
-        cwd: resolve(__dirname, "../../packages/database"),
+        cwd: resolve(dir, "../../packages/database"),
         env: process.env,
       },
       (error, stdout, stderr) => {
@@ -135,7 +139,7 @@ export async function uploadAndPublishDummySet(
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
-    `../packages/database/seeds/test/crosssections/${file}`,
+    `../packages/database/src/test/seed/crosssections/${file}`,
     { encoding: "utf8" },
   );
   await page.locator("textarea").fill(dummySet);

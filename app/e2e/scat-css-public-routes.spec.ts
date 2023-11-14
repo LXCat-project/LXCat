@@ -13,6 +13,7 @@ test.use({ storageState: "adminStorageState.json" });
 
 test.describe("given 2 dummy sets", () => {
   test.beforeAll(async ({ browser }) => {
+    await db().setupCollections();
     await uploadAndPublishDummySet(browser);
     await uploadAndPublishDummySet(
       browser,

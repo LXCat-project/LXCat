@@ -10,6 +10,7 @@ import { uploadAndPublishDummySet } from "./global-setup";
 test.use({ storageState: "adminStorageState.json" });
 
 test.beforeAll(async ({ browser }) => {
+  await db().setupCollections();
   await uploadAndPublishDummySet(browser);
   await uploadAndPublishDummySet(
     browser,

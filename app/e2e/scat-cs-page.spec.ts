@@ -35,6 +35,7 @@ const csTest = test.extend({
 
 test.describe("Cross section page", () => {
   test.beforeAll(async ({ browser }) => {
+    await db().setupCollections();
     await uploadAndPublishDummySet(browser);
   });
 

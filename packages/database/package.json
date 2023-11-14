@@ -43,7 +43,7 @@
   ],
   "private": true,
   "scripts": {
-    "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts setup",
+    "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/setup.ts",
     "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
     "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
     "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",

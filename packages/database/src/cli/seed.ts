@@ -12,7 +12,7 @@ import path from "path";
     const afile = path.resolve(dir, file);
     if (afile.endsWith(".ts")) {
       const module = await import(afile);
-      await module.default.default();
+      await module.default();
     }
   }
 })();
