@@ -50,7 +50,7 @@ pub struct ProcessInfo {
 #[derive(Debug, Deserialize)]
 pub struct Process {
     pub reaction: Reaction<String>,
-    pub info: ProcessInfo,
+    pub info: Vec<ProcessInfo>,
 }
 
 #[derive(Debug, Deserialize)]
