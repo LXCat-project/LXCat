@@ -4,7 +4,7 @@
 
 import { LXCatDatabase } from "./lxcat-database.js";
 
-let _db: LXCatDatabase | undefined = undefined;
+const _db: LXCatDatabase | undefined = undefined;
 
 export function db() {
   if (_db === undefined) {

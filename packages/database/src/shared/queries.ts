@@ -90,7 +90,7 @@ export async function insertStateTree(
 ): Promise<string> {
   let ret_id = "";
 
-  let topLevelState: AnySpecies = {
+  const topLevelState: AnySpecies = {
     type: "simple",
     particle: state.particle,
     charge: state.charge,

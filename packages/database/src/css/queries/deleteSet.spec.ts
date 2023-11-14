@@ -7,8 +7,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { Status, VersionInfo } from "../../shared/types/version_info.js";
 import { systemDb } from "../../systemDb.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { CrossSectionSetItem } from "../public.js";
-import { byId, FilterOptions, KeyedVersionInfo, SortOptions } from "./public.js";
+import { CrossSectionSetItem, FilterOptions, SortOptions } from "../public.js";
+import { KeyedVersionInfo } from "./public.js";
 import {
   ISO_8601_UTC,
   sampleCrossSectionSet,

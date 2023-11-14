@@ -54,7 +54,7 @@
     "format": "dprint fmt",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint --ext .ts src/ seeds/ setup/",
+    "lint": "eslint --ext .ts src/",
     "test": "vitest",
     "collectionschema:Particle": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Particle --out src/shared/schemas/Particle.schema.json -e none --no-top-ref",
     "collectionschema:Contributor": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Contributor --out src/shared/schemas/Contributor.schema.json -e none --no-top-ref",

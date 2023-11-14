@@ -29,8 +29,8 @@ export const TotalAngularSpecifier = z.object({
  */
 export const buildTerm = <
   EConfig extends z.ZodTypeAny,
-  Symbol extends z.ZodTypeAny,
->(electronConfig: EConfig, term: Symbol) =>
+  TermSymbol extends z.ZodTypeAny,
+>(electronConfig: EConfig, term: TermSymbol) =>
   z.object({ config: electronConfig, term });
 
 /**

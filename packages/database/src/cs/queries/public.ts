@@ -4,7 +4,6 @@
 
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
-import { db } from "../../db.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedLTPMixture } from "../../schema/mixture.js";
 import { OwnedProcess } from "../../schema/process.js";
