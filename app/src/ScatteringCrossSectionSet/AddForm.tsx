@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { OrganizationFromDB } from "@lxcat/database/dist/auth/queries";
+import { KeyedOrganization } from "@lxcat/database/auth";
 import { LTPDocument } from "@lxcat/schema";
 import { useMemo } from "react";
 import { EditForm } from "./EditForm";
@@ -10,7 +10,7 @@ import { EditForm } from "./EditForm";
 interface Props {
   // onSubmit: (newSet: CrossSectionSetInputOwned, newMessage: string) => void;
   onSubmit: (newSet: any, newMessage: string) => void;
-  organizations: OrganizationFromDB[];
+  organizations: KeyedOrganization[];
 }
 
 export const AddForm = ({ onSubmit, organizations }: Props) => {

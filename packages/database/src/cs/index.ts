@@ -1,1 +1,1 @@
-export { type CrossSectionHeading } from "./public.js";
+export type { CrossSectionHeading, CrossSectionItem } from "./public.js";

@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { KeyedDocument } from "@lxcat/database/schema";
+import { KeyedSet } from "@lxcat/database/set";
+
 /**
  * Functions that interact with API endpoints
  */
-
-import { CrossSectionSetOwned } from "@lxcat/database/dist/css/queries/author_read";
 
 const headers = new Headers({
   Accept: "application/json",
@@ -40,10 +41,10 @@ export async function publishSet(selectedSetId: string) {
   }
 }
 
-export async function listSetsOfOwner(): Promise<CrossSectionSetOwned[]> {
+export async function listSetsOfOwner(): Promise<Array<KeyedSet>> {
   const url = "/api/author/scat-css";
   const init = { headers };
   const res = await fetch(url, init);
   const data = await res.json();
-  return data.items as CrossSectionSetOwned[];
+  return data.items as KeyedSet[];
 }

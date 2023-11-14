@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/item";
 import { Button, Checkbox, Group, Space } from "@mantine/core";
 import { useState } from "react";
 import { ReactionSummary } from "./ReactionSummary";

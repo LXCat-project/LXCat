@@ -9,13 +9,13 @@ import { UseFormReturnType } from "@mantine/form";
 import Latex from "react-latex-next";
 import { BolsigFormInput } from "./io";
 import "katex/dist/katex.min.css";
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { SerializedSpecies } from "@lxcat/database/schema";
 import { IntegerInput } from "../../shared/IntegerInput";
 import { RangeInputForm } from "../../shared/RangeInputForm";
 import { ScientificInput } from "../../shared/ScientificInput";
 
 export interface BolsigInputFormProps {
-  consumedStates: Array<State>;
+  consumedStates: Array<SerializedSpecies>;
   config: UseFormReturnType<Omit<BolsigFormInput, "crossSections">>;
 }
 

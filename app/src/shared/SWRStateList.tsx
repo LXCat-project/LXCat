@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { StateProcess } from "@lxcat/database/dist/cs/picker/types";
-import { StatePath } from "@lxcat/database/dist/shared/getStateLeaf";
+import { StateProcess } from "@lxcat/database/item/picker";
+import { StatePath } from "@lxcat/database/shared";
 import { Button, Stack } from "@mantine/core";
 import { SWRReactionOptions, SWRStateSelect } from "./SWRStateSelect";
 

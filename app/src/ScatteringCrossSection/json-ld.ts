@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
+import { CrossSectionItem } from "@lxcat/database/item";
 import { Dataset, WithContext } from "schema-dts";
 import { reference2bibliography } from "../shared/cite";
 import { reactionAsText } from "./reaction";

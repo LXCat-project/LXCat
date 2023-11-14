@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { type SerializedSpecies } from "@lxcat/database/schema";
 import { type Reaction } from "@lxcat/schema/process";
 import { Latex } from "../shared/Latex";
-
 import { reactionAsLatex } from "./reaction";
 
-export const ReactionSummary = (props: Reaction<State>) => {
+export const ReactionSummary = (props: Reaction<SerializedSpecies>) => {
   const label = reactionAsLatex(props);
   return <Latex>{label}</Latex>;
 };

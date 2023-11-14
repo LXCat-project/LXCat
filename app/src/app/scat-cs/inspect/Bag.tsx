@@ -4,8 +4,7 @@
 
 import type { Reaction } from "@lxcat/schema/process";
 
-import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
-import type { SerializedSpecies } from "@lxcat/database/dist/schema/species";
+import { KeyedLTPMixture, SerializedSpecies } from "@lxcat/database/schema";
 import { DenormalizedProcess } from "../denormalized-process";
 import { formatReference } from "./cite";
 import { PlotPage } from "./PlotPage";
@@ -64,20 +63,12 @@ function denormalizeProcesses(
       }),
     };
 
-    return Array.isArray(p.info)
-      ? p.info.map(info => ({
-        reaction,
-        info: {
-          ...info,
-          isPartOf: info.isPartOf.map(setId => sets[setId]),
-        },
-      }))
-      : [{
-        reaction,
-        info: {
-          ...p.info,
-          isPartOf: p.info.isPartOf.map(setId => sets[setId]),
-        },
-      }];
+    return p.info.map(info => ({
+      reaction,
+      info: {
+        ...info,
+        isPartOf: info.isPartOf.map(setId => sets[setId]),
+      },
+    }));
   });
 }

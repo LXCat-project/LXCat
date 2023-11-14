@@ -2,14 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
+import { CrossSectionItem } from "@lxcat/database/item";
+import { PagingOptions } from "@lxcat/database/shared";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-
-import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
-
-import { db } from "@lxcat/database";
-import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
 import { mustBeAuthor } from "../../../auth/middleware";
 import { Paging } from "../../../ScatteringCrossSection/Paging";
 import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";

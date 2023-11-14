@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
+import { CrossSectionHeading } from "@lxcat/database/item";
 import { createStyles, Group, Stack, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
