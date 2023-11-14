@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { KeyedDocument } from "@lxcat/database/schema";
+import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -21,7 +21,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       if (typeof body === "string") {
         body = JSON.parse(body);
       }
-      const parseResult = KeyedDocument.safeParse(body);
+      const parseResult = PartialKeyedDocument.safeParse(body);
       if (parseResult.success) {
         const affiliations = await db()
           .getAffiliations(req.user.email)
