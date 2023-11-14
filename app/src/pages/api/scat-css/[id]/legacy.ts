@@ -4,6 +4,7 @@
 
 import { db } from "@lxcat/database";
 import { KeyedDocumentReferenceable } from "@lxcat/database/schema";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -28,6 +29,15 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           data.references,
           ([key, reference]) => [key, reference2bibliography(reference)],
         );
+        const states = mapObject(
+          data.states,
+          (
+            [key, state],
+          ) => [key, {
+            detailed: state,
+            serialized: AnySpeciesSerializable.parse(state).serialize(),
+          }],
+        );
 
         const dataWithRef: KeyedDocumentReferenceable = {
           $schema: "",
@@ -43,7 +53,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           "Content-Disposition",
           `attachment;filename="${dataWithRef.name}.txt"`,
         );
-        res.send(convertDocument({ ...dataWithRef, references }));
+        res.send(convertDocument({ ...dataWithRef, states, references }));
       } else {
         res.status(404).end("Not found");
       }
