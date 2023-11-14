@@ -1,2 +1,10 @@
-export { defaultReactionTemplate, defaultSearchTemplate } from "./default";
-export { type ReactionTemplate, Reversible } from "./types";
+export { defaultReactionTemplate, defaultSearchTemplate } from "./default.js";
+export {
+  type CSSetTree,
+  type NestedStateArray,
+  type ReactionOptions,
+  type ReactionTemplate,
+  Reversible,
+  type SearchOptions,
+  StateProcess,
+} from "./types.js";

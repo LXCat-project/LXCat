@@ -4,10 +4,10 @@
 
 import { type AnyProcess } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { now } from "../../date";
-import { LXCatDatabase } from "../../lxcat-database";
-import { Status, VersionInfo } from "../../shared/types/version_info";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { now } from "../../date.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { Status, VersionInfo } from "../../shared/types/version_info.js";
 
 export async function createCS(
   this: LXCatDatabase,

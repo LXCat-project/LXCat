@@ -13,13 +13,13 @@ import {
   insertSampleStateIds,
   sampleCrossSection,
   sampleStates,
-} from "../../cs/queries/testutils";
-import { KeyedDocument, PartialKeyedDocument } from "../../schema/document";
-import { OwnedProcess } from "../../schema/process";
-import { SerializedSpecies } from "../../schema/species";
-import { Status } from "../../shared/types/version_info";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+} from "../../cs/queries/testutils.js";
+import { KeyedDocument, PartialKeyedDocument } from "../../schema/document.js";
+import { OwnedProcess } from "../../schema/process.js";
+import { SerializedSpecies } from "../../schema/species.js";
+import { Status } from "../../shared/types/version_info.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
   ISO_8601_UTC,
   matches8601,
@@ -27,7 +27,7 @@ import {
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 const email = "somename@example.com";
 

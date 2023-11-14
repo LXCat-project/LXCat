@@ -4,17 +4,17 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { CrossSectionSetHeading } from "../public";
-import { FilterOptions, SortOptions } from "./public";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { CrossSectionSetHeading } from "../public.js";
+import { FilterOptions, SortOptions } from "./public.js";
 import {
   emptySelection,
   loadTestSets,
   matchesId,
   sampleSets4SearchWithVersions,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

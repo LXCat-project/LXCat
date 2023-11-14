@@ -7,10 +7,10 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { Reference } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { matchesId, truncateCrossSectionSetCollections } from "./testutils";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { matchesId, truncateCrossSectionSetCollections } from "./testutils.js";
 
 const email = "somename@example.com";
 

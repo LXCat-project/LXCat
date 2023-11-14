@@ -3,15 +3,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
-import { LXCatDatabase } from "../../lxcat-database";
-import { KeyedLTPMixture } from "../../schema/mixture";
-import { OwnedProcess } from "../../schema/process";
-import { PagingOptions } from "../../shared/types/search";
-import { KeyedVersionInfo } from "../../shared/types/version_info";
-import { ReactionTemplate } from "../picker/types";
-import { CrossSectionHeading } from "../public";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { db } from "../../db.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { KeyedLTPMixture } from "../../schema/mixture.js";
+import { OwnedProcess } from "../../schema/process.js";
+import { PagingOptions } from "../../shared/types/search.js";
+import { KeyedVersionInfo } from "../../shared/types/version_info.js";
+import { ReactionTemplate } from "../picker/types.js";
+import { CrossSectionHeading } from "../public.js";
 
 export async function byId(this: LXCatDatabase, id: string) {
   const cursor: ArrayCursor<unknown> = await this.db.query(aql`

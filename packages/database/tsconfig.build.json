@@ -8,6 +8,6 @@
     "outDir": "./dist"
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["./**/*.spec.ts", "./**/testutils.ts", "./src/test/**"],
+  "exclude": ["./**/*.spec.ts"],
   "extends": "@lxcat/tsconfig/base.json"
 }

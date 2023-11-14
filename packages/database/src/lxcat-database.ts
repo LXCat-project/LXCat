@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Database } from "arangojs";
-import { CreateDatabaseOptions } from "arangojs/database";
+import { CreateDatabaseOptions } from "arangojs/database.js";
 import {
   addOrganization,
   addSession,
@@ -26,7 +26,7 @@ import {
   unlinkAccount,
   updateSession,
   updateUser,
-} from "./auth/queries";
+} from "./auth/queries.js";
 import {
   getAvailableTypeTags,
   getCSIdByReactionTemplate,
@@ -35,20 +35,20 @@ import {
   getReversible,
   getSearchOptions,
   getStateSelection,
-} from "./cs/picker/queries/public";
+} from "./cs/picker/queries/public.js";
 import {
   byOrgAndId,
   byOwnerAndId as itemByOwnerAndId,
   getVersionInfo as getItemVersionInfo,
   searchOwned,
-} from "./cs/queries/author_read";
+} from "./cs/queries/author_read.js";
 import {
   byId,
   byIds,
   csHistory,
   getCSHeadings,
   search,
-} from "./cs/queries/public";
+} from "./cs/queries/public.js";
 import {
   createCS,
   createDraftCS,
@@ -60,13 +60,13 @@ import {
   updateCS,
   updateDraftCS,
   updateVersionStatus as updateItemVersionStatus,
-} from "./cs/queries/write";
+} from "./cs/queries/write.js";
 import {
   byOwnerAndId,
   getVersionInfo as getSetVersionInfo,
   isOwnerOfSet,
   listOwnedSets,
-} from "./css/queries/author_read";
+} from "./css/queries/author_read.js";
 import {
   createDraftSet,
   createSet,
@@ -80,8 +80,8 @@ import {
   updateDraftSet,
   updateSet,
   updateVersionStatus as updateSetVersionStatus,
-} from "./css/queries/author_write";
-import { getSetAffiliation } from "./css/queries/get-affiliation";
+} from "./css/queries/author_write.js";
+import { getSetAffiliation } from "./css/queries/get-affiliation.js";
 import {
   activeSetOfArchivedSet,
   byId as getSetByIdOld,
@@ -93,10 +93,10 @@ import {
   setHistory,
   stateChoices,
   tagChoices,
-} from "./css/queries/public";
-import { setupUserCollections } from "./setup/2_users";
-import { setupSharedCollections } from "./setup/3_shared";
-import { setupCrossSectionCollections } from "./setup/4_cs";
+} from "./css/queries/public.js";
+import { setupUserCollections } from "./setup/2_users.js";
+import { setupSharedCollections } from "./setup/3_shared.js";
+import { setupCrossSectionCollections } from "./setup/4_cs.js";
 import {
   insertDocument,
   insertEdge,
@@ -106,17 +106,17 @@ import {
   insertStateDict,
   insertStateTree,
   upsertDocument,
-} from "./shared/queries";
-import { upsertOrganization } from "./shared/queries/organization";
-import { findReactionId } from "./shared/queries/reaction";
+} from "./shared/queries.js";
+import { upsertOrganization } from "./shared/queries/organization.js";
+import { findReactionId } from "./shared/queries/reaction.js";
 import {
   getReferences,
   getReferencesForSelection,
-} from "./shared/queries/reference";
+} from "./shared/queries/reference.js";
 import {
   getSpeciesChildren,
   getTopLevelSpecies,
-} from "./shared/queries/species";
+} from "./shared/queries/species.js";
 
 export class LXCatDatabase {
   protected db: Database;
@@ -234,8 +234,8 @@ export class LXCatDatabase {
   public publishSet = publishSet;
   protected createDraftSet = createDraftSet;
   protected isDraftlessSet = isDraftlessSet;
-  protected removeDraftSetUnchecked = removeDraftUnchecked;
-  protected retractSetUnchecked = retractSetUnchecked;
+  public removeDraftSetUnchecked = removeDraftUnchecked;
+  public retractSetUnchecked = retractSetUnchecked;
   protected draftItemsFromSet = draftItemsFromSet;
   protected doesPublishingEffectOtherSets = doesPublishingEffectOtherSets;
   protected updateDraftSet = updateDraftSet;

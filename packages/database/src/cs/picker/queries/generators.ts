@@ -4,12 +4,12 @@
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { literal } from "arangojs/aql";
-import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
-import { StateLeaf } from "../../../shared/getStateLeaf";
-import { ReactionFunction, StateProcess } from "../types";
-import { getCSSetFilterAQL } from "./filters";
-import { returnId } from "./return";
+import { literal } from "arangojs/aql.js";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql.js";
+import { StateLeaf } from "../../../shared/get-state-leaf.js";
+import { ReactionFunction, StateProcess } from "../types.js";
+import { getCSSetFilterAQL } from "./filters.js";
+import { returnId } from "./return.js";
 
 export function getFullStateTreeAQL(
   process: StateProcess,

@@ -5,7 +5,7 @@
 import { AnySpecies } from "@lxcat/schema/species";
 import path from "path";
 import { object, string } from "zod";
-import { generateSchema } from "../shared/generate-schema";
+import { generateSchema } from "../shared/generate-schema.js";
 
 const Contributor = object({ name: string() });
 

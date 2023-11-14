@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../lxcat-database";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
   KeyedOrganization,
@@ -15,8 +15,8 @@ import type {
   UserFromDB,
   UserInDb,
   UserWithAccountSessionInDb,
-} from "./schema";
-import { Role } from "./schema";
+} from "./schema.js";
+import { Role } from "./schema.js";
 
 export async function toggleRole(
   this: LXCatDatabase,

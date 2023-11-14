@@ -6,7 +6,7 @@ import { type Reference } from "@lxcat/schema";
 import { Reaction } from "@lxcat/schema/process";
 import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
 import { isAtom } from "@lxcat/schema/species/atoms";
-import { LXCatDatabase } from "../lxcat-database";
+import { LXCatDatabase } from "../lxcat-database.js";
 
 export async function insertDocument(
   this: LXCatDatabase,

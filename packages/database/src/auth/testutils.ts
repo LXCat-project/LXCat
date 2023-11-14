@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Database } from "arangojs";
-import testUserCreator from "../test/seed/1_users";
+import testUserCreator from "../test/seed/1_users.js";
 
 export interface TestKeys {
   testUserKey: string;

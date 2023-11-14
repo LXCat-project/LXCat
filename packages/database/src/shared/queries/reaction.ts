@@ -4,8 +4,8 @@
 
 import { type Reaction } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../lxcat-database";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function findReactionId(
   this: LXCatDatabase,

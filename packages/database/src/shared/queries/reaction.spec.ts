@@ -4,9 +4,9 @@
 
 import { AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
-import { truncateCrossSectionSetCollections } from "../../css/queries/testutils";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+import { truncateCrossSectionSetCollections } from "../../css/queries/testutils.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 
 describe("given db with test user and organization", () => {
   let db: LXCatTestDatabase;

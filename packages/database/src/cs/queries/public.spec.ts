@@ -8,10 +8,10 @@ import {
   matchesId,
   sampleCrossSectionSet,
   truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { KeyedLTPMixture } from "../../schema/mixture";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+} from "../../css/queries/testutils.js";
+import { KeyedLTPMixture } from "../../schema/mixture.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 
 let db: LXCatTestDatabase;
 

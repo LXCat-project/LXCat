@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../lxcat-database";
-import { SerializedSpecies } from "../../schema/species";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { SerializedSpecies } from "../../schema/species.js";
 
 export type SpeciesNode = {
   _key: string;

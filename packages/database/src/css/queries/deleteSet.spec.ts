@@ -4,17 +4,17 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Status, VersionInfo } from "../../shared/types/version_info";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { CrossSectionSetItem } from "../public";
-import { byId, FilterOptions, KeyedVersionInfo, SortOptions } from "./public";
+import { Status, VersionInfo } from "../../shared/types/version_info.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { CrossSectionSetItem } from "../public.js";
+import { byId, FilterOptions, KeyedVersionInfo, SortOptions } from "./public.js";
 import {
   ISO_8601_UTC,
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

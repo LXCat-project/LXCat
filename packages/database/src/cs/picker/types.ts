@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
-import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
-import { StatePath } from "../../shared/getStateLeaf";
-import { StateTree } from "../../shared/queries/state";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql.js";
+import { StatePath } from "../../shared/get-state-leaf.js";
+import { StateTree } from "../../shared/types/state.js";
 
 export interface ReactionTemplate {
   consumes: StatePath[];

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { DocumentData } from "arangojs/documents";
+import { DocumentData } from "arangojs/documents.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { Keyed } from "../schema/key";
+import { Keyed } from "../schema/key.js";
 
 export const Session = z
   .object({

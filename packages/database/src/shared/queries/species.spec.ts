@@ -4,9 +4,9 @@
 
 import { type AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { SpeciesNode } from "./species";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { SpeciesNode } from "./species.js";
 
 type StateDict = Record<string, AnySpecies>;
 

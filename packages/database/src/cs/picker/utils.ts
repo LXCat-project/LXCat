@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { StateSummary, StateTree } from "../../shared/queries/state";
-import { NestedStateArray } from "./types";
+import { StateSummary, StateTree } from "../../shared/types/state.js";
+import { NestedStateArray } from "./types.js";
 
 export function stateArrayToObject({
   id,

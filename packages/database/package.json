@@ -3,18 +3,39 @@
   "version": "0.1.0",
   "description": "Database abstraction layer for LXCat web application.",
   "license": "AGPL-3.0-or-later",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./cs/picker": {
+    "./item": {
+      "types": "./dist/cs/index.d.ts",
+      "default": "./dist/cs/index.js"
+    },
+    "./item/picker": {
       "types": "./dist/cs/picker/index.d.ts",
       "default": "./dist/cs/picker/index.js"
     },
     "./auth": {
-      "types": "./dist/auth.index.d.ts",
+      "types": "./dist/auth/index.d.ts",
       "default": "./dist/auth/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "default": "./dist/schema/index.js"
+    },
+    "./set": {
+      "types": "./dist/css/index.d.ts",
+      "default": "./dist/schema/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
     }
   },
   "files": [

@@ -4,9 +4,9 @@
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { systemDb } from "../systemDb";
-import { LXCatTestDatabase } from "../testutils";
-import { loadTestUserAndOrg, TestKeys } from "./testutils";
+import { systemDb } from "../systemDb.js";
+import { LXCatTestDatabase } from "../testutils.js";
+import { loadTestUserAndOrg, TestKeys } from "./testutils.js";
 
 describe("given filled ArangoDB container", () => {
   let db: LXCatTestDatabase;

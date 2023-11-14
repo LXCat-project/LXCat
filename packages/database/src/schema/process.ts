@@ -5,8 +5,8 @@
 import { Reference, SetHeader } from "@lxcat/schema";
 import { Process, ProcessInfo } from "@lxcat/schema/process";
 import { array, object, TypeOf, ZodType, ZodTypeAny } from "zod";
-import { Keyed } from "./key";
-import { SerializedSpecies } from "./species";
+import { Keyed } from "./key.js";
+import { SerializedSpecies } from "./species.js";
 
 export const KeyedProcess = <
   StateType extends ZodTypeAny,

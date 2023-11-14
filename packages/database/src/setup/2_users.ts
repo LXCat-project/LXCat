@@ -4,12 +4,12 @@
 
 import "dotenv/config";
 import { Database } from "arangojs";
-import { CollectionType } from "arangojs/collection";
+import { CollectionType } from "arangojs/collection.js";
 import {
   OrganizationAsJsonSchema,
   UserWithAccountSessionInDb,
   UserWithAccountSessionInDbAsJsonSchema,
-} from "../auth/schema";
+} from "../auth/schema.js";
 
 export const setupUserCollections = async (db: Database) => {
   await createUserCollection(db);

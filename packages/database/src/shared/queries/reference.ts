@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { ArrayCursor } from "arangojs/cursor.js";
 
-import { LXCatDatabase } from "../../lxcat-database";
-import { Bibliography } from "../types/bibliography";
-import { Reference } from "../types/collections";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { Bibliography } from "../types/bibliography.js";
+import { Reference } from "../types/collections.js";
 
 export async function getReferences(
   this: LXCatDatabase,

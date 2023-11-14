@@ -1,6 +1,7 @@
 export {
   Account,
   KeyedOrganization,
+  Organization,
   Role,
   Session,
   SessionDiff,
@@ -9,4 +10,4 @@ export {
   type UserFromDB,
   type UserInDb,
   UserWithAccountSessionInDb,
-} from "./schema";
+} from "./schema.js";

@@ -4,15 +4,15 @@
 
 import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { ArrayCursor } from "arangojs/cursor.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { insertStateDict } from "../queries";
-import { State } from "../types/collections";
+} from "../../css/queries/testutils.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { insertStateDict } from "../queries.js";
+import { State } from "../types/collections.js";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -22,7 +22,7 @@ import {
   listStateChoices,
   listStates,
   StateChoices,
-} from "./state";
+} from "./state.js";
 
 let db: LXCatTestDatabase;
 

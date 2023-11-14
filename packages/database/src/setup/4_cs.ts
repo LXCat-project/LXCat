@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CollectionType } from "arangojs/collection";
+import { CollectionType } from "arangojs/collection.js";
 import "dotenv/config";
 import { Database } from "arangojs";
-import { Relation } from "../cs/schema";
+import { Relation } from "../cs/schema.js";
 
 export const setupCrossSectionCollections = async (db: Database) => {
   await createCrossSectionSetCollection(db);
