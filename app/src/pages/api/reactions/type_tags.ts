@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getAvailableTypeTags } from "@lxcat/database/dist/cs/picker/queries/public";
-import { Reversible } from "@lxcat/database/dist/cs/picker/types";
-import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
+import { db } from "@lxcat/database";
+import { Reversible } from "@lxcat/database/item/picker";
+import { StateLeaf } from "@lxcat/database/shared";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -33,7 +33,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       : Reversible.Both;
 
     res.json(
-      await getAvailableTypeTags(consumes, produces, reversible, setIds),
+      await db().getAvailableTypeTags(consumes, produces, reversible, setIds),
     );
   })
   .handler();

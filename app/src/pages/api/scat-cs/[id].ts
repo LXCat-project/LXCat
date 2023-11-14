@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { byId } from "@lxcat/database/dist/cs/queries/public";
+import { db } from "@lxcat/database";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z } from "zod";
@@ -20,17 +20,19 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .get(async (req, res) => {
     const { id } = querySchema.parse(req.query);
 
-    const data = await byId(id);
+    const data = await db().getItemById(id);
 
     if (data === undefined) {
       res.status(404).end("Not found");
       return;
     }
 
-    data.url = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`;
-    data.termsOfUse =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}#termsOfUse`;
-    res.json(data);
+    res.json({
+      url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`,
+      termsOfUse:
+        `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}#termsOfUse`,
+      ...data,
+    });
   })
   .handler();
 

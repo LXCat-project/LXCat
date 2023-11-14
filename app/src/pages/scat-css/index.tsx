@@ -6,14 +6,12 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 
-import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import { db } from "@lxcat/database";
 import {
+  CrossSectionSetHeading,
   FilterOptions,
-  search,
-  searchFacets,
   SortOptions,
-} from "@lxcat/database/dist/css/queries/public";
-
+} from "@lxcat/database/set";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import Head from "next/head";
 import { Filter } from "../../ScatteringCrossSectionSet/Filter";
@@ -64,8 +62,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     offset: 0,
     count: Number.MAX_SAFE_INTEGER,
   };
-  const items = await search(filter, sort, paging);
-  const facets = await searchFacets(filter);
+  const items = await db().searchSet(filter, sort, paging);
+  const facets = await db().searchFacets(filter);
   return {
     props: {
       items,

@@ -5,7 +5,7 @@
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
-import { getReferences } from "@lxcat/database/dist/shared/queries/reference";
+import { db } from "@lxcat/database";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z, ZodError } from "zod";
@@ -35,7 +35,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
 
       const unique_ids = [...new Set(ids)];
 
-      const references = await getReferences(unique_ids);
+      const references = await db().getReferences(unique_ids);
 
       if (references.length > 0) {
         switch (format) {

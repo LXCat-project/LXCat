@@ -2,11 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  byOwnerAndId,
-  getVersionInfo,
-} from "@lxcat/database/dist/css/queries/author_read";
-import { type KeyedDocument } from "@lxcat/database/dist/schema/document";
+import { db } from "@lxcat/database";
+import type { KeyedDocument } from "@lxcat/database/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -122,8 +119,8 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
-  const set = await byOwnerAndId(me.email, id);
-  const info = await getVersionInfo(id);
+  const set = await db().getSetByOwnerAndId(me.email, id);
+  const info = await db().getSetVersionInfo(id);
   const commitMessage = info !== undefined && info.commitMessage
     ? info.commitMessage
     : "";

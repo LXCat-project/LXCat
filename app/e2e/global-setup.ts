@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database/src/db";
-import { upsertOrganization } from "@lxcat/database/src/shared/queries/organization";
-import { startDbContainer } from "@lxcat/database/src/testutils";
+import { db } from "@lxcat/database";
+import { startDbContainer } from "@lxcat/database/test";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
 import { rm } from "fs/promises";
@@ -115,16 +114,6 @@ async function signUp(page: Page, email: string) {
   await page.waitForURL("/");
 }
 
-export async function truncateNonUserCollections() {
-  const collections = await db().collections(true);
-  for (const c of collections) {
-    console.log(`Truncating ${c.name}`);
-    if (c.name !== "users") {
-      await c.truncate();
-    }
-  }
-}
-
 export async function uploadAndPublishDummySet(
   browser: Browser,
   file = "dummy.json",
@@ -132,7 +121,7 @@ export async function uploadAndPublishDummySet(
 ) {
   const page = await browser.newPage();
 
-  await upsertOrganization(org);
+  await db().upsertOrganization(org);
 
   // Make admin user a member of organization
   await page.goto("/admin/users");

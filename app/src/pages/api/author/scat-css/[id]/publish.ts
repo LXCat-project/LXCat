@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
-import { publish } from "@lxcat/database/dist/css/queries/author_write";
+import { db } from "@lxcat/database";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -22,8 +21,8 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     }
     const { id } = req.query;
     if (typeof id === "string") {
-      if (await isOwner(id, user.email)) {
-        await publish(id);
+      if (await db().isOwnerOfSet(id, user.email)) {
+        await db().publishSet(id);
         const data = { id };
         res.json(data);
       } else {

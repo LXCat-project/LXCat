@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { toggleRole } from "@lxcat/database/dist/auth/queries";
-import { Role } from "@lxcat/database/dist/auth/schema";
+import { db } from "@lxcat/database";
+import { Role } from "@lxcat/database/auth";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -18,7 +18,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .post(async (req, res) => {
     const { user: userId, role } = req.query;
     if (typeof userId === "string") {
-      const user = await toggleRole(userId, Role.parse(role));
+      const user = await db().toggleRole(userId, Role.parse(role));
       return res.json(user);
     }
   })

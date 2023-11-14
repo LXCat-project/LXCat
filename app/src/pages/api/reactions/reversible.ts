@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getReversible } from "@lxcat/database/dist/cs/picker/queries/public";
-import { StateLeaf } from "@lxcat/database/dist/shared/getStateLeaf";
+import { db } from "@lxcat/database";
+import { StateLeaf } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
@@ -30,7 +30,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     const typeTags = parseParam<Array<ReactionTypeTag>>(typeTagsParam, []);
     const setIds = parseParam<Array<string>>(setIdsParam, []);
 
-    res.json(await getReversible(consumes, produces, typeTags, setIds));
+    res.json(await db().getReversible(consumes, produces, typeTags, setIds));
   })
   .handler();
 

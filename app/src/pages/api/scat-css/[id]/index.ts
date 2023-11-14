@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Cite } from "@citation-js/core";
-import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -12,7 +11,8 @@ import {
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
 import "@citation-js/plugin-bibtex";
-import { KeyedDocumentReferenceable } from "@lxcat/database/dist/schema/document";
+import { db } from "@lxcat/database";
+import { KeyedDocumentReferenceable } from "@lxcat/database/schema";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 
@@ -23,7 +23,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .get(async (req, res) => {
     const { id, refstyle = "csl" } = req.query;
     if (typeof id === "string") {
-      const data = await byIdJSON(id);
+      const data = await db().getSetById(id);
 
       if (data === undefined) {
         res.status(404).end("Not found");

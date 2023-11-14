@@ -2,11 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
+import { db } from "@lxcat/database";
+import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
-
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/dist/schema/mixture";
 import { z } from "zod";
 import {
   AuthRequest,
@@ -37,7 +36,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
         ids.join(",")
       }#termsOfUse`,
-      ...await byIds(ids),
+      ...await db().getMixtureByIds(ids),
     };
 
     const references = mapObject(

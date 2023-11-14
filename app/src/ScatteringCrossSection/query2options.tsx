@@ -5,7 +5,7 @@
 import {
   defaultSearchTemplate,
   ReactionTemplate,
-} from "@lxcat/database/cs/picker";
+} from "@lxcat/database/item/picker";
 import { ParsedUrlQuery } from "querystring";
 
 export function getTemplateFromQuery(

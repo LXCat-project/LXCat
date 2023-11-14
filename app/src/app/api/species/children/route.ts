@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getSpeciesChildren } from "@lxcat/database/dist/shared/queries/species";
+import { db } from "@lxcat/database";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { zodMiddleware } from "../../middleware/zod";
@@ -14,7 +14,7 @@ const router = RouteBuilder
   .init()
   .use(zodMiddleware(ContextSchema))
   .get(async (_, ctx) => {
-    const children = await getSpeciesChildren(ctx.searchParams.id);
+    const children = await db().getSpeciesChildren(ctx.searchParams.id);
     return NextResponse.json(children);
   })
   .compile();

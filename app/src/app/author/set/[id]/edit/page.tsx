@@ -2,9 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { byId } from "@lxcat/database/dist/css/queries/author_read";
-import { getSetAffiliation } from "@lxcat/database/src/css/queries/get-affiliation";
-import { getAffiliations } from "@lxcat/database/src/shared/queries/organization";
+import { db } from "@lxcat/database";
 import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
@@ -26,27 +24,27 @@ const EditSetPage = async (props: URLParams) => {
     return <Unauthorized />;
   }
 
-  const set = await byId(id);
+  const set = await db().getSetById(id);
 
   if (!set) return <NotFound />;
 
   return (
     <EditForm
       initialSet={set}
-      organizations={await getAffiliations(session.user.email)}
+      organizations={await db().getAffiliations(session.user.email)}
     />
   );
 };
 
 const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
-  const userAffiliations = await getAffiliations(email);
-  const setAffiliation = await getSetAffiliation(setId);
+  const userAffiliations = await db().getAffiliations(email);
+  const setAffiliation = await db().getSetAffiliation(setId);
 
   if (setAffiliation === undefined) {
     return false;
   }
 
-  return userAffiliations.includes(setAffiliation);
+  return userAffiliations.map(({ name }) => name).includes(setAffiliation);
 };
 
 const userIsAuthor = (session: Session | null): session is Session => {

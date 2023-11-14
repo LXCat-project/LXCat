@@ -4,8 +4,7 @@
 
 "use client";
 
-import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
-import { SerializedSpecies } from "@lxcat/database/dist/schema/species";
+import { KeyedLTPMixture, SerializedSpecies } from "@lxcat/database/schema";
 import { Button, Grid, Stack } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";

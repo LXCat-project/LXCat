@@ -2,18 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
+import { NestedStateArray, StateProcess } from "@lxcat/database/item/picker";
+import { StateSummary, StateTree } from "@lxcat/database/shared";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRouter } from "next-connect";
-
-import { getStateSelection } from "@lxcat/database/dist/cs/picker/queries/public";
-import {
-  NestedStateArray,
-  StateProcess,
-} from "@lxcat/database/dist/cs/picker/types";
-import {
-  StateSummary,
-  StateTree,
-} from "@lxcat/database/dist/shared/queries/state";
 
 export function stateArrayToObject({
   id,
@@ -44,7 +37,11 @@ const handler = createRouter<NextApiRequest, NextApiResponse>()
       : undefined;
 
     if (stateProcess && reactions) {
-      const stateArray = await getStateSelection(stateProcess, reactions, []);
+      const stateArray = await db().getStateSelection(
+        stateProcess,
+        reactions,
+        [],
+      );
       res.json(stateArrayToTree(stateArray) ?? {});
     } else {
       res.json({});

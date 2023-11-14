@@ -4,10 +4,9 @@
 
 // import { GetServerSideProps, NextPage } from "next";
 
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
+import { db } from "@lxcat/database";
+import { KeyedLTPMixture } from "@lxcat/database/schema";
 import Script from "next/script";
-
-import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
 import { reference2bibliography } from "../../../shared/cite";
 import { IdsSchema } from "../IdsSchema";
 import { Bag } from "./Bag";
@@ -56,7 +55,7 @@ const fetchProps = async (
   }
 
   const ids = IdsSchema.parse(rawIds);
-  const bag = await byIds(ids);
+  const bag = await db().getMixtureByIds(ids);
   const hasCompleteSet = Object.values(bag.sets).some((s) => s.complete);
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);
   const hasMixedCompleteSets = hasCompleteSet && hasNonCompleteSet;

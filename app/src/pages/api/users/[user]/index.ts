@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { dropUser } from "@lxcat/database/dist/auth/queries";
+import { db } from "@lxcat/database";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -17,7 +17,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .delete(async (req, res) => {
     const { user: userId } = req.query;
     if (typeof userId === "string") {
-      await dropUser(userId);
+      await db().dropUser(userId);
       res.status(204).send("");
     }
   })

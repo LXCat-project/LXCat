@@ -2,14 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import { db } from "@lxcat/database";
+import { CrossSectionSetHeading } from "@lxcat/database/set";
 import type { LTPDocument } from "@lxcat/schema";
 import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
-import {
-  truncateNonUserCollections,
-  uploadAndPublishDummySet,
-} from "./global-setup";
+import { uploadAndPublishDummySet } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -24,7 +22,7 @@ test.describe("given 2 dummy sets", () => {
   });
 
   test.afterAll(async () => {
-    await truncateNonUserCollections();
+    await db().truncateNonUserCollections();
   });
 
   test.describe("cross section set list page", () => {
