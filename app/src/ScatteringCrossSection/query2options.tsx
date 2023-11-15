@@ -2,8 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { defaultSearchTemplate } from "@lxcat/database/dist/cs/picker/default";
-import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
+import {
+  defaultSearchTemplate,
+  ReactionTemplate,
+} from "@lxcat/database/item/picker";
 import { ParsedUrlQuery } from "querystring";
 
 export function getTemplateFromQuery(

@@ -4,13 +4,10 @@
 
 // import { GetServerSideProps, NextPage } from "next";
 
+import { db } from "@lxcat/database";
+import { KeyedLTPMixture } from "@lxcat/database/schema";
 import Script from "next/script";
 import { z } from "zod";
-
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
-import { getCSIdsInSet } from "@lxcat/database/dist/css/queries/public";
-
-import { KeyedLTPMixture } from "@lxcat/database/dist/schema/mixture";
 import { reference2bibliography } from "../../../shared/cite";
 import { Bag } from "../../scat-cs/inspect/Bag";
 
@@ -43,7 +40,7 @@ export default ScatteringCrossSectionSelectionPage;
 
 const fetchProps = async (rawId: string): Promise<BagProps> => {
   const id = z.string().regex(/\d+/).parse(rawId);
-  const bag = await byIds(await getCSIdsInSet(id));
+  const bag = await db().getMixtureByIds(await db().getItemIdsInSet(id));
   const hasCompleteSet = Object.values(bag.sets).some((s) => s.complete);
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);
   const hasMixedCompleteSets = hasCompleteSet && hasNonCompleteSet;

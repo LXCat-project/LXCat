@@ -4,8 +4,8 @@
 
 "use client";
 
-import { type SerializedSpecies } from "@lxcat/database/dist/schema/species";
-import { Box, createStyles, Group, Loader, px, Text } from "@mantine/core";
+import { SerializedSpecies } from "@lxcat/database/schema";
+import { createStyles, Group, px, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";

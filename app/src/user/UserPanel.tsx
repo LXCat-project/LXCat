@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Role } from "@lxcat/database/dist/auth/schema";
+import { Role } from "@lxcat/database/auth";
 import {
   Button,
   Card,

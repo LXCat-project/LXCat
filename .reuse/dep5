@@ -14,6 +14,10 @@ Files: *.json
 Copyright: LXCat team
 License: AGPL-3.0-or-later
 
+Files: app/*.json
+Copyright: LXCat team
+License: AGPL-3.0-or-later
+
 Files: packages/*/*.json
 Copyright: LXCat team
 License: AGPL-3.0-or-later

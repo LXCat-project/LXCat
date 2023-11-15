@@ -4,13 +4,13 @@
 
 import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

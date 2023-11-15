@@ -3,10 +3,39 @@
   "version": "0.1.0",
   "description": "Database abstraction layer for LXCat web application.",
   "license": "AGPL-3.0-or-later",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./item": {
+      "types": "./dist/cs/index.d.ts",
+      "default": "./dist/cs/index.js"
+    },
+    "./item/picker": {
+      "types": "./dist/cs/picker/index.d.ts",
+      "default": "./dist/cs/picker/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "default": "./dist/auth/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "default": "./dist/schema/index.js"
+    },
+    "./set": {
+      "types": "./dist/css/index.d.ts",
+      "default": "./dist/schema/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    },
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
     }
   },
   "files": [
@@ -14,7 +43,7 @@
   ],
   "private": true,
   "scripts": {
-    "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts setup",
+    "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/setup.ts",
     "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
     "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
     "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",
@@ -25,7 +54,7 @@
     "format": "dprint fmt",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint --ext .ts src/ seeds/ setup/",
+    "lint": "eslint --ext .ts src/",
     "test": "vitest",
     "collectionschema:Particle": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Particle --out src/shared/schemas/Particle.schema.json -e none --no-top-ref",
     "collectionschema:Contributor": "ts-json-schema-generator -f ./tsconfig.json --path src/shared/types/collections.ts --type Contributor --out src/shared/schemas/Contributor.schema.json -e none --no-top-ref",

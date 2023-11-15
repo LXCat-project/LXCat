@@ -4,7 +4,7 @@
 
 import "dotenv/config";
 import { Database } from "arangojs";
-import { Relation } from "../shared/schema";
+import { Relation } from "../shared/schema.js";
 
 export const setupSharedCollections = async (db: Database) => {
   await createParticleCollection(db);
@@ -14,6 +14,7 @@ export const setupSharedCollections = async (db: Database) => {
   await createReactionCollection(db);
   await createEdgeCollections(db);
 };
+export default setupSharedCollections;
 
 const createParticleCollection = async (db: Database) => {
   const collection = db.collection("Particle");

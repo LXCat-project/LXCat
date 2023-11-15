@@ -4,11 +4,11 @@
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { literal } from "arangojs/aql";
-import { AqlLiteral } from "arangojs/aql";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../../lxcat-database";
-import { getStateLeaf, StateLeaf } from "../../../shared/getStateLeaf";
+import { literal } from "arangojs/aql.js";
+import { AqlLiteral } from "arangojs/aql.js";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../../lxcat-database.js";
+import { getStateLeaf, StateLeaf } from "../../../shared/get-state-leaf.js";
 import {
   CSSetTree,
   NestedStateArray,
@@ -16,21 +16,21 @@ import {
   Reversible,
   SearchOptions,
   StateProcess,
-} from "../types";
-import { stateArrayToTree } from "../utils";
+} from "../types.js";
+import { stateArrayToTree } from "../utils.js";
 import {
   getCSSetFilterAQL,
   getReversibleFilterAQL,
   getTypeTagFilterAQL,
-} from "./filters";
+} from "./filters.js";
 import {
   getCSSetAQL,
   getFullStateTreeAQL,
   getPartakingStateAQL,
   getReactionsAQL,
   getStateSelectionAQL,
-} from "./generators";
-import { returnCSId, returnReversible, returnTypeTags } from "./return";
+} from "./generators.js";
+import { returnCSId, returnReversible, returnTypeTags } from "./return.js";
 
 export async function getPartakingStateSelection(
   this: LXCatDatabase,

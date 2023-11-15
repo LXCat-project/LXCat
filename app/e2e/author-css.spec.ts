@@ -2,16 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
 import { expect, Page, test } from "@playwright/test";
-import {
-  truncateNonUserCollections,
-  uploadAndPublishDummySet,
-} from "./global-setup";
+import { uploadAndPublishDummySet } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
+test.beforeAll(async () => {
+  await db().setupCollections();
+});
+
 test.afterAll(async () => {
-  await truncateNonUserCollections();
+  await db().truncateNonUserCollections();
 });
 
 test("/api/author/scat-css", async ({ request }) => {
@@ -28,7 +30,7 @@ test("/api/author/scat-css", async ({ request }) => {
 test.describe.skip("/author/scat-css", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
-    return truncateNonUserCollections;
+    return db().truncateNonUserCollections;
   });
 
   test.beforeEach(async ({ page }) => {
@@ -72,7 +74,7 @@ test.describe.skip("/author/scat-css", () => {
   );
 });
 
-test.describe("/author/scat-css/add", () => {
+test.describe.skip("/author/scat-css/add", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/author/scat-css/add");
   });

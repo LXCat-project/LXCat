@@ -3,18 +3,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../lxcat-database";
-import { KeyedDocument } from "../../schema/document";
-import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSet } from "../collections";
-
-export interface CrossSectionSetOwned extends CrossSectionSet {
-  _key: string;
-}
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { KeyedDocument } from "../../schema/document.js";
+import { VersionInfo } from "../../shared/types/version_info.js";
+import { KeyedSet } from "../public.js";
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<CrossSectionSetOwned> = await this.db.query(aql`
+  const cursor: ArrayCursor<KeyedSet> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         LIMIT 1

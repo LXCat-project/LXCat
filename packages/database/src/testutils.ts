@@ -5,13 +5,13 @@
 import { ArangoDBContainer } from "@testcontainers/arangodb";
 import { Database } from "arangojs";
 import { Wait } from "testcontainers";
-import { PortWithOptionalBinding } from "testcontainers/build/utils/port";
-import { loadTestUserAndOrg } from "./auth/testutils";
-import { LXCatDatabase } from "./lxcat-database";
-import { setupUserCollections } from "./setup/2_users";
-import { setupSharedCollections } from "./setup/3_shared";
-import { setupCrossSectionCollections } from "./setup/4_cs";
-import { setSystemDb } from "./systemDb";
+import { PortWithOptionalBinding } from "testcontainers/build/utils/port.js";
+import { loadTestUserAndOrg } from "./auth/testutils.js";
+import { LXCatDatabase } from "./lxcat-database.js";
+import { setupUserCollections } from "./setup/2_users.js";
+import { setupSharedCollections } from "./setup/3_shared.js";
+import { setupCrossSectionCollections } from "./setup/4_cs.js";
+import { setSystemDb } from "./systemDb.js";
 
 export async function startDbContainer(
   password = "testpw",

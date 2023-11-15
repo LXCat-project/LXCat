@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { byIdJSON } from "@lxcat/database/dist/css/queries/public";
-import { KeyedDocumentReferenceable } from "@lxcat/database/dist/schema/document";
+import { db } from "@lxcat/database";
+import { KeyedDocumentReferenceable } from "@lxcat/database/schema";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -22,11 +23,20 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   .get(async (req, res) => {
     const { id } = req.query;
     if (typeof id === "string") {
-      const data = await byIdJSON(id);
+      const data = await db().getSetById(id);
       if (data) {
         const references = mapObject(
           data.references,
           ([key, reference]) => [key, reference2bibliography(reference)],
+        );
+        const states = mapObject(
+          data.states,
+          (
+            [key, state],
+          ) => [key, {
+            detailed: state,
+            serialized: AnySpeciesSerializable.parse(state).serialize(),
+          }],
         );
 
         const dataWithRef: KeyedDocumentReferenceable = {
@@ -43,7 +53,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
           "Content-Disposition",
           `attachment;filename="${dataWithRef.name}.txt"`,
         );
-        res.send(convertDocument({ ...dataWithRef, references }));
+        res.send(convertDocument({ ...dataWithRef, states, references }));
       } else {
         res.status(404).end("Not found");
       }

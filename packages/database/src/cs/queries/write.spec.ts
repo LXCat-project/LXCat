@@ -4,17 +4,17 @@
 
 import { AnyProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
-import { deepClone } from "../../css/queries/deepClone";
-import { ISO_8601_UTC, matchesId } from "../../css/queries/testutils";
-import { KeyedProcess } from "../../schema/process";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+import { deepClone } from "../../css/queries/deepClone.js";
+import { ISO_8601_UTC, matchesId } from "../../css/queries/testutils.js";
+import { KeyedProcess } from "../../schema/process.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
   createDraftFromPublished,
   createSampleCrossSection,
   insertSampleStateIds,
   truncateCrossSectionCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 describe("given db with test user and organization", () => {
   let db: LXCatTestDatabase;

@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
 import { expect, test } from "@playwright/test";
-import { truncateNonUserCollections } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.afterAll(async () => {
-  await truncateNonUserCollections();
+  await db().truncateNonUserCollections();
 });
 
 test.describe("User panel", () => {

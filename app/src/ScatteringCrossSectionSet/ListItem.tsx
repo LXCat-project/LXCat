@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import { CrossSectionSetHeading } from "@lxcat/database/set";
 import Link from "next/link";
 
 const style = {

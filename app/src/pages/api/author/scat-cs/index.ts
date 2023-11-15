@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { searchOwned } from "@lxcat/database/dist/cs/queries/author_read";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 
+import { db } from "@lxcat/database";
 import {
   AuthRequest,
   hasAuthorRole,
@@ -28,7 +28,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     // FIXME: Alter `searchOwned` to accept search template argument.
     // const query = req.query;
     // const selection = getTemplateFromQuery(query);
-    const results = await searchOwned(me.email, paging);
+    const results = await db().searchOwnedItems(me.email, paging);
     console.log(results);
     res.json(results);
   })

@@ -2,13 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getCSIdByReactionTemplate } from "@lxcat/database/dist/cs/picker/queries/public";
-import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
-import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
-import {
-  getStateLeaf,
-  StateLeaf,
-} from "@lxcat/database/dist/shared/getStateLeaf";
+import { db } from "@lxcat/database";
+import { ReactionTemplate } from "@lxcat/database/item/picker";
+import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { AuthRequest } from "../../../auth/middleware";
@@ -46,7 +42,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
               && set.length === 0
             )
           ) {
-            return getCSIdByReactionTemplate(
+            return db().getItemIdsByReactionTemplate(
               consumes,
               produces,
               typeTags,
@@ -61,7 +57,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     );
 
     const csIds = new Set(csIdsNested.flat());
-    const csHeadings = await getCSHeadings(Array.from(csIds), {
+    const csHeadings = await db().getItemHeadings(Array.from(csIds), {
       // FIXME: This is a magic value, maybe use PAGE_SIZE?
       count: 100,
       offset,

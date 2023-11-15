@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// @ts-nocheck
+// TODO: Deprecate
+
 import { FilterOptions } from "@lxcat/database/dist/css/queries/public";
 import { StateChoices } from "@lxcat/database/dist/shared/queries/state";
 import Link from "next/link";

@@ -153,85 +153,84 @@ fn parse_process(
 ) -> std::result::Result<String, Box<dyn Error>> {
     let tag = parse_tag(&process.reaction.type_tags);
 
-    write!(buffer, "\n{}", tag.to_uppercase())?;
-    write!(
-        buffer,
-        "\n{}",
-        get_reaction_summary(&process.reaction, states)?
-    )?;
-    write!(
-        buffer,
-        "\n {:.6e}",
-        match tag.to_uppercase().as_str() {
-            "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&process.info.parameters)
-                .ok_or_else(|| ParserError::MissingMassRatio(process.info.id.clone()))?,
-            _ => process.info.threshold,
-        }
-    )?;
-    write!(
-        buffer,
-        "\nSPECIES: {}",
-        get_particles(&process.reaction, &states).join(" / ")
-    )?;
-    write!(
-        buffer,
-        "\nPROCESS: {} {}-> {}, {}",
-        parse_entries(&process.reaction.lhs, states),
-        match process.reaction.reversible {
-            true => "<",
-            false => "",
-        },
-        parse_entries(&process.reaction.rhs, states),
-        tag
-    )?;
+    for info in &process.info {
+        write!(buffer, "\n{}", tag.to_uppercase())?;
+        write!(
+            buffer,
+            "\n{}",
+            get_reaction_summary(&process.reaction, states)?
+        )?;
+        write!(
+            buffer,
+            "\n {:.6e}",
+            match tag.to_uppercase().as_str() {
+                "EFFECTIVE" | "ELASTIC" => get_mass_ratio(&info.parameters)
+                    .ok_or_else(|| ParserError::MissingMassRatio(info.id.clone()))?,
+                _ => info.threshold,
+            }
+        )?;
+        write!(
+            buffer,
+            "\nSPECIES: {}",
+            get_particles(&process.reaction, &states).join(" / ")
+        )?;
+        write!(
+            buffer,
+            "\nPROCESS: {} {}-> {}, {}",
+            parse_entries(&process.reaction.lhs, states),
+            match process.reaction.reversible {
+                true => "<",
+                false => "",
+            },
+            parse_entries(&process.reaction.rhs, states),
+            tag
+        )?;
 
-    match tag {
-        "Effective" | "Elastic" => {
-            write!(
-                buffer,
-                "\nPARAM.:  m/M = {}",
-                get_mass_ratio(&process.info.parameters)
-                    .ok_or_else(|| ParserError::MissingMassRatio(process.info.id.clone()))?,
-            )
-        }
-        _ => {
-            write!(
-                buffer,
-                "\nPARAM.:  E = {} {}",
-                process.info.threshold, process.info.data.units.0
-            )
-        }
-    }?;
+        match tag {
+            "Effective" | "Elastic" => {
+                write!(
+                    buffer,
+                    "\nPARAM.:  m/M = {}",
+                    get_mass_ratio(&info.parameters)
+                        .ok_or_else(|| ParserError::MissingMassRatio(info.id.clone()))?,
+                )
+            }
+            _ => {
+                write!(
+                    buffer,
+                    "\nPARAM.:  E = {} {}",
+                    info.threshold, info.data.units.0
+                )
+            }
+        }?;
 
-    // TODO: It seems that supplying a statistical weight ratio is optional for
-    // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
-    // the dataset be perceived as faulty?
-    if process.reaction.reversible {
-        if let Some(params) = &process.info.parameters {
-            if let Some(sw_ratio) = params.statistical_weight_ratio {
-                write!(buffer, ", g1/g0 = {}", sw_ratio)?;
+        // TODO: It seems that supplying a statistical weight ratio is optional for
+        // reversible processes, see for example IST-Lisbon, N2. Is this correct, or should
+        // the dataset be perceived as faulty?
+        if process.reaction.reversible {
+            if let Some(params) = &info.parameters {
+                if let Some(sw_ratio) = params.statistical_weight_ratio {
+                    write!(buffer, ", g1/g0 = {}", sw_ratio)?;
+                }
             }
         }
+        if complete {
+            write!(buffer, ", complete set")?;
+        }
+        for reference in &info.references {
+            write!(buffer, "\nCOMMENT: {}", references[reference].trim())?;
+        }
+        write!(
+            buffer,
+            "\nCOLUMNS: {} ({}) | {} ({})",
+            info.data.labels.0, info.data.units.0, info.data.labels.1, info.data.units.1
+        )?;
+        write!(buffer, "\n-----------------------------")?;
+        for (x, y) in info.data.values.iter() {
+            write!(buffer, "\n {:.6e}\t{:.6e}", x, y)?;
+        }
+        writeln!(buffer, "\n-----------------------------")?;
     }
-    if complete {
-        write!(buffer, ", complete set")?;
-    }
-    for reference in &process.info.references {
-        write!(buffer, "\nCOMMENT: {}", references[reference].trim())?;
-    }
-    write!(
-        buffer,
-        "\nCOLUMNS: {} ({}) | {} ({})",
-        process.info.data.labels.0,
-        process.info.data.units.0,
-        process.info.data.labels.1,
-        process.info.data.units.1
-    )?;
-    write!(buffer, "\n-----------------------------")?;
-    for (x, y) in process.info.data.values.iter() {
-        write!(buffer, "\n {:.6e}\t{:.6e}", x, y)?;
-    }
-    writeln!(buffer, "\n-----------------------------")?;
 
     Ok(buffer)
 }
@@ -310,9 +309,11 @@ impl Mixture {
             )?;
 
             for process in self.processes.iter().filter(|&process| {
-                (&process.info.is_part_of)
-                    .as_ref()
-                    .map_or(false, |sets| sets.contains(set_key))
+                process.info.iter().all(|info| {
+                    info.is_part_of
+                        .as_ref()
+                        .map_or(false, |sets| sets.contains(set_key))
+                })
             }) {
                 legacy = parse_process(
                     legacy,

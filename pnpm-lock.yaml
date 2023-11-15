@@ -211,8 +211,8 @@ importers:
         specifier: workspace:^
         version: link:../packages/tsconfig
       '@playwright/test':
-        specifier: 1.34.3
-        version: 1.34.3
+        specifier: 1.38.0
+        version: 1.38.0
       '@types/cookie':
         specifier: ^0.5.3
         version: 0.5.3
@@ -2561,15 +2561,12 @@ packages:
       tslib: 2.5.3
     dev: true
 
-  /@playwright/test@1.34.3:
-    resolution: {integrity: sha512-zPLef6w9P6T/iT6XDYG3mvGOqOyb6eHaV9XtkunYs0+OzxBtrPAAaHotc0X+PJ00WPPnLfFBTl7mf45Mn8DBmw==}
-    engines: {node: '>=14'}
+  /@playwright/test@1.38.0:
+    resolution: {integrity: sha512-xis/RXXsLxwThKnlIXouxmIvvT3zvQj1JE39GsNieMUrMpb3/GySHDh2j8itCG22qKVD4MYLBp7xB73cUW/UUw==}
+    engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 20.9.0
-      playwright-core: 1.34.3
-    optionalDependencies:
-      fsevents: 2.3.2
+      playwright: 1.38.0
     dev: true
 
   /@plotly/d3-sankey-circular@0.33.1:
@@ -9704,10 +9701,20 @@ packages:
       pathe: 1.1.1
     dev: true
 
-  /playwright-core@1.34.3:
-    resolution: {integrity: sha512-2pWd6G7OHKemc5x1r1rp8aQcpvDh7goMBZlJv6Co5vCNLVcQJdhxRL09SGaY6HcyHH9aT4tiynZabMofVasBYw==}
-    engines: {node: '>=14'}
+  /playwright-core@1.38.0:
+    resolution: {integrity: sha512-f8z1y8J9zvmHoEhKgspmCvOExF2XdcxMW8jNRuX4vkQFrzV4MlZ55iwb5QeyiFQgOFCUolXiRHgpjSEnqvO48g==}
+    engines: {node: '>=16'}
     hasBin: true
+    dev: true
+
+  /playwright@1.38.0:
+    resolution: {integrity: sha512-fJGw+HO0YY+fU/F1N57DMO+TmXHTrmr905J05zwAQE9xkuwP/QLDk63rVhmyxh03dYnEhnRbsdbH9B0UVVRB3A==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.38.0
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /plotly.js-basic-dist@2.27.1:

@@ -8,11 +8,11 @@ import { AnySpecies } from "@lxcat/schema/species";
 import { Database } from "arangojs";
 import { expect } from "vitest";
 import { z } from "zod";
-import { LXCatDatabase } from "../../lxcat-database";
-import { LXCatTestDatabase } from "../../testutils";
-import { FilterOptions } from "./public";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 
-import testCsCreator from "../../test/seed/2_cs";
+import testCsCreator from "../../test/seed/2_cs.js";
+import { FilterOptions } from "../public.js";
 
 export async function loadTestSets(db: LXCatDatabase) {
   await testCsCreator(db);

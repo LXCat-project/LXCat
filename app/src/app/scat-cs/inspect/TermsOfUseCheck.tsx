@@ -4,12 +4,10 @@
 
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import { Button, Center, Modal } from "@mantine/core";
 import { IconLicense } from "@tabler/icons-react";
-import { usePathname } from "next/navigation";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
 import { TermsOfUse } from "../../../shared/TermsOfUse";
 import { ButtonClipboard } from "./ButtonClipboard";
@@ -19,16 +17,16 @@ import { FormattedReference } from "./types";
 interface Props {
   references: FormattedReference[];
   permaLink: string;
+  forceOpen?: boolean;
 }
 
-export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
-  const path = usePathname() ?? "";
-  const hash = path.split("#")[1] || "";
-  const hasForce = hash.includes("termsOfUse");
+export const TermsOfUseCheck = (
+  { references, permaLink, forceOpen }: Props,
+) => {
   const hasDownloadToken = typeof document !== "undefined"
     ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
     : false;
-  const [agreement, setAgreement] = useState(!hasForce && hasDownloadToken);
+  const [agreement, setAgreement] = useState(!forceOpen && hasDownloadToken);
 
   async function acceptTermsOfUse() {
     const url = "/api/auth/tou";
@@ -40,8 +38,11 @@ export const TermsOfUseCheck = ({ references, permaLink }: Props) => {
     } else {
       // Give error feedback to user
     }
-    if (hasForce) {
-      document.location.hash = "";
+    if (forceOpen) {
+      const searchParams = new URLSearchParams(document.location.search);
+      searchParams.delete("termsOfUse");
+
+      document.location.search = searchParams.toString();
     }
   }
 

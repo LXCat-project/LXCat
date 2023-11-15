@@ -4,12 +4,9 @@
 
 import {
   defaultReactionTemplate,
-  defaultSearchTemplate,
-} from "@lxcat/database/dist/cs/picker/default";
-import {
   ReactionTemplate,
   Reversible,
-} from "@lxcat/database/dist/cs/picker/types";
+} from "@lxcat/database/item/picker";
 import { Button, Group, Stack } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { produce } from "immer";

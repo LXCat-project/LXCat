@@ -7,11 +7,11 @@
 // NOTE: Soon deprecated
 
 import { aql } from "arangojs";
-import { join, literal } from "arangojs/aql";
-import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
-import { ArrayCursor } from "arangojs/cursor";
-import { db } from "../../db";
-import { State } from "../types/collections";
+import { join, literal } from "arangojs/aql.js";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql.js";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { db } from "../../db.js";
+import { State } from "../types/collections.js";
 
 export type VibrationalChoices = {
   [index: string]: {
@@ -273,10 +273,3 @@ export async function getIdByLabel(label: string) {
   const cursor: ArrayCursor<string> = await db().query(query);
   return cursor.next();
 }
-
-export type StateSummary = {
-  latex: string;
-  valid: boolean;
-  children?: StateTree;
-};
-export type StateTree = Record<string, StateSummary>;

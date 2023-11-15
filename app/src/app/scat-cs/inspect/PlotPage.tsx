@@ -48,11 +48,12 @@ const Chart = dynamic(
 const NUM_LINES_INIT = 5;
 
 export const PlotPage = (
-  { processes, refs, setMismatch, permaLink }: {
+  { processes, refs, setMismatch, permaLink, forceTermsOfUse }: {
     processes: Array<DenormalizedProcess>;
     refs: Array<FormattedReference>;
     setMismatch: boolean;
     permaLink: string;
+    forceTermsOfUse?: boolean;
   },
 ) => {
   const router = useRouter();
@@ -193,7 +194,11 @@ export const PlotPage = (
                     Export table
                   </Button>
                 </Button.Group>
-                <TermsOfUseCheck references={refs} permaLink={permaLink} />
+                <TermsOfUseCheck
+                  references={refs}
+                  permaLink={permaLink}
+                  forceOpen={forceTermsOfUse}
+                />
               </Group>
             </Stack>
           </Stack>

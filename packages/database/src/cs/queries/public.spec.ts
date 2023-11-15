@@ -8,10 +8,10 @@ import {
   matchesId,
   sampleCrossSectionSet,
   truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { KeyedLTPMixture } from "../../schema/mixture";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+} from "../../css/queries/testutils.js";
+import { KeyedLTPMixture } from "../../schema/mixture.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 
 let db: LXCatTestDatabase;
 
@@ -251,7 +251,7 @@ describe("given 4 published cross sections in 2 sets", () => {
       expect(result.processes).toEqual(expected.processes);
     });
 
-    it.only("given 0 ids should return 0 cross sections", async () => {
+    it("given 0 ids should return 0 cross sections", async () => {
       const result = await db.getMixtureByIds([]);
       const expected: LTPMixture = {
         states: {},

@@ -4,8 +4,8 @@
 
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { LXCatDatabase } from "../lxcat-database";
-import { PartialKeyedDocument } from "../schema/document";
+import { LXCatDatabase } from "../lxcat-database.js";
+import { PartialKeyedDocument } from "../schema/document.js";
 
 export async function load_css(db: LXCatDatabase, fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });

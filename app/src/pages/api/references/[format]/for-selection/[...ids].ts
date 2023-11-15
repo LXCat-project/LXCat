@@ -5,7 +5,7 @@
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
-import { getReferencesForSelection } from "@lxcat/database/dist/shared/queries/reference";
+import { db } from "@lxcat/database";
 import type { Reference } from "@lxcat/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
@@ -36,7 +36,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
 
       const unique_ids = [...new Set(ids)];
 
-      const bibliography = await getReferencesForSelection(unique_ids);
+      const bibliography = await db().getReferencesForSelection(unique_ids);
 
       const selectionReference: Reference = {
         id: `LXCatData`,

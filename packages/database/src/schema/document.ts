@@ -7,8 +7,8 @@ import { AnySpecies } from "@lxcat/schema/species";
 import { array, object, output, record, string } from "zod";
 
 import { Process, ProcessInfo } from "@lxcat/schema/process";
-import { Keyed, PartialKeyed } from "./key";
-import { KeyedProcess } from "./process";
+import { Keyed, PartialKeyed } from "./key.js";
+import { KeyedProcess } from "./process.js";
 
 const KeyedDocumentBody = object({
   references: record(Reference),

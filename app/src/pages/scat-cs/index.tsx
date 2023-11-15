@@ -2,34 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  defaultReactionTemplate,
-  defaultSearchTemplate,
-} from "@lxcat/database/dist/cs/picker/default";
-import {
-  getCSIdByReactionTemplate,
-  getSearchOptions,
-} from "@lxcat/database/dist/cs/picker/queries/public";
+import { db } from "@lxcat/database";
+import { CrossSectionHeading } from "@lxcat/database/item";
 import {
   CSSetTree,
+  defaultReactionTemplate,
+  defaultSearchTemplate,
   ReactionOptions,
   ReactionTemplate,
   Reversible,
   SearchOptions,
   StateProcess,
-} from "@lxcat/database/dist/cs/picker/types";
-import { CrossSectionHeading } from "@lxcat/database/dist/cs/public";
-import { getCSHeadings } from "@lxcat/database/dist/cs/queries/public";
+} from "@lxcat/database/item/picker";
 import {
   getStateLeaf,
   getStateLeafs,
+  PagingOptions,
   StateLeaf,
-} from "@lxcat/database/dist/shared/getStateLeaf";
-import {
-  getIdByLabel,
   StateTree,
-} from "@lxcat/database/dist/shared/queries/state";
-import { PagingOptions } from "@lxcat/database/dist/shared/types/search";
+} from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import {
   Box,
@@ -285,12 +276,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   };
 
   const defaultTemplates = defaultSearchTemplate();
-  const defaultOptions = getSearchOptions(defaultTemplates);
+  const defaultOptions = db().getSearchOptions(defaultTemplates);
 
   const [options, items] = deepEqual(defaultTemplates, template)
     ? [await defaultOptions, []]
     : await Promise.all([
-      getSearchOptions(template),
+      db().getSearchOptions(template),
       Promise.all(
         template.map(
           async ({
@@ -299,7 +290,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
             typeTags,
             reversible,
             set,
-          }) => {
+          }: ReactionTemplate) => {
             const consumes = consumesPaths
               .map(getStateLeaf)
               .filter((leaf): leaf is StateLeaf => leaf !== undefined);
@@ -315,7 +306,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
                 && set.length === 0
               )
             ) {
-              return getCSIdByReactionTemplate(
+              return db().getItemIdsByReactionTemplate(
                 consumes,
                 produces,
                 typeTags,
@@ -328,7 +319,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           },
         ),
       ).then((csIdsNested) =>
-        getCSHeadings([...new Set(csIdsNested.flat())], paging)
+        db().getItemHeadings([...new Set(csIdsNested.flat())], paging)
       ),
     ]);
 

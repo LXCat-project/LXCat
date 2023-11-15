@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { listOwned } from "@lxcat/database/dist/css/queries/author_read";
-import { createSet } from "@lxcat/database/dist/css/queries/author_write";
-import { KeyedDocument } from "@lxcat/database/dist/schema/document";
-import { getAffiliations } from "@lxcat/database/dist/shared/queries/organization";
+import { db } from "@lxcat/database";
+import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import {
@@ -23,14 +21,16 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       if (typeof body === "string") {
         body = JSON.parse(body);
       }
-      const parseResult = KeyedDocument.safeParse(body);
+      const parseResult = PartialKeyedDocument.safeParse(body);
       if (parseResult.success) {
-        const affiliations = await getAffiliations(req.user.email);
+        const affiliations = await db()
+          .getAffiliations(req.user.email)
+          .then((affiliations) => affiliations.map(({ name }) => name));
 
         const doc = parseResult.data;
         if (affiliations.includes(doc.contributor)) {
           // Add to CrossSectionSet with status=='draft' and version=='1'
-          const id = await createSet(doc, "draft");
+          const id = await db().createSet(doc, "draft");
           res.json({ id });
         } else {
           res.statusCode = 403;
@@ -66,7 +66,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
   })
   .get(async (req, res) => {
     const user = req.user;
-    const items = await listOwned(user.email);
+    const items = await db().listOwnedSets(user.email);
     res.json({ items });
     return;
   })

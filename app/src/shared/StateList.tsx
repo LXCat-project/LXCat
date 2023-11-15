@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { StatePath } from "@lxcat/database/dist/shared/getStateLeaf";
-import { StateTree } from "@lxcat/database/dist/shared/queries/state";
+import { StatePath, StateTree } from "@lxcat/database/shared";
 import { Button, Stack } from "@mantine/core";
 import { StateSelect } from "./StateSelect";
 

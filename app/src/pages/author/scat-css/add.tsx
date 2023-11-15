@@ -2,11 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  OrganizationFromDB,
-  userMemberships,
-} from "@lxcat/database/dist/auth/queries";
-import { type KeyedDocument } from "@lxcat/database/dist/schema/document";
+import { db } from "@lxcat/database";
+import type { KeyedOrganization } from "@lxcat/database/auth";
+import { KeyedDocument } from "@lxcat/database/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -17,7 +15,7 @@ import { ErrorList } from "../../../shared/ErrorList";
 import { Layout } from "../../../shared/Layout";
 
 interface Props {
-  organizations: OrganizationFromDB[];
+  organizations: KeyedOrganization[];
 }
 
 const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
@@ -67,7 +65,7 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
 
-  const organizations = await userMemberships(me.email);
+  const organizations = await db().getAffiliations(me.email);
   return {
     props: {
       organizations,

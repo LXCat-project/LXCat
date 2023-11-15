@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { DocumentData } from "arangojs/documents";
+import { DocumentData } from "arangojs/documents.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { Keyed } from "../schema/key.js";
 
 export const Session = z
   .object({
@@ -24,6 +25,12 @@ export const Session = z
   })
   .strict();
 export type Session = z.infer<typeof Session>;
+
+export const SessionDiff = z.object({
+  expires: Session.shape.expires.optional(),
+  sessionToken: z.string(),
+});
+export type SessionDiff = z.infer<typeof SessionDiff>;
 
 export const Account = z.object({
   type: z.string(),
@@ -71,8 +78,15 @@ export const User = z.object({
 });
 
 export type User = z.infer<typeof User>;
-
 export type UserInDb = DocumentData<z.infer<typeof User>>;
+
+export interface UserFromDB extends UserInDb {
+  _key: string;
+  organizations: string[];
+}
+
+export const UserDiff = Keyed(User.partial());
+export type UserDiff = z.TypeOf<typeof UserDiff>;
 
 export const UserWithAccountSessionInDb = User.extend({
   roles: z.array(Role).optional().default([]), // Same as User.roles, but defaults to []
@@ -93,5 +107,7 @@ export const Organization = z.object({
 });
 
 export type Organization = z.infer<typeof Organization>;
-
 export const OrganizationAsJsonSchema = zodToJsonSchema(Organization);
+
+export const KeyedOrganization = Keyed(Organization);
+export type KeyedOrganization = z.infer<typeof KeyedOrganization>;

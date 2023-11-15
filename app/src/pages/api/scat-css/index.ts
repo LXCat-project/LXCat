@@ -2,11 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  FilterOptions,
-  search,
-  SortOptions,
-} from "@lxcat/database/dist/css/queries/public";
+import { db } from "@lxcat/database";
+import { FilterOptions, SortOptions } from "@lxcat/database/set";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
@@ -47,7 +44,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
         ? parseInt(count)
         : Number.MAX_SAFE_INTEGER,
     };
-    const items = await search(filter, sort, paging);
+    const items = await db().searchSet(filter, sort, paging);
     res.json({ items });
     return;
   })

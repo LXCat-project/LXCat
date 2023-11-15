@@ -4,9 +4,9 @@
 
 import type { Reference, SelfReference } from "@lxcat/schema";
 import { type Reaction } from "@lxcat/schema/process";
-import { CrossSection } from "../cs/collections";
-import { CrossSectionSet } from "../css/collections";
-import { State } from "../shared/types/collections";
+import { CrossSection } from "../cs/collections.js";
+import { CrossSectionSet } from "../css/collections.js";
+import { State } from "../shared/types/collections.js";
 
 export interface CrossSectionHeading {
   id: string;

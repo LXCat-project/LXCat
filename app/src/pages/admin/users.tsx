@@ -2,13 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  listOrganizations,
-  listUsers,
-  OrganizationFromDB,
-  UserFromDB,
-} from "@lxcat/database/dist/auth/queries";
-import { Role, User } from "@lxcat/database/dist/auth/schema";
+import { db } from "@lxcat/database";
+import type { KeyedOrganization, User, UserFromDB } from "@lxcat/database/auth";
+import { Role } from "@lxcat/database/auth";
 import { Button, MultiSelect } from "@mantine/core";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
@@ -17,7 +13,7 @@ import { Layout } from "../../shared/Layout";
 
 interface Props {
   users: UserFromDB[];
-  organizations: OrganizationFromDB[];
+  organizations: KeyedOrganization[];
   me: User;
 }
 
@@ -143,8 +139,8 @@ export default AdminUsers;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const me = await mustBeAdmin(context);
-  const users = await listUsers();
-  const organizations = await listOrganizations();
+  const users = await db().listUsers();
+  const organizations = await db().listOrganizations();
   return {
     props: {
       users,

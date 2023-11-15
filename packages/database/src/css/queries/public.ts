@@ -4,30 +4,24 @@
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../lxcat-database";
-import { KeyedDocument } from "../../schema/document";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { KeyedDocument } from "../../schema/document.js";
 import {
   ChoiceRow,
   generateStateChoicesAql,
   generateStateFilterAql,
   groupStateChoices,
   StateChoices,
-} from "../../shared/queries/state";
-import { PagingOptions } from "../../shared/types/search";
-import { VersionInfo } from "../../shared/types/version_info";
-import { CrossSectionSetHeading, CrossSectionSetItem } from "../public";
-
-export interface FilterOptions {
-  contributor: string[];
-  state: StateChoices;
-  tag: ReactionTypeTag[];
-}
-
-export interface SortOptions {
-  field: "name" | "contributor";
-  dir: "ASC" | "DESC";
-}
+} from "../../shared/queries/state.js";
+import { PagingOptions } from "../../shared/types/search.js";
+import { VersionInfo } from "../../shared/types/version_info.js";
+import {
+  CrossSectionSetHeading,
+  CrossSectionSetItem,
+  FilterOptions,
+  SortOptions,
+} from "../public.js";
 
 export async function search(
   this: LXCatDatabase,

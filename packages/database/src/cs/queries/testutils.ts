@@ -5,12 +5,12 @@
 import { AnyProcess } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
 import { Database } from "arangojs";
-import { deepClone } from "../../css/queries/deepClone";
-import { LXCatDatabase } from "../../lxcat-database";
-import { KeyedProcess } from "../../schema/process";
-import { StateTree } from "../../shared/queries/state";
-import { Status } from "../../shared/types/version_info";
-import { LXCatTestDatabase } from "../../testutils";
+import { deepClone } from "../../css/queries/deepClone.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { KeyedProcess } from "../../schema/process.js";
+import { StateTree } from "../../shared/types/state.js";
+import { Status } from "../../shared/types/version_info.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 
 export async function createSampleCrossSection(
   db: LXCatTestDatabase,

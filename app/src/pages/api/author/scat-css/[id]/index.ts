@@ -2,14 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { isOwner } from "@lxcat/database/dist/css/queries/author_read";
-import {
-  removeDraftUnchecked,
-  retractSetUnchecked,
-  updateSet,
-} from "@lxcat/database/dist/css/queries/author_write";
-import { getVersionInfo } from "@lxcat/database/dist/css/queries/public";
-import { KeyedDocument } from "@lxcat/database/dist/schema/document";
+import { db } from "@lxcat/database";
+import { KeyedDocument } from "@lxcat/database/schema";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
 import { z } from "zod";
@@ -37,9 +31,13 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       const parseResults = KeyedDocument.safeParse(body.doc);
 
       if (parseResults.success) {
-        if (await isOwner(id, user.email)) {
+        if (await db().isOwnerOfSet(id, user.email)) {
           try {
-            const newId = await updateSet(id, parseResults.data, body.message);
+            const newId = await db().updateSet(
+              id,
+              parseResults.data,
+              body.message,
+            );
             const data = { id: newId };
             res.json(data);
           } catch (error) {
@@ -76,7 +74,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
     if (request.success) {
       const { query: { id }, body: { message } } = request.data;
 
-      const versionInfo = await getVersionInfo(id);
+      const versionInfo = await db().getSetVersionInfo(id);
 
       if (versionInfo === undefined) {
         res.status(204).end(`Item with id ${id} does not exist.`);
@@ -84,10 +82,10 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
       }
 
       if (
-        await isOwner(id, user.email)
+        await db().isOwnerOfSet(id, user.email)
       ) {
         if (versionInfo.status === "draft" && user.roles?.includes("author")) {
-          await removeDraftUnchecked(id);
+          await db().removeDraftSetUnchecked(id);
         } else if (
           versionInfo.status === "published"
           && user.roles?.includes("publisher")
@@ -98,7 +96,7 @@ const handler = createRouter<AuthRequest, NextApiResponse>()
             );
             return;
           }
-          await retractSetUnchecked(id, message);
+          await db().retractSetUnchecked(id, message);
         }
         const data = { id };
         res.json(data);

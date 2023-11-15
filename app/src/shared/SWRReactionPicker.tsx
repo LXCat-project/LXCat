@@ -7,12 +7,8 @@ import {
   ReactionTemplate,
   Reversible,
   StateProcess,
-} from "@lxcat/database/dist/cs/picker/types";
-import {
-  getStateLeafs,
-  StateLeaf,
-  StatePath,
-} from "@lxcat/database/dist/shared/getStateLeaf";
+} from "@lxcat/database/item/picker";
+import { getStateLeafs, StateLeaf, StatePath } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { useState } from "react";
 import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";

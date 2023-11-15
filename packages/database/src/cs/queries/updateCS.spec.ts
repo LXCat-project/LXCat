@@ -8,15 +8,15 @@ import {
   ISO_8601_UTC,
   sampleEmail,
   truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { Status } from "../../shared/types/version_info";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+} from "../../css/queries/testutils.js";
+import { Status } from "../../shared/types/version_info.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
   createSampleCrossSection,
   insertSampleStateIds,
   sampleCrossSection,
-} from "./testutils";
+} from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

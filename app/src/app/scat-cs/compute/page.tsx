@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { convertMixture } from "@lxcat/converter";
-import { byIds } from "@lxcat/database/dist/cs/queries/public";
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/dist/schema/mixture";
+import { db } from "@lxcat/database";
+import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
@@ -61,7 +61,7 @@ const fetchProps = async (
     url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
     termsOfUse:
       `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
-    ...await byIds(ids),
+    ...await db().getMixtureByIds(ids),
   };
 
   const references = mapObject(

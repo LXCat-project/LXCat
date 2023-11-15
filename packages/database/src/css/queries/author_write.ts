@@ -4,14 +4,14 @@
 
 import { type AnyProcess } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { ArrayCursor } from "arangojs/cursor.js";
 import deepEqual from "deep-equal";
-import { now } from "../../date";
-import { LXCatDatabase } from "../../lxcat-database";
-import type { PartialKeyedDocument } from "../../schema/document";
-import { KeyedProcess } from "../../schema/process";
-import { mapReaction } from "../../shared/queries";
-import { Status, VersionInfo } from "../../shared/types/version_info";
+import { now } from "../../date.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import type { PartialKeyedDocument } from "../../schema/document.js";
+import { KeyedProcess } from "../../schema/process.js";
+import { mapReaction } from "../../shared/queries.js";
+import { Status, VersionInfo } from "../../shared/types/version_info.js";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(

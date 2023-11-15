@@ -4,13 +4,13 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { KeyedDocument } from "../../schema/document";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { CrossSectionSetOwned } from "./author_read";
-import { deepClone } from "./deepClone";
-import { KeyedVersionInfo } from "./public";
-import { ISO_8601_UTC, matchesId, sampleEmail } from "./testutils";
+import { KeyedDocument } from "../../schema/document.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { CrossSectionSetOwned } from "./author_read.js";
+import { deepClone } from "./deepClone.js";
+import { KeyedVersionInfo } from "./public.js";
+import { ISO_8601_UTC, matchesId, sampleEmail } from "./testutils.js";
 
 describe("given filled ArangoDB container", () => {
   let db: LXCatTestDatabase;

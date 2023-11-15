@@ -2,19 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { CrossSectionSetHeading } from "@lxcat/database/dist/css/public";
+import { db } from "@lxcat/database";
+import { CrossSectionSetHeading } from "@lxcat/database/set";
 import type { LTPDocument } from "@lxcat/schema";
 import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
-import {
-  truncateNonUserCollections,
-  uploadAndPublishDummySet,
-} from "./global-setup";
+import { uploadAndPublishDummySet } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.describe("given 2 dummy sets", () => {
   test.beforeAll(async ({ browser }) => {
+    await db().setupCollections();
     await uploadAndPublishDummySet(browser);
     await uploadAndPublishDummySet(
       browser,
@@ -24,7 +23,7 @@ test.describe("given 2 dummy sets", () => {
   });
 
   test.afterAll(async () => {
-    await truncateNonUserCollections();
+    await db().truncateNonUserCollections();
   });
 
   test.describe("cross section set list page", () => {
@@ -124,7 +123,7 @@ test.describe("given 2 dummy sets", () => {
     });
 
     // TODO: Use set with more than 5 cross sections to test whether only first 5 are checked.
-    test("only process plot checkbos should be checked", async ({ page }) => {
+    test("only process plot checkbox should be checked", async ({ page }) => {
       const checkboxes = page.locator("tbody input[type=checkbox]");
       await expect(checkboxes).toBeChecked();
     });
@@ -150,20 +149,23 @@ test.describe("given 2 dummy sets", () => {
       // TODO: Check that all cross sections are drawn.
     });
 
-    test.describe("visit details page with #terms_of_use hash", () => {
+    test.describe("visit details page with termsOfUse search param", () => {
       let urlWithHash = "";
       test.beforeEach(async ({ page }) => {
         await page.locator("text=Download data").click();
+
         const download = await page
-          .locator("text=JSON")
+          .locator("a:has-text('JSON')")
           .getAttribute("href");
+
         if (download === null) {
           test.fail();
           return;
         }
+
         // TODO: Links should point to `/api/scat-css`.
         const ids = download.replace("/api/scat-cs/inspect", "");
-        urlWithHash = `/scat-cs/inspect/${ids}#terms_of_use`;
+        urlWithHash = `/scat-cs/inspect${ids}&termsOfUse=true`;
       });
 
       test("should show terms of use dialog", async ({ context }) => {

@@ -13,21 +13,20 @@ import {
   insertSampleStateIds,
   sampleCrossSection,
   sampleStates,
-} from "../../cs/queries/testutils";
-import { KeyedDocument, PartialKeyedDocument } from "../../schema/document";
-import { OwnedProcess } from "../../schema/process";
-import { SerializedSpecies } from "../../schema/species";
-import { Status } from "../../shared/types/version_info";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+} from "../../cs/queries/testutils.js";
+import { KeyedDocument, PartialKeyedDocument } from "../../schema/document.js";
+import { OwnedProcess } from "../../schema/process.js";
+import { SerializedSpecies } from "../../schema/species.js";
+import { Status } from "../../shared/types/version_info.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
-  ISO_8601_UTC,
   matches8601,
   matchesId,
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 const email = "somename@example.com";
 
@@ -226,7 +225,7 @@ describe("given published cross section set where data of 1 published cross sect
           // versionInfo: {
           //   commitMessage:
           //     `Indirect draft by editing set Some name / CrossSectionSet/${keycss2}`,
-          //   createdOn: expect.stringMatching(ISO_8601_UTC),
+          //   createdOn: matches8601,
           //   status: "draft",
           //   version: "2",
           // },
@@ -302,7 +301,7 @@ describe("given published cross section set where data of 1 published cross sect
           references: [],
           // versionInfo: {
           //   commitMessage: "",
-          //   createdOn: expect.stringMatching(ISO_8601_UTC),
+          //   createdOn: matches8601,
           //   status: "published",
           //   version: "1",
           // },
@@ -343,14 +342,14 @@ describe("given published cross section set where data of 1 published cross sect
         {
           _key: keycss2,
           commitMessage: `Altered data of A->B cross section`,
-          createdOn: expect.stringMatching(ISO_8601_UTC),
+          createdOn: matches8601,
           name: "Some name",
           status: "published",
           version: "2",
         },
         {
           _key: keycss1,
-          createdOn: expect.stringMatching(ISO_8601_UTC),
+          createdOn: matches8601,
           name: "Some name",
           status: "archived",
           version: "1",
@@ -1480,7 +1479,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     //     type: "LUT",
     //     versionInfo: {
     //       commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
-    //       createdOn: expect.stringMatching(ISO_8601_UTC),
+    //       createdOn: matches8601,
     //       status: "draft",
     //       version: "1",
     //     },
@@ -1691,7 +1690,7 @@ describe("given draft cross section set where a reference is extended in a cross
     //       type: "LUT",
     //       versionInfo: {
     //         commitMessage: `Indirect draft by editing set Some name / ${keycss2}`,
-    //         createdOn: expect.stringMatching(ISO_8601_UTC),
+    //         createdOn: matches8601,
     //         status: "draft",
     //         version: "1",
     //       },

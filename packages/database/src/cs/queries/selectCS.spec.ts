@@ -8,15 +8,15 @@ import {
   sampleSets4Search,
   sampleSets4SearchWithVersions,
   truncateCrossSectionSetCollections,
-} from "../../css/queries/testutils";
-import { getStateLeaf, StateLeaf } from "../../shared/getStateLeaf";
-import { StateSummary } from "../../shared/queries/state";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { defaultSearchTemplate } from "../picker/default";
-import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types";
-import { CrossSectionHeading } from "../public";
-import { NestedState, removeIdsFromTree } from "./testutils";
+} from "../../css/queries/testutils.js";
+import { getStateLeaf, StateLeaf } from "../../shared/get-state-leaf.js";
+import { StateSummary } from "../../shared/queries/state.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { defaultSearchTemplate } from "../picker/default.js";
+import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types.js";
+import { CrossSectionHeading } from "../public.js";
+import { NestedState, removeIdsFromTree } from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

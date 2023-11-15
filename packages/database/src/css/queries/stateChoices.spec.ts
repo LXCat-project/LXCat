@@ -4,13 +4,13 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { StateChoices } from "../../shared/queries/state";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
+import { StateChoices } from "../../shared/queries/state.js";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
 import {
   emptySelection,
   truncateCrossSectionSetCollections,
-} from "./testutils";
+} from "./testutils.js";
 
 let db: LXCatTestDatabase;
 

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "./systemDb";
-import { LXCatTestDatabase } from "./testutils";
+import { systemDb } from "./systemDb.js";
+import { LXCatTestDatabase } from "./testutils.js";
 
 describe("given running ArangoDB container with empty lxcat database", () => {
   let db: LXCatTestDatabase;

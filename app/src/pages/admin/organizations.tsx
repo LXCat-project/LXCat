@@ -2,17 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  listOrganizations,
-  OrganizationFromDB,
-} from "@lxcat/database/dist/auth/queries";
+import { db } from "@lxcat/database";
+import { KeyedOrganization } from "@lxcat/database/auth";
 import { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import { mustBeAdmin } from "../../auth/middleware";
 import { Layout } from "../../shared/Layout";
 
 interface Props {
-  organizations: OrganizationFromDB[];
+  organizations: KeyedOrganization[];
 }
 
 const AdminOrganizations: NextPage<Props> = ({ organizations }) => {
@@ -30,7 +28,7 @@ const AdminOrganizations: NextPage<Props> = ({ organizations }) => {
       body: JSON.stringify({ name: newOrgName }),
     });
     if (res.ok) {
-      const newOrg = (await res.json()) as OrganizationFromDB;
+      const newOrg = KeyedOrganization.parse(await res.json());
       setOrgs((orgs) => {
         return [...orgs, newOrg];
       });
@@ -64,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   await mustBeAdmin(context);
-  const organizations = await listOrganizations();
+  const organizations = await db().listOrganizations();
   return {
     props: {
       organizations,

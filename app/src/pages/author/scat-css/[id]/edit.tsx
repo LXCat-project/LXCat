@@ -4,15 +4,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  OrganizationFromDB,
-  userMemberships,
-} from "@lxcat/database/dist/auth/queries";
-import {
-  byOwnerAndId,
-  CrossSectionSetInputOwned,
-  getVersionInfo,
-} from "@lxcat/database/dist/css/queries/author_read";
+import { db } from "@lxcat/database";
+import { KeyedOrganization } from "@lxcat/database/auth";
+import { KeyedDocument, PartialKeyedDocument } from "@lxcat/database/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -23,10 +17,10 @@ import { ErrorList } from "../../../../shared/ErrorList";
 import { Layout } from "../../../../shared/Layout";
 
 interface Props {
-  set: CrossSectionSetInputOwned;
+  set: KeyedDocument;
   setKey: string;
   commitMessage: string;
-  organizations: OrganizationFromDB[];
+  organizations: KeyedOrganization[];
 }
 
 const EditCrossSectionSetPage: NextPage<Props> = ({
@@ -39,7 +33,7 @@ const EditCrossSectionSetPage: NextPage<Props> = ({
   const [id, setId] = useState("");
 
   async function onSubmit(
-    newSet: CrossSectionSetInputOwned,
+    newSet: PartialKeyedDocument,
     newMessage: string,
   ) {
     const url = `/api/author/scat-css/${setKey}`;
@@ -90,9 +84,9 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
-  const set = await byOwnerAndId(me.email, id);
-  const organizations = await userMemberships(me.email);
-  const info = await getVersionInfo(id);
+  const set = await db().getSetByOwnerAndId(me.email, id);
+  const organizations = await db().getAffiliations(me.email);
+  const info = await db().getSetVersionInfo(id);
   const commitMessage = info !== undefined && info.commitMessage
     ? info.commitMessage
     : "";

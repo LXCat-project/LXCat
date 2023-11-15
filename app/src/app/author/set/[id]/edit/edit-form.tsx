@@ -4,8 +4,8 @@
 
 "use client";
 
-import { PartialKeyedDocument } from "@lxcat/database/dist/schema/document";
-import { StateTree } from "@lxcat/database/dist/shared/queries/state";
+import { KeyedOrganization } from "@lxcat/database/auth";
+import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -40,7 +40,7 @@ export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = {
   initialSet: PartialKeyedDocument;
-  organizations: Array<string>;
+  organizations: Array<KeyedOrganization>;
 };
 
 export const getError = (
@@ -217,7 +217,7 @@ export const EditForm = (
               <Checkbox label="Complete" {...getInputProps("set.complete")} />
               <NativeSelect
                 label="Contributor"
-                data={organizations}
+                data={organizations.map(({ name }) => name)}
                 {...getInputProps("set.contributor")}
               />
             </Stack>

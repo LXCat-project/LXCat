@@ -2,12 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { db } from "@lxcat/database";
 import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
-import {
-  truncateNonUserCollections,
-  uploadAndPublishDummySet,
-} from "./global-setup";
+import { uploadAndPublishDummySet } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -37,11 +35,12 @@ const csTest = test.extend({
 
 test.describe("Cross section page", () => {
   test.beforeAll(async ({ browser }) => {
+    await db().setupCollections();
     await uploadAndPublishDummySet(browser);
   });
 
   test.afterAll(async () => {
-    await truncateNonUserCollections();
+    await db().truncateNonUserCollections();
   });
 
   csTest("should have plot", async ({ page }) => {

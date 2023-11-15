@@ -3,14 +3,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
-import { LXCatDatabase } from "../../lxcat-database";
-import { KeyedProcess, OwnedProcess } from "../../schema/process";
-import { PagingOptions } from "../../shared/types/search";
-import { VersionInfo } from "../../shared/types/version_info";
+import { ArrayCursor } from "arangojs/cursor.js";
+import { LXCatDatabase } from "../../lxcat-database.js";
+import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
+import { PagingOptions } from "../../shared/types/search.js";
+import { VersionInfo } from "../../shared/types/version_info.js";
 
-// import { defaultSearchTemplate } from "../picker/default";
-// import { ReactionTemplate } from "../picker/types";
+// import { defaultSearchTemplate } from "../picker/default.js";
+// import { ReactionTemplate } from "../picker/types.js";
 
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
   const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`

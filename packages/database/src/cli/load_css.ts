@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "dotenv/config";
-import { db } from "..";
-import { load_css_dir } from "../css/loaders";
+import { load_css_dir } from "../css/loaders.js";
+import { db } from "../db.js";
 
 (async () => {
   const dir = process.argv[2];

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LXCatDatabase } from "../../lxcat-database";
+import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function upsertOrganization(this: LXCatDatabase, name: string) {
   const organization = await this.upsertDocument("Organization", {

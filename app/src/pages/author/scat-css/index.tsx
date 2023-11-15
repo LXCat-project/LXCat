@@ -2,11 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { User } from "@lxcat/database/dist/auth/schema";
-import {
-  CrossSectionSetOwned,
-  listOwned,
-} from "@lxcat/database/dist/css/queries/author_read";
+import { db } from "@lxcat/database";
+import { User } from "@lxcat/database/auth";
+import { KeyedSet } from "@lxcat/database/set";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
@@ -19,7 +17,7 @@ import { ErrorDialog } from "../../../shared/ErrorDialog";
 import { Layout } from "../../../shared/Layout";
 
 interface Props {
-  items: CrossSectionSetOwned[];
+  items: KeyedSet[];
   user: User;
 }
 
@@ -195,7 +193,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const user = await mustBeAuthor(context);
-  const items = await listOwned(user.email);
+  const items = await db().listOwnedSets(user.email);
   return {
     props: { items, user },
   };

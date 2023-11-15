@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTemplate } from "@lxcat/database/dist/cs/picker/types";
+import { ReactionTemplate } from "@lxcat/database/item/picker";
 import { Button, Modal } from "@mantine/core";
 import { useState } from "react";
 import { Picked, Picker } from "./Picker";

@@ -2,16 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reversible, StateProcess } from "@lxcat/database/dist/cs/picker/types";
+import { Reversible, StateProcess } from "@lxcat/database/item/picker";
 import {
   OMIT_CHILDREN_KEY,
   StateLeaf,
   StatePath,
-} from "@lxcat/database/dist/shared/getStateLeaf";
-import { Sx } from "@mantine/core";
-
-import { StateTree } from "@lxcat/database/dist/shared/queries/state";
+  StateTree,
+} from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
+import { Sx } from "@mantine/core";
 import useSWRImmutable from "swr/immutable";
 import { StateSelect } from "./StateSelect";
 

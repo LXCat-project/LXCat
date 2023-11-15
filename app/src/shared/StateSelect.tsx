@@ -5,11 +5,9 @@
 import {
   OMIT_CHILDREN_KEY,
   StatePath,
-} from "@lxcat/database/dist/shared/getStateLeaf";
-import type {
   StateSummary,
   StateTree,
-} from "@lxcat/database/dist/shared/queries/state";
+} from "@lxcat/database/shared";
 import { Button, Sx } from "@mantine/core";
 import { Latex } from "./Latex";
 import { LatexSelect } from "./LatexSelect";

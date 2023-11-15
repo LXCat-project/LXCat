@@ -4,13 +4,11 @@
 
 import { type AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "../../systemDb";
-import { LXCatTestDatabase } from "../../testutils";
-import { SpeciesNode } from "./species";
+import { systemDb } from "../../systemDb.js";
+import { LXCatTestDatabase } from "../../testutils.js";
+import { SpeciesNode } from "./species.js";
 
 type StateDict = Record<string, AnySpecies>;
-
-let stateMap: Record<string, string>;
 
 let db: LXCatTestDatabase;
 
@@ -63,7 +61,7 @@ describe("Species functionality", () => {
       },
     };
 
-    stateMap = await db.insertStateDict(states);
+    await db.insertStateDict(states);
   });
 
   it("getTopLevelSpecies()", async () => {
@@ -82,14 +80,14 @@ describe("Species functionality", () => {
     });
 
     it("Single electronic", async () => {
-      let parent = topLevel.find(({ species }) =>
+      const parent = topLevel.find(({ species }) =>
         species.detailed.particle === "N2"
       );
 
       expect(parent).toBeDefined();
 
-      let children = await db.getSpeciesChildren(parent!._key);
-      let actual = [
+      const children = await db.getSpeciesChildren(parent!._key);
+      const actual = [
         {
           type: "HomonuclearDiatom",
           particle: "N2",
@@ -108,7 +106,7 @@ describe("Species functionality", () => {
     });
 
     it("Single vibrational", async () => {
-      let parent = topLevel.find(({ species }) =>
+      const parent = topLevel.find(({ species }) =>
         species.detailed.particle === "N2"
       );
 
@@ -120,7 +118,7 @@ describe("Species functionality", () => {
 
       const vibChildren = await db.getSpeciesChildren(children[0]._key);
 
-      let actual = [
+      const actual = [
         {
           type: "HomonuclearDiatom",
           particle: "N2",
@@ -142,7 +140,7 @@ describe("Species functionality", () => {
     });
 
     it("Two vibrational children from compound", async () => {
-      let parent = topLevel.find(({ species }) =>
+      const parent = topLevel.find(({ species }) =>
         species.detailed.particle === "CO2"
       );
 
@@ -158,7 +156,7 @@ describe("Species functionality", () => {
     });
 
     it("Two rotational children from different sources", async () => {
-      let parent = topLevel.find(({ species }) =>
+      const parent = topLevel.find(({ species }) =>
         species.detailed.particle === "N2"
       );
 

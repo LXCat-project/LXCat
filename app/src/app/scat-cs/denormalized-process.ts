@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { SerializedSpecies } from "@lxcat/database/dist/schema/species";
+import { SerializedSpecies } from "@lxcat/database/schema";
 import type { SetHeader } from "@lxcat/schema";
 import type { CrossSectionInfo, Reaction } from "@lxcat/schema/process";
 

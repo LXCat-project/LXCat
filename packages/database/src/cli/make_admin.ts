@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "dotenv/config";
-import { db } from "..";
+import { db } from "../db.js";
 
 (async () => {
   try {

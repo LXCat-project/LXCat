@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database/src/db";
-import { upsertOrganization } from "@lxcat/database/src/shared/queries/organization";
-import { startDbContainer } from "@lxcat/database/src/testutils";
+import { db, LXCatDatabase, systemDb } from "@lxcat/database";
+import { startDbContainer } from "@lxcat/database/test";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
 import { rm } from "fs/promises";
@@ -40,7 +39,9 @@ async function globalSetup(config: FullConfig) {
 
   console.log("Create collections");
   // create db collections
-  await runDbCommand("pnpm run setup");
+  // TODO: Figure out how to run setup as a cli command.
+  // await runDbCommand("pnpm run setup");
+  await LXCatDatabase.create(systemDb(), "lxcat");
   // It is up to tests to login
   // and to populate and truncate db
 
@@ -57,6 +58,8 @@ async function globalSetup(config: FullConfig) {
   // TODO create user for each role and store the those users cookies.
   await browser.close();
 
+  await db().truncateNonUserCollections();
+
   console.log("Completed global setup");
   // return teardown method
   return async () => {
@@ -69,11 +72,13 @@ async function globalSetup(config: FullConfig) {
 export default globalSetup;
 
 export async function runDbCommand(command: string) {
+  const dir = new URL(".", import.meta.url).pathname;
+
   return new Promise((presolve, reject) => {
     exec(
       command,
       {
-        cwd: resolve(__dirname, "../../packages/database"),
+        cwd: resolve(dir, "../../packages/database"),
         env: process.env,
       },
       (error, stdout, stderr) => {
@@ -115,16 +120,6 @@ async function signUp(page: Page, email: string) {
   await page.waitForURL("/");
 }
 
-export async function truncateNonUserCollections() {
-  const collections = await db().collections(true);
-  for (const c of collections) {
-    console.log(`Truncating ${c.name}`);
-    if (c.name !== "users") {
-      await c.truncate();
-    }
-  }
-}
-
 export async function uploadAndPublishDummySet(
   browser: Browser,
   file = "dummy.json",
@@ -132,7 +127,7 @@ export async function uploadAndPublishDummySet(
 ) {
   const page = await browser.newPage();
 
-  await upsertOrganization(org);
+  await db().upsertOrganization(org);
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
@@ -146,7 +141,7 @@ export async function uploadAndPublishDummySet(
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
-    `../packages/database/seeds/test/crosssections/${file}`,
+    `../packages/database/src/test/seed/crosssections/${file}`,
     { encoding: "utf8" },
   );
   await page.locator("textarea").fill(dummySet);

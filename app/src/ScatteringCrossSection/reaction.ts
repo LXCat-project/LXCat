@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { State } from "@lxcat/database/dist/shared/types/collections";
+import { SerializedSpecies } from "@lxcat/database/schema";
 import { Reaction, ReactionEntry } from "@lxcat/schema/process";
 
-function entryAsLatex(entry: ReactionEntry<State>) {
+function entryAsLatex(entry: ReactionEntry<SerializedSpecies>) {
   if (entry.count === 1) {
     return entry.state.serialized.latex;
   }
   return `${entry.count}${entry.state.serialized.latex}`;
 }
-function entryAsText(entry: ReactionEntry<State>) {
+function entryAsText(entry: ReactionEntry<SerializedSpecies>) {
   if (entry.count === 1) {
     return entry.state.serialized.summary;
   }
@@ -23,7 +23,7 @@ function entryAsText(entry: ReactionEntry<State>) {
  * @param reaction
  * @returns
  */
-export function reactionAsLatex(reaction: Reaction<State>) {
+export function reactionAsLatex(reaction: Reaction<SerializedSpecies>) {
   const lhs = reaction.lhs.map(entryAsLatex).join(" + ");
   const rhs = reaction.rhs.map(entryAsLatex).join(" + ");
   const arrow = reaction.reversible ? "\\leftrightarrow" : "\\rightarrow";
@@ -35,7 +35,7 @@ export function reactionAsLatex(reaction: Reaction<State>) {
  * @param reaction
  * @returns
  */
-export function reactionAsText(reaction: Reaction<State>) {
+export function reactionAsText(reaction: Reaction<SerializedSpecies>) {
   const lhs = reaction.lhs.map(entryAsText).join(" + ");
   const rhs = reaction.rhs.map(entryAsText).join(" + ");
   const arrow = reaction.reversible ? "⇋" : "➙";
