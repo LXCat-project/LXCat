@@ -8,6 +8,10 @@ import { uploadAndPublishDummySet } from "./global-setup";
 
 test.use({ storageState: "adminStorageState.json" });
 
+test.beforeAll(async () => {
+  await db().setupCollections();
+});
+
 test.afterAll(async () => {
   await db().truncateNonUserCollections();
 });

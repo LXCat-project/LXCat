@@ -58,6 +58,8 @@ async function globalSetup(config: FullConfig) {
   // TODO create user for each role and store the those users cookies.
   await browser.close();
 
+  await db().truncateNonUserCollections();
+
   console.log("Completed global setup");
   // return teardown method
   return async () => {
