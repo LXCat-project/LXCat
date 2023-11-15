@@ -88,7 +88,7 @@
     "@types/json-schema": "^7.0.12",
     "@types/mdast": "^4.0.0",
     "@types/node": "20.9.0",
-    "@types/oidc-provider": "^7.14.0",
+    "@types/oidc-provider": "^8.4.2",
     "@types/plotly.js-basic-dist": "^1.54.3",
     "@types/react": "18.2.37",
     "@types/react-plotly.js": "^2.6.3",
@@ -98,7 +98,7 @@
     "dprint": "^0.42.5",
     "eslint": "^8.53.0",
     "eslint-config-next": "14.0.2",
-    "oidc-provider": "^7.14.3",
+    "oidc-provider": "^8.4.1",
     "testcontainers": "^10.2.2",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
