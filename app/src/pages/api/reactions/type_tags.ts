@@ -7,16 +7,10 @@ import { Reversible } from "@lxcat/database/item/picker";
 import { StateLeaf } from "@lxcat/database/shared";
 import { NextApiResponse } from "next";
 import { createRouter } from "next-connect";
-import {
-  AuthRequest,
-  hasDeveloperRole,
-  hasSessionOrAPIToken,
-} from "../../../auth/middleware";
+import { AuthRequest } from "../../../auth/middleware";
 import { parseParam } from "../../../shared/utils";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
-  .use(hasSessionOrAPIToken)
-  .use(hasDeveloperRole)
   .get(async (req, res) => {
     const {
       consumes: consumesParam,
