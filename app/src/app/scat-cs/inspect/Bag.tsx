@@ -12,9 +12,11 @@ import { PlotPage } from "./PlotPage";
 export const Bag = ({
   bag,
   hasMixedCompleteSets,
+  forceTermsOfUse,
 }: {
   bag: KeyedLTPMixture;
   hasMixedCompleteSets: boolean;
+  forceTermsOfUse?: boolean;
 }) => {
   const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
     formatReference(id, ref)
@@ -29,6 +31,7 @@ export const Bag = ({
       refs={formattedRefs}
       setMismatch={hasMixedCompleteSets}
       permaLink={permaLink}
+      forceTermsOfUse={forceTermsOfUse}
     />
   );
 };
