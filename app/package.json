@@ -89,7 +89,7 @@
     "@types/mdast": "^4.0.0",
     "@types/node": "20.9.0",
     "@types/oidc-provider": "^8.4.2",
-    "@types/plotly.js-basic-dist": "^1.54.3",
+    "@types/plotly.js-basic-dist": "^1.54.4",
     "@types/react": "18.2.37",
     "@types/react-plotly.js": "^2.6.3",
     "@types/unist": "^3.0.2",
