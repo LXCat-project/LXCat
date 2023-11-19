@@ -194,8 +194,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       zod:
-        specifier: 3.21.3
-        version: 3.21.3
+        specifier: 3.22.4
+        version: 3.22.4
     devDependencies:
       '@babel/core':
         specifier: ^7.23.3
@@ -297,11 +297,11 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       zod:
-        specifier: 3.21.3
-        version: 3.21.3
+        specifier: 3.22.4
+        version: 3.22.4
       zod-to-json-schema:
         specifier: ^3.21.4
-        version: 3.21.4(zod@3.21.3)
+        version: 3.21.4(zod@3.22.4)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -377,11 +377,11 @@ importers:
         specifier: ^8.12.0
         version: 8.12.0
       zod:
-        specifier: 3.21.3
-        version: 3.21.3
+        specifier: 3.22.4
+        version: 3.22.4
       zod-to-json-schema:
         specifier: ^3.21.4
-        version: 3.21.4(zod@3.21.3)
+        version: 3.21.4(zod@3.22.4)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -12453,16 +12453,16 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /zod-to-json-schema@3.21.4(zod@3.21.3):
+  /zod-to-json-schema@3.21.4(zod@3.22.4):
     resolution: {integrity: sha512-fjUZh4nQ1s6HMccgIeE0VP4QG/YRGPmyjO9sAh890aQKPEk3nqbfUXhMFaC+Dr5KvYBm8BCyvfpZf2jY9aGSsw==}
     peerDependencies:
       zod: ^3.21.4
     dependencies:
-      zod: 3.21.3
+      zod: 3.22.4
     dev: false
 
-  /zod@3.21.3:
-    resolution: {integrity: sha512-tz1QgJomEhMTQhOBvQxnnrTo8q77EjpGLlaWicCoEEkMzScuONzDkJKIHr83CS89fGY24iGCStj2ZOCHpPOEyA==}
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
   /zwitch@2.0.4:
