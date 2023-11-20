@@ -3,22 +3,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CrossSectionHeading } from "@lxcat/database/item";
-import { createStyles, Group, Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Reference } from "../shared/Reference";
+import classes from "./cs-table.module.css";
 import { ReactionSummary } from "./ReactionSummary";
-
-const useStyles = createStyles(() => ({
-  expandIcon: {
-    transition: "transform 0.2s ease",
-  },
-  expandIconRotated: {
-    transform: "rotate(90deg)",
-  },
-}));
 
 interface Props {
   items: CrossSectionHeading[];
@@ -27,7 +20,6 @@ interface Props {
 export const CSTable = ({ items }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
   const router = useRouter();
-  const { cx, classes } = useStyles();
 
   const sets = [
     ...new Map(
@@ -50,7 +42,7 @@ export const CSTable = ({ items }: Props) => {
 
   return (
     <DataTable
-      withBorder
+      withTableBorder
       borderRadius="md"
       highlightOnHover
       columns={[
@@ -58,10 +50,10 @@ export const CSTable = ({ items }: Props) => {
           accessor: "organization",
           title: "Database",
           render: ({ id, organization }) => (
-            <Group spacing="xs">
+            <Group gap="xs">
               <IconChevronRight
                 size="0.9em"
-                className={cx(classes.expandIcon, {
+                className={clsx(classes.expandIcon, {
                   [classes.expandIconRotated]: expandedSets.includes(id),
                 })}
               />
@@ -89,17 +81,15 @@ export const CSTable = ({ items }: Props) => {
         },
         content: ({ record }) => (
           <Stack
-            spacing={3}
-            sx={(theme) => (
-              { backgroundColor: theme.colors.gray[0], padding: 10 }
-            )}
+            gap={3}
+            className={classes.nestedBody}
           >
-            <Stack spacing={3} p="xs">
-              <Group spacing={6}>
+            <Stack gap={3} p="xs">
+              <Group gap={6}>
                 <Text fw={700}>Description:</Text>
                 <Text>{record.description}</Text>
               </Group>
-              <Group spacing={6}>
+              <Group gap={6}>
                 <Text fw={700}>Published in:</Text>
                 <Text>
                   {record.publishedIn
@@ -110,9 +100,9 @@ export const CSTable = ({ items }: Props) => {
             </Stack>
             <DataTable
               withColumnBorders
-              withBorder
+              withTableBorder
               borderRadius="md"
-              sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
+              className={classes.nestedTable}
               highlightOnHover={true}
               columns={[
                 { accessor: "reaction" },
@@ -123,7 +113,7 @@ export const CSTable = ({ items }: Props) => {
                 },
               ]}
               records={record.cs}
-              onRowClick={(record) =>
+              onRowClick={({ record }) =>
                 router.push(`/scat-cs/inspect?ids=${record.id}`)}
             />
           </Stack>

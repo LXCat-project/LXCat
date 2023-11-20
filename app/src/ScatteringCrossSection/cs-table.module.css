@@ -1,0 +1,15 @@
+.nestedTable {
+  .mantine-ScrollArea-viewport {
+    maxHeight: 300;
+  }
+}
+.expandIcon {
+  transition: "transform 0.2s ease";
+}
+.expandIconRotated {
+  transform: "rotate(90deg)";
+}
+.nestedBody {
+  backgroundColor: var(--mantine-color-gray-0);
+  padding: 10;
+}

@@ -15,7 +15,7 @@ function MyApp({
 }: AppProps<{ session: Session }>) {
   return (
     <SessionProvider session={session}>
-      <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+      <MantineProvider theme={theme}>
         <Component {...pageProps} />
       </MantineProvider>
     </SessionProvider>

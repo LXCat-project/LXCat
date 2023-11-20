@@ -1,0 +1,40 @@
+.control: {
+  display: "flex";
+  justifyContent: "space-between";
+  alignItems: "center";
+  padding: `calc(var(--mantine-spacing-xs)/2) ${theme.spacing.sm}`;
+  borderRadius: var(--mantine-radius-sm);
+  border: `${rem(1)} solid ${
+    theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[3]
+  }`,
+  transition: "background-color 150ms ease",
+  backgroundColor: theme.colorScheme === "dark"
+    ? theme.colors.dark[opened ? 5 : 6]
+    : opened
+    ? theme.colors.gray[0]
+    : theme.white;
+  &:hover: {
+    backgroundColor: theme.colorScheme === "dark"
+      ? theme.colors.dark[5]
+      : theme.colors.gray[0],
+  },
+  &:active: {
+    backgroundColor: theme.colorScheme === "dark"
+      ? theme.colors.dark[6]
+      : theme.colors.gray[1],
+  },
+},
+item: {
+  borderRadius: theme.radius.sm,
+},
+dropdown: {
+  borderRadius: theme.radius.sm,
+},
+label: {
+  fontWeight: 500,
+  fontSize: theme.fontSizes.sm,
+},
+icon: {
+  transition: "transform 150ms ease",
+  transform: opened ? "rotate(180deg)" : "rotate(0deg)",
+},

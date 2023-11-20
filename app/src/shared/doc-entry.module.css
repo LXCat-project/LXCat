@@ -1,0 +1,23 @@
+.control {
+  fontWeight: 500;
+  display: "block";
+  width: "100%";
+  paddingTop: var(--mantine-spacing-xs);
+  paddingBottom: var(--mantine-spacing-xs);
+  marginRight: 0;
+  color: var(--mantine-color-black);
+  fontSize: var(--mantine-fontsize-md);
+  &:hover {
+    backgroundColor: var(--mantine-color-gray-0);
+    color: var(--mantine-color-black);
+    textDecoration: "none";
+  }
+}
+.link {
+  :hover {
+    textDecoration: "none";
+  }
+}
+.chevron {
+  transition: "transform 200ms ease";
+}

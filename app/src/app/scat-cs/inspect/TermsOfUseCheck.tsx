@@ -51,7 +51,7 @@ export const TermsOfUseCheck = (
       <Button
         type="button"
         size="md"
-        rightIcon={<IconLicense size={"1.05rem"} stroke={1.5} />}
+        rightSection={<IconLicense size={"1.05rem"} stroke={1.5} />}
         onClick={() => setAgreement(false)}
       >
         Terms of use
@@ -67,7 +67,7 @@ export const TermsOfUseCheck = (
         <TermsOfUse />
         <HowToCite references={references} />
         <Center>
-          <Button.Group sx={{ marginTop: 10 }}>
+          <Button.Group style={{ marginTop: 10 }}>
             <ButtonClipboard link={permaLink}>Copy permalink</ButtonClipboard>
             <Button size="md" onClick={acceptTermsOfUse}>
               I agree with the terms of use

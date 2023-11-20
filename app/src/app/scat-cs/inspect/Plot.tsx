@@ -5,6 +5,7 @@
 "use client";
 
 import { Center, Checkbox, Grid, Loader, Stack } from "@mantine/core";
+import clsx from "clsx";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
@@ -76,12 +77,12 @@ export const ProcessPlot = (
                 reaction: <Latex>{reactionAsLatex(process.reaction)}</Latex>,
                 _check: (
                   <Checkbox
-                    sx={{
+                    className={clsx({
                       ".mantine-Checkbox-input:checked": {
                         backgroundColor:
                           colorScheme[index % colorScheme.length],
                       },
-                    }}
+                    })}
                     checked={selected.has(process.info._key)}
                     onChange={() => toggleRow(process.info._key)}
                   />

@@ -4,11 +4,13 @@
 
 import { MultiSelect } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
 import { Latex } from "../../../shared/Latex";
 import { DenormalizedProcess } from "../denormalized-process";
+import classes from "./inspect.module.css";
 
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
@@ -43,11 +45,11 @@ export const ProcessTable = (
 
   return (
     <DataTable
-      withBorder
+      withTableBorder
       withColumnBorders
       borderRadius="md"
       idAccessor="info._key"
-      sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 400 } }}
+      className={classes.processTable}
       records={records}
       columns={[{
         accessor: "reaction",
@@ -63,7 +65,7 @@ export const ProcessTable = (
             data={availableTags}
             value={selectedTags}
             onChange={setSelectedTags}
-            icon={<IconSearch size={16} />}
+            leftSection={<IconSearch size={16} />}
             clearable
             searchable
           />
@@ -90,11 +92,11 @@ export const ProcessTable = (
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
       getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
-        sx: {
+        className: clsx({
           ".mantine-Checkbox-input:checked": {
             backgroundColor: colorMap.get(_key),
           },
-        },
+        }),
       })}
     />
   );

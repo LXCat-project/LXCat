@@ -1,0 +1,13 @@
+.nestedTable {
+  .mantine-ScrollArea-viewport {
+    maxHeight: 300;
+  }
+}
+.processTable {
+  .mantine-ScrollArea-viewport {
+    maxHeight: 400;
+  }
+}
+.smallMargin {
+  margin: var(--mantine-spacing-sm);
+}

@@ -192,7 +192,7 @@ export const EditForm = (
         <Tabs
           defaultValue="general"
           value={activeTab}
-          onTabChange={setActiveTab}
+          onChange={setActiveTab}
         >
           <Tabs.List>
             <Tabs.Tab value="general">General</Tabs.Tab>
@@ -202,7 +202,7 @@ export const EditForm = (
             <Tabs.Tab value="json">JSON</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="general">
-            <Stack spacing="xs">
+            <Stack gap="xs">
               <TextInput
                 label="Name"
                 withAsterisk
@@ -318,7 +318,7 @@ export const EditForm = (
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
-        <Stack spacing="sm">
+        <Stack gap="sm">
           <TextInput
             label="Commit message"
             placeholder="Describe which changes have been made."

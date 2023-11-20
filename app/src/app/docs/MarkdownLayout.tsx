@@ -4,20 +4,9 @@
 
 "use client";
 
-import { createStyles } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
+import classes from "./docs.module.css";
 import { DocsSidebar } from "./DocsSidebar";
-
-const useStyles = createStyles(() => ({
-  main: {
-    position: "absolute",
-    left: 310,
-    top: 60,
-    bottom: 0,
-    right: 0,
-    overflowY: "scroll",
-  },
-}));
 
 export const MarkdownLayout = ({
   docFiles,
@@ -26,7 +15,6 @@ export const MarkdownLayout = ({
   docFiles: Array<DocFile>;
   children: React.ReactNode;
 }) => {
-  const { classes } = useStyles();
   return (
     <>
       <DocsSidebar docFiles={docFiles} />

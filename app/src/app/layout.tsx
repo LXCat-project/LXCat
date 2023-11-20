@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { ColorSchemeScript } from "@mantine/core";
 import ErrorBoundary from "../shared/ErrorBoundary";
 import { NavBar } from "../shared/NavBar";
 import "../styles/globals.css";
@@ -14,7 +15,9 @@ interface RootLayoutProps {
 const MyApp = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en-US">
-      <head />
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body>
         <Provider>
           <div style={{ boxSizing: "border-box" }}>

@@ -28,6 +28,7 @@ import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./ButtonClipboard";
 import { ButtonMultiDownload } from "./ButtonMultiDownload";
 import { colorScheme } from "./colors";
+import classes from "./inspect.module.css";
 import { ProcessTable } from "./ProcessTable";
 import { Reference } from "./Reference";
 import { TermsOfUseCheck } from "./TermsOfUseCheck";
@@ -80,9 +81,7 @@ export const PlotPage = (
     <>
       {setMismatch && warningVisible && (
         <Alert
-          sx={(theme) => ({
-            margin: theme.spacing.xs,
-          })}
+          className={classes.smallMargin}
           icon={<IconAlertCircle />}
           title="Mismatch in selected data!"
           color="orange"
@@ -96,7 +95,7 @@ export const PlotPage = (
       <Grid
         align="center"
         justify="center"
-        sx={(theme) => ({ margin: theme.spacing.xs })}
+        className={classes.smallMargin}
       >
         <Grid.Col span="content">
           <Stack>
@@ -126,7 +125,7 @@ export const PlotPage = (
                 </ButtonClipboard>
                 <Button
                   size="md"
-                  rightIcon={<IconCalculator size="1.2rem" stroke={1.5} />}
+                  rightSection={<IconCalculator size="1.2rem" stroke={1.5} />}
                   onClick={() =>
                     router.push(`/scat-cs/compute?ids=${idsString}`)}
                 >
@@ -147,9 +146,9 @@ export const PlotPage = (
             />
             <Stack>
               <DataTable
-                withBorder
+                withTableBorder
                 borderRadius="md"
-                sx={{ ".mantine-ScrollArea-viewport": { maxHeight: 300 } }}
+                className={classes.nestedTable}
                 records={refs}
                 columns={[{
                   accessor: "marker",
@@ -161,7 +160,7 @@ export const PlotPage = (
                   render: (ref) => <Reference>{ref}</Reference>,
                 }]}
               />
-              <Group position="center">
+              <Group justify="center">
                 <Button.Group>
                   <ButtonMultiDownload
                     entries={[{
@@ -187,7 +186,7 @@ export const PlotPage = (
                     variant="light"
                     size="md"
                     disabled
-                    rightIcon={
+                    rightSection={
                       <IconTableExport size={"1.05rem"} stroke={1.5} />
                     }
                   >

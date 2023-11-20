@@ -11,7 +11,6 @@ import {
   NumberInput,
   Select,
   Stack,
-  Sx,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -19,14 +18,7 @@ import assert from "assert";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import { useFormContext } from "../edit-form";
 import { AnyOf } from "./any-of";
-
-const listStyle: Sx = (theme: MantineTheme) => ({
-  padding: theme.spacing.xs,
-  borderStyle: "solid",
-  borderRadius: theme.radius.md,
-  borderColor: theme.colors.gray[4],
-  borderWidth: "thin",
-});
+import classes from "./form-factory.module.css";
 
 export const SpeciesForm = (
   { typeMap, basePath }: {
@@ -38,7 +30,7 @@ export const SpeciesForm = (
   const { getInputProps } = context;
 
   return (
-    <Stack spacing={1}>
+    <Stack gap={1}>
       <Select
         label="Type"
         data={Object.keys(typeMap).map((type) => ({
@@ -79,12 +71,12 @@ export const PropertyBox = (
 ) => (
   label
     ? (
-      <Stack spacing={1}>
+      <Stack gap={1}>
         <Text>{capitalizeFirst(label)}</Text>
-        <Box sx={listStyle}>{children}</Box>
+        <Box className={classes.list}>{children}</Box>
       </Stack>
     )
-    : <Box sx={listStyle}>{children}</Box>
+    : <Box className={classes.list}>{children}</Box>
 );
 
 export const generateSpeciesForm = (
@@ -128,7 +120,7 @@ const SchemaNumberInput = (
     <NumberInput
       min={schema.minimum}
       step={schema.multipleOf}
-      precision={schema.multipleOf && 1}
+      decimalScale={schema.multipleOf && 1}
       label={propertyName!}
       {...getInputProps(formPath)}
     />

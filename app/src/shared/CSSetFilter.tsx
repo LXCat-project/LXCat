@@ -26,15 +26,15 @@ export const CSSetFilter = ({
   onSetChecked,
 }: CSSetFilterProps) => {
   return (
-    <Stack spacing={3} align="flex-start">
+    <Stack gap={3} align="flex-start">
       {Object.entries(data).map(([id, summary]) => {
         const numSelected = Object.keys(summary.sets).filter((setId) =>
           selection.has(setId)
         ).length;
 
         return (
-          <Stack key={id} spacing={2}>
-            <Group spacing={3}>
+          <Stack key={id} gap={2}>
+            <Group gap={3}>
               {
                 // FIXME: Duplicating onClick is not great, but adding Box or
                 // div introduces weird displacement of the chevron.
@@ -66,9 +66,9 @@ export const CSSetFilter = ({
             </Group>
             {unfolded.has(id)
               ? (
-                <Stack spacing={3}>
+                <Stack gap={3}>
                   {Object.entries(summary.sets).map(([setId, setName]) => (
-                    <Group key={setId} spacing={0}>
+                    <Group key={setId} gap={0}>
                       <Space w={50} />
                       <Checkbox
                         size="sm"

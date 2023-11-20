@@ -1,0 +1,8 @@
+.main {
+  position: "absolute";
+  left: 310;
+  top: 60;
+  bottom: 0;
+  right: 0;
+  overflowY: "scroll";
+}

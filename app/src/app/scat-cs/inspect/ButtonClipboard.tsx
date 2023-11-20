@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Button, rem, Tooltip } from "@mantine/core";
+import { Button, Tooltip } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 
@@ -23,7 +23,7 @@ export const ButtonClipboard = (
     >
       <Button
         variant="light"
-        rightIcon={clipboard.copied
+        rightSection={clipboard.copied
           ? <IconCheck size="1.2rem" stroke={1.5} />
           : <IconCopy size="1.2rem" stroke={1.5} />}
         radius="sm"
