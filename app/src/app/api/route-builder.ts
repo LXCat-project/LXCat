@@ -11,10 +11,7 @@ type BaseContext = {
   params?: Record<string, unknown>;
 };
 
-export type RequestBody = {
-  text: string;
-  json?: any;
-};
+export type RequestBody = string | object;
 
 type HttpMethods =
   | "GET"
@@ -57,9 +54,9 @@ export class RouteBuilder<Context> {
       (req: NextRequest, ctx: BaseContext, headers: Headers) => {
         let body: undefined | RequestBody = undefined;
         if (req.body) {
-          body = { text: String(req.body.getReader().read()) };
+          body = String(req.body.getReader().read());
           try {
-            body.json = JSON.parse(body.text);
+            body = JSON.parse(body);
           } catch (e) {}
         }
 
