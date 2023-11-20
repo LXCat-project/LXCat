@@ -80,6 +80,9 @@ importers:
       arangojs:
         specifier: ^8.6.0
         version: 8.6.0
+      clsx:
+        specifier: ^2.0.0
+        version: 2.0.0
       cookie:
         specifier: ^0.6.0
         version: 0.6.0
