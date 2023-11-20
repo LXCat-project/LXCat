@@ -25,13 +25,28 @@ export function requestParamsFromSchema(schema: z.AnyZodObject): {
   cookies?: z.AnyZodObject;
   headers?: z.AnyZodObject | z.ZodType<unknown>[];
 } {
-  console.log(JSON.stringify(schema, null, 2));
-  console.log(
-    JSON.stringify(schema.shape.searchParams.shape.id, null, 2),
-  );
+  let body = undefined;
+  if (schema.shape.body) {
+    let contentType = "";
+    if (typeof schema.shape.body === "string") {
+      contentType = "text/plain";
+    } else if (typeof schema.shape.body === "object") {
+      contentType = "application/json";
+    }
+
+    body = {
+      content: {
+        [contentType]: {
+          schema: schema.shape.body,
+        },
+      },
+    };
+  }
+
   return {
     params: schema.shape.params,
     query: schema.shape.searchParams,
+    body: body,
   };
 }
 export async function generateOpenAPI() {
@@ -45,6 +60,8 @@ export async function generateOpenAPI() {
     mod.default();
   });
 
+  const url = `${process.env.NEXT_PUBLIC_URL}/api/`;
+
   const config: OpenAPIObjectConfig = {
     openapi: "3.1.0",
     info: {
@@ -53,7 +70,7 @@ export async function generateOpenAPI() {
       title: "LXCat API",
       description: "API for working with LXCat data.",
     },
-    servers: [{ url: "v1" }],
+    servers: [{ url: url }],
   };
 
   return new OpenApiGeneratorV31(registry().definitions).generateDocument(
