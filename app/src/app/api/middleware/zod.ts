@@ -14,7 +14,7 @@ export const zodMiddleware = <Schema extends z.ZodTypeAny>(
   const result = schema.safeParse(ctx);
 
   if (!result.success) {
-    return err(new NextResponse(result.error.toString(), { status: 404 }));
+    return err(new NextResponse(result.error.toString(), { status: 400 }));
   }
 
   return ok([result.data, headers]);
