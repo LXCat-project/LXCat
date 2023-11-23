@@ -131,10 +131,11 @@ export async function uploadAndPublishDummySet(
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
-  // Mantine multiselect is hard to test as it changes its dom tree based on selection
-  await page.locator("div[role=\"combobox\"]").click({
-    position: { x: 1, y: 1 },
-  });
+  await page.locator("div.mantine-MultiSelect-root").click(
+    {
+      position: { x: 1, y: 1 },
+    },
+  );
   await page.locator(`text=${org}`).click();
   await page.waitForSelector(`div:has-text("${org}")`);
 

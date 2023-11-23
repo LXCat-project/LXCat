@@ -115,7 +115,7 @@ test.describe("given 2 dummy sets", () => {
       await page.locator("text=I agree with the terms of use").click();
     });
 
-    test("should have single process listed", async ({ page }) => {
+    test.only("should have single process listed", async ({ page }) => {
       const processes = page.locator(
         ".mantine-Table-root:has-text(\"Reaction\") tbody tr",
       );

@@ -34,7 +34,6 @@ export const StateList = ({
               data={entry.data}
               selected={entry.selected}
               onChange={async (selected) => onUpdate(index, selected)}
-              inGroup={false}
               style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
