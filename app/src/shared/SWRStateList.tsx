@@ -47,7 +47,6 @@ export const SWRStateList = ({
               selected={entry.selected}
               onChange={async (selected, latex) =>
                 onUpdate(index, selected, latex)}
-              inGroup={false}
               style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,

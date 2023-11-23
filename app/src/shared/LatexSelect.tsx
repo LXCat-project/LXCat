@@ -25,10 +25,11 @@ export type LatexSelectProps = {
   name?: string;
   clearable?: boolean;
   style?: MantineStyleProp;
+  className?: string;
 };
 
 export function LatexSelect(
-  { data, placeholder, value, onChange, name, clearable, style }:
+  { data, placeholder, value, onChange, name, clearable, style, className }:
     LatexSelectProps,
 ) {
   const [opened, setOpened] = useState(false);
@@ -52,7 +53,11 @@ export function LatexSelect(
     >
       <Menu.Target>
         <UnstyledButton
-          className={clsx(classes.control, opened && classes.controlOpened)}
+          className={clsx(
+            classes.control,
+            opened && classes.controlOpened,
+            className,
+          )}
           style={style}
           data-button
         >

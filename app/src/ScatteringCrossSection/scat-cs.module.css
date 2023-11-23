@@ -2,6 +2,6 @@
   border-style: solid;
   border-width: thin;
   border-radius: var(--mantine-radius-md);
-  border-color: var(--mantine-colors-gray-4);
+  border-color: var(--mantine-color-gray-4);
   padding: var(--mantine-spacing-xs);
 }

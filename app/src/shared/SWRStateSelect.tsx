@@ -103,7 +103,6 @@ export interface SWRStateSelectProps {
   process: StateProcess;
   selected: StatePath;
   onChange: (selected: StatePath, latex: string) => void | Promise<void>;
-  inGroup?: boolean;
   style?: MantineStyleProp;
 }
 

@@ -8,7 +8,8 @@ import {
   StateSummary,
   StateTree,
 } from "@lxcat/database/shared";
-import { Button, MantineStyleProp } from "@mantine/core";
+import { MantineStyleProp } from "@mantine/core";
+import clsx from "clsx";
 import { Latex } from "./Latex";
 import { LatexSelect } from "./LatexSelect";
 import classes from "./state-select.module.css";
@@ -26,7 +27,6 @@ type StateSelectProps = {
   data: StateTree;
   selected: StatePath;
   onChange: (selected: StatePath) => void | Promise<void>;
-  inGroup?: boolean;
   style?: MantineStyleProp;
 };
 
@@ -34,7 +34,6 @@ export const StateSelect = ({
   data,
   selected: { particle, electronic, vibrational, rotational },
   onChange,
-  inGroup,
 }: StateSelectProps) => {
   const particleChange = (newParticle?: string) =>
     onChange({ particle: newParticle });
@@ -58,6 +57,13 @@ export const StateSelect = ({
       ? vibrationalEntries[vibrational].children
       : undefined;
 
+  const hasElectronic = electronicEntries
+    && Object.keys(electronicEntries).length > 0;
+  const hasVibrational = vibrationalEntries
+    && Object.keys(vibrationalEntries).length > 0;
+  const hasRotational = rotationalEntries
+    && Object.keys(rotationalEntries).length > 0;
+
   const component = (
     <>
       <LatexSelect
@@ -68,8 +74,11 @@ export const StateSelect = ({
         // TODO make name unique between StateSelect instances
         name="particle-select"
         clearable
+        className={clsx(classes.end, { [classes.middle]: hasElectronic })}
+        // NOTE: Equal to --button-height-sm.
+        style={{ height: "calc(2.25rem * var(--mantine-scale))" }}
       />
-      {electronicEntries && Object.keys(electronicEntries).length > 0
+      {hasElectronic
         ? (
           <LatexSelect
             data={{
@@ -80,10 +89,11 @@ export const StateSelect = ({
             onChange={electronicChange}
             placeholder={Placeholder("\\mathrm{Electronic}")}
             clearable
+            className={clsx(classes.end, { [classes.middle]: hasVibrational })}
           />
         )
         : <></>}
-      {vibrationalEntries && Object.keys(vibrationalEntries).length > 0
+      {hasVibrational
         ? (
           <LatexSelect
             data={{
@@ -96,10 +106,11 @@ export const StateSelect = ({
             onChange={vibrationalChange}
             placeholder={Placeholder("\\mathrm{Vibrational}")}
             clearable
+            className={clsx(classes.end, { [classes.middle]: hasRotational })}
           />
         )
         : <></>}
-      {rotationalEntries && Object.keys(rotationalEntries).length > 0
+      {hasRotational
         ? (
           <LatexSelect
             data={{
@@ -112,17 +123,12 @@ export const StateSelect = ({
             onChange={rotationalChange}
             placeholder={Placeholder("\\mathrm{Rotational}")}
             clearable
+            className={classes.end}
           />
         )
         : <></>}
     </>
   );
 
-  return (inGroup ?? true)
-      && electronicEntries
-      && Object.keys(electronicEntries).length > 0
-    ? <Button.Group>{component}</Button.Group>
-    : (
-      component
-    );
+  return component;
 };
