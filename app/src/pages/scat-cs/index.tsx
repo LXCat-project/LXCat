@@ -36,6 +36,7 @@ import { CSTable } from "../../ScatteringCrossSection/CSTable";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
+import classes from "../../ScatteringCrossSection/scat-cs.module.css";
 import {
   emptyFilter,
   informationFromTemplates,
@@ -44,7 +45,6 @@ import {
 import { Layout } from "../../shared/Layout";
 import { CacheMap } from "../../shared/swr-cache-map";
 import { omit } from "../../shared/utils";
-import classes from "./scat-cs.module.css";
 
 interface Example {
   label: string;
@@ -223,7 +223,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
               passHref
               legacyBehavior
             >
-              <Button leftSection={<IconGraph />} component="a" variant="light">
+              <Button
+                leftSection={<IconGraph />}
+                component="a"
+                style={{ textDecorationLine: "none" }}
+                variant="light"
+              >
                 Plot selection
               </Button>
             </Link>

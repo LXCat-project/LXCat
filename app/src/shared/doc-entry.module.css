@@ -1,23 +1,29 @@
 .control {
-  fontWeight: 500;
-  display: "block";
-  width: "100%";
-  paddingTop: var(--mantine-spacing-xs);
-  paddingBottom: var(--mantine-spacing-xs);
-  marginRight: 0;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  padding-top: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  margin-right: 0px;
   color: var(--mantine-color-black);
-  fontSize: var(--mantine-fontsize-md);
+  font-size: var(--mantine-fontsize-md);
   &:hover {
-    backgroundColor: var(--mantine-color-gray-0);
+    background-color: var(--mantine-color-gray-0);
     color: var(--mantine-color-black);
-    textDecoration: "none";
+    text-decoration: none;
   }
 }
 .link {
   :hover {
-    textDecoration: "none";
+    text-decoration: none;
   }
 }
 .chevron {
-  transition: "transform 200ms ease";
+  transition: transform 200ms ease;
+}
+.collapse {
+  margin-left: 21px;
+  border-left-style: dashed;
+  border-left-width: 1px;
+  border-left-color: var(--mantine-color-gray-3);
 }

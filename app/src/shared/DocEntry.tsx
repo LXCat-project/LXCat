@@ -78,10 +78,7 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
       {section.children
         ? (
           <Collapse
-            style={{
-              borderLeft: `1px dashed ${theme.colors.gray[3]}`,
-              marginLeft: 21,
-            }}
+            className={classes.collapse}
             in={opened}
           >
             {section.children.map((child) => (

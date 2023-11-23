@@ -5,15 +5,7 @@
 "use client";
 
 import { Role } from "@lxcat/database/auth";
-import {
-  Button,
-  Card,
-  Center,
-  createStyles,
-  Drawer,
-  NavLink,
-  Space,
-} from "@mantine/core";
+import { Button, Card, Center, Drawer, NavLink, Space } from "@mantine/core";
 import {
   IconApi,
   IconEdit,
@@ -25,19 +17,8 @@ import {
 } from "@tabler/icons-react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import classes from "./user.module.css";
 import { UserInfoIcons } from "./UserInfo";
-
-const useStyles = createStyles(() => ({
-  inner: {
-    marginTop: 59,
-    height: "100%",
-  },
-  overlay: {
-    marginTop: 59,
-    height: "100%",
-    width: "100%",
-  },
-}));
 
 export const UserPanel = (
   { session, open, onClose }: {
@@ -47,7 +28,6 @@ export const UserPanel = (
   },
 ) => {
   const roles = session.user.roles;
-  const { classes } = useStyles();
 
   return (
     <Drawer
@@ -55,7 +35,7 @@ export const UserPanel = (
       onClose={onClose}
       position="right"
       size="sm"
-      classNames={{ ...classes }}
+      classNames={{ inner: classes.panelInner, overlay: classes.panelOverlay }}
     >
       <Card withBorder>
         <UserInfoIcons
@@ -68,20 +48,20 @@ export const UserPanel = (
         {(roles && roles.includes(Role.enum.admin)) && (
           <>
             <NavLink
-              icon=<IconUsersGroup size="1.3rem" />
+              leftSection=<IconUsersGroup size="1.3rem" />
               label="Admin"
               childrenOffset={28}
             >
               <NavLink
                 component="a"
                 href="/admin/users"
-                icon=<IconUser size="1.3rem" />
+                leftSection=<IconUser size="1.3rem" />
                 label="Manage users"
               />
               <NavLink
                 component="a"
                 href="/admin/organizations"
-                icon=<IconUsers size="1.3rem" />
+                leftSection=<IconUsers size="1.3rem" />
                 label="Manage organizations"
               />
             </NavLink>
@@ -90,20 +70,20 @@ export const UserPanel = (
         {(roles && roles.includes(Role.enum.author)) && (
           <>
             <NavLink
-              icon=<IconFileUpload size="1.3rem" />
+              leftSection=<IconFileUpload size="1.3rem" />
               label="Author"
               childrenOffset={28}
             >
               <NavLink
                 component="a"
                 href="/author/scat-css"
-                icon=<IconEdit size="1.3rem" />
+                leftSection=<IconEdit size="1.3rem" />
                 label="Manage cross section sets"
               />
               <NavLink
                 component="a"
                 href="/author/scat-cs"
-                icon=<IconEdit size="1.3rem" />
+                leftSection=<IconEdit size="1.3rem" />
                 label="Manage cross sections"
               />
             </NavLink>
@@ -112,14 +92,14 @@ export const UserPanel = (
         {(roles && roles.includes(Role.enum.developer)) && (
           <>
             <NavLink
-              icon=<IconTerminal2 size="1.3rem" />
+              leftSection=<IconTerminal2 size="1.3rem" />
               label="Developer"
               childrenOffset={28}
             >
               <NavLink
                 component="a"
                 href="/developer"
-                icon=<IconApi size="1.3rem" />
+                leftSection=<IconApi size="1.3rem" />
                 label="Generate API token"
               />
             </NavLink>

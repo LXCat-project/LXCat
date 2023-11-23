@@ -211,7 +211,7 @@ export const EditForm = (
               <Textarea
                 label="Description"
                 withAsterisk
-                minRows={10}
+                rows={10}
                 {...getInputProps("set.description")}
               />
               <Checkbox label="Complete" {...getInputProps("set.complete")} />

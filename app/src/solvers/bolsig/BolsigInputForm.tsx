@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
 import { Card, Select, Stack, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import Latex from "react-latex-next";
@@ -23,10 +21,10 @@ export const BolsigInputForm = (
   { config, consumedStates }: BolsigInputFormProps,
 ) => {
   return (
-    <Stack spacing="xs" sx={{ minWidth: 300, maxWidth: 500 }}>
+    <Stack gap="xs" style={{ minWidth: 300, maxWidth: 500 }}>
       <Card withBorder padding="xs">
         <Title order={3}>General</Title>
-        <Stack spacing="xs">
+        <Stack gap="xs">
           <RangeInputForm
             label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
             form={config}
@@ -48,7 +46,7 @@ export const BolsigInputForm = (
       </Card>
       <Card withBorder padding="xs">
         <Title order={3}>Gas mole fractions</Title>
-        <Stack spacing="xs">
+        <Stack gap="xs">
           {consumedStates.map(state => (
             <ScientificInput
               key={state.serialized.summary}
@@ -63,7 +61,7 @@ export const BolsigInputForm = (
       </Card>
       <Card withBorder padding="xs">
         <Title order={3}>Numerics</Title>
-        <Stack spacing="xs">
+        <Stack gap="xs">
           <Select
             label="Grid type"
             {...config.getInputProps("numerics.grid.type")}

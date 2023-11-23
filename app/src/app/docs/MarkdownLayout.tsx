@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
+import { AppShell, AppShellMain } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
 import classes from "./docs.module.css";
 import { DocsSidebar } from "./DocsSidebar";
@@ -16,11 +15,16 @@ export const MarkdownLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <>
+    <AppShell>
       <DocsSidebar docFiles={docFiles} />
-      <div className={classes.main}>
+      <AppShellMain>
         {children}
-      </div>
-    </>
+      </AppShellMain>
+      {
+        // <div className={classes.main}>
+        //   {children}
+        // </div>
+      }
+    </AppShell>
   );
 };

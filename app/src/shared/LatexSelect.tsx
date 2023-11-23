@@ -4,8 +4,15 @@
 
 "use client";
 
-import { Group, Menu, rem, ScrollArea, UnstyledButton } from "@mantine/core";
+import {
+  Group,
+  MantineStyleProp,
+  Menu,
+  ScrollArea,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconChevronDown, IconX } from "@tabler/icons-react";
+import clsx from "clsx";
 import { useState } from "react";
 import { Latex } from "./Latex";
 import classes from "./latex-select.module.css";
@@ -17,28 +24,21 @@ export type LatexSelectProps = {
   onChange: (value?: string) => Promise<void> | void;
   name?: string;
   clearable?: boolean;
-  // TODO: Replace with style and className.
-  sx?: Sx;
+  style?: MantineStyleProp;
 };
 
 export function LatexSelect(
-  { data, placeholder, value, onChange, name, clearable, sx }: LatexSelectProps,
+  { data, placeholder, value, onChange, name, clearable, style }:
+    LatexSelectProps,
 ) {
   const [opened, setOpened] = useState(false);
 
   const items = Object.entries(data).map(([key, label]) => (
     <Menu.Item
-      className={classes.item}
+      className={clsx(classes.item, key === value && classes.itemSelected)}
       onClick={() => onChange(key)}
       key={key}
       disabled={key === value}
-      sx={(theme) =>
-        key === value
-          ? {
-            backgroundColor: theme.colors.brand[5],
-            ":disabled": { color: "white" },
-          }
-          : {}}
     >
       <Latex>{label}</Latex>
     </Menu.Item>
@@ -52,8 +52,8 @@ export function LatexSelect(
     >
       <Menu.Target>
         <UnstyledButton
-          className={classes.control}
-          sx={sx}
+          className={clsx(classes.control, opened && classes.controlOpened)}
+          style={style}
           data-button
         >
           <Group>
@@ -72,7 +72,9 @@ export function LatexSelect(
               : (
                 <IconChevronDown
                   size="1rem"
-                  className={classes.icon}
+                  className={clsx(classes.icon, {
+                    [classes.iconRotated]: opened,
+                  })}
                   stroke={1.5}
                   aria-controls={name}
                 />

@@ -2,12 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import "@mantine/core/styles.css";
-import "mantine-datatable/styles.css";
-
 import { MantineProvider } from "@mantine/core";
-import { SessionProvider } from "next-auth/react";
 import { theme } from "../theme";
+import { SessionProvider } from "./auth-provider";
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   return (

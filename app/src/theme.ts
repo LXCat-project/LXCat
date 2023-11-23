@@ -2,10 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { MantineThemeOverride } from "@mantine/core";
+"use client";
 
-export const theme: MantineThemeOverride = {
-  colorScheme: "light",
+import { createTheme, defaultVariantColorsResolver } from "@mantine/core";
+
+export const theme = createTheme({
   colors: {
     brand: [
       "#e5f2ff",
@@ -21,4 +22,17 @@ export const theme: MantineThemeOverride = {
     ],
   },
   primaryColor: "brand",
-};
+  variantColorResolver: (input) => {
+    const defaultColors = defaultVariantColorsResolver(input);
+
+    if (input.variant === "light") {
+      return {
+        ...defaultColors,
+        background: "var(--mantine-color-brand-0)",
+        hover: "var(--mantine-color-brand-1)",
+      };
+    }
+
+    return defaultColors;
+  },
+});

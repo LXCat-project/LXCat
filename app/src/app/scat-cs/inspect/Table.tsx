@@ -4,45 +4,10 @@
 
 "use client";
 
-import { createStyles, ScrollArea, Table } from "@mantine/core";
+import { ScrollArea, Table } from "@mantine/core";
+import clsx from "clsx";
 import { useState } from "react";
-
-const useStyles = createStyles((theme) => ({
-  header: {
-    position: "sticky",
-    top: 0,
-    backgroundColor: theme.colorScheme === "dark"
-      ? theme.colors.dark[7]
-      : theme.white,
-    transition: "box-shadow 150ms ease",
-
-    zIndex: 1,
-
-    "&::after": {
-      content: "\"\"",
-      position: "absolute",
-      left: 0,
-      right: 0,
-      bottom: 0,
-      borderBottom: `1px solid ${
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[3]
-          : theme.colors.gray[2]
-      }`,
-    },
-  },
-
-  scrolled: {
-    boxShadow: theme.shadows.sm,
-  },
-
-  outer: {
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.gray[4],
-    borderStyle: "solid",
-  },
-}));
+import classes from "./table.module.css";
 
 export type TableRow = { key: string } & Record<string, React.ReactNode>;
 
@@ -55,7 +20,6 @@ export interface GenericTableProps<Row extends TableRow> {
 export function TableScrollArea<Row extends TableRow>(
   { data, headers, maxHeight }: GenericTableProps<Row>,
 ) {
-  const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row) => (
@@ -67,29 +31,28 @@ export function TableScrollArea<Row extends TableRow>(
   ));
 
   return (
-    <ScrollArea
-      className={classes.outer}
-      sx={{
-        ".mantine-ScrollArea-viewport": { maxHeight: maxHeight ?? 300 },
-        ".mantine-ScrollArea-thumb": { zIndex: 1 },
-      }}
-      onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
-    >
-      <Table
-        sx={{
-          // minWidth: 700
-        }}
+    <div style={{ maxHeight: maxHeight ?? 300 }}>
+      <ScrollArea
+        className={classes.outer}
+        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
-        <thead
-          className={cx(classes.header, { [classes.scrolled]: scrolled })}
+        <Table
+          style={{
+            // minWidth: 700
+          }}
         >
-          <tr>
-            {headers.map(({ key, label }) => <th key={String(key)}>{label}
-            </th>)}
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
-    </ScrollArea>
+          <thead
+            className={clsx(classes.header, { [classes.scrolled]: scrolled })}
+          >
+            <tr>
+              {headers.map(({ key, label }) => (
+                <th key={String(key)}>{label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </ScrollArea>
+    </div>
   );
 }

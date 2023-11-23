@@ -1,7 +1,0 @@
-.list {
-  borderStyle: "solid";
-  borderWidth: "thin";
-  borderRadius: var(--mantine-radius-md);
-  borderColor: var(--mantine-colors-gray-4);
-  padding: var(--mantine-spacing-xs);
-}

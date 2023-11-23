@@ -6,14 +6,13 @@ import { Reversible } from "@lxcat/database/item/picker";
 import {
   Box,
   Group,
-  MantineTheme,
   MultiSelect,
   MultiSelectProps,
   Stack,
-  Sx,
 } from "@mantine/core";
 import { CSSetFilter, CSSetFilterProps } from "./CSSetFilter";
 import { LatexSelect, LatexSelectProps } from "./LatexSelect";
+import classes from "./reaction-picker.module.css";
 import { SWRStateList, SWRStateListProps } from "./SWRStateList";
 
 interface SWRReactionPickerImplProps {
@@ -22,17 +21,9 @@ interface SWRReactionPickerImplProps {
   reversible: Omit<LatexSelectProps, "data"> & {
     choices: Array<Reversible>;
   };
-  typeTags: Omit<MultiSelectProps, "sx">;
+  typeTags: MultiSelectProps;
   sets: CSSetFilterProps;
 }
-
-const listStyle: Sx = (theme: MantineTheme) => ({
-  padding: theme.spacing.xs,
-  borderStyle: "solid",
-  borderRadius: theme.radius.md,
-  borderColor: theme.colors.gray[4],
-  borderWidth: "thin",
-});
 
 const choiceMap: Record<Reversible, string> = {
   [Reversible.Both]: "\\rightarrow \\\\ \\leftrightarrow",
@@ -48,10 +39,10 @@ export const SWRReactionPickerImpl = ({
   sets,
 }: SWRReactionPickerImplProps) => {
   return (
-    <Group spacing="xs">
-      <Stack spacing="xs">
-        <Group spacing="xs">
-          <Box sx={listStyle}>
+    <Group gap="xs">
+      <Stack gap="xs">
+        <Group gap="xs">
+          <Box className={classes.list}>
             <SWRStateList {...consumes} />
           </Box>
           <LatexSelect
@@ -61,9 +52,9 @@ export const SWRReactionPickerImpl = ({
                 choices.includes(key as Reversible)
               ),
             )}
-            sx={{ borderStyle: "none" }}
+            style={{ borderStyle: "none" }}
           />
-          <Box sx={listStyle}>
+          <Box className={classes.list}>
             <SWRStateList {...produces} />
           </Box>
         </Group>
@@ -72,7 +63,7 @@ export const SWRReactionPickerImpl = ({
           {...typeTags}
         />
       </Stack>
-      <Box sx={listStyle}>
+      <Box className={classes.list}>
         <CSSetFilter {...sets} />
       </Box>
     </Group>

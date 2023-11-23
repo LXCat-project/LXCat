@@ -1,40 +1,52 @@
-.control: {
-  display: "flex";
-  justifyContent: "space-between";
-  alignItems: "center";
-  padding: `calc(var(--mantine-spacing-xs)/2) ${theme.spacing.sm}`;
-  borderRadius: var(--mantine-radius-sm);
-  border: `${rem(1)} solid ${
-    theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[3]
-  }`,
-  transition: "background-color 150ms ease",
-  backgroundColor: theme.colorScheme === "dark"
-    ? theme.colors.dark[opened ? 5 : 6]
-    : opened
-    ? theme.colors.gray[0]
-    : theme.white;
-  &:hover: {
-    backgroundColor: theme.colorScheme === "dark"
-      ? theme.colors.dark[5]
-      : theme.colors.gray[0],
-  },
-  &:active: {
-    backgroundColor: theme.colorScheme === "dark"
-      ? theme.colors.dark[6]
-      : theme.colors.gray[1],
-  },
-},
-item: {
-  borderRadius: theme.radius.sm,
-},
-dropdown: {
-  borderRadius: theme.radius.sm,
-},
-label: {
-  fontWeight: 500,
-  fontSize: theme.fontSizes.sm,
-},
-icon: {
-  transition: "transform 150ms ease",
-  transform: opened ? "rotate(180deg)" : "rotate(0deg)",
-},
+.control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: calc(var(--mantine-spacing-xs)/2);
+  padding-bottom: calc(var(--mantine-spacing-xs)/2);
+  padding-left: var(--mantine-spacing-sm);
+  padding-right: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 150ms ease;
+  border-width: calc(rem(1));
+  border-style: solid;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  &:hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+  &:active {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  }
+}
+.controlOpened {
+  @mixin dark {
+    background-color: var(--mantine-color-dark-5);
+  }
+  @mixin light {
+    background-color: var(--mantine-color-gray-0);
+  }
+}
+.item {
+  border-radius: var(--mantine-radius-sm);
+}
+.itemSelected {
+  background-color: var(--mantine-color-brand-5);
+  :disabled {
+    color: var(--mantine-color-white);
+  }
+}
+.dropdown {
+  border-radius: var(--mantine-radius-sm);
+}
+.label {
+  font-weight: 500;
+  font-size: var(--mantine-fontsize-sm);
+}
+.icon {
+  transition: transform 150ms ease;
+  transform: rotate(0deg);
+}
+.iconRotated {
+  transform: rotate(180deg);
+}

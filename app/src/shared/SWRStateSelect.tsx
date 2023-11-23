@@ -10,7 +10,7 @@ import {
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import { Sx } from "@mantine/core";
+import { MantineStyleProp } from "@mantine/core";
 import useSWRImmutable from "swr/immutable";
 import { StateSelect } from "./StateSelect";
 
@@ -104,7 +104,7 @@ export interface SWRStateSelectProps {
   selected: StatePath;
   onChange: (selected: StatePath, latex: string) => void | Promise<void>;
   inGroup?: boolean;
-  sx?: Sx;
+  style?: MantineStyleProp;
 }
 
 export const SWRStateSelect = ({

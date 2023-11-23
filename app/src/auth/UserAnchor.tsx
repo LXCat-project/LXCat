@@ -25,13 +25,14 @@ export function UserAnchor() {
           src={user.image!}
           title={`Logged in ${user.name}`}
           alt="Picture of logged in user"
+          style={{
+            borderRadius: "var(--mantine-radius-sm)",
+          }}
           width={40}
           height={40}
           onClick={open}
         />
-        {opened && (
-          <UserPanel session={session} open={opened} onClose={close} />
-        )}
+        <UserPanel session={session} open={opened} onClose={close} />
       </>
     );
   }

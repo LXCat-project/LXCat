@@ -1,3 +1,3 @@
 .portrait {
-  borderRadius: var(--theme-radius-sm);
+  border-radius: var(--theme-radius-sm);
 }

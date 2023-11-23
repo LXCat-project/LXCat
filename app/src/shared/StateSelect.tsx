@@ -8,9 +8,10 @@ import {
   StateSummary,
   StateTree,
 } from "@lxcat/database/shared";
-import { Button, Sx } from "@mantine/core";
+import { Button, MantineStyleProp } from "@mantine/core";
 import { Latex } from "./Latex";
 import { LatexSelect } from "./LatexSelect";
+import classes from "./state-select.module.css";
 import { mapObject } from "./utils";
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
@@ -18,7 +19,7 @@ function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
 }
 
 const Placeholder = (value: string) => (
-  <Latex sx={(theme) => ({ color: theme.colors.gray[4] })}>{value}</Latex>
+  <Latex className={classes.placeholder}>{value}</Latex>
 );
 
 type StateSelectProps = {
@@ -26,7 +27,7 @@ type StateSelectProps = {
   selected: StatePath;
   onChange: (selected: StatePath) => void | Promise<void>;
   inGroup?: boolean;
-  sx?: Sx;
+  style?: MantineStyleProp;
 };
 
 export const StateSelect = ({
@@ -64,60 +65,54 @@ export const StateSelect = ({
         value={particle}
         onChange={particleChange}
         placeholder={Placeholder("\\mathrm{Particle}")}
-        // TODO make name uniq between StateSelect instances
+        // TODO make name unique between StateSelect instances
         name="particle-select"
         clearable
       />
       {electronicEntries && Object.keys(electronicEntries).length > 0
         ? (
-          <>
-            <LatexSelect
-              data={{
-                ...(data[particle!].valid ? { [OMIT_CHILDREN_KEY]: "-" } : {}),
-                ...mapObject(electronicEntries, omitChildren),
-              }}
-              value={electronic}
-              onChange={electronicChange}
-              placeholder={Placeholder("\\mathrm{Electronic}")}
-              clearable
-            />
-          </>
+          <LatexSelect
+            data={{
+              ...(data[particle!].valid ? { [OMIT_CHILDREN_KEY]: "-" } : {}),
+              ...mapObject(electronicEntries, omitChildren),
+            }}
+            value={electronic}
+            onChange={electronicChange}
+            placeholder={Placeholder("\\mathrm{Electronic}")}
+            clearable
+          />
         )
         : <></>}
       {vibrationalEntries && Object.keys(vibrationalEntries).length > 0
         ? (
-          <>
-            <LatexSelect
-              data={{
-                ...(electronicEntries![electronic!].valid
-                  ? { [OMIT_CHILDREN_KEY]: "-" }
-                  : {}),
-                ...mapObject(vibrationalEntries, omitChildren),
-              }}
-              value={vibrational}
-              onChange={vibrationalChange}
-              placeholder={Placeholder("\\mathrm{Vibrational}")}
-              clearable
-            />
-          </>
+          <LatexSelect
+            data={{
+              ...(electronicEntries![electronic!].valid
+                ? { [OMIT_CHILDREN_KEY]: "-" }
+                : {}),
+              ...mapObject(vibrationalEntries, omitChildren),
+            }}
+            value={vibrational}
+            onChange={vibrationalChange}
+            placeholder={Placeholder("\\mathrm{Vibrational}")}
+            clearable
+          />
         )
         : <></>}
       {rotationalEntries && Object.keys(rotationalEntries).length > 0
         ? (
-          <>
-            <LatexSelect
-              data={{
-                ...(vibrationalEntries![vibrational!].valid
-                  ? { [OMIT_CHILDREN_KEY]: "-" }
-                  : {}),
-                ...mapObject(rotationalEntries, omitChildren),
-              }}
-              value={rotational}
-              onChange={rotationalChange}
-              placeholder={Placeholder("\\mathrm{Rotational}")}
-              clearable
-            />
-          </>
+          <LatexSelect
+            data={{
+              ...(vibrationalEntries![vibrational!].valid
+                ? { [OMIT_CHILDREN_KEY]: "-" }
+                : {}),
+              ...mapObject(rotationalEntries, omitChildren),
+            }}
+            value={rotational}
+            onChange={rotationalChange}
+            placeholder={Placeholder("\\mathrm{Rotational}")}
+            clearable
+          />
         )
         : <></>}
     </>

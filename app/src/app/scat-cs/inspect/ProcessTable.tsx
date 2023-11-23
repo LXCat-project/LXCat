@@ -4,7 +4,6 @@
 
 import { MultiSelect } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../ScatteringCrossSection/reaction";
@@ -92,11 +91,8 @@ export const ProcessTable = (
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
       getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
-        className: clsx({
-          ".mantine-Checkbox-input:checked": {
-            backgroundColor: colorMap.get(_key),
-          },
-        }),
+        color: colorMap.get(_key),
+        className: classes.processCheckbox,
       })}
     />
   );
