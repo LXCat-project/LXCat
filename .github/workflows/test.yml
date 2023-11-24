@@ -87,13 +87,13 @@ jobs:
       run: pnpm -C app exec playwright install chromium --with-deps
     - name: Run unit tests
       run: pnpm -C app test -- run --coverage
-    - name: Create coverage report for unit tests
-      if: always()
-      uses: davelosert/vitest-coverage-report-action@v2
+    - name: Upload coverage report to Codecov
+      uses: codecov/codecov-action@v3
       with:
-        working-directory: app
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: packages/app/coverage/coverage-final.json
+        flags: app
     # TODO: Collect coverage for end-to-end tests.
-    # See https://playwright.dev/docs/ci-intro for how to upload report as artifact.
     - name: Run end-to-end tests
       run: pnpm -C app test:e2e
 
@@ -130,11 +130,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/database/coverage/coverage-final.json
         flags: database
-    # - name: Create coverage report
-    #   if: always()
-    #   uses: davelosert/vitest-coverage-report-action@v2
-    #   with:
-    #     working-directory: packages/database
 
   test-schema:
     needs: build
@@ -169,11 +164,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/schema/coverage/coverage-final.json
         flags: schema
-    # - name: Create coverage report
-    #   if: always()
-    #   uses: davelosert/vitest-coverage-report-action@v2
-    #   with:
-    #     working-directory: packages/schema
 
   reuse:
     runs-on: ubuntu-20.04
