@@ -6,12 +6,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # LXCat
 
-LXCat is an open-access website for collecting, displaying, and downloading electron
-and ion scattering cross sections, swarm parameters, reaction rates, energy distribution
-functions, and other data required for modeling low temperature plasmas.
+LXCat is an open-access website for collecting, displaying, and downloading
+electron and ion scattering cross sections, swarm parameters, reaction rates,
+energy distribution functions, and other data required for modeling low
+temperature plasmas.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8095107.svg)](https://doi.org/10.5281/zenodo.8095107)
 [![Test Pipeline Status](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg?flag=schema)](https://codecov.io/gh/LXCat-project/LXCat?flags[0]=schema)
+[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg?flag=database)](https://codecov.io/gh/LXCat-project/LXCat?flags[0]=database)
 
 ## Installation
 
@@ -19,9 +22,12 @@ To get familiar with the code read the following documentation:
 
 - [docs/code-contributor.md](docs/code-contributor.md) for technology choices.
 - [app/README.md](app/README.md) for web application and web service.
-- [packages/database/README.md](packages/database/README.md) for spinning up the database and filling it.
-- [packages/schema/README.md](packages/schema/README.md) for JSON schemas, validators and Typescript types of LXCat documents.
-- [packages/converter/README.md](packages/converter/README.md) for conversion to the legacy LXCat format.
+- [packages/database/README.md](packages/database/README.md) for spinning up the
+  database and filling it.
+- [packages/schema/README.md](packages/schema/README.md) for JSON schemas,
+  validators and Typescript types of LXCat documents.
+- [packages/converter/README.md](packages/converter/README.md) for conversion to
+  the legacy LXCat format.
 
 ## Documentation
 
@@ -29,7 +35,8 @@ Documentation for different users can be found at [docs/](docs/).
 
 ## Production deployment
 
-Create `.env` file with content similar to `.env.local` described in [app/README.md](app/README.md).
+Create `.env` file with content similar to `.env.local` described in
+[app/README.md](app/README.md).
 
 Startup containers with
 
@@ -52,8 +59,8 @@ docker-compose run setup load-css /packages/database/seeds/<production data seed
 docker-compose run setup make-admin <email of user>
 ```
 
-Web application will run at `http://localhost:3000`.
-The app should be reversed proxied by a web server to provide https.
+Web application will run at `http://localhost:3000`. The app should be reversed
+proxied by a web server to provide https.
 
 ## How to cite
 
@@ -79,9 +86,11 @@ appreciate if you cite our project.
 
 ## License
 
-The code in this project is released under GNU Affero General Public License v3.0 or later.
-Except for the schema (packages/schema) and converter (packages/converter) packages which are released under Apache 2.0.
+The code in this project is released under GNU Affero General Public License
+v3.0 or later. Except for the schema (packages/schema) and converter
+(packages/converter) packages which are released under Apache 2.0.
 
 ## Copyright
 
-The LXCat team wrote the LXCat code. The LXCat team members are listed in [CITATION.cff](CITATION.cff).
+The LXCat team wrote the LXCat code. The LXCat team members are listed in
+[CITATION.cff](CITATION.cff).
