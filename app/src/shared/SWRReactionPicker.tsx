@@ -268,7 +268,5 @@ export const SWRReactionPicker = ({
         }}
       />
     )
-    : (
-      latex
-    );
+    : latex;
 };

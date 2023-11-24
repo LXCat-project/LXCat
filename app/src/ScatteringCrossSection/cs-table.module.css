@@ -3,22 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .nestedTable {
-  thead {
-    pointer-events: none;
-  }
-  :global(.mantine-ScrollArea-viewport) {
-    max-height: 300px;
-  }
+    thead {
+        pointer-events: none;
+    }
+
+    :global(.mantine-ScrollArea-viewport) {
+        max-height: 300px;
+    }
 }
+
 .expandIcon {
-  transition: transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
+
 .expandIconRotated {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
+
 .nestedBody {
-  background-color: var(--mantine-color-gray-0);
-  padding: 10px;
+    background-color: var(--mantine-color-gray-0);
+    padding: 10px;
 }

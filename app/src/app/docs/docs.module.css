@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .main {
-  position: absolute;
-  left: 310;
-  top: 60;
-  bottom: 0;
-  right: 0;
-  overflowY: scroll;
+    position: absolute;
+    left: 310;
+    top: 60;
+    bottom: 0;
+    right: 0;
+    overflowY: scroll;
 }

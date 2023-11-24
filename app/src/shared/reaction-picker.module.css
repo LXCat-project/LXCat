@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .list {
-  padding: var(--mantine-spacing-xs);
-  border-style: solid;
-  border-radius: var(--mantine-radius-md);
-  border-color: var(--mantine-color-gray-4);
-  border-width: thin;
+    padding: var(--mantine-spacing-xs);
+    border-style: solid;
+    border-radius: var(--mantine-radius-md);
+    border-color: var(--mantine-color-gray-4);
+    border-width: thin;
 }

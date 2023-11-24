@@ -14,7 +14,11 @@ import { StateSummary } from "../../shared/queries/state.js";
 import { systemDb } from "../../systemDb.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { defaultSearchTemplate } from "../picker/default.js";
-import { ReactionOptions, ReactionTemplate, Reversible } from "../picker/types.js";
+import {
+  ReactionOptions,
+  ReactionTemplate,
+  Reversible,
+} from "../picker/types.js";
 import { CrossSectionHeading } from "../public.js";
 import { NestedState, removeIdsFromTree } from "./testutils.js";
 

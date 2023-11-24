@@ -1944,9 +1944,7 @@ const SimpleVibrational = ({
             vindex={vindex}
           />
         )
-        : (
-          children
-        )}
+        : children}
     </div>
   );
 };
@@ -2058,9 +2056,7 @@ const SimpleElectronic = ({
             />
           </div>
         )
-        : (
-          children
-        )}
+        : children}
     </>
   );
 };

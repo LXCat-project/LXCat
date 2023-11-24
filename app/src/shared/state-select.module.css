@@ -3,16 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .placeholder {
-  color: var(--mantine-color-gray-4);
+    color: var(--mantine-color-gray-4);
 }
+
 .middle {
-  border-left: none;
-  border-radius: 0;
+    border-left: none;
+    border-radius: 0;
 }
+
 .end {
-  border-left: none;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

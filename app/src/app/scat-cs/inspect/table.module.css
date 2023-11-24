@@ -3,28 +3,30 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .header {
-  position: sticky;
-  top: 0;
-  background-color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
-  transition: box-shadow 150ms ease;
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
-  }
+    position: sticky;
+    top: 0;
+    background-color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
+    transition: box-shadow 150ms ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+    }
 }
+
 .scrolled {
-  box-shadow: var(--mantine-shadows-sm);
+    box-shadow: var(--mantine-shadows-sm);
 }
+
 .outer {
-  flex: 1;
-  border-radius: var(--mantine-radius-md);
-  border-width: 1px;
-  border-color: var(--mantine-color-gray-4);
-  border-style: solid;
+    flex: 1;
+    border-radius: var(--mantine-radius-md);
+    border-width: 1px;
+    border-color: var(--mantine-color-gray-4);
+    border-style: solid;
 }

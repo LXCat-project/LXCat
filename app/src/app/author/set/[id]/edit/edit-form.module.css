@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 .expandIcon {
-  transition: transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
+
 .expandIconRotated {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
