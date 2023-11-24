@@ -124,11 +124,17 @@ jobs:
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/database
       run: pnpm -C packages/database test -- run --coverage --no-threads
-    - name: Create coverage report
-      if: always()
-      uses: davelosert/vitest-coverage-report-action@v2
+    - name: Upload coverage report to Codecov
+      uses: codecov/codecov-action@v3
       with:
-        working-directory: packages/database
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: packages/database/coverage/coverage-final.json
+        flags: database
+    # - name: Create coverage report
+    #   if: always()
+    #   uses: davelosert/vitest-coverage-report-action@v2
+    #   with:
+    #     working-directory: packages/database
 
   test-schema:
     needs: build
