@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 .icon {
   color: light-dark(var(--mantine-color-dark-3), var(--mantine-color-gray-5));
 }
