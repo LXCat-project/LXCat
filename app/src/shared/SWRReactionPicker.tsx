@@ -232,7 +232,8 @@ export const SWRReactionPicker = ({
         typeTags={{
           data: typeTags,
           value: selection.typeTags,
-          onChange: (newTags: Array<ReactionTypeTag>) => onTagsChange(newTags),
+          onChange: (newTags: Array<string>) =>
+            onTagsChange(newTags as Array<ReactionTypeTag>),
         }}
         sets={{
           data: csSets,
@@ -267,7 +268,5 @@ export const SWRReactionPicker = ({
         }}
       />
     )
-    : (
-      latex
-    );
+    : latex;
 };

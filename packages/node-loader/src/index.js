@@ -22,9 +22,11 @@ export default function loader(content) {
 
   return `
 try {
-  process.dlopen(module, require("path").join(${JSON.stringify(
-    outputPath || _compiler.options.output.path
-  )}, /*__webpack_public_path__,*/ ${JSON.stringify(name)}${
+  process.dlopen(module, require("path").join(${
+    JSON.stringify(
+      outputPath || _compiler.options.output.path,
+    )
+  }, /*__webpack_public_path__,*/ ${JSON.stringify(name)}${
     typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""
   }));
 } catch (error) {

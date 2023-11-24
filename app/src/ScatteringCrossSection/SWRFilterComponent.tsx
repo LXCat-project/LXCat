@@ -96,7 +96,7 @@ export const SWRFilterComponent = ({
   return (
     <Stack>
       {selection.map((r, i) => (
-        <Group key={r.id} position="center">
+        <Group key={r.id} justify="center">
           <SWRReactionPicker
             ids={r.ids}
             selection={r.options}

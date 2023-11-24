@@ -30,7 +30,7 @@ export const AnyOf = (
       >
         {definitions.map((value, i) => (
           <option key={i} value={i.toString()}>
-            {!(typeof (value) === "boolean")
+            {!(typeof value === "boolean")
               ? value.description ?? i.toString()
               : i.toString()}
           </option>

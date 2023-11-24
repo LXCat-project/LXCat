@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
 import { Button, Menu } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 import { LinkToggle } from "./LinkToggle";
@@ -30,7 +28,7 @@ export const ButtonMultiDownload = (
     >
       <Menu.Target>
         <Button
-          rightIcon={<IconDownload size="1.05rem" stroke={1.5} />}
+          rightSection={<IconDownload size="1.05rem" stroke={1.5} />}
           pr={12}
           size="md"
         >
@@ -50,7 +48,7 @@ export const ButtonMultiDownload = (
             download={fileName ?? true}
             disabled={disabled}
           >
-            <Menu.Item icon={icon} disabled={disabled}>
+            <Menu.Item leftSection={icon} disabled={disabled}>
               {text}
             </Menu.Item>
           </LinkToggle>

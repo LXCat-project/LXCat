@@ -4,19 +4,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Button, createStyles } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { UserPanel } from "../user/UserPanel";
-
-const useStyles = createStyles((theme) => ({
-  portrait: { borderRadius: theme.radius.sm },
-}));
+import classes from "./auth.module.css";
 
 export function UserAnchor() {
   const { data: session } = useSession();
-  const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 
   if (session) {
@@ -29,20 +25,21 @@ export function UserAnchor() {
           src={user.image!}
           title={`Logged in ${user.name}`}
           alt="Picture of logged in user"
+          style={{
+            borderRadius: "var(--mantine-radius-sm)",
+          }}
           width={40}
           height={40}
           onClick={open}
         />
-        {opened && (
-          <UserPanel session={session} open={opened} onClose={close} />
-        )}
+        <UserPanel session={session} open={opened} onClose={close} />
       </>
     );
   }
 
   return (
     <>
-      <Button variant="default" compact onClick={() => signIn()}>
+      <Button variant="default" size="compact-md" onClick={() => signIn()}>
         Sign in
       </Button>
     </>

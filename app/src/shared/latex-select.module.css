@@ -1,0 +1,68 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+.control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: calc(var(--mantine-spacing-xs) / 2);
+    padding-bottom: calc(var(--mantine-spacing-xs) / 2);
+    padding-left: var(--mantine-spacing-sm);
+    padding-right: var(--mantine-spacing-sm);
+    border-radius: var(--mantine-radius-sm);
+    transition: background-color 150ms ease;
+    border-width: calc(rem(1));
+    border-style: solid;
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+
+    &:hover {
+        background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+    }
+
+    &:active {
+        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+    }
+}
+
+.controlOpened {
+    @mixin dark {
+        background-color: var(--mantine-color-dark-5);
+    }
+
+    @mixin light {
+        background-color: var(--mantine-color-gray-0);
+    }
+}
+
+.item {
+    border-radius: var(--mantine-radius-sm);
+}
+
+.itemSelected {
+    background-color: var(--mantine-color-brand-5);
+
+    :disabled {
+        color: var(--mantine-color-white);
+    }
+}
+
+.dropdown {
+    border-radius: var(--mantine-radius-sm);
+}
+
+.label {
+    font-weight: 500;
+    font-size: var(--mantine-fontsize-sm);
+}
+
+.icon {
+    transition: transform 150ms ease;
+    transform: rotate(0deg);
+}
+
+.iconRotated {
+    transform: rotate(180deg);
+}

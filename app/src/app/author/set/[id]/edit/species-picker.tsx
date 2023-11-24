@@ -5,27 +5,20 @@
 "use client";
 
 import { SerializedSpecies } from "@lxcat/database/schema";
-import { createStyles, Group, px, Text } from "@mantine/core";
+import { Group, px, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import useSWR from "swr";
 import { Latex } from "../../../../../shared/Latex";
+import classes from "./edit-form.module.css";
 
 export type SpeciesNode = {
   _key: string;
   species: SerializedSpecies;
   hasChildren: boolean;
 };
-
-const useStyles = createStyles(() => ({
-  expandIcon: {
-    transition: "transform 0.2s ease",
-  },
-  expandIconRotated: {
-    transform: "rotate(90deg)",
-  },
-}));
 
 export type SpeciesPickerImplProps = {
   records: Array<SpeciesNode>;
@@ -49,13 +42,12 @@ const SpeciesPickerImpl = (
   }: SpeciesPickerImplProps,
 ) => {
   const [expanded, setExpanded] = useState<Array<string>>([]);
-  const { cx, classes } = useStyles();
 
   return (
     <DataTable
       selectedRecords={selected}
       onSelectedRecordsChange={setSelected}
-      withBorder={!(nested ?? false)}
+      withTableBorder={!(nested ?? false)}
       withColumnBorders
       noHeader={nested ?? false}
       highlightOnHover
@@ -70,16 +62,16 @@ const SpeciesPickerImpl = (
           render: ({ _key, species, hasChildren }) => (
             <Group
               style={{
-                paddingLeft: (hasChildren ? 0 : px("1.6rem"))
+                paddingLeft: (hasChildren ? 0 : px("1.6rem") as number)
                   + (leftPadding ?? 0),
               }}
-              spacing="xs"
+              gap="xs"
             >
               {hasChildren
                 && (
                   <IconChevronRight
                     size="0.9rem"
-                    className={cx(classes.expandIcon, {
+                    className={clsx(classes.expandIcon, {
                       [classes.expandIconRotated]: expanded.includes(_key),
                     })}
                   />
@@ -146,7 +138,7 @@ const ChildSpeciesPicker = (
   );
 };
 
-const INDENT = px("0.3rem");
+const INDENT = px("0.3rem") as number;
 
 export type SpeciesPickerProps = {
   selected: Array<SpeciesNode>;

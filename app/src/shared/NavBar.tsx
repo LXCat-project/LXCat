@@ -4,44 +4,12 @@
 
 "use client";
 
-import {
-  Container,
-  createStyles,
-  Group,
-  Header,
-  Menu,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
+import { Container, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { IconDatabase, IconFileText, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 import { UserAnchor } from "../auth/UserAnchor";
 import { LXCatLogo } from "./Logo";
-
-const useStyles = createStyles((theme) => ({
-  bar: {
-    backgroundColor: theme.colors.brand[6],
-    alignItems: "center",
-    display: "flex",
-    paddingLeft: 24,
-    paddingRight: 24,
-  },
-  dropdownItem: {
-    ":hover": {
-      textDecorationLine: "none",
-    },
-  },
-  menuItem: {
-    color: theme.colors.brand[0],
-    backgroundColor: theme.colors.brand[6],
-    padding: "8px 12px",
-    borderRadius: theme.radius.sm,
-    "&:hover": {
-      backgroundColor: theme.fn.darken(theme.colors.brand[6], 0.1),
-      textDecorationLine: "none",
-    },
-  },
-}));
+import classes from "./nav-bar.module.css";
 
 const entries = [
   {
@@ -71,8 +39,6 @@ const entries = [
 ];
 
 export const NavBar = () => {
-  const { classes, theme } = useStyles();
-
   const barItems = entries.map((entry) => {
     const menuItems = entry.links?.map((item) => (
       <Menu.Item
@@ -94,7 +60,7 @@ export const NavBar = () => {
         >
           <Menu.Target>
             <UnstyledButton className={classes.menuItem}>
-              <Group spacing="xs">
+              <Group gap="xs">
                 {entry.icon}
                 <Text>{entry.label}</Text>
               </Group>
@@ -112,7 +78,7 @@ export const NavBar = () => {
         className={classes.menuItem}
         href={entry.link}
       >
-        <Group spacing="xs">
+        <Group gap="xs">
           {entry.icon}
           <Text>{entry.label}</Text>
         </Group>
@@ -121,14 +87,17 @@ export const NavBar = () => {
   });
 
   return (
-    <Header height={60} className={classes.bar}>
+    <header className={classes.bar}>
       <Link href="/">
-        <LXCatLogo height={70} width={70} color={theme.colors.brand[0]} />
+        <LXCatLogo
+          boxClassName={classes.logoBox}
+          pathClassName={classes.logoPath}
+        />
       </Link>
       <Container style={{ display: "flex" }}>
-        <Group spacing={3}>{barItems}</Group>
+        <Group gap={3}>{barItems}</Group>
       </Container>
       <UserAnchor />
-    </Header>
+    </header>
   );
 };

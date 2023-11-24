@@ -17,7 +17,7 @@ export function RangeInputForm<FormSchema>(
   { label, form, basePath }: RangeInputFormProperties<FormSchema>,
 ) {
   return (
-    <Stack spacing="xs">
+    <Stack gap="xs">
       <Select
         label={label}
         data={[
@@ -36,7 +36,7 @@ export function RangeInputForm<FormSchema>(
           />
         )
         : (
-          <Group align="start" grow spacing="xs">
+          <Group align="start" grow gap="xs">
             <ScientificInput
               placeholder="From"
               {...form.getInputProps(`${basePath}.from`)}

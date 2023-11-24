@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Navbar, ScrollArea } from "@mantine/core";
+import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
 import { DocEntry } from "../../shared/DocEntry";
 
@@ -14,8 +14,8 @@ export const DocsSidebar = ({
   docFiles: Array<DocFile>;
 }) => {
   return (
-    <Navbar sx={{ zIndex: 10 }} p="xs" width={{ base: 300 }}>
-      <Navbar.Section grow component={ScrollArea} type="scroll">
+    <AppShellNavbar style={{ width: 300, zIndex: 10 }} p="xs">
+      <AppShellSection grow component={ScrollArea} type="scroll">
         {docFiles.flatMap((file) =>
           file.entries
             ? (
@@ -31,7 +31,7 @@ export const DocsSidebar = ({
             )
             : <></>
         )}
-      </Navbar.Section>
-    </Navbar>
+      </AppShellSection>
+    </AppShellNavbar>
   );
 };

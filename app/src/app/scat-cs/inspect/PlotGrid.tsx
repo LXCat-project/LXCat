@@ -24,8 +24,8 @@ export const PlotGrid = () => {
     <Container my="md">
       <SimpleGrid
         cols={2}
-        sx={{ width: "100%" }}
-        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+        style={{ width: "100%" }}
+        // breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
         <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} />
         <Grid gutter="md">

@@ -22,15 +22,7 @@ import {
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import {
-  Box,
-  Button,
-  Group,
-  MantineTheme,
-  Space,
-  Sx,
-  Text,
-} from "@mantine/core";
+import { Box, Button, Group, Space, Text } from "@mantine/core";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import deepEqual from "deep-equal";
 import { GetServerSideProps, NextPage } from "next";
@@ -44,6 +36,7 @@ import { CSTable } from "../../ScatteringCrossSection/CSTable";
 import { Filter } from "../../ScatteringCrossSection/Filter";
 import { Paging } from "../../ScatteringCrossSection/Paging";
 import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
+import classes from "../../ScatteringCrossSection/scat-cs.module.css";
 import {
   emptyFilter,
   informationFromTemplates,
@@ -67,14 +60,6 @@ interface Props {
   defaultReactionOptions: ReactionOptions;
   examples: Example[];
 }
-
-const listStyle: Sx = (theme: MantineTheme) => ({
-  padding: theme.spacing.xs,
-  borderStyle: "solid",
-  borderRadius: theme.radius.md,
-  borderColor: theme.colors.gray[4],
-  borderWidth: "thin",
-});
 
 const generateCachePairs = (
   selection: ReactionTemplate,
@@ -199,7 +184,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             ]),
         }}
       >
-        <Box sx={listStyle}>
+        <Box className={classes.list}>
           <Filter
             selection={selection}
             onChange={onChange}
@@ -209,7 +194,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
         </Box>
       </SWRConfig>
       <Space h="sm" />
-      <Group position="center">
+      <Group justify="center">
         <Button
           color="red"
           disabled={items.length == 0 && selection.length < 2}
@@ -217,7 +202,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             onChange([emptyFilter()]);
             setEditableReaction(0);
           }}
-          leftIcon=<IconTrash />
+          leftSection=<IconTrash />
         >
           Clear selection
         </Button>
@@ -227,7 +212,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             onChange([...selection, emptyFilter()]);
             setEditableReaction(selection.length);
           }}
-          leftIcon=<IconAdjustmentsPlus />
+          leftSection=<IconAdjustmentsPlus />
         >
           Add Filter
         </Button>
@@ -238,7 +223,12 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
               passHref
               legacyBehavior
             >
-              <Button leftIcon={<IconGraph />} component="a" variant="light">
+              <Button
+                leftSection={<IconGraph />}
+                component="a"
+                style={{ textDecorationLine: "none" }}
+                variant="light"
+              >
                 Plot selection
               </Button>
             </Link>

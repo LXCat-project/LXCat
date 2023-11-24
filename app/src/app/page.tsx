@@ -2,13 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { NextPage } from "next";
-import Head from "next/head";
 import { jsonLdScriptProps } from "react-schemaorg";
 import { Organization, WebSite, WithContext } from "schema-dts";
 
-import { Layout } from "../shared/Layout";
-
+import Script from "next/script";
 import logo from "../../public/lxcat.png";
 
 const jsonLDLogo: WithContext<Organization> = {
@@ -28,21 +25,18 @@ const jsonLDWebsite: WithContext<WebSite> = {
   },
 };
 
-const Home: NextPage = () => {
-  return (
-    <Layout>
-      <Head>
-        <script key="jsonld-logo" {...jsonLdScriptProps(jsonLDLogo)} />
-        <script key="jsonld-website" {...jsonLdScriptProps(jsonLDWebsite)} />
-      </Head>
-      <h1>Welcome to LXCat</h1>
+const Home = () => (
+  <>
+    <Script key="jsonld-logo" {...jsonLdScriptProps(jsonLDLogo)} />
+    <Script key="jsonld-website" {...jsonLdScriptProps(jsonLDWebsite)} />
 
-      <p>
-        This is the next version of the LXCat web site and is under heavy
-        construction.
-      </p>
-    </Layout>
-  );
-};
+    <h1>Welcome to LXCat</h1>
+
+    <p>
+      This is the next version of the LXCat web site and is under heavy
+      construction.
+    </p>
+  </>
+);
 
 export default Home;

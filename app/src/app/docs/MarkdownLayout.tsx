@@ -2,22 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
-import { createStyles } from "@mantine/core";
+import { AppShell, AppShellMain } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
+import classes from "./docs.module.css";
 import { DocsSidebar } from "./DocsSidebar";
-
-const useStyles = createStyles(() => ({
-  main: {
-    position: "absolute",
-    left: 310,
-    top: 60,
-    bottom: 0,
-    right: 0,
-    overflowY: "scroll",
-  },
-}));
 
 export const MarkdownLayout = ({
   docFiles,
@@ -26,13 +14,17 @@ export const MarkdownLayout = ({
   docFiles: Array<DocFile>;
   children: React.ReactNode;
 }) => {
-  const { classes } = useStyles();
   return (
-    <>
+    <AppShell>
       <DocsSidebar docFiles={docFiles} />
-      <div className={classes.main}>
+      <AppShellMain>
         {children}
-      </div>
-    </>
+      </AppShellMain>
+      {
+        // <div className={classes.main}>
+        //   {children}
+        // </div>
+      }
+    </AppShell>
   );
 };

@@ -1,0 +1,41 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+.bar {
+    background-color: var(--mantine-color-brand-6);
+    align-items: center;
+    display: flex;
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+}
+
+.dropdownItem {
+    &:hover {
+        text-decoration-line: none;
+    }
+}
+
+.menuItem {
+    color: var(--mantine-color-brand-0);
+    background-color: var(--mantine-color-brand-6);
+    padding: 8px 12px;
+    border-radius: var(--mantine-radius-sm);
+
+    &:hover {
+        background-color: var(--mantine-color-brand-5);
+        text-decoration-line: none;
+    }
+}
+
+.logoBox {
+    width: 70px;
+    height: 70px;
+}
+
+.logoPath {
+    stroke-width: 0.08466667px;
+    fill: var(--mantine-color-brand-0);
+}

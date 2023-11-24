@@ -117,7 +117,7 @@ test.describe("given 2 dummy sets", () => {
 
     test("should have single process listed", async ({ page }) => {
       const processes = page.locator(
-        ".mantine-Table-root:has-text(\"Reaction\") tbody tr",
+        ".mantine-Table-table:has-text(\"Reaction\") tbody tr",
       );
       await expect(processes).toHaveCount(1);
     });

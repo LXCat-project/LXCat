@@ -16,6 +16,7 @@ import {
   BolsigInput,
   BolsigOutput,
 } from "../../../solvers/bolsig/io";
+import classes from "./bolsig.module.css";
 
 export interface BolsigPageProps {
   data: KeyedLTPMixture;
@@ -124,7 +125,7 @@ export const BolsigPage = (
       )}
       <Grid
         align="center"
-        sx={theme => ({ margin: theme.spacing.xs })}
+        className={classes.grid}
         grow
       >
         <Grid.Col span="auto" style={{ minWidth: 300, maxWidth: 500 }}>

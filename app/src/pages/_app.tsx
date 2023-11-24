@@ -2,7 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import "@mantine/core/styles.css";
+import "mantine-datatable/styles.css";
 import "../styles/globals.css";
+
 import { MantineProvider } from "@mantine/core";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
@@ -15,7 +18,7 @@ function MyApp({
 }: AppProps<{ session: Session }>) {
   return (
     <SessionProvider session={session}>
-      <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+      <MantineProvider theme={theme}>
         <Component {...pageProps} />
       </MantineProvider>
     </SessionProvider>

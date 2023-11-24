@@ -55,7 +55,7 @@ export const Picker = ({
       </fieldset>
       {/* TODO add paging or scrolling, now first 100 are shown */}
       <Space h="md" />
-      <Group position="center">
+      <Group justify="center">
         <Button type="button" onClick={onLocalSubmit}>
           Add picked states
         </Button>

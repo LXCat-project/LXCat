@@ -14,7 +14,7 @@ export const ErrorDialog = (
   },
 ) => (
   <Dialog opened={opened} withCloseButton onClose={onClose}>
-    <Text size="md" color="red" weight={700}>
+    <Text size="md" c="red" fw={700}>
       {typeof error === "string" ? error : error.message}
     </Text>
   </Dialog>

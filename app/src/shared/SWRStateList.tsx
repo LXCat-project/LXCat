@@ -31,12 +31,12 @@ export const SWRStateList = ({
   onUpdate,
 }: SWRStateListProps) => {
   return (
-    <Stack align="stretch" spacing="xs">
+    <Stack align="stretch" gap="xs">
       {entries.map((entry, index) => {
         return (
           <Button.Group
             key={entry.id}
-            sx={{ borderRadius: 4, overflow: "hidden" }}
+            style={{ borderRadius: 4, overflow: "hidden" }}
           >
             <Button variant="light" onClick={() => onRemove(index)}>
               -
@@ -47,8 +47,7 @@ export const SWRStateList = ({
               selected={entry.selected}
               onChange={async (selected, latex) =>
                 onUpdate(index, selected, latex)}
-              inGroup={false}
-              sx={{
+              style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderLeftStyle: "none",
