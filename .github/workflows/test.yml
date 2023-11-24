@@ -157,11 +157,17 @@ jobs:
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/schema
       run: pnpm -C packages/schema test -- run --coverage
-    - name: Create coverage report
-      if: always()
-      uses: davelosert/vitest-coverage-report-action@v2
+    - name: Upload coverage report to Codecov
+      uses: codecov/codecov-action@v3
       with:
-        working-directory: packages/schema
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: packages/schema/coverage/coverage-final.json
+        flags: schema
+    # - name: Create coverage report
+    #   if: always()
+    #   uses: davelosert/vitest-coverage-report-action@v2
+    #   with:
+    #     working-directory: packages/schema
 
   reuse:
     runs-on: ubuntu-20.04
