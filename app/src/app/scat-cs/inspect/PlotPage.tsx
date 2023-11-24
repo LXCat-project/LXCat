@@ -148,7 +148,7 @@ export const PlotPage = (
               <DataTable
                 withTableBorder
                 borderRadius="md"
-                className={classes.nestedTable}
+                className={classes.scrollableTable}
                 records={refs}
                 columns={[{
                   accessor: "marker",

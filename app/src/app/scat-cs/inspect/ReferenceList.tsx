@@ -2,10 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-
+import { DataTable } from "mantine-datatable";
+import classes from "./inspect.module.css";
 import { Reference } from "./Reference";
-import { TableScrollArea } from "./Table";
 import { FormattedReference } from "./types";
 
 export const ReferenceList = ({
@@ -13,11 +12,16 @@ export const ReferenceList = ({
 }: {
   references: Array<FormattedReference>;
 }) => (
-  <TableScrollArea
-    headers={[{ label: "References", key: "ref" }]}
-    data={references.map((ref) => ({
-      key: ref.id,
-      ref: <Reference>{ref}</Reference>,
-    }))}
+  <DataTable
+    withTableBorder
+    withRowBorders
+    borderRadius="md"
+    columns={[{
+      title: "Reference",
+      accessor: "ref",
+      render: (record) => <Reference>{record}</Reference>,
+    }]}
+    records={references}
+    className={classes.scrollableTable}
   />
 );

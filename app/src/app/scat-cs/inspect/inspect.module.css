@@ -1,4 +1,4 @@
-.nestedTable {
+.scrollableTable {
   :global(.mantine-ScrollArea-viewport) {
     max-height: 300px;
   }
