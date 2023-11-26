@@ -225,8 +225,8 @@ importers:
         specifier: 20.9.2
         version: 20.9.2
       '@types/oidc-provider':
-        specifier: ^8.4.2
-        version: 8.4.2
+        specifier: ^8.4.3
+        version: 8.4.3
       '@types/plotly.js-basic-dist':
         specifier: ^1.54.4
         version: 1.54.4
@@ -3293,8 +3293,8 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
-  /@types/oidc-provider@8.4.2:
-    resolution: {integrity: sha512-yIWNRZADn3Jo8FaOUrF9uoA7aMWVuLrwx6dcwYPJZIBXqWZyocaRpKIOvN5reJSdRUk79zdp9TUFOIM4dO6G7Q==}
+  /@types/oidc-provider@8.4.3:
+    resolution: {integrity: sha512-BtkZ7pi2mvlG0uORntefTGub6oxXKZnMPnRZN/b7Xda+m052uWEaeF6OCRp7PO+kMbygyZmKQXY09cfiA22nMw==}
     dependencies:
       '@types/koa': 2.13.6
       '@types/node': 20.9.2
