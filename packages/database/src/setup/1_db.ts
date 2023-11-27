@@ -9,7 +9,7 @@ export default async function() {
   const db = systemDb();
 
   const names = await db.listDatabases();
-  const databaseName = process.env.ARANGO_NAME || "lxcat";
+  const databaseName = process.env.ARANGO_DB || "lxcat";
   if (!names.includes(databaseName)) {
     // TODO only print log when not testing aka calling from cli
     console.log(`Creating database ${databaseName}`);

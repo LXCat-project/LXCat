@@ -2,15 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
+import { systemDb } from "@lxcat/database";
 import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
 import { uploadAndPublishDummySet } from "./global-setup";
+import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.beforeAll(async ({ browser }) => {
-  await db().setupCollections();
+  // await rootDb().setupCollections();
+  // await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
+
   await uploadAndPublishDummySet(browser);
   await uploadAndPublishDummySet(
     browser,
@@ -20,7 +23,7 @@ test.beforeAll(async ({ browser }) => {
 });
 
 test.afterAll(async () => {
-  await db().truncateNonUserCollections();
+  await rootDb().truncateNonUserCollections();
 });
 
 test.describe("cross section index page with Uo selected", () => {
