@@ -32,7 +32,7 @@ export async function startDbContainer(
   setSystemDb(url, password);
 
   process.env.ARANGO_URL = url;
-  process.env.ARANGO_PASSWORD = password;
+  process.env.ARANGO_ROOT_PASSWORD = password;
 
   return async () => {
     await container.stop();
