@@ -43,14 +43,14 @@
   ],
   "private": true,
   "scripts": {
-    "setup": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/setup.ts",
-    "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/seed.ts",
-    "make-admin": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/make_admin.ts",
-    "drop-database": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_database.ts",
-    "drop-non-user": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/drop_non_user.ts",
+    "setup": "tsx src/cli/setup.ts",
+    "seed": "tsx src/cli/seed.ts",
+    "make-admin": "tsx src/cli/make_admin.ts",
+    "drop-database": "tsx src/cli/drop_database.ts",
+    "drop-non-user": "tsx src/cli/drop_non_user.ts",
     "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
-    "load-css": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/load_css.ts",
-    "collection-schemas": "node --experimental-specifier-resolution=node --loader ts-node/esm src/cli/collection-schemas.ts",
+    "load-css": "tsx src/cli/load_css.ts",
+    "collection-schemas": "tsx src/cli/collection-schemas.ts",
     "format": "dprint fmt",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
@@ -87,8 +87,8 @@
     "eslint": "8.54.0",
     "testcontainers": "^10.3.2",
     "ts-json-schema-generator": "^1.4.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
+    "tsx": "^4.5.0",
+    "typescript": "^5.3.2",
     "vitest": "^0.34.6"
   }
 }
