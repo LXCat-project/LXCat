@@ -7,7 +7,7 @@ import { db } from "../db.js";
 
 (async () => {
   try {
-    await db().truncateNonUserCollections();
+    await db().dropNonUserCollections();
   } catch (err) {
     console.error(err);
   }

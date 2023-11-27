@@ -9,6 +9,7 @@ import { exec } from "child_process";
 import { rm } from "fs/promises";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
+import { rootDb } from "./root-db";
 import { testOidcServer } from "./test-oidc-server";
 
 async function globalSetup(config: FullConfig) {
@@ -33,6 +34,8 @@ async function globalSetup(config: FullConfig) {
   });
 
   // Make child processes use right env
+  process.env.ARANGO_USERNAME = "lxcat";
+  process.env.ARANGO_DB = "lxcat";
   process.env.ARANGO_PASSWORD = env.ARANGO_PASSWORD;
   process.env.ARANGO_ROOT_PASSWORD = env.ARANGO_PASSWORD;
   process.env.ARANGO_URL = env.ARANGO_URL;
@@ -41,7 +44,12 @@ async function globalSetup(config: FullConfig) {
   // create db collections
   // TODO: Figure out how to run setup as a cli command.
   // await runDbCommand("pnpm run setup");
-  await LXCatDatabase.create(systemDb(), "lxcat");
+  const lxcat = await LXCatDatabase.create(systemDb(), "lxcat");
+  await lxcat.createUser(
+    systemDb(),
+    process.env.ARANGO_USERNAME!,
+    process.env.ARANGO_PASSWORD,
+  );
   // It is up to tests to login
   // and to populate and truncate db
 
@@ -58,7 +66,7 @@ async function globalSetup(config: FullConfig) {
   // TODO create user for each role and store the those users cookies.
   await browser.close();
 
-  await db().truncateNonUserCollections();
+  // await rootDb().dropNonUserCollections();
 
   console.log("Completed global setup");
   // return teardown method

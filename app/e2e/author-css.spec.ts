@@ -2,18 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
+import { db, systemDb } from "@lxcat/database";
 import { expect, Page, test } from "@playwright/test";
 import { uploadAndPublishDummySet } from "./global-setup";
+import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
-test.beforeAll(async () => {
-  await db().setupCollections();
-});
+// test.beforeAll(async () => {
+//   await rootDb().setupCollections();
+//   await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
+// });
 
 test.afterAll(async () => {
-  await db().truncateNonUserCollections();
+  await rootDb().truncateNonUserCollections();
 });
 
 test("/api/author/scat-css", async ({ request }) => {
@@ -30,7 +32,7 @@ test("/api/author/scat-css", async ({ request }) => {
 test.describe.skip("/author/scat-css", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
-    return db().truncateNonUserCollections;
+    return db().dropNonUserCollections;
   });
 
   test.beforeEach(async ({ page }) => {

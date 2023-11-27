@@ -139,7 +139,11 @@ export class LXCatDatabase {
     return new this(db);
   }
 
-  public async createUser(system: Database, username: string, password: string) {
+  public async createUser(
+    system: Database,
+    username: string,
+    password: string,
+  ) {
     const users = await system.listUsers();
 
     if (users.map((user) => user.user).includes(username)) {
@@ -148,22 +152,31 @@ export class LXCatDatabase {
 
     const user = await system.createUser(username, password);
 
-    const collections = await this.db.listCollections()
+    await this.setupUserPrivileges(system, username);
+
+    return user;
+  }
+
+  public async setupUserPrivileges(system: Database, username: string) {
+    const collections = await this.db.listCollections();
 
     console.log(collections);
 
-    await system.setUserAccessLevel(username, {database: this.db.name, grant: "ro"});
+    await system.setUserAccessLevel(username, {
+      database: this.db.name,
+      grant: "ro",
+    });
 
-    await Promise.all(collections.map((collection) => system.setUserAccessLevel(
-        username, 
+    await Promise.all(collections.map((collection) =>
+      system.setUserAccessLevel(
+        username,
         {
-          database: this.db.name, 
-          collection: collection.name, 
-          grant: "rw"
-        }
-    )));
-
-    return user;
+          database: this.db.name,
+          collection: collection.name,
+          grant: "rw",
+        },
+      )
+    ));
   }
 
   public async setupCollections() {
@@ -194,6 +207,16 @@ export class LXCatDatabase {
   }
 
   public async truncateNonUserCollections() {
+    const collections = await this.db.collections(true);
+    for (const c of collections) {
+      console.log(`Truncating ${c.name}`);
+      if (c.name !== "users") {
+        await c.truncate();
+      }
+    }
+  }
+
+  public async dropNonUserCollections() {
     const collections = await this.db.collections(true);
     for (const c of collections) {
       console.log(`Dropping ${c.name}`);

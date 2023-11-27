@@ -8,7 +8,7 @@ import { systemDb } from "../systemDb.js";
 
 (async () => {
   try {
-    await systemDb().removeUser(process.env.ARANGO_USER!);
+    await systemDb().removeUser(process.env.ARANGO_USERNAME!);
     await systemDb().dropDatabase(db().name());
   } catch (err) {
     console.error(err);
