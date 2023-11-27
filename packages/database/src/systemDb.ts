@@ -11,8 +11,8 @@ export function systemDb() {
     // Do not use `db` from app as it will error trying to connect to non-existing db
     return setSystemDb(
       process.env.ARANGO_URL || "http://localhost:8529",
-      process.env.ARANGO_PASSWORD,
-      process.env.ARANGO_USERNAME || "root",
+      process.env.ARANGO_ROOT_PASSWORD,
+      // process.env.ARANGO_USERNAME || "root",
     );
   }
 
