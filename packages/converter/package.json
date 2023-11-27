@@ -17,7 +17,7 @@
     "dev": "pnpm build",
     "build": "napi build --release --strip --dts dist/index.d.ts",
     "build:debug": "napi build --dts dist/index.d.ts",
-    "test": "node --loader ts-node/esm --test tests/valid.test.ts",
+    "test": "tsx --test tests/valid.test.ts",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year --skip-unrecognised src tests",
     "clean": "rm -rf target dist",
     "prepublishOnly": "pnpm build"
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@napi-rs/cli": "^2.16.5",
     "@types/node": "^20.10.0",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.5.0",
     "typescript": "^5.3.2"
   }
 }
