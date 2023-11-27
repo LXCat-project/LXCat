@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db, LXCatDatabase, systemDb } from "@lxcat/database";
+import { db } from "@lxcat/database";
 import { startDbContainer } from "@lxcat/database/test";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
 import { rm } from "fs/promises";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
-import { rootDb } from "./root-db";
 import { testOidcServer } from "./test-oidc-server";
 
 async function globalSetup(config: FullConfig) {
@@ -41,35 +40,26 @@ async function globalSetup(config: FullConfig) {
   process.env.ARANGO_URL = env.ARANGO_URL;
 
   console.log("Create collections");
-  // create db collections
-  // TODO: Figure out how to run setup as a cli command.
-  // await runDbCommand("pnpm run setup");
-  const lxcat = await LXCatDatabase.create(systemDb(), "lxcat");
-  await lxcat.createUser(
-    systemDb(),
-    process.env.ARANGO_USERNAME!,
-    process.env.ARANGO_PASSWORD,
-  );
-  // It is up to tests to login
-  // and to populate and truncate db
+  // Setup the `lxcat` database and user.
+  await runDbCommand("pnpm run setup");
+
+  // It is up to tests to login and to populate and truncate the db.
 
   console.log("Create admin user and store its cookie");
   const browser = await chromium.launch();
   const baseURL = env.NEXT_PUBLIC_URL;
   const email = "admin@ng.lxcat.net";
   const adminPage = await browser.newPage({ baseURL });
-  // Login with test oidc account
+  // Login with test oidc account.
   await signUp(adminPage, email);
-  // add admin roles
+  // Add admin roles.
   await runDbCommand(`pnpm make-admin ${email}`);
   await adminPage.context().storageState({ path: "adminStorageState.json" });
   // TODO create user for each role and store the those users cookies.
   await browser.close();
 
-  // await rootDb().dropNonUserCollections();
-
   console.log("Completed global setup");
-  // return teardown method
+
   return async () => {
     await rm("adminStorageState.json");
     await stopDbContainer();
