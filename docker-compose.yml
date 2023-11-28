@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: app/Dockerfile
       args:
-        - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+        - LXCAT_BUILD_ENV=production
     env_file: .env.production
     ports:
       - "127.0.0.1:3000:3000"

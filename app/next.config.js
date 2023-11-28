@@ -5,7 +5,9 @@
 import NextBundleAnalyzer from "@next/bundle-analyzer";
 import dotenv from "dotenv";
 
-dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
+if (process.env.LXCAT_BUILD_ENV !== "production") {
+  dotenv.config({ path: "../.env.development" });
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
