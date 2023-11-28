@@ -35,31 +35,27 @@ Documentation for different users can be found at [docs/](docs/).
 
 ## Production deployment
 
-Create `.env` file with content similar to `.env.local` described in
-[app/README.md](app/README.md).
+Create a `.env.production` file. The contents of `.env.production.example` can be used as a guideline. Additionally, some further instructions are presented in [app/README.md](app/README.md).
 
-Startup containers with
+The production containers can be built and started by running
 
 ```shell
 docker-compose up --build
 ```
 
-Fill database with
+Subsequently, the following commands can be used to setup and fill the database.
 
 ```shell
-docker-compose run setup setup
-# To seed db with test data set use
-docker-compose run setup seed seeds/test
-# To seed db with production data use
-# The `./database/seeds` directory is bind mounted inside the Docker container,
-# so copy any seed files to that directory
-cp -r <production data seed> ./packages/database/seeds/<production data seed>
-docker-compose run setup load-css /packages/database/seeds/<production data seed>
-# To give an already logged in user admin rights
+docker compose run setup setup
+# To seed the db with test data set use:
+docker compose run setup seed seeds/test
+# To seed the db with production data, temporarily supply the source path as a read-only volume bound to `/data`:
+docker compose -v <production data path>:/data:ro setup load-css /data
+# To give an already logged in user admin rights:
 docker-compose run setup make-admin <email of user>
 ```
 
-Web application will run at `http://localhost:3000`. The app should be reversed
+The web application will run at `http://localhost:3000`. The app should be reversed
 proxied by a web server to provide https.
 
 ## How to cite

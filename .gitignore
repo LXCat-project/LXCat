@@ -2,11 +2,23 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-.direnv
-.env
+# Direnv
 .envrc
+.direnv
+
+# Environment files
+.env.development
+.env.production
+
+# Turborepo
 .turbo
+
+# Node dependencies
 node_modules
+
+# Test coverage
 **/coverage
 **/junit.xml
+
+# Misc
 .venv

@@ -32,9 +32,9 @@ pnpm install
 pnpm dev  # Starts app, database, schema workspaces in development mode
 ```
 
-The application uses `@lxcat/database` package which needs a ArangoDB database server, see its [README](../packages/database/README.md) how to setup the database.
+The application uses the `@lxcat/database` package, which needs an ArangoDB database server, see its [README](../packages/database/README.md) for how to setup the database.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to visit the development environment.
 
 You can start editing the page by modifying `src/pages/index.tsx`. The page auto-updates as you edit the file.
 
@@ -51,7 +51,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Setup auth
 
-The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keycloak](http://www.keycloak.org/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB users collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keycloak](http://www.keycloak.org/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB `users` collection.
 
 ### In auth0 dashboard
 
@@ -161,30 +161,43 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
 ### In local directory
 
-In `.env.local` file define the following key/value pairs
+In the root `.env.development` file (or `.env.production` depending on the desired environment) define the following key/value pairs
 
 ```env
-# Used as root url for absolute URLs
+# Used as root url for absolute URLs.
 NEXT_PUBLIC_URL=<URL where users visit server, like http://localhost:3000>
-# Where openid identity provider should redirect back to
+
+# Where openid identity provider should redirect back to.
 NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
-# Secret used to sign JWT api tokens
+# Secret used to sign JWT api tokens.
 NEXTAUTH_SECRET=<Random string>
-# Password used to connect to database
-ARANGO_PASSWORD=<Arangodb root password>
-ARANGO_ROOT_PASSWORD=<Arangodb root password used in docker>
+
+# Optional: URL of the ArangoDB api; usually left as default: http://localhost:8529.
+ARANGO_URL=<URL>
+# Optional: Name of the database that hosts LXCat related data. Default: `lxcat`.
+ARANGO_DB=<Database name>
+# Optional: Name of the restricted ArangoDB user used by `app` to communicate to the database. Default: `lxcat`.
+ARANGO_USERNAME=<Username>
+# Password used by the `ARANGO_USERNAME` user to connect to database
+ARANGO_PASSWORD=<ArangoDB `app` user password>
+# ArangoDB root password.
+ARANGO_ROOT_PASSWORD=<Arangodb root password>
+
 # When you want to use Auth0 as identity provider set the AUTH0_* vars
 AUTH0_CLIENT_ID=<Client ID from Auth0 application settings page>
 AUTH0_CLIENT_SECRET=<Client secret from Auth0 application settings page>
 AUTH0_ISSUER=<Domain from Auth0 application settings page with `https://` prepended>
+
 # When you want to use GitLab as identity provider set the GITLAB_* vars
 GITLAB_CLIENT_ID=<Application ID from GitLab application page>
 GITLAB_CLIENT_SECRET=<Client secret from GitLab application page>
+
 # When you want to use Orcid as identity provider set the ORCID_* vars
 ORCID_CLIENT_ID=<Client ID from Orcid developer tools page>
 ORCID_CLIENT_SECRET=<Client secret from Orcid developer tools page>
 # To use Orcid sandbox instead of production Orcid set following var
 ORCID_SANDBOX=True
+
 # When you want to use Keycloak as identity provider set the KEYCLOAK_* vars
 KEYCLOAK_CLIENT_ID=<Client ID from Keycloak client page>
 KEYCLOAK_CLIENT_SECRET=<Client secret from credentials tab on the Keycloak client page>
@@ -228,10 +241,10 @@ graph TD
 
 The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also
 
-- signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`
-- has utility functions to fill or truncate database
+- signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`,
+- has utility functions to fill and truncate database collections.
 
-The `e2e/test-oidc-server.ts` file contains a OpenID connect server which accepts any email/password combination and returns
+The `e2e/test-oidc-server.ts` file contains an OpenID connect server which accepts any email/password combination and returns
 a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars.
 
 ## Unit Tests
@@ -246,4 +259,4 @@ To see which modules are loaded by web browser use
 ANALYZE=true pnpm build
 ```
 
-Command writes `.next/analyze/client.html`.
+The result is written to `.next/analyze/client.html`.

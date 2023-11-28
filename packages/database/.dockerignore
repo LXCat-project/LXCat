@@ -1,4 +1,15 @@
 # SPDX-FileCopyrightText: LXCat team
 
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
+# Dependencies
+node_modules
+
+# Docker volume
 arangodb3
+
+# Build
+dist
+
+# Testing coverage
+coverage
