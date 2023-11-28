@@ -11,7 +11,7 @@ import {
 import { zodMiddleware } from "./middleware/zod";
 import { RouteBuilder } from "./route-builder";
 
-const ContextSchema = z.object({ searchParams: z.object({ id: z.string() }) });
+const ContextSchema = z.object({ query: z.object({ id: z.string() }) });
 
 const router = RouteBuilder
   .init()

@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
-import { speciesSchema } from "../../schemas.openapi";
 import { querySchema } from "./route";
 
 export default async function() {
@@ -13,16 +13,16 @@ export default async function() {
 
   registry().registerPath({
     method: "get",
-    path: "/species/children",
-    tags: ["Species"],
-    description: "Get children belonging to a species.",
+    path: "/scat-cs/inspect",
+    tags: ["Cross-section"],
+    description: "Get cross sections by IDs.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Species objects",
+        description: "LTP mixture data",
         content: {
           "application/json": {
-            schema: z.array(speciesSchema),
+            schema: KeyedLTPMixtureReferenceable,
           },
         },
       },

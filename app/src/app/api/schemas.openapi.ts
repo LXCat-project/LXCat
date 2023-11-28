@@ -1,6 +1,14 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
-import { SerializedSpecies } from "@lxcat/database/schema";
+import {
+  KeyedLTPMixtureReferenceable,
+  OwnedProcess,
+  SerializedSpecies,
+} from "@lxcat/database/schema";
 import { Reference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
@@ -64,6 +72,16 @@ export const crossSectionHeadingSchema = z.object({
   reference: z.array(Reference),
 });
 
+export const crossSectionSetHeadingSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const stateLeaf = z.object({
+  id: z.string(),
+  includeChildren: z.boolean(),
+});
+
 export default async function() {
   registry().register(
     "Species",
@@ -78,5 +96,20 @@ export default async function() {
   registry().register(
     "CrossSectionHeading",
     crossSectionHeadingSchema,
+  );
+
+  registry().register(
+    "KeyedLTPMixture",
+    KeyedLTPMixtureReferenceable,
+  );
+
+  registry().register(
+    "CrossSectionSetHeading",
+    crossSectionSetHeadingSchema,
+  );
+
+  registry().register(
+    "OwnedProcess",
+    OwnedProcess,
   );
 }

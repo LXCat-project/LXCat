@@ -3,24 +3,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { z } from "zod";
-import { registry } from "../../../docs/openapi";
-import { speciesSchema } from "../schemas.openapi";
+import { Schema, z } from "zod";
+import { registry } from "../../../../docs/openapi";
 
 export default async function() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({
     method: "get",
-    path: "/species",
-    tags: ["Species"],
-    description: "Get all species.",
+    path: "/scat-css/LTPDocument",
+    tags: ["Schema"],
+    description: "Get cross section set schema.",
     responses: {
       200: {
-        description: "Species objects",
+        description: "Cross section set schema.",
         content: {
-          "application/json": {
-            schema: z.array(speciesSchema),
+          "application/schema+json": {
+            schema: z.object({}),
           },
         },
       },

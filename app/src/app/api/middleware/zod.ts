@@ -5,17 +5,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { err, ok } from "true-myth/result";
 import { z } from "zod";
-import { Headers, Middleware } from "../route-builder";
+import { badRequestResponse } from "../../../shared/api-responses";
+import { BaseContext, Headers, Middleware } from "../route-builder";
 
-export const zodMiddleware = <Schema extends z.ZodTypeAny>(
+export const zodMiddleware = <
+  Context extends BaseContext,
+  Schema extends z.ZodType<z.input<Schema>>,
+>(
   schema: Schema,
-): Middleware<unknown, z.TypeOf<Schema>> =>
-(_: NextRequest, ctx: unknown, headers: Headers) => {
-  const result = schema.safeParse(ctx);
+): Middleware<Context, Context & { parsedParams: z.output<Schema> }> =>
+(_: NextRequest, ctx: Context, headers: Headers) => {
+  const result = schema.safeParse(ctx.params);
 
   if (!result.success) {
-    return err(new NextResponse(result.error.toString(), { status: 400 }));
+    return err(badRequestResponse({ json: result.error }));
   }
 
-  return ok([result.data, headers]);
+  return ok([
+    { ...ctx, parsedParams: result.data },
+    headers,
+  ]);
 };

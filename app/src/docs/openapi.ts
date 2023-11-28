@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {
   OpenApiGeneratorV31,
   OpenAPIRegistry,
@@ -17,6 +21,13 @@ export const registry = () => {
   }
   return _registry;
 };
+
+export const queryArraySchema = (schema: z.ZodTypeAny) =>
+  z.preprocess((a) => {
+    if (typeof a === "string") {
+      return a.split(",");
+    }
+  }, schema);
 
 export function requestParamsFromSchema(schema: z.AnyZodObject): {
   body?: ZodRequestBody;

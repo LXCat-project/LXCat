@@ -4,8 +4,7 @@
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
-import { speciesSchema } from "../../schemas.openapi";
+import { registry, requestParamsFromSchema } from "../../../../../docs/openapi";
 import { querySchema } from "./route";
 
 export default async function() {
@@ -13,16 +12,16 @@ export default async function() {
 
   registry().registerPath({
     method: "get",
-    path: "/species/children",
-    tags: ["Species"],
-    description: "Get children belonging to a species.",
+    path: "/scat-cs/inspect/legacy",
+    tags: ["Cross-section"],
+    description: "Get cross section data in legacy format.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Species objects",
+        description: "Cross section data in legacy format",
         content: {
-          "application/json": {
-            schema: z.array(speciesSchema),
+          "text/plain": {
+            schema: z.string(),
           },
         },
       },

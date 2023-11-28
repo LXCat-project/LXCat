@@ -7,11 +7,17 @@ import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import { MaybePromise } from "./util";
 
-type BaseContext = {
-  params?: Record<string, unknown>;
+export type RequestBody = string | object;
+
+type Params = {
+  path?: Record<string, string>;
+  query?: Record<string, string>;
+  body?: RequestBody;
 };
 
-export type RequestBody = string | object;
+export type BaseContext = {
+  params?: Params | Record<string, string>;
+};
 
 type HttpMethods =
   | "GET"
@@ -63,11 +69,13 @@ export class RouteBuilder<Context> {
         return ok(
           [
             {
-              ...ctx,
-              searchParams: Object.fromEntries(
-                req.nextUrl.searchParams.entries(),
-              ),
-              body: body,
+              params: {
+                pathParams: ctx.params as Record<string, string> | undefined,
+                searchParams: Object.fromEntries(
+                  req.nextUrl.searchParams.entries(),
+                ),
+                body: body,
+              },
             },
             headers,
           ],
