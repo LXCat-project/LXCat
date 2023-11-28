@@ -2,9 +2,18 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# Docker
 Dockerfile
 .dockerignore
+
+# Dependencies
 node_modules
-npm-debug.log
+
+# Readme
 README.md
+
+# Nextjs
 .next
+
+# Test coverage
+coverage

@@ -2,14 +2,16 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+app/.env.*local
+app/coverage
 app/node_modules
 app/.next
-database/arangodb3
-database/node_modules
-database/dist
-schema/node_modules
-schema/dist
+
+packages/database/arangodb3
+packages/*/coverage
+packages/*/target
+packages/*/node_modules
+packages/*/dist
+
 node_modules
-app/.env.local
-database/.env
-.env
+.env.*
