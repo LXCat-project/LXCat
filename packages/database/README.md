@@ -11,33 +11,35 @@ This package provides a data abstraction layer for the application to the databa
 
 ## Run for development
 
-Create `.env` file inside `packages/database/` directory with
+Create `.env.development` at the root of this repository, with the following content:
 
 ```shell
-ARANGO_PASSWORD=<arangodb root password used to connect to Docker container>
-ARANGO_ROOT_PASSWORD=<Arangodb root password used to set pw in Docker container>
-# To connect to ArangoDB running on URL other then http://localhost:8529 uncomment line below
-# ARANGO_URL=<URL where ArangoDB is running>
-# To use database other then lxcat uncomment line below
-# ARANGO_DB=<database name>
-# To connect to ArangoDB with other user then root uncomment line below
-# ARANGO_USERNAME=<user name>
+# Optional: URL of the ArangoDB api; usually left as default: http://localhost:8529.
+ARANGO_URL=<URL>
+# Optional: Name of the database that hosts LXCat related data. Default: `lxcat`.
+ARANGO_DB=<Database name>
+# Optional: Name of the restricted ArangoDB user used by `app` to communicate to the database. Default: `lxcat`.
+ARANGO_USERNAME=<Username>
+# Password used by the `ARANGO_USERNAME` user to connect to database
+ARANGO_PASSWORD=<ArangoDB `app` user password>
+# ArangoDB root password.
+ARANGO_ROOT_PASSWORD=<Arangodb root password>
 ```
 
-Spin up a database container.
+Spin up a database container, referencing `.env.development`, bind-mounting `./arangodb3` to `/var/lib/arangodb3`, and exposing chosen ArangoDB API port (`8529` by default).
 
 ```shell
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.9.1
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.11.0
 ```
 
 The `./arangodb3` directory is used to persist the collection data.
-The container will listen on [http://localhost:8529](http://localhost:8529).
+The container will listen on [http://localhost:8529](http://localhost:8529) (or the value of `ARANGO_URL` if set).
 
-The ArangoDB dashboard (built-in admin web interface) can be accessed in a web browser by visiting [http://localhost:8529](http://localhost:8529) and login with `root` as username and value of ARANGO_PASSWORD environment variable as password and select `lxcat` (or value of ARANGO_DB environment variable if set) as DB.
+The ArangoDB dashboard (built-in admin web interface) can be accessed in a web browser by visiting [http://localhost:8529](http://localhost:8529) and login with `ARANGO_USERNAME` as username and value of `ARANGO_PASSWORD` environment variable as password and select `lxcat` (or value of ARANGO_DB environment variable if set) as DB.
 
 ## Setup
 
-To create database and create all empty collections run following command:
+To create the database and setup the collections run the following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
@@ -100,15 +102,13 @@ Instead of writing seed scripts you can also load a directory of cross section s
 pnpm load-css <a directory with cross section set JSON documents>
 ```
 
-> When runnning command with Docker, make sure directory is readable inside container.
+> When runnning command with Docker, make sure the desired directory is readable inside the container.
 
 ## Make user an admin
 
 Some pages require the user to have a certain role.
 To assign new roles to user can be done on `/admin` page, but you need to have the `admin` role to access the page..
-There is a chicken and the egg problem to access the page.
-
-The admin role can also be assigned to a user that has already logged in once by running following command
+Therefore, there is a chicken and egg problem to access the page. To mitigate this, the admin role can also be assigned to a user that has already logged in once by running following command
 
 ```sh
 pnpm make-admin <email of user>
@@ -124,7 +124,7 @@ To start over the whole database can be dropped with
 pnpm drop-database
 ```
 
-To start over and fill database with test seed use
+To start over and fill the database with the test seed use
 
 ```sh
 pnpm reload
@@ -142,7 +142,7 @@ The JSON schemas for the ArangoDB collections are stored as `src/**/*.schema.jso
 Any time the types change run
 
 ```shell
-pnpm collectionschema
+pnpm collection-schemas
 ```
 
 ## Tests
