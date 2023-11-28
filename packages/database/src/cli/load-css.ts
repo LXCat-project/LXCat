@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import "dotenv/config";
+import "./env.js";
 import { load_css_dir } from "../css/loaders.js";
 import { db } from "../db.js";
 
