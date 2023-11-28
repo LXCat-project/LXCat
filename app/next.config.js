@@ -3,6 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import NextBundleAnalyzer from "@next/bundle-analyzer";
+import dotenv from "dotenv";
+
+dotenv.config({ path: `../.env.${process.env.NODE_ENV}` });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

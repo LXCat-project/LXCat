@@ -249,6 +249,9 @@ importers:
       babel-loader:
         specifier: ^9.1.3
         version: 9.1.3(@babel/core@7.23.3)(webpack@5.87.0)
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       dprint:
         specifier: ^0.43.1
         version: 0.43.1
@@ -5860,7 +5863,6 @@ packages:
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
-    dev: false
 
   /dprint@0.43.1:
     resolution: {integrity: sha512-wdxiQehZNCu99g41qZlGP1W+ypGgK20v8MY75qf58SbejOqACJgO2g+xhHes3x1Gn5fNyDxU8gsm2xrTyDby8w==}
