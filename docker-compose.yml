@@ -2,11 +2,11 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-version: "3.9"
+version: "3.0.0.beta.0"
 services:
   database:
-    image: arangodb/arangodb:3.9.1
-    env_file: .env
+    image: arangodb/arangodb:3.11.0
+    env_file: .env.production
     restart: unless-stopped
     volumes:
       - db-data:/var/lib/arangodb3
@@ -16,7 +16,7 @@ services:
       dockerfile: app/Dockerfile
       args:
         - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
-    env_file: .env
+    env_file: .env.production
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: packages/database/Dockerfile
     command: []
-    env_file: .env
+    env_file: .env.production
     volumes:
       - ./packages/database/seeds:/packages/database/seeds
     depends_on:
