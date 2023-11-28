@@ -6,10 +6,8 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { ReactionTemplate, Reversible } from "@lxcat/database/item/picker";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
-import { JSONSchema7Object } from "json-schema";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
-import { okJsonResponse } from "../../../shared/api_responses";
+import { okJsonResponse } from "../../../shared/api-responses";
 import { parseParam } from "../../../shared/utils";
 import { applyCORS } from "../middleware/cors";
 import { zodMiddleware } from "../middleware/zod";
@@ -22,12 +20,12 @@ extendZodWithOpenApi(z);
 const page_size = 100;
 
 export const querySchema = z.object({
-  searchParams: z.object({
+  query: z.object({
     offset: z.number().optional().describe(
       `Page number of first result, 1 page is ${page_size} entries long.`,
     ),
   }),
-  "body": z.object({
+  body: z.object({
     reactions: z.array(reactionTemplateSchema).openapi({
       example: [
         {
@@ -60,13 +58,10 @@ const router = RouteBuilder
   .init()
   .use(applyCORS())
   .use(zodMiddleware(querySchema))
-  .get(async (_, ctx, __) => {
-    const reactions = parseParam<Array<ReactionTemplate>>(
-      JSON.stringify(ctx.body.reactions),
-      [],
-    );
-    const offset = ctx.searchParams.offset
-      ? ctx.searchParams.offset
+  .get(async (_, ctx) => {
+    const reactions = ctx.parsedParams.body.reactions;
+    const offset = ctx.parsedParams.query.offset
+      ? ctx.parsedParams.query.offset
       : 0;
 
     const csIdsNested = await Promise.all(

@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   notFoundResponse,
   okJsonResponse,
-} from "../../../../shared/api_responses";
+} from "../../../../shared/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
@@ -12,16 +12,20 @@ import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
 
-const inputSchema = z.object({ id: z.string().describe("Cross section ID") });
+export const querySchema = z.object({
+  path: z.object({
+    id: z.string().describe("Cross section ID"),
+  }),
+});
 
 const router = RouteBuilder
   .init()
   .use(applyCORS())
   .use(hasSessionOrAPIToken())
   .use(hasDeveloperOrDownloadRole())
-  .use(zodMiddleware(inputSchema))
-  .get(async (_0, ctx, _1) => {
-    const id = ctx.id;
+  .use(zodMiddleware(querySchema))
+  .get(async (_, ctx) => {
+    const id = ctx.parsedParams.path.id;
     const data = await db().getItemById(id);
 
     if (data === undefined) {

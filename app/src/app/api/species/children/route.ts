@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { db } from "@lxcat/database";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { zodMiddleware } from "../../middleware/zod";
@@ -11,20 +11,17 @@ import { RouteBuilder } from "../../route-builder";
 
 extendZodWithOpenApi(z);
 
-export const ContextSchema = z.object({
-  searchParams: z.object({
+export const querySchema = z.object({
+  query: z.object({
     id: z.string().describe("ID of the parent species."),
   }),
 });
 
-// console.log(JSON.stringify(ContextSchema, null, 2));
-// console.log(JSON.stringify(ContextSchema.shape.searchParams.shape.id, null, 2));
-
 const router = RouteBuilder
   .init()
-  .use(zodMiddleware(ContextSchema))
+  .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    const children = await db().getSpeciesChildren(ctx.searchParams.id);
+    const children = await db().getSpeciesChildren(ctx.parsedParams.query.id);
     return NextResponse.json(children);
   })
   .compile();

@@ -85,7 +85,7 @@ export const hasSessionOrAPIToken =
   };
 
 export const hasSession =
-  <Context>(): Middleware<Context, Context> =>
+  <Context>(): Middleware<Context, Context & { user: JwtPayload }> =>
   async (_: NextRequest, ctx: Context, headers: Headers) => {
     const session = await getServerSession(options);
     if (session?.user) {
@@ -94,7 +94,7 @@ export const hasSession =
           ...ctx,
           user: {
             email: session.user.email,
-            role: session.user.roles,
+            roles: session.user.roles,
           },
         },
         headers,
