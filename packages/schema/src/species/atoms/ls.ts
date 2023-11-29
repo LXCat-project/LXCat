@@ -4,7 +4,8 @@
 
 import { z } from "zod";
 import { makeComponent } from "../component";
-import { SimpleParticle } from "../composition/simple/particle";
+import { AtomComposition } from "../composition/atom";
+import { SpeciesBase } from "../composition/species-base";
 import { makeAtom } from "../generators";
 import {
   atomicOrbital,
@@ -67,5 +68,9 @@ export const LSComponent = makeComponent(
 );
 export type LSComponent = z.output<typeof LSComponent>;
 
-export const AtomLS = makeAtom("AtomLS", SimpleParticle, LSComponent);
+export const AtomLS = makeAtom(
+  "AtomLS",
+  SpeciesBase(AtomComposition),
+  LSComponent,
+);
 export type AtomLS = z.input<typeof AtomLS.plain>;
