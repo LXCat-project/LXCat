@@ -4,7 +4,8 @@
 
 import { z } from "zod";
 import { makeComponent } from "../component.js";
-import { SimpleParticle } from "../composition/simple/particle.js";
+import { AtomComposition } from "../composition/atom.js";
+import { SpeciesBase } from "../composition/species-base.js";
 import { makeAtom } from "../generators.js";
 import {
   buildTerm,
@@ -84,5 +85,9 @@ export const J1L2Component = makeComponent(
   serializeLatexJ1L2,
 );
 
-export const AtomJ1L2 = makeAtom("AtomJ1L2", SimpleParticle, J1L2Component);
+export const AtomJ1L2 = makeAtom(
+  "AtomJ1L2",
+  SpeciesBase(AtomComposition),
+  J1L2Component,
+);
 export type AtomJ1L2 = z.output<typeof AtomJ1L2.plain>;
