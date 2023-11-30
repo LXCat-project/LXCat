@@ -35,7 +35,7 @@ Documentation for different users can be found at [docs/](docs/).
 
 ## Production deployment
 
-Create a `.env.production` file. The contents of `.env.production.example` can be used as a guideline. Additionally, some further instructions are presented in [app/README.md](app/README.md).
+Create a `.env.production` file. The contents presented in [app/README.md](app/README.md) can be used as a guideline.
 
 The production containers can be built and started by running
 
