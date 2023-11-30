@@ -6,6 +6,7 @@
 
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { PartialKeyedDocument } from "@lxcat/database/schema";
+import { Reference } from "@lxcat/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -29,6 +30,7 @@ import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
 import { Latex } from "../../../../../shared/Latex";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
+import { ReferenceTable } from "./reference-table";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
 
 const EditFormValues = z.object({
@@ -315,6 +317,17 @@ export const EditForm = (
                 </Stack>
               </Modal>
             </Stack>
+          </Tabs.Panel>
+          <Tabs.Panel value="references">
+            <ReferenceTable
+              references={Object.values(getInputProps("set.references").value)}
+              onChange={(references: Array<Reference>) =>
+                getInputProps("set.references").onChange(
+                  Object.fromEntries(
+                    references.map((reference) => [reference.id, reference]),
+                  ),
+                )}
+            />
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
