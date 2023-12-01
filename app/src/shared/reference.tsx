@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+"use client";
+
 import { useMemo } from "react";
 
 import "katex/dist/katex.min.css";
