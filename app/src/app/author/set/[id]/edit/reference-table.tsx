@@ -9,7 +9,7 @@ import { useState } from "react";
 import Result, { err, ok } from "true-myth/result";
 import { getReferenceLabel } from "../../../../../shared/cite";
 import { doi2csl } from "../../../../../shared/doi2csl";
-import { Reference as ReferenceComponent } from "../../../../../shared/Reference";
+import { Reference as ReferenceComponent } from "../../../../../shared/reference";
 
 export const ReferenceTable = (
   { references, onChange }: {
