@@ -2,8 +2,7 @@ import { Reference } from "@lxcat/schema";
 import { ActionIcon, Stack } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
-import Latex from "react-latex-next";
-import { reference2bibliography } from "../../../../../shared/cite";
+import { Reference as ReferenceComponent } from "../../../../../shared/Reference";
 // import { Latex } from "../../../../../shared/Latex";
 
 export const ReferenceTable = (
@@ -18,7 +17,7 @@ export const ReferenceTable = (
         striped
         columns={[{
           accessor: "reference",
-          render: (record) => <Latex>{reference2bibliography(record)}</Latex>,
+          render: (record) => <ReferenceComponent {...record} />,
         }, {
           accessor: "actions",
           title: "",
