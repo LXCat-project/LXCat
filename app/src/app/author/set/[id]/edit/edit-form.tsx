@@ -10,13 +10,9 @@ import {
   Reference,
   type VersionedLTPDocument,
 } from "@lxcat/schema";
-import { stateJSONSchema } from "@lxcat/schema/json-schema";
-import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
-  Accordion,
   Button,
   Checkbox,
-  Modal,
   NativeSelect,
   Space,
   Stack,
@@ -25,16 +21,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
-import { JSONSchema7 } from "json-schema";
-import { nanoid } from "nanoid";
 import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
-import { Latex } from "../../../../../shared/latex";
-import { generateSpeciesForm, SpeciesForm } from "./form-factory";
+import { ProcessTab } from "./process-tab";
 import { ReferenceTable } from "./reference-table";
-import { SpeciesNode, SpeciesPicker } from "./species-picker";
 import { SpeciesTab } from "./species-tab";
 
 const EditFormValues = z.object({
@@ -242,6 +233,14 @@ export const EditForm = (
                     references.map((reference) => [reference.id, reference]),
                   ),
                 )}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="processes">
+            <ProcessTab
+              processes={form.values.set.processes}
+              species={form.values.set.states}
+              references={form.values.set.references}
+              onChange={(processes) => {}}
             />
           </Tabs.Panel>
         </Tabs>
