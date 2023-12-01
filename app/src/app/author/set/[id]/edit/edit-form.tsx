@@ -35,6 +35,7 @@ import { Latex } from "../../../../../shared/latex";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 import { ReferenceTable } from "./reference-table";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
+import { SpeciesTab } from "./species-tab";
 
 const EditFormValues = z.object({
   set: EditedLTPDocument,
@@ -179,14 +180,6 @@ export const EditForm = (
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");
-  const [
-    speciesPickerOpened,
-    { open: openSpeciesPicker, close: closeSpeciesPicker },
-  ] = useDisclosure(false);
-  const [selectedSpecies, setSelectedSpecies] = useState<Array<SpeciesNode>>(
-    [],
-  );
-
   const { getInputProps } = form;
 
   return (
@@ -204,7 +197,7 @@ export const EditForm = (
         >
           <Tabs.List>
             <Tabs.Tab value="general">General</Tabs.Tab>
-            <Tabs.Tab value="states">States</Tabs.Tab>
+            <Tabs.Tab value="species">Species</Tabs.Tab>
             <Tabs.Tab value="references">References</Tabs.Tab>
             <Tabs.Tab value="processes">Processes</Tabs.Tab>
             <Tabs.Tab value="json">JSON</Tabs.Tab>
@@ -230,99 +223,15 @@ export const EditForm = (
               />
             </Stack>
           </Tabs.Panel>
-          <Tabs.Panel value="states">
-            <Stack>
-              <Accordion>
-                {getInputProps(`set.states`).value
-                  && Object.entries(form.values.set.states).map(
-                    ([key, state]) => {
-                      const parsed = AnySpeciesSerializable.safeParse(state);
-                      const controlNode = parsed.success
-                        ? parsed.data.serialize().latex
-                        : "...";
-
-                      return (
-                        <Accordion.Item key={key} value={key}>
-                          <Accordion.Control>
-                            <Latex>{controlNode}</Latex>
-                          </Accordion.Control>
-                          <Accordion.Panel>
-                            <SpeciesForm
-                              typeMap={generateSpeciesForm(
-                                stateJSONSchema as JSONSchema7,
-                                `set.states.${key}`,
-                              )}
-                              basePath={`set.states.${key}`}
-                            />
-                          </Accordion.Panel>
-                        </Accordion.Item>
-                      );
-                    },
-                  )}
-              </Accordion>
-              <Button.Group>
-                <Button
-                  onClick={() => {
-                    const id = nanoid();
-                    form.setFieldValue(
-                      "set.states",
-                      {
-                        ...form.values.set.states,
-                        [id]: {
-                          type: "simple",
-                          particle: "",
-                          charge: 0,
-                        },
-                      },
-                    );
-                    form.setFieldValue("meta.set.states", {
-                      ...form.values.meta.set.states,
-                      [id]: {
-                        electronic: {
-                          anyOf: "0",
-                          vibrational: {
-                            anyOf: "0",
-                            rotational: { anyOf: "0" },
-                          },
-                        },
-                      },
-                    });
-                  }}
-                >
-                  +
-                </Button>
-                <Button
-                  variant="light"
-                  onClick={openSpeciesPicker}
-                >
-                  Add from database
-                </Button>
-              </Button.Group>
-              <Modal
-                opened={speciesPickerOpened}
-                onClose={closeSpeciesPicker}
-                title="Choose existing species from the database"
-              >
-                <Stack>
-                  <SpeciesPicker
-                    selected={selectedSpecies}
-                    setSelected={setSelectedSpecies}
-                  />
-                  <Button
-                    onClick={() => {
-                      for (const species of selectedSpecies) {
-                        form.values.set.states[species._key] =
-                          species.species.detailed;
-                      }
-                      closeSpeciesPicker();
-                      setSelectedSpecies([]);
-                    }}
-                  >
-                    Add
-                  </Button>
-                </Stack>
-              </Modal>
-            </Stack>
+          <Tabs.Panel value="species">
+            <SpeciesTab
+              species={form.values.set.states}
+              meta={form.values.meta}
+              onChange={(species, meta) => {
+                form.setFieldValue("set.states", species);
+                form.setFieldValue("set.meta", meta);
+              }}
+            />
           </Tabs.Panel>
           <Tabs.Panel value="references">
             <ReferenceTable
