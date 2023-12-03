@@ -312,8 +312,8 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
       zod-to-json-schema:
-        specifier: ^3.21.4
-        version: 3.21.4(zod@3.22.4)
+        specifier: ^3.22.1
+        version: 3.22.1(zod@3.22.4)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -392,8 +392,8 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
       zod-to-json-schema:
-        specifier: ^3.21.4
-        version: 3.21.4(zod@3.22.4)
+        specifier: ^3.22.1
+        version: 3.22.1(zod@3.22.4)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -13286,10 +13286,10 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /zod-to-json-schema@3.21.4(zod@3.22.4):
-    resolution: {integrity: sha512-fjUZh4nQ1s6HMccgIeE0VP4QG/YRGPmyjO9sAh890aQKPEk3nqbfUXhMFaC+Dr5KvYBm8BCyvfpZf2jY9aGSsw==}
+  /zod-to-json-schema@3.22.1(zod@3.22.4):
+    resolution: {integrity: sha512-bVSWQ2JF3ZglQefafkM+Kk9KQ2fqqSi4VhxWaup1NJX9FS5jDg0EkEioVCWui0PiIQvcXJUjmN71bg672+a+tA==}
     peerDependencies:
-      zod: ^3.21.4
+      zod: ^3.22.4
     dependencies:
       zod: 3.22.4
     dev: false
