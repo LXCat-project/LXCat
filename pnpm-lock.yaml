@@ -288,8 +288,8 @@ importers:
         specifier: ^20.10.2
         version: 20.10.2
       tsx:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^4.6.2
+        version: 4.6.2
       typescript:
         specifier: ^5.3.2
         version: 5.3.2
@@ -346,8 +346,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       tsx:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^4.6.2
+        version: 4.6.2
       typescript:
         specifier: ^5.3.2
         version: 5.3.2
@@ -411,8 +411,8 @@ importers:
         specifier: 8.54.0
         version: 8.54.0
       tsx:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^4.6.2
+        version: 4.6.2
       typescript:
         specifier: ^5.3.2
         version: 5.3.2
@@ -6440,7 +6440,7 @@ packages:
       eslint: 8.54.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.0.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.54.0)
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.0.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.54.0)
-      get-tsconfig: 4.6.0
+      get-tsconfig: 4.7.2
       globby: 13.1.4
       is-core-module: 2.13.0
       is-glob: 4.0.3
@@ -7067,12 +7067,6 @@ packages:
     dependencies:
       call-bind: 1.0.5
       get-intrinsic: 1.2.2
-    dev: true
-
-  /get-tsconfig@4.6.0:
-    resolution: {integrity: sha512-lgbo68hHTQnFddybKbbs/RDRJnJT5YyGy2kQzVwbq+g67X73i+5MVTval34QxGkOe9X5Ujf1UYpCaphLyltjEg==}
-    dependencies:
-      resolve-pkg-maps: 1.0.0
     dev: true
 
   /get-tsconfig@4.7.2:
@@ -12403,8 +12397,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: true
 
-  /tsx@4.5.0:
-    resolution: {integrity: sha512-hgxdziy9KLaHh9KE+a6tIZFP6kb0MLq/1D0sJVifbGP4QVEYhy6+2FNn7MyCm1pMc63p9CW/L1OzdqTNPxs6rg==}
+  /tsx@4.6.2:
+    resolution: {integrity: sha512-QPpBdJo+ZDtqZgAnq86iY/PD2KYCUPSUGIunHdGwyII99GKH+f3z3FZ8XNFLSGQIA4I365ui8wnQpl8OKLqcsg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
