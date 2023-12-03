@@ -210,8 +210,8 @@ importers:
         specifier: 1.38.0
         version: 1.38.0
       '@types/cookie':
-        specifier: ^0.5.4
-        version: 0.5.4
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -3470,8 +3470,8 @@ packages:
     resolution: {integrity: sha512-v6LCdKfK6BwcqMo+wYW05rLS12S0ZO0Fl4w1h4aaZMD7bqT3gVUns6FvLJKGZHQmYn3SX55JWGpziwJRwVgutA==}
     dev: true
 
-  /@types/cookie@0.5.4:
-    resolution: {integrity: sha512-7z/eR6O859gyWIAjuvBWFzNURmf2oPBmJlfVWkwehU5nzIyjwBsTh7WMmEEV4JFnHuQ3ex4oyTvfKzcyJVDBNA==}
+  /@types/cookie@0.6.0:
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
     dev: true
 
   /@types/cookies@0.7.7:
