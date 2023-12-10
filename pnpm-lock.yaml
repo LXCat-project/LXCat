@@ -89,8 +89,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3
       mantine-datatable:
-        specifier: ^7.1.7
-        version: 7.1.7(@mantine/core@7.2.2)(@mantine/hooks@7.3.1)(clsx@2.0.0)(react@18.2.0)
+        specifier: ^7.3.0
+        version: 7.3.0(@mantine/core@7.2.2)(@mantine/hooks@7.3.1)(clsx@2.0.0)(react@18.2.0)
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0
@@ -8449,8 +8449,8 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /mantine-datatable@7.1.7(@mantine/core@7.2.2)(@mantine/hooks@7.3.1)(clsx@2.0.0)(react@18.2.0):
-    resolution: {integrity: sha512-e3hmXrdYc00f1FaPOfA5nKSSfMWR1FXDPT+Ct1OgwP2H8naBeSzPCcBXcc1lIcjDXsxW77IdPo4uMq1UL18GZQ==}
+  /mantine-datatable@7.3.0(@mantine/core@7.2.2)(@mantine/hooks@7.3.1)(clsx@2.0.0)(react@18.2.0):
+    resolution: {integrity: sha512-JcLYuQdG7H0yQm/aSTaGjCbMch64lgfqJLNcygXiM+L2gLJtA9E99jE5aFAr3dIVp7luSddHJgq7aYC4ragzIQ==}
     peerDependencies:
       '@mantine/core': '>=7'
       '@mantine/hooks': '>=7'

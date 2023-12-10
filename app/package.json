@@ -41,7 +41,7 @@
     "deep-equal": "^2.2.3",
     "github-slugger": "^2.0.0",
     "immer": "^10.0.3",
-    "mantine-datatable": "^7.1.7",
+    "mantine-datatable": "^7.3.0",
     "mdast-util-from-markdown": "^2.0.0",
     "mermaid": "^10.6.1",
     "nanoid": "^5.0.4",
