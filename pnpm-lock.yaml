@@ -343,8 +343,8 @@ importers:
         specifier: ^10.3.2
         version: 10.3.2
       ts-json-schema-generator:
-        specifier: ^1.4.1
-        version: 1.4.1
+        specifier: ^1.5.0
+        version: 1.5.0
       tsx:
         specifier: ^4.6.2
         version: 4.6.2
@@ -12359,8 +12359,8 @@ packages:
     engines: {node: '>=6.10'}
     dev: false
 
-  /ts-json-schema-generator@1.4.1:
-    resolution: {integrity: sha512-wnhPMtskk9KvsTuU8AYx0TNdm1YrLVUEontT22+jL12JIPqPXdaoxPgsYBhlqDXsR9R9Nm2bJgH5r4IrTMbTSg==}
+  /ts-json-schema-generator@1.5.0:
+    resolution: {integrity: sha512-RkiaJ6YxGc5EWVPfyHxszTmpGxX8HC2XBvcFlAl1zcvpOG4tjjh+eXioStXJQYTvr9MoK8zCOWzAUlko3K0DiA==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     dependencies:
