@@ -62,8 +62,8 @@ importers:
         specifier: ^14.0.4
         version: 14.0.4
       '@tabler/icons-react':
-        specifier: ^2.42.0
-        version: 2.42.0(react@18.2.0)
+        specifier: ^2.43.0
+        version: 2.43.0(react@18.2.0)
       ajv:
         specifier: ^8.12.0
         version: 8.12.0
@@ -3369,18 +3369,18 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
-  /@tabler/icons-react@2.42.0(react@18.2.0):
-    resolution: {integrity: sha512-2APr++u24P2mx9vJymJQJORRpu2Qej0rPrtAvgXu8YomHjLXVP+O1VtToSGyoSPH1ysA569XbxrwzOau9Ne12A==}
+  /@tabler/icons-react@2.43.0(react@18.2.0):
+    resolution: {integrity: sha512-D0ZqgD8pbbe8vENLunoIWH4zmdcG4N/B5Xsx2Nta2oVsoftva9uL+9Ci/J9pHsZzkl+jXFdo3xAlGAuWfaTK0w==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@tabler/icons': 2.42.0
+      '@tabler/icons': 2.43.0
       prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
-  /@tabler/icons@2.42.0:
-    resolution: {integrity: sha512-ynV4iaC1c1mUhuAr9HRaoq8KrWYmZ0bJEpOh7qTBE+OfdDsdvQUe+0S7FW+DHkJ4RuxQMdO8djrZK7HrUw9YMA==}
+  /@tabler/icons@2.43.0:
+    resolution: {integrity: sha512-afToJMJj31Q9Put1/saemluLBvWhgzsF59QM/mJZZ7LLHW12ViumyQIwA31SRCH/HsYBEoRp2qHFt0QwIFWDFw==}
     dev: false
 
   /@testcontainers/arangodb@10.3.2:
