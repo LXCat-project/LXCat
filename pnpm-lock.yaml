@@ -267,8 +267,8 @@ importers:
         specifier: ^9.3.0
         version: 9.3.0(postcss@8.4.31)
       postcss-preset-mantine:
-        specifier: ^1.11.0
-        version: 1.11.0(postcss@8.4.31)
+        specifier: ^1.11.1
+        version: 1.11.1(postcss@8.4.31)
       testcontainers:
         specifier: ^10.3.2
         version: 10.3.2
@@ -10688,8 +10688,8 @@ packages:
       postcss-value-parser: 4.2.0
     dev: true
 
-  /postcss-preset-mantine@1.11.0(postcss@8.4.31):
-    resolution: {integrity: sha512-drhCJAd8Rrn5ulRX5cP6DM6nMLrACAsBU73MfXNI3c77p4dodO36KcfEMY0WqaQkd/E2oODkTm7gVYOzjs45Gw==}
+  /postcss-preset-mantine@1.11.1(postcss@8.4.31):
+    resolution: {integrity: sha512-BMO+VzLP1X6Tm5sfmnFINpYsgVyN4LJheKz+25kT4JcPqccByIo4N0HCHI9B2zzduvdYadg6O/e+yQV7xLOs4g==}
     peerDependencies:
       postcss: '>=8.0.0'
     dependencies:
