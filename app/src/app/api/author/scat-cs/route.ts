@@ -1,17 +1,34 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
+import { z } from "zod";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
+import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
+
+extendZodWithOpenApi(z);
+
+export const querySchema = z.object({
+  query: z.object({
+    offset: z.string().optional(),
+    count: z.string().optional(),
+  }),
+});
 
 const router = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
   .use(hasAuthorRole())
+  .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    // TODO retrieve paging options from URL query
+    let params = ctx.parsedParams.query;
+    const { offset, count } = params;
+
     const paging = {
-      offset: 0,
-      count: 100,
+      offset: offset ? parseInt(offset) : 0,
+      count: count
+        ? parseInt(count)
+        : Number.MAX_SAFE_INTEGER,
     };
     const me = ctx.user;
     if (me === undefined) {

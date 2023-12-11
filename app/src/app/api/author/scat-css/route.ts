@@ -9,7 +9,7 @@ import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
 
-const querySchema = z.object({
+export const querySchema = z.object({
   body: PartialKeyedDocument,
 });
 

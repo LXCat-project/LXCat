@@ -45,12 +45,12 @@ export const querySchema = z.object({
   query: z.object({
     contributor: z.string(),
     tag: z.string(),
-    offset: z.string(),
-    count: z.string(),
+    offset: z.string().optional(),
+    count: z.string().optional(),
   }),
   body: z.object({
     state: stateFilterSchema,
-  }),
+  }).optional(),
 });
 
 const router = RouteBuilder
@@ -61,13 +61,11 @@ const router = RouteBuilder
   .get(async (_, ctx) => {
     let params = ctx.parsedParams.query;
     const { contributor, tag, offset, count } = params;
-    let state = ctx.parsedParams.body.state
+
+    const state = ctx.parsedParams.body
       ? ctx.parsedParams.body.state
       : { particle: {} };
 
-    // const state = params.state && !Array.isArray(params.state)
-    //   ? params.state
-    //   : stateSelectionToSearchParam({ particle: {} });
     const filter: FilterOptions = {
       contributor: query2array(contributor),
       tag: query2array(tag).filter(

@@ -20,8 +20,8 @@ const router = RouteBuilder
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
     const { user: userId, role } = ctx.parsedParams.path;
-    const user = await db().toggleRole(userId, role);
-    return okJsonResponse(user);
+    const roles = await db().toggleRole(userId, role);
+    return okJsonResponse(roles);
   })
   .compile();
 

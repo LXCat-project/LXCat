@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../docs/openapi";
@@ -10,12 +14,12 @@ export default async function() {
   registry().registerPath({
     method: "get",
     path: "/scat-cs",
-    tags: ["cs"],
-    description: "Get filtered cross sections.",
+    tags: ["Cross-section"],
+    description: "Get cross section headings by filter.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Cross section objects",
+        description: "Cross section heading objects",
         content: {
           "application/json": {
             schema: z.array(crossSectionHeadingSchema),

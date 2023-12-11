@@ -11,12 +11,12 @@ import { okJsonResponse } from "../../../../shared/api-responses";
 import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-import { stateLeaf } from "../../schemas.openapi";
+import { stateLeafSchema } from "../../schemas.openapi";
 
 export const querySchema = z.object({
   query: z.object({
-    consumes: queryArraySchema(stateLeaf),
-    produces: queryArraySchema(stateLeaf),
+    consumes: queryArraySchema(stateLeafSchema),
+    produces: queryArraySchema(stateLeafSchema),
     typeTags: queryArraySchema(ReactionTypeTag),
     reversible: z.nativeEnum(Reversible).default(Reversible.Both),
   }),
