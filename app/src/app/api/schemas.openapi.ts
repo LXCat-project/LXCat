@@ -11,10 +11,9 @@ import {
 } from "@lxcat/database/schema";
 import { Reference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
+import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { z } from "zod";
 import { registry } from "../../docs/openapi";
-import {} from "@lxcat/schema";
-import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 
 extendZodWithOpenApi(z);
 
@@ -72,12 +71,44 @@ export const crossSectionHeadingSchema = z.object({
   reference: z.array(Reference),
 });
 
+const baseStateSummarySchema = z.object({
+  latex: z.string(),
+  valid: z.boolean(),
+});
+
+type _StateSummary = z.infer<typeof baseStateSummarySchema> & {
+  children?: Record<string, _StateSummary>;
+};
+
+export const stateSummarySchema: z.ZodType<_StateSummary> =
+  baseStateSummarySchema.extend({
+    children: z.lazy(() => z.record(z.string(), stateSummarySchema)).optional()
+      .openapi("StateSummary", { type: "object" }),
+  }).openapi("stateSummarySchema");
+
+export const stateTreeSchema = z.record(z.string(), stateSummarySchema);
+
+export const organizationSummarySchema = z.object({
+  name: z.string(),
+  sets: z.record(z.string(), z.string()),
+});
+
+export const reactionOptionsSchema = z.object({
+  consumes: z.array(stateTreeSchema),
+  produces: z.array(stateTreeSchema),
+  typeTags: z.array(ReactionTypeTag),
+  reversible: z.array(z.nativeEnum(Reversible)),
+  set: z.record(z.string(), organizationSummarySchema),
+});
+
+export const searchOptionsSchema = z.array(reactionOptionsSchema);
+
 export const crossSectionSetHeadingSchema = z.object({
   id: z.string(),
   name: z.string(),
 });
 
-export const stateLeaf = z.object({
+export const stateLeafSchema = z.object({
   id: z.string(),
   includeChildren: z.boolean(),
 });
@@ -111,5 +142,10 @@ export default async function() {
   registry().register(
     "OwnedProcess",
     OwnedProcess,
+  );
+
+  registry().register(
+    "ReactionOptions",
+    reactionOptionsSchema,
   );
 }

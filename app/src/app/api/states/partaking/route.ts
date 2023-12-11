@@ -7,17 +7,17 @@ import { Reversible, StateProcess } from "@lxcat/database/item/picker";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
 import { queryArraySchema } from "../../../../docs/openapi";
-import { stateArrayToTree } from "../../../../pages/api/states/in_reaction";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-import { stateLeaf } from "../../schemas.openapi";
+import { stateLeafSchema } from "../../schemas.openapi";
+import { stateArrayToTree } from "../in-reaction/route";
 
 export const querySchema = z.object({
   query: z.object({
     stateProcess: z.nativeEnum(StateProcess).optional(),
-    consumes: queryArraySchema(stateLeaf),
-    produces: queryArraySchema(stateLeaf),
+    consumes: queryArraySchema(stateLeafSchema),
+    produces: queryArraySchema(stateLeafSchema),
     typeTags: queryArraySchema(ReactionTypeTag),
     reversible: z.nativeEnum(Reversible).default(Reversible.Both),
     setIds: queryArraySchema(z.string()),
