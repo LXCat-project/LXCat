@@ -55,11 +55,12 @@ export function requestParamsFromSchema(schema: z.AnyZodObject): {
   }
 
   return {
-    params: schema.shape.params,
-    query: schema.shape.searchParams,
+    params: schema.shape.path,
+    query: schema.shape.query,
     body: body,
   };
 }
+
 export async function generateOpenAPI() {
   const files = await glob("./**/{*.,}openapi.ts", { cwd: "./src/app/api/" });
 
