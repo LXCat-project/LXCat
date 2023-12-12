@@ -36,7 +36,7 @@ export function getFullStateTreeAQL(
                       RETURN 1
                   ) == 1
                   FILTER valid
-                  LET latex = rotational.serialize.electronic.vibrational.rotational.latex
+                  LET latex = rotational.serialized.electronic.vibrational.rotational.latex
                   RETURN {id: rotational._id, latex, valid}
                 )
                 LET valid = COUNT(
