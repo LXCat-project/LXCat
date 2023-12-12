@@ -1,4 +1,3 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { KeyedDocument } from "@lxcat/database/schema";
 import { z } from "zod";
@@ -12,8 +11,6 @@ import {
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
-
-extendZodWithOpenApi(z);
 
 export const postSchema = z.object({
   query: z.object({ id: z.string() }),

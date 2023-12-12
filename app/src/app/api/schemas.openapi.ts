@@ -6,7 +6,6 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
 import {
   KeyedLTPMixtureReferenceable,
-  OwnedProcess,
   SerializedSpecies,
 } from "@lxcat/database/schema";
 import { Reference } from "@lxcat/schema";
@@ -137,11 +136,6 @@ export default async function() {
   registry().register(
     "CrossSectionSetHeading",
     crossSectionSetHeadingSchema,
-  );
-
-  registry().register(
-    "OwnedProcess",
-    OwnedProcess,
   );
 
   registry().register(

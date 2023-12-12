@@ -2,14 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-
-extendZodWithOpenApi(z);
 
 export const querySchema = z.object({
   query: z.object({

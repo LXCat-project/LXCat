@@ -4,11 +4,10 @@
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
-import { ReactionTemplate, Reversible } from "@lxcat/database/item/picker";
+import { Reversible } from "@lxcat/database/item/picker";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
 import { z } from "zod";
 import { okJsonResponse } from "../../../shared/api-responses";
-import { parseParam } from "../../../shared/utils";
 import { applyCORS } from "../middleware/cors";
 import { zodMiddleware } from "../middleware/zod";
 import { RouteBuilder } from "../route-builder";
