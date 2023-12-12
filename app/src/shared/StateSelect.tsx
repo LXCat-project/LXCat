@@ -74,9 +74,9 @@ export const StateSelect = ({
         // TODO make name unique between StateSelect instances
         name="particle-select"
         clearable
-        className={clsx(classes.end, { [classes.middle]: hasElectronic })}
-        // NOTE: Equal to --button-height-sm.
-        style={{ height: "calc(2.25rem * var(--mantine-scale))" }}
+        className={clsx(classes.dropdown, classes.end, {
+          [classes.middle]: hasElectronic,
+        })}
       />
       {hasElectronic
         ? (
@@ -89,7 +89,9 @@ export const StateSelect = ({
             onChange={electronicChange}
             placeholder={Placeholder("\\mathrm{Electronic}")}
             clearable
-            className={clsx(classes.end, { [classes.middle]: hasVibrational })}
+            className={clsx(classes.dropdown, classes.end, {
+              [classes.middle]: hasVibrational,
+            })}
           />
         )
         : <></>}
@@ -106,7 +108,9 @@ export const StateSelect = ({
             onChange={vibrationalChange}
             placeholder={Placeholder("\\mathrm{Vibrational}")}
             clearable
-            className={clsx(classes.end, { [classes.middle]: hasRotational })}
+            className={clsx(classes.dropdown, classes.end, {
+              [classes.middle]: hasRotational,
+            })}
           />
         )
         : <></>}
@@ -123,7 +127,7 @@ export const StateSelect = ({
             onChange={rotationalChange}
             placeholder={Placeholder("\\mathrm{Rotational}")}
             clearable
-            className={classes.end}
+            className={clsx(classes.dropdown, classes.end)}
           />
         )
         : <></>}
