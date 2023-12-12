@@ -8,7 +8,7 @@ import {
   ZodRequestBody,
 } from "@asteasolutions/zod-to-openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { OpenAPIObjectConfig } from "@asteasolutions/zod-to-openapi/dist/v3.0/openapi-generator";
+import { OpenAPIObjectConfigV31 } from "@asteasolutions/zod-to-openapi/dist/v3.1/openapi-generator";
 import { glob } from "glob";
 import { z } from "zod";
 
@@ -74,7 +74,7 @@ export async function generateOpenAPI() {
 
   const url = `${process.env.NEXT_PUBLIC_URL}/api/`;
 
-  const config: OpenAPIObjectConfig = {
+  const config: OpenAPIObjectConfigV31 = {
     openapi: "3.1.0",
     info: {
       // TODO: figure out what to do with API versioning.

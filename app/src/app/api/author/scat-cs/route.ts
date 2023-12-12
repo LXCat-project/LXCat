@@ -1,12 +1,9 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { z } from "zod";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-
-extendZodWithOpenApi(z);
 
 export const querySchema = z.object({
   query: z.object({
