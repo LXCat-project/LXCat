@@ -7,7 +7,7 @@ import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../../docs/openapi";
 import { deleteSchema, postSchema } from "./route";
 
-export default async function() {
+export async function register() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({

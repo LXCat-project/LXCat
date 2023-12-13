@@ -8,7 +8,7 @@ import { Role } from "@lxcat/database/auth";
 import { z } from "zod";
 import { querySchema } from "./schemas";
 
-export default async function() {
+export async function register() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({
