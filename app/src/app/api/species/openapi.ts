@@ -7,7 +7,7 @@ import { z } from "zod";
 import { registry } from "../../../docs/openapi";
 import { speciesSchema } from "../schemas.openapi";
 
-export default async function() {
+export async function register() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({

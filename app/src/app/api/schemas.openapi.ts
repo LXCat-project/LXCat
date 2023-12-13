@@ -112,7 +112,7 @@ export const stateLeafSchema = z.object({
   includeChildren: z.boolean(),
 });
 
-export default async function() {
+export async function register() {
   registry().register(
     "Species",
     speciesSchema,

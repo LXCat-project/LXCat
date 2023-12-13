@@ -4,7 +4,7 @@ import { z } from "zod";
 import { registry } from "../../../../../../docs/openapi";
 import { querySchema } from "./schemas";
 
-export default async function() {
+export async function register() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({

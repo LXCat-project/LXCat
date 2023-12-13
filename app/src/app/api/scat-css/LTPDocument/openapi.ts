@@ -6,7 +6,7 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Schema, z } from "zod";
 import { registry } from "../../../../docs/openapi";
 
-export default async function() {
+export async function register() {
   extendZodWithOpenApi(z);
 
   registry().registerPath({
