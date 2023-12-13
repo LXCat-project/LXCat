@@ -1,5 +1,4 @@
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   notFoundResponse,
   okJsonResponse,
@@ -11,12 +10,7 @@ import {
 import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-
-export const querySchema = z.object({
-  path: z.object({
-    id: z.string().describe("Cross section ID"),
-  }),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

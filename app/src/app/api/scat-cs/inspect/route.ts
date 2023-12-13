@@ -4,10 +4,7 @@
 
 import { db } from "@lxcat/database";
 import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
-import { z } from "zod";
-import { queryArraySchema } from "../../../../docs/openapi";
 import { okJsonResponse } from "../../../../shared/api-responses";
-import { IdsSchema } from "../../../scat-cs/IdsSchema";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
@@ -15,12 +12,7 @@ import {
 import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-
-export const querySchema = z.object({
-  query: z.object({
-    ids: queryArraySchema(IdsSchema),
-  }),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

@@ -3,26 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { Reversible, StateProcess } from "@lxcat/database/item/picker";
-import { ReactionTypeTag } from "@lxcat/schema/process";
-import { z } from "zod";
-import { queryArraySchema } from "../../../../docs/openapi";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-import { stateLeafSchema } from "../../schemas.openapi";
-import { stateArrayToTree } from "../in-reaction/route";
-
-export const querySchema = z.object({
-  query: z.object({
-    stateProcess: z.nativeEnum(StateProcess).optional(),
-    consumes: queryArraySchema(stateLeafSchema),
-    produces: queryArraySchema(stateLeafSchema),
-    typeTags: queryArraySchema(ReactionTypeTag),
-    reversible: z.nativeEnum(Reversible).default(Reversible.Both),
-    setIds: queryArraySchema(z.string()),
-  }),
-});
+import { stateArrayToTree } from "../util";
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

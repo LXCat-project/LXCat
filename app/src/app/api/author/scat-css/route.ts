@@ -1,6 +1,4 @@
 import { db } from "@lxcat/database";
-import { PartialKeyedDocument } from "@lxcat/database/schema";
-import { z } from "zod";
 import {
   forbiddenResponse,
   okJsonResponse,
@@ -8,10 +6,7 @@ import {
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
-
-export const querySchema = z.object({
-  body: PartialKeyedDocument,
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

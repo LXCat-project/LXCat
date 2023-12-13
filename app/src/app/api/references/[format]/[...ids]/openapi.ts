@@ -6,7 +6,7 @@ import { registry, requestParamsFromSchema } from "@/docs/openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reference } from "@lxcat/schema";
 import { z } from "zod";
-import { querySchema } from "./route";
+import { querySchema } from "./schemas";
 
 export default async function() {
   extendZodWithOpenApi(z);

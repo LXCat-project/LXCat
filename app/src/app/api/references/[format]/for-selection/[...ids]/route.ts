@@ -4,7 +4,6 @@
 
 import { Cite } from "@citation-js/core";
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   notFoundResponse,
   okJsonResponse,
@@ -19,17 +18,7 @@ import { RouteBuilder } from "../../../../route-builder";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 import { Reference } from "@lxcat/schema";
-
-export const querySchema = z.object({
-  path: z.object({
-    format: z.union([
-      z.literal("bibtex"),
-      z.literal("csl-json"),
-      z.literal("ris"),
-    ]),
-    ids: z.array(z.string()).min(1),
-  }),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

@@ -1,14 +1,9 @@
 import { db } from "@lxcat/database";
-import { Organization } from "@lxcat/database/auth";
-import { z } from "zod";
 import { okJsonResponse } from "../../../shared/api-responses";
 import { hasAdminRole, hasSession } from "../middleware/auth";
 import { zodMiddleware } from "../middleware/zod";
 import { RouteBuilder } from "../route-builder";
-
-export const querySchema = z.object({
-  body: Organization,
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
