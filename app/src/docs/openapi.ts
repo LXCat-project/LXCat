@@ -22,6 +22,8 @@ export const registry = () => {
   return _registry;
 };
 
+let cachedSpec: any | undefined;
+
 export const queryArraySchema = (schema: z.ZodTypeAny) =>
   z.preprocess((a) => {
     if (typeof a === "string") {
@@ -61,16 +63,25 @@ export function requestParamsFromSchema(schema: z.AnyZodObject): {
   };
 }
 
+async function awaitImport(dir: string) {
+  const mod = await import(`../app/api/${dir}openapi.ts`);
+  await mod.register();
+}
+
 export async function generateOpenAPI() {
+  if (cachedSpec !== undefined) {
+    return cachedSpec;
+  }
   const files = await glob("./**/{*.,}openapi.ts", { cwd: "./src/app/api/" });
 
   // Import all .openapi files which register the endpoints and schemas.
-  files.map((x) => {
-    return x.slice(0, -10);
-  }).forEach(async (dir) => {
-    const mod = await import(`../app/api/${dir}openapi.ts`);
-    mod.default();
+  let importTasks = files.map((f) => {
+    // bundler needs partial path for dynamic imports,
+    // so extract only most relative directory name and reconstruct later.
+    return awaitImport(f.slice(0, -10));
   });
+
+  await Promise.all(importTasks);
 
   const url = `${process.env.NEXT_PUBLIC_URL}/api/`;
 
@@ -85,7 +96,11 @@ export async function generateOpenAPI() {
     servers: [{ url: url }],
   };
 
-  return new OpenApiGeneratorV31(registry().definitions).generateDocument(
+  let obj = new OpenApiGeneratorV31(registry().definitions).generateDocument(
     config,
   );
+
+  cachedSpec = obj;
+
+  return obj;
 }
