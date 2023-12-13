@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   badRequestResponse,
   createdResponse,
@@ -12,13 +11,7 @@ import {
 import { hasAdminRole, hasSession } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
-
-export const querySchema = z.object({
-  path: z.object({
-    user: z.string(),
-  }),
-  body: z.object({ orgKeys: z.array(z.string()) }).optional(),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

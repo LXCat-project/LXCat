@@ -6,7 +6,6 @@ import { db } from "@lxcat/database";
 import { FilterOptions, SortOptions } from "@lxcat/database/set";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { query2array } from "../../../shared/query2array";
 import {
   hasDeveloperOrDownloadRole,
@@ -14,44 +13,7 @@ import {
 } from "../../api/middleware/auth";
 import { zodMiddleware } from "../../api/middleware/zod";
 import { RouteBuilder } from "../../api/route-builder";
-
-const stateFilterSchema = z.object(
-  {
-    particle: z.record(
-      z.string(),
-      z.object({
-        charge: z.record(
-          z.number(),
-          z.object({
-            electronic: z.record(
-              z.string(),
-              z.object({
-                vibrational: z.record(
-                  z.string(),
-                  z.object({
-                    rotational: z.array(z.string()),
-                  }),
-                ),
-              }),
-            ),
-          }),
-        ),
-      }),
-    ),
-  },
-);
-
-export const querySchema = z.object({
-  query: z.object({
-    contributor: z.string(),
-    tag: z.string(),
-    offset: z.string().optional(),
-    count: z.string().optional(),
-  }),
-  body: z.object({
-    state: stateFilterSchema,
-  }).optional(),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()

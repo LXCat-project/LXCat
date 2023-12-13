@@ -5,7 +5,6 @@
 import { db } from "@lxcat/database";
 import { KeyedDocumentReferenceable } from "@lxcat/database/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
-import { z } from "zod";
 import {
   badRequestResponse,
   notFoundResponse,
@@ -20,10 +19,7 @@ import {
 } from "../../../middleware/auth";
 import { applyCORS } from "../../../middleware/cors";
 import { zodMiddleware } from "../../../middleware/zod";
-
-export const querySchema = z.object({
-  path: z.object({ id: z.string().describe("Cross section set ID") }),
-});
+import { querySchema } from "./schemas";
 
 const handler = RouteBuilder
   .init()

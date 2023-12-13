@@ -2,7 +2,7 @@ import { requestParamsFromSchema } from "@/docs/openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { registry } from "../../../../../../docs/openapi";
-import { querySchema } from "./route";
+import { querySchema } from "./schemas";
 
 export default async function() {
   extendZodWithOpenApi(z);

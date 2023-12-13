@@ -1,6 +1,5 @@
 import { Cite } from "@citation-js/core";
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   badRequestResponse,
   notFoundResponse,
@@ -11,14 +10,7 @@ import { RouteBuilder } from "../../../api/route-builder";
 import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
-
-export const querySchema = z.object({
-  path: z.object({ id: z.string().describe("Cross section set ID") }),
-  query: z.object({
-    refstyle: z.string().describe("Style in which to return references.")
-      .optional(),
-  }),
-});
+import { querySchema } from "./schemas";
 
 const handler = RouteBuilder
   .init()

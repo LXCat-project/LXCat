@@ -1,5 +1,4 @@
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   forbiddenResponse,
   okJsonResponse,
@@ -10,12 +9,7 @@ import {
 } from "../../../../middleware/auth";
 import { zodMiddleware } from "../../../../middleware/zod";
 import { RouteBuilder } from "../../../../route-builder";
-
-export const querySchema = z.object({
-  path: z.object({
-    id: z.string(),
-  }),
-});
+import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
