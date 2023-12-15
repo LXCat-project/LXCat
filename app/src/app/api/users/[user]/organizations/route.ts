@@ -21,7 +21,7 @@ const router = RouteBuilder
   .post(async (_, ctx) => {
     if (ctx.parsedParams.body) {
       const { user: userKey } = ctx.parsedParams.path;
-      await db().setAffiliations(userKey, ctx.parsedParams.body.orgKeys);
+      await db().setAffiliations(userKey, ctx.parsedParams.body);
       return createdResponse();
     } else {
       return badRequestResponse({

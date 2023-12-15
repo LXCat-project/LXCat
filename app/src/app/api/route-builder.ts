@@ -57,21 +57,20 @@ export class RouteBuilder<Context> {
 
   static init() {
     return new RouteBuilder(
-      (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
         let body: undefined | RequestBody = undefined;
-        if (req.body) {
-          body = String(req.body.getReader().read());
-          try {
-            body = JSON.parse(body);
-          } catch (e) {}
+        if (req.headers.get("Content-Type") === "application/json") {
+          body = await req.json();
+        } else if (req.headers.get("Content-Type") === "text/plain") {
+          body = await req.text();
         }
 
         return ok(
           [
             {
               params: {
-                pathParams: ctx.params as Record<string, string> | undefined,
-                searchParams: Object.fromEntries(
+                path: ctx.params as Record<string, string> | undefined,
+                query: Object.fromEntries(
                   req.nextUrl.searchParams.entries(),
                 ),
                 body: body,

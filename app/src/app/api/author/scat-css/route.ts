@@ -8,7 +8,7 @@ import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
 import { querySchema } from "./schemas";
 
-const router = RouteBuilder
+const postRouter = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
   .use(hasAuthorRole())
@@ -37,6 +37,11 @@ const router = RouteBuilder
     }
     return okJsonResponse({});
   })
+  .compile();
+
+const getRouter = RouteBuilder
+  .init()
+  .use(hasSessionOrAPIToken())
   .get(async (_, ctx) => {
     const user = ctx.user;
     const items = await db().listOwnedSets(user.email);
@@ -44,4 +49,4 @@ const router = RouteBuilder
   })
   .compile();
 
-export { router as GET, router as POST };
+export { getRouter as GET, postRouter as POST };
