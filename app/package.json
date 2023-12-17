@@ -79,7 +79,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.23.6",
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",
     "@playwright/test": "1.38.0",
