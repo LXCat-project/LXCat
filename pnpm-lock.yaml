@@ -258,8 +258,8 @@ importers:
         specifier: 14.0.4
         version: 14.0.4(eslint@8.55.0)(typescript@5.3.3)
       oidc-provider:
-        specifier: ^8.4.2
-        version: 8.4.2
+        specifier: ^8.4.3
+        version: 8.4.3
       postcss-flexbugs-fixes:
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.4.31)
@@ -2986,8 +2986,8 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
 
-  /@koa/cors@4.0.0:
-    resolution: {integrity: sha512-Y4RrbvGTlAaa04DBoPBWJqDR5gPj32OOz827ULXfgB1F7piD1MB/zwn8JR2LAnvdILhxUbXbkXGWuNVsFuVFCQ==}
+  /@koa/cors@5.0.0:
+    resolution: {integrity: sha512-x/iUDjcS90W69PryLDIMgFyV21YLTnG9zOpPXS7Bkt2b8AsY3zZsIpOLBkYr9fBcF3HbkKaER5hOBZLfpLgYNw==}
     engines: {node: '>= 14.0.0'}
     dependencies:
       vary: 1.1.2
@@ -9922,10 +9922,10 @@ packages:
       es-abstract: 1.22.2
     dev: true
 
-  /oidc-provider@8.4.2:
-    resolution: {integrity: sha512-2uYTNcgstsp8NZtEnAuBkri1i4ziLLGYqe1TgbmLWg6Qh3X0rzGQjny9NJeit6TLvF8TmaeRm1L2FN8Y8C8aQQ==}
+  /oidc-provider@8.4.3:
+    resolution: {integrity: sha512-XEGMwSJEMXf0z2lKLts/y5p9cd5hBODKmwJnLeOhdKJh8kgYfFLYtc555/9cBBLmQ4JBnK4xb/zk1AGbvZdYvw==}
     dependencies:
-      '@koa/cors': 4.0.0
+      '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
       debug: 4.3.4
       eta: 3.2.0
