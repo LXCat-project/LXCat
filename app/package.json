@@ -99,7 +99,7 @@
     "dprint": "^0.43.2",
     "eslint": "^8.55.0",
     "eslint-config-next": "14.0.4",
-    "oidc-provider": "^8.4.2",
+    "oidc-provider": "^8.4.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^9.3.0",
     "postcss-preset-mantine": "^1.11.1",
