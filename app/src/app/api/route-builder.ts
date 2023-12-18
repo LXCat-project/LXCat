@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { badRequestResponse } from "@/shared/api-responses";
 import { NextRequest, NextResponse } from "next/server";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
@@ -57,12 +58,26 @@ export class RouteBuilder<Context> {
 
   static init() {
     return new RouteBuilder(
-      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (
+        req: NextRequest,
+        ctx: BaseContext,
+        headers: Headers,
+      ): Promise<Result<[BaseContext, Headers], NextResponse>> => {
         let body: undefined | RequestBody = undefined;
-        if (req.headers.get("Content-Type") === "application/json") {
-          body = await req.json();
-        } else if (req.headers.get("Content-Type") === "text/plain") {
-          body = await req.text();
+        console.log(req.bodyUsed);
+        if (req.body) {
+          const text = await req.text();
+          if (text) {
+            if (req.headers.get("Content-Type") === "application/json") {
+              try {
+                body = JSON.parse(text);
+              } catch {
+                return err(badRequestResponse());
+              }
+            } else if (req.headers.get("Content-Type") === "text/plain") {
+              body = text;
+            }
+          }
         }
 
         return ok(

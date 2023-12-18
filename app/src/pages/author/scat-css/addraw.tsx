@@ -20,18 +20,20 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
     setErrors([]);
     setId("");
     const url = `/api/author/scat-css`;
-    const body = JSON.stringify(doc);
     const headers = new Headers({
       Accept: "application/json",
       "Content-Type": "application/json",
     });
-    const init = { method: "POST", body, headers };
+
+    const init = { method: "POST", body: doc, headers };
     const res = await fetch(url, init);
     const data = await res.json();
     if (res.ok) {
       setId(data.id);
     } else {
-      setErrors(data.errors);
+      if (data.issues) {
+        setErrors(data.issues);
+      }
     }
   };
 

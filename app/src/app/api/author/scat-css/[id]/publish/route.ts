@@ -32,4 +32,4 @@ const router = RouteBuilder
   })
   .compile();
 
-export { router as GET };
+export { router as POST };
