@@ -22,7 +22,7 @@ const postRouter = RouteBuilder
     if (affiliations.includes(doc.contributor)) {
       // Add to CrossSectionSet with status=='draft' and version=='1'
       const id = await db().createSet(doc, "draft");
-      okJsonResponse({ id });
+      return okJsonResponse({ id });
     } else {
       return forbiddenResponse({
         json: {
@@ -35,7 +35,6 @@ const postRouter = RouteBuilder
         },
       });
     }
-    return okJsonResponse({});
   })
   .compile();
 
