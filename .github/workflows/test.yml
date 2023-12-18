@@ -86,7 +86,10 @@ jobs:
     - name: Install playwright browsers
       run: pnpm -C app exec playwright install chromium --with-deps
     - name: Run unit tests
-      run: pnpm -C app test -- run --coverage.enable --coverage.all=false
+      run: |
+        cd app
+        pnpm test -- run --coverage.enable --coverage.all=false
+        cd ..
     - name: Run end-to-end tests
       run: pnpm -C app test:e2e
     - name: Upload coverage reports to Codecov
