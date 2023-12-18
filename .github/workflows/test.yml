@@ -93,7 +93,7 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: app/coverage/coverage-final.json,app/.nyc_output/playwright_coverage_*.json
+        files: ./app/coverage/coverage-final.json,./app/.nyc_output/playwright_coverage_*.json
         flags: app
 
   test-database:
