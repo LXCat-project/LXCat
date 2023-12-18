@@ -123,7 +123,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/database
-      run: pnpm -C packages/database test -- run --coverage --no-threads
+      run: pnpm -C packages/database test -- run --coverage --pool=forks
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v3
       with:
