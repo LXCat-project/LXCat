@@ -43,7 +43,6 @@ import { Reference as ReferenceRecord } from "@lxcat/schema";
 import { LTPDocument } from "@lxcat/schema";
 import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import { AnySpecies } from "@lxcat/schema/species";
 
 import { CrossSectionItem } from "@lxcat/database/dist/cs/public";
 import { StateDict } from "@lxcat/database/dist/shared/queries/state";
