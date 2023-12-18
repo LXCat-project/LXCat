@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { expect, test } from "@playwright/test";
+import { expect, test } from "playwright-test-coverage";
 // import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
