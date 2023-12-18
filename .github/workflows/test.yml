@@ -89,11 +89,13 @@ jobs:
       run: pnpm -C app test -- run --coverage.enabled --coverage.all=false
     - name: Run end-to-end tests
       run: pnpm -C app test:e2e
+    - name: Build end-to-end coverage report
+      run: pnpm -C app coverage:report
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./app/coverage/coverage-final.json,./app/.nyc_output/playwright_coverage_*.json
+        directory: ./app/coverage
         flags: app
 
   test-database:
