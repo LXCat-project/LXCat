@@ -5,7 +5,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { StateChoices } from "../../shared/queries/state.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
   emptySelection,

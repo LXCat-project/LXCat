@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "dotenv/config";
-import { systemDb } from "../systemDb.js";
+import { systemDb } from "../system-db.js";
 
 export default async function() {
   const db = systemDb();

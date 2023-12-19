@@ -9,7 +9,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import {
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { insertStateDict } from "../queries.js";
 import { State } from "../types/collections.js";

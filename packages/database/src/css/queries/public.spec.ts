@@ -4,7 +4,7 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { CrossSectionSetHeading } from "../public.js";
 import { FilterOptions, SortOptions } from "./public.js";

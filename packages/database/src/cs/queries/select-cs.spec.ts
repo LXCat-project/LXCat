@@ -11,7 +11,7 @@ import {
 } from "../../css/queries/testutils.js";
 import { getStateLeaf, StateLeaf } from "../../shared/get-state-leaf.js";
 import { StateSummary } from "../../shared/queries/state.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { defaultSearchTemplate } from "../picker/default.js";
 import {

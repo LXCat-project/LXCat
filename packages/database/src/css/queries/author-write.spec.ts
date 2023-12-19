@@ -5,10 +5,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { KeyedDocument } from "../../schema/document.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { CrossSectionSetOwned } from "./author_read.js";
-import { deepClone } from "./deepClone.js";
+import { KeyedSet } from "../public.js";
+import { deepClone } from "./deep-clone.js";
 import { KeyedVersionInfo } from "./public.js";
 import { ISO_8601_UTC, matchesId, sampleEmail } from "./testutils.js";
 
@@ -47,7 +47,7 @@ describe("given filled ArangoDB container", () => {
 
     it("should have author list with a single draft set", async () => {
       const result = await db.listOwnedSets("somename@example.com");
-      const expected: CrossSectionSetOwned[] = [
+      const expected: KeyedSet[] = [
         {
           _key: keycss1,
           complete: true,
@@ -77,7 +77,7 @@ describe("given filled ArangoDB container", () => {
 
       it("should have author list with a single published set", async () => {
         const result = await db.listOwnedSets("somename@example.com");
-        const expected: CrossSectionSetOwned[] = [
+        const expected: KeyedSet[] = [
           {
             _key: keycss1,
             complete: true,
@@ -113,7 +113,7 @@ describe("given filled ArangoDB container", () => {
         it("should have author list with a single draft set", async () => {
           const result = await db.listOwnedSets("somename@example.com");
           // listOwned hides published sets which have drafts
-          const expected: CrossSectionSetOwned[] = [
+          const expected: KeyedSet[] = [
             {
               _key: keycss2,
               complete: true,
@@ -139,7 +139,7 @@ describe("given filled ArangoDB container", () => {
           it("should have author list with a single published set", async () => {
             const result = await db.listOwnedSets("somename@example.com");
             // TODO publish should have made keycss1 archived and listOwned should not have returned keycss1
-            const expected: CrossSectionSetOwned[] = [
+            const expected: KeyedSet[] = [
               {
                 _key: keycss2,
                 complete: true,

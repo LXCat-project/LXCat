@@ -4,4 +4,4 @@
 
 export { db } from "./db.js";
 export { LXCatDatabase } from "./lxcat-database.js";
-export { systemDb } from "./systemDb.js";
+export { systemDb } from "./system-db.js";

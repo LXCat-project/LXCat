@@ -11,7 +11,7 @@ import {
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
 import { Status } from "../../shared/types/version-info.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { createSampleCrossSection, insertSampleStateIds } from "./testutils.js";
 

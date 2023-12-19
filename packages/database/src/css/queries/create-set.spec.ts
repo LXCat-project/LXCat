@@ -8,7 +8,7 @@ import { Reference } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { matchesId, truncateCrossSectionSetCollections } from "./testutils.js";
 

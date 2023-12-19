@@ -4,7 +4,7 @@
 
 import "./env.js";
 import { LXCatDatabase } from "../lxcat-database.js";
-import { systemDb } from "../systemDb.js";
+import { systemDb } from "../system-db.js";
 
 const db = await LXCatDatabase.create(
   systemDb(),
