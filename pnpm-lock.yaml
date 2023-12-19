@@ -199,8 +199,8 @@ importers:
         specifier: workspace:^
         version: link:../packages/tsconfig
       '@playwright/test':
-        specifier: 1.38.0
-        version: 1.38.0
+        specifier: 1.40.0
+        version: 1.40.0
       '@types/cookie':
         specifier: ^0.6.0
         version: 0.6.0
@@ -254,7 +254,7 @@ importers:
         version: 8.4.3
       playwright-test-coverage:
         specifier: ^1.2.12
-        version: 1.2.12(@playwright/test@1.38.0)
+        version: 1.2.12(@playwright/test@1.40.0)
       postcss-flexbugs-fixes:
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.4.32)
@@ -3187,12 +3187,12 @@ packages:
       tslib: 2.5.3
     dev: true
 
-  /@playwright/test@1.38.0:
-    resolution: {integrity: sha512-xis/RXXsLxwThKnlIXouxmIvvT3zvQj1JE39GsNieMUrMpb3/GySHDh2j8itCG22qKVD4MYLBp7xB73cUW/UUw==}
+  /@playwright/test@1.40.0:
+    resolution: {integrity: sha512-PdW+kn4eV99iP5gxWNSDQCbhMaDVej+RXL5xr6t04nbKLCBwYtA046t7ofoczHOm8u6c+45hpDKQVZqtqwkeQg==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      playwright: 1.38.0
+      playwright: 1.40.0
     dev: true
 
   /@plotly/d3-sankey-circular@0.33.1:
@@ -10239,26 +10239,26 @@ packages:
       pathe: 1.1.1
     dev: true
 
-  /playwright-core@1.38.0:
-    resolution: {integrity: sha512-f8z1y8J9zvmHoEhKgspmCvOExF2XdcxMW8jNRuX4vkQFrzV4MlZ55iwb5QeyiFQgOFCUolXiRHgpjSEnqvO48g==}
+  /playwright-core@1.40.0:
+    resolution: {integrity: sha512-fvKewVJpGeca8t0ipM56jkVSU6Eo0RmFvQ/MaCQNDYm+sdvKkMBBWTE1FdeMqIdumRaXXjZChWHvIzCGM/tA/Q==}
     engines: {node: '>=16'}
     hasBin: true
     dev: true
 
-  /playwright-test-coverage@1.2.12(@playwright/test@1.38.0):
+  /playwright-test-coverage@1.2.12(@playwright/test@1.40.0):
     resolution: {integrity: sha512-WdR3shV+7IWtlB1AZcXSysUyZmyAqXM9+DT3iBSS1p4SkJoWZslkTqk04l5ZExSkuaM+5fKl0M9TyUuJWuGgLA==}
     peerDependencies:
       '@playwright/test': ^1.14.1
     dependencies:
-      '@playwright/test': 1.38.0
+      '@playwright/test': 1.40.0
     dev: true
 
-  /playwright@1.38.0:
-    resolution: {integrity: sha512-fJGw+HO0YY+fU/F1N57DMO+TmXHTrmr905J05zwAQE9xkuwP/QLDk63rVhmyxh03dYnEhnRbsdbH9B0UVVRB3A==}
+  /playwright@1.40.0:
+    resolution: {integrity: sha512-gyHAgQjiDf1m34Xpwzaqb76KgfzYrhK7iih+2IzcOCoZWr/8ZqmdBw+t0RU85ZmfJMgtgAiNtBQ/KS2325INXw==}
     engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      playwright-core: 1.38.0
+      playwright-core: 1.40.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
