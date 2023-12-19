@@ -10,7 +10,7 @@ import {
   hasAuthorRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { getTemplateFromQuery } from "../../../../ScatteringCrossSection/query2options";
+import { getTemplateFromQuery } from "../../../../cs/template-from-query";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

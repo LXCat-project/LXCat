@@ -41,7 +41,7 @@ import {
   byOwnerAndId as itemByOwnerAndId,
   getVersionInfo as getItemVersionInfo,
   searchOwned,
-} from "./cs/queries/author_read.js";
+} from "./cs/queries/author-read.js";
 import {
   byId,
   byIds,
@@ -66,7 +66,7 @@ import {
   getVersionInfo as getSetVersionInfo,
   isOwnerOfSet,
   listOwnedSets,
-} from "./css/queries/author_read.js";
+} from "./css/queries/author-read.js";
 import {
   createDraftSet,
   createSet,
@@ -80,7 +80,7 @@ import {
   updateDraftSet,
   updateSet,
   updateVersionStatus as updateSetVersionStatus,
-} from "./css/queries/author_write.js";
+} from "./css/queries/author-write.js";
 import { getSetAffiliation } from "./css/queries/get-affiliation.js";
 import {
   activeSetOfArchivedSet,

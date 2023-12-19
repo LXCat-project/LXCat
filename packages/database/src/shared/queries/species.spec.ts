@@ -4,7 +4,7 @@
 
 import { type AnySpecies } from "@lxcat/schema/species";
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { SpeciesNode } from "./species.js";
 

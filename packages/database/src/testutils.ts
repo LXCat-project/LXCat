@@ -11,7 +11,7 @@ import { LXCatDatabase } from "./lxcat-database.js";
 import { setupUserCollections } from "./setup/2_users.js";
 import { setupSharedCollections } from "./setup/3_shared.js";
 import { setupCrossSectionCollections } from "./setup/4_cs.js";
-import { setSystemDb } from "./systemDb.js";
+import { setSystemDb } from "./system-db.js";
 
 export async function startDbContainer(
   password = "testpw",

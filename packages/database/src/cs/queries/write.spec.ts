@@ -4,10 +4,10 @@
 
 import { AnyProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
-import { deepClone } from "../../css/queries/deepClone.js";
+import { deepClone } from "../../css/queries/deep-clone.js";
 import { ISO_8601_UTC, matchesId } from "../../css/queries/testutils.js";
 import { KeyedProcess } from "../../schema/process.js";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
   createDraftFromPublished,

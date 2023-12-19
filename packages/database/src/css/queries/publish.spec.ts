@@ -4,7 +4,7 @@
 
 import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { systemDb } from "../../systemDb.js";
+import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
   sampleCrossSectionSet,

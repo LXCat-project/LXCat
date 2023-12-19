@@ -9,7 +9,7 @@ import { Button, MultiSelect } from "@mantine/core";
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
 import { mustBeAdmin } from "../../auth/middleware";
-import { Layout } from "../../shared/Layout";
+import { Layout } from "../../shared/layout";
 
 interface Props {
   users: UserFromDB[];

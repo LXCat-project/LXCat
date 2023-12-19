@@ -10,9 +10,9 @@ import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import { mustBeAuthor } from "../../../auth/middleware";
-import { AddForm } from "../../../ScatteringCrossSectionSet/AddForm";
-import { ErrorList } from "../../../shared/ErrorList";
-import { Layout } from "../../../shared/Layout";
+import { AddForm } from "../../../cs-set/add-form";
+import { ErrorList } from "../../../shared/error-list";
+import { Layout } from "../../../shared/layout";
 
 interface Props {
   organizations: KeyedOrganization[];

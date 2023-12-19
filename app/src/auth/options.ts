@@ -11,8 +11,8 @@ import { Provider } from "next-auth/providers/index";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { env } from "process";
 import logo from "../../public/lxcat.png";
-import { ArangoAdapter } from "./ArangoAdapter";
-import OrcidProvider, { OrcidSandboxProvider } from "./OrcidProvider";
+import { ArangoAdapter } from "./arango-adapter";
+import OrcidProvider, { OrcidSandboxProvider } from "./orcid-provider";
 
 const providers: Provider[] = [];
 if (process.env.AUTH0_CLIENT_ID) {

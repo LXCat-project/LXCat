@@ -12,7 +12,7 @@ import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "../../../../auth/middleware";
-import { idsSchema } from "../../../../ScatteringCrossSection/ids-schema";
+import { idsSchema } from "../../../../cs/ids-schema";
 import { reference2bibliography } from "../../../../shared/cite";
 import { applyCORS } from "../../../../shared/cors";
 import { mapObject } from "../../../../shared/utils";

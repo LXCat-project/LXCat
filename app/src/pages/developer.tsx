@@ -4,8 +4,8 @@
 
 import { Button, Space } from "@mantine/core";
 import { useState } from "react";
-import { Layout } from "../shared/Layout";
-import { TermsOfUseCheckForDeveloper } from "../shared/TermsOfUseCheckForDeveloper";
+import { Layout } from "../shared/layout";
+import { TermsOfUseCheckForDeveloper } from "../shared/terms-of-use-developer";
 
 const DeveloperPage = () => {
   const [token, setToken] = useState("");

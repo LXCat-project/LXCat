@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import useSWR from "swr";
-import { Latex } from "../../../../../shared/Latex";
+import { Latex } from "../../../../../shared/latex";
 import classes from "./edit-form.module.css";
 
 export type SpeciesNode = {

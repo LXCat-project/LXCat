@@ -15,7 +15,7 @@ import {
   StateChoices,
 } from "../../shared/queries/state.js";
 import { PagingOptions } from "../../shared/types/search.js";
-import { VersionInfo } from "../../shared/types/version_info.js";
+import { VersionInfo } from "../../shared/types/version-info.js";
 import {
   CrossSectionSetHeading,
   CrossSectionSetItem,

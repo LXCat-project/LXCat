@@ -27,7 +27,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
-import { Latex } from "../../../../../shared/Latex";
+import { Latex } from "../../../../../shared/latex";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
 

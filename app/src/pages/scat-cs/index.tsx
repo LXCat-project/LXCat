@@ -31,18 +31,18 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { SWRConfig, unstable_serialize } from "swr";
-import { BAG_SIZE, PAGE_SIZE } from "../../ScatteringCrossSection/constants";
-import { CSTable } from "../../ScatteringCrossSection/CSTable";
-import { Filter } from "../../ScatteringCrossSection/Filter";
-import { Paging } from "../../ScatteringCrossSection/Paging";
-import { getTemplateFromQuery } from "../../ScatteringCrossSection/query2options";
-import classes from "../../ScatteringCrossSection/scat-cs.module.css";
+import { BAG_SIZE, PAGE_SIZE } from "../../cs/constants";
+import { CSTable } from "../../cs/cs-table";
+import { Filter } from "../../cs/filter";
+import { Paging } from "../../cs/paging";
+import classes from "../../cs/scat-cs.module.css";
 import {
   emptyFilter,
   informationFromTemplates,
   ReactionInformation,
-} from "../../ScatteringCrossSection/SWRFilterComponent";
-import { Layout } from "../../shared/Layout";
+} from "../../cs/swr-filter-component";
+import { getTemplateFromQuery } from "../../cs/template-from-query";
+import { Layout } from "../../shared/layout";
 import { CacheMap } from "../../shared/swr-cache-map";
 import { omit } from "../../shared/utils";
 

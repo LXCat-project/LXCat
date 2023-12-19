@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { NextPage } from "next";
-import { Layout } from "../shared/Layout";
+import { Layout } from "../shared/layout";
 
 const TeamPage: NextPage = () => {
   return (

@@ -9,12 +9,12 @@ import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import { mustBeAuthor } from "../../../auth/middleware";
-import { listSetsOfOwner } from "../../../ScatteringCrossSectionSet/client";
-import { DeleteDialog } from "../../../ScatteringCrossSectionSet/DeleteDialog";
-import { PublishDialog } from "../../../ScatteringCrossSectionSet/PublishDialog";
-import { RetractDialog } from "../../../ScatteringCrossSectionSet/RetractDialog";
-import { ErrorDialog } from "../../../shared/ErrorDialog";
-import { Layout } from "../../../shared/Layout";
+import { listSetsOfOwner } from "../../../cs-set/client";
+import { DeleteDialog } from "../../../cs-set/delete-dialog";
+import { PublishDialog } from "../../../cs-set/publish-dialog";
+import { RetractDialog } from "../../../cs-set/retract-dialog";
+import { ErrorDialog } from "../../../shared/error-dialog";
+import { Layout } from "../../../shared/layout";
 
 interface Props {
   items: KeyedSet[];

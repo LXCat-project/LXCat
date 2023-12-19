@@ -16,7 +16,7 @@ import { query2array } from "../../../shared/query2array";
 import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
-} from "../../../shared/StateFilter";
+} from "../../../shared/state-filter";
 
 const handler = createRouter<AuthRequest, NextApiResponse>()
   .use(hasSessionOrAPIToken)

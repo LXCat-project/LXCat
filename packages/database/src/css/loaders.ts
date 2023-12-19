@@ -7,7 +7,7 @@ import { join } from "path";
 import { LXCatDatabase } from "../lxcat-database.js";
 import { PartialKeyedDocument } from "../schema/document.js";
 
-export async function load_css(db: LXCatDatabase, fn: string) {
+async function load_css(db: LXCatDatabase, fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });
   const body = PartialKeyedDocument.parse(JSON.parse(content));
   const cs_set_id = await db.createSet(body);

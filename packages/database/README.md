@@ -136,15 +136,6 @@ pnpm reload
 pnpm build
 ```
 
-## Generate collection schemas
-
-The JSON schemas for the ArangoDB collections are stored as `src/**/*.schema.json` and are generated from Typescript types.
-Any time the types change run
-
-```shell
-pnpm collection-schemas
-```
-
 ## Tests
 
 See [code contributor doc](../../docs/code-contributor#unit-tests)

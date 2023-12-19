@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { VersionInfo } from "../shared/types/version_info.js";
+import { VersionInfo } from "../shared/types/version-info.js";
 
 export interface CrossSectionSet {
   name: string;

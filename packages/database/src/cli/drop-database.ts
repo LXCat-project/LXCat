@@ -4,7 +4,7 @@
 
 import "./env.js";
 import { db } from "../db.js";
-import { systemDb } from "../systemDb.js";
+import { systemDb } from "../system-db.js";
 
 (async () => {
   try {

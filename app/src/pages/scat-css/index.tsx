@@ -14,14 +14,14 @@ import {
 } from "@lxcat/database/set";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import Head from "next/head";
-import { Filter } from "../../ScatteringCrossSectionSet/Filter";
-import { List } from "../../ScatteringCrossSectionSet/List";
-import { Layout } from "../../shared/Layout";
+import { Filter } from "../../cs-set/filter";
+import { List } from "../../cs-set/list";
+import { Layout } from "../../shared/layout";
 import { query2array } from "../../shared/query2array";
 import {
   stateSelectionFromSearchParam,
   stateSelectionToSearchParam,
-} from "../../shared/StateFilter";
+} from "../../shared/state-filter";
 
 interface Props {
   items: CrossSectionSetHeading[];
