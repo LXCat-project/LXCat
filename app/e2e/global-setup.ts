@@ -140,7 +140,7 @@ export async function uploadAndPublishDummySet(
   // Add a set
   await page.goto("/author/scat-css/addraw");
   const dummySet = await readFile(
-    `../packages/database/src/test/seed/crosssections/${file}`,
+    `../packages/database/src/test/seed/cross-sections/${file}`,
     { encoding: "utf8" },
   );
   await page.locator("textarea").fill(dummySet);
