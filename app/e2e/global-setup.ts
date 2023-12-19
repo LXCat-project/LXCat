@@ -69,7 +69,7 @@ async function globalSetup(config: FullConfig) {
 
 export default globalSetup;
 
-export async function runDbCommand(command: string) {
+async function runDbCommand(command: string) {
   const dir = new URL(".", import.meta.url).pathname;
 
   return new Promise((presolve, reject) => {

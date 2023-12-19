@@ -22,7 +22,7 @@ export interface SWRReactionOptions {
   csSets: Set<string>;
 }
 
-export const fetchStateTreeForSelection = async (
+const fetchStateTreeForSelection = async (
   stateProcess: StateProcess,
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,

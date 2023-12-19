@@ -19,7 +19,7 @@ export function db() {
   return _db;
 }
 
-export const setDb = (
+const setDb = (
   url: string,
   password: string | undefined,
   username = "lxcat",

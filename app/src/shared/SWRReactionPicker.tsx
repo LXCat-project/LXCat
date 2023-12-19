@@ -16,7 +16,7 @@ import { SWRReactionPickerImpl } from "./SWRReactionPickerImpl";
 import useSWRImmutable from "swr/immutable";
 import { omit } from "./utils";
 
-export const fetchTypeTags = async (
+const fetchTypeTags = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   reversible: Reversible,
@@ -32,7 +32,7 @@ export const fetchTypeTags = async (
       })}`,
     )
   ).json();
-export const fetchReversible = async (
+const fetchReversible = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
@@ -48,7 +48,7 @@ export const fetchReversible = async (
       })}`,
     )
   ).json();
-export const fetchCSSets = async (
+const fetchCSSets = async (
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   typeTags: Array<ReactionTypeTag>,
