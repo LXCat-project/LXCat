@@ -6,7 +6,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedDocument } from "../../schema/document.js";
-import { VersionInfo } from "../../shared/types/version_info.js";
+import { VersionInfo } from "../../shared/types/version-info.js";
 import { KeyedSet } from "../public.js";
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {

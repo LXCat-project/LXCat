@@ -4,7 +4,7 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Status, VersionInfo } from "../../shared/types/version_info.js";
+import { Status, VersionInfo } from "../../shared/types/version-info.js";
 import { systemDb } from "../../systemDb.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { CrossSectionSetItem, FilterOptions, SortOptions } from "../public.js";

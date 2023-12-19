@@ -9,7 +9,7 @@ import {
   sampleEmail,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
-import { Status } from "../../shared/types/version_info.js";
+import { Status } from "../../shared/types/version-info.js";
 import { systemDb } from "../../systemDb.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {

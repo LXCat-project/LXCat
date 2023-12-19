@@ -9,7 +9,7 @@ import { deepClone } from "../../css/queries/deepClone.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { StateTree } from "../../shared/types/state.js";
-import { Status } from "../../shared/types/version_info.js";
+import { Status } from "../../shared/types/version-info.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 
 export async function createSampleCrossSection(

@@ -7,7 +7,7 @@ import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
-import { VersionInfo } from "../../shared/types/version_info.js";
+import { VersionInfo } from "../../shared/types/version-info.js";
 
 // import { defaultSearchTemplate } from "../picker/default.js";
 // import { ReactionTemplate } from "../picker/types.js";

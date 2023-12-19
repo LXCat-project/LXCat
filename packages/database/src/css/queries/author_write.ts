@@ -11,7 +11,7 @@ import { LXCatDatabase } from "../../lxcat-database.js";
 import type { PartialKeyedDocument } from "../../schema/document.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { mapReaction } from "../../shared/queries.js";
-import { Status, VersionInfo } from "../../shared/types/version_info.js";
+import { Status, VersionInfo } from "../../shared/types/version-info.js";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(

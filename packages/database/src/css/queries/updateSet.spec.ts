@@ -17,7 +17,7 @@ import {
 import { KeyedDocument, PartialKeyedDocument } from "../../schema/document.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { SerializedSpecies } from "../../schema/species.js";
-import { Status } from "../../shared/types/version_info.js";
+import { Status } from "../../shared/types/version-info.js";
 import { systemDb } from "../../systemDb.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
