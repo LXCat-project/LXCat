@@ -9,8 +9,8 @@ import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
 import { mapObject } from "../../../shared/utils";
-import { IdsSchema } from "../IdsSchema";
-import { BolsigPage, BolsigPageProps } from "./BolsigPage";
+import { IdsSchema } from "../ids-schema";
+import { BolsigPage, BolsigPageProps } from "./bolsig-page";
 
 interface URLParams {
   searchParams?: { ids?: string };

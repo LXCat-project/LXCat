@@ -8,9 +8,9 @@ import { PagingOptions } from "@lxcat/database/shared";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { mustBeAuthor } from "../../../auth/middleware";
-import { Paging } from "../../../ScatteringCrossSection/Paging";
-import { ReactionSummary } from "../../../ScatteringCrossSection/ReactionSummary";
-import { Layout } from "../../../shared/Layout";
+import { Paging } from "../../../cs/paging";
+import { ReactionSummary } from "../../../cs/reaction-summary";
+import { Layout } from "../../../shared/layout";
 
 interface Props {
   items: CrossSectionItem[];

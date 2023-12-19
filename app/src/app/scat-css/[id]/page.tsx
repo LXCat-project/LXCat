@@ -9,7 +9,7 @@ import { KeyedLTPMixture } from "@lxcat/database/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
-import { Bag } from "../../scat-cs/inspect/Bag";
+import { PlotPage } from "../../scat-cs/inspect/plot-page";
 
 interface BagProps {
   bag: KeyedLTPMixture;
@@ -30,7 +30,7 @@ const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
       />
       {params
         // FIXME: Use a specialized component to render a single set.
-        ? <Bag {...(await fetchProps(params.id))} />
+        ? <PlotPage {...(await fetchProps(params.id))} />
         : <></>}
     </>
   );

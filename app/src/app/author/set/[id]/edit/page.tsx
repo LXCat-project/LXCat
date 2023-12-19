@@ -7,7 +7,7 @@ import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 import { options } from "../../../../../auth/options";
-import { NotFound } from "../../../../../shared/NotFound";
+import { NotFound } from "../../../../../shared/not-found";
 import { Unauthorized } from "../../../../../shared/unauthorized";
 import { EditForm } from "./edit-form";
 
