@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { systemDb } from "@lxcat/database";
-import { expect, test } from "@playwright/test";
 import { readFile } from "fs/promises";
+import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";
 

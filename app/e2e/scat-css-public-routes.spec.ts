@@ -5,7 +5,7 @@
 import { systemDb } from "@lxcat/database";
 import { CrossSectionSetHeading } from "@lxcat/database/set";
 import type { LTPDocument } from "@lxcat/schema";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "playwright-test-coverage";
 import { readFile } from "fs/promises";
 import { uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";

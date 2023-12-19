@@ -13,6 +13,12 @@ if (process.env.LXCAT_BUILD_ENV !== "production") {
 const nextConfig = {
   reactStrictMode: true,
 
+  experimental: {
+    swcPlugins: process.env.CI && [
+      ["swc-plugin-coverage-instrument", {}],
+    ]
+  },
+
   webpack: (config, { nextRuntime }) => {
     if (nextRuntime === "nodejs") {
       config.module.rules = [
