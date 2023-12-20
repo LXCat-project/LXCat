@@ -7,7 +7,7 @@ export const page_size = 100;
 
 export const querySchema = z.object({
   query: z.object({
-    offset: z.number().optional().describe(
+    offset: z.coerce.number().optional().describe(
       `Page number of first result, 1 page is ${page_size} entries long.`,
     ),
     reactions: queryObjectSchema(z.array(reactionTemplateSchema)),
