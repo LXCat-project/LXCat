@@ -24,9 +24,7 @@ const router = RouteBuilder
     let params = ctx.parsedParams.query;
     const { contributor, tag, offset, count } = params;
 
-    const state = ctx.parsedParams.body
-      ? ctx.parsedParams.body.state
-      : { particle: {} };
+    const state = ctx.parsedParams.query.state ?? { particle: {} };
 
     const filter: FilterOptions = {
       contributor: query2array(contributor),

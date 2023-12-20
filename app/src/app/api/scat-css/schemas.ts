@@ -1,3 +1,4 @@
+import { queryObjectSchema } from "@/docs/openapi";
 import { z } from "zod";
 
 const stateFilterSchema = z.object(
@@ -28,12 +29,10 @@ const stateFilterSchema = z.object(
 
 export const querySchema = z.object({
   query: z.object({
-    contributor: z.string(),
-    tag: z.string(),
+    contributor: z.string().optional(),
+    tag: z.string().optional(),
     offset: z.string().optional(),
     count: z.string().optional(),
+    state: queryObjectSchema(stateFilterSchema).optional(),
   }),
-  body: z.object({
-    state: stateFilterSchema,
-  }).optional(),
 });

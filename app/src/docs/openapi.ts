@@ -24,12 +24,42 @@ export const registry = () => {
 
 let cachedSpec: any | undefined;
 
-export const queryArraySchema = (schema: z.ZodTypeAny) =>
+export const queryArraySchema = <
+  Schema extends
+    | z.ZodArray<z.ZodString>
+    | z.ZodEffects<z.ZodArray<z.ZodString>>,
+>(
+  schema: Schema,
+) =>
   z.preprocess((a) => {
     if (typeof a === "string") {
       return a.split(",");
     }
-  }, schema);
+  }, schema).openapi({ param: { style: "simple", example: "123, 234, 345" } });
+
+export const queryJSONArraySchema = <Schema extends z.ZodArray<z.ZodTypeAny>>(
+  schema: Schema,
+) =>
+  z.preprocess((s) => {
+    if (typeof s === "string") {
+      if (s[0] === "[" && s[s.length - 1] === "]") {
+        try {
+          return JSON.parse(s);
+        } catch {}
+      }
+    }
+  }, schema).describe("URL encoded JSON array.");
+
+export const queryObjectSchema = <Schema extends z.ZodTypeAny>(
+  schema: Schema,
+) =>
+  z.preprocess((o) => {
+    if (typeof o === "string") {
+      try {
+        return JSON.parse(o);
+      } catch {}
+    }
+  }, schema).describe("URL encoded JSON object");
 
 export function requestParamsFromSchema(schema: z.AnyZodObject): {
   body?: ZodRequestBody;
