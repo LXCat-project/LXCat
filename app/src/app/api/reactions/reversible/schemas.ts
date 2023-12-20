@@ -1,13 +1,13 @@
-import { queryArraySchema } from "@/docs/openapi";
+import { queryJSONArraySchema } from "@/docs/openapi";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
 import { stateLeafSchema } from "../../schemas.openapi";
 
 export const querySchema = z.object({
   query: z.object({
-    consumes: queryArraySchema(stateLeafSchema),
-    produces: queryArraySchema(stateLeafSchema),
-    typeTags: queryArraySchema(ReactionTypeTag),
-    setIds: queryArraySchema(z.string()),
+    consumes: queryJSONArraySchema(z.array(stateLeafSchema)),
+    produces: queryJSONArraySchema(z.array(stateLeafSchema)),
+    typeTags: queryJSONArraySchema(z.array(ReactionTypeTag)),
+    setIds: queryJSONArraySchema(z.array(z.string())),
   }),
 });

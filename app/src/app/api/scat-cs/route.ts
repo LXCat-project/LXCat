@@ -19,7 +19,7 @@ const router = RouteBuilder
   .use(applyCORS())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    const reactions = ctx.parsedParams.body.reactions;
+    const reactions = ctx.parsedParams.query.reactions;
     const offset = ctx.parsedParams.query.offset
       ? ctx.parsedParams.query.offset
       : 0;
