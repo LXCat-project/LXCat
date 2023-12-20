@@ -64,7 +64,6 @@ export class RouteBuilder<Context> {
         headers: Headers,
       ): Promise<Result<[BaseContext, Headers], NextResponse>> => {
         let body: undefined | RequestBody = undefined;
-        console.log(req.bodyUsed);
         if (req.body) {
           const text = await req.text();
           if (text) {
