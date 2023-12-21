@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { generateOpenAPI } from "@/docs/openapi";
 import { NextResponse } from "next/server";
-import { generateOpenAPI } from "../../../docs/openapi";
 import { applyCORS } from "../middleware/cors";
 import { RouteBuilder } from "../route-builder";
 
