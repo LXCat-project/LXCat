@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { queryJSONArraySchema } from "@/docs/openapi";
 import { Reversible, StateProcess } from "@lxcat/database/item/picker";
 import { ReactionTypeTag } from "@lxcat/schema/process";

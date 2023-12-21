@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { db } from "@lxcat/database";
 import { okJsonResponse } from "../../../../../../shared/api-responses";
 import { hasAdminRole, hasSession } from "../../../../middleware/auth";
