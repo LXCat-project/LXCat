@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { queryObjectSchema } from "@/docs/openapi";
 import { z } from "zod";
+import { queryJSONSchema } from "../util";
 
 const stateFilterSchema = z.object(
   {
@@ -37,6 +37,6 @@ export const querySchema = z.object({
     tag: z.string().optional(),
     offset: z.string().optional(),
     count: z.string().optional(),
-    state: queryObjectSchema(stateFilterSchema).optional(),
+    state: queryJSONSchema(stateFilterSchema).optional(),
   }),
 });

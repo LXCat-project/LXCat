@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { queryArraySchema } from "@/app/api/util";
 import { IdsSchema } from "@/app/scat-cs/IdsSchema";
-import { queryArraySchema } from "@/docs/openapi";
 import { z } from "zod";
 
 export const querySchema = z.object({
