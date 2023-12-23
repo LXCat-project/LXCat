@@ -7,7 +7,12 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    } 
   },
   "include": [
     "next-env.d.ts",
