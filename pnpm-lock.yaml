@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -277,8 +273,8 @@ importers:
         specifier: ^9.3.0
         version: 9.3.0(postcss@8.4.32)
       postcss-preset-mantine:
-        specifier: ^1.11.1
-        version: 1.11.1(postcss@8.4.32)
+        specifier: ^1.12.1
+        version: 1.12.1(postcss@8.4.32)
       swc-plugin-coverage-instrument:
         specifier: ^0.0.20
         version: 0.0.20
@@ -11065,8 +11061,8 @@ packages:
       postcss-value-parser: 4.2.0
     dev: true
 
-  /postcss-preset-mantine@1.11.1(postcss@8.4.32):
-    resolution: {integrity: sha512-BMO+VzLP1X6Tm5sfmnFINpYsgVyN4LJheKz+25kT4JcPqccByIo4N0HCHI9B2zzduvdYadg6O/e+yQV7xLOs4g==}
+  /postcss-preset-mantine@1.12.1(postcss@8.4.32):
+    resolution: {integrity: sha512-N1biscmlvJHYPWN6znrlFre80wh9baAaMETfERn8acQJykioGYmHIJLpQSwUSxqq/PG8QbayUyOnHgBV/tsZyA==}
     peerDependencies:
       postcss: '>=8.0.0'
     dependencies:
@@ -13958,3 +13954,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
