@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -93,8 +89,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3
       mantine-datatable:
-        specifier: ^7.3.0
-        version: 7.3.0(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.0.0)(react@18.2.0)
+        specifier: ^7.3.3
+        version: 7.3.3(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.0.0)(react@18.2.0)
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0
@@ -8754,8 +8750,8 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /mantine-datatable@7.3.0(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.0.0)(react@18.2.0):
-    resolution: {integrity: sha512-JcLYuQdG7H0yQm/aSTaGjCbMch64lgfqJLNcygXiM+L2gLJtA9E99jE5aFAr3dIVp7luSddHJgq7aYC4ragzIQ==}
+  /mantine-datatable@7.3.3(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.0.0)(react@18.2.0):
+    resolution: {integrity: sha512-Pfu3SMFIeS0IcjtA3cZ1q3ukSIMIyKJscEervs0sIdzOlWZ3dJ2a80GEntVMj0IacsGJcLgCF488T1AZLHKohA==}
     peerDependencies:
       '@mantine/core': '>=7'
       '@mantine/hooks': '>=7'
@@ -13958,3 +13954,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
