@@ -22,7 +22,7 @@
     "@citation-js/plugin-csl": "^0.7.2",
     "@citation-js/plugin-doi": "^0.7.2",
     "@citation-js/plugin-ris": "^0.7.4",
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.2",
