@@ -119,8 +119,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       plotly.js-basic-dist:
-        specifier: ^2.27.1
-        version: 2.27.1
+        specifier: ^2.28.0
+        version: 2.28.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10449,8 +10449,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /plotly.js-basic-dist@2.27.1:
-    resolution: {integrity: sha512-b2Ct46nn9N8l4tn1mRhyjPLiLQ0g0mp3pcoYZGu8nxJ/sj97NDZOlUf7vtC8kkSVBMOzbwgEdMtuTOozMoPIVQ==}
+  /plotly.js-basic-dist@2.28.0:
+    resolution: {integrity: sha512-TZrPYTEHcQU9S8DlQXV+g9HMNS6cr2qO3C+yRKZ3Rqs4hFNc5t7Izsff0iNJvaqMfUBSuxWMW+XD1Gqf1hWaMg==}
     dev: false
 
   /plotly.js@2.24.2:
