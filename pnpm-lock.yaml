@@ -48,13 +48,13 @@ importers:
         version: link:../packages/schema
       '@mantine/core':
         specifier: ^7.3.2
-        version: 7.3.2(@mantine/hooks@7.3.2)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.3.2(@mantine/hooks@7.4.0)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/form':
         specifier: ^7.4.0
         version: 7.4.0(react@18.2.0)
       '@mantine/hooks':
-        specifier: ^7.3.2
-        version: 7.3.2(react@18.2.0)
+        specifier: ^7.4.0
+        version: 7.4.0(react@18.2.0)
       '@mdx-js/mdx':
         specifier: ^2.3.0
         version: 2.3.0
@@ -90,7 +90,7 @@ importers:
         version: 10.0.3
       mantine-datatable:
         specifier: ^7.4.0
-        version: 7.4.0(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.1.0)(react@18.2.0)
+        version: 7.4.0(@mantine/core@7.3.2)(@mantine/hooks@7.4.0)(clsx@2.1.0)(react@18.2.0)
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0
@@ -2838,7 +2838,7 @@ packages:
       - supports-color
     dev: true
 
-  /@mantine/core@7.3.2(@mantine/hooks@7.3.2)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/core@7.3.2(@mantine/hooks@7.4.0)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-CwAuQogVLcLR7O9e1eOgi3gtk4XX6cnaqevAxzJJpIOIyCnHiQ3cEGINVXyUUjUUipBlvK3sqz3NPGJ2ekLFDQ==}
     peerDependencies:
       '@mantine/hooks': 7.3.2
@@ -2846,7 +2846,7 @@ packages:
       react-dom: ^18.2.0
     dependencies:
       '@floating-ui/react': 0.24.8(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.3.2(react@18.2.0)
+      '@mantine/hooks': 7.4.0(react@18.2.0)
       clsx: 2.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -2868,8 +2868,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mantine/hooks@7.3.2(react@18.2.0):
-    resolution: {integrity: sha512-xgumuuI3PBWXff5N02HCI7PEy25mDEdyXDQklUYK93J6FKwpcosyZnGVitoUrV1gLtYYa9ZudeAWdhHuh/CpOg==}
+  /@mantine/hooks@7.4.0(react@18.2.0):
+    resolution: {integrity: sha512-Swv23D8XmZqE2hohPBcff+ITwv5l8UlwiiEGMhL+ceUvJLnPzdwlW21qnLBtRtZWyQQ59TAav4M0GFGd93JS8Q==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -8538,7 +8538,7 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /mantine-datatable@7.4.0(@mantine/core@7.3.2)(@mantine/hooks@7.3.2)(clsx@2.1.0)(react@18.2.0):
+  /mantine-datatable@7.4.0(@mantine/core@7.3.2)(@mantine/hooks@7.4.0)(clsx@2.1.0)(react@18.2.0):
     resolution: {integrity: sha512-5h37YnRoGntCQThoHcIkxWGHBup5bbIRSSoTe60rHsg2nUP6xt/Vye3bdlcWZwYxOsKWF1/nDhZZKOYFjMM5bQ==}
     peerDependencies:
       '@mantine/core': '>=7'
@@ -8546,8 +8546,8 @@ packages:
       clsx: '>=2'
       react: '>=18.2'
     dependencies:
-      '@mantine/core': 7.3.2(@mantine/hooks@7.3.2)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.3.2(react@18.2.0)
+      '@mantine/core': 7.3.2(@mantine/hooks@7.4.0)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.4.0(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
     dev: false
