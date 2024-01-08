@@ -5,8 +5,8 @@
 import { systemDb } from "@lxcat/database";
 import { CrossSectionSetHeading } from "@lxcat/database/set";
 import type { LTPDocument } from "@lxcat/schema";
-import { expect, test } from "playwright-test-coverage";
 import { readFile } from "fs/promises";
+import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";
 
@@ -84,7 +84,9 @@ test.describe("given 2 dummy sets", () => {
         const expected = `@article{MyFamilyNameSome,
 \tauthor = {MyFamilyName, MyGivenName},
 \tjournal = {SomeJournal},
+\tdoi = {10.1109/5.771073},
 \ttitle = {Some main reference title},
+\turl = {https://doi.org/10.1109/5.771073},
 \thowpublished = {https://doi.org/10.1109/5.771073},
 }
 
