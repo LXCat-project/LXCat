@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { KeyedDocument } from "@lxcat/database/schema";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
+import { keyedDocumentSchema } from "../../schemas.openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
@@ -26,7 +26,7 @@ export async function register() {
               $schema: z.string(),
               url: z.string(),
               termOfUse: z.string(),
-            }).and(KeyedDocument),
+            }).and(keyedDocumentSchema),
           },
         },
       },

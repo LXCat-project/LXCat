@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { referenceSchema } from "@/app/api/schemas.openapi";
 import { registry, requestParamsFromSchema } from "@/docs/openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { Reference } from "@lxcat/schema";
 import { z } from "zod";
 import { querySchema } from "./schemas";
 
@@ -22,7 +22,9 @@ export async function register() {
         description: "Citation data in the requested format for the given IDs.",
         content: {
           "application/json": {
-            schema: z.array(Reference).or(z.record(z.string(), z.string())),
+            schema: z.array(referenceSchema).or(
+              z.record(z.string(), z.string()),
+            ),
           },
           "text/plain": {
             schema: z.string(),

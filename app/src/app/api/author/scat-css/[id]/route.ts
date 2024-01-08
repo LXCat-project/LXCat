@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { keyedDocumentSchema } from "@/app/api/schemas.openapi";
 import { db } from "@lxcat/database";
-import { KeyedDocument } from "@lxcat/database/schema";
 import { z } from "zod";
 import {
   badRequestResponse,
@@ -18,7 +18,7 @@ import { RouteBuilder } from "../../../route-builder";
 
 export const postSchema = z.object({
   query: z.object({ id: z.string() }),
-  body: z.object({ doc: KeyedDocument, message: z.string() }),
+  body: z.object({ doc: keyedDocumentSchema, message: z.string() }),
 });
 
 // TODO: Define max length for `id` and `message`.

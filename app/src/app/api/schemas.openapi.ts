@@ -5,22 +5,54 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
 import {
-  KeyedLTPMixtureReferenceable,
+  Keyed,
+  KeyedProcess,
+  OwnedProcess,
   SerializedSpecies,
 } from "@lxcat/database/schema";
-import { Reference } from "@lxcat/schema";
+import { Reference, SetHeader } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { z } from "zod";
-import { registry } from "../../docs/openapi";
 
 extendZodWithOpenApi(z);
+
+// Redefine schema as intersection between 2 identical schemas so openapi context gets added.
+export const anySpeciesSchema = z.intersection(AnySpecies, AnySpecies).openapi(
+  "AnySpecies",
+);
+
+export const ownedProcessSchema = z.intersection(OwnedProcess, OwnedProcess)
+  .openapi("OwnedProcess");
+
+export const reactionTypeTagSchema = z.intersection(
+  ReactionTypeTag,
+  ReactionTypeTag,
+).openapi("ReactionTypeTag");
+
+export const referenceSchema = z.intersection(Reference, Reference)
+  .openapi("Reference");
+
+const keyedDocumentBodySchema = z.object({
+  references: z.record(referenceSchema),
+  states: z.record(anySpeciesSchema),
+  processes: z.array(KeyedProcess(z.string(), z.string())),
+});
+
+const KeyedDocumentSchema = Keyed(
+  SetHeader.merge(keyedDocumentBodySchema),
+);
+
+export const keyedDocumentSchema = z.intersection(
+  KeyedDocumentSchema,
+  KeyedDocumentSchema,
+).openapi("KeyedDocument");
 
 export const speciesSchema = z.object({
   _id: z.string(),
   species: SerializedSpecies,
   hasChildren: z.boolean(),
-});
+}).openapi("Species");
 
 export const reactionTemplateSchema = z.object({
   consumes: z.array(z.object({
@@ -36,9 +68,9 @@ export const reactionTemplateSchema = z.object({
     rotational: z.string().optional(),
   })),
   reversible: z.nativeEnum(Reversible),
-  typeTags: z.array(ReactionTypeTag),
+  typeTags: z.array(reactionTypeTagSchema),
   set: z.array(z.string()),
-});
+}).openapi("ReactionTemplate");
 
 export const versionInfoSchema = z.object({
   status: z.enum(["draft", "published", "archived", "retracted"]),
@@ -65,10 +97,10 @@ export const crossSectionHeadingSchema = z.object({
     ),
   ),
   reaction: Reaction(
-    z.object({ detailed: AnySpecies, serialized: StateSummary }),
+    z.object({ detailed: anySpeciesSchema, serialized: StateSummary }),
   ),
   reference: z.array(Reference),
-});
+}).openapi("CrossSectionHeading");
 
 const baseStateSummarySchema = z.object({
   latex: z.string(),
@@ -98,14 +130,14 @@ export const reactionOptionsSchema = z.object({
   typeTags: z.array(ReactionTypeTag),
   reversible: z.array(z.nativeEnum(Reversible)),
   set: z.record(z.string(), organizationSummarySchema),
-});
+}).openapi("ReactionOptions");
 
 export const searchOptionsSchema = z.array(reactionOptionsSchema);
 
 export const crossSectionSetHeadingSchema = z.object({
   id: z.string(),
   name: z.string(),
-});
+}).openapi("CrossSectionSetHeading");
 
 export const stateLeafSchema = z.object({
   id: z.string(),
@@ -113,33 +145,4 @@ export const stateLeafSchema = z.object({
 });
 
 export async function register() {
-  registry().register(
-    "Species",
-    speciesSchema,
-  );
-
-  registry().register(
-    "ReactionTemplate",
-    reactionTemplateSchema,
-  );
-
-  registry().register(
-    "CrossSectionHeading",
-    crossSectionHeadingSchema,
-  );
-
-  registry().register(
-    "KeyedLTPMixture",
-    KeyedLTPMixtureReferenceable,
-  );
-
-  registry().register(
-    "CrossSectionSetHeading",
-    crossSectionSetHeadingSchema,
-  );
-
-  registry().register(
-    "ReactionOptions",
-    reactionOptionsSchema,
-  );
 }
