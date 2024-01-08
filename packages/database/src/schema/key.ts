@@ -11,8 +11,8 @@ import {
   ZodTypeAny,
 } from "zod";
 
-export const Key = object({ _key: string() });
-export const PartialKey = object({ _key: string().optional() });
+const Key = object({ _key: string() });
+const PartialKey = object({ _key: string().optional() });
 
 export const Keyed = <
   Shape extends ZodRawShape,

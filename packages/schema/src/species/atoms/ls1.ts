@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { makeComponent } from "../component";
-import { SimpleParticle } from "../composition/simple/particle";
-import { makeAtom } from "../generators";
+import { makeComponent } from "../component.js";
+import { SimpleParticle } from "../composition/simple/particle.js";
+import { makeAtom } from "../generators.js";
 import {
   atomicOrbital,
   buildTerm,
@@ -14,12 +14,12 @@ import {
   serializeShellConfig,
   ShellEntry,
   TotalAngularSpecifier,
-} from "./common";
+} from "./common.js";
 import {
   LSTermUncoupled,
   serializeLatexLSTermImpl,
   serializeLSTermImpl,
-} from "./ls";
+} from "./ls.js";
 
 export const LS1Term = z.object({
   L: z.number().int().nonnegative(),

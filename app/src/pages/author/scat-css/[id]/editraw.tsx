@@ -9,7 +9,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
 import { mustBeAuthor } from "../../../../auth/middleware";
-import { Layout } from "../../../../shared/Layout";
+import { Layout } from "../../../../shared/layout";
 
 interface Props {
   set: KeyedDocument;

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { UnknownKeysParam, z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
-import { type Component } from "./component";
+import { type Component } from "./component.js";
 
 export const typeTag = <Tag extends string>(tag: Tag) =>
   z.object({ type: z.literal(tag) });

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { array, object, ZodTypeAny } from "zod";
-import { Reaction } from "./reaction";
+import { Reaction } from "./reaction/index.js";
 
 export const Process = <
   StateType extends ZodTypeAny,

@@ -7,7 +7,7 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { Status, VersionInfo } from "../../shared/types/version_info.js";
+import { Status, VersionInfo } from "../../shared/types/version-info.js";
 
 export async function createCS(
   this: LXCatDatabase,

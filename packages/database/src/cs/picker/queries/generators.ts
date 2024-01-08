@@ -85,7 +85,7 @@ export function getFullStateTreeAQL(
   `;
 }
 
-export function getTreeForStateSelectionAQL(
+function getTreeForStateSelectionAQL(
   consumes: Array<StateLeaf>,
   produces: Array<StateLeaf>,
   lhsIdentifier: AqlLiteral = literal("lhs"),

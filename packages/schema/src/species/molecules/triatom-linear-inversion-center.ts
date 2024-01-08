@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { SimpleParticle } from "../composition/simple/particle";
-import { makeMolecule } from "../generators";
-import { LinearInversionCenterElectronic } from "./components/electronic/linear-inversion-center";
-import { Rotational } from "./components/rotational";
-import { LinearTriatomVibrational } from "./components/vibrational/linear-triatomic";
+import { SimpleParticle } from "../composition/simple/particle.js";
+import { makeMolecule } from "../generators.js";
+import { LinearInversionCenterElectronic } from "./components/electronic/linear-inversion-center.js";
+import { Rotational } from "./components/rotational.js";
+import { LinearTriatomVibrational } from "./components/vibrational/linear-triatomic.js";
 
 export const LinearTriatomInversionCenter = makeMolecule(
   "LinearTriatomInversionCenter",

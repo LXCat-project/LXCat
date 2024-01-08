@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, test } from "vitest";
-import { LTPDocument } from "./document";
+import { LTPDocument } from "./document.js";
 
 describe("LTPDocument", () => {
   test("Should throw when referencing faulty state key", () => {

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { listDocFiles, md2mdx } from "../../../docs/generator";
-import { MDXRenderer } from "./MDXRenderer";
+import { MDXRenderer } from "./mdx-renderer";
 
 import "highlight.js/styles/github.css";
 import "katex/dist/katex.min.css";

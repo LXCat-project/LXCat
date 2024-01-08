@@ -4,6 +4,8 @@
 
 import { Database } from "arangojs";
 import { CreateDatabaseOptions } from "arangojs/database.js";
+import { Result } from "true-myth";
+import { err, ok } from "true-myth/result";
 import {
   addOrganization,
   addSession,
@@ -41,7 +43,7 @@ import {
   byOwnerAndId as itemByOwnerAndId,
   getVersionInfo as getItemVersionInfo,
   searchOwned,
-} from "./cs/queries/author_read.js";
+} from "./cs/queries/author-read.js";
 import {
   byId,
   byIds,
@@ -66,7 +68,7 @@ import {
   getVersionInfo as getSetVersionInfo,
   isOwnerOfSet,
   listOwnedSets,
-} from "./css/queries/author_read.js";
+} from "./css/queries/author-read.js";
 import {
   createDraftSet,
   createSet,
@@ -80,7 +82,7 @@ import {
   updateDraftSet,
   updateSet,
   updateVersionStatus as updateSetVersionStatus,
-} from "./css/queries/author_write.js";
+} from "./css/queries/author-write.js";
 import { getSetAffiliation } from "./css/queries/get-affiliation.js";
 import {
   activeSetOfArchivedSet,
@@ -94,9 +96,10 @@ import {
   stateChoices,
   tagChoices,
 } from "./css/queries/public.js";
-import { setupUserCollections } from "./setup/2_users.js";
-import { setupSharedCollections } from "./setup/3_shared.js";
-import { setupCrossSectionCollections } from "./setup/4_cs.js";
+import { setupCrossSectionCollections } from "./setup/cs.js";
+import { setupDatabase } from "./setup/db.js";
+import { setupSharedCollections } from "./setup/shared.js";
+import { setupUserCollections } from "./setup/users.js";
 import {
   insertDocument,
   insertEdge,
@@ -129,14 +132,20 @@ export class LXCatDatabase {
     system: Database,
     name: string,
     options?: CreateDatabaseOptions,
-  ) {
-    const db = await system.createDatabase(name, options);
+  ): Promise<Result<LXCatDatabase, Error>> {
+    const dbResult = await setupDatabase(system, name, options);
+
+    if (dbResult.isErr) {
+      return err(dbResult.error);
+    }
+
+    const db = dbResult.value;
 
     await setupUserCollections(db);
     await setupSharedCollections(db);
     await setupCrossSectionCollections(db);
 
-    return new this(db);
+    return ok(new this(db));
   }
 
   public async createUser(

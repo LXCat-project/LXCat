@@ -27,7 +27,7 @@ export type SerializeOptions = {
 /**
  * remark plugin which removes all import and export statements
  */
-export function removeImportsExportsPlugin(): Plugin {
+function removeImportsExportsPlugin(): Plugin {
   return (tree) => remove(tree, "mdxjsEsm");
 }
 

@@ -3,16 +3,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { discriminatedUnion, output } from "zod";
-import { AnyAtom, AnyAtomSerializable } from "./atoms/any-atom";
-import { serializeAtom } from "./atoms/serialize";
-import { isSerializableAtom } from "./atoms/type-guard";
-import { AnyParticle } from "./composition/any-particle";
-import { serializeSimpleParticle } from "./composition/simple/serialize";
-import { AnyMolecule, AnyMoleculeSerializable } from "./molecules";
-import { serializeMolecule } from "./molecules/serialize";
-import { isSerializableMolecule } from "./molecules/type-guard";
-import { StateSummary } from "./summary";
-import { serializeUnspecified, Unspecified } from "./unspecified";
+import { AnyAtom, AnyAtomSerializable } from "./atoms/any-atom.js";
+import { serializeAtom } from "./atoms/serialize.js";
+import { isSerializableAtom } from "./atoms/type-guard.js";
+import { AnyParticle } from "./composition/any-particle.js";
+import { serializeSimpleParticle } from "./composition/simple/serialize.js";
+import {
+  AnyMolecule,
+  AnyMoleculeSerializable,
+} from "./molecules/any-molecule.js";
+import { serializeMolecule } from "./molecules/serialize.js";
+import { isSerializableMolecule } from "./molecules/type-guard.js";
+import { StateSummary } from "./summary.js";
+import { serializeUnspecified, Unspecified } from "./unspecified/index.js";
 
 export const AnySpecies = discriminatedUnion("type", [
   AnyParticle,

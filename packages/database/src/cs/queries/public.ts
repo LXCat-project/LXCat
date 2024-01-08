@@ -8,7 +8,7 @@ import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedLTPMixture } from "../../schema/mixture.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
-import { KeyedVersionInfo } from "../../shared/types/version_info.js";
+import { KeyedVersionInfo } from "../../shared/types/version-info.js";
 import { ReactionTemplate } from "../picker/types.js";
 import { CrossSectionHeading } from "../public.js";
 

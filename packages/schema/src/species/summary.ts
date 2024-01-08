@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { OneOrMultiple } from "../common/util";
-import { SimpleParticle } from "./composition/simple/particle";
+import { OneOrMultiple } from "../common/util.js";
+import { SimpleParticle } from "./composition/simple/particle.js";
 
 const SummarizedComponent = z.object({
   summary: z.string().min(1),

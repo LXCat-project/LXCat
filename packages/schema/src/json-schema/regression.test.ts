@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from "vitest";
 import OriginalLTPMixtureSchema from "../test-data/LTPMixture.schema.json";
-import { LTPMixtureJSONSchema } from "./mixture";
+import { LTPMixtureJSONSchema } from "./mixture.js";
 
 describe("JSON Schema creation regression tests", () => {
   it("LTPMixture", () => {

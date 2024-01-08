@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import type { AnySpecies, AnySpeciesSerializable } from "../any-species";
-import { AnyAtom, AnyAtomSerializable } from "./any-atom";
+import type { AnySpecies, AnySpeciesSerializable } from "../any-species.js";
+import { AnyAtom, AnyAtomSerializable } from "./any-atom.js";
 
 export const isAtom = (state: AnySpecies): state is AnyAtom =>
   AnyAtom.options.some((option) => option.shape.type.value === state.type);

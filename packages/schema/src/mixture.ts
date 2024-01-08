@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { output, z } from "zod";
-import { Reference } from "./common/reference";
-import { Process } from "./process/process";
-import { ProcessInfo } from "./process/process-info";
-import { SetReference } from "./process/set-reference";
-import { SelfReference } from "./self-reference";
-import { SetHeader } from "./set-header";
-import { AnySpecies } from "./species";
+import { Reference } from "./common/reference.js";
+import { ProcessInfo } from "./process/process-info.js";
+import { Process } from "./process/process.js";
+import { SetReference } from "./process/set-reference.js";
+import { SelfReference } from "./self-reference.js";
+import { SetHeader } from "./set-header.js";
+import { AnySpecies } from "./species/any-species.js";
 
 const MixtureBody = z.object({
   sets: z.record(SetHeader),

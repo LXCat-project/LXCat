@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { electronicOrbital } from "../common";
+import { electronicOrbital } from "../common.js";
 
 /**
  * Array used for the conversion of the orbital angular momentum

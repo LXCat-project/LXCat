@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, test } from "vitest";
-import { LTPMixture } from "./mixture";
+import { LTPMixture } from "./mixture.js";
 
 describe("LTPMixture", () => {
   test("Should throw when referencing faulty state key", () => {

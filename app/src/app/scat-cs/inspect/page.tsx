@@ -9,8 +9,8 @@ import { KeyedLTPMixture } from "@lxcat/database/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
-import { IdsSchema } from "../IdsSchema";
-import { Bag } from "./Bag";
+import { IdsSchema } from "../ids-schema";
+import { PlotPage } from "./plot-page";
 
 interface BagProps {
   bag: KeyedLTPMixture;
@@ -46,7 +46,7 @@ const ScatteringCrossSectionSelectionPage = async (
       {/* TODO add dialog how to cite */}
       {searchParams
         ? (
-          <Bag
+          <PlotPage
             {...(await fetchProps(searchParams.ids ?? []))}
             forceTermsOfUse={searchParams.termsOfUse ? true : false}
           />

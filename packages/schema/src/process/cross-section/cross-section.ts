@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z, ZodType } from "zod";
-import { ProcessInfoBase } from "../process-info-base";
-import { CrossSectionData } from "./data-types";
+import { ProcessInfoBase } from "../process-info-base.js";
+import { CrossSectionData } from "./data-types.js";
 
 export const CrossSectionInfo = <ReferenceType extends z.ZodTypeAny>(
   ReferenceType: ReferenceType,

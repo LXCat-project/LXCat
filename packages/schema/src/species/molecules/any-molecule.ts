@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { discriminatedUnion, output } from "zod";
-import { HeteronuclearDiatom } from "./diatom-heteronuclear";
-import { HomonuclearDiatom } from "./diatom-homonuclear";
-import { LinearTriatomInversionCenter } from "./triatom-linear-inversion-center";
+import { HeteronuclearDiatom } from "./diatom-heteronuclear.js";
+import { HomonuclearDiatom } from "./diatom-homonuclear.js";
+import { LinearTriatomInversionCenter } from "./triatom-linear-inversion-center.js";
 
 export const AnyMolecule = discriminatedUnion("type", [
   HomonuclearDiatom.plain,
