@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@citation-js/core": "^0.7.1",
-    "@citation-js/plugin-bibtex": "^0.7.2",
+    "@citation-js/plugin-bibtex": "^0.7.5",
     "@citation-js/plugin-csl": "^0.7.2",
     "@citation-js/plugin-doi": "^0.7.2",
     "@citation-js/plugin-ris": "^0.7.4",
@@ -84,7 +84,7 @@
     "@babel/core": "^7.23.7",
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",
-    "@playwright/test": "1.38.0",
+    "@playwright/test": "1.40.0",
     "@types/cookie": "^0.6.0",
     "@types/deep-equal": "^1.0.4",
     "@types/json-schema": "^7.0.15",
