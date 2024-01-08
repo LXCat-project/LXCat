@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { makeComponent } from "../../../component";
-import { molecularOrbital, molecularOrbitalLatex } from "../../common";
-import { MolecularParity } from "../common";
-import { LinearElectronicDescriptor } from "./linear";
+import { makeComponent } from "../../../component.js";
+import { molecularOrbital, molecularOrbitalLatex } from "../../common.js";
+import { MolecularParity } from "../common.js";
+import { LinearElectronicDescriptor } from "./linear.js";
 
 const LinearInversionCenterElectronicDescriptor = LinearElectronicDescriptor
   .merge(MolecularParity);

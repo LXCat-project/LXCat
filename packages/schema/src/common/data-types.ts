@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { Pair } from "./util";
+import { Pair } from "./util.js";
 
 export const LUT = z.object({
   type: z.literal("LUT"),

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { output, ZodType, ZodTypeAny } from "zod";
-import { Process } from "./process";
-import { ProcessInfo } from "./process-info";
+import { Process } from "./process.js";
+import { ProcessInfo } from "./process-info.js";
 
 export const AnyProcess = <
   StateType extends ZodTypeAny,

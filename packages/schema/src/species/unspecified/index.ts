@@ -2,5 +2,5 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from "./serialize";
-export * from "./unspecified";
+export * from "./serialize.js";
+export * from "./unspecified.js";

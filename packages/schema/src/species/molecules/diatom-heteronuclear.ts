@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { SimpleParticle } from "../composition/simple/particle";
-import { makeMolecule } from "../generators";
-import { LinearElectronic } from "./components/electronic/linear";
-import { Rotational } from "./components/rotational";
-import { DiatomicVibrational } from "./components/vibrational/diatomic";
+import { SimpleParticle } from "../composition/simple/particle.js";
+import { makeMolecule } from "../generators.js";
+import { LinearElectronic } from "./components/electronic/linear.js";
+import { Rotational } from "./components/rotational.js";
+import { DiatomicVibrational } from "./components/vibrational/diatomic.js";
 
 export const HeteronuclearDiatom = makeMolecule(
   "HeteronuclearDiatom",

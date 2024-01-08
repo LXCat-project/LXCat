@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { number, object, tuple } from "zod";
-import { makeComponent } from "../../../component";
+import { makeComponent } from "../../../component.js";
 
 const LinearTriatomVibrationalDescriptor = object({
   v: tuple([number().int(), number().int(), number().int()]),

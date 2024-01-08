@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, it } from "vitest";
-import { type AnySpecies, AnySpeciesSerializable } from "./any-species";
-import { type StateSummary } from "./summary";
+import { type AnySpecies, AnySpeciesSerializable } from "./any-species.js";
+import { type StateSummary } from "./summary.js";
 
 type TestCases = Array<[string, AnySpecies, StateSummary]>;
 

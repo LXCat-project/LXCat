@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { number, object } from "zod";
-import { makeComponent } from "../../component";
+import { makeComponent } from "../../component.js";
 
 const RotationalDescriptor = object({ J: number().int() });
 

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { CSLDateVariable } from "./date-variable";
-import { CSLNameVariable } from "./name-variable";
+import { CSLDateVariable } from "./date-variable.js";
+import { CSLNameVariable } from "./name-variable.js";
 
 export const CSLData = z
   .object({

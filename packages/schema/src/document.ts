@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { Reference } from "./common/reference";
-import { AnyProcess } from "./process";
-import { SelfReference } from "./self-reference";
-import { SetHeader } from "./set-header";
-import { AnySpecies } from "./species";
+import { Reference } from "./common/reference.js";
+import { AnyProcess } from "./process/any-process.js";
+import { SelfReference } from "./self-reference.js";
+import { SetHeader } from "./set-header.js";
+import { AnySpecies } from "./species/any-species.js";
 
 const DocumentBody = z.object({
   references: z.record(Reference),
@@ -31,7 +31,7 @@ export const LTPDocument = SelfReference
   .refine(
     (doc) =>
       doc.processes
-        .flatMap(({ info }) => Array.isArray(info) ? info : [info])
+        .flatMap(({ info }) => info)
         .flatMap(({ references }) => references)
         .every((reference) => reference in doc.references),
     "Referenced reference key is missing in references record.",

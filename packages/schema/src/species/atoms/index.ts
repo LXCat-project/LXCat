@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from "./any-atom";
-export * from "./type-guard";
+export * from "./any-atom.js";
+export * from "./type-guard.js";
 
-export { AtomJ1L2 } from "./j1l2";
-export { AtomLS } from "./ls";
-export { AtomLS1 } from "./ls1";
+export { AtomJ1L2 } from "./j1l2.js";
+export { AtomLS } from "./ls.js";
+export { AtomLS1 } from "./ls1.js";

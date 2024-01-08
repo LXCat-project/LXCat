@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { parseCharge, parseChargeLatex } from "../../common";
-import { StateSummary } from "../../summary";
-import { SimpleParticle } from "./particle";
+import { parseCharge, parseChargeLatex } from "../../common.js";
+import { StateSummary } from "../../summary.js";
+import { SimpleParticle } from "./particle.js";
 
 export const serializeSimpleParticle = (
   state: SimpleParticle,

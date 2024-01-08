@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z, ZodType } from "zod";
-import { ReactionTypeTag } from "./type-tags";
+import { ReactionTypeTag } from "./type-tags.js";
 
 export const ReactionEntry = <StateType extends z.ZodTypeAny>(
   StateType: StateType,

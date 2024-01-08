@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { parseCharge, parseChargeLatex } from "../common";
-import { StateSummary } from "../summary";
-import { AnyAtomSerializable } from "./any-atom";
+import { parseCharge, parseChargeLatex } from "../common.js";
+import { StateSummary } from "../summary.js";
+import { AnyAtomSerializable } from "./any-atom.js";
 
 export const serializeAtom = (atom: AnyAtomSerializable): StateSummary => {
   const serialized: StateSummary = {

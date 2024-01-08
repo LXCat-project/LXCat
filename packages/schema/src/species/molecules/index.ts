@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from "./any-molecule";
-export * from "./type-guard";
+export * from "./any-molecule.js";
+export * from "./type-guard.js";
 
-export { HeteronuclearDiatom } from "./diatom-heteronuclear";
-export { HomonuclearDiatom } from "./diatom-homonuclear";
-export { LinearTriatomInversionCenter } from "./triatom-linear-inversion-center";
+export { HeteronuclearDiatom } from "./diatom-heteronuclear.js";
+export { HomonuclearDiatom } from "./diatom-homonuclear.js";
+export { LinearTriatomInversionCenter } from "./triatom-linear-inversion-center.js";

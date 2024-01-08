@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Schema and validator for LXCat",
   "license": "Apache-2.0",
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "json:set": "tsx src/cli/mixture-schema.ts",

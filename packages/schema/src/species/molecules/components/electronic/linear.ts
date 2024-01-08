@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { z } from "zod";
-import { makeComponent } from "../../../component";
-import { molecularOrbital, molecularOrbitalLatex } from "../../common";
+import { makeComponent } from "../../../component.js";
+import { molecularOrbital, molecularOrbitalLatex } from "../../common.js";
 
 export const LinearElectronicDescriptor = z.object({
   energyId: z.string(),
