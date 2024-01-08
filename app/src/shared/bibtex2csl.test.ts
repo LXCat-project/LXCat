@@ -27,6 +27,9 @@ describe("bibtex2csl()", () => {
     const result = await bibtex2csl(input);
     const expected = {
       Carbone2021Data: {
+        DOI: "10.3390/atoms9010016",
+        ISSN: "2218-2004",
+        URL: "https://www.mdpi.com/2218-2004/9/1/16",
         author: [
           { given: "Emile", family: "Carbone" },
           { given: "Wouter", family: "Graef" },
