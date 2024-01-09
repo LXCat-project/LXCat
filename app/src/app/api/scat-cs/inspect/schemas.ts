@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { IdsSchema } from "@/app/scat-cs/IdsSchema";
+import { IdsSchema } from "@/app/scat-cs/ids-schema";
 import { z } from "zod";
 import { queryArraySchema } from "../../util";
 
