@@ -2,10 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {
+  forbiddenResponse,
+  unauthorizedResponse,
+} from "@/shared/api-responses";
 import { Role } from "@lxcat/database/auth";
 import { getServerSession } from "next-auth";
 import { decode } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { err, ok } from "true-myth/result";
 import { options } from "../../../auth/options";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
@@ -77,10 +81,7 @@ export const hasSessionOrAPIToken =
     }
 
     return err(
-      new NextResponse("Unauthorized", {
-        status: 401,
-        headers: [["WWW-Authenticate", "Bearer, OAuth"]],
-      }),
+      unauthorizedResponse(),
     );
   };
 
@@ -101,10 +102,7 @@ export const hasSession =
       ]);
     }
     return err(
-      new NextResponse("Unauthorized", {
-        status: 401,
-        headers: [["WWW-Authenticate", "Bearer, OAuth"]],
-      }),
+      unauthorizedResponse(),
     );
   };
 
@@ -124,7 +122,7 @@ export const hasAdminRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
     }
   };
 
@@ -144,7 +142,7 @@ export const hasDeveloperRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
     }
   };
 
@@ -165,7 +163,7 @@ export const hasDeveloperOrDownloadRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
     }
   };
 
@@ -185,7 +183,7 @@ export const hasAuthorRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
     }
   };
 
@@ -205,6 +203,6 @@ export const hasPublisherRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
     }
   };
