@@ -6,34 +6,94 @@ import { NextRequest, NextResponse } from "next/server";
 import { err, ok } from "true-myth/result";
 import { Headers, Middleware } from "../route-builder";
 
-export const applyCORS = 
-  <Context>(): Middleware<Context, Context> =>
+export type CORSOptions = {
+  allowedOrigins: string[];
+  allowedMethods: string[];
+  allowedHeaders?: string[];
+  allowCredentials?: boolean;
+  maxAge?: number;
+  exposeHeaders?: string[];
+  preflightStatusCode: number;
+};
+
+const DEFAULTS: CORSOptions = {
+  allowedOrigins: ["*"],
+  allowedMethods: ["GET", "HEAD"],
+  allowedHeaders: ["Authorization"],
+  preflightStatusCode: 204,
+};
+
+export const applyCORS =
+  <Context>(options: CORSOptions = DEFAULTS): Middleware<Context, Context> =>
   async (
     req: NextRequest,
     ctx: Context,
-    headers: Headers
-) => {
-  // Only handles CORS preflight, headers are assumed to be set through nextConf parameters.
-    
-  let method = req.method && req.method.toUpperCase && req.method.toUpperCase();
+    headers: Headers,
+  ) => {
+    // Only handles CORS preflight, headers are assumed to be set through nextConf parameters.
 
-  // Handle CORS preflight
-  if (method == 'OPTIONS') {
-    // Not actually an error
-    return err(new NextResponse(
-      "",
-      {        
-        // some legacy browsers (IE11, various SmartTVs) choke on 204
-        status: 200,
-        // Safari (and potentially other browsers) need content-length 0,
-        //   for 204 or they just hang waiting for a body
-        headers: [['Content-Length', '0']]
+    let method = req.method && req.method.toUpperCase
+      && req.method.toUpperCase();
+    let cors_headers: [string, string][] = [];
+    cors_headers.push([
+      "Access-Control-Allow-Origin",
+      options.allowedOrigins.join(", "),
+    ]);
+
+    if (options.allowCredentials && options.allowCredentials === true) {
+      cors_headers.push(["Access-Control-Allow-Credentials", "true"]);
+    }
+
+    // Handle CORS preflight
+    if (method === "OPTIONS") {
+      cors_headers.push([
+        "Access-Control-Allow-Methods",
+        options.allowedMethods.join(", "),
+      ]);
+
+      if (options.allowedHeaders) {
+        cors_headers.push([
+          "Access-Control-Allow-Headers",
+          options.allowedHeaders.join(", "),
+        ]);
       }
-    ))
-  } else {
-    return ok([
-      ctx,
-      headers,
-    ])
-  }
-}
+
+      if (options.maxAge) {
+        cors_headers.push([
+          "Access-Control-Max-Age",
+          options.maxAge.toString(),
+        ]);
+      }
+
+      if (options.exposeHeaders) {
+        cors_headers.push([
+          "Access-Control-Expose-Headers",
+          options.exposeHeaders.join(", "),
+        ]);
+      }
+
+      const body = options.preflightStatusCode === 204 ? null : "";
+      // Not actually an error
+      return err(
+        new NextResponse(
+          body,
+          {
+            status: options.preflightStatusCode,
+            // Safari (and potentially other browsers) need content-length 0,
+            //   for 204 or they just hang waiting for a body
+            headers: ([["Content-Length", "0"]] as [string, string][]).concat(
+              cors_headers,
+            ),
+          },
+        ),
+      );
+    } else {
+      for (let header of cors_headers) {
+        headers[header[0]] = header[1];
+      }
+      return ok([
+        ctx,
+        headers,
+      ]);
+    }
+  };

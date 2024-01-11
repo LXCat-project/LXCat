@@ -34,18 +34,6 @@ const nextConfig = {
   images: {
     domains: ["s.gravatar.com", "secure.gravatar.com"],
   },
-  async headers() {
-    return [
-      {
-        // Enable CORS on all API paths.
-        source: "/api/:path*",
-        headers: [
-          { key: "Access-Control-Allow-Origin", value: process.env.NEXT_PUBLIC_URL },
-          { key: "Access-Control-Allow-Methods", value: "GET,HEAD" },
-        ]
-      }
-    ]
-  }
 };
 
 // For local https disable cert checking
