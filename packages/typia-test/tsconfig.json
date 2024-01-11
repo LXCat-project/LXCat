@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ESNext", "dom"],
+    "module": "NodeNext",
+    "resolveJsonModule": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src/**/*.ts"],
+  "extends": "@lxcat/tsconfig/base.json"
+}

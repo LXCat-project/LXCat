@@ -1,0 +1,39 @@
+{
+  "name": "@lxcat/typia-test",
+  "version": "0.1.0",
+  "description": "LXCat typia-test",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc",
+    "lint": "eslint src/ --ext .ts",
+    "format": "dprint fmt",
+    "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
+    "prepublishOnly": "pnpm build",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "typia": "^5.3.9"
+  },
+  "devDependencies": {
+    "@lxcat/tsconfig": "workspace:^",
+    "@typescript-eslint/eslint-plugin": "^6.18.0",
+    "dprint": "^0.45.0",
+    "eslint": "8.56.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
