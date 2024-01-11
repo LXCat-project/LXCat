@@ -121,6 +121,11 @@ export class RouteBuilder<Context> {
         const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
+          for (const key in headers) {
+            if (result.error.headers.get(key) === null) {
+              result.error.headers.append(key, headers[key]);
+            }
+          }
           return err(result.error);
         }
 
