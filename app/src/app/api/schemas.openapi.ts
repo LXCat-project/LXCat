@@ -5,48 +5,16 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
 import {
-  Keyed,
-  KeyedProcess,
+  KeyedDocument,
   OwnedProcess,
   SerializedSpecies,
 } from "@lxcat/database/schema";
-import { Reference, SetHeader } from "@lxcat/schema";
+import { Reference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);
-
-// Redefine schema as intersection between 2 identical schemas so openapi context gets added.
-export const anySpeciesSchema = z.intersection(AnySpecies, AnySpecies).openapi(
-  "AnySpecies",
-);
-
-export const ownedProcessSchema = z.intersection(OwnedProcess, OwnedProcess)
-  .openapi("OwnedProcess");
-
-export const reactionTypeTagSchema = z.intersection(
-  ReactionTypeTag,
-  ReactionTypeTag,
-).openapi("ReactionTypeTag");
-
-export const referenceSchema = z.intersection(Reference, Reference)
-  .openapi("Reference");
-
-const keyedDocumentBodySchema = z.object({
-  references: z.record(referenceSchema),
-  states: z.record(anySpeciesSchema),
-  processes: z.array(KeyedProcess(z.string(), z.string())),
-});
-
-const KeyedDocumentSchema = Keyed(
-  SetHeader.merge(keyedDocumentBodySchema),
-);
-
-export const keyedDocumentSchema = z.intersection(
-  KeyedDocumentSchema,
-  KeyedDocumentSchema,
-).openapi("KeyedDocument");
 
 export const speciesSchema = z.object({
   _id: z.string(),
@@ -68,7 +36,7 @@ export const reactionTemplateSchema = z.object({
     rotational: z.string().optional(),
   })),
   reversible: z.nativeEnum(Reversible),
-  typeTags: z.array(reactionTypeTagSchema),
+  typeTags: z.array(ReactionTypeTag),
   set: z.array(z.string()),
 }).openapi("ReactionTemplate");
 
@@ -97,7 +65,7 @@ export const crossSectionHeadingSchema = z.object({
     ),
   ),
   reaction: Reaction(
-    z.object({ detailed: anySpeciesSchema, serialized: StateSummary }),
+    z.object({ detailed: AnySpecies, serialized: StateSummary }),
   ),
   reference: z.array(Reference),
 }).openapi("CrossSectionHeading");
@@ -145,4 +113,14 @@ export const stateLeafSchema = z.object({
 });
 
 export async function register() {
+  AnySpecies._def.openapi = { _internal: { refId: "AnySpecies" } };
+  KeyedDocument._def.openapi = { _internal: { refId: "KeyedDocument" } };
+  ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };
+  OwnedProcess._def.openapi = { _internal: { refId: "OwnedProcess" } };
+  ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };
+  Reference._def.openapi = { _internal: { refId: "Reference" } };
+  SerializedSpecies._def.openapi = {
+    _internal: { refId: "SerializedSpecies" },
+  };
+  StateSummary._def.openapi = { _internal: { refId: "StateSummary" } };
 }

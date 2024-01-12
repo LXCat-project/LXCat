@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { OwnedProcess } from "@lxcat/database/schema";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
-import { ownedProcessSchema } from "../../schemas.openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
@@ -25,7 +25,7 @@ export async function register() {
             schema: z.object({
               url: z.string(),
               termOfUse: z.string(),
-              data: z.array(ownedProcessSchema),
+              data: z.array(OwnedProcess),
             }),
           },
         },
