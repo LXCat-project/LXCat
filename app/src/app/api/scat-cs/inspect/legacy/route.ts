@@ -56,4 +56,4 @@ const router = RouteBuilder
   })
   .compile();
 
-export { router as GET };
+export { router as GET, router as OPTIONS };

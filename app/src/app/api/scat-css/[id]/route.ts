@@ -17,7 +17,7 @@ import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
 import { querySchema } from "./schemas";
 
-const handler = RouteBuilder
+const router = RouteBuilder
   .init()
   .use(applyCORS())
   .use(hasSessionOrAPIToken())
@@ -69,4 +69,4 @@ const handler = RouteBuilder
   })
   .compile();
 
-export { handler as GET };
+export { router as GET, router as OPTIONS };

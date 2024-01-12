@@ -23,6 +23,13 @@ const DEFAULTS: CORSOptions = {
   preflightStatusCode: 204,
 };
 
+/**
+ * Adds CORS headers to response.
+ * For non-simple requests
+ * ({@link https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests}),
+ * the router has to be exported as OPTIONS as well as the other required methods so the pre-flight request
+ * gets handled correctly.
+ */
 export const applyCORS =
   <Context>(options: CORSOptions = DEFAULTS): Middleware<Context, Context> =>
   async (
@@ -30,8 +37,6 @@ export const applyCORS =
     ctx: Context,
     headers: Headers,
   ) => {
-    // Only handles CORS preflight, headers are assumed to be set through nextConf parameters.
-
     let method = req.method && req.method.toUpperCase
       && req.method.toUpperCase();
     let cors_headers: [string, string][] = [];

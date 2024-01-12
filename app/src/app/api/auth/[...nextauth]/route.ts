@@ -5,6 +5,6 @@
 import NextAuth from "next-auth";
 import { options } from "../../../../auth/options";
 
-const handler = NextAuth(options);
+const router = NextAuth(options);
 
-export { handler as GET, handler as POST };
+export { router as GET, router as POST };
