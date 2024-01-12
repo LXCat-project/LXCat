@@ -14,7 +14,7 @@ export async function register() {
     method: "post",
     path: "/author/scat-css/{id}",
     tags: ["Author"],
-    description: "Post cross section set.",
+    description: "Edit cross section set.",
     request: requestParamsFromSchema(postSchema),
     responses: {
       200: {
