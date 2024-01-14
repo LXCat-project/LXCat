@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -268,8 +264,8 @@ importers:
         specifier: ^0.0.20
         version: 0.0.20
       testcontainers:
-        specifier: ^10.4.0
-        version: 10.4.0
+        specifier: ^10.5.0
+        version: 10.5.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -338,8 +334,8 @@ importers:
         specifier: 8.56.0
         version: 8.56.0
       testcontainers:
-        specifier: ^10.4.0
-        version: 10.4.0
+        specifier: ^10.5.0
+        version: 10.5.0
       tsx:
         specifier: ^4.7.0
         version: 4.7.0
@@ -3200,7 +3196,7 @@ packages:
   /@testcontainers/arangodb@10.4.0:
     resolution: {integrity: sha512-ffPqXfruYLIEDOEtGXpIOOt3TEvdhNLHwRFuYlS0gSiwdWNY1usPqBkFTiF9dDwfPDfiS7HGfPwm774Y47S6cA==}
     dependencies:
-      testcontainers: 10.4.0
+      testcontainers: 10.5.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -12013,8 +12009,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@10.4.0:
-    resolution: {integrity: sha512-kMmJXOAuJeQTRbGSrIEBaAzTzGzmY4+DU5xW5CxgzxgywCoy53ubeiTh3eZ1rzT54YR3zf0nijlb/l7OT4E+/g==}
+  /testcontainers@10.5.0:
+    resolution: {integrity: sha512-VgZeX3CRDvJXx2mdBW4/tF4AaCpIvE7nztxvGq5I/N6fgkQg9JoB16cUBdoAZJB/uyHDtCqtw9b/eFrTBanEjQ==}
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.23
@@ -13227,3 +13223,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
