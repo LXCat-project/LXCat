@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -250,8 +246,8 @@ importers:
         specifier: ^15.1.0
         version: 15.1.0
       oidc-provider:
-        specifier: ^8.4.3
-        version: 8.4.3
+        specifier: ^8.4.4
+        version: 8.4.4
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.40.0)
@@ -9694,8 +9690,8 @@ packages:
       es-abstract: 1.22.2
     dev: true
 
-  /oidc-provider@8.4.3:
-    resolution: {integrity: sha512-XEGMwSJEMXf0z2lKLts/y5p9cd5hBODKmwJnLeOhdKJh8kgYfFLYtc555/9cBBLmQ4JBnK4xb/zk1AGbvZdYvw==}
+  /oidc-provider@8.4.4:
+    resolution: {integrity: sha512-SLstVFmGKAgOnQ5KvbawlTCZb4jQmU2N8WZYahVcYoc/y0JIQCsdNW5T0tCYLcuCESazuAfvcxF4qY2KkIN6eQ==}
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
@@ -13227,3 +13223,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
