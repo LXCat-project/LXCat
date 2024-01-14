@@ -97,7 +97,7 @@
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
     "nyc": "^15.1.0",
-    "oidc-provider": "^8.4.3",
+    "oidc-provider": "^8.4.4",
     "playwright-test-coverage": "^1.2.12",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^9.3.0",
