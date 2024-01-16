@@ -16,8 +16,12 @@ type Params = {
   body?: RequestBody;
 };
 
+export type NextContext = {
+  params?: Record<string, string>;
+};
+
 export type BaseContext = {
-  params?: Params | Record<string, string>;
+  params: Params;
 };
 
 type HttpMethods =
@@ -42,14 +46,14 @@ export type Middleware<InContext, OutContext> = (
 export class RouteBuilder<Context> {
   private callchain: (
     req: NextRequest,
-    ctx: BaseContext,
+    ctx: NextContext,
     headers: Headers,
   ) => MaybePromise<Result<[Context, Headers], NextResponse>>;
 
   private constructor(
     callback: (
       req: NextRequest,
-      ctx: BaseContext,
+      ctx: NextContext,
       headers: Headers,
     ) => MaybePromise<Result<[Context, Headers], NextResponse>>,
   ) {
@@ -60,7 +64,7 @@ export class RouteBuilder<Context> {
     return new RouteBuilder(
       async (
         req: NextRequest,
-        ctx: BaseContext,
+        ctx: NextContext,
         headers: Headers,
       ): Promise<Result<[BaseContext, Headers], NextResponse>> => {
         let body: undefined | RequestBody = undefined;
@@ -79,20 +83,13 @@ export class RouteBuilder<Context> {
           }
         }
 
-        return ok(
-          [
-            {
-              params: {
-                path: ctx.params as Record<string, string> | undefined,
-                query: Object.fromEntries(
-                  req.nextUrl.searchParams.entries(),
-                ),
-                body: body,
-              },
-            },
-            headers,
-          ],
-        );
+        return ok([{
+          params: {
+            path: ctx.params,
+            query: Object.fromEntries(req.nextUrl.searchParams.entries()),
+            body: body,
+          },
+        }, headers]);
       },
     );
   }
@@ -100,7 +97,7 @@ export class RouteBuilder<Context> {
   compile() {
     return async (
       req: NextRequest,
-      ctx: BaseContext,
+      ctx: NextContext,
     ): Promise<NextResponse> => {
       const result = await this.callchain(req, ctx, {});
 
@@ -117,7 +114,7 @@ export class RouteBuilder<Context> {
     callback: Middleware<Context, NewContext>,
   ): RouteBuilder<NewContext> {
     return new RouteBuilder(
-      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (req: NextRequest, ctx: NextContext, headers: Headers) => {
         const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
@@ -143,7 +140,7 @@ export class RouteBuilder<Context> {
     ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return new RouteBuilder(
-      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (req: NextRequest, ctx: NextContext, headers: Headers) => {
         const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
