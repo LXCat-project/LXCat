@@ -14,8 +14,7 @@ let router = RouteBuilder
   .use(zodMiddleware(querySchema))
   .get(
     async (_, ctx) => {
-      const stateProcess = ctx.parsedParams.body.stateProcess;
-      const reactions = ctx.parsedParams.body.reactions;
+      const { stateProcess, reactions } = ctx.parsedParams.body;
       if (stateProcess && reactions) {
         const stateArray = await db().getStateSelection(
           stateProcess,
