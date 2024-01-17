@@ -86,9 +86,7 @@ export const applyCORS =
             status: options.preflightStatusCode,
             // Safari (and potentially other browsers) need content-length 0,
             //   for 204 or they just hang waiting for a body
-            headers: ([["Content-Length", "0"]] as [string, string][]).concat(
-              cors_headers,
-            ),
+            headers: cors_headers.concat(["Content-Length", "0"]),
           },
         ),
       );
