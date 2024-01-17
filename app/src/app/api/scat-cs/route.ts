@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { PAGE_SIZE } from "@/cs/constants";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
@@ -10,7 +11,7 @@ import { okJsonResponse } from "../../../shared/api-responses";
 import { applyCORS } from "../middleware/cors";
 import { zodMiddleware } from "../middleware/zod";
 import { RouteBuilder } from "../route-builder";
-import { page_size, querySchema } from "./schemas";
+import { querySchema } from "./schemas";
 
 extendZodWithOpenApi(z);
 
@@ -64,7 +65,7 @@ const router = RouteBuilder
 
     const csIds = new Set(csIdsNested.flat());
     const csHeadings = await db().getItemHeadings(Array.from(csIds), {
-      count: page_size,
+      count: PAGE_SIZE,
       offset,
     });
     return okJsonResponse(csHeadings);
