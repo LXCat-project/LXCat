@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { Schema, z } from "zod";
+import { z } from "zod";
+
 import { registry } from "../../../../docs/openapi";
 
 export async function register() {
@@ -19,7 +20,9 @@ export async function register() {
         description: "Cross section set schema.",
         content: {
           "application/schema+json": {
-            schema: z.object({}),
+            schema: {
+              $ref: "https://json-schema.org/draft/2020-12/schema",
+            },
           },
         },
       },
