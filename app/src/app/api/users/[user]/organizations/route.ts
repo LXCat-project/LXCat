@@ -19,7 +19,7 @@ const router = RouteBuilder
   .use(hasAdminRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
-    if (ctx.parsedParams.body) {
+    if (ctx.parsedParams.body.length > 0) {
       const { user: userKey } = ctx.parsedParams.path;
       await db().setAffiliations(userKey, ctx.parsedParams.body);
       return createdResponse();
