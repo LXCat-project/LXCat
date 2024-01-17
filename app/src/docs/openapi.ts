@@ -22,6 +22,7 @@ export const registry = () => {
   return _registry;
 };
 
+// OpenAPIObject | undefined but OpenAPIObject is not exported.
 let cachedSpec: any | undefined;
 
 export function requestParamsFromSchema(schema: z.AnyZodObject): {
