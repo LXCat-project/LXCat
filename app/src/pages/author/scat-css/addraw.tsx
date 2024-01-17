@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { ErrorObject } from "ajv";
+import { mustBeAuthor } from "@/auth/middleware";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
-import { mustBeAuthor } from "../../../auth/middleware";
+import { ZodError } from "zod";
 import { Layout } from "../../../shared/layout";
 
 interface Props {}
 
 const AddRawCrossSectionSetPage: NextPage<Props> = () => {
   const [doc, setDoc] = useState("");
-  const [errors, setErrors] = useState<ErrorObject[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [id, setId] = useState("");
   const uploadCS = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -27,12 +27,29 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
 
     const init = { method: "POST", body: doc, headers };
     const res = await fetch(url, init);
-    const data = await res.json();
-    if (res.ok) {
-      setId(data.id);
-    } else {
-      if (data.issues) {
-        setErrors(data.issues);
+    let resp_str = await res.text();
+    try {
+      const data = JSON.parse(resp_str);
+      if (res.ok) {
+        setId(data.id);
+      } else {
+        if (data.issues) {
+          // Assume error is ZodError
+          // TODO: better zod issue formatting.
+          setErrors(
+            (data as ZodError).issues.map((issue) =>
+              JSON.stringify(issue, undefined, 2)
+            ),
+          );
+        } else {
+          setErrors([JSON.stringify(data, undefined, 2)]);
+        }
+      }
+    } catch {
+      if (res.ok) {
+        setId("No ID received.");
+      } else {
+        setErrors([resp_str]);
       }
     }
   };
@@ -63,8 +80,7 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
             <ul>
               {errors.map((e, i) => (
                 <li key={i}>
-                  {e.message}, {JSON.stringify(e.params, undefined, 2)}{" "}
-                  {e.instancePath && `@ ${e.instancePath}`}
+                  {e}
                 </li>
               ))}
             </ul>
