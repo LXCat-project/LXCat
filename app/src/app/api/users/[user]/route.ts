@@ -15,8 +15,8 @@ const router = RouteBuilder
   .use(hasAdminRole())
   .use(zodMiddleware(querySchema))
   .delete(async (_, ctx) => {
-    const { user: userId } = ctx.parsedParams.path;
-    await db().dropUser(userId);
+    const { user } = ctx.parsedParams.path;
+    await db().dropUser(user);
     return noContentResponse();
   })
   .compile();
