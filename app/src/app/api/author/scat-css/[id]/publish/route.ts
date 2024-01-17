@@ -21,10 +21,6 @@ const router = RouteBuilder
   .use(hasPublisherRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
-    if (!ctx.user || "iat" in ctx.user) {
-      throw Error("How did you get here?");
-    }
-
     const id = ctx.parsedParams.path.id;
     if (await db().isOwnerOfSet(id, ctx.user.email)) {
       await db().publishSet(id);

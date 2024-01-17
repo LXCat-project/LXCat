@@ -15,9 +15,6 @@ const router = RouteBuilder
   .use(hasDeveloperRole())
   .get(async (_, ctx) => {
     const user = ctx.user;
-    if (!user || "iat" in user) {
-      throw Error("How did you get here?");
-    }
     const token = {
       // TODO use _key from db instead of user supplied info like email
       email: user.email,
