@@ -10,7 +10,7 @@ import { BaseContext, Headers, Middleware } from "../route-builder";
 
 export const zodMiddleware = <
   Context extends BaseContext,
-  Schema extends z.ZodType<z.input<Schema>>,
+  Schema extends z.ZodTypeAny,
 >(
   schema: Schema,
 ): Middleware<Context, Context & { parsedParams: z.output<Schema> }> =>
