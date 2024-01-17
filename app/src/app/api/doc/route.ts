@@ -10,7 +10,7 @@ import { RouteBuilder } from "../route-builder";
 const router = RouteBuilder
   .init()
   .use(applyCORS())
-  .get(async (_, __) => {
+  .get(async () => {
     return NextResponse.json(await generateOpenAPI());
   })
   .compile();
