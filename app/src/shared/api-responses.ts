@@ -6,12 +6,12 @@ import { NextResponse } from "next/server";
 
 const response = (
   { body, json }: { body?: BodyInit; json?: any },
-  resp_init: ResponseInit,
-  default_body: string,
+  respInit: ResponseInit,
+  defaultBody: string,
 ) => {
-  if (json) return NextResponse.json(json, resp_init);
-  const res_body = body ? body : default_body;
-  return new NextResponse(res_body, resp_init);
+  if (json) return NextResponse.json(json, respInit);
+  const respBody = body ? body : defaultBody;
+  return new NextResponse(respBody, respInit);
 };
 
 export const badRequestResponse = (
