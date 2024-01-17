@@ -62,5 +62,5 @@ export const createdResponse = (
 };
 
 export const noContentResponse = () => {
-  return new NextResponse("", { status: 204 });
+  return new NextResponse(null, { status: 204 });
 };
