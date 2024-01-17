@@ -6,6 +6,6 @@ import { z } from "zod";
 
 export const querySchema = z.object({
   path: z.object({
-    user: z.string(),
+    user: z.string().min(1),
   }),
 });
