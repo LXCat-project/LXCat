@@ -25,8 +25,7 @@ export async function register() {
             schema: z.object({
               url: z.string(),
               termOfUse: z.string(),
-              data: z.array(OwnedProcess),
-            }),
+            }).merge(OwnedProcess),
           },
         },
       },

@@ -34,7 +34,7 @@ const router = RouteBuilder
       url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`,
       termsOfUse:
         `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}#termsOfUse`,
-      data,
+      ...data,
     });
   }).compile();
 
