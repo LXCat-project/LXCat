@@ -8,16 +8,27 @@ export type MaybePromise<T> = T | Promise<T>;
 
 export const queryArraySchema = <
   Schema extends
-    | z.ZodArray<z.ZodString>
+    | z.ZodArray<
+      | z.ZodString
+      | z.ZodEnum<[string, ...string[]]>
+    >
+    | z.ZodOptional<
+      z.ZodArray<
+        | z.ZodString
+        | z.ZodEnum<[string, ...string[]]>
+      >
+    >
     | z.ZodEffects<z.ZodArray<z.ZodString>>,
 >(
   schema: Schema,
 ) =>
   z.preprocess((a) => {
-    if (typeof a === "string") {
+    if (!a && schema.isOptional()) {
+      return [];
+    } else if (typeof a === "string") {
       return a.split(",");
     }
-  }, schema).describe("Comma seperated string array.");
+  }, schema).describe("Comma separated string array.");
 
 export const queryJSONSchema = <Schema extends z.ZodTypeAny>(
   schema: Schema,

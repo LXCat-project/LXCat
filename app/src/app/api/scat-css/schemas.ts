@@ -2,8 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { PAGE_SIZE } from "@/cs/constants";
+import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
-import { queryJSONSchema } from "../util";
+import { queryArraySchema, queryJSONSchema } from "../util";
 
 const stateFilterSchema = z.object(
   {
@@ -33,10 +35,14 @@ const stateFilterSchema = z.object(
 
 export const querySchema = z.object({
   query: z.object({
-    contributor: z.string().optional(),
-    tag: z.string().optional(),
-    offset: z.string().optional(),
-    count: z.string().optional(),
-    state: queryJSONSchema(stateFilterSchema).optional(),
+    contributor: queryArraySchema(z.array(z.string()).optional()),
+    tag: queryArraySchema(z.array(ReactionTypeTag).optional()),
+    offset: z.number().int().nonnegative().optional().default(0),
+    count: z.number().int().nonnegative().optional().default(PAGE_SIZE),
+    state: queryJSONSchema(
+      stateFilterSchema.optional().default({
+        particle: {},
+      }),
+    ),
   }),
 });
