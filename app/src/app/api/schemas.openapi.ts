@@ -48,7 +48,7 @@ export const versionInfoSchema = z.object({
   retractedMessage: z.string().optional(),
 });
 
-export const crossSectionSetSchema = z.object({
+export const crossSectionSetHeadingSchema = z.object({
   name: z.string(),
   description: z.string(),
   publishedIn: z.string().optional(),
@@ -60,7 +60,7 @@ export const crossSectionSetSchema = z.object({
 export const crossSectionHeadingSchema = z.object({
   id: z.string(),
   isPartOf: z.array(
-    crossSectionSetSchema.omit({ publishedIn: true }).and(
+    crossSectionSetHeadingSchema.omit({ publishedIn: true }).and(
       z.object({ id: z.string(), publishedIn: Reference.optional() }),
     ),
   ),
@@ -102,7 +102,7 @@ export const reactionOptionsSchema = z.object({
 
 export const searchOptionsSchema = z.array(reactionOptionsSchema);
 
-export const crossSectionSetHeadingSchema = z.object({
+export const crossSectionSetReferenceSchema = z.object({
   id: z.string(),
   name: z.string(),
 }).openapi("CrossSectionSetHeading");

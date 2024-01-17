@@ -5,7 +5,7 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../docs/openapi";
-import { crossSectionSetHeadingSchema } from "../schemas.openapi";
+import { crossSectionSetReferenceSchema } from "../schemas.openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
@@ -22,7 +22,7 @@ export async function register() {
         description: "Cross section set heading objects",
         content: {
           "application/json": {
-            schema: z.array(crossSectionSetHeadingSchema),
+            schema: z.array(crossSectionSetReferenceSchema),
           },
         },
       },
