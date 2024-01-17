@@ -2,16 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
-import { stateLeafSchema } from "../../schemas.openapi";
-import { queryJSONSchema } from "../../util";
+import { reactionQuerySchema } from "../../schemas.openapi";
 
 export const querySchema = z.object({
-  query: z.object({
-    consumes: queryJSONSchema(z.array(stateLeafSchema)),
-    produces: queryJSONSchema(z.array(stateLeafSchema)),
-    typeTags: queryJSONSchema(z.array(ReactionTypeTag)),
-    setIds: queryJSONSchema(z.array(z.string())),
-  }),
+  query: reactionQuerySchema.omit({ reversible: true }),
 });

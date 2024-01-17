@@ -13,6 +13,7 @@ import { Reference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { z } from "zod";
+import { queryJSONSchema } from "./util";
 
 extendZodWithOpenApi(z);
 
@@ -110,6 +111,14 @@ export const crossSectionSetReferenceSchema = z.object({
 export const stateLeafSchema = z.object({
   id: z.string(),
   includeChildren: z.boolean(),
+});
+
+export const reactionQuerySchema = z.object({
+  consumes: queryJSONSchema(z.array(stateLeafSchema)),
+  produces: queryJSONSchema(z.array(stateLeafSchema)),
+  reversible: z.nativeEnum(Reversible).default(Reversible.Both),
+  typeTags: queryJSONSchema(z.array(ReactionTypeTag)),
+  setIds: queryJSONSchema(z.array(z.string())),
 });
 
 export async function register() {
