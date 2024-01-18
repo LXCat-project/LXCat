@@ -8,6 +8,6 @@ import { queryArraySchema } from "../../util";
 
 export const querySchema = z.object({
   query: z.object({
-    ids: queryArraySchema(IdsSchema),
+    ids: queryArraySchema(IdsSchema.optional()),
   }),
 });
