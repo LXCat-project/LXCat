@@ -35,8 +35,8 @@ const stateFilterSchema = z.object(
 
 export const querySchema = z.object({
   query: z.object({
-    contributor: queryArraySchema(z.array(z.string())),
-    tag: queryArraySchema(z.array(ReactionTypeTag)),
+    contributor: queryArraySchema(z.array(z.string()).optional().default([])),
+    tag: queryArraySchema(z.array(ReactionTypeTag).optional().default([])),
     offset: z.number().int().nonnegative().optional().default(0),
     count: z.number().int().nonnegative().optional().default(PAGE_SIZE),
     state: queryJSONSchema(

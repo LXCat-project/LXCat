@@ -7,34 +7,14 @@ import { z } from "zod";
 export type MaybePromise<T> = T | Promise<T>;
 
 export const queryArraySchema = <
-  Schema extends
-    | z.ZodArray<
-      | z.ZodString
-      | z.ZodEnum<[string, ...string[]]>
-    >
-    | z.ZodEffects<
-      | z.ZodArray<z.ZodString>
-      | z.ZodEnum<[string, ...string[]]>
-    >
-    | z.ZodOptional<
-      | z.ZodArray<
-        | z.ZodString
-        | z.ZodEnum<[string, ...string[]]>
-      >
-      | z.ZodEffects<
-        | z.ZodArray<z.ZodString>
-        | z.ZodEnum<[string, ...string[]]>
-      >
-    >,
+  Schema extends z.ZodType<string[] | undefined>,
 >(
   schema: Schema,
 ) =>
   z.preprocess((a) => {
-    if (!a && !schema.isOptional()) {
-      return [];
-    } else if (typeof a === "string") {
+    if (typeof a === "string") {
       return a.split(",");
-    }
+    } else return undefined;
   }, schema).describe("Comma separated string array.");
 
 export const queryJSONSchema = <Schema extends z.ZodTypeAny>(
@@ -45,7 +25,7 @@ export const queryJSONSchema = <Schema extends z.ZodTypeAny>(
       try {
         return JSON.parse(o);
       } catch {
-        // Empty catch block returns null, which will make zod throw an error if the schema isnt optional.
+        return undefined;
       }
-    }
+    } else return undefined;
   }, schema).describe("URL encoded JSON object");
