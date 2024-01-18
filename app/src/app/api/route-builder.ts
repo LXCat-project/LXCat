@@ -71,13 +71,17 @@ export class RouteBuilder<Context> {
         if (req.body) {
           const text = await req.text();
           if (text) {
-            if (req.headers.get("Content-Type") === "application/json") {
+            if (
+              req.headers.has("Content-Type") && /^application\/json.*/.test(
+                req.headers.get("Content-Type")!,
+              )
+            ) {
               try {
                 body = JSON.parse(text);
               } catch {
                 return err(badRequestResponse());
               }
-            } else if (req.headers.get("Content-Type") === "text/plain") {
+            } else {
               body = text;
             }
           }
