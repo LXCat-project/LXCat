@@ -17,13 +17,13 @@ import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
 
 export const postSchema = z.object({
-  query: z.object({ id: z.string() }),
+  path: z.object({ id: z.string() }),
   body: z.object({ doc: KeyedDocument, message: z.string() }),
 });
 
 // TODO: Define max length for `id` and `message`.
 export const deleteSchema = z.object({
-  query: z.object({ id: z.string().min(1) }),
+  path: z.object({ id: z.string().min(1) }),
   body: z.object({ message: z.optional(z.string().min(1)) }),
 });
 
@@ -34,10 +34,10 @@ const postRouter = RouteBuilder
   .use(zodMiddleware(postSchema))
   .post(async (_, ctx) => {
     const params = ctx.parsedParams;
-    if (await db().isOwnerOfSet(params.query.id, ctx.user.email)) {
+    if (await db().isOwnerOfSet(params.path.id, ctx.user.email)) {
       try {
         const newId = await db().updateSet(
-          params.query.id,
+          params.path.id,
           params.body.doc,
           params.body.message,
         );
@@ -72,7 +72,7 @@ const deleteRouter = RouteBuilder
   .use(hasAuthorRole())
   .use(zodMiddleware(deleteSchema))
   .delete(async (_, ctx) => {
-    const id = ctx.parsedParams.query.id;
+    const id = ctx.parsedParams.path.id;
 
     const versionInfo = await db().getSetVersionInfo(id);
 
