@@ -13,26 +13,34 @@ import {
 } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
+import { Key } from "./key.js";
 import { ProcessInfo } from "./process/process-info.js";
 import { Process } from "./process/process.js";
 import { SetReference } from "./process/set-reference.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
+import { VersionInfo } from "./version-info.js";
 import { versioned } from "./versioned.js";
 
+// HEAD
 const MixtureBody = <ReferenceType extends ZodTypeAny>(
   Reference: ReferenceType,
 ) =>
+  // HEAD
   object({
     sets: record(versioned(SetHeader(Contributor))),
     references: record(Reference),
     states: record(SerializedSpecies),
     processes: array(
+      // TODO: An intersection type usually does not generate the best JSON schemas. See if there is a
+      //       better way to model process data with set references.
       Process(
         string(),
-        versioned(
-          ProcessInfo(ReferenceRef(string().min(1))).merge(SetReference),
+        object({ _key: Key, versionInfo: VersionInfo }).and(
+          ProcessInfo(ReferenceRef(string().min(1))),
+        ).and(
+          SetReference,
         ),
       ),
     ),
