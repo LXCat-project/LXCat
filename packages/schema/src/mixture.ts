@@ -16,7 +16,9 @@ const MixtureBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    Process(z.string(), ProcessInfo(z.string()).merge(SetReference)),
+    // TODO: An intersection type usually does not generate the best JSON schemas. See if there is a
+    //       better way to model process data with set references.
+    Process(z.string(), ProcessInfo(z.string()).and(SetReference)),
   ),
 });
 

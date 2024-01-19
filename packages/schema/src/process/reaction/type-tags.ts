@@ -12,5 +12,9 @@ export const ReactionTypeTag = z.enum([
   "Rotational",
   "Attachment",
   "Ionization",
+  "Recombination",
+  "Radiative",
+  "Quenching",
+  "Chemistry",
 ]);
 export type ReactionTypeTag = z.output<typeof ReactionTypeTag>;
