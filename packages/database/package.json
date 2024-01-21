@@ -71,7 +71,7 @@
     "@testcontainers/arangodb": "^10.5.0",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^20.11.5",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@vitest/coverage-v8": "^1.2.1",
     "dprint": "^0.45.0",
     "eslint": "8.56.0",
