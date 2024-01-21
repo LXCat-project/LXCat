@@ -246,8 +246,8 @@ importers:
         specifier: ^15.1.0
         version: 15.1.0
       oidc-provider:
-        specifier: ^8.4.4
-        version: 8.4.4
+        specifier: ^8.4.5
+        version: 8.4.5
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.40.0)
@@ -9724,8 +9724,8 @@ packages:
       es-abstract: 1.22.2
     dev: true
 
-  /oidc-provider@8.4.4:
-    resolution: {integrity: sha512-SLstVFmGKAgOnQ5KvbawlTCZb4jQmU2N8WZYahVcYoc/y0JIQCsdNW5T0tCYLcuCESazuAfvcxF4qY2KkIN6eQ==}
+  /oidc-provider@8.4.5:
+    resolution: {integrity: sha512-2NsPrvIAX1W4ZR41cGbz2Lt2Ci8iXvECh+x+LcKcM115s/h8iB1pwnNlCdIrvAA2iBGM4/TkO75Xg7xb2FCzWA==}
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
