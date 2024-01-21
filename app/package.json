@@ -88,7 +88,7 @@
     "@types/node": "20.11.5",
     "@types/oidc-provider": "^8.4.3",
     "@types/plotly.js-basic-dist": "^1.54.4",
-    "@types/react": "18.2.47",
+    "@types/react": "18.2.48",
     "@types/react-plotly.js": "^2.6.3",
     "@types/unist": "^3.0.2",
     "@vitest/coverage-v8": "^1.2.1",
