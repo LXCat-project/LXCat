@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: LXCat team
 //
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
 import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
