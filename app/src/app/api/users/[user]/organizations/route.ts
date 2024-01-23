@@ -4,7 +4,6 @@
 
 import { db } from "@lxcat/database";
 import {
-  badRequestResponse,
   createdResponse,
   noContentResponse,
 } from "../../../../../shared/api-responses";
@@ -19,15 +18,9 @@ const router = RouteBuilder
   .use(hasAdminRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
-    if (ctx.parsedParams.body.length > 0) {
-      const { user: userKey } = ctx.parsedParams.path;
-      await db().setAffiliations(userKey, ctx.parsedParams.body);
-      return createdResponse();
-    } else {
-      return badRequestResponse({
-        body: "Request missing body with organization keys",
-      });
-    }
+    const { user: userKey } = ctx.parsedParams.path;
+    await db().setAffiliations(userKey, ctx.parsedParams.body);
+    return createdResponse();
   })
   .delete(async (_, ctx) => {
     const { user: userKey } = ctx.parsedParams.path;
