@@ -39,6 +39,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to visit t
 You can start editing the page by modifying `src/pages/index.tsx`. The page auto-updates as you edit the file.
 
 The `src/pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+However, this app uses the [app router](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) instead of the pages router to implement API routes, so the files can be found at `/app/api/**/route.ts`.
 
 ## Learn More
 
@@ -260,3 +261,19 @@ ANALYZE=true pnpm build
 ```
 
 The result is written to `.next/analyze/client.html`.
+
+## API Development
+
+All API routes are built with zod schemas that can be used to verify query, path or body parameters
+by using the `zodMiddleware` function in your `RouteBuilder` chain.
+Each endpoint also has a corresponding `openapi.ts` file which is used to generate an OpenAPI endpoint 
+description.
+
+When the `/api/doc` endpoint is first queried, all `register` methods in every `openapi.ts` file under 
+`src/app/api/` will get called. This function should use the global OpenAPI `registry()` to register 
+the defined behaviour of the endpoint using the `zod-to-openapi` function `registerPath()`.
+
+When using existing schemas in input or output schemas, add the schema to the `register()` function 
+in `app/api/schemas.openapi.ts`, manually adding the required openapi metadata like shown in the already 
+existing entries. Doing this will prevent the schema from being duplicated in the OpenAPI spec when 
+used more than once, as it will be placed under the `components/` path and referenced where used.

@@ -23,6 +23,9 @@ permissions:
   packages: read
   pull-requests: write
 
+env:
+  NEXT_PUBLIC_URL: http://localhost:3000
+
 jobs:
   build:
     runs-on: ubuntu-20.04

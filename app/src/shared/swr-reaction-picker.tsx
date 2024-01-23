@@ -24,7 +24,7 @@ const fetchTypeTags = async (
 ): Promise<Array<ReactionTypeTag>> =>
   (
     await fetch(
-      `/api/reactions/type_tags?${new URLSearchParams({
+      `/api/reactions/type-tags?${new URLSearchParams({
         consumes: JSON.stringify(consumes),
         produces: JSON.stringify(produces),
         reversible,

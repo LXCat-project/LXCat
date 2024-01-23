@@ -48,14 +48,14 @@ test.describe("given 2 dummy sets", () => {
   test.describe("cross section set list api route", () => {
     test("given no search params, should list 2 sets", async ({ request }) => {
       const res = await request.get("/api/scat-css");
-      const { items } = await res.json();
+      const items = await res.json();
       expect(items).toHaveLength(2);
     });
     test("given filter on a org, should list 1 sets", async ({ request }) => {
       const res = await request.get(
         "/api/scat-css?contributor=Some+organization",
       );
-      const { items } = await res.json();
+      const items = await res.json();
       expect(items).toHaveLength(1);
     });
   });
@@ -66,8 +66,8 @@ test.describe("given 2 dummy sets", () => {
       const res = await request.get(
         "/api/scat-css?contributor=Some+organization",
       );
-      const body: { items: CrossSectionSetHeading[] } = await res.json();
-      setId = body.items[0].id;
+      const body: CrossSectionSetHeading[] = await res.json();
+      setId = body[0].id;
     });
 
     test.describe("/api/scat-css/[id]", () => {
@@ -109,7 +109,9 @@ test.describe("given 2 dummy sets", () => {
       test("should return text in bolsig+ format", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}/legacy`);
 
-        expect(res.headers()["content-type"]).toEqual("text/plain");
+        expect(res.headers()["content-type"]).toEqual(
+          "text/plain;charset=UTF-8, text/plain",
+        );
         const body = await res.text();
         expect(body).toBeTruthy();
       });

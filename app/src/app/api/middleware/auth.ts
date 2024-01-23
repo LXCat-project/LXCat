@@ -2,10 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {
+  forbiddenResponse,
+  unauthorizedResponse,
+} from "@/shared/api-responses";
 import { Role } from "@lxcat/database/auth";
 import { getServerSession } from "next-auth";
 import { decode } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { err, ok } from "true-myth/result";
 import { options } from "../../../auth/options";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
@@ -77,11 +81,69 @@ export const hasSessionOrAPIToken =
     }
 
     return err(
-      new NextResponse("Unauthorized", {
-        status: 401,
-        headers: [["WWW-Authenticate", "Bearer, OAuth"]],
-      }),
+      unauthorizedResponse(),
     );
+  };
+
+export const hasSession =
+  <Context>(): Middleware<Context, Context & { user: JwtPayload }> =>
+  async (_: NextRequest, ctx: Context, headers: Headers) => {
+    const session = await getServerSession(options);
+    if (session?.user) {
+      return ok([
+        {
+          ...ctx,
+          user: {
+            email: session.user.email,
+            roles: session.user.roles,
+          },
+        },
+        headers,
+      ]);
+    }
+    return err(
+      unauthorizedResponse(),
+    );
+  };
+
+/**
+ * API Middleware to check if user has admin role.
+ * Returns 403 when user does not have admin role.
+ */
+export const hasAdminRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.admin))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(forbiddenResponse());
+    }
+  };
+
+/**
+ * API Middleware to check if user has developer role.
+ * Returns 403 when user does not have developer role.
+ */
+export const hasDeveloperRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.developer))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(forbiddenResponse());
+    }
   };
 
 /**
@@ -101,6 +163,46 @@ export const hasDeveloperOrDownloadRole =
     ) {
       return ok([ctx, headers]);
     } else {
-      return err(new NextResponse("Forbidden", { status: 403 }));
+      return err(forbiddenResponse());
+    }
+  };
+
+/**
+ * API Middleware to check if user has author role.
+ * Returns 403 when user does not have author role.
+ */
+export const hasAuthorRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.author))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(forbiddenResponse());
+    }
+  };
+
+/**
+ * API Middleware to check if user has publisher role.
+ * Returns 403 when user does not have publisher role.
+ */
+export const hasPublisherRole =
+  <Context extends { user: JwtPayload }>(): Middleware<Context, Context> =>
+  (
+    _: NextRequest,
+    ctx: Context,
+    headers: Headers,
+  ) => {
+    if (
+      (ctx.user.roles.includes(Role.enum.publisher))
+    ) {
+      return ok([ctx, headers]);
+    } else {
+      return err(forbiddenResponse());
     }
   };

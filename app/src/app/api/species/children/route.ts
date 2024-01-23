@@ -4,17 +4,15 @@
 
 import { db } from "@lxcat/database";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
 
-const ContextSchema = z.object({ searchParams: z.object({ id: z.string() }) });
-
+import { querySchema } from "./schemas";
 const router = RouteBuilder
   .init()
-  .use(zodMiddleware(ContextSchema))
+  .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    const children = await db().getSpeciesChildren(ctx.searchParams.id);
+    const children = await db().getSpeciesChildren(ctx.parsedParams.query.id);
     return NextResponse.json(children);
   })
   .compile();

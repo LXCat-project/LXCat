@@ -2,13 +2,26 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { badRequestResponse } from "@/shared/api-responses";
 import { NextRequest, NextResponse } from "next/server";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import { MaybePromise } from "./util";
 
-type BaseContext = {
-  params?: Record<string, unknown>;
+export type RequestBody = string | object;
+
+type Params = {
+  path?: Record<string, string>;
+  query?: Record<string, string>;
+  body?: RequestBody;
+};
+
+export type NextContext = {
+  params?: Record<string, string>;
+};
+
+export type BaseContext = {
+  params: Params;
 };
 
 type HttpMethods =
@@ -33,14 +46,14 @@ export type Middleware<InContext, OutContext> = (
 export class RouteBuilder<Context> {
   private callchain: (
     req: NextRequest,
-    ctx: BaseContext,
+    ctx: NextContext,
     headers: Headers,
   ) => MaybePromise<Result<[Context, Headers], NextResponse>>;
 
   private constructor(
     callback: (
       req: NextRequest,
-      ctx: BaseContext,
+      ctx: NextContext,
       headers: Headers,
     ) => MaybePromise<Result<[Context, Headers], NextResponse>>,
   ) {
@@ -49,18 +62,38 @@ export class RouteBuilder<Context> {
 
   static init() {
     return new RouteBuilder(
-      (req: NextRequest, ctx: BaseContext, headers: Headers) => {
-        return ok(
-          [
-            {
-              ...ctx,
-              searchParams: Object.fromEntries(
-                req.nextUrl.searchParams.entries(),
-              ),
-            },
-            headers,
-          ],
-        );
+      async (
+        req: NextRequest,
+        ctx: NextContext,
+        headers: Headers,
+      ): Promise<Result<[BaseContext, Headers], NextResponse>> => {
+        let body: undefined | RequestBody = undefined;
+        if (req.body) {
+          const text = await req.text();
+          if (text) {
+            if (
+              req.headers.has("Content-Type") && /^application\/json.*/.test(
+                req.headers.get("Content-Type")!,
+              )
+            ) {
+              try {
+                body = JSON.parse(text);
+              } catch {
+                return err(badRequestResponse());
+              }
+            } else {
+              body = text;
+            }
+          }
+        }
+
+        return ok([{
+          params: {
+            path: ctx.params,
+            query: Object.fromEntries(req.nextUrl.searchParams.entries()),
+            body: body,
+          },
+        }, headers]);
       },
     );
   }
@@ -68,7 +101,7 @@ export class RouteBuilder<Context> {
   compile() {
     return async (
       req: NextRequest,
-      ctx: BaseContext,
+      ctx: NextContext,
     ): Promise<NextResponse> => {
       const result = await this.callchain(req, ctx, {});
 
@@ -85,10 +118,15 @@ export class RouteBuilder<Context> {
     callback: Middleware<Context, NewContext>,
   ): RouteBuilder<NewContext> {
     return new RouteBuilder(
-      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (req: NextRequest, ctx: NextContext, headers: Headers) => {
         const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
+          for (const key in headers) {
+            if (result.error.headers.get(key) === null) {
+              result.error.headers.append(key, headers[key]);
+            }
+          }
           return err(result.error);
         }
 
@@ -106,7 +144,7 @@ export class RouteBuilder<Context> {
     ) => MaybePromise<NextResponse>,
   ): RouteBuilder<Context> {
     return new RouteBuilder(
-      async (req: NextRequest, ctx: BaseContext, headers: Headers) => {
+      async (req: NextRequest, ctx: NextContext, headers: Headers) => {
         const result = await this.callchain(req, ctx, headers);
 
         if (result.isErr) {
@@ -114,7 +152,13 @@ export class RouteBuilder<Context> {
         }
 
         if (req.method === method) {
-          return err(await callback(req, result.value[0], result.value[1]));
+          let resp = await callback(req, result.value[0], result.value[1]);
+          for (const key in result.value[1]) {
+            if (resp.headers.get(key) === null) {
+              resp.headers.append(key, result.value[1][key]);
+            }
+          }
+          return err(resp);
         }
 
         return ok(result.value);
