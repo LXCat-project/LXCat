@@ -106,7 +106,7 @@ export const searchOptionsSchema = z.array(reactionOptionsSchema);
 export const crossSectionSetReferenceSchema = z.object({
   id: z.string(),
   name: z.string(),
-}).openapi("CrossSectionSetHeading");
+}).openapi("CrossSectionSetReference");
 
 export const stateLeafSchema = z.object({
   id: z.string(),

@@ -2,10 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { registry } from "@/docs/openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-
-import { registry } from "../../../../docs/openapi";
 
 export async function register() {
   extendZodWithOpenApi(z);
