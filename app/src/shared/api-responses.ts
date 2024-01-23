@@ -10,7 +10,7 @@ const response = (
   defaultBody: string,
 ) => {
   if (json) return NextResponse.json(json, respInit);
-  const respBody = body ? body : defaultBody;
+  const respBody = body ?? defaultBody;
   return new NextResponse(respBody, respInit);
 };
 

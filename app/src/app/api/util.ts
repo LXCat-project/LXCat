@@ -11,11 +11,8 @@ export const queryArraySchema = <
 >(
   schema: Schema,
 ) =>
-  z.preprocess((a) => {
-    if (typeof a === "string") {
-      return a.split(",");
-    } else return undefined;
-  }, schema).describe("Comma separated string array.");
+  z.preprocess((a) => typeof a === "string" ? a.split(",") : undefined, schema)
+    .describe("Comma separated string array.");
 
 export const queryJSONSchema = <Schema extends z.ZodTypeAny>(
   schema: Schema,
