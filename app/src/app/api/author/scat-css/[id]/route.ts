@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { LXCatID } from "@/shared/lxcatid";
 import { db } from "@lxcat/database";
 import { KeyedDocument } from "@lxcat/database/schema";
 import { z } from "zod";
@@ -17,13 +18,12 @@ import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
 
 export const postSchema = z.object({
-  path: z.object({ id: z.string() }),
+  path: z.object({ id: LXCatID }),
   body: z.object({ doc: KeyedDocument, message: z.string() }),
 });
 
-// TODO: Define max length for `id` and `message`.
 export const deleteSchema = z.object({
-  path: z.object({ id: z.string().min(1) }),
+  path: z.object({ id: LXCatID }),
   body: z.object({ message: z.optional(z.string().min(1)) }),
 });
 
