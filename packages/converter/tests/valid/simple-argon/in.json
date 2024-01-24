@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost",
-  "termsOfUse": "http://localhost",
+  "url": "https://ng.lxcat.net/scat-css/test-id",
+  "termsOfUse": "https://ng.lxcat.net/scat-css/test-id#terms_of_use",
   "contributor": "test",
   "name": "simple-argon",
   "id": "test-id",
@@ -138,7 +138,5 @@
         }
       ]
     }
-  ],
-  "url": "https://ng.lxcat.net/scat-css/test-id",
-  "terms_of_use": "https://ng.lxcat.net/scat-css/test-id#terms_of_use"
+  ]
 }
