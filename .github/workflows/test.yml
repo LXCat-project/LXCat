@@ -177,7 +177,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/cache/restore@v3
+    - uses: actions/cache/restore@v4
       with:
         path: |
           ${{ github.workspace }}/packages/schema/dist
