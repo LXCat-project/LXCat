@@ -8,11 +8,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ATTACHMENT
-CO2(X^{1}\Sigma_{g}^+(v=0,0,0)) -> CO(X^{1}\Sigma^+) + O^-(^{2}P^o_{3/2})
- 4.000000e0
+CO2{X^1S_g^+{0,0,0}} -> CO{X^1S^+} + O^-{^2P^o_3/2}
+ 3.900000e0
 SPECIES: e / CO2 / CO / O
-PROCESS: e + CO2(X^{1}\Sigma_{g}^+(v=0,0,0)) -> CO(X^{1}\Sigma^+) + O^-(^{2}P^o_{3/2}), Attachment
-PARAM.:  E = 4 eV
+PROCESS: e + CO2{X^1S_g^+{0,0,0}} -> CO{X^1S^+} + O^-{^2P^o_3/2}, Attachment
+PARAM.:  E = 3.9 eV
 COMMENT: Test reference
 COLUMNS: Energy (eV) | Cross section (m^2)
 -----------------------------
