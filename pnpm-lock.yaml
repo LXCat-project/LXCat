@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -326,8 +322,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.5.0
-        version: 10.5.0
+        specifier: ^10.6.0
+        version: 10.6.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -3310,8 +3306,8 @@ packages:
     resolution: {integrity: sha512-Q5G8Pj5IO+Uhc6pszpu5/hGYY018JwEzzvmuqr+gKJtfIvAHA3umpwUilMRLEy89p+WCP+YsDhicMhfBCCv1qA==}
     dev: false
 
-  /@testcontainers/arangodb@10.5.0:
-    resolution: {integrity: sha512-1OPplHWJ1tQzMsBWGqLvDor8XYbsoBTVWRL7RgYZO+g4Evth/lRgLx5xdbUI6/bNaVhGLEnSECoZx3qAA+6Dmw==}
+  /@testcontainers/arangodb@10.6.0:
+    resolution: {integrity: sha512-tiOuntrBNvc1p2+QApreVzqpjQeU6DByX4HH1uMP72czUxQr676/zmulcnF05aoQyiu8vSBHGmiVuh90//wxUw==}
     dependencies:
       testcontainers: 10.6.0
     transitivePeerDependencies:
@@ -5882,7 +5878,7 @@ packages:
     resolution: {integrity: sha512-2/WLvA7UZ6A2LDLQrYW0idKipmNBWhtfvrn2yzjC5PnHDzuFVj1zAZN6MJxVMKP0zZH8uzAK6OwVZYHGuyCmTw==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      yaml: 2.3.1
+      yaml: 2.3.4
     dev: true
 
   /docker-modem@3.0.8:
@@ -13742,11 +13738,11 @@ packages:
   /yaml@2.3.1:
     resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
     engines: {node: '>= 14'}
+    dev: false
 
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
-    dev: false
 
   /yargs-parser@18.1.3:
     resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}
@@ -13834,3 +13830,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
