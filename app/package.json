@@ -20,7 +20,7 @@
     "@asteasolutions/zod-to-openapi": "^6.3.0",
     "@citation-js/core": "^0.7.6",
     "@citation-js/plugin-bibtex": "^0.7.6",
-    "@citation-js/plugin-csl": "^0.7.2",
+    "@citation-js/plugin-csl": "^0.7.6",
     "@citation-js/plugin-doi": "^0.7.7",
     "@citation-js/plugin-ris": "^0.7.6",
     "@hookform/error-message": "^2.0.1",
