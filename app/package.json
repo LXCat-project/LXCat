@@ -94,7 +94,7 @@
     "@types/react": "18.2.48",
     "@types/react-plotly.js": "^2.6.3",
     "@types/unist": "^3.0.2",
-    "@vitest/coverage-v8": "^1.2.1",
+    "@vitest/coverage-v8": "^1.2.2",
     "dotenv": "^16.3.2",
     "dprint": "^0.45.0",
     "eslint": "^8.56.0",
