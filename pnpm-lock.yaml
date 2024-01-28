@@ -17,8 +17,8 @@ importers:
         specifier: ^0.7.6
         version: 0.7.6
       '@citation-js/plugin-bibtex':
-        specifier: ^0.7.6
-        version: 0.7.6(@citation-js/core@0.7.6)
+        specifier: ^0.7.8
+        version: 0.7.8(@citation-js/core@0.7.6)
       '@citation-js/plugin-csl':
         specifier: ^0.7.6
         version: 0.7.6(@citation-js/core@0.7.6)
@@ -1643,8 +1643,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /@citation-js/plugin-bibtex@0.7.6(@citation-js/core@0.7.6):
-    resolution: {integrity: sha512-UpkeFYroj0qnBK4j0/+hskaQyZbVzR2DIixbQCW2fCjg3qPz0rncJwIpIAF1F91nZHmrSELaqtTY3dYL3k+AFg==}
+  /@citation-js/plugin-bibtex@0.7.8(@citation-js/core@0.7.6):
+    resolution: {integrity: sha512-20fUXe1zm1oCONFflGj3mgIk6DHspPjWrBirGfsyHmVSR/4xqnSbrqtztLiV15zt3tbKLepTaHm3ZTrcLOK0MA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
