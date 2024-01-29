@@ -54,12 +54,18 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
+        components: llvm-tools-preview
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - name: Setup environment for coverage collection in `@lxcat/converter`
+      run: |
+        cd packages/converter
+        cargo llvm-cov show-env --export-prefix >> $GITHUB_ENV
+        cd -
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Build packages
       run: pnpm build
-      env:
-        RUSTFLAGS: '-C instrument-coverage'
     - name: Lint
       run: pnpm lint
 
@@ -194,18 +200,35 @@ jobs:
       with:
         node-version: 18
         cache: 'pnpm'
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: llvm-tools-preview
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - name: Setup environment for coverage collection
+      run: |
+        cd packages/converter
+        cargo llvm-cov show-env --export-prefix >> $GITHUB_ENV
+        cd -
     - name: Test @lxcat/converter
       run: pnpm -C packages/converter test
-    - name: Generate lcov report
-      id: grcov
-      uses: actions-rs/grcov@v0.1.5
+    - name: Generate code coverage report
+      run: |
+        cd packages/converter
+        cargo llvm-cov report -r --codecov --output-path codecov.json
+        cd -
+    # - name: Generate lcov report
+    #   id: grcov
+    #   uses: actions-rs/grcov@v0.1.5
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ${{ steps.grcov.outputs.report }}
+        files: packages/converter/codecov.json
         flags: converter
 
   reuse:
