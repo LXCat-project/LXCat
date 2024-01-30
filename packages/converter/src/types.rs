@@ -35,12 +35,26 @@ pub struct LUT {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct ReferenceWithComments {
+    pub id: String,
+    pub comments: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum ReferenceRef {
+    Id(String),
+    WithComment(ReferenceWithComments),
+}
+
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProcessInfo {
     #[serde(rename = "_key")]
     pub id: String,
     pub parameters: Option<Parameters>,
-    pub references: Vec<String>,
+    pub comments: Option<Vec<String>>,
+    pub references: Vec<ReferenceRef>,
     pub threshold: f64,
     #[serde(default)]
     pub is_part_of: Option<Vec<String>>,

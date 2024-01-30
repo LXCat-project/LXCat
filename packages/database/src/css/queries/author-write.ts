@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { type AnyProcess } from "@lxcat/schema/process";
+import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import deepEqual from "deep-equal";
@@ -58,7 +59,7 @@ export async function createSet(
         cs.info[0]._key,
       );
       if (prevCs !== undefined) {
-        if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
+        if (isEqualProcess(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await this.insertEdge(
@@ -252,7 +253,7 @@ export async function updateDraftSet(
       delete cs.info[0]._key;
 
       if (prevCs !== undefined) {
-        if (isEqualSection(cs, prevCs, state_ids, reference_ids)) {
+        if (isEqualProcess(cs, prevCs, state_ids, reference_ids)) {
           // the cross section in db with id cs.id has same content as given cs
           // Make cross sections part of set by adding to IsPartOf collection
           await this.insertEdge(
@@ -398,9 +399,9 @@ export async function deleteSet(
   }
 }
 
-function isEqualSection(
-  newCS: AnyProcess<string, string>,
-  prevCS: KeyedProcess<string, string>,
+function isEqualProcess(
+  newCS: AnyProcess<string, ReferenceRef<string>>,
+  prevCS: KeyedProcess<string, ReferenceRef<string>>,
   stateLookup: Record<string, string>,
   referenceLookup: Record<string, string>,
 ) {
@@ -431,15 +432,15 @@ function isEqualSection(
   return deepEqual(newMappedCS, prevMappedCS);
 }
 
-function mapReferences(
+const mapReferences = (
   referenceLookup: Record<string, string>,
-  reference: string[] | undefined,
-) {
-  if (reference === undefined) {
-    return undefined;
-  }
-  return reference.map((r) => referenceLookup[r]);
-}
+  references: Array<ReferenceRef<string>>,
+) =>
+  references.map((ref) =>
+    typeof ref === "string"
+      ? referenceLookup[ref]
+      : { ...ref, id: referenceLookup[ref.id] }
+  );
 
 export async function doesPublishingEffectOtherSets(
   this: LXCatDatabase,

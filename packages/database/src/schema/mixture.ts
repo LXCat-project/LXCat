@@ -6,6 +6,7 @@ import { Reference, SelfReference, SetHeader } from "@lxcat/schema";
 import { array, object, output, record, string } from "zod";
 
 import { Process, ProcessInfo, SetReference } from "@lxcat/schema/process";
+import { ReferenceRef } from "@lxcat/schema/reference";
 import { Keyed } from "./key.js";
 import { SerializedSpecies } from "./species.js";
 
@@ -14,7 +15,10 @@ const KeyedMixtureBody = object({
   references: record(Reference),
   states: record(SerializedSpecies),
   processes: array(
-    Process(string(), Keyed(ProcessInfo(string()).merge(SetReference))),
+    Process(
+      string(),
+      Keyed(ProcessInfo(ReferenceRef(string().min(1))).merge(SetReference)),
+    ),
   ),
 });
 

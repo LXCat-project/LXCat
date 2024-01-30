@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { type AnyProcess } from "@lxcat/schema/process";
+import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { now } from "../../date.js";
@@ -11,7 +12,7 @@ import { Status, VersionInfo } from "../../shared/types/version-info.js";
 
 export async function createCS(
   this: LXCatDatabase,
-  cs: AnyProcess<string, string>,
+  cs: AnyProcess<string, ReferenceRef<string>>,
   stateDict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
   refDict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
   organizationId: string,
@@ -32,7 +33,9 @@ export async function createCS(
 
   const { references, ...infoBody } = info[0];
 
-  const refIds = references.map((value: string) => refDict[value]);
+  const refIds = references.map((ref) =>
+    typeof ref === "string" ? refDict[ref] : refDict[ref.id]
+  );
 
   const versionInfo: VersionInfo = {
     status,
@@ -94,7 +97,7 @@ export async function updateCS(
    * Key of the cross section item that serves as the base for the draft.
    */
   key: string,
-  cs: AnyProcess<string, string>,
+  cs: AnyProcess<string, ReferenceRef<string>>,
   message: string,
   stateDict: Record<string, string>,
   refDict: Record<string, string>,
@@ -149,7 +152,7 @@ export async function isDraftless(this: LXCatDatabase, key: string) {
 export async function createDraftCS(
   this: LXCatDatabase,
   version: string,
-  process: AnyProcess<string, string>,
+  process: AnyProcess<string, ReferenceRef<string>>,
   message: string,
   key: string,
   stateDict: Record<string, string>,
@@ -184,7 +187,7 @@ export async function createDraftCS(
 export async function updateDraftCS(
   this: LXCatDatabase,
   version: string,
-  processItem: AnyProcess<string, string>,
+  processItem: AnyProcess<string, ReferenceRef<string>>,
   commitMessage: string,
   key: string,
   stateDict: Record<string, string>,
@@ -219,12 +222,15 @@ export async function updateDraftCS(
   await this.db.collection("CrossSection").replace({ _key: key }, doc);
 
   // handle updated refs
-  const ref_ids = references.map((value: string) => refDict[value]);
-  if (ref_ids) {
-    for (const id of ref_ids) {
+  const refIds = references.map((ref) =>
+    typeof ref === "string" ? refDict[ref] : refDict[ref.id]
+  );
+
+  if (refIds) {
+    for (const id of refIds) {
       await this.insertEdge("References", `CrossSection/${key}`, id);
     }
-    await this.dropReferencesFromExcluding(`CrossSection/${key}`, ref_ids);
+    await this.dropReferencesFromExcluding(`CrossSection/${key}`, refIds);
     // TODO remove orphaned references?
   }
 }

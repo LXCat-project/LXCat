@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "json:doc": "tsx src/cli/document-schema.ts",
-    "json:set": "tsx src/cli/mixture-schema.ts",
+    "json:mix": "tsx src/cli/mixture-schema.ts",
     "build": "tsc",
     "lint": "eslint src/ --ext .ts",
     "format": "dprint fmt",
@@ -54,8 +54,12 @@
       "default": "./dist/process/index.js"
     },
     "./data-types": {
-      "types": "./dist/commons/data-types.d.ts",
-      "default": "./dist/commons/data-types.js"
+      "types": "./dist/common/data-types.d.ts",
+      "default": "./dist/common/data-types.js"
+    },
+    "./reference": {
+      "types": "./dist/common/reference.d.ts",
+      "default": "./dist/common/reference.js"
     },
     "./json-schema": {
       "types": "./dist/json-schema/index.js",

@@ -83,7 +83,11 @@ export const ProcessTable = (
         title: "Source",
         render: ({ info: { references } }) =>
           `[${
-            references.map((rid) => referenceMarkers.get(rid)!).sort().join(
+            references.map((ref) =>
+              typeof ref === "string"
+                ? referenceMarkers.get(ref)!
+                : referenceMarkers.get(ref.id)!
+            ).sort().join(
               ", ",
             )
           }]`,

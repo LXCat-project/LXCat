@@ -15,6 +15,7 @@ export const ProcessInfoBase = <
 ) =>
   z.object({
     type: z.literal(type),
+    comments: z.array(z.string().min(1)).optional(),
     references: z.array(referenceType),
     data: dataType,
   });
