@@ -54,8 +54,8 @@
       "default": "./dist/process/index.js"
     },
     "./data-types": {
-      "types": "./dist/commons/data-types.d.ts",
-      "default": "./dist/commons/data-types.js"
+      "types": "./dist/common/data-types.d.ts",
+      "default": "./dist/common/data-types.js"
     },
     "./json-schema": {
       "types": "./dist/json-schema/index.js",
