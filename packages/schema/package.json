@@ -57,6 +57,10 @@
       "types": "./dist/common/data-types.d.ts",
       "default": "./dist/common/data-types.js"
     },
+    "./reference": {
+      "types": "./dist/common/reference.d.ts",
+      "default": "./dist/common/reference.js"
+    },
     "./json-schema": {
       "types": "./dist/json-schema/index.js",
       "default": "./dist/json-schema/index.js"
