@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { output, z } from "zod";
-import { Reference } from "./common/reference.js";
+import { Reference, ReferenceRef } from "./common/reference.js";
 import { ProcessInfo } from "./process/process-info.js";
 import { Process } from "./process/process.js";
 import { SetReference } from "./process/set-reference.js";
@@ -16,7 +16,10 @@ const MixtureBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    Process(z.string(), ProcessInfo(z.string()).merge(SetReference)),
+    Process(
+      z.string(),
+      ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
+    ),
   ),
 });
 
@@ -36,7 +39,11 @@ export const LTPMixture = MixtureBody
       doc.processes
         .flatMap(({ info }) => info)
         .flatMap(({ references }) => references)
-        .every((reference) => reference in doc.references),
+        .every((reference) =>
+          typeof reference === "string"
+            ? reference in doc.references
+            : reference.id in doc.references
+        ),
     "Referenced reference key is missing in references record.",
   );
 export type LTPMixture = output<typeof LTPMixture>;

@@ -7,3 +7,6 @@ import { CSLData } from "./csl/data.js";
 
 export const Reference = CSLData;
 export type Reference = z.infer<typeof Reference>;
+
+export const ReferenceRef = <IDType extends z.ZodTypeAny>(idType: IDType) =>
+  idType.or(z.object({ id: idType, comment: z.string() }));
