@@ -131,10 +131,42 @@
                   "type": "string",
                   "const": "CrossSection"
                 },
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
                 "references": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "$ref": "#/properties/processes/items/properties/info/items/properties/references/items/anyOf/0"
+                          },
+                          "comments": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/properties/processes/items/properties/info/items/properties/references/items/anyOf/0"
+                            },
+                            "minItems": 1
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "comments"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
                   }
                 },
                 "data": {
