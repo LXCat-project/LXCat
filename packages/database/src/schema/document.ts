@@ -7,13 +7,14 @@ import { AnySpecies } from "@lxcat/schema/species";
 import { array, object, output, record, string } from "zod";
 
 import { Process, ProcessInfo } from "@lxcat/schema/process";
+import { ReferenceRef } from "@lxcat/schema/reference";
 import { Keyed, PartialKeyed } from "./key.js";
 import { KeyedProcess } from "./process.js";
 
 const KeyedDocumentBody = object({
   references: record(Reference),
   states: record(AnySpecies),
-  processes: array(KeyedProcess(string(), string())),
+  processes: array(KeyedProcess(string(), ReferenceRef(string().min(1)))),
 });
 
 export const KeyedDocument = Keyed(SetHeader.merge(KeyedDocumentBody));
@@ -27,7 +28,9 @@ export type KeyedDocumentReferenceable = output<
 const PartialKeyedDocumentBody = object({
   references: record(Reference),
   states: record(AnySpecies),
-  processes: array(Process(string(), PartialKeyed(ProcessInfo(string())))),
+  processes: array(
+    Process(string(), PartialKeyed(ProcessInfo(ReferenceRef(string().min(1))))),
+  ),
 });
 
 export const PartialKeyedDocument = PartialKeyed(
