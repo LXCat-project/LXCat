@@ -10,3 +10,11 @@ export type Reference = z.infer<typeof Reference>;
 
 export const ReferenceRef = <IDType extends z.ZodTypeAny>(idType: IDType) =>
   idType.or(z.object({ id: idType, comment: z.string() }));
+
+type ReferenceRefType<IDType extends z.ZodTypeAny> = ReturnType<
+  typeof ReferenceRef<IDType>
+>;
+
+export type ReferenceRef<IDType> = z.output<
+  ReferenceRefType<z.ZodType<IDType>>
+>;
