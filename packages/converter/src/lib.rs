@@ -10,7 +10,7 @@ use std::{collections::HashMap, error::Error};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
-use types::{Document, Mixture, Parameters, Process, Reaction, State, StateEntry};
+use types::{Document, Mixture, Parameters, Process, Reaction, ReferenceRef, State, StateEntry};
 
 fn get_particles<'a>(
     reaction: &Reaction<String>,
@@ -217,8 +217,21 @@ fn parse_process(
         if complete {
             write!(buffer, ", complete set")?;
         }
+        if let Some(comments) = &info.comments {
+            for comment in comments {
+                write!(buffer, "\nCOMMENT: {}", comment.trim())?;
+            }
+        }
         for reference in &info.references {
-            write!(buffer, "\nCOMMENT: {}", references[reference].trim())?;
+            match reference {
+                ReferenceRef::Id(id) => write!(buffer, "\nCOMMENT: {}", references[id].trim())?,
+                ReferenceRef::WithComment(reference) => {
+                    write!(buffer, "\nCOMMENT: {}", references[&reference.id].trim())?;
+                    for comment in &reference.comments {
+                        write!(buffer, "\nCOMMENT: {}", comment.trim())?;
+                    }
+                }
+            }
         }
         write!(
             buffer,
