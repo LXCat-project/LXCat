@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "json:doc": "tsx src/cli/document-schema.ts",
-    "json:set": "tsx src/cli/mixture-schema.ts",
+    "json:mix": "tsx src/cli/mixture-schema.ts",
     "build": "tsc",
     "lint": "eslint src/ --ext .ts",
     "format": "dprint fmt",
