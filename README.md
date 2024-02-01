@@ -13,8 +13,7 @@ temperature plasmas.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8095107.svg)](https://doi.org/10.5281/zenodo.8095107)
 [![Test Pipeline Status](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/LXCat-project/LXCat/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg?flag=schema)](https://codecov.io/gh/LXCat-project/LXCat?flags[0]=schema)
-[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg?flag=database)](https://codecov.io/gh/LXCat-project/LXCat?flags[0]=database)
+[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg)](https://codecov.io/gh/LXCat-project/LXCat)
 
 ## Installation
 
@@ -35,7 +34,8 @@ Documentation for different users can be found at [docs/](docs/).
 
 ## Production deployment
 
-Create a `.env.production` file. The contents presented in [app/README.md](app/README.md) can be used as a guideline.
+Create a `.env.production` file. The contents presented in
+[app/README.md](app/README.md) can be used as a guideline.
 
 The production containers can be built and started by running
 
@@ -55,8 +55,8 @@ docker compose -v <production data path>:/data:ro setup load-css /data
 docker-compose run setup make-admin <email of user>
 ```
 
-The web application will run at `http://localhost:3000`. The app should be reversed
-proxied by a web server to provide https.
+The web application will run at `http://localhost:3000`. The app should be
+reversed proxied by a web server to provide https.
 
 ## How to cite
 
