@@ -60,7 +60,7 @@ jobs:
     - name: Setup environment for coverage collection in `@lxcat/converter`
       run: |
         cd packages/converter
-        cargo llvm-cov show-env --export-prefix >> $GITHUB_ENV
+        cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -212,7 +212,7 @@ jobs:
     - name: Setup environment for coverage collection
       run: |
         cd packages/converter
-        cargo llvm-cov show-env --export-prefix >> $GITHUB_ENV
+        cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Test @lxcat/converter
       run: pnpm -C packages/converter test
