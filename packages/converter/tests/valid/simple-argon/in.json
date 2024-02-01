@@ -64,7 +64,7 @@
           "threshold": 0,
           "references": ["main"],
           "data": {
-          "type": "LUT",
+            "type": "LUT",
             "labels": ["Energy", "Cross section"],
             "units": ["eV", "m^2"],
             "values": [
