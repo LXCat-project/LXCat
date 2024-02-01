@@ -103,7 +103,7 @@ jobs:
     - name: Build end-to-end coverage report
       run: pnpm -C app coverage:report
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         directory: ./app/coverage
@@ -137,7 +137,7 @@ jobs:
     - name: Test @lxcat/database
       run: pnpm -C packages/database test -- run --coverage --pool=forks
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/database/coverage/coverage-final.json
@@ -171,7 +171,7 @@ jobs:
     - name: Test @lxcat/schema
       run: pnpm -C packages/schema test -- run --coverage
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/schema/coverage/coverage-final.json
