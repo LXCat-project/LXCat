@@ -6,6 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # LXCat web application and web service
 
+[![codecov](https://codecov.io/gh/LXCat-project/LXCat/graph/badge.svg?flag=app)](https://codecov.io/gh/LXCat-project/LXCat?flags[0]=app)
+
 - [LXCat web application and web service](#lxcat-web-application-and-web-service)
   - [Getting Started](#getting-started)
   - [Learn More](#learn-more)
@@ -20,7 +22,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   - [Unit Tests](#unit-tests)
   - [Optimizations](#optimizations)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project bootstrapped with
+[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -32,27 +35,41 @@ pnpm install
 pnpm dev  # Starts app, database, schema workspaces in development mode
 ```
 
-The application uses the `@lxcat/database` package, which needs an ArangoDB database server, see its [README](../packages/database/README.md) for how to setup the database.
+The application uses the `@lxcat/database` package, which needs an ArangoDB
+database server, see its [README](../packages/database/README.md) for how to
+setup the database.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to visit the development environment.
+Open [http://localhost:3000](http://localhost:3000) with your browser to visit
+the development environment.
 
-You can start editing the page by modifying `src/pages/index.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/pages/index.tsx`. The page
+auto-updates as you edit the file.
 
-The `src/pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-However, this app uses the [app router](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) instead of the pages router to implement API routes, so the files can be found at `/app/api/**/route.ts`.
+The `src/pages/api` directory is mapped to `/api/*`. Files in this directory are
+treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead
+of React pages. However, this app uses the
+[app router](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
+instead of the pages router to implement API routes, so the files can be found
+at `/app/api/**/route.ts`.
 
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
+  features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can check out
+[the Next.js GitHub repository](https://github.com/vercel/next.js/) - your
+feedback and contributions are welcome!
 
 ## Setup auth
 
-The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keycloak](http://www.keycloak.org/) or [GitLab Appliction](https://gitlab.com/-/profile/applications) to perform authentication. User management is stored in the ArangoDB `users` collection.
+The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/),
+[Keycloak](http://www.keycloak.org/) or
+[GitLab Appliction](https://gitlab.com/-/profile/applications) to perform
+authentication. User management is stored in the ArangoDB `users` collection.
 
 ### In auth0 dashboard
 
@@ -63,14 +80,16 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
    - Allowed Logout URLs
      - For dev deployment set to `http://localhost:3000`
 
-2. Make sure `disable sign ups` is disabled in auth0 authentication database settings. So users can register themselves.
+2. Make sure `disable sign ups` is disabled in auth0 authentication database
+   settings. So users can register themselves.
 
 ### In GitLab application settings
 
 1. Create a [new application](https://gitlab.com/-/profile/applications)
 
    - Redirect URI
-     - For dev deployments set to `http://localhost:3000/api/auth/callback/gitlab`
+     - For dev deployments set to
+       `http://localhost:3000/api/auth/callback/gitlab`
    - Scopes
      - Select `read_user`, `openid`, `profile` and `email`
 
@@ -78,46 +97,60 @@ The app can use [Orcid](https://orcid.org), [Auth0](https://auth0.com/), [Keyclo
 
 1. Register on [https://sandbox.orcid.org/](https://sandbox.orcid.org/)
 
-   - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
-   - Use `<something>@mailinator.com` as email, because to register app you need a verified email and Orcid sandbox only sends mails to `mailinator.com`.
+   - Only one app can be registered per orcid account, so use alias when primary
+     account already has an registered app.
+   - Use `<something>@mailinator.com` as email, because to register app you need
+     a verified email and Orcid sandbox only sends mails to `mailinator.com`.
 
-2. Goto [https://www.mailinator.com/v4/public/inboxes.jsp](https://www.mailinator.com/v4/public/inboxes.jsp) and search for `<something>` and verify your email adress
-3. Goto [https://sandbox.orcid.org/account](https://sandbox.orcid.org/account), make email public for everyone
-4. Goto [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools) to register for public API.
+2. Goto
+   [https://www.mailinator.com/v4/public/inboxes.jsp](https://www.mailinator.com/v4/public/inboxes.jsp)
+   and search for `<something>` and verify your email adress
+3. Goto [https://sandbox.orcid.org/account](https://sandbox.orcid.org/account),
+   make email public for everyone
+4. Goto
+   [https://sandbox.orcid.org/developer-tools](https://sandbox.orcid.org/developer-tools)
+   to register for public API.
 
    - Your website URL
      - Does not allow localhost URL, so use `https://lxcat.net`
    - Redirect URI
-     - For dev deployments set to `http://localhost:3000/api/auth/callback/orcidsandbox`
+     - For dev deployments set to
+       `http://localhost:3000/api/auth/callback/orcidsandbox`
 
 ### For Orcid
 
 1. Register on [https://orcid.org/](https://orcid.org/)
 
-   - Only one app can be registered per orcid account, so use alias when primary account already has an registered app.
+   - Only one app can be registered per orcid account, so use alias when primary
+     account already has an registered app.
 
-2. Goto [https://orcid.org/developer-tools](https://orcid.org/developer-tools) to register for public API.
+2. Goto [https://orcid.org/developer-tools](https://orcid.org/developer-tools)
+   to register for public API.
 
    - Your website URL
      - Does not allow localhost URL, so use `https://lxcat.net`
    - Redirect URI, requires https
-     - For dev deployments the nextjs server on <http://localhost:3000> has to be reversed-proxied to https
-       This can be done with [caddyserver](https://caddyserver.com/)
+     - For dev deployments the nextjs server on <http://localhost:3000> has to
+       be reversed-proxied to https This can be done with
+       [caddyserver](https://caddyserver.com/)
 
        ```sh
        caddy run
        # This will ask for sudo login to install a CA certificate into local trust store so browser trusts the URL
        ```
 
-       This will make app available on [https://localhost:8443](https://localhost:8443).
-       In Orcid site set the redirect URL to `https://localhost:8443/api/auth/callback/orcid`.
-       Also set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
-     - For production deployments set to `https://< lxcat domain >/api/auth/callback/orcid`
-       Also set `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
+       This will make app available on
+       [https://localhost:8443](https://localhost:8443). In Orcid site set the
+       redirect URL to `https://localhost:8443/api/auth/callback/orcid`. Also
+       set `NEXT_PUBLIC_URL=https://localhost:8443` in `.env.local` file.
+     - For production deployments set to
+       `https://< lxcat domain >/api/auth/callback/orcid` Also set
+       `NEXT_PUBLIC_URL=https://< lxcat domain >` in `.env.local` file.
 
 ### For Keycloak
 
-[Keycloak](http://www.keycloak.org/) is an open source oauth provider which can be used for local accounts in production.
+[Keycloak](http://www.keycloak.org/) is an open source oauth provider which can
+be used for local accounts in production.
 
 <details>
 <summary>How to configure keycloak</summary>
@@ -130,14 +163,19 @@ docker run --rm  -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD
 
 Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
-1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm) called `lxcat-test-realm`
+1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm)
+   called `lxcat-test-realm`
 2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-real/users)
-   - The password must be set in Credentials tab, dont forget to turn off `temporary` field.
-   - Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and `/lxcat.png` respectively.
-3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real). This is the oauth provider the lxcat app will authenticate against.
+   - The password must be set in Credentials tab, dont forget to turn off
+     `temporary` field.
+   - Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and
+     `/lxcat.png` respectively.
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real).
+   This is the oauth provider the lxcat app will authenticate against.
    - Client ID: lxcat-test
    - Client protocol: openid-connect
-   - Root URL: http://localhost:3000 or whatever url the application is running on.
+   - Root URL: http://localhost:3000 or whatever url the application is running
+     on.
    - After creation edit client some more
    - Access type: confidential
    - To Valid Redirect URIs field add `https://localhost:3000/*`
@@ -156,13 +194,15 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
        - User attribute: picture
        - Token Claim Name: picture
        - Claim JSON Type: string
-   - On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in /app/e2e/.env.test file.
+   - On creditials tab copy Secret value to KEYCLOAK_CLIENT_SECRET in
+     /app/e2e/.env.test file.
 
 </details>
 
 ### In local directory
 
-In the root `.env.development` file (or `.env.production` depending on the desired environment) define the following key/value pairs
+In the root `.env.development` file (or `.env.production` depending on the
+desired environment) define the following key/value pairs
 
 ```env
 # Used as root url for absolute URLs.
@@ -209,7 +249,8 @@ At least one identity provider should be configured.
 
 ## End to end tests
 
-The end to end tests (`e2e/**.spec.ts`) are written and run using [playwright](https://playwright.dev/).
+The end to end tests (`e2e/**.spec.ts`) are written and run using
+[playwright](https://playwright.dev/).
 
 Before running test ensure playwright's chromium browser is installed with
 
@@ -229,7 +270,8 @@ To debug and record add `await page.pause()` and run tests with
 pnpm test:e2e -- --headed
 ```
 
-The test command spins up the app dev server, ArangoDB in a Docker container, a test OpenID connect server and then executes the tests in the `e2e/` directory.
+The test command spins up the app dev server, ArangoDB in a Docker container, a
+test OpenID connect server and then executes the tests in the `e2e/` directory.
 
 ```mermaid
 graph TD
@@ -240,13 +282,17 @@ graph TD
     playwright -->|execute| t[tests]
 ```
 
-The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the ArangoDB and test identity provider. It also
+The `e2e/global-setup.ts` file is used as playwrights global setup to spinup the
+ArangoDB and test identity provider. It also
 
-- signs up admin user, to become admin user in tests add `test.use({ storageState: "adminStorageState.json" });`,
+- signs up admin user, to become admin user in tests add
+  `test.use({ storageState: "adminStorageState.json" });`,
 - has utility functions to fill and truncate database collections.
 
-The `e2e/test-oidc-server.ts` file contains an OpenID connect server which accepts any email/password combination and returns
-a dummy profile with orcid and picture. The application configures its client by using the `TESTOIDC_CLIENT_*` env vars.
+The `e2e/test-oidc-server.ts` file contains an OpenID connect server which
+accepts any email/password combination and returns a dummy profile with orcid
+and picture. The application configures its client by using the
+`TESTOIDC_CLIENT_*` env vars.
 
 ## Unit Tests
 
@@ -264,16 +310,19 @@ The result is written to `.next/analyze/client.html`.
 
 ## API Development
 
-All API routes are built with zod schemas that can be used to verify query, path or body parameters
-by using the `zodMiddleware` function in your `RouteBuilder` chain.
-Each endpoint also has a corresponding `openapi.ts` file which is used to generate an OpenAPI endpoint 
-description.
+All API routes are built with zod schemas that can be used to verify query, path
+or body parameters by using the `zodMiddleware` function in your `RouteBuilder`
+chain. Each endpoint also has a corresponding `openapi.ts` file which is used to
+generate an OpenAPI endpoint description.
 
-When the `/api/doc` endpoint is first queried, all `register` methods in every `openapi.ts` file under 
-`src/app/api/` will get called. This function should use the global OpenAPI `registry()` to register 
-the defined behaviour of the endpoint using the `zod-to-openapi` function `registerPath()`.
+When the `/api/doc` endpoint is first queried, all `register` methods in every
+`openapi.ts` file under `src/app/api/` will get called. This function should use
+the global OpenAPI `registry()` to register the defined behaviour of the
+endpoint using the `zod-to-openapi` function `registerPath()`.
 
-When using existing schemas in input or output schemas, add the schema to the `register()` function 
-in `app/api/schemas.openapi.ts`, manually adding the required openapi metadata like shown in the already 
-existing entries. Doing this will prevent the schema from being duplicated in the OpenAPI spec when 
-used more than once, as it will be placed under the `components/` path and referenced where used.
+When using existing schemas in input or output schemas, add the schema to the
+`register()` function in `app/api/schemas.openapi.ts`, manually adding the
+required openapi metadata like shown in the already existing entries. Doing this
+will prevent the schema from being duplicated in the OpenAPI spec when used more
+than once, as it will be placed under the `components/` path and referenced
+where used.

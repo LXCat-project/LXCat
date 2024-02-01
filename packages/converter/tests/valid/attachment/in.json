@@ -1,51 +1,70 @@
 {
-  "complete": false,
-  "description": "CO2 attachment cross section test.",
+  "url": "https://ng.lxcat.net/scat-css/test-id",
+  "termsOfUse": "https://ng.lxcat.net/scat-css/test-id#terms_of_use",
+  "contributor": "IST-Lisbon",
   "name": "CO2",
+  "description": "CO2 attachment cross section test.",
+  "complete": false,
   "states": {
     "CO2(X^{1}\\Sigma_{g}^+(v=0,0,0))": {
-      "charge": 0,
-      "electronic": [
-        {
-          "e": "X",
+      "detailed": {
+        "type": "LinearTriatomInversionCenter",
+        "particle": "CO2",
+        "charge": 0,
+        "electronic": {
+          "energyId": "X",
           "Lambda": 0,
           "S": 0,
-          "parity": "g",
           "reflection": "+",
-          "summary": "X^{1}\\Sigma_{g}^+",
-          "vibrational": [{ "v": [0, 0, 0], "summary": "0,0,0" }]
+          "parity": "g",
+          "vibrational": { "v": [0, 0, 0] }
         }
-      ],
-      "particle": "CO2",
-      "type": "LinearTriatomInversionCenter"
+      },
+      "serialized": {
+        "particle": "CO2",
+        "charge": 0,
+        "summary": "CO2{X^1S_g^+{0,0,0}}",
+        "latex": "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,0,0\\right)\\right)",
+        "electronic": {
+          "summary": "X^1S_g^+",
+          "latex": "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
+          "vibrational": { "summary": "0,0,0", "latex": "0,0,0" }
+        }
+      }
     },
-    "e": { "charge": -1, "particle": "e" },
+    "e": {
+      "detailed": { "type": "simple", "particle": "e", "charge": -1 },
+      "serialized": { "particle": "e", "charge": -1, "summary": "e^-", "latex": "\\mathrm{e}^-" }
+    },
     "O^-(^{2}P^o_{3/2})": {
-      "charge": -1,
-      "electronic": [
-        {
-          "scheme": "LS",
-          "config": [],
-          "term": { "S": 0.5, "L": 1, "P": -1, "J": 1.5 },
-          "summary": "^{2}P^o_{3/2}"
-        }
-      ],
-      "particle": "O",
-      "type": "AtomLS"
+      "detailed": {
+        "type": "AtomLS",
+        "particle": "O",
+        "charge": -1,
+        "electronic": { "config": [], "term": { "L": 1, "S": 0.5, "P": -1, "J": 1.5 } }
+      },
+      "serialized": {
+        "particle": "O",
+        "charge": -1,
+        "summary": "O^-{^2P^o_3/2}",
+        "latex": "\\mathrm{O}^-\\left({}^{2}\\mathrm{P}^o_{3/2}\\right)",
+        "electronic": { "summary": "^2P^o_3/2", "latex": "{}^{2}\\mathrm{P}^o_{3/2}" }
+      }
     },
     "CO(X^{1}\\Sigma^+)": {
-      "charge": 0,
-      "electronic": [
-        {
-          "e": "X",
-          "S": 0,
-          "Lambda": 0,
-          "reflection": "+",
-          "summary": "X^{1}\\Sigma^+"
-        }
-      ],
-      "particle": "CO",
-      "type": "HeteronuclearDiatom"
+      "detailed": {
+        "type": "HeteronuclearDiatom",
+        "particle": "CO",
+        "charge": 0,
+        "electronic": { "energyId": "X", "Lambda": 0, "S": 0, "reflection": "+" }
+      },
+      "serialized": {
+        "particle": "CO",
+        "charge": 0,
+        "summary": "CO{X^1S^+}",
+        "latex": "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
+        "electronic": { "summary": "X^1S^+", "latex": "\\mathrm{X}^{1}\\Sigma^+" }
+      }
     }
   },
   "references": {
@@ -53,32 +72,35 @@
   },
   "processes": [
     {
-      "data": [
-        [3.9, 0],
-        [4.0, 1e-23],
-        [4.5, 1.5e-23]
-      ],
-      "labels": ["Energy", "Cross section"],
       "reaction": {
         "lhs": [
           { "state": "e", "count": 1 },
           { "state": "CO2(X^{1}\\Sigma_{g}^+(v=0,0,0))", "count": 1 }
         ],
         "reversible": false,
-        "type_tags": ["Attachment"],
+        "typeTags": ["Attachment"],
         "rhs": [
           { "state": "CO(X^{1}\\Sigma^+)", "count": 1 },
           { "state": "O^-(^{2}P^o_{3/2})", "count": 1 }
         ]
       },
-      "threshold": 4.0,
-      "type": "LUT",
-      "units": ["eV", "m^2"],
-      "reference": ["1358469"],
-      "id": "1358623"
+      "info": [
+        {
+          "_key": "1358623",
+          "references": ["1358469"],
+          "threshold": 3.9,
+          "data": {
+            "type": "LUT",
+            "labels": ["Energy", "Cross section"],
+            "units": ["eV", "m^2"],
+            "values": [
+              [3.9, 0],
+              [4.0, 1e-23],
+              [4.5, 1.5e-23]
+            ]
+          }
+        }
+      ]
     }
-  ],
-  "contributor": "IST-Lisbon",
-  "url": "https://ng.lxcat.net/scat-css/test-id",
-  "terms_of_use": "https://ng.lxcat.net/scat-css/test-id#terms_of_use"
+  ]
 }

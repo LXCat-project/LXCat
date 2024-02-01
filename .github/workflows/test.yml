@@ -54,6 +54,14 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
+        components: llvm-tools-preview
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - name: Setup environment for coverage collection in `@lxcat/converter`
+      run: |
+        cd packages/converter
+        cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
+        cd -
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Build packages
@@ -168,6 +176,60 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/schema/coverage/coverage-final.json
         flags: schema
+
+  test-converter:
+    needs: build
+    runs-on: ubuntu-20.04
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/cache/restore@v4
+      with:
+        path: |
+          ${{ github.workspace }}/packages/schema/dist
+          ${{ github.workspace }}/packages/database/dist
+          ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/packages/converter/target
+          ${{ github.workspace }}/app/.next/
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: llvm-tools-preview
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - name: Setup environment for coverage collection
+      run: |
+        cd packages/converter
+        cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
+        cd -
+    - name: Test @lxcat/converter
+      run: pnpm -C packages/converter test
+    - name: Generate code coverage report
+      run: |
+        cd packages/converter
+        cargo llvm-cov report -r --codecov --output-path codecov.json
+        cd -
+    # - name: Generate lcov report
+    #   id: grcov
+    #   uses: actions-rs/grcov@v0.1.5
+    - name: Upload coverage report to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: packages/converter/codecov.json
+        flags: converter
 
   reuse:
     runs-on: ubuntu-20.04

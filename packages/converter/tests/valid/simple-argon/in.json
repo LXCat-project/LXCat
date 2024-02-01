@@ -1,4 +1,6 @@
 {
+  "url": "https://ng.lxcat.net/scat-css/test-id",
+  "termsOfUse": "https://ng.lxcat.net/scat-css/test-id#terms_of_use",
   "contributor": "test",
   "name": "simple-argon",
   "id": "test-id",
@@ -8,30 +10,41 @@
     "main": "Test reference"
   },
   "states": {
-    "e": { "particle": "e", "charge": -1 },
+    "e": {
+      "serialized": {
+        "particle": "e",
+        "charge": -1,
+        "summary": "e^-",
+        "latex": "e^{-1}"
+      }
+    },
     "Ar{1S0}": {
-      "particle": "Ar",
-      "charge": 0,
-      "type": "AtomLS",
-      "electronic": [
-        {
-          "scheme": "LS",
-          "config": [],
-          "term": { "L": 0, "S": 0, "P": 1, "J": 0 }
-        }
-      ]
+      "serialized": {
+        "particle": "Ar",
+        "charge": 0,
+        "summary": "Ar{1S0}",
+        "latex": "Ar\\left({}^1S_0\\right)"
+      }
     },
     "Ar{*}": {
-      "particle": "Ar",
-      "charge": 0,
-      "type": "AtomLS",
-      "electronic": [{ "e": "*" }]
+      "serialized": {
+        "particle": "Ar",
+        "charge": 0,
+        "summary": "Ar{*}",
+        "latex": "Ar\\left(*\\right)"
+      }
     },
-    "Ar^+": { "particle": "Ar", "charge": 1 }
+    "Ar^+": {
+      "serialized": {
+        "particle": "Ar",
+        "charge": 1,
+        "summary": "Ar^+",
+        "latex": "Ar^+"
+      }
+    }
   },
   "processes": [
     {
-      "id": "process-elastic",
       "reaction": {
         "lhs": [
           { "count": 1, "state": "e" },
@@ -42,22 +55,28 @@
           { "count": 1, "state": "Ar{1S0}" }
         ],
         "reversible": false,
-        "type_tags": ["Effective"]
+        "typeTags": ["Effective"]
       },
-      "reference": ["main"],
-      "type": "LUT",
-      "labels": ["Energy", "Cross section"],
-      "units": ["eV", "m^2"],
-      "parameters": { "mass_ratio": 0.0000136 },
-      "threshold": 0,
-      "data": [
-        [0, 1e-21],
-        [1, 2e-21],
-        [2, 3e-21]
+      "info": [
+        {
+          "_key": "process-elastic",
+          "parameters": { "massRatio": 0.0000136 },
+          "threshold": 0,
+          "references": ["main"],
+          "data": {
+            "type": "LUT",
+            "labels": ["Energy", "Cross section"],
+            "units": ["eV", "m^2"],
+            "values": [
+              [0, 1e-21],
+              [1, 2e-21],
+              [2, 3e-21]
+            ]
+          }
+        }
       ]
     },
     {
-      "id": "process-excitation",
       "reaction": {
         "lhs": [
           { "count": 1, "state": "e" },
@@ -68,21 +87,27 @@
           { "count": 1, "state": "Ar{*}" }
         ],
         "reversible": false,
-        "type_tags": ["Electronic"]
+        "typeTags": ["Electronic"]
       },
-      "reference": ["main"],
-      "type": "LUT",
-      "labels": ["Energy", "Cross section"],
-      "units": ["eV", "m^2"],
-      "threshold": 5,
-      "data": [
-        [0, 0],
-        [5, 2e-21],
-        [10, 3e-21]
+      "info": [
+        {
+          "_key": "process-excitation",
+          "type": "LUT",
+          "references": ["main"],
+          "threshold": 5,
+          "data": {
+            "labels": ["Energy", "Cross section"],
+            "units": ["eV", "m^2"],
+            "values": [
+              [0, 0],
+              [5, 2e-21],
+              [10, 3e-21]
+            ]
+          }
+        }
       ]
     },
     {
-      "id": "process-ionization",
       "reaction": {
         "lhs": [
           { "count": 1, "state": "e" },
@@ -93,20 +118,25 @@
           { "count": 1, "state": "Ar^+" }
         ],
         "reversible": false,
-        "type_tags": ["Ionization"]
+        "typeTags": ["Ionization"]
       },
-      "reference": ["main"],
-      "type": "LUT",
-      "labels": ["Energy", "Cross section"],
-      "units": ["eV", "m^2"],
-      "threshold": 10,
-      "data": [
-        [0, 0],
-        [10, 2e-21],
-        [20, 3e-21]
+      "info": [
+        {
+          "_key": "process-ionization",
+          "type": "LUT",
+          "references": ["main"],
+          "threshold": 10,
+          "data": {
+            "labels": ["Energy", "Cross section"],
+            "units": ["eV", "m^2"],
+            "values": [
+              [0, 0],
+              [10, 2e-21],
+              [20, 3e-21]
+            ]
+          }
+        }
       ]
     }
-  ],
-  "url": "https://ng.lxcat.net/scat-css/test-id",
-  "terms_of_use": "https://ng.lxcat.net/scat-css/test-id#terms_of_use"
+  ]
 }
