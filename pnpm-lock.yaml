@@ -47,8 +47,8 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0(@mantine/hooks@7.5.1)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/form':
-        specifier: ^7.5.0
-        version: 7.5.0(react@18.2.0)
+        specifier: ^7.5.1
+        version: 7.5.1(react@18.2.0)
       '@mantine/hooks':
         specifier: ^7.5.1
         version: 7.5.1(react@18.2.0)
@@ -2783,8 +2783,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/form@7.5.0(react@18.2.0):
-    resolution: {integrity: sha512-Bp2ZYwt+oYXNUm7ySPwst5C9S44YvrdsiFXjUzjX1QaoznAWern1W0dtyF7vJ3KWOoY9+7XXx+Ou4pHTOIq/hQ==}
+  /@mantine/form@7.5.1(react@18.2.0):
+    resolution: {integrity: sha512-NPc6sYXZGImFsZvr9Md5DM8C+vpC14rqLcOJlW4DFqze1/MBblVxR+abCNM12r5hrqUxHXEu55yPzxcR9Hoj3Q==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
