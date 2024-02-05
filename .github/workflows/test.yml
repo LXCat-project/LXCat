@@ -221,11 +221,8 @@ jobs:
         cd packages/converter
         cargo llvm-cov report -r --codecov --output-path codecov.json
         cd -
-    # - name: Generate lcov report
-    #   id: grcov
-    #   uses: actions-rs/grcov@v0.1.5
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/converter/codecov.json
