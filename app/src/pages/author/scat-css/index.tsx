@@ -68,7 +68,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                   <>
                     {user.roles?.includes("author") && (
                       <>
-                        <Link href={`/author/scat-css/${item._key}/edit`}>
+                        <Link href={`/author/set/${item._key}/edit`}>
                           <button>Edit</button>
                         </Link>
                         <Link href={`/author/scat-css/${item._key}/editraw`}>
@@ -102,7 +102,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                     {user.roles?.includes("author")
                       && (
                         <>
-                          <Link href={`/author/scat-css/${item._key}/edit`}>
+                          <Link href={`/author/set/${item._key}/edit`}>
                             <button>Edit</button>
                           </Link>
                           <Link href={`/author/scat-css/${item._key}/editraw`}>
