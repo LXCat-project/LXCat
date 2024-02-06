@@ -116,8 +116,11 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
             RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
         )
         LET refs2 = (
-          FOR r IN OUTBOUND cs References
-            RETURN r._key
+          FOR r, re IN OUTBOUND cs References
+            RETURN HAS(re, "comments") ? {
+              id: r._key,
+              comments: re.comments
+            } : r._key
         )
         LET sets2 = (
           FOR p IN IsPartOf
