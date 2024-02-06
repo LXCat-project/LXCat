@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { MultiSelect } from "@mantine/core";
+import { HoverCard, MultiSelect, Text } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
@@ -82,15 +82,23 @@ export const ProcessTable = (
         accessor: "reference",
         title: "Source",
         render: ({ info: { references } }) =>
-          `[${
-            references.map((ref) =>
-              typeof ref === "string"
-                ? referenceMarkers.get(ref)!
-                : referenceMarkers.get(ref.id)!
-            ).sort().join(
-              ", ",
-            )
-          }]`,
+          references.map((ref) => {
+            const id = typeof ref === "string" ? ref : ref.id;
+            const comments = typeof ref !== "string" && ref.comments;
+            return (
+              <HoverCard disabled={comments !== undefined}>
+                <HoverCard.Target>
+                  <Text size="sm">{referenceMarkers.get(id)}</Text>
+                </HoverCard.Target>
+                <HoverCard.Dropdown>
+                  <Text size="sm">{comments}</Text>
+                </HoverCard.Dropdown>
+              </HoverCard>
+            );
+          }),
+        // .sort().join(
+        //   ", ",
+        // ),
       }]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
