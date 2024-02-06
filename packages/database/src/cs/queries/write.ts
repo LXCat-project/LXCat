@@ -33,10 +33,6 @@ export async function createCS(
 
   const { references, ...infoBody } = info[0];
 
-  const refIds = references.map((ref) =>
-    typeof ref === "string" ? refDict[ref] : refDict[ref.id]
-  );
-
   const versionInfo: VersionInfo = {
     status,
     version,
@@ -51,9 +47,12 @@ export async function createCS(
     info: infoBody,
   });
 
-  if (refIds) {
-    for (const id of refIds) {
-      await this.insertEdge("References", csId, id);
+  for (const ref of references) {
+    if (typeof ref === "string") {
+      await this.insertEdge("References", csId, refDict[ref]);
+    } else {
+      const { id, comments } = ref;
+      await this.insertEdge("References", csId, refDict[id], { comments });
     }
   }
 
@@ -221,16 +220,34 @@ export async function updateDraftCS(
   };
   await this.db.collection("CrossSection").replace({ _key: key }, doc);
 
-  // handle updated refs
-  const refIds = references.map((ref) =>
-    typeof ref === "string" ? refDict[ref] : refDict[ref.id]
-  );
-
-  if (refIds) {
-    for (const id of refIds) {
-      await this.insertEdge("References", `CrossSection/${key}`, id);
+  if (references.length > 0) {
+    // handle updated refs
+    for (const ref of references) {
+      if (typeof ref === "string") {
+        await this.insertEdge(
+          "References",
+          `CrossSection/${key}`,
+          refDict[ref],
+        );
+      } else {
+        const { id, comments } = ref;
+        await this.insertEdge(
+          "References",
+          `CrossSection/${key}`,
+          refDict[id],
+          {
+            comments,
+          },
+        );
+      }
     }
-    await this.dropReferencesFromExcluding(`CrossSection/${key}`, refIds);
+
+    await this.dropReferencesFromExcluding(
+      `CrossSection/${key}`,
+      references.map((ref) =>
+        typeof ref === "string" ? refDict[ref] : refDict[ref.id]
+      ),
+    );
     // TODO remove orphaned references?
   }
 }

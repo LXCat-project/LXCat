@@ -96,7 +96,9 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
           },
         },
-        references: {},
+        references: {
+          "337": { id: "main", type: "article", title: "Test reference title" },
+        },
         processes: [
           {
             reaction: {
@@ -125,7 +127,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 units: ["eV", "m^2"],
                 values: [[1, 3.14e-20]],
               },
-              references: [],
+              references: [matchesId],
               isPartOf: [matchesId],
             }],
           },
@@ -156,7 +158,12 @@ describe("given 4 published cross sections in 2 sets", () => {
                 units: ["eV", "m^2"],
                 values: [[2, 5.12e-10]],
               },
-              references: [],
+              references: [{
+                id: matchesId,
+                comments: [
+                  "Comment to e.g. highlight a specific location in the corresponding reference.",
+                ],
+              }],
               isPartOf: [matchesId],
             }],
           },
@@ -187,7 +194,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 units: ["eV", "m^2"],
                 values: [[1, 3.14e-20]],
               },
-              references: [],
+              references: [matchesId],
               isPartOf: [matchesId],
             }],
           },
@@ -218,7 +225,12 @@ describe("given 4 published cross sections in 2 sets", () => {
                 units: ["eV", "m^2"],
                 values: [[2, 5.12e-10]],
               },
-              references: [],
+              references: [{
+                id: matchesId,
+                comments: [
+                  "Comment to e.g. highlight a specific location in the corresponding reference.",
+                ],
+              }],
               isPartOf: [matchesId],
             }],
           },
@@ -304,7 +316,9 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
           },
         },
-        references: {},
+        references: {
+          "337": { id: "main", type: "article", title: "Test reference title" },
+        },
         processes: [
           {
             reaction: {
@@ -333,7 +347,7 @@ describe("given 4 published cross sections in 2 sets", () => {
                 labels: ["Energy", "Cross Section"],
                 units: ["eV", "m^2"],
               },
-              references: [],
+              references: [matchesId],
               isPartOf: [matchesId],
             }],
           },
@@ -353,6 +367,7 @@ describe("given 4 published cross sections in 2 sets", () => {
         Object.values(expected.states),
       );
       expect(Object.values(result.sets)).toEqual(Object.values(expected.sets));
+      console.error(result.references);
       expect(Object.values(result.references)).toEqual(
         Object.values(expected.references),
       );

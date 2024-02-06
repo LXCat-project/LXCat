@@ -52,7 +52,13 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
     contributor: "Some organization",
     name: "Some name",
     description: "Some description",
-    references: {},
+    references: {
+      main: {
+        id: "main",
+        type: "article",
+        title: "Test reference title",
+      },
+    },
     states: {
       a: {
         type: "simple",
@@ -87,7 +93,7 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
             units: ["eV", "m^2"],
             values: [[1, 3.14e-20]],
           },
-          references: [],
+          references: ["main"],
         }],
       },
       {
@@ -106,7 +112,12 @@ export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
             units: ["eV", "m^2"],
             values: [[2, 5.12e-10]],
           },
-          references: [],
+          references: [{
+            id: "main",
+            comments: [
+              "Comment to e.g. highlight a specific location in the corresponding reference.",
+            ],
+          }],
         }],
       },
     ],

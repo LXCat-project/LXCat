@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { MultiSelect } from "@mantine/core";
+import { ReferenceRef } from "@lxcat/schema/reference";
+import { Group, HoverCard, MultiSelect, Stack, Text } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useEffect, useMemo, useState } from "react";
@@ -18,6 +19,51 @@ export type ProcessTableProps = {
   selected: Array<DenormalizedProcess>;
   onChangeSelected: (selected: Array<DenormalizedProcess>) => void;
 };
+
+const renderReferences = (
+  references: Array<ReferenceRef<string>>,
+  markers: Map<string, number>,
+) => (
+  <Group gap={1}>
+    <Text size="sm">[</Text>
+    {references
+      .map((ref) =>
+        typeof ref === "string"
+          ? {
+            id: ref,
+            marker: markers.get(ref)!,
+            comments: undefined,
+          }
+          : {
+            id: ref.id,
+            marker: markers.get(ref.id)!,
+            comments: ref.comments,
+          }
+      )
+      .sort((a, b) => a.marker - b.marker)
+      .map(
+        ({ id, marker, comments }, index) => {
+          return (
+            <HoverCard key={id} disabled={comments === undefined}>
+              <HoverCard.Target>
+                <Text size="sm" fw={comments && 700}>
+                  {index + 1 < references.length ? `${marker},` : marker}
+                </Text>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Stack gap="xs">
+                  {comments?.map((comment, i) => (
+                    <Text size="md" key={i}>{comment}</Text>
+                  ))}
+                </Stack>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          );
+        },
+      )}
+    <Text size="sm">]</Text>
+  </Group>
+);
 
 export const ProcessTable = (
   { processes, referenceMarkers, colorMap, selected, onChangeSelected }:
@@ -82,15 +128,7 @@ export const ProcessTable = (
         accessor: "reference",
         title: "Source",
         render: ({ info: { references } }) =>
-          `[${
-            references.map((ref) =>
-              typeof ref === "string"
-                ? referenceMarkers.get(ref)!
-                : referenceMarkers.get(ref.id)!
-            ).sort().join(
-              ", ",
-            )
-          }]`,
+          renderReferences(references, referenceMarkers),
       }]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
