@@ -51,6 +51,7 @@
     "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
     "load-css": "tsx src/cli/load-css.ts",
     "format": "dprint fmt",
+    "clean": "rm -rf dist",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts src/",
