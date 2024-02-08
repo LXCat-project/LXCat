@@ -42,7 +42,7 @@ jobs:
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
         restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
@@ -84,7 +84,7 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
@@ -124,7 +124,7 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
@@ -158,7 +158,7 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
@@ -192,7 +192,7 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
