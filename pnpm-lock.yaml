@@ -291,8 +291,8 @@ importers:
         specifier: ^20.11.16
         version: 20.11.16
       tsx:
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
 
   packages/database:
     dependencies:
@@ -346,8 +346,8 @@ importers:
         specifier: ^10.6.0
         version: 10.6.0
       tsx:
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -405,8 +405,8 @@ importers:
         specifier: 8.56.0
         version: 8.56.0
       tsx:
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -12705,8 +12705,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: true
 
-  /tsx@4.7.0:
-    resolution: {integrity: sha512-I+t79RYPlEYlHn9a+KzwrvEwhJg35h/1zHsLC2JXvhC2mdynMv6Zxzvhv5EMV6VF5qJlLlkSnMVvdZV3PSIGcg==}
+  /tsx@4.7.1:
+    resolution: {integrity: sha512-8d6VuibXHtlN5E3zFkgY8u4DX7Y3Z27zvvPKVmLon/D4AjuKzarkUBTLDBgj9iTQ0hg5xM7c/mYiRVM+HETf0g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
