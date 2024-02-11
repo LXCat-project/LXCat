@@ -96,7 +96,7 @@
     "@types/react-plotly.js": "^2.6.3",
     "@types/unist": "^3.0.2",
     "@vitest/coverage-v8": "^1.2.2",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.2",
     "dprint": "^0.45.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
