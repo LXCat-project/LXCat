@@ -240,7 +240,8 @@ export const EditForm = (
               processes={form.values.set.processes}
               species={form.values.set.states}
               references={form.values.set.references}
-              onChange={(processes) => {}}
+              onChange={(processes) =>
+                form.setFieldValue("set.processes", processes)}
             />
           </Tabs.Panel>
         </Tabs>

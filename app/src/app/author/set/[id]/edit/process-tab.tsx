@@ -1,13 +1,16 @@
 "use client";
 
+import { MaybePromise } from "@/app/api/util";
+import { reactionAsLatex } from "@/cs/reaction";
+import { reference2bibliography } from "@/shared/cite";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import { Accordion, MultiSelect } from "@mantine/core";
 import { useMemo } from "react";
 import Latex from "react-latex-next";
-import { reactionAsLatex } from "../../../../../cs/reaction";
-import { reference2bibliography } from "../../../../../shared/cite";
-import { MaybePromise } from "../../../../api/util";
+
+type Process = PartialKeyedDocument["processes"][number];
+type ProcessInfo = Process["info"][number];
 
 const resolveReactionSpecies = (
   reaction: PartialKeyedDocument["processes"][number]["reaction"],
@@ -30,33 +33,61 @@ const resolveReactionSpecies = (
   })),
 });
 
-const ProcessItem = (
-  { process, species, references }: {
-    process: PartialKeyedDocument["processes"][number];
-    species: PartialKeyedDocument["states"];
+const ProcessInfoItem = (
+  { info, references, onChange }: {
+    info: ProcessInfo;
     references: PartialKeyedDocument["references"];
+    onChange: (info: ProcessInfo) => MaybePromise<void>;
   },
 ) => {
-  const latex = useMemo(
-    () => reactionAsLatex(resolveReactionSpecies(process.reaction, species)),
-    [process, species],
-  );
+  const referenceMap = useMemo(() =>
+    Object.fromEntries(
+      Object.entries(references).map(([
+        key,
+        value,
+      ]) => [key, reference2bibliography(value)]),
+    ), [references]);
 
   return (
-    <Accordion.Item key={latex} value={latex}>
+    <MultiSelect
+      label="References"
+      data={Object.keys(references).map((key) => ({
+        value: key,
+        label: referenceMap[key],
+      }))}
+      // TODO: Use a component that allows for adding reference comments.
+      value={info.references.map(ref => typeof ref === "object" ? ref.id : ref)}
+      onChange={(references) => onChange({ ...info, references })}
+    />
+  );
+};
+
+const ProcessItem = (
+  { process, species, references, reactionLatex, onChange }: {
+    process: Process;
+    species: PartialKeyedDocument["states"];
+    references: PartialKeyedDocument["references"];
+    reactionLatex: string;
+    onChange: (process: Process) => MaybePromise<void>;
+  },
+) => {
+  return (
+    <Accordion.Item value={reactionLatex}>
       <Accordion.Control>
-        <Latex>{`$${latex}$`}</Latex>
+        <Latex>{`$${reactionLatex}$`}</Latex>
       </Accordion.Control>
       <Accordion.Panel>
-        {
-          // TODO: References are linked to an info object, not to a reaction.
-        }
-        <MultiSelect
-          data={Object.entries(references).map(([key, reference]) => ({
-            value: key,
-            label: reference2bibliography(reference),
-          }))}
-        />
+        {process.info.map((info, index) => (
+          <ProcessInfoItem
+            key={index}
+            info={info}
+            references={references}
+            onChange={(info) => {
+              process.info[index] = info;
+              onChange(process);
+            }}
+          />
+        ))}
       </Accordion.Panel>
     </Accordion.Item>
   );
@@ -74,13 +105,25 @@ export const ProcessTab = (
 ) => {
   return (
     <Accordion>
-      {processes.map((process) => (
-        <ProcessItem
-          process={process}
-          species={species}
-          references={references}
-        />
-      ))}
+      {processes.map((process, index) => {
+        const latex = reactionAsLatex(
+          resolveReactionSpecies(process.reaction, species),
+        );
+
+        return (
+          <ProcessItem
+            key={latex}
+            process={process}
+            species={species}
+            references={references}
+            reactionLatex={latex}
+            onChange={(process) => {
+              processes[index] = process;
+              onChange(processes);
+            }}
+          />
+        );
+      })}
     </Accordion>
   );
 };
