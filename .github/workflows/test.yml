@@ -28,7 +28,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
@@ -42,13 +42,13 @@ jobs:
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
         restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install Rust
       uses: actions-rs/toolchain@v1
@@ -71,7 +71,7 @@ jobs:
 
   test-app:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
@@ -84,13 +84,13 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -111,7 +111,7 @@ jobs:
 
   test-database:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
@@ -124,13 +124,13 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -145,7 +145,7 @@ jobs:
 
   test-schema:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
@@ -158,13 +158,13 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -179,7 +179,7 @@ jobs:
 
   test-converter:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
@@ -192,13 +192,13 @@ jobs:
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
         version: 8
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install Rust
       uses: actions-rs/toolchain@v1
@@ -229,7 +229,7 @@ jobs:
         flags: converter
 
   reuse:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v4
