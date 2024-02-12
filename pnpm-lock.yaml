@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -273,8 +277,8 @@ importers:
         specifier: ^0.0.20
         version: 0.0.20
       testcontainers:
-        specifier: ^10.6.0
-        version: 10.6.0
+        specifier: ^10.7.1
+        version: 10.7.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -322,8 +326,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.6.0
-        version: 10.6.0
+        specifier: ^10.7.1
+        version: 10.7.1
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -343,8 +347,8 @@ importers:
         specifier: 8.56.0
         version: 8.56.0
       testcontainers:
-        specifier: ^10.6.0
-        version: 10.6.0
+        specifier: ^10.7.1
+        version: 10.7.1
       tsx:
         specifier: ^4.7.1
         version: 4.7.1
@@ -3306,10 +3310,10 @@ packages:
     resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
-  /@testcontainers/arangodb@10.6.0:
-    resolution: {integrity: sha512-tiOuntrBNvc1p2+QApreVzqpjQeU6DByX4HH1uMP72czUxQr676/zmulcnF05aoQyiu8vSBHGmiVuh90//wxUw==}
+  /@testcontainers/arangodb@10.7.1:
+    resolution: {integrity: sha512-iy2NLy9JyaR6uXLWJgEsXoLM6CtO7tvAQLXUbneHKpcysxmFqBBJudfYFRi+gii03+KFOOaVUxC64U5IjXjEnw==}
     dependencies:
-      testcontainers: 10.6.0
+      testcontainers: 10.7.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -12528,8 +12532,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@10.6.0:
-    resolution: {integrity: sha512-FDJ3o3J8IMu1V7Uc6lNZ2MAD8+BV4HdpR/Vf5mHtgYHKdn6k1EbGFwtnvVNOxanJ99FCjf/EU8eA5ZQ4yjlsGA==}
+  /testcontainers@10.7.1:
+    resolution: {integrity: sha512-JarbT6o7fv1siUts4tGv3wBoYrWKxjla69+5QWG9+bcd4l+ECJ3ikfGD/hpXRmRBsnjzeWyV+tL9oWOBRzk+lA==}
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.23
@@ -13806,7 +13810,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
