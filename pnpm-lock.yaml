@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -322,8 +326,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.6.0
-        version: 10.6.0
+        specifier: ^10.7.1
+        version: 10.7.1
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -3306,8 +3310,8 @@ packages:
     resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
-  /@testcontainers/arangodb@10.6.0:
-    resolution: {integrity: sha512-tiOuntrBNvc1p2+QApreVzqpjQeU6DByX4HH1uMP72czUxQr676/zmulcnF05aoQyiu8vSBHGmiVuh90//wxUw==}
+  /@testcontainers/arangodb@10.7.1:
+    resolution: {integrity: sha512-iy2NLy9JyaR6uXLWJgEsXoLM6CtO7tvAQLXUbneHKpcysxmFqBBJudfYFRi+gii03+KFOOaVUxC64U5IjXjEnw==}
     dependencies:
       testcontainers: 10.7.1
     transitivePeerDependencies:
@@ -13806,7 +13810,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
