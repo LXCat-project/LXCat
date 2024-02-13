@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -43,6 +47,9 @@ importers:
       '@lxcat/schema':
         specifier: workspace:^
         version: link:../packages/schema
+      '@mantine/code-highlight':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/core@7.10.1)(@mantine/hooks@7.10.1)(react-dom@18.3.1)(react@18.3.1)
       '@mantine/core':
         specifier: ^7.10.1
         version: 7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -3059,6 +3066,22 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@mantine/code-highlight@7.10.1(@mantine/core@7.10.1)(@mantine/hooks@7.10.1)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-ZeqBnd/i6CNF8avmjgYNqo9hKFnrzYoKV13OrKAHNRZk7vdbBGoSeVYF1vq+ChDBOZQfLOW+2naTi3VdzwLOhg==}
+    peerDependencies:
+      '@mantine/core': 7.10.1
+      '@mantine/hooks': 7.10.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@mantine/core': 7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@mantine/hooks': 7.10.1(react@18.3.1)
+      clsx: 2.1.1
+      highlight.js: 11.9.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
 
   /@mantine/core@7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-l9ypojKN3PjwO1CSLIsqxi7mA25+7w+xc71Q+JuCCREI0tuGwkZsKbIOpuTATIJOjPh8ycLiW7QxX1LYsRTq6w==}
@@ -14566,7 +14589,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

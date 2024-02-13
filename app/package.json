@@ -29,6 +29,7 @@
     "@lxcat/converter": "workspace:^",
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
+    "@mantine/code-highlight": "^7.10.1",
     "@mantine/core": "^7.10.1",
     "@mantine/form": "^7.10.1",
     "@mantine/hooks": "^7.10.1",
