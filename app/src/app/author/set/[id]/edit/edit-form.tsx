@@ -186,6 +186,7 @@ export const EditForm = (
           defaultValue="general"
           value={activeTab}
           onChange={setActiveTab}
+          keepMounted={false}
         >
           <Tabs.List>
             <Tabs.Tab value="general">General</Tabs.Tab>
