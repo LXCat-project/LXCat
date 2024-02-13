@@ -5,7 +5,7 @@
 import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { type AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
-import { Accordion, Button, Modal, Stack } from "@mantine/core";
+import { Accordion, Button, Modal, ScrollArea, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { JSONSchema7 } from "json-schema";
 import { nanoid } from "nanoid";
@@ -14,6 +14,7 @@ import Latex from "react-latex-next";
 import { MaybePromise } from "../../../../api/util";
 import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
+import classes from "./species-tab.module.css";
 
 const getSpeciesMeta = (species: AnySpecies) => {
   const speciesMeta = {
@@ -74,33 +75,35 @@ export const SpeciesTab = (
 
   return (
     <Stack>
-      <Accordion>
-        {Object.entries(species).map(
-          ([key, state]) => {
-            const parsed = AnySpeciesSerializable.safeParse(state);
-            const controlNode = parsed.success
-              ? parsed.data.serialize().latex
-              : "...";
+      <ScrollArea classNames={{ viewport: classes.speciesList }} type="auto">
+        <Accordion>
+          {Object.entries(species).map(
+            ([key, state]) => {
+              const parsed = AnySpeciesSerializable.safeParse(state);
+              const controlNode = parsed.success
+                ? parsed.data.serialize().latex
+                : "...";
 
-            return (
-              <Accordion.Item key={key} value={key}>
-                <Accordion.Control>
-                  <Latex>{`$${controlNode}$`}</Latex>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <SpeciesForm
-                    typeMap={generateSpeciesForm(
-                      stateJSONSchema as JSONSchema7,
-                      `set.states.${key}`,
-                    )}
-                    basePath={`set.states.${key}`}
-                  />
-                </Accordion.Panel>
-              </Accordion.Item>
-            );
-          },
-        )}
-      </Accordion>
+              return (
+                <Accordion.Item key={key} value={key}>
+                  <Accordion.Control>
+                    <Latex>{`$${controlNode}$`}</Latex>
+                  </Accordion.Control>
+                  <Accordion.Panel>
+                    <SpeciesForm
+                      typeMap={generateSpeciesForm(
+                        stateJSONSchema as JSONSchema7,
+                        `set.states.${key}`,
+                      )}
+                      basePath={`set.states.${key}`}
+                    />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              );
+            },
+          )}
+        </Accordion>
+      </ScrollArea>
       <Button.Group>
         <Button
           onClick={() => {
