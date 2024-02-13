@@ -24,6 +24,7 @@ import { createFormContext, zodResolver } from "@mantine/form";
 import { useState } from "react";
 import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
+import { JsonTab } from "./json-tab";
 import { ProcessTab } from "./process-tab";
 import { ReferenceTable } from "./reference-table";
 import { SpeciesTab } from "./species-tab";
@@ -243,6 +244,9 @@ export const EditForm = (
               onChange={(processes) =>
                 form.setFieldValue("set.processes", processes)}
             />
+          </Tabs.Panel>
+          <Tabs.Panel value="json">
+            <JsonTab json={JSON.stringify(form.values.set, null, 2)} />
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
