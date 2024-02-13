@@ -91,7 +91,7 @@ describe("Selecting individual cross sections", () => {
             children: [
               {
                 children: [],
-                latex: "*",
+                latex: "\\mathrm{*}",
                 valid: true,
               },
             ],
@@ -229,7 +229,7 @@ describe("Selecting individual cross sections", () => {
           { children: [], latex: "\\mathrm{N2}", valid: true },
           { children: [], latex: "\\mathrm{Ar}^+", valid: true },
           {
-            children: [{ children: [], latex: "*", valid: true }],
+            children: [{ children: [], latex: "\\mathrm{*}", valid: true }],
             latex: "\\mathrm{He}",
             valid: false,
           },
