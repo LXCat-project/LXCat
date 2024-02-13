@@ -174,6 +174,10 @@ export const EditForm = (
   const [activeTab, setActiveTab] = useState<string | null>("general");
   const { getInputProps } = form;
 
+  const [processAccordionState, processAccordionOnChange] = useState<
+    string | null
+  >(null);
+
   return (
     <FormProvider form={form}>
       <form
@@ -244,6 +248,10 @@ export const EditForm = (
               references={form.values.set.references}
               onChange={(processes) =>
                 form.setFieldValue("set.processes", processes)}
+              accordion={{
+                value: processAccordionState,
+                onChange: processAccordionOnChange,
+              }}
             />
           </Tabs.Panel>
           <Tabs.Panel value="json">
