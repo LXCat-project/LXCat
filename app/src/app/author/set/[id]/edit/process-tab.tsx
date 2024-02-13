@@ -48,6 +48,15 @@ const ProcessInfoItem = (
       ]) => [key, reference2bibliography(value)]),
     ), [references]);
 
+  // Filters out removed references.
+  const filteredRefs = info.references.filter((ref) =>
+    typeof ref === "object" ? ref.id : ref in references
+  );
+
+  if (filteredRefs.length < info.references.length) {
+    onChange({ ...info, references: filteredRefs });
+  }
+
   return (
     <MultiSelect
       label="References"
