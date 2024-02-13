@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { type AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
