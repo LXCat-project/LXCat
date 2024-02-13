@@ -5,10 +5,10 @@
 "use client";
 
 import { MaybePromise } from "@/app/api/util";
-import { reactionAsLatex } from "@/cs/reaction";
 import { reference2bibliography } from "@/shared/cite";
 import { LatexSelect } from "@/shared/latex-select";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
+import { ReactionEntry } from "@lxcat/schema/process";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
@@ -25,42 +25,42 @@ import classes from "./process-tab.module.css";
 type Process = PartialKeyedDocument["processes"][number];
 type ProcessInfo = Process["info"][number];
 
-const resolveReactionSpecies = (
-  reaction: PartialKeyedDocument["processes"][number]["reaction"],
-  species: PartialKeyedDocument["states"],
-) => ({
-  ...reaction,
-  lhs: reaction.lhs.map(({ count, state }) => ({
-    count,
-    state: {
-      detailed: species[state],
-      serialized: AnySpeciesSerializable.parse(species[state]).serialize(),
-    },
-  })),
-  rhs: reaction.rhs.map(({ count, state }) => ({
-    count,
-    state: {
-      detailed: species[state],
-      serialized: AnySpeciesSerializable.parse(species[state]).serialize(),
-    },
-  })),
-});
+function entryAsLatex(
+  entry: ReactionEntry<string>,
+  speciesMap: Record<string, string>,
+) {
+  if (entry.count === 1) {
+    return speciesMap[entry.state];
+  }
+  return `${entry.count}${speciesMap[entry.state]}`;
+}
+
+export function reactionAsLatex(
+  reaction: Process["reaction"],
+  speciesMap: Record<string, string>,
+) {
+  const lhs = reaction
+    .lhs
+    .map((entry) => entryAsLatex(entry, speciesMap))
+    .join(" + ");
+
+  const rhs = reaction
+    .rhs
+    .map((entry) => entryAsLatex(entry, speciesMap))
+    .join(" + ");
+
+  const arrow = reaction.reversible ? "\\leftrightarrow" : "\\rightarrow";
+
+  return `${lhs} ${arrow} ${rhs}`;
+}
 
 const ProcessInfoItem = (
   { info, references, onChange }: {
     info: ProcessInfo;
-    references: PartialKeyedDocument["references"];
+    references: Record<string, string>;
     onChange: (info: ProcessInfo) => MaybePromise<void>;
   },
 ) => {
-  const referenceMap = useMemo(() =>
-    Object.fromEntries(
-      Object.entries(references).map(([
-        key,
-        value,
-      ]) => [key, reference2bibliography(value)]),
-    ), [references]);
-
   // Filters out removed references.
   const filteredRefs = info.references.filter((ref) =>
     typeof ref === "object" ? ref.id : ref in references
@@ -73,9 +73,9 @@ const ProcessInfoItem = (
   return (
     <MultiSelect
       label="References"
-      data={Object.keys(references).map((key) => ({
-        value: key,
-        label: referenceMap[key],
+      data={Object.entries(references).map(([value, label]) => ({
+        value,
+        label,
       }))}
       // TODO: Use a component that allows for adding reference comments.
       value={info.references.map(ref => typeof ref === "object" ? ref.id : ref)}
@@ -87,7 +87,7 @@ const ProcessInfoItem = (
 const ReactionBuilder = (
   { reaction, species, onChange }: {
     reaction: Process["reaction"];
-    species: PartialKeyedDocument["states"];
+    species: Record<string, string>;
     onChange: (reaction: Process["reaction"]) => MaybePromise<void>;
   },
 ) => (
@@ -104,16 +104,16 @@ const ReactionBuilder = (
 const ProcessItem = (
   { process, species, references, onChange, itemValue }: {
     process: Process;
-    species: PartialKeyedDocument["states"];
-    references: PartialKeyedDocument["references"];
+    species: Record<string, string>;
+    references: Record<string, string>;
     onChange: (process: Process) => MaybePromise<void>;
     itemValue: string;
   },
 ) => {
-  const latex = useMemo(() =>
-    reactionAsLatex(
-      resolveReactionSpecies(process.reaction, species),
-    ), [process.reaction, species]);
+  const latex = useMemo(() => reactionAsLatex(process.reaction, species), [
+    process.reaction,
+    species,
+  ]);
 
   return (
     <Accordion.Item value={itemValue}>
@@ -161,24 +161,46 @@ export const ProcessTab = (
       onChange: (value: string | null) => void;
     };
   },
-) => (
-  <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-    <Accordion {...accordion}>
-      {processes.map((process, index) => {
-        return (
-          <ProcessItem
-            key={index}
-            itemValue={`process-${index}`}
-            process={process}
-            species={species}
-            references={references}
-            onChange={(process) => {
-              processes[index] = process;
-              onChange(processes);
-            }}
-          />
-        );
-      })}
-    </Accordion>
-  </ScrollArea>
-);
+) => {
+  // TODO: It might be better to supply these maps as a property, as this
+  //       component is often un- and remounted.
+  const speciesMap = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(species).map((
+          [key, species],
+        ) => [key, AnySpeciesSerializable.parse(species).serialize().latex]),
+      ),
+    [species],
+  );
+
+  const referenceMap = useMemo(() =>
+    Object.fromEntries(
+      Object.entries(references).map(([
+        key,
+        value,
+      ]) => [key, reference2bibliography(value)]),
+    ), [references]);
+
+  return (
+    <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
+      <Accordion {...accordion}>
+        {processes.map((process, index) => {
+          return (
+            <ProcessItem
+              key={index}
+              itemValue={`process-${index}`}
+              process={process}
+              species={speciesMap}
+              references={referenceMap}
+              onChange={(process) => {
+                processes[index] = process;
+                onChange(processes);
+              }}
+            />
+          );
+        })}
+      </Accordion>
+    </ScrollArea>
+  );
+};
