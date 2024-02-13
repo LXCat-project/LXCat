@@ -7,3 +7,7 @@
 .processList {
   max-height: calc(100vh - 250px);
 }
+
+.processList > div[style] {
+  display: block !important;
+}
