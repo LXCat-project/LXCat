@@ -7,9 +7,17 @@
 import { MaybePromise } from "@/app/api/util";
 import { reactionAsLatex } from "@/cs/reaction";
 import { reference2bibliography } from "@/shared/cite";
+import { LatexSelect } from "@/shared/latex-select";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
-import { Accordion, MultiSelect, ScrollArea } from "@mantine/core";
+import {
+  Accordion,
+  Fieldset,
+  Group,
+  MultiSelect,
+  ScrollArea,
+  Stack,
+} from "@mantine/core";
 import { useMemo } from "react";
 import Latex from "react-latex-next";
 import classes from "./process-tab.module.css";
@@ -76,70 +84,101 @@ const ProcessInfoItem = (
   );
 };
 
+const ReactionBuilder = (
+  { reaction, species, onChange }: {
+    reaction: Process["reaction"];
+    species: PartialKeyedDocument["states"];
+    onChange: (reaction: Process["reaction"]) => MaybePromise<void>;
+  },
+) => (
+  <Group>
+    <LatexSelect
+      value={reaction.reversible ? "true" : "false"}
+      data={{ false: "\\rightarrow", true: "\\leftrightarrow" }}
+      onChange={(value) =>
+        onChange({ ...reaction, reversible: value === "true" })}
+    />
+  </Group>
+);
+
 const ProcessItem = (
-  { process, species, references, reactionLatex, onChange }: {
+  { process, species, references, onChange, itemValue }: {
     process: Process;
     species: PartialKeyedDocument["states"];
     references: PartialKeyedDocument["references"];
-    reactionLatex: string;
     onChange: (process: Process) => MaybePromise<void>;
+    itemValue: string;
   },
 ) => {
+  const latex = useMemo(() =>
+    reactionAsLatex(
+      resolveReactionSpecies(process.reaction, species),
+    ), [process.reaction, species]);
+
   return (
-    <Accordion.Item value={reactionLatex}>
+    <Accordion.Item value={itemValue}>
       <Accordion.Control>
-        <Latex>{`$${reactionLatex}$`}</Latex>
+        <Latex>{`$${latex}$`}</Latex>
       </Accordion.Control>
       <Accordion.Panel>
-        {process.info.map((info, index) => (
-          <ProcessInfoItem
-            key={index}
-            info={info}
-            references={references}
-            onChange={(info) => {
-              process.info[index] = info;
-              onChange(process);
-            }}
-          />
-        ))}
+        <Stack>
+          <Fieldset legend="Reaction">
+            <ReactionBuilder
+              reaction={process.reaction}
+              species={species}
+              onChange={(reaction) => onChange({ ...process, reaction })}
+            />
+          </Fieldset>
+          <Fieldset legend="Info objects">
+            {process.info.map((info, index) => (
+              <ProcessInfoItem
+                key={index}
+                info={info}
+                references={references}
+                onChange={(info) => {
+                  process.info[index] = info;
+                  onChange(process);
+                }}
+              />
+            ))}
+          </Fieldset>
+        </Stack>
       </Accordion.Panel>
     </Accordion.Item>
   );
 };
 
 export const ProcessTab = (
-  { processes, species, references, onChange }: {
+  { processes, species, references, onChange, accordion }: {
     processes: PartialKeyedDocument["processes"];
     species: PartialKeyedDocument["states"];
     references: PartialKeyedDocument["references"];
     onChange: (
       processes: PartialKeyedDocument["processes"],
     ) => MaybePromise<void>;
+    accordion: {
+      value: string | null;
+      onChange: (value: string | null) => void;
+    };
   },
-) => {
-  return (
-    <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-      <Accordion>
-        {processes.map((process, index) => {
-          const latex = reactionAsLatex(
-            resolveReactionSpecies(process.reaction, species),
-          );
-
-          return (
-            <ProcessItem
-              key={latex}
-              process={process}
-              species={species}
-              references={references}
-              reactionLatex={latex}
-              onChange={(process) => {
-                processes[index] = process;
-                onChange(processes);
-              }}
-            />
-          );
-        })}
-      </Accordion>
-    </ScrollArea>
-  );
-};
+) => (
+  <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
+    <Accordion {...accordion}>
+      {processes.map((process, index) => {
+        return (
+          <ProcessItem
+            key={index}
+            itemValue={`process-${index}`}
+            process={process}
+            species={species}
+            references={references}
+            onChange={(process) => {
+              processes[index] = process;
+              onChange(processes);
+            }}
+          />
+        );
+      })}
+    </Accordion>
+  </ScrollArea>
+);
