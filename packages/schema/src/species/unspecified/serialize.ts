@@ -8,17 +8,15 @@ import { type Unspecified } from "./unspecified.js";
 
 export const serializeUnspecified = (state: Unspecified): StateSummary => {
   const serialized = serializeSimpleParticle(state);
+  const latex = `\\mathrm{${state.electronic}}`;
 
   serialized.summary += "{";
   serialized.latex += "\\left(";
 
-  serialized.electronic = {
-    summary: state.electronic,
-    latex: state.electronic,
-  };
+  serialized.electronic = { summary: state.electronic, latex };
 
   serialized.summary += state.electronic;
-  serialized.latex += state.electronic;
+  serialized.latex += latex;
 
   serialized.summary += "}";
   serialized.latex += "\\right)";
