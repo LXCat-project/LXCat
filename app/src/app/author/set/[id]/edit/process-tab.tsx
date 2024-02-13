@@ -9,9 +9,10 @@ import { reactionAsLatex } from "@/cs/reaction";
 import { reference2bibliography } from "@/shared/cite";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
-import { Accordion, MultiSelect } from "@mantine/core";
+import { Accordion, MultiSelect, ScrollArea } from "@mantine/core";
 import { useMemo } from "react";
 import Latex from "react-latex-next";
+import classes from "./process-tab.module.css";
 
 type Process = PartialKeyedDocument["processes"][number];
 type ProcessInfo = Process["info"][number];
@@ -117,26 +118,28 @@ export const ProcessTab = (
   },
 ) => {
   return (
-    <Accordion>
-      {processes.map((process, index) => {
-        const latex = reactionAsLatex(
-          resolveReactionSpecies(process.reaction, species),
-        );
+    <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
+      <Accordion>
+        {processes.map((process, index) => {
+          const latex = reactionAsLatex(
+            resolveReactionSpecies(process.reaction, species),
+          );
 
-        return (
-          <ProcessItem
-            key={latex}
-            process={process}
-            species={species}
-            references={references}
-            reactionLatex={latex}
-            onChange={(process) => {
-              processes[index] = process;
-              onChange(processes);
-            }}
-          />
-        );
-      })}
-    </Accordion>
+          return (
+            <ProcessItem
+              key={latex}
+              process={process}
+              species={species}
+              references={references}
+              reactionLatex={latex}
+              onChange={(process) => {
+                processes[index] = process;
+                onChange(processes);
+              }}
+            />
+          );
+        })}
+      </Accordion>
+    </ScrollArea>
   );
 };
