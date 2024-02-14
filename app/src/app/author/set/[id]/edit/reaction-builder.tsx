@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { MaybePromise } from "@/app/api/util";
 import { LatexSelect } from "@/shared/latex-select";
 import { PartialKeyedDocument } from "@lxcat/database/schema";
