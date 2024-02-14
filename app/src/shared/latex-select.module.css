@@ -37,6 +37,10 @@
     }
 }
 
+.controlGrow {
+    flex-grow: 1;
+}
+
 .item {
     border-radius: var(--mantine-radius-sm);
 }
