@@ -26,11 +26,21 @@ export type LatexSelectProps = {
   clearable?: boolean;
   style?: MantineStyleProp;
   className?: string;
+  grow?: boolean;
 };
 
 export function LatexSelect(
-  { data, placeholder, value, onChange, name, clearable, style, className }:
-    LatexSelectProps,
+  {
+    data,
+    placeholder,
+    value,
+    onChange,
+    name,
+    clearable,
+    style,
+    className,
+    grow,
+  }: LatexSelectProps,
 ) {
   const [opened, setOpened] = useState(false);
 
@@ -56,12 +66,13 @@ export function LatexSelect(
           className={clsx(
             classes.control,
             opened && classes.controlOpened,
+            grow && classes.controlGrow,
             className,
           )}
           style={style}
           data-button
         >
-          <Group>
+          <Group style={{ width: "100%" }} justify="space-between">
             {value ? <Latex>{data[value]}</Latex> : placeholder ?? ""}
             {value && clearable
               ? (
