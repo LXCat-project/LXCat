@@ -167,13 +167,13 @@ const ProcessInfoItem = (
 };
 
 const ProcessItem = (
-  { process, species, references, onChange, itemValue, renderPanel }: {
+  { process, species, references, onChange, itemValue, renderPanel = true }: {
     process: Process;
     species: Record<string, string>;
     references: Record<string, string>;
     onChange: (process: Process) => MaybePromise<void>;
     itemValue: string;
-    renderPanel: boolean;
+    renderPanel?: boolean;
   },
 ) => {
   const latex = useMemo(() => reactionAsLatex(process.reaction, species), [
