@@ -8,12 +8,13 @@ import { MaybePromise } from "@/app/api/util";
 import { reference2bibliography } from "@/shared/cite";
 import { LatexSelect } from "@/shared/latex-select";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
-import { ReactionEntry } from "@lxcat/schema/process";
+import { ReactionEntry, ReactionTypeTag } from "@lxcat/schema/process";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
   ActionIcon,
   Button,
+  Center,
   Fieldset,
   Group,
   MultiSelect,
@@ -152,28 +153,40 @@ const ReactionBuilder = (
     onChange: (reaction: Process["reaction"]) => MaybePromise<void>;
   },
 ) => (
-  <Group justify="center">
-    <Fieldset legend="Reactants">
-      <SpeciesBuilder
-        entries={reaction.lhs}
-        species={species}
-        onChange={(lhs) => onChange({ ...reaction, lhs })}
+  <Stack align="stretch">
+    <Group justify="space-evenly">
+      <Fieldset legend="Reactants">
+        <SpeciesBuilder
+          entries={reaction.lhs}
+          species={species}
+          onChange={(lhs) => onChange({ ...reaction, lhs })}
+        />
+      </Fieldset>
+      <LatexSelect
+        value={reaction.reversible ? "true" : "false"}
+        data={{ false: "\\rightarrow", true: "\\leftrightarrow" }}
+        onChange={(value) =>
+          onChange({ ...reaction, reversible: value === "true" })}
       />
-    </Fieldset>
-    <LatexSelect
-      value={reaction.reversible ? "true" : "false"}
-      data={{ false: "\\rightarrow", true: "\\leftrightarrow" }}
-      onChange={(value) =>
-        onChange({ ...reaction, reversible: value === "true" })}
-    />
-    <Fieldset legend="Products">
-      <SpeciesBuilder
-        entries={reaction.rhs}
-        species={species}
-        onChange={(rhs) => onChange({ ...reaction, rhs })}
+      <Fieldset legend="Products">
+        <SpeciesBuilder
+          entries={reaction.rhs}
+          species={species}
+          onChange={(rhs) => onChange({ ...reaction, rhs })}
+        />
+      </Fieldset>
+    </Group>
+    <Center>
+      <MultiSelect
+        label="Type tags"
+        value={reaction.typeTags}
+        data={ReactionTypeTag.options}
+        onChange={(tags) =>
+          onChange({ ...reaction, typeTags: tags as Array<ReactionTypeTag> })}
+        style={{ minWidth: "300px", maxWidth: "500px" }}
       />
-    </Fieldset>
-  </Group>
+    </Center>
+  </Stack>
 );
 
 const ProcessItem = (
