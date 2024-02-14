@@ -7,3 +7,7 @@
 .viewport {
   max-height: 500px;
 }
+
+.thumb {
+  z-index: 10;
+}
