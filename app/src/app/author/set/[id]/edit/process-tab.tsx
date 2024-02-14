@@ -99,7 +99,7 @@ const SpeciesBuilder = (
   <Stack>
     {entries.map((entry, index) => {
       return (
-        <Group justify="space-between">
+        <Group key={entry.state} justify="space-between">
           <NumberInput
             allowDecimal={false}
             allowNegative={false}
@@ -113,7 +113,6 @@ const SpeciesBuilder = (
             }}
           />
           <LatexSelect
-            key={entry.state}
             value={entry.state}
             data={species}
             onChange={(speciesKey) => {
