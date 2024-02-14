@@ -167,12 +167,13 @@ const ProcessInfoItem = (
 };
 
 const ProcessItem = (
-  { process, species, references, onChange, itemValue }: {
+  { process, species, references, onChange, itemValue, renderPanel }: {
     process: Process;
     species: Record<string, string>;
     references: Record<string, string>;
     onChange: (process: Process) => MaybePromise<void>;
     itemValue: string;
+    renderPanel: boolean;
   },
 ) => {
   const latex = useMemo(() => reactionAsLatex(process.reaction, species), [
@@ -186,31 +187,36 @@ const ProcessItem = (
         <Latex>{`$${latex}$`}</Latex>
       </Accordion.Control>
       <Accordion.Panel>
-        <Stack>
-          <Fieldset legend="Reaction">
-            <ReactionBuilder
-              reaction={process.reaction}
-              species={species}
-              onChange={(reaction) => onChange({ ...process, reaction })}
-            />
-          </Fieldset>
-          <Fieldset legend="Info objects">
-            <Accordion defaultValue={process.info.length === 1 ? "0" : null}>
-              {process.info.map((info, index) => (
-                <ProcessInfoItem
-                  key={index}
-                  id={String(index)}
-                  info={info}
-                  references={references}
-                  onChange={(info) => {
-                    process.info[index] = info;
-                    onChange(process);
-                  }}
+        {renderPanel
+          && (
+            <Stack>
+              <Fieldset legend="Reaction">
+                <ReactionBuilder
+                  reaction={process.reaction}
+                  species={species}
+                  onChange={(reaction) => onChange({ ...process, reaction })}
                 />
-              ))}
-            </Accordion>
-          </Fieldset>
-        </Stack>
+              </Fieldset>
+              <Fieldset legend="Info objects">
+                <Accordion
+                  defaultValue={process.info.length === 1 ? "0" : null}
+                >
+                  {process.info.map((info, index) => (
+                    <ProcessInfoItem
+                      key={index}
+                      id={String(index)}
+                      info={info}
+                      references={references}
+                      onChange={(info) => {
+                        process.info[index] = info;
+                        onChange(process);
+                      }}
+                    />
+                  ))}
+                </Accordion>
+              </Fieldset>
+            </Stack>
+          )}
       </Accordion.Panel>
     </Accordion.Item>
   );
@@ -265,6 +271,7 @@ export const ProcessTab = (
                 processes[index] = process;
                 onChange(processes);
               }}
+              renderPanel={`process-${index}` === accordion.value}
             />
           );
         })}
