@@ -200,6 +200,7 @@ const ProcessItem = (
               <Fieldset legend="Info objects">
                 <Accordion
                   defaultValue={process.info.length === 1 ? "0" : null}
+                  variant="contained"
                 >
                   {process.info.map((info, index) => (
                     <ProcessInfoItem
@@ -258,7 +259,7 @@ export const ProcessTab = (
 
   return (
     <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-      <Accordion {...accordion}>
+      <Accordion {...accordion} variant="contained">
         {processes.map((process, index) => {
           return (
             <ProcessItem
