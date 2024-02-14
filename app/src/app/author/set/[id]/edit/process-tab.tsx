@@ -40,7 +40,7 @@ function entryAsLatex(
   return `${entry.count}${speciesMap[entry.state]}`;
 }
 
-export function reactionAsLatex(
+function reactionAsLatex(
   reaction: Process["reaction"],
   speciesMap: Record<string, string>,
 ) {
