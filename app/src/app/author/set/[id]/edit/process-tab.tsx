@@ -19,13 +19,13 @@ import {
   MultiSelect,
   ScrollArea,
   Select,
-  Space,
   Stack,
   TextInput,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useMemo } from "react";
 import Latex from "react-latex-next";
+import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
 
@@ -60,6 +60,31 @@ function reactionAsLatex(
 
   return `${lhs} ${arrow} ${rhs}`;
 }
+
+const dataTypeLabels = { "LUT": "Lookup table" };
+const dataTypeSelectData = Object
+  .entries(dataTypeLabels)
+  .map(([value, label]) => ({ value, label }));
+
+const ProcessInfoData = (
+  { data, onChange }: {
+    data: ProcessInfo["data"];
+    onChange: (data: ProcessInfo["data"]) => MaybePromise<void>;
+  },
+) => (
+  <Stack gap="sm">
+    <Select
+      label="Type"
+      allowDeselect={false}
+      value={data.type}
+      data={dataTypeSelectData}
+    />
+    <LookupTable
+      data={data}
+      onChange={onChange}
+    />
+  </Stack>
+);
 
 const CommentSection = (
   { comments, onChange }: {
@@ -135,32 +160,38 @@ const ProcessInfoItem = (
         {typeLabelMap[info.type]}
       </Accordion.Control>
       <Accordion.Panel>
-        <Select
-          label="Type"
-          allowDeselect={false}
-          value={info.type}
-          data={typeSelectData}
-        />
-        <Fieldset legend="Comments">
-          <CommentSection
-            comments={info.comments}
-            onChange={(comments) => onChange({ ...info, comments })}
+        <Stack gap="sm">
+          <Select
+            label="Type"
+            allowDeselect={false}
+            value={info.type}
+            data={typeSelectData}
           />
-        </Fieldset>
-        <MultiSelect
-          label="References"
-          data={Object.entries(references).map(([value, label]) => ({
-            value,
-            label,
-          }))}
-          // TODO: Use a component that allows for adding reference comments.
-          value={info.references.map(ref =>
-            typeof ref === "object" ? ref.id : ref
-          )}
-          onChange={(references) => onChange({ ...info, references })}
-        />
-        <Fieldset legend="Data">
-        </Fieldset>
+          <Fieldset legend="Comments">
+            <CommentSection
+              comments={info.comments}
+              onChange={(comments) => onChange({ ...info, comments })}
+            />
+          </Fieldset>
+          <MultiSelect
+            label="References"
+            data={Object.entries(references).map(([value, label]) => ({
+              value,
+              label,
+            }))}
+            // TODO: Use a component that allows for adding reference comments.
+            value={info.references.map(ref =>
+              typeof ref === "object" ? ref.id : ref
+            )}
+            onChange={(references) => onChange({ ...info, references })}
+          />
+          <Fieldset legend="Data">
+            <ProcessInfoData
+              data={info.data}
+              onChange={(data) => onChange({ ...info, data })}
+            />
+          </Fieldset>
+        </Stack>
       </Accordion.Panel>
     </Accordion.Item>
   );
