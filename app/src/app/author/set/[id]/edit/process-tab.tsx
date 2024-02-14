@@ -11,11 +11,19 @@ import { ReactionEntry } from "@lxcat/schema/process";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
+  ActionIcon,
+  Button,
+  Center,
   Fieldset,
+  Group,
   MultiSelect,
   ScrollArea,
+  Select,
+  Space,
   Stack,
+  TextInput,
 } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import { useMemo } from "react";
 import Latex from "react-latex-next";
 import classes from "./process-tab.module.css";
@@ -53,8 +61,60 @@ function reactionAsLatex(
   return `${lhs} ${arrow} ${rhs}`;
 }
 
+const CommentSection = (
+  { comments, onChange }: {
+    comments: Array<string> | undefined;
+    onChange: (comments: Array<string> | undefined) => MaybePromise<void>;
+  },
+) => (
+  <Stack justify="stretch">
+    {comments?.map((comment, index) => {
+      return (
+        <Group key={index} justify="center">
+          <TextInput
+            style={{ flexGrow: 1 }}
+            value={comment}
+            onChange={(event) => {
+              const newComments = [...comments];
+              newComments[index] = event.currentTarget.value;
+              return onChange(newComments);
+            }}
+          />
+          <ActionIcon
+            variant="subtle"
+            color="red"
+            onClick={() =>
+              onChange(
+                comments
+                  ? comments.filter((_, curIndex) => curIndex !== index)
+                  : undefined,
+              )}
+          >
+            <IconTrash />
+          </ActionIcon>
+        </Group>
+      );
+    })}
+    <Center>
+      <Button
+        variant="light"
+        style={{ width: 200 }}
+        onClick={() => onChange(comments ? [...comments, ""] : [""])}
+      >
+        +
+      </Button>
+    </Center>
+  </Stack>
+);
+
+const typeLabelMap = { "CrossSection": "Cross section" };
+const typeSelectData = Object
+  .entries(typeLabelMap)
+  .map(([value, label]) => ({ value, label }));
+
 const ProcessInfoItem = (
-  { info, references, onChange }: {
+  { id, info, references, onChange }: {
+    id: string;
     info: ProcessInfo;
     references: Record<string, string>;
     onChange: (info: ProcessInfo) => MaybePromise<void>;
@@ -70,16 +130,39 @@ const ProcessInfoItem = (
   }
 
   return (
-    <MultiSelect
-      label="References"
-      data={Object.entries(references).map(([value, label]) => ({
-        value,
-        label,
-      }))}
-      // TODO: Use a component that allows for adding reference comments.
-      value={info.references.map(ref => typeof ref === "object" ? ref.id : ref)}
-      onChange={(references) => onChange({ ...info, references })}
-    />
+    <Accordion.Item value={id}>
+      <Accordion.Control>
+        {typeLabelMap[info.type]}
+      </Accordion.Control>
+      <Accordion.Panel>
+        <Select
+          label="Type"
+          allowDeselect={false}
+          value={info.type}
+          data={typeSelectData}
+        />
+        <Fieldset legend="Comments">
+          <CommentSection
+            comments={info.comments}
+            onChange={(comments) => onChange({ ...info, comments })}
+          />
+        </Fieldset>
+        <MultiSelect
+          label="References"
+          data={Object.entries(references).map(([value, label]) => ({
+            value,
+            label,
+          }))}
+          // TODO: Use a component that allows for adding reference comments.
+          value={info.references.map(ref =>
+            typeof ref === "object" ? ref.id : ref
+          )}
+          onChange={(references) => onChange({ ...info, references })}
+        />
+        <Fieldset legend="Data">
+        </Fieldset>
+      </Accordion.Panel>
+    </Accordion.Item>
   );
 };
 
@@ -112,17 +195,20 @@ const ProcessItem = (
             />
           </Fieldset>
           <Fieldset legend="Info objects">
-            {process.info.map((info, index) => (
-              <ProcessInfoItem
-                key={index}
-                info={info}
-                references={references}
-                onChange={(info) => {
-                  process.info[index] = info;
-                  onChange(process);
-                }}
-              />
-            ))}
+            <Accordion defaultValue={process.info.length === 1 ? "0" : null}>
+              {process.info.map((info, index) => (
+                <ProcessInfoItem
+                  key={index}
+                  id={String(index)}
+                  info={info}
+                  references={references}
+                  onChange={(info) => {
+                    process.info[index] = info;
+                    onChange(process);
+                  }}
+                />
+              ))}
+            </Accordion>
           </Fieldset>
         </Stack>
       </Accordion.Panel>
