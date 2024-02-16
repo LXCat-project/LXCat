@@ -148,15 +148,6 @@ const ProcessInfoItem = (
     onDelete: () => MaybePromise<void>;
   },
 ) => {
-  // Filters out removed references.
-  const filteredRefs = info.references.filter((ref) =>
-    typeof ref === "object" ? ref.id : ref in references
-  );
-
-  if (filteredRefs.length < info.references.length) {
-    onChange({ ...info, references: filteredRefs });
-  }
-
   return (
     <Accordion.Item value={id}>
       <Center>
