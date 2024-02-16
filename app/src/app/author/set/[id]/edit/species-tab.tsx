@@ -104,40 +104,42 @@ export const SpeciesTab = (
           )}
         </Accordion>
       </ScrollArea>
-      <Button.Group>
-        <Button
-          onClick={() => {
-            const id = nanoid();
-            onChange({
-              ...species,
-              [id]: {
-                type: "simple",
-                particle: "",
-                charge: 0,
-              },
-            }, {
-              ...meta,
-              [id]: {
-                electronic: {
-                  anyOf: "0",
-                  vibrational: {
+      <Center>
+        <Button.Group>
+          <Button
+            onClick={() => {
+              const id = nanoid();
+              onChange({
+                ...species,
+                [id]: {
+                  type: "simple",
+                  particle: "",
+                  charge: 0,
+                },
+              }, {
+                ...meta,
+                [id]: {
+                  electronic: {
                     anyOf: "0",
-                    rotational: { anyOf: "0" },
+                    vibrational: {
+                      anyOf: "0",
+                      rotational: { anyOf: "0" },
+                    },
                   },
                 },
-              },
-            });
-          }}
-        >
-          +
-        </Button>
-        <Button
-          variant="light"
-          onClick={openSpeciesPicker}
-        >
-          Add from database
-        </Button>
-      </Button.Group>
+              });
+            }}
+          >
+            +
+          </Button>
+          <Button
+            variant="light"
+            onClick={openSpeciesPicker}
+          >
+            Add from database
+          </Button>
+        </Button.Group>
+      </Center>
       <Modal
         opened={speciesPickerOpened}
         onClose={closeSpeciesPicker}
