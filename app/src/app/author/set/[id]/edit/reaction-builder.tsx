@@ -17,6 +17,8 @@ import {
   Stack,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
+import { nanoid } from "nanoid";
+import { useState } from "react";
 
 type Process = PartialKeyedDocument["processes"][number];
 
@@ -26,58 +28,68 @@ const SpeciesBuilder = (
     species: Record<string, string>;
     onChange: (entries: Process["reaction"]["lhs"]) => MaybePromise<void>;
   },
-) => (
-  <Stack>
-    {entries.map((entry, index) => {
-      return (
-        <Group key={entry.state} justify="space-between">
-          <NumberInput
-            allowDecimal={false}
-            allowNegative={false}
-            min={1}
-            style={{ width: "70px" }}
-            value={entry.count}
-            onChange={(count) => {
-              const newEntries = [...entries];
-              newEntries[index].count = count as number;
-              return onChange(newEntries);
-            }}
-          />
-          <LatexSelect
-            value={entry.state}
-            data={species}
-            onChange={(speciesKey) => {
-              const newEntries = [...entries];
-              newEntries[index].state = speciesKey!;
-              return onChange(newEntries);
-            }}
-            grow
-          />
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={() =>
-              onChange(entries.filter((_, curIndex) => curIndex !== index))}
-          >
-            <IconTrash />
-          </ActionIcon>
-        </Group>
-      );
-    })}
-    <Center>
-      <Button
-        style={{ width: 180 }}
-        onClick={() => {
-          if (entries.every((entry) => entry.state in species)) {
-            onChange([...entries, { count: 1, state: "" }]);
-          }
-        }}
-      >
-        +
-      </Button>
-    </Center>
-  </Stack>
-);
+) => {
+  const [ids, setIds] = useState(entries.map(_ => nanoid()));
+
+  return (
+    <Stack>
+      {entries.map((entry, index) => {
+        return (
+          <Group key={ids[index]} justify="space-between">
+            <NumberInput
+              allowDecimal={false}
+              allowNegative={false}
+              min={1}
+              style={{ width: "70px" }}
+              value={entry.count}
+              onChange={(count) =>
+                onChange(
+                  entries.with(index, { ...entry, count: count as number }),
+                )}
+            />
+            <LatexSelect
+              value={entry.state}
+              data={species}
+              onChange={(speciesKey) => {
+                const newEntries = [...entries];
+                newEntries[index].state = speciesKey!;
+                return onChange(newEntries);
+              }}
+              grow
+            />
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={() => {
+                setIds((ids) =>
+                  ids.filter((_, curIndex) => curIndex !== index)
+                );
+                return onChange(
+                  entries.filter((_, curIndex) => curIndex !== index),
+                );
+              }}
+            >
+              <IconTrash />
+            </ActionIcon>
+          </Group>
+        );
+      })}
+      <Center>
+        <Button
+          style={{ width: 180 }}
+          onClick={() => {
+            if (entries.every((entry) => entry.state in species)) {
+              setIds((ids) => [...ids, nanoid()]);
+              return onChange([...entries, { count: 1, state: "" }]);
+            }
+          }}
+        >
+          +
+        </Button>
+      </Center>
+    </Stack>
+  );
+};
 
 export const ReactionBuilder = (
   { reaction, species, onChange }: {
