@@ -233,12 +233,33 @@ export const EditForm = (
           <Tabs.Panel value="references">
             <ReferenceTable
               references={Object.values(getInputProps("set.references").value)}
-              onChange={(references: Array<Reference>) =>
-                getInputProps("set.references").onChange(
-                  Object.fromEntries(
-                    references.map((reference) => [reference.id, reference]),
-                  ),
-                )}
+              onChange={(references: Array<Reference>) => {
+                const referenceMap = Object.fromEntries(
+                  references.map((reference) => [reference.id, reference]),
+                );
+
+                // NOTE: This is quite inefficient. However, it is far from the
+                //       bottleneck (rendering and state updates are the
+                //       problem).
+                const processes = references.length
+                    < Object.keys(form.values.set.references).length
+                  ? form.values.set.processes.map((process) => ({
+                    ...process,
+                    info: process.info.map((info) => ({
+                      ...info,
+                      references: info.references.filter((ref) =>
+                        (typeof ref === "object" ? ref.id : ref) in referenceMap
+                      ),
+                    })),
+                  }))
+                  : form.values.set.processes;
+
+                getInputProps("set").onChange({
+                  ...form.values.set,
+                  processes,
+                  references: referenceMap,
+                });
+              }}
             />
           </Tabs.Panel>
           <Tabs.Panel value="processes">
