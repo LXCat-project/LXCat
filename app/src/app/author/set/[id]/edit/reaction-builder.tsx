@@ -64,15 +64,18 @@ const SpeciesBuilder = (
         </Group>
       );
     })}
-    <Button
-      onClick={() => {
-        if (entries.every((entry) => entry.state in species)) {
-          onChange([...entries, { count: 1, state: "" }]);
-        }
-      }}
-    >
-      +
-    </Button>
+    <Center>
+      <Button
+        style={{ width: 180 }}
+        onClick={() => {
+          if (entries.every((entry) => entry.state in species)) {
+            onChange([...entries, { count: 1, state: "" }]);
+          }
+        }}
+      >
+        +
+      </Button>
+    </Center>
   </Stack>
 );
 
