@@ -21,7 +21,7 @@ export async function register() {
         content: {
           "application/schema+json": {
             schema: {
-              $ref: LTPDocumentJSONSchema.$schema,
+              $ref: LTPDocumentJSONSchema.$schema?.replace(/^http:/, "https:"),
             },
           },
         },
