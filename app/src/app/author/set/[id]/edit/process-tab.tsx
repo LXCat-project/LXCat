@@ -214,11 +214,20 @@ const defaultInfoItem = (): CrossSectionInfo<ReferenceRef<string>> => ({
 });
 
 const ProcessItem = (
-  { process, species, references, onChange, itemValue, renderPanel = true }: {
+  {
+    process,
+    species,
+    references,
+    onChange,
+    onDelete,
+    itemValue,
+    renderPanel = true,
+  }: {
     process: Process;
     species: Record<string, string>;
     references: Record<string, string>;
     onChange: (process: Process) => MaybePromise<void>;
+    onDelete: () => MaybePromise<void>;
     itemValue: string;
     renderPanel?: boolean;
   },
@@ -232,9 +241,19 @@ const ProcessItem = (
 
   return (
     <Accordion.Item value={itemValue}>
-      <Accordion.Control>
-        <Latex>{`$${latex}$`}</Latex>
-      </Accordion.Control>
+      <Center>
+        <Accordion.Control>
+          <Latex>{`$${latex}$`}</Latex>
+        </Accordion.Control>
+        <ActionIcon
+          style={{ marginRight: 10 }}
+          variant="subtle"
+          color="red"
+          onClick={onDelete}
+        >
+          <IconTrash />
+        </ActionIcon>
+      </Center>
       <Accordion.Panel>
         {renderPanel
           && (
@@ -334,14 +353,16 @@ export const ProcessTab = (
       ]) => [key, reference2bibliography(value)]),
     ), [references]);
 
+  const [ids, setIds] = useState(processes.map((_) => nanoid()));
+
   return (
     <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-      <Accordion {...accordion} variant="contained">
+      <Accordion {...accordion} variant="contained" chevronPosition="left">
         {processes.map((process, index) => {
           return (
             <ProcessItem
-              key={index}
-              itemValue={`process-${index}`}
+              key={ids[index]}
+              itemValue={ids[index]}
               process={process}
               species={speciesMap}
               references={referenceMap}
@@ -349,7 +370,15 @@ export const ProcessTab = (
                 processes[index] = process;
                 onChange(processes);
               }}
-              renderPanel={`process-${index}` === accordion.value}
+              onDelete={() => {
+                setIds((ids) =>
+                  ids.filter((_, curIndex) => curIndex !== index)
+                );
+                return onChange(
+                  processes.filter((_, curIndex) => curIndex !== index),
+                );
+              }}
+              renderPanel={ids[index] === accordion.value}
             />
           );
         })}
