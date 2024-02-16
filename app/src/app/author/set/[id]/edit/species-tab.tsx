@@ -5,8 +5,18 @@
 import { PartialKeyedDocument } from "@lxcat/database/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { type AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
-import { Accordion, Button, Modal, ScrollArea, Stack } from "@mantine/core";
+import {
+  Accordion,
+  ActionIcon,
+  Button,
+  Center,
+  Group,
+  Modal,
+  ScrollArea,
+  Stack,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconTrack, IconTrash } from "@tabler/icons-react";
 import { JSONSchema7 } from "json-schema";
 import { nanoid } from "nanoid";
 import { useState } from "react";
@@ -76,7 +86,7 @@ export const SpeciesTab = (
   return (
     <Stack>
       <ScrollArea classNames={{ viewport: classes.speciesList }} type="auto">
-        <Accordion>
+        <Accordion variant="contained" chevronPosition="left">
           {Object.entries(species).map(
             ([key, state]) => {
               const parsed = AnySpeciesSerializable.safeParse(state);
@@ -86,9 +96,23 @@ export const SpeciesTab = (
 
               return (
                 <Accordion.Item key={key} value={key}>
-                  <Accordion.Control>
-                    <Latex>{`$${controlNode}$`}</Latex>
-                  </Accordion.Control>
+                  <Center>
+                    <Accordion.Control>
+                      <Latex>{`$${controlNode}$`}</Latex>
+                    </Accordion.Control>
+                    <ActionIcon
+                      style={{ marginRight: 10 }}
+                      variant="subtle"
+                      color="red"
+                      onClick={() => {
+                        delete species[key];
+                        delete meta[key];
+                        return onChange(species, meta);
+                      }}
+                    >
+                      <IconTrash />
+                    </ActionIcon>
+                  </Center>
                   <Accordion.Panel>
                     <SpeciesForm
                       typeMap={generateSpeciesForm(

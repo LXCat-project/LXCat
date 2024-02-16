@@ -225,8 +225,32 @@ export const EditForm = (
               species={form.values.set.states}
               meta={form.values.meta}
               onChange={(species, meta) => {
-                form.setFieldValue("set.states", species);
-                form.setFieldValue("set.meta", meta);
+                // NOTE: This is quite inefficient. However, it is far from the
+                //       bottleneck (rendering and state updates are the
+                //       problem).
+                const processes = Object.keys(species).length
+                    < Object.keys(form.values.set.states).length
+                  ? form.values.set.processes.map((process) => ({
+                    ...process,
+                    reaction: {
+                      ...process.reaction,
+                      lhs: process.reaction.lhs.filter((entry) =>
+                        entry.state in species
+                      ),
+                      rhs: process.reaction.rhs.filter((entry) =>
+                        entry.state in species
+                      ),
+                    },
+                  }))
+                  : form.values.set.processes;
+
+                form.setValues(
+                  {
+                    ...form.values,
+                    meta,
+                    set: { ...form.values.set, states: species, processes },
+                  },
+                );
               }}
             />
           </Tabs.Panel>
