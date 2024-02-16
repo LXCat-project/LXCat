@@ -249,7 +249,7 @@ const ProcessItem = (
               <Fieldset legend="Info objects">
                 <Stack>
                   <Accordion
-                    defaultValue={process.info.length === 1 ? "0" : null}
+                    defaultValue={process.info.length === 1 ? ids[0] : null}
                     variant="contained"
                     chevronPosition="left"
                   >
