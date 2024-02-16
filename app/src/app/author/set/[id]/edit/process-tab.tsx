@@ -7,7 +7,8 @@
 import { MaybePromise } from "@/app/api/util";
 import { reference2bibliography } from "@/shared/cite";
 import { type PartialKeyedDocument } from "@lxcat/database/schema";
-import { ReactionEntry } from "@lxcat/schema/process";
+import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
+import { ReferenceRef } from "@lxcat/schema/reference";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
@@ -23,7 +24,8 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
-import { useMemo } from "react";
+import { nanoid } from "nanoid";
+import { useMemo, useState } from "react";
 import Latex from "react-latex-next";
 import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
@@ -138,11 +140,12 @@ const typeSelectData = Object
   .map(([value, label]) => ({ value, label }));
 
 const ProcessInfoItem = (
-  { id, info, references, onChange }: {
+  { id, info, references, onChange, onDelete }: {
     id: string;
     info: ProcessInfo;
     references: Record<string, string>;
     onChange: (info: ProcessInfo) => MaybePromise<void>;
+    onDelete: () => MaybePromise<void>;
   },
 ) => {
   // Filters out removed references.
@@ -156,9 +159,19 @@ const ProcessInfoItem = (
 
   return (
     <Accordion.Item value={id}>
-      <Accordion.Control>
-        {typeLabelMap[info.type]}
-      </Accordion.Control>
+      <Center>
+        <Accordion.Control>
+          {typeLabelMap[info.type]}
+        </Accordion.Control>
+        <ActionIcon
+          style={{ marginRight: 10 }}
+          variant="subtle"
+          color="red"
+          onClick={onDelete}
+        >
+          <IconTrash />
+        </ActionIcon>
+      </Center>
       <Accordion.Panel>
         <Stack gap="sm">
           <Select
@@ -197,6 +210,18 @@ const ProcessInfoItem = (
   );
 };
 
+const defaultInfoItem = (): CrossSectionInfo<ReferenceRef<string>> => ({
+  type: "CrossSection",
+  references: [],
+  threshold: 0,
+  data: {
+    type: "LUT",
+    labels: ["Energy", "Cross Section"],
+    units: ["eV", "m2"],
+    values: [[0, 0]],
+  },
+});
+
 const ProcessItem = (
   { process, species, references, onChange, itemValue, renderPanel = true }: {
     process: Process;
@@ -211,6 +236,8 @@ const ProcessItem = (
     process.reaction,
     species,
   ]);
+
+  const [ids, setIds] = useState(process.info.map((_) => nanoid()));
 
   return (
     <Accordion.Item value={itemValue}>
@@ -229,23 +256,51 @@ const ProcessItem = (
                 />
               </Fieldset>
               <Fieldset legend="Info objects">
-                <Accordion
-                  defaultValue={process.info.length === 1 ? "0" : null}
-                  variant="contained"
-                >
-                  {process.info.map((info, index) => (
-                    <ProcessInfoItem
-                      key={index}
-                      id={String(index)}
-                      info={info}
-                      references={references}
-                      onChange={(info) => {
-                        process.info[index] = info;
-                        onChange(process);
+                <Stack>
+                  <Accordion
+                    defaultValue={process.info.length === 1 ? "0" : null}
+                    variant="contained"
+                    chevronPosition="left"
+                  >
+                    {process.info.map((info, index) => (
+                      <ProcessInfoItem
+                        key={ids[index]}
+                        id={ids[index]}
+                        info={info}
+                        references={references}
+                        onChange={(info) => {
+                          process.info[index] = info;
+                          onChange(process);
+                        }}
+                        onDelete={() => {
+                          setIds((ids) =>
+                            ids.filter((_, curIndex) => curIndex !== index)
+                          );
+                          return onChange({
+                            ...process,
+                            info: process.info.filter((_, curIndex) =>
+                              curIndex !== index
+                            ),
+                          });
+                        }}
+                      />
+                    ))}
+                  </Accordion>
+                  <Center>
+                    <Button
+                      style={{ width: 300 }}
+                      onClick={() => {
+                        setIds((ids) => [...ids, nanoid()]);
+                        return onChange({
+                          ...process,
+                          info: [...process.info, defaultInfoItem()],
+                        });
                       }}
-                    />
-                  ))}
-                </Accordion>
+                    >
+                      +
+                    </Button>
+                  </Center>
+                </Stack>
               </Fieldset>
             </Stack>
           )}
