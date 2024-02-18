@@ -300,8 +300,8 @@ importers:
         specifier: workspace:^
         version: link:../schema
       arangojs:
-        specifier: ^8.6.0
-        version: 8.6.0
+        specifier: ^8.7.0
+        version: 8.7.0
       deep-equal:
         specifier: ^2.2.3
         version: 2.2.3
@@ -4192,8 +4192,8 @@ packages:
       default-require-extensions: 3.0.1
     dev: true
 
-  /arangojs@8.6.0:
-    resolution: {integrity: sha512-w5pNwYBmzFuOEt6Z1/D7frWpcuq/35UJ2Vpx7pQM2ERAQx44nd/OADfKfR09+hE7onC4czJiFSefd4Rup6ldJQ==}
+  /arangojs@8.7.0:
+    resolution: {integrity: sha512-iPzZdKtFRFSwBCEI/op+fhN+m1rrl5xMKRBKE3UIHMXMeBfKhxLj7c4TGtOn7pTTc7WqIi53xuPR+g7aEMU8xw==}
     engines: {node: '>=14'}
     dependencies:
       '@types/node': 20.11.17
