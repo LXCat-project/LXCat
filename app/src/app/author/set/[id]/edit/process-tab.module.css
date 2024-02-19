@@ -5,7 +5,7 @@
  */
 
 .processList {
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 300px);
 }
 
 .processList > div[style] {
