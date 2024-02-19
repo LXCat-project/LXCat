@@ -23,7 +23,7 @@ import {
   Stack,
   TextInput,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconPlaylistAdd, IconTrash } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
 import Latex from "react-latex-next";
@@ -125,10 +125,10 @@ const CommentSection = (
     <Center>
       <Button
         variant="light"
-        style={{ width: 200 }}
         onClick={() => onChange(comments ? [...comments, ""] : [""])}
+        rightSection={<IconPlaylistAdd />}
       >
-        +
+        Add comment
       </Button>
     </Center>
   </Stack>
@@ -298,7 +298,6 @@ const ProcessItem = (
                   </Accordion>
                   <Center>
                     <Button
-                      style={{ width: 300 }}
                       onClick={() => {
                         setIds((ids) => [...ids, nanoid()]);
                         return onChange({
@@ -306,8 +305,9 @@ const ProcessItem = (
                           info: [...process.info, defaultInfoItem()],
                         });
                       }}
+                      rightSection={<IconPlaylistAdd />}
                     >
-                      +
+                      Add info object
                     </Button>
                   </Center>
                 </Stack>
