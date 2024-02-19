@@ -23,7 +23,11 @@ import {
   Stack,
   TextInput,
 } from "@mantine/core";
-import { IconPlaylistAdd, IconTrash } from "@tabler/icons-react";
+import {
+  IconPlaylistAdd,
+  IconRowInsertBottom,
+  IconTrash,
+} from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
 import Latex from "react-latex-next";
@@ -356,33 +360,49 @@ export const ProcessTab = (
   const [ids, setIds] = useState(processes.map((_) => nanoid()));
 
   return (
-    <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-      <Accordion {...accordion} variant="contained" chevronPosition="left">
-        {processes.map((process, index) => {
-          return (
-            <ProcessItem
-              key={ids[index]}
-              itemValue={ids[index]}
-              process={process}
-              species={speciesMap}
-              references={referenceMap}
-              onChange={(process) => {
-                processes[index] = process;
-                onChange(processes);
-              }}
-              onDelete={() => {
-                setIds((ids) =>
-                  ids.filter((_, curIndex) => curIndex !== index)
-                );
-                return onChange(
-                  processes.filter((_, curIndex) => curIndex !== index),
-                );
-              }}
-              renderPanel={ids[index] === accordion.value}
-            />
-          );
-        })}
-      </Accordion>
-    </ScrollArea>
+    <Stack>
+      <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
+        <Accordion {...accordion} variant="contained" chevronPosition="left">
+          {processes.map((process, index) => {
+            return (
+              <ProcessItem
+                key={ids[index]}
+                itemValue={ids[index]}
+                process={process}
+                species={speciesMap}
+                references={referenceMap}
+                onChange={(process) => {
+                  processes[index] = process;
+                  onChange(processes);
+                }}
+                onDelete={() => {
+                  setIds((ids) =>
+                    ids.filter((_, curIndex) => curIndex !== index)
+                  );
+                  return onChange(
+                    processes.filter((_, curIndex) => curIndex !== index),
+                  );
+                }}
+                renderPanel={ids[index] === accordion.value}
+              />
+            );
+          })}
+        </Accordion>
+      </ScrollArea>
+      <Center>
+        <Button
+          rightSection={<IconRowInsertBottom />}
+          onClick={() => {
+            setIds((ids) => [...ids, nanoid()]);
+            return onChange([...processes, {
+              reaction: { lhs: [], rhs: [], reversible: false, typeTags: [] },
+              info: [],
+            }]);
+          }}
+        >
+          Add process
+        </Button>
+      </Center>
+    </Stack>
   );
 };
