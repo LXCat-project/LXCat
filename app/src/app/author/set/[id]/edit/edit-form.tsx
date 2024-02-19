@@ -182,7 +182,20 @@ export const EditForm = (
     <FormProvider form={form}>
       <form
         style={{ margin: 10 }}
-        onSubmit={form.onSubmit((data) => {
+        onSubmit={form.onSubmit(async (formData) => {
+          const url = `/api/author/scat-css/${formData.set._key!}`;
+          const body = JSON.stringify({
+            doc: formData.set,
+            message: formData.commitMessage,
+          });
+          const headers = new Headers({
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          });
+          const init = { method: "POST", body, headers };
+          const res = await fetch(url, init);
+          const data = await res.json();
+          // TODO: Handle user feedback.
           console.log(data);
         })}
       >
