@@ -18,12 +18,11 @@ export const DeleteDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
     if (confirmed) {
       const result = await deleteSet(selectedSetId);
       if (typeof result === "string") {
-        onClose(result);
-        return;
+        return onClose(result);
       }
     }
 
-    onClose();
+    return onClose();
   }
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>
