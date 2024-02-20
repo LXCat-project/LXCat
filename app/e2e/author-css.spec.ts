@@ -39,10 +39,10 @@ test.describe.skip("/author/scat-css", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/author/scat-css");
     await page.locator("button:text-is(\"Edit\")").click();
-    await page.locator("textarea[name=\"set\\.description\"]").fill(
+    await page.getByPlaceholder("Describe which changes have").fill(
       "Edited description",
     );
-    await page.locator("button:has-text(\"Submit\")").click();
+    await page.getByRole("button", { name: "Submit" }).click();
     await page.goto("/author/scat-css");
   });
 
@@ -51,7 +51,9 @@ test.describe.skip("/author/scat-css", () => {
   // async calls (that e.g. reload the page data) to finish before
   // continuing
 
-  test("A simple edit should result in a draft", async ({ page }) => {
+  test.only("A simple edit should result in a draft", async ({ page }) => {
+    await page.goto("/author/scat-css");
+
     const table = page.locator("table:has(thead th:text(\"Version\"))");
 
     // Status = draft
