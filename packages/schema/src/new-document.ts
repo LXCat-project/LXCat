@@ -2,22 +2,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { string, z } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
-import { AnyProcess } from "./process/any-process.js";
-import { SelfReference } from "./self-reference.js";
+import { NewProcess } from "./process/new-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 
-const DocumentBody = z.object({
+const NewDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
-  processes: z.array(AnyProcess(z.string(), ReferenceRef(z.string().min(1)))),
+  processes: z.array(NewProcess(z.string(), ReferenceRef(z.string().min(1)))),
 });
 
-export const LTPDocument = SelfReference
-  .merge(SetHeader)
-  .merge(DocumentBody)
+// Does not contain any _key or version information. Fresh datasets that are
+// uploaded by contributors use this type.
+export const NewLTPDocument = NewDocumentBody
+  .merge(SetHeader(string().min(1)))
   .refine(
     (doc) =>
       doc.processes
@@ -41,4 +41,4 @@ export const LTPDocument = SelfReference
     "Referenced reference key is missing in references record.",
   );
 
-export type LTPDocument = z.output<typeof LTPDocument>;
+export type NewLTPDocument = z.output<typeof NewLTPDocument>;

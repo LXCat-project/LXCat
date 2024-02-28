@@ -3,14 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, test } from "vitest";
-import { LTPDocument } from "./document.js";
+import { NewLTPDocument } from "./new-document.js";
 
 describe("LTPDocument", () => {
   test("Should throw when referencing faulty state key", () => {
-    const doc: LTPDocument = {
-      $schema: "http://schema.com",
-      url: "http://test.com",
-      termsOfUse: "http://test.com/terms-of-use",
+    const doc: NewLTPDocument = {
       contributor: "TestOrganization",
       name: "TestContributor",
       description: "",
@@ -39,15 +36,12 @@ describe("LTPDocument", () => {
         },
       ],
     };
-    expect(() => LTPDocument.parse(doc)).toThrowError(
+    expect(() => NewLTPDocument.parse(doc)).toThrowError(
       "Referenced state key is missing in states record.",
     );
   });
   test("Should throw when referencing faulty reference key", () => {
-    const doc: LTPDocument = {
-      $schema: "http://schema.com",
-      url: "http://test.com",
-      termsOfUse: "http://test.com/terms-of-use",
+    const doc: NewLTPDocument = {
       contributor: "TestOrganization",
       name: "TestContributor",
       description: "",
@@ -76,7 +70,7 @@ describe("LTPDocument", () => {
         },
       ],
     };
-    expect(() => LTPDocument.parse(doc)).toThrowError(
+    expect(() => NewLTPDocument.parse(doc)).toThrowError(
       "Referenced reference key is missing in references record.",
     );
   });

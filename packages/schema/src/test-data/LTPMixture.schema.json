@@ -7,8 +7,29 @@
         "type": "object",
         "properties": {
           "contributor": {
-            "type": "string",
-            "minLength": 1
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string"
+              },
+              "contact": {
+                "type": "string"
+              },
+              "howToReference": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "description",
+              "contact",
+              "howToReference"
+            ],
+            "additionalProperties": false
           },
           "name": {
             "type": "string",

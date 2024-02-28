@@ -2,29 +2,28 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, z } from "zod";
+import { z } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
-import { ProcessInfo } from "./process/process-info.js";
-import { Process } from "./process/process.js";
-import { SetReference } from "./process/set-reference.js";
+import { VersionedProcess } from "./process/versioned-process.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
+import { versioned } from "./versioned.js";
 
-const MixtureBody = z.object({
-  sets: z.record(SetHeader(Contributor)),
+const VersionedDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    Process(
-      z.string(),
-      ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
-    ),
+    versioned(VersionedProcess(z.string(), ReferenceRef(z.string().min(1)))),
   ),
 });
 
-export const LTPMixture = MixtureBody
+// Contains _key and version information. Datasets downloaded from LXCat use
+// this schema.
+export const VersionedLTPDocument = versioned(
+  SelfReference.merge(SetHeader(Contributor)).merge(VersionedDocumentBody),
+)
   .refine(
     (doc) =>
       doc.processes
@@ -47,10 +46,5 @@ export const LTPMixture = MixtureBody
         ),
     "Referenced reference key is missing in references record.",
   );
-export type LTPMixture = output<typeof LTPMixture>;
 
-export const LTPMixtureWithReference = z.intersection(
-  SelfReference,
-  LTPMixture,
-);
-export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;
+export type EditedLTPDocument = z.output<typeof VersionedLTPDocument>;

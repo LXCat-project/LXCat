@@ -10,7 +10,12 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
-          contributor: "TestOrganization",
+          contributor: {
+            name: "TestOrganization",
+            description: "Description for test data.",
+            contact: "test@testmail.com",
+            howToReference: "",
+          },
           name: "TestContributor",
           description: "",
           complete: false,
@@ -49,7 +54,12 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
-          contributor: "TestOrganization",
+          contributor: {
+            name: "TestOrganization",
+            description: "Description for test data.",
+            contact: "test@testmail.com",
+            howToReference: "",
+          },
           name: "TestContributor",
           description: "",
           complete: false,

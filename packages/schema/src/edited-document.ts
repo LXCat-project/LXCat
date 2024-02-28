@@ -2,29 +2,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, z } from "zod";
+import { string, z } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
-import { Contributor } from "./contributor.js";
-import { ProcessInfo } from "./process/process-info.js";
-import { Process } from "./process/process.js";
-import { SetReference } from "./process/set-reference.js";
-import { SelfReference } from "./self-reference.js";
+import { partialKeyed } from "./partial-keyed.js";
+import { EditedProcess } from "./process/edited-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 
-const MixtureBody = z.object({
-  sets: z.record(SetHeader(Contributor)),
+const EditedDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    Process(
-      z.string(),
-      ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
-    ),
+    partialKeyed(EditedProcess(z.string(), ReferenceRef(z.string().min(1)))),
   ),
 });
 
-export const LTPMixture = MixtureBody
+// Optionally contains _key information, version information can be omitted.
+// This type can be used to update existing documents.
+export const EditedLTPDocument = partialKeyed(
+  EditedDocumentBody.merge(SetHeader(string().min(1))),
+)
   .refine(
     (doc) =>
       doc.processes
@@ -47,10 +44,5 @@ export const LTPMixture = MixtureBody
         ),
     "Referenced reference key is missing in references record.",
   );
-export type LTPMixture = output<typeof LTPMixture>;
 
-export const LTPMixtureWithReference = z.intersection(
-  SelfReference,
-  LTPMixture,
-);
-export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;
+export type EditedLTPDocument = z.output<typeof EditedLTPDocument>;
