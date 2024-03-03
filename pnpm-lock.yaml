@@ -11,8 +11,8 @@ importers:
   app:
     dependencies:
       '@asteasolutions/zod-to-openapi':
-        specifier: ^6.3.0
-        version: 6.3.1(zod@3.22.4)
+        specifier: ^6.4.0
+        version: 6.4.0(zod@3.22.4)
       '@citation-js/core':
         specifier: ^0.7.6
         version: 0.7.6
@@ -430,8 +430,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
 
-  /@asteasolutions/zod-to-openapi@6.3.1(zod@3.22.4):
-    resolution: {integrity: sha512-1CRWBqslgdBpZeJnxxksGirAQ39Iztxk+LzTkYwoP0mNzuaULa604s8Xc5V9yzmYccwJ89O9fPQgxCkbNN398g==}
+  /@asteasolutions/zod-to-openapi@6.4.0(zod@3.22.4):
+    resolution: {integrity: sha512-8cxfF7AHHx2PqnN4Cd8/O8CBu/nVYJP9DpnfVLW3BFb66VJDnqI/CczZnkqMc3SNh6J9GiX7JbJ5T4BSP4HZ2Q==}
     peerDependencies:
       zod: ^3.20.2
     dependencies:
