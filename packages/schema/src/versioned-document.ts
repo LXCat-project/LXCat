@@ -15,7 +15,7 @@ const VersionedDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    versioned(VersionedProcess(z.string(), ReferenceRef(z.string().min(1)))),
+    VersionedProcess(z.string(), ReferenceRef(z.string().min(1))),
   ),
 });
 
