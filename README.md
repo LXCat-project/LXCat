@@ -88,5 +88,5 @@ v3.0 or later. Except for the schema (packages/schema) and converter
 
 ## Copyright
 
-The LXCat team wrote the LXCat code. The LXCat team members are listed in
+Members of the LXCat team wrote the LXCat code. The authors are listed in
 [CITATION.cff](CITATION.cff).
