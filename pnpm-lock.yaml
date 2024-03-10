@@ -23,8 +23,8 @@ importers:
         specifier: ^0.7.9
         version: 0.7.9(@citation-js/core@0.7.9)
       '@citation-js/plugin-doi':
-        specifier: ^0.7.8
-        version: 0.7.8(@citation-js/core@0.7.9)
+        specifier: ^0.7.9
+        version: 0.7.9(@citation-js/core@0.7.9)
       '@citation-js/plugin-ris':
         specifier: ^0.7.9
         version: 0.7.9(@citation-js/core@0.7.9)
@@ -1666,8 +1666,8 @@ packages:
       citeproc: 2.4.63
     dev: false
 
-  /@citation-js/plugin-doi@0.7.8(@citation-js/core@0.7.9):
-    resolution: {integrity: sha512-jqdEVSlPXI1vE4YfdJmj5JPTP8tdlfHwCgytOCO4ENQQJ1U2cXGRUrgC9THt+vhre+fP8zhB8MZ+MN38PbmYuQ==}
+  /@citation-js/plugin-doi@0.7.9(@citation-js/core@0.7.9):
+    resolution: {integrity: sha512-n6vYT9SU+FewthkRHuwlLmALrQKTpBq9zg9sVUDgnNhe3T/IirOKfleQ5+F5t6y2N82EAwakj/rtHTcsL/fYsw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
