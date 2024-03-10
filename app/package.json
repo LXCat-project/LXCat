@@ -43,7 +43,7 @@
     "github-slugger": "^2.0.0",
     "glob": "^10.3.10",
     "immer": "^10.0.4",
-    "mantine-datatable": "^7.6.0",
+    "mantine-datatable": "^7.6.1",
     "mdast-util-from-markdown": "^2.0.0",
     "mermaid": "^10.9.0",
     "nanoid": "^5.0.6",
