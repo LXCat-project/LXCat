@@ -2,23 +2,22 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type AnyProcess } from "@lxcat/schema/process";
+import { Status, VersionInfo } from "@lxcat/schema";
+import { EditedProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
-import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { Status, VersionInfo } from "../../shared/types/version-info.js";
 
 export async function createCS(
   this: LXCatDatabase,
-  cs: AnyProcess<string, ReferenceRef<string>>,
+  cs: EditedProcess<string, ReferenceRef<string>>,
   stateDict: Record<string, string>, // key is string used in cs and value is database id eg. State/1234
   refDict: Record<string, string>, // key is string used in cs and value is database id eg. Reference/1234
   organizationId: string,
   status: Status = "published",
-  version = "1",
-  commitMessage = "",
+  version = 1,
+  commitMessage?: string,
 ): Promise<string> {
   const { reaction, info } = cs;
 
@@ -31,12 +30,12 @@ export async function createCS(
     );
   }
 
-  const { references, ...infoBody } = info[0];
+  const { references, _key, ...infoBody } = info[0];
 
   const versionInfo: VersionInfo = {
     status,
     version,
-    createdOn: now(),
+    createdOn: new Date(),
     commitMessage,
   };
 
@@ -96,7 +95,7 @@ export async function updateCS(
    * Key of the cross section item that serves as the base for the draft.
    */
   key: string,
-  cs: AnyProcess<string, ReferenceRef<string>>,
+  cs: EditedProcess<string, ReferenceRef<string>>,
   message: string,
   stateDict: Record<string, string>,
   refDict: Record<string, string>,
@@ -150,8 +149,8 @@ export async function isDraftless(this: LXCatDatabase, key: string) {
 
 export async function createDraftCS(
   this: LXCatDatabase,
-  version: string,
-  process: AnyProcess<string, ReferenceRef<string>>,
+  version: number,
+  process: EditedProcess<string, ReferenceRef<string>>,
   message: string,
   key: string,
   stateDict: Record<string, string>,
@@ -162,8 +161,9 @@ export async function createDraftCS(
   await this.isItemDraftless(key);
   // Add to CrossSection with status=='draft'
   const newStatus: Status = "draft";
-  // For draft version = prev version + 1
-  const newVersion = `${parseInt(version) + 1}`;
+  // For a draft the version = prev version + 1
+  const newVersion = version + 1;
+
   const idOfDraft = await this.createItem(
     process,
     stateDict,
@@ -185,19 +185,19 @@ export async function createDraftCS(
 
 export async function updateDraftCS(
   this: LXCatDatabase,
-  version: string,
-  processItem: AnyProcess<string, ReferenceRef<string>>,
+  version: number,
+  processItem: EditedProcess<string, ReferenceRef<string>>,
   commitMessage: string,
   key: string,
   stateDict: Record<string, string>,
   refDict: Record<string, string>,
   organization: string,
 ) {
-  const versionInfo = {
+  const versionInfo: VersionInfo = {
     status: "draft",
     version,
     commitMessage,
-    createdOn: now(),
+    createdOn: new Date(),
   };
 
   const { reaction, info } = processItem;

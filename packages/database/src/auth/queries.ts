@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Contributor } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
   KeyedOrganization,
-  Organization,
   Session,
   SessionDiff,
   UserDiff,
@@ -263,7 +263,7 @@ export async function stripAffiliations(this: LXCatDatabase, userKey: string) {
   return null;
 }
 
-export async function addOrganization(this: LXCatDatabase, org: Organization) {
+export async function addOrganization(this: LXCatDatabase, org: Contributor) {
   const cursor: ArrayCursor<string> = await this.db.query(aql`
         INSERT
             ${org}

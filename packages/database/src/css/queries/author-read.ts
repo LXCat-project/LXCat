@@ -2,11 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { KeyedDocument } from "../../schema/document.js";
-import { VersionInfo } from "../../shared/types/version-info.js";
 import { KeyedSet } from "../public.js";
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {
@@ -90,13 +89,13 @@ export async function byOwnerAndId(
                   )
                   RETURN {
                     reaction,
-                    info: [MERGE(cs.info, { _key: cs._key, references: csRefs })]
+                    info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: csRefs }, cs.info)]
                   }
               )
-              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), {contributor: org.name, references, states, processes})
+              RETURN MERGE(UNSET(css, ["_rev", "_id", "organization"]), {contributor: UNSET(org, ["_id", "_key", "_rev"]), references, states, processes})
     `);
   return await cursor.next().then((doc) =>
-    doc ? KeyedDocument.parse(doc) : null
+    doc ? VersionedLTPDocument.parse(doc) : null
   );
 }
 
@@ -126,5 +125,5 @@ export async function getVersionInfo(this: LXCatDatabase, key: string) {
         FILTER css._key == ${key}
         RETURN css.versionInfo
   `);
-  return cursor.next();
+  return cursor.next().then((info) => info && VersionInfo.parse(info));
 }

@@ -4,7 +4,7 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { KeyedDocument } from "../../schema/document.js";
+import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { KeyedSet } from "../public.js";
@@ -40,7 +40,7 @@ describe("given filled ArangoDB container", () => {
           processes: [],
         },
         "draft",
-        "1",
+        1,
         "Initial version",
       );
     });
@@ -58,7 +58,7 @@ describe("given filled ArangoDB container", () => {
             commitMessage: "Initial version",
             createdOn: expect.stringMatching(ISO_8601_UTC),
             status: "draft",
-            version: "1",
+            version: 1,
           },
         },
       ];
@@ -88,7 +88,7 @@ describe("given filled ArangoDB container", () => {
               commitMessage: "Initial version",
               createdOn: expect.stringMatching(ISO_8601_UTC),
               status: "published",
-              version: "1",
+              version: 1,
             },
           },
         ];
@@ -106,7 +106,14 @@ describe("given filled ArangoDB container", () => {
           expect(css2).toBeDefined();
           if (css2 !== null) {
             css2.description = "Some description 1st edit";
-            keycss2 = await db.updateSet(keycss1, css2, "First edit");
+            keycss2 = await db.updateSet(
+              keycss1,
+              EditedLTPDocument.parse({
+                ...css2,
+                contributor: css2.contributor.name,
+              }),
+              "First edit",
+            );
           }
         });
 
@@ -124,7 +131,7 @@ describe("given filled ArangoDB container", () => {
                 commitMessage: "First edit",
                 createdOn: expect.stringMatching(ISO_8601_UTC),
                 status: "draft",
-                version: "2",
+                version: 2,
               },
             },
           ];
@@ -150,7 +157,7 @@ describe("given filled ArangoDB container", () => {
                   commitMessage: "First edit",
                   createdOn: expect.stringMatching(ISO_8601_UTC),
                   status: "published",
-                  version: "2",
+                  version: 2,
                 },
               },
             ];
@@ -166,7 +173,7 @@ describe("given filled ArangoDB container", () => {
                 createdOn: expect.stringMatching(ISO_8601_UTC),
                 status: "published",
                 name: "Some versioned name",
-                version: "2",
+                version: 2,
               },
               {
                 _key: keycss1,
@@ -174,7 +181,7 @@ describe("given filled ArangoDB container", () => {
                 createdOn: expect.stringMatching(ISO_8601_UTC),
                 name: "Some versioned name",
                 status: "archived",
-                version: "1",
+                version: 1,
               },
             ];
             expect(result).toEqual(expected);
@@ -189,7 +196,7 @@ describe("given filled ArangoDB container", () => {
                 createdOn: expect.stringMatching(ISO_8601_UTC),
                 name: "Some versioned name",
                 status: "published",
-                version: "2",
+                version: 2,
               },
               {
                 _key: keycss1,
@@ -197,7 +204,7 @@ describe("given filled ArangoDB container", () => {
                 createdOn: expect.stringMatching(ISO_8601_UTC),
                 name: "Some versioned name",
                 status: "archived",
-                version: "1",
+                version: 1,
               },
             ];
             expect(result).toEqual(expected);
@@ -209,7 +216,7 @@ describe("given filled ArangoDB container", () => {
 
   describe("given published set with 3 refs, 4 simple particle states and 2 processes", () => {
     let keycss1: string;
-    let css1: KeyedDocument;
+    let css1: VersionedLTPDocument;
 
     beforeAll(async () => {
       // NOTE: We do not clear the container so this set needs a different name.
@@ -300,7 +307,7 @@ describe("given filled ArangoDB container", () => {
           ],
         },
         "published",
-        "1",
+        1,
         "Initial version",
       );
       const css = await db.getSetByOwnerAndId("somename@example.com", keycss1);
@@ -313,10 +320,13 @@ describe("given filled ArangoDB container", () => {
 
     describe("when draft is made with only change to charge of state with particle A", () => {
       let keycss2: string;
-      let css2: KeyedDocument;
+      let css2: VersionedLTPDocument;
 
       beforeAll(async () => {
-        const cssdraft = deepClone(css1);
+        const cssdraft = EditedLTPDocument.parse({
+          ...css1,
+          contributor: css1.contributor.name,
+        });
         const stateA = Object.values(cssdraft.states).find(
           (species) => species.particle === "A",
         );
@@ -358,7 +368,14 @@ describe("given filled ArangoDB container", () => {
           );
 
           if (other) {
-            expect(process).toEqual(other);
+            const info = process.info.map((
+              { versionInfo, ...infoWithoutVersion },
+            ) => infoWithoutVersion);
+            const otherInfo = process.info.map((
+              { versionInfo, ...infoWithoutVersion },
+            ) => infoWithoutVersion);
+            expect(process.reaction).toEqual(other.reaction);
+            expect(info).toEqual(otherInfo);
           } else {
             const other = css2.processes.find(({ reaction }) =>
               css2.states[reaction.lhs[0].state].particle === "A"
@@ -372,12 +389,13 @@ describe("given filled ArangoDB container", () => {
             const expected = deepClone(other);
             expected.info[0]._key = matchesId;
             expected.info[0].references = expect.any(Array);
+            expected.info[0].versionInfo = expect.any(Object);
 
             expect(process.info).toEqual(expected.info);
           }
         }
 
-        expect.assertions(4);
+        expect.assertions(5);
       });
 
       it("draft set should have other id as published set", () => {
@@ -398,7 +416,7 @@ describe("given filled ArangoDB container", () => {
         processes: [],
       },
       "draft",
-      "1",
+      1,
       "Initial version",
     );
     expect(
@@ -413,7 +431,7 @@ describe("given filled ArangoDB container", () => {
           processes: [],
         },
         "draft",
-        "1",
+        1,
         "Initial version",
       ),
     ).rejects.toThrowError();

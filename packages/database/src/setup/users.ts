@@ -8,9 +8,9 @@ import { CollectionType } from "arangojs/collection.js";
 import { Result, Unit } from "true-myth";
 import { err, ok } from "true-myth/result";
 import {
-  OrganizationAsJsonSchema,
+  // OrganizationAsJsonSchema,
   UserWithAccountSessionInDb,
-  UserWithAccountSessionInDbAsJsonSchema,
+  // UserWithAccountSessionInDbAsJsonSchema,
 } from "../auth/schema.js";
 import { ArangoError } from "../error.js";
 
@@ -41,9 +41,9 @@ const createUserCollection = async (
     return err(ArangoError("The User collection already exists"));
   }
   await users.create({
-    schema: {
-      rule: UserWithAccountSessionInDbAsJsonSchema,
-    },
+    // schema: {
+    //   rule: UserWithAccountSessionInDbAsJsonSchema,
+    // },
   });
   await Promise.all([
     users.ensureIndex({
@@ -77,9 +77,9 @@ const createOrganizationCollection = async (
     return err(ArangoError("The Organization collection already exists"));
   }
   await organizations.create({
-    schema: {
-      rule: OrganizationAsJsonSchema,
-    },
+    // schema: {
+    //   rule: OrganizationAsJsonSchema,
+    // },
   });
   await organizations.ensureIndex({
     type: "persistent",

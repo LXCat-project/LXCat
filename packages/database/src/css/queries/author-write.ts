@@ -2,38 +2,35 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type AnyProcess } from "@lxcat/schema/process";
+import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
+import { NewProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import deepEqual from "deep-equal";
-import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import type { PartialKeyedDocument } from "../../schema/document.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { mapReaction } from "../../shared/queries.js";
-import { Status, VersionInfo } from "../../shared/types/version-info.js";
 
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
   this: LXCatDatabase,
-  dataset: PartialKeyedDocument,
+  // FIXME: createSet should only accept
+  dataset: EditedLTPDocument,
   status: Status = "published",
-  version = "1",
-  commitMessage = "",
+  version = 1,
+  commitMessage?: string,
 ) {
+  // FIXME: We do not want to allow the creation of organizations through `createSet`.
   // Reuse Organization created by cross section drafting
   const organizationId = await this.upsertOrganization(dataset.contributor);
 
   const versionInfo: VersionInfo = {
     status,
     version,
-    createdOn: now(),
+    createdOn: new Date(),
+    commitMessage,
   };
-
-  if (commitMessage) {
-    versionInfo.commitMessage = commitMessage;
-  }
 
   const state_ids = await this.insertStateDict(dataset.states);
   const reference_ids = await this.insertReferenceDict(dataset.references);
@@ -160,7 +157,7 @@ export async function updateSet(
    * Key of set that needs to be updated aka create a draft from
    */
   key: string,
-  set: PartialKeyedDocument,
+  set: EditedLTPDocument,
   message: string,
 ) {
   const info = await this.getSetVersionInfo(key);
@@ -192,8 +189,8 @@ export async function isDraftlessSet(this: LXCatDatabase, key: string) {
 
 export async function createDraftSet(
   this: LXCatDatabase,
-  version: string,
-  set: PartialKeyedDocument,
+  version: number,
+  set: EditedLTPDocument,
   message: string,
   key: string,
 ) {
@@ -202,7 +199,7 @@ export async function createDraftSet(
   // Add to CrossSectionSet with status=='draft'
   const newStatus: Status = "draft";
   // For draft version = prev version + 1
-  const newVersion = `${parseInt(version) + 1}`;
+  const newVersion = version + 1;
   // TODO perform createSet+insert_edge inside single transaction
   const keyOfDraft = await this.createSet(set, newStatus, newVersion, message);
   // Add previous version (published )and current version (draft) to CrossSectionSetHistory collection
@@ -217,13 +214,13 @@ export async function createDraftSet(
 export async function updateDraftSet(
   this: LXCatDatabase,
   key: string,
-  dataset: PartialKeyedDocument,
+  dataset: EditedLTPDocument,
   versionInfo: VersionInfo,
   message: string,
 ) {
   const organizationId = await this.upsertOrganization(dataset.contributor);
   versionInfo.commitMessage = message;
-  versionInfo.createdOn = now();
+  versionInfo.createdOn = new Date();
   const set = {
     name: dataset.name,
     description: dataset.description,
@@ -400,7 +397,7 @@ export async function deleteSet(
 }
 
 function isEqualProcess(
-  newCS: AnyProcess<string, ReferenceRef<string>>,
+  newCS: NewProcess<string, ReferenceRef<string>>,
   prevCS: KeyedProcess<string, ReferenceRef<string>>,
   stateLookup: Record<string, string>,
   referenceLookup: Record<string, string>,

@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LTPDocument } from "@lxcat/schema";
 import type { Reaction } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
 import { Database } from "arangojs";
@@ -11,6 +10,7 @@ import { z } from "zod";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 
+import { NewLTPDocument } from "@lxcat/schema";
 import testCsCreator from "../../test/seed/2_cs.js";
 import { FilterOptions } from "../public.js";
 
@@ -43,11 +43,8 @@ export async function truncateCrossSectionSetCollections(db: Database) {
   );
 }
 
-export function sampleCrossSectionSet(): z.input<typeof LTPDocument> {
+export function sampleCrossSectionSet(): z.input<typeof NewLTPDocument> {
   return {
-    $schema: "",
-    url: "",
-    termsOfUse: "",
     complete: false,
     contributor: "Some organization",
     name: "Some name",
@@ -402,11 +399,8 @@ function setFrom(
   reactions: ReadonlyArray<Reaction<string>>,
   contributor: string,
 ) {
-  return LTPDocument.parse(
+  return NewLTPDocument.parse(
     {
-      $schema: "http://www.schema.com",
-      url: "http://www.url.com",
-      termsOfUse: "http://www.terms-of-use.com",
       complete: false,
       contributor,
       name,

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { LTPMixture } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { KeyedLTPMixture } from "../../schema/mixture.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
 import { KeyedVersionInfo } from "../../shared/types/version-info.js";
@@ -48,20 +48,20 @@ export async function byId(this: LXCatDatabase, id: string) {
         )
         RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
     )
-    RETURN { reaction, info: [MERGE({ _key: cs._key, references, isPartOf: sets }, cs.info)] }
+    RETURN { reaction, info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references, isPartOf: sets }, cs.info)] }
   `);
   return OwnedProcess.parseAsync(await cursor.next());
 }
 
 export async function byIds(this: LXCatDatabase, ids: string[]) {
-  const cursor: ArrayCursor<KeyedLTPMixture> = await this.db.query(aql`
+  const cursor: ArrayCursor<LTPMixture> = await this.db.query(aql`
     LET sets = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status != 'draft'
-          RETURN {[css._key]:  MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {contributor: DOCUMENT(css.organization).name})}
+          RETURN {[css._key]:  MERGE(UNSET(css, ["_rev", "_id", "organization"]), {contributor: UNSET(DOCUMENT(css.organization), ["_id", "_key", "_rev"])})}
     )
     LET references = MERGE(
       FOR cs IN CrossSection
@@ -127,7 +127,7 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
             FILTER cs._id == p._from
             RETURN PARSE_IDENTIFIER(p._to).key
         )
-        RETURN { reaction, info: [MERGE({ _key: cs._key, references: refs2, isPartOf: sets2 }, cs.info)] }
+        RETURN { reaction, info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2, isPartOf: sets2 }, cs.info)] }
     )
     RETURN {
       states,
@@ -137,18 +137,12 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
     }
   `);
 
-  const result = await cursor.next();
-
-  if (result === undefined) {
-    return {
-      states: {},
-      references: {},
-      processes: [],
-      sets: {},
-    };
-  }
-
-  return result;
+  return await cursor.next() ?? {
+    states: {},
+    references: {},
+    processes: [],
+    sets: {},
+  };
 }
 
 export async function getCSHeadings(

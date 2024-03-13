@@ -4,10 +4,15 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Status, VersionInfo } from "../../shared/types/version-info.js";
+import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { CrossSectionSetItem, FilterOptions, SortOptions } from "../public.js";
+import {
+  CrossSectionSetItem,
+  FilterOptions,
+  KeyedSet,
+  SortOptions,
+} from "../public.js";
 import { KeyedVersionInfo } from "./public.js";
 import {
   ISO_8601_UTC,
@@ -98,8 +103,8 @@ describe("deleting a published cross section without shared cross sections", () 
     const expected: VersionInfo = {
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
-      version: "1",
+      createdOn: expect.any(Date),
+      version: 1,
     };
     expect(info).toEqual(expected);
   });
@@ -117,11 +122,10 @@ describe("deleting a published cross section without shared cross sections", () 
       const info = await db.getItemVersionInfo(_key);
 
       const expected: VersionInfo = {
-        commitMessage: "",
+        version: 1,
         status: "retracted",
+        createdOn: expect.any(Date),
         retractMessage: "My retract message",
-        createdOn: expect.stringMatching(ISO_8601_UTC),
-        version: "1",
       };
       expect(info).toEqual(expected);
     }
@@ -141,7 +145,7 @@ describe("deleting a published cross section without shared cross sections", () 
 
   it("should be in authors listing", async () => {
     const result = await db.listOwnedSets("somename@example.com");
-    const expected = [
+    const expected: Array<KeyedSet> = [
       {
         _key: keycss1,
         complete: false,
@@ -152,7 +156,7 @@ describe("deleting a published cross section without shared cross sections", () 
           createdOn: expect.stringMatching(ISO_8601_UTC),
           status: "retracted",
           retractMessage: "My retract message",
-          version: "1",
+          version: 1,
         },
       },
     ];
@@ -168,7 +172,7 @@ describe("deleting a published cross section without shared cross sections", () 
         name: "Some name",
         status: "retracted",
         retractMessage: "My retract message",
-        version: "1",
+        version: 1,
       },
     ];
     expect(result).toEqual(expected);
@@ -186,7 +190,7 @@ describe("deleting a published cross section without shared cross sections", () 
         createdOn: expect.stringMatching(ISO_8601_UTC),
         status: "retracted",
         retractMessage: "My retract message",
-        version: "1",
+        version: 1,
       },
       processes: expect.any(Array),
     };
@@ -205,9 +209,14 @@ describe("deleting a published cross section with one shared cross section", () 
       expect.fail("Should have created first set");
     }
 
-    css2.name = "Some other name";
-    css2.processes.pop(); // delete second section in second set
-    keycss2 = await db.createSet(css2, "published");
+    const editedSet = EditedLTPDocument.parse({
+      ...css2,
+      name: "Some other name",
+      contributor: css2.contributor.name,
+    });
+
+    editedSet.processes.pop(); // delete second cross section in second set
+    keycss2 = await db.createSet(editedSet, "published");
 
     await db.deleteSet(keycss1, "My retract message");
 
@@ -219,8 +228,8 @@ describe("deleting a published cross section with one shared cross section", () 
     const expected: VersionInfo = {
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
-      version: "1",
+      createdOn: expect.any(Date),
+      version: 1,
     };
     expect(info).toEqual(expected);
   });
@@ -250,11 +259,10 @@ describe("deleting a published cross section with one shared cross section", () 
     const info = await db.getItemVersionInfo(nonSharedCSKey);
 
     const expected: VersionInfo = {
-      commitMessage: "",
+      version: 1,
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
-      version: "1",
+      createdOn: expect.any(Date),
     };
     expect(info).toEqual(expected);
   });
@@ -276,10 +284,9 @@ describe("deleting a published cross section with one shared cross section", () 
     const info = await db.getItemVersionInfo(sharedcskey);
 
     const expected: VersionInfo = {
-      commitMessage: "",
+      version: 1,
       status: "published",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
-      version: "1",
+      createdOn: expect.any(Date),
     };
     expect(info).toEqual(expected);
   });
@@ -312,10 +319,15 @@ describe("deleting a draft cross section set with one shared cross section", () 
       expect.fail("Should have created first set");
     }
 
-    css2.name = "Some other name";
-    css2.processes.pop(); // delete second cross section in second set
+    const editedSet: EditedLTPDocument = {
+      ...css2,
+      name: "Some other name",
+      contributor: css2.contributor.name,
+    };
 
-    await db.createSet(css2, "draft");
+    editedSet.processes.pop(); // delete second section in second set
+
+    await db.createSet(editedSet, "draft");
 
     await db.deleteSet(keycss1, "My retract message");
 

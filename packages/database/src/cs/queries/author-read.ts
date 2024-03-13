@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
-import { VersionInfo } from "../../shared/types/version-info.js";
 
 // import { defaultSearchTemplate } from "../picker/default.js";
 // import { ReactionTemplate } from "../picker/types.js";
@@ -18,7 +18,7 @@ export async function getVersionInfo(this: LXCatDatabase, key: string) {
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
     `);
-  return cursor.next();
+  return VersionInfo.parseAsync(await cursor.next());
 }
 
 export async function searchOwned(
@@ -69,7 +69,7 @@ export async function searchOwned(
           )
           SORT cs.versionInfo.createdOn DESC
           ${limit_aql}
-          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references, isPartOf: sets })] }
+          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, versionInfo: cs.versionInfo, references, isPartOf: sets })] }
 	`);
   return (await cursor.all()).map((cs) => OwnedProcess.parse(cs));
 }

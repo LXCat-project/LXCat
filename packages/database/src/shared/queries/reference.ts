@@ -5,9 +5,9 @@
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 
+import { Reference } from "@lxcat/schema";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { Bibliography } from "../types/bibliography.js";
-import { Reference } from "../types/collections.js";
 
 export async function getReferences(
   this: LXCatDatabase,

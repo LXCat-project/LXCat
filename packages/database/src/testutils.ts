@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { ArangoDBContainer } from "@testcontainers/arangodb";
-import { Database } from "arangojs";
+import { aql, Database } from "arangojs";
 import { Wait } from "testcontainers";
 import { PortWithOptionalBinding } from "testcontainers/build/utils/port.js";
 import { loadTestUserAndOrg } from "./auth/testutils.js";
@@ -48,6 +48,12 @@ export class LXCatTestDatabase extends LXCatDatabase {
     await setupCrossSectionCollections(db);
 
     return new LXCatTestDatabase(db);
+  }
+
+  public async printCS() {
+    let cursor = await this.db.query(aql`FOR cs IN CrossSection RETURN cs`);
+
+    return cursor.all();
   }
 
   public async setupTestUser() {
