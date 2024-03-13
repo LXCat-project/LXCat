@@ -10,16 +10,19 @@ import { Process } from "./process/process.js";
 import { SetReference } from "./process/set-reference.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
-import { AnySpecies } from "./species/any-species.js";
+import { SerializedSpecies } from "./species/serialized.js";
+import { versioned } from "./versioned.js";
 
 const MixtureBody = z.object({
-  sets: z.record(SetHeader(Contributor)),
+  sets: z.record(versioned(SetHeader(Contributor))),
   references: z.record(Reference),
-  states: z.record(AnySpecies),
+  states: z.record(SerializedSpecies),
   processes: z.array(
     Process(
       z.string(),
-      ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
+      versioned(
+        ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
+      ),
     ),
   ),
 });

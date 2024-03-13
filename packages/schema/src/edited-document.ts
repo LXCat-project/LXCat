@@ -13,7 +13,7 @@ const EditedDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
   processes: z.array(
-    partialKeyed(EditedProcess(z.string(), ReferenceRef(z.string().min(1)))),
+    EditedProcess(z.string(), ReferenceRef(z.string().min(1))),
   ),
 });
 

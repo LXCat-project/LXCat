@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { object, string } from "zod";
+import { object, string, TypeOf } from "zod";
 
 export const Contributor = object({
   name: string().min(1),
@@ -10,3 +10,4 @@ export const Contributor = object({
   contact: string(),
   howToReference: string(),
 });
+export type Contributor = TypeOf<typeof Contributor>;

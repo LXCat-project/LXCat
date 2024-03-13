@@ -5,6 +5,7 @@
 import { z } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
+import { LTPMixture } from "./mixture.js";
 import { VersionedProcess } from "./process/versioned-process.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
@@ -22,7 +23,7 @@ const VersionedDocumentBody = z.object({
 // Contains _key and version information. Datasets downloaded from LXCat use
 // this schema.
 export const VersionedLTPDocument = versioned(
-  SelfReference.merge(SetHeader(Contributor)).merge(VersionedDocumentBody),
+  SetHeader(Contributor).merge(VersionedDocumentBody),
 )
   .refine(
     (doc) =>
@@ -47,4 +48,12 @@ export const VersionedLTPDocument = versioned(
     "Referenced reference key is missing in references record.",
   );
 
-export type EditedLTPDocument = z.output<typeof VersionedLTPDocument>;
+export type VersionedLTPDocument = z.output<typeof VersionedLTPDocument>;
+
+export const VersionedLTPDocumentWithReference = z.intersection(
+  SelfReference,
+  LTPMixture,
+);
+export type VersionedLTPDocumentWithReference = z.output<
+  typeof VersionedLTPDocumentWithReference
+>;
