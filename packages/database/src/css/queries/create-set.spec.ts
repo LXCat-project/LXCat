@@ -4,7 +4,7 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Reference } from "@lxcat/schema";
+import { Reference, VersionedLTPDocument } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
@@ -130,8 +130,13 @@ describe("giving draft set made with existing draft cross section", () => {
 
   it("should have set with existing cross section", async () => {
     const set = await db.getSetByOwnerAndId(email, keycss1);
-    const expected = {
+    const expected: VersionedLTPDocument = {
       _key: matchesId,
+      versionInfo: {
+        version: 1,
+        status: "draft",
+        createdOn: expect.any(Date),
+      },
       complete: false,
       description: "Some description",
       name: "Some name",
@@ -147,6 +152,11 @@ describe("giving draft set made with existing draft cross section", () => {
           },
           info: [{
             _key: keycs1,
+            versionInfo: {
+              version: 1,
+              status: "draft",
+              createdOn: expect.any(Date),
+            },
             type: "CrossSection",
             threshold: 42,
             data: {
@@ -159,7 +169,12 @@ describe("giving draft set made with existing draft cross section", () => {
           }],
         },
       ],
-      contributor: "Some organization",
+      contributor: {
+        name: "Some organization",
+        contact: "info@some-org.com",
+        description: "Description of some organization.",
+        howToReference: "",
+      },
     };
     expect(set).toEqual(expected);
   });
