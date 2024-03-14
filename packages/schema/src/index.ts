@@ -5,6 +5,7 @@
 export { Reference } from "./common/reference.js";
 export { Contributor } from "./contributor.js";
 export { EditedLTPDocument } from "./edited-document.js";
+export { Key } from "./key.js";
 export { LTPMixture, LTPMixtureWithReference } from "./mixture.js";
 export { NewLTPDocument } from "./new-document.js";
 export { SelfReference } from "./self-reference.js";

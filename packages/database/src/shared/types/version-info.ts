@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { type VersionInfo } from "@lxcat/schema";
+import { Key, VersionInfo } from "@lxcat/schema";
+import { object, TypeOf } from "zod";
 
-export interface KeyedVersionInfo extends VersionInfo {
-  _key: string;
-}
+export const KeyedVersionInfo = VersionInfo.merge(object({ _key: Key }));
+export type KeyedVersionInfo = TypeOf<typeof KeyedVersionInfo>;
