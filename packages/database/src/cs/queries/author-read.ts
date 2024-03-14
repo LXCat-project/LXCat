@@ -9,16 +9,15 @@ import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
 
-// import { defaultSearchTemplate } from "../picker/default.js";
-// import { ReactionTemplate } from "../picker/types.js";
-
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
       FOR cs IN CrossSection
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
     `);
-  return VersionInfo.parseAsync(await cursor.next());
+  return cursor.next().then((result) =>
+    result === undefined ? undefined : VersionInfo.parse(result)
+  );
 }
 
 export async function searchOwned(
