@@ -52,7 +52,7 @@ export type VersionedLTPDocument = z.output<typeof VersionedLTPDocument>;
 
 export const VersionedLTPDocumentWithReference = z.intersection(
   SelfReference,
-  LTPMixture,
+  VersionedLTPDocument,
 );
 export type VersionedLTPDocumentWithReference = z.output<
   typeof VersionedLTPDocumentWithReference

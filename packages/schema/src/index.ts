@@ -11,5 +11,8 @@ export { NewLTPDocument } from "./new-document.js";
 export { SelfReference } from "./self-reference.js";
 export { SetHeader } from "./set-header.js";
 export { Status, VersionInfo } from "./version-info.js";
-export { VersionedLTPDocument } from "./versioned-document.js";
+export {
+  VersionedLTPDocument,
+  VersionedLTPDocumentWithReference,
+} from "./versioned-document.js";
 export { versioned } from "./versioned.js";
