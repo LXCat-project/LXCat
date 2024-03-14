@@ -4,12 +4,11 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { Status, VersionInfo } from "@lxcat/schema";
 import {
-  ISO_8601_UTC,
   sampleEmail,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
-import { Status } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
@@ -70,10 +69,10 @@ describe("given published cross section has been updated", () => {
 
   it("should have draft version", async () => {
     const info = await db.getItemVersionInfo(keycs2);
-    const expected = {
+    const expected: VersionInfo = {
+      version: 2,
       status: "draft",
-      version: "2",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
+      createdOn: expect.any(Date),
       commitMessage: "Updated threshold",
     };
     expect(info).toEqual(expected);
@@ -136,9 +135,9 @@ describe("given draft cross section has been updated", () => {
   it("should have draft version", async () => {
     const info = await db.getItemVersionInfo(keycs2);
     const expected = {
+      version: 1,
       status: "draft",
-      version: "1",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
+      createdOn: expect.any(Date),
       commitMessage: "Updated threshold",
     };
     expect(info).toEqual(expected);
