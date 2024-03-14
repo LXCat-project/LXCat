@@ -10,6 +10,12 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
+          _key: "setkey",
+          versionInfo: {
+            version: 1,
+            status: "published",
+            createdOn: new Date(),
+          },
           contributor: {
             name: "TestOrganization",
             description: "Description for test data.",
@@ -32,6 +38,12 @@ describe("LTPMixture", () => {
             typeTags: ["Elastic"],
           },
           info: [{
+            _key: "cskey",
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: new Date(),
+            },
             type: "CrossSection",
             references: [],
             threshold: 0,
@@ -54,6 +66,12 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
+          _key: "setkey",
+          versionInfo: {
+            version: 1,
+            status: "published",
+            createdOn: new Date(),
+          },
           contributor: {
             name: "TestOrganization",
             description: "Description for test data.",
@@ -76,6 +94,12 @@ describe("LTPMixture", () => {
             typeTags: ["Elastic"],
           },
           info: [{
+            _key: "cskey",
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: new Date(),
+            },
             type: "CrossSection",
             references: ["FaultyKey"],
             threshold: 0,
