@@ -4,13 +4,12 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
+import type { Status, VersionInfo } from "@lxcat/schema";
 import {
-  ISO_8601_UTC,
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
-import { Status } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { createSampleCrossSection, insertSampleStateIds } from "./testutils.js";
@@ -38,11 +37,10 @@ describe("given published cross section has been retracted", () => {
 
   it("should have retracted status", async () => {
     const info = await db.getItemVersionInfo(keycs1);
-    const expected = {
+    const expected: VersionInfo = {
+      version: 1,
       status: "retracted",
-      version: "1",
-      createdOn: expect.stringMatching(ISO_8601_UTC),
-      commitMessage: "",
+      createdOn: expect.any(Date),
       retractMessage: "I do not want to talk about it",
     };
     expect(info).toEqual(expected);
