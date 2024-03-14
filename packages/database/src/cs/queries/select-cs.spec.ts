@@ -567,7 +567,7 @@ describe("Selecting individual cross sections", () => {
               versionInfo: {
                 createdOn: expect.any(String),
                 status: "published",
-                version: "1",
+                version: 1,
               },
             },
           ],
@@ -651,6 +651,11 @@ describe("Selecting individual cross sections", () => {
         info: [{
           type: "CrossSection",
           _key: matchesId,
+          versionInfo: {
+            createdOn: expect.any(Date),
+            status: "published",
+            version: 1,
+          },
           threshold: 0,
           data: {
             type: "LUT",
