@@ -209,7 +209,7 @@ export async function listUsers(this: LXCatDatabase) {
 export async function listOrganizations(this: LXCatDatabase) {
   const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
     FOR o IN Organization
-        RETURN UNSET(o, ["_id", "_rev"])
+        RETURN { _key: o._key, name: o.name }
   `);
   return await cursor.all();
 }
@@ -219,7 +219,7 @@ export async function getAffiliations(this: LXCatDatabase, email: string) {
     FOR u IN users
       FILTER u.email == ${email}
       FOR org IN OUTBOUND u MemberOf
-        RETURN UNSET(org, ["_id", "_rev"])
+        RETURN { _key: org._key, name: org.name }
   `);
   return await cursor.all();
 }
