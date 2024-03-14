@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { boolean, object, string, ZodTypeAny } from "zod";
+import { boolean, object, string, TypeOf, ZodType, ZodTypeAny } from "zod";
 
 export const SetHeader = <ContributorType extends ZodTypeAny>(
   contributor: ContributorType,
@@ -16,3 +16,11 @@ export const SetHeader = <ContributorType extends ZodTypeAny>(
     description: string().describe("A description of this dataset."),
     complete: boolean(),
   });
+
+type SetHeaderInfoType<ReferenceType extends ZodTypeAny> = ReturnType<
+  typeof SetHeader<ReferenceType>
+>;
+
+export type SetHeader<ReferenceType> = TypeOf<
+  SetHeaderInfoType<ZodType<ReferenceType>>
+>;
