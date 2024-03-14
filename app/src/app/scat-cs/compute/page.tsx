@@ -4,7 +4,7 @@
 
 import { convertMixture } from "@lxcat/converter";
 import { db } from "@lxcat/database";
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
+import { LTPMixtureWithReference } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
@@ -55,7 +55,7 @@ const fetchProps = async (
 
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
-  const data: KeyedLTPMixtureReferenceable = {
+  const data: LTPMixtureWithReference = {
     // FIXME: Use proper schema reference.
     $schema: "",
     url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,

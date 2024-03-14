@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
+import { LTPMixtureWithReference } from "@lxcat/schema";
 import { okResponse } from "../../../../../shared/api-responses";
 import { reference2bibliography } from "../../../../../shared/cite";
 import { mapObject } from "../../../../../shared/utils";
@@ -23,7 +23,7 @@ const router = RouteBuilder
   .use(hasDeveloperOrDownloadRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    const data: KeyedLTPMixtureReferenceable = {
+    const data: LTPMixtureWithReference = {
       // FIXME: Return correct $schema url.
       $schema: "",
       url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${

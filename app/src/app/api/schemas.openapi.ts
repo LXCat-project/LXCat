@@ -4,14 +4,14 @@
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
-import {
-  KeyedDocument,
-  OwnedProcess,
-  SerializedSpecies,
-} from "@lxcat/database/schema";
-import { Reference } from "@lxcat/schema";
+import { OwnedProcess } from "@lxcat/database/schema";
+import { Reference, VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
-import { AnySpecies, StateSummary } from "@lxcat/schema/species";
+import {
+  AnySpecies,
+  SerializedSpecies,
+  StateSummary,
+} from "@lxcat/schema/species";
 import { z } from "zod";
 import { queryJSONSchema } from "./util";
 
@@ -123,7 +123,9 @@ export const reactionQuerySchema = z.object({
 
 export async function register() {
   AnySpecies._def.openapi = { _internal: { refId: "AnySpecies" } };
-  KeyedDocument._def.openapi = { _internal: { refId: "KeyedDocument" } };
+  VersionedLTPDocumentWithReference._def.openapi = {
+    _internal: { refId: "VersionedLTPDocumentWithReference" },
+  };
   ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };
   OwnedProcess._def.openapi = { _internal: { refId: "OwnedProcess" } };
   ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };

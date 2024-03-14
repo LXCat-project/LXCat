@@ -4,7 +4,8 @@
 
 import type { Reaction } from "@lxcat/schema/process";
 
-import { KeyedLTPMixture, SerializedSpecies } from "@lxcat/database/schema";
+import { LTPMixture } from "@lxcat/schema";
+import { SerializedSpecies } from "@lxcat/schema/species";
 import { DenormalizedProcess } from "../denormalized-process";
 import { formatReference } from "./cite";
 import { PlotPageClient } from "./plot-page-client";
@@ -14,7 +15,7 @@ export const PlotPage = ({
   hasMixedCompleteSets,
   forceTermsOfUse,
 }: {
-  bag: KeyedLTPMixture;
+  bag: LTPMixture;
   hasMixedCompleteSets: boolean;
   forceTermsOfUse?: boolean;
 }) => {
@@ -37,9 +38,9 @@ export const PlotPage = ({
 };
 
 function denormalizeProcesses(
-  processes: KeyedLTPMixture["processes"],
-  states: KeyedLTPMixture["states"],
-  sets: KeyedLTPMixture["sets"],
+  processes: LTPMixture["processes"],
+  states: LTPMixture["states"],
+  sets: LTPMixture["sets"],
 ): Array<DenormalizedProcess> {
   return processes.flatMap((p) => {
     const reaction: Reaction<SerializedSpecies> = {

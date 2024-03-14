@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { PartialKeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import { z } from "zod";
 
 export const querySchema = z.object({
-  body: PartialKeyedDocument,
+  body: EditedLTPDocument,
 });

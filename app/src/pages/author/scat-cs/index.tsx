@@ -50,7 +50,7 @@ function renderItem(item: CrossSectionItem) {
         </ul>
       </td>
       <td>{item.versionInfo.status}</td>
-      <td>{item.versionInfo.createdOn}</td>
+      <td>{item.versionInfo.createdOn.toISOString()}</td>
       <td>{item.versionInfo.version}</td>
       <td></td>
     </tr>

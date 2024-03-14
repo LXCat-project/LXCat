@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import type { KeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { mustBeAuthor } from "../../../../auth/middleware";
 import { Layout } from "../../../../shared/layout";
 
 interface Props {
-  set: KeyedDocument;
+  set: EditedLTPDocument;
   setKey: string;
   commitMessage: string;
 }
@@ -119,7 +119,9 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
-  const set = await db().getSetByOwnerAndId(me.email, id);
+  const set = EditedLTPDocument.parse(
+    await db().getSetByOwnerAndId(me.email, id),
+  );
   const info = await db().getSetVersionInfo(id);
   const commitMessage = info !== undefined && info.commitMessage
     ? info.commitMessage
