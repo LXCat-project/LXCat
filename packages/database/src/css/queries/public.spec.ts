@@ -6,8 +6,12 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { CrossSectionSetHeading } from "../public.js";
-import { FilterOptions, SortOptions } from "./public.js";
+import {
+  CrossSectionSetHeading,
+  FilterOptions,
+  SortOptions,
+} from "../public.js";
+import {} from "./public.js";
 import {
   emptySelection,
   loadTestSets,
