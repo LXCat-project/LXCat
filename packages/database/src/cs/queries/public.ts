@@ -250,7 +250,7 @@ export async function search(
  */
 export async function csHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSection/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR h IN 0..9999999
       ANY ${id}
       CrossSectionHistory
@@ -258,5 +258,7 @@ export async function csHistory(this: LXCatDatabase, key: string) {
       SORT h.versionInfo.version DESC
       RETURN MERGE({_key: h._key}, h.versionInfo)
   `);
-  return await cursor.all();
+  return await cursor.all().then((results) =>
+    results.map((info) => KeyedVersionInfo.parse(info))
+  );
 }
