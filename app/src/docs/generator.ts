@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { readdir, readFile } from "fs/promises";
+import { Heading } from "mdast";
 import { fromMarkdown } from "mdast-util-from-markdown";
+import { serialize } from "next-mdx-remote/serialize";
 import { join, relative, sep } from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
@@ -13,11 +15,7 @@ import remarkEmbedImages from "remark-embed-images";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
-
 import { VFile } from "vfile";
-
-import { Heading } from "mdast";
-import { serialize } from "./serialize";
 import { rehypeMermaid } from "./transformer";
 
 const DOC_ROOT = join(__dirname, "../../../../../../docs");
