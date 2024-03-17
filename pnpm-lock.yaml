@@ -45,7 +45,7 @@ importers:
         version: link:../packages/schema
       '@mantine/core':
         specifier: ^7.6.1
-        version: 7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/form':
         specifier: ^7.6.2
         version: 7.6.2(react@18.2.0)
@@ -108,7 +108,7 @@ importers:
         version: 1.0.0
       next-mdx-remote:
         specifier: canary
-        version: 0.0.0-canary-20240314172753(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
+        version: 0.0.0-canary-20240314172753(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
       nextjs-cors:
         specifier: ^2.2.0
         version: 2.2.0(next@14.1.3)
@@ -228,8 +228,8 @@ importers:
         specifier: ^1.54.4
         version: 1.54.4
       '@types/react':
-        specifier: 18.2.64
-        version: 18.2.64
+        specifier: 18.2.66
+        version: 18.2.66
       '@types/react-plotly.js':
         specifier: ^2.6.3
         version: 2.6.3
@@ -2817,7 +2817,7 @@ packages:
       - supports-color
     dev: true
 
-  /@mantine/core@7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/core@7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-52BgYXAMD+E6vDiGIGOJlLBc0pdT2+gzrB0g+v7c7xeiNXqHEG5cEplLErfNBHh9kMQHiDHCiCb5Su9jqoUlXw==}
     peerDependencies:
       '@mantine/hooks': 7.6.1
@@ -2830,8 +2830,8 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-number-format: 5.3.1(react-dom@18.2.0)(react@18.2.0)
-      react-remove-scroll: 2.5.7(@types/react@18.2.64)(react@18.2.0)
-      react-textarea-autosize: 8.5.3(@types/react@18.2.64)(react@18.2.0)
+      react-remove-scroll: 2.5.7(@types/react@18.2.66)(react@18.2.0)
+      react-textarea-autosize: 8.5.3(@types/react@18.2.66)(react@18.2.0)
       type-fest: 3.13.1
     transitivePeerDependencies:
       - '@types/react'
@@ -2933,14 +2933,14 @@ packages:
       - supports-color
     dev: false
 
-  /@mdx-js/react@3.0.1(@types/react@18.2.64)(react@18.2.0):
+  /@mdx-js/react@3.0.1(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-9ZrPIU4MGf6et1m1ov3zKf+q9+deetI51zprKB1D/z3NOb+rUxxtEl3mCjW5wTGh6VhRdwPueh1oRzi6ezkA8A==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.5
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
     dev: false
 
@@ -3668,11 +3668,11 @@ packages:
     resolution: {integrity: sha512-HBQwyGuu/dGXDsWhnQrhH+xcJSsHvjkwfSRjP+YpOsCCWryIuXF78ZCBjpfgO3sCc0Jo8sYp4NOGtqT7Cn3epQ==}
     dependencies:
       '@types/plotly.js': 2.12.18
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
     dev: true
 
-  /@types/react@18.2.64:
-    resolution: {integrity: sha512-MlmPvHgjj2p3vZaxbQgFUQFvD8QiZwACfGqEdDSWou5yISWxDQ4/74nCAwsUiX7UFLKZz3BbVSPj+YxeoGGCfg==}
+  /@types/react@18.2.66:
+    resolution: {integrity: sha512-OYTmMI4UigXeFMF/j4uv0lBBEbongSgptPrHBxqME44h9+yNov+oL6Z3ocJKo0WyXR84sQUNeyIp9MRfckvZpg==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -8567,7 +8567,7 @@ packages:
       clsx: '>=2'
       react: '>=18.2'
     dependencies:
-      '@mantine/core': 7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 7.6.1(@mantine/hooks@7.6.2)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 7.6.2(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
@@ -9811,7 +9811,7 @@ packages:
       regexparam: 2.0.1
     dev: false
 
-  /next-mdx-remote@0.0.0-canary-20240314172753(@types/react@18.2.64)(react-dom@18.2.0)(react@18.2.0):
+  /next-mdx-remote@0.0.0-canary-20240314172753(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-jZyxOJrOLDP83YzqymN94DHdX29i7rao0TJyee8Sq2/+z3xuH1QuW1tY+Aoa6yHehdUnsE5/pr7Mts4aVlk1Lw==}
     engines: {node: '>=14', npm: '>=7'}
     peerDependencies:
@@ -9820,7 +9820,7 @@ packages:
     dependencies:
       '@babel/code-frame': 7.23.5
       '@mdx-js/mdx': 3.0.1
-      '@mdx-js/react': 3.0.1(@types/react@18.2.64)(react@18.2.0)
+      '@mdx-js/react': 3.0.1(@types/react@18.2.66)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       unist-util-remove: 3.1.1
@@ -11285,7 +11285,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-remove-scroll-bar@2.3.4(@types/react@18.2.64)(react@18.2.0):
+  /react-remove-scroll-bar@2.3.4(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -11295,13 +11295,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
-      react-style-singleton: 2.2.1(@types/react@18.2.64)(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.66)(react@18.2.0)
       tslib: 2.5.3
     dev: false
 
-  /react-remove-scroll@2.5.7(@types/react@18.2.64)(react@18.2.0):
+  /react-remove-scroll@2.5.7(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-FnrTWO4L7/Bhhf3CYBNArEG/yROV0tKmTv7/3h9QCFvH6sndeFf1wPqOcbFVu5VAulS5dV1wGT3GZZ/1GawqiA==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -11311,13 +11311,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
-      react-remove-scroll-bar: 2.3.4(@types/react@18.2.64)(react@18.2.0)
-      react-style-singleton: 2.2.1(@types/react@18.2.64)(react@18.2.0)
+      react-remove-scroll-bar: 2.3.4(@types/react@18.2.66)(react@18.2.0)
+      react-style-singleton: 2.2.1(@types/react@18.2.66)(react@18.2.0)
       tslib: 2.5.3
-      use-callback-ref: 1.3.0(@types/react@18.2.64)(react@18.2.0)
-      use-sidecar: 1.1.2(@types/react@18.2.64)(react@18.2.0)
+      use-callback-ref: 1.3.0(@types/react@18.2.66)(react@18.2.0)
+      use-sidecar: 1.1.2(@types/react@18.2.66)(react@18.2.0)
     dev: false
 
   /react-schemaorg@2.0.0(react@18.2.0)(schema-dts@1.1.2)(typescript@5.4.2):
@@ -11333,7 +11333,7 @@ packages:
       typescript: 5.4.2
     dev: false
 
-  /react-style-singleton@2.2.1(@types/react@18.2.64)(react@18.2.0):
+  /react-style-singleton@2.2.1(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -11343,7 +11343,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.2.0
@@ -11360,7 +11360,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-textarea-autosize@8.5.3(@types/react@18.2.64)(react@18.2.0):
+  /react-textarea-autosize@8.5.3(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-XT1024o2pqCuZSuBt9FwHlaDeNtVrtCXu0Rnz88t1jUGheCLa3PhjE1GH8Ctm2axEtvdCl5SUHYschyQ0L5QHQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -11369,7 +11369,7 @@ packages:
       '@babel/runtime': 7.22.5
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
-      use-latest: 1.2.1(@types/react@18.2.64)(react@18.2.0)
+      use-latest: 1.2.1(@types/react@18.2.66)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -13274,7 +13274,7 @@ packages:
     resolution: {integrity: sha512-XdVKMF4SJ0nP/O7XIPB0JwAEuT9lDIYnNsK8yGVe43y0AWoKeJNdv3ZNWh7ksJ6KqQFjOO6ox/VEitLnaVNufw==}
     dev: false
 
-  /use-callback-ref@1.3.0(@types/react@18.2.64)(react@18.2.0):
+  /use-callback-ref@1.3.0(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -13284,7 +13284,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
       tslib: 2.5.3
     dev: false
@@ -13297,7 +13297,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.64)(react@18.2.0):
+  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
     peerDependencies:
       '@types/react': '*'
@@ -13306,11 +13306,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
     dev: false
 
-  /use-latest@1.2.1(@types/react@18.2.64)(react@18.2.0):
+  /use-latest@1.2.1(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==}
     peerDependencies:
       '@types/react': '*'
@@ -13319,12 +13319,12 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       react: 18.2.0
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.64)(react@18.2.0)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.66)(react@18.2.0)
     dev: false
 
-  /use-sidecar@1.1.2(@types/react@18.2.64)(react@18.2.0):
+  /use-sidecar@1.1.2(@types/react@18.2.66)(react@18.2.0):
     resolution: {integrity: sha512-epTbsLuzZ7lPClpz2TyryBfztm7m+28DlEv2ZCQ3MDr5ssiwyOwGH/e5F9CkfWjJ1t4clvI58yF822/GUkjjhw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -13334,7 +13334,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.2.64
+      '@types/react': 18.2.66
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.5.3
