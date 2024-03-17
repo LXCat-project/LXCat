@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -120,8 +116,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       plotly.js-basic-dist:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^2.30.1
+        version: 2.30.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10538,8 +10534,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /plotly.js-basic-dist@2.30.0:
-    resolution: {integrity: sha512-QBAslO+UVM4OYjf/Fv0dRY3v0t5jYhhsns2yeBV4B2k6avrPjaHvSugeVKJyiRDYrgnO+qpx7bcWbUOfGArEbQ==}
+  /plotly.js-basic-dist@2.30.1:
+    resolution: {integrity: sha512-Lkxq9RPO+EHSOQgOta4wJRo6WW2c/TsdpdmG/lRV1RaeoV1bKwjoWqEItCYbvv95Fi5n4rvXW+4VNKFiSCZnIw==}
     dev: false
 
   /plotly.js@2.28.0(mapbox-gl@1.10.1):
@@ -13934,3 +13930,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
