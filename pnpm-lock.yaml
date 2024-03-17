@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -304,8 +300,8 @@ importers:
         specifier: workspace:^
         version: link:../schema
       arangojs:
-        specifier: ^8.7.0
-        version: 8.7.0
+        specifier: ^8.8.0
+        version: 8.8.0
       deep-equal:
         specifier: ^2.2.3
         version: 2.2.3
@@ -4299,8 +4295,8 @@ packages:
       default-require-extensions: 3.0.1
     dev: true
 
-  /arangojs@8.7.0:
-    resolution: {integrity: sha512-iPzZdKtFRFSwBCEI/op+fhN+m1rrl5xMKRBKE3UIHMXMeBfKhxLj7c4TGtOn7pTTc7WqIi53xuPR+g7aEMU8xw==}
+  /arangojs@8.8.0:
+    resolution: {integrity: sha512-TQ1yDPGU6eh08jRavjdx64eRmjVABSDB1LUk+koloEmY2XybFTv4azW5xEZ07Ohai63gnkLWkaWh+4DdlPoAfw==}
     engines: {node: '>=14'}
     dependencies:
       '@types/node': 20.11.25
@@ -13934,3 +13930,7 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
