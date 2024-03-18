@@ -14,7 +14,7 @@ describe("LTPMixture", () => {
           versionInfo: {
             version: 1,
             status: "published",
-            createdOn: new Date(),
+            createdOn: (new Date()).toISOString(),
           },
           contributor: {
             name: "TestOrganization",
@@ -42,7 +42,7 @@ describe("LTPMixture", () => {
             versionInfo: {
               version: 1,
               status: "published",
-              createdOn: new Date(),
+              createdOn: (new Date()).toISOString(),
             },
             type: "CrossSection",
             references: [],
@@ -70,7 +70,7 @@ describe("LTPMixture", () => {
           versionInfo: {
             version: 1,
             status: "published",
-            createdOn: new Date(),
+            createdOn: (new Date()).toISOString(),
           },
           contributor: {
             name: "TestOrganization",
@@ -98,7 +98,7 @@ describe("LTPMixture", () => {
             versionInfo: {
               version: 1,
               status: "published",
-              createdOn: new Date(),
+              createdOn: (new Date()).toISOString(),
             },
             type: "CrossSection",
             references: ["FaultyKey"],

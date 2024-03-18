@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { coerce, enum as zodEnum, number, object, string, TypeOf } from "zod";
+import { enum as zodEnum, number, object, string, TypeOf } from "zod";
 
 /**
  * Valid transitions:
@@ -19,7 +19,7 @@ export type Status = TypeOf<typeof Status>;
 // Used to store version information about versioned documents.
 export const VersionInfo = object({
   version: number().int().positive(),
-  createdOn: coerce.date(),
+  createdOn: string().datetime(),
   status: Status,
   commitMessage: string().min(1).optional().describe(
     "Description of what was changed since the previous version.",
