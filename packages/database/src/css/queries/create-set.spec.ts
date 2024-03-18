@@ -10,7 +10,11 @@ import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { matchesId, truncateCrossSectionSetCollections } from "./testutils.js";
+import {
+  matches8601,
+  matchesId,
+  truncateCrossSectionSetCollections,
+} from "./testutils.js";
 
 const email = "somename@example.com";
 
@@ -135,7 +139,7 @@ describe("giving draft set made with existing draft cross section", () => {
       versionInfo: {
         version: 1,
         status: "draft",
-        createdOn: expect.any(Date),
+        createdOn: matches8601,
       },
       complete: false,
       description: "Some description",
@@ -155,7 +159,7 @@ describe("giving draft set made with existing draft cross section", () => {
             versionInfo: {
               version: 1,
               status: "draft",
-              createdOn: expect.any(Date),
+              createdOn: matches8601,
             },
             type: "CrossSection",
             threshold: 42,

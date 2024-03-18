@@ -61,7 +61,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                 {/* TODO link to preview a draft + create preview page reusing components from public page */}
               </td>
               <td>{item.versionInfo.status}</td>
-              <td>{item.versionInfo.createdOn.toISOString()}</td>
+              <td>{item.versionInfo.createdOn}</td>
               <td>{item.versionInfo.version}</td>
               <td>
                 {item.versionInfo.status === "draft" && (

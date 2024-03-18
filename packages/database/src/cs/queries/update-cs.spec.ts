@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { Status, VersionInfo } from "@lxcat/schema";
 import {
+  matches8601,
   sampleEmail,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
@@ -72,7 +73,7 @@ describe("given published cross section has been updated", () => {
     const expected: VersionInfo = {
       version: 2,
       status: "draft",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
       commitMessage: "Updated threshold",
     };
     expect(info).toEqual(expected);
@@ -137,7 +138,7 @@ describe("given draft cross section has been updated", () => {
     const expected = {
       version: 1,
       status: "draft",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
       commitMessage: "Updated threshold",
     };
     expect(info).toEqual(expected);

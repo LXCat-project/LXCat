@@ -7,6 +7,7 @@ import { EditedProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
+import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function createCS(
@@ -35,7 +36,7 @@ export async function createCS(
   const versionInfo: VersionInfo = {
     status,
     version,
-    createdOn: new Date(),
+    createdOn: now(),
     commitMessage,
   };
 
@@ -197,7 +198,7 @@ export async function updateDraftCS(
     status: "draft",
     version,
     commitMessage,
-    createdOn: new Date(),
+    createdOn: now(),
   };
 
   const { reaction, info } = processItem;

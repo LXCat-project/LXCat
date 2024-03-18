@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import type { Status, VersionInfo } from "@lxcat/schema";
 import {
+  matches8601,
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
@@ -40,7 +41,7 @@ describe("given published cross section has been retracted", () => {
     const expected: VersionInfo = {
       version: 1,
       status: "retracted",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
       retractMessage: "I do not want to talk about it",
     };
     expect(info).toEqual(expected);

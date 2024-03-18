@@ -2,14 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
+import { Key, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
+import { boolean, object, string } from "zod";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { KeyedSet } from "../public.js";
+// import { KeyedSet } from "../public.js";
+
+const KeyedSet = object({
+  _key: Key,
+  name: string(),
+  description: string(),
+  publishedIn: string().optional(),
+  complete: boolean(),
+  organization: string(),
+  versionInfo: VersionInfo,
+});
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<KeyedSet> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         LIMIT 1
@@ -33,7 +44,7 @@ export async function listOwnedSets(this: LXCatDatabase, email: string) {
                     FILTER with_draft != 1
                         return MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
     `);
-  return await cursor.all();
+  return cursor.all().then((sets) => sets.map((set) => KeyedSet.parse(set)));
 }
 
 export async function byOwnerAndId(
@@ -120,10 +131,12 @@ export async function isOwnerOfSet(
 }
 
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         RETURN css.versionInfo
   `);
-  return cursor.next().then((info) => info && VersionInfo.parse(info));
+  return cursor.next().then((info) =>
+    info !== undefined ? VersionInfo.parse(info) : undefined
+  );
 }

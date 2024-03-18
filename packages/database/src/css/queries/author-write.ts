@@ -8,6 +8,7 @@ import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import deepEqual from "deep-equal";
+import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { mapReaction } from "../../shared/queries.js";
@@ -28,7 +29,7 @@ export async function createSet(
   const versionInfo: VersionInfo = {
     status,
     version,
-    createdOn: new Date(),
+    createdOn: now(),
     commitMessage,
   };
 
@@ -220,7 +221,7 @@ export async function updateDraftSet(
 ) {
   const organizationId = await this.upsertOrganization(dataset.contributor);
   versionInfo.commitMessage = message;
-  versionInfo.createdOn = new Date();
+  versionInfo.createdOn = now();
   const set = {
     name: dataset.name,
     description: dataset.description,

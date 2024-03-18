@@ -4,13 +4,14 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 import {
+  matches8601,
   matchesId,
   sampleSets4Search,
   sampleSets4SearchWithVersions,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
 import { getStateLeaf, StateLeaf } from "../../shared/get-state-leaf.js";
-import { StateSummary } from "../../shared/queries/state.js";
+import { StateSummary } from "../../shared/types/state.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { defaultSearchTemplate } from "../picker/default.js";
@@ -652,7 +653,7 @@ describe("Selecting individual cross sections", () => {
           type: "CrossSection",
           _key: matchesId,
           versionInfo: {
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             status: "published",
             version: 1,
           },

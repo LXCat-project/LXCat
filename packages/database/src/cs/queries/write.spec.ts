@@ -6,7 +6,7 @@ import { VersionInfo } from "@lxcat/schema";
 import { NewProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
 import { deepClone } from "../../css/queries/deep-clone.js";
-import { matchesId } from "../../css/queries/testutils.js";
+import { matches8601, matchesId } from "../../css/queries/testutils.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { KeyedVersionInfo } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
@@ -61,7 +61,7 @@ describe("given db with test user and organization", () => {
         const expected: VersionInfo = {
           version: 2,
           status: "draft",
-          createdOn: expect.any(Date),
+          createdOn: matches8601,
           commitMessage: "My first update",
         };
         expect(info).toEqual(expected);
@@ -94,14 +94,14 @@ describe("given db with test user and organization", () => {
               _key: keycs2,
               version: 2,
               status: "published",
-              createdOn: expect.any(Date),
+              createdOn: matches8601,
               commitMessage: "My first update",
             },
             {
               _key: keycs1,
               version: 1,
               status: "archived",
-              createdOn: expect.any(Date),
+              createdOn: matches8601,
             },
           ];
           expect(history).toEqual(expected);
@@ -126,7 +126,7 @@ describe("given db with test user and organization", () => {
         const expected = {
           version: 2,
           status: "draft",
-          createdOn: expect.any(Date),
+          createdOn: matches8601,
           commitMessage: "My first update",
         };
         expect(info).toEqual(expected);
@@ -223,7 +223,7 @@ describe("given db with test user and organization", () => {
         const expected = {
           version: 1,
           status: "draft",
-          createdOn: expect.any(Date),
+          createdOn: matches8601,
         };
         expect(info).toEqual(expected);
       });
@@ -238,7 +238,7 @@ describe("given db with test user and organization", () => {
           const expected: VersionInfo = {
             version: 1,
             status: "published",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
           };
           expect(info).toEqual(expected);
         });

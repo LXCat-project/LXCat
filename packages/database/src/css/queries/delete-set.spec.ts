@@ -15,7 +15,7 @@ import {
 } from "../public.js";
 import { KeyedVersionInfo } from "./public.js";
 import {
-  ISO_8601_UTC,
+  matches8601,
   sampleCrossSectionSet,
   sampleEmail,
   truncateCrossSectionSetCollections,
@@ -103,7 +103,7 @@ describe("deleting a published cross section without shared cross sections", () 
     const expected: VersionInfo = {
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
       version: 1,
     };
     expect(info).toEqual(expected);
@@ -124,7 +124,7 @@ describe("deleting a published cross section without shared cross sections", () 
       const expected: VersionInfo = {
         version: 1,
         status: "retracted",
-        createdOn: expect.any(Date),
+        createdOn: matches8601,
         retractMessage: "My retract message",
       };
       expect(info).toEqual(expected);
@@ -153,7 +153,7 @@ describe("deleting a published cross section without shared cross sections", () 
         name: "Some name",
         organization: "Some organization",
         versionInfo: {
-          createdOn: expect.stringMatching(ISO_8601_UTC),
+          createdOn: matches8601,
           status: "retracted",
           retractMessage: "My retract message",
           version: 1,
@@ -168,7 +168,7 @@ describe("deleting a published cross section without shared cross sections", () 
     const expected: KeyedVersionInfo[] = [
       {
         _key: keycss1,
-        createdOn: expect.stringMatching(ISO_8601_UTC),
+        createdOn: matches8601,
         name: "Some name",
         status: "retracted",
         retractMessage: "My retract message",
@@ -187,7 +187,7 @@ describe("deleting a published cross section without shared cross sections", () 
       name: "Some name",
       contributor: "Some organization", // TODO should have organization or contributor not both
       versionInfo: {
-        createdOn: expect.stringMatching(ISO_8601_UTC),
+        createdOn: matches8601,
         status: "retracted",
         retractMessage: "My retract message",
         version: 1,
@@ -228,7 +228,7 @@ describe("deleting a published cross section with one shared cross section", () 
     const expected: VersionInfo = {
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
       version: 1,
     };
     expect(info).toEqual(expected);
@@ -262,7 +262,7 @@ describe("deleting a published cross section with one shared cross section", () 
       version: 1,
       status: "retracted",
       retractMessage: "My retract message",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
     };
     expect(info).toEqual(expected);
   });
@@ -286,7 +286,7 @@ describe("deleting a published cross section with one shared cross section", () 
     const expected: VersionInfo = {
       version: 1,
       status: "published",
-      createdOn: expect.any(Date),
+      createdOn: matches8601,
     };
     expect(info).toEqual(expected);
   });

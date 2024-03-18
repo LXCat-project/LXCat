@@ -211,7 +211,7 @@ describe("given published cross section set where data of 1 published cross sect
           versionInfo: {
             version: 2,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -292,7 +292,7 @@ describe("given published cross section set where data of 1 published cross sect
           versionInfo: {
             version: 1,
             status: "published",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
           },
           type: "CrossSection",
           threshold: 13,
@@ -427,7 +427,7 @@ describe("given published cross section set where data of 1 published cross sect
             versionInfo: {
               version: 2,
               status: "published",
-              createdOn: expect.any(Date),
+              createdOn: matches8601,
               commitMessage: expect.stringContaining(
                 "Indirect draft by editing set",
               ),
@@ -498,7 +498,7 @@ describe("given published cross section set where data of 1 published cross sect
             versionInfo: {
               version: 1,
               status: "published",
-              createdOn: expect.any(Date),
+              createdOn: matches8601,
             },
             type: "CrossSection",
             isPartOf: [
@@ -677,7 +677,7 @@ describe("given draft cross section set where its cross section data is altered"
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -848,7 +848,7 @@ describe("given draft cross section set where its cross section data is added la
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -1019,7 +1019,7 @@ describe("given draft cross section set where its non cross section data is alte
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -1184,7 +1184,7 @@ describe("given draft cross section set where its cross section state is altered
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -1338,7 +1338,7 @@ describe("given draft cross section set where a reference is added to a cross se
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -1499,7 +1499,7 @@ describe("given draft cross section set where a reference is replaced in a cross
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -1722,7 +1722,7 @@ describe("given draft cross section set where a reference is extended in a cross
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -2148,7 +2148,7 @@ describe("given draft cross section set where its charge in cross section is alt
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
@@ -2304,7 +2304,7 @@ describe("given draft cross section set where its charge in cross section is alt
           versionInfo: {
             version: 1,
             status: "draft",
-            createdOn: expect.any(Date),
+            createdOn: matches8601,
             commitMessage: expect.stringContaining(
               "Indirect draft by editing set",
             ),
