@@ -51,7 +51,7 @@ export class LXCatTestDatabase extends LXCatDatabase {
   }
 
   public async printCS() {
-    let cursor = await this.db.query(aql`FOR cs IN CrossSection RETURN cs`);
+    const cursor = await this.db.query(aql`FOR cs IN CrossSection RETURN cs`);
 
     return cursor.all();
   }
