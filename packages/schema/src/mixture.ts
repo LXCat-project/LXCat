@@ -23,7 +23,6 @@ import { SerializedSpecies } from "./species/serialized.js";
 import { VersionInfo } from "./version-info.js";
 import { versioned } from "./versioned.js";
 
-// HEAD
 const MixtureBody = <ReferenceType extends ZodTypeAny>(
   Reference: ReferenceType,
 ) =>
@@ -37,10 +36,11 @@ const MixtureBody = <ReferenceType extends ZodTypeAny>(
       //       better way to model process data with set references.
       Process(
         string(),
-        object({ _key: Key, versionInfo: VersionInfo }).and(
-          ProcessInfo(ReferenceRef(string().min(1))),
-        ).and(
-          SetReference,
+        ProcessInfo(
+          ReferenceRef(string().min(1)),
+          object({ _key: Key, versionInfo: VersionInfo }).merge(
+            SetReference,
+          ),
         ),
       ),
     ),
