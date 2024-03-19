@@ -7,6 +7,7 @@ import { CSLData } from "../common/csl/data.js";
 import { CSLDateVariable } from "../common/csl/date-variable.js";
 import { CSLNameVariable } from "../common/csl/name-variable.js";
 import { Constant, Expression, LUT } from "../common/data-types.js";
+import { Contributor } from "../contributor.js";
 import { Key } from "../key.js";
 import { LTPMixture } from "../mixture.js";
 import { CrossSectionData } from "../process/cross-section/data-types.js";
@@ -30,7 +31,7 @@ export const LTPMixtureJSONSchema = zodToJsonSchema(LTPMixture, {
   definitions: {
     Key,
     VersionInfo,
-    SetHeader,
+    SetHeader: SetHeader(Contributor),
     CSLData,
     CSLNameVariable,
     CSLDateVariable,

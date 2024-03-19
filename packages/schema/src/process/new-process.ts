@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, ZodType, ZodTypeAny } from "zod";
+import { object, output, ZodType, ZodTypeAny } from "zod";
 import { ProcessInfo } from "./process-info.js";
 import { Process } from "./process.js";
 
@@ -10,7 +10,7 @@ export const NewProcess = <
   StateType extends ZodTypeAny,
   ReferenceType extends ZodTypeAny,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, ProcessInfo(ReferenceType));
+  Process(StateType, ProcessInfo(ReferenceType, object({})));
 
 type NewProcessType<
   StateType extends ZodTypeAny,
