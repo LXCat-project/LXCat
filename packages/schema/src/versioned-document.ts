@@ -2,33 +2,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, z, ZodTypeAny } from "zod";
+import { z, ZodTypeAny } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
-import { ProcessInfo } from "./process/process-info.js";
-import { Process } from "./process/process.js";
-import { SetReference } from "./process/set-reference.js";
+import { VersionedProcess } from "./process/versioned-process.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
-import { SerializedSpecies } from "./species/serialized.js";
+import { AnySpecies } from "./species/any-species.js";
 import { versioned } from "./versioned.js";
 
-const MixtureBody = <ReferenceType extends ZodTypeAny>(
+const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
   Reference: ReferenceType,
 ) =>
-  z.object({
-    sets: z.record(versioned(SetHeader(Contributor))),
-    references: z.record(Reference),
-    states: z.record(SerializedSpecies),
-    processes: z.array(
-      Process(
-        z.string(),
-        versioned(
-          ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
+  versioned(
+    SetHeader(Contributor).merge(
+      z.object({
+        references: z.record(Reference),
+        states: z.record(AnySpecies),
+        processes: z.array(
+          VersionedProcess(z.string(), ReferenceRef(z.string().min(1))),
         ),
-      ),
+      }),
     ),
-  })
+  )
     .refine(
       (doc) =>
         doc.processes
@@ -52,11 +48,15 @@ const MixtureBody = <ReferenceType extends ZodTypeAny>(
       "Referenced reference key is missing in references record.",
     );
 
-export const LTPMixture = MixtureBody(Reference);
-export type LTPMixture = output<typeof LTPMixture>;
+// Contains _key and version information. Datasets downloaded from LXCat use
+// this schema.
+export const VersionedLTPDocument = VersionedDocumentBody(Reference);
+export type VersionedLTPDocument = z.output<typeof VersionedLTPDocument>;
 
-export const LTPMixtureWithReference = z.intersection(
+export const VersionedLTPDocumentWithReference = z.intersection(
   SelfReference,
-  MixtureBody(Reference.or(z.string().min(1))),
+  VersionedDocumentBody(Reference.or(z.string().min(1))),
 );
-export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;
+export type VersionedLTPDocumentWithReference = z.output<
+  typeof VersionedLTPDocumentWithReference
+>;

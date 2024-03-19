@@ -7,8 +7,29 @@
         "type": "object",
         "properties": {
           "contributor": {
-            "type": "string",
-            "minLength": 1
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string"
+              },
+              "contact": {
+                "type": "string"
+              },
+              "howToReference": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "description",
+              "contact",
+              "howToReference"
+            ],
+            "additionalProperties": false
           },
           "name": {
             "type": "string",
@@ -24,13 +45,21 @@
           },
           "complete": {
             "type": "boolean"
+          },
+          "_key": {
+            "$ref": "#/definitions/Key"
+          },
+          "versionInfo": {
+            "$ref": "#/definitions/VersionInfo"
           }
         },
         "required": [
           "contributor",
           "name",
           "description",
-          "complete"
+          "complete",
+          "_key",
+          "versionInfo"
         ],
         "additionalProperties": false
       }
@@ -44,7 +73,7 @@
     "states": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/AnySpecies"
+        "$ref": "#/definitions/SerializedSpecies"
       }
     },
     "processes": {
@@ -251,6 +280,12 @@
                   "items": {
                     "type": "string"
                   }
+                },
+                "_key": {
+                  "$ref": "#/definitions/Key"
+                },
+                "versionInfo": {
+                  "$ref": "#/definitions/VersionInfo"
                 }
               },
               "required": [
@@ -258,7 +293,9 @@
                 "references",
                 "data",
                 "threshold",
-                "isPartOf"
+                "isPartOf",
+                "_key",
+                "versionInfo"
               ],
               "additionalProperties": false
             }
@@ -280,6 +317,49 @@
   ],
   "additionalProperties": false,
   "definitions": {
+    "Key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VersionInfo": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "published",
+            "archived",
+            "retracted"
+          ],
+          "description": "The status of the versioned document."
+        },
+        "commitMessage": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Description of what was changed since the previous version."
+        },
+        "retractMessage": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Description of why the item was retracted."
+        }
+      },
+      "required": [
+        "version",
+        "createdOn",
+        "status"
+      ],
+      "additionalProperties": false
+    },
     "CSLData": {
       "type": "object",
       "properties": {
@@ -1872,6 +1952,129 @@
         "particle",
         "charge",
         "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "StateSummary": {
+      "type": "object",
+      "properties": {
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latex": {
+          "type": "string",
+          "minLength": 1
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "$ref": "#/definitions/StateSummary/properties/summary"
+                },
+                "latex": {
+                  "$ref": "#/definitions/StateSummary/properties/latex"
+                },
+                "vibrational": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "summary": {
+                          "$ref": "#/definitions/StateSummary/properties/summary"
+                        },
+                        "latex": {
+                          "$ref": "#/definitions/StateSummary/properties/latex"
+                        },
+                        "rotational": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "summary": {
+                                  "$ref": "#/definitions/StateSummary/properties/summary"
+                                },
+                                "latex": {
+                                  "$ref": "#/definitions/StateSummary/properties/latex"
+                                }
+                              },
+                              "required": [
+                                "summary",
+                                "latex"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0/properties/vibrational/anyOf/0/properties/rotational/anyOf/0"
+                              },
+                              "minItems": 2
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "summary",
+                        "latex"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0/properties/vibrational/anyOf/0"
+                      },
+                      "minItems": 2
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "summary",
+                "latex"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0"
+              },
+              "minItems": 2
+            }
+          ]
+        }
+      },
+      "required": [
+        "particle",
+        "charge",
+        "summary",
+        "latex"
+      ],
+      "additionalProperties": false
+    },
+    "SerializedSpecies": {
+      "type": "object",
+      "properties": {
+        "detailed": {
+          "$ref": "#/definitions/AnySpecies"
+        },
+        "serialized": {
+          "$ref": "#/definitions/StateSummary"
+        }
+      },
+      "required": [
+        "detailed",
+        "serialized"
       ],
       "additionalProperties": false
     }

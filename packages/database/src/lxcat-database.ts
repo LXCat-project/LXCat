@@ -110,7 +110,10 @@ import {
   insertStateTree,
   upsertDocument,
 } from "./shared/queries.js";
-import { upsertOrganization } from "./shared/queries/organization.js";
+import {
+  getOrganizationByName,
+  upsertOrganization,
+} from "./shared/queries/organization.js";
 import { findReactionId } from "./shared/queries/reaction.js";
 import {
   getReferences,
@@ -247,6 +250,7 @@ export class LXCatDatabase {
   public insertReactionWithDict = insertReactionWithDict;
 
   public upsertOrganization = upsertOrganization;
+  public getOrganizationByName = getOrganizationByName;
 
   // references
   public getReferences = getReferences;

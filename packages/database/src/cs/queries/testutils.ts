@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyProcess } from "@lxcat/schema/process";
+import { Status } from "@lxcat/schema";
+import { NewProcess } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
 import { Database } from "arangojs";
 import { deepClone } from "../../css/queries/deep-clone.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess } from "../../schema/process.js";
 import { StateTree } from "../../shared/types/state.js";
-import { Status } from "../../shared/types/version-info.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 
 export async function createSampleCrossSection(
@@ -45,7 +45,7 @@ export function removeIdsFromTree(tree: StateTree): Array<NestedState> {
   }));
 }
 
-export function sampleCrossSection(): AnyProcess<string, string> {
+export function sampleCrossSection(): NewProcess<string, string> {
   return {
     reaction: {
       lhs: [{ count: 1, state: "s1" }],

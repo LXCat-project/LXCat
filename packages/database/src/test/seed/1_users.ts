@@ -2,9 +2,10 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import "dotenv/config";
+import { Contributor } from "@lxcat/schema";
 import { Database } from "arangojs";
 import { EdgeCollection } from "arangojs/collection.js";
-import { Organization, UserWithAccountSessionInDb } from "../../auth/schema.js";
+import { UserWithAccountSessionInDb } from "../../auth/schema.js";
 
 export default async (db: Database) => {
   const users = db.collection<UserWithAccountSessionInDb>("users");
@@ -18,10 +19,13 @@ export default async (db: Database) => {
   // TODO hide logs of seed behind a flag
   console.log(`Test user added with _key = ${newUser._key}`);
 
-  const organizations = db.collection<Organization>("Organization");
-  const organization = Organization.parse({
+  const organizations = db.collection<Contributor>("Organization");
+  const organization: Contributor = {
     name: "Some organization",
-  });
+    description: "Description of some organization.",
+    contact: "info@some-org.com",
+    howToReference: "",
+  };
   const newOrganization = await organizations.save(organization, {
     returnNew: true,
   });

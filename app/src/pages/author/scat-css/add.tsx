@@ -4,7 +4,7 @@
 
 import { db } from "@lxcat/database";
 import type { KeyedOrganization } from "@lxcat/database/auth";
-import { KeyedDocument } from "@lxcat/database/schema";
+import { NewLTPDocument } from "@lxcat/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -22,7 +22,7 @@ const AddCrossSectionSetPage: NextPage<Props> = ({ organizations }) => {
   const [errors, setErrors] = useState<ErrorObject[]>([]);
   const [id, setId] = useState("");
 
-  async function onSubmit(newSet: KeyedDocument) {
+  async function onSubmit(newSet: NewLTPDocument) {
     const url = `/api/author/scat-css`;
     const body = JSON.stringify(newSet);
     const headers = new Headers({

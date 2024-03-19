@@ -5,7 +5,7 @@
 "use client";
 
 import { KeyedOrganization } from "@lxcat/database/auth";
-import { PartialKeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument, type VersionedLTPDocument } from "@lxcat/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -32,14 +32,14 @@ import { generateSpeciesForm, SpeciesForm } from "./form-factory";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
 
 const EditFormValues = z.object({
-  set: PartialKeyedDocument,
+  set: EditedLTPDocument,
   commitMessage: z.string().min(1),
   meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = {
-  initialSet: PartialKeyedDocument;
+  initialSet: VersionedLTPDocument;
   organizations: Array<KeyedOrganization>;
 };
 
@@ -81,7 +81,10 @@ export const EditForm = (
       validate: zodResolver(EditFormValues),
       initialValues: {
         commitMessage: "",
-        set: initialSet,
+        set: EditedLTPDocument.parse({
+          ...initialSet,
+          contributor: initialSet.contributor.name,
+        }),
         meta: {
           set: {
             states: Object.fromEntries(

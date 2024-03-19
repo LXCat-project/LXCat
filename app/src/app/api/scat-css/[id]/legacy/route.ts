@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { KeyedDocumentReferenceable } from "@lxcat/database/schema";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   badRequestResponse,
@@ -48,7 +48,7 @@ const router = RouteBuilder
         }],
       );
 
-      const dataWithRef: KeyedDocumentReferenceable = {
+      const dataWithRef: VersionedLTPDocumentWithReference = {
         $schema: "",
         url:
           `${process.env.NEXT_PUBLIC_URL}/scat-css/${ctx.parsedParams.path.id}`,

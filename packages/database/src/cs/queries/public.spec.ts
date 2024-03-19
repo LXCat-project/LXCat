@@ -5,11 +5,11 @@
 import { LTPMixture } from "@lxcat/schema";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
+  matches8601,
   matchesId,
   sampleCrossSectionSet,
   truncateCrossSectionSetCollections,
 } from "../../css/queries/testutils.js";
-import { KeyedLTPMixture } from "../../schema/mixture.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 
@@ -54,7 +54,7 @@ describe("given 4 published cross sections in 2 sets", () => {
   describe("byIds()", () => {
     it("given correct ids should return 4 cross sections", async () => {
       const result = await db.getMixtureByIds(csids);
-      const expected: KeyedLTPMixture = {
+      const expected: LTPMixture = {
         states: {
           "528": {
             detailed: {
@@ -119,6 +119,11 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
             info: [{
               _key: matchesId,
+              versionInfo: {
+                version: 1,
+                status: "published",
+                createdOn: matches8601,
+              },
               type: "CrossSection",
               threshold: 42,
               data: {
@@ -150,6 +155,11 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
             info: [{
               _key: matchesId,
+              versionInfo: {
+                version: 1,
+                status: "published",
+                createdOn: matches8601,
+              },
               type: "CrossSection",
               threshold: 13,
               data: {
@@ -186,6 +196,11 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
             info: [{
               _key: matchesId,
+              versionInfo: {
+                version: 1,
+                status: "published",
+                createdOn: matches8601,
+              },
               type: "CrossSection",
               threshold: 42,
               data: {
@@ -217,6 +232,11 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
             info: [{
               _key: matchesId,
+              versionInfo: {
+                version: 1,
+                status: "published",
+                createdOn: matches8601,
+              },
               type: "CrossSection",
               threshold: 13,
               data: {
@@ -238,17 +258,37 @@ describe("given 4 published cross sections in 2 sets", () => {
         sets: {
           "525": {
             _key: matchesId,
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: matches8601,
+            },
             complete: false,
             description: "Some description",
             name: "Some name",
-            contributor: "Some organization",
+            contributor: {
+              name: "Some organization",
+              description: "Description of some organization.",
+              contact: "info@some-org.com",
+              howToReference: "",
+            },
           },
           "575": {
             _key: matchesId,
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: matches8601,
+            },
             complete: false,
             description: "Some description",
             name: "Some other name",
-            contributor: "Some organization",
+            contributor: {
+              name: "Some organization",
+              description: "Description of some organization.",
+              contact: "info@some-org.com",
+              howToReference: "",
+            },
           },
         },
       };
@@ -287,7 +327,7 @@ describe("given 4 published cross sections in 2 sets", () => {
 
     it("given 1 good and 1 bad ids should return 1 good cross sections", async () => {
       const result = await db.getMixtureByIds([csids[0], "bad2"]);
-      const expected: KeyedLTPMixture = {
+      const expected: LTPMixture = {
         states: {
           "524": {
             detailed: {
@@ -339,6 +379,11 @@ describe("given 4 published cross sections in 2 sets", () => {
             },
             info: [{
               _key: matchesId,
+              versionInfo: {
+                version: 1,
+                status: "published",
+                createdOn: matches8601,
+              },
               type: "CrossSection",
               threshold: 42,
               data: {
@@ -355,10 +400,20 @@ describe("given 4 published cross sections in 2 sets", () => {
         sets: {
           "521": {
             _key: matchesId,
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: matches8601,
+            },
             complete: false,
             description: "Some description",
             name: "Some name",
-            contributor: "Some organization",
+            contributor: {
+              name: "Some organization",
+              description: "Description of some organization.",
+              contact: "info@some-org.com",
+              howToReference: "",
+            },
           },
         },
       };
@@ -367,7 +422,6 @@ describe("given 4 published cross sections in 2 sets", () => {
         Object.values(expected.states),
       );
       expect(Object.values(result.sets)).toEqual(Object.values(expected.sets));
-      console.error(result.references);
       expect(Object.values(result.references)).toEqual(
         Object.values(expected.references),
       );

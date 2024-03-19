@@ -5,14 +5,14 @@
 // import { GetServerSideProps, NextPage } from "next";
 
 import { db } from "@lxcat/database";
-import { KeyedLTPMixture } from "@lxcat/database/schema";
+import { LTPMixture } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
 import { PlotPage } from "../../scat-cs/inspect/plot-page";
 
 interface BagProps {
-  bag: KeyedLTPMixture;
+  bag: LTPMixture;
   hasMixedCompleteSets: boolean;
   references: { ref: string; url?: string }[];
 }

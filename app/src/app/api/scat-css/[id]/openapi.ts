@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { KeyedDocument } from "@lxcat/database/schema";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
 import { querySchema } from "./schemas";
@@ -22,11 +22,7 @@ export async function register() {
         description: "Cross section set",
         content: {
           "application/json": {
-            schema: z.object({
-              $schema: z.string(),
-              url: z.string(),
-              termOfUse: z.string(),
-            }).and(KeyedDocument),
+            schema: VersionedLTPDocumentWithReference,
           },
         },
       },

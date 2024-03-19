@@ -7,7 +7,7 @@ import { UseFormReturnType } from "@mantine/form";
 import Latex from "react-latex-next";
 import { BolsigFormInput } from "./io";
 import "katex/dist/katex.min.css";
-import { SerializedSpecies } from "@lxcat/database/schema";
+import { type SerializedSpecies } from "@lxcat/schema/species";
 import { IntegerInput } from "../../shared/integer-input";
 import { RangeInputForm } from "../../shared/range-input-form";
 import { ScientificInput } from "../../shared/scientific-input";

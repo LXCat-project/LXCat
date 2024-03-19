@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { systemDb } from "@lxcat/database";
 import { CrossSectionSetHeading } from "@lxcat/database/set";
-import type { LTPDocument } from "@lxcat/schema";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
@@ -73,14 +72,19 @@ test.describe("given 2 dummy sets", () => {
     test.describe("/api/scat-css/[id]", () => {
       test("given no refstyle should return csl", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}`);
-        const set: LTPDocument = await res.json();
+        const set = VersionedLTPDocumentWithReference.parse(await res.json());
         const ref0 = Object.values(set.references)[0];
-        expect(ref0.id).toEqual("SomeMainId");
+
+        if (typeof ref0 === "string") {
+          test.fail(true, "Expected references to be in CSL format.");
+        } else {
+          expect(ref0.id).toEqual("SomeMainId");
+        }
       });
 
       test("given bibtex refstyle should return bibtex string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=bibtex`);
-        const set: LTPDocument = await res.json();
+        const set = VersionedLTPDocumentWithReference.parse(await res.json());
         const expected = `@article{MyFamilyNameSome,
 \tauthor = {MyFamilyName, MyGivenName},
 \tjournal = {SomeJournal},
@@ -97,7 +101,7 @@ test.describe("given 2 dummy sets", () => {
 
       test("given apa refstyle should return apa string", async ({ request }) => {
         const res = await request.get(`/api/scat-css/${setId}?refstyle=apa`);
-        const set: LTPDocument = await res.json();
+        const set = VersionedLTPDocumentWithReference.parse(await res.json());
         const ref0 = Object.values(set.references)[0];
         const expected =
           "MyFamilyName, M. (n.d.). Some main reference title. In SomeJournal. https://doi.org/10.1109/5.771073\n";

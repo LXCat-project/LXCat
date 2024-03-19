@@ -4,7 +4,7 @@
 
 import { LXCatID } from "@/shared/lxcatid";
 import { db } from "@lxcat/database";
-import { KeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import { z } from "zod";
 import {
   badRequestResponse,
@@ -19,7 +19,7 @@ import { RouteBuilder } from "../../../route-builder";
 
 export const postSchema = z.object({
   path: z.object({ id: LXCatID }),
-  body: z.object({ doc: KeyedDocument, message: z.string() }),
+  body: z.object({ doc: EditedLTPDocument, message: z.string() }),
 });
 
 export const deleteSchema = z.object({

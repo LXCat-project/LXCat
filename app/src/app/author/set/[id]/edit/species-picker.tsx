@@ -4,7 +4,7 @@
 
 "use client";
 
-import { SerializedSpecies } from "@lxcat/database/schema";
+import { type SerializedSpecies } from "@lxcat/schema/species";
 import { Group, px, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import clsx from "clsx";
