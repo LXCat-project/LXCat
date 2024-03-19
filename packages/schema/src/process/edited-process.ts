@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, ZodType, ZodTypeAny } from "zod";
-import { partialKeyed } from "../partial-keyed.js";
+import { object, output, ZodType, ZodTypeAny } from "zod";
+import { Key } from "../key.js";
 import { ProcessInfo } from "./process-info.js";
 import { Process } from "./process.js";
 
@@ -11,7 +11,10 @@ export const EditedProcess = <
   StateType extends ZodTypeAny,
   ReferenceType extends ZodTypeAny,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, partialKeyed(ProcessInfo(ReferenceType)));
+  Process(
+    StateType,
+    ProcessInfo(ReferenceType, object({ _key: Key.optional() })),
+  );
 
 type EditedProcessType<
   StateType extends ZodTypeAny,
