@@ -30,6 +30,7 @@ export type Constant = TypeOf<typeof Constant>;
 export const Expression = object({
   type: literal("Expression"),
   expression: string().min(1),
+  unit: string().min(1),
   parameters: array(string().min(1)).min(1),
 }).superRefine((value, ctx) => {
   for (const param of value.parameters) {
