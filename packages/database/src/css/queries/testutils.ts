@@ -260,6 +260,31 @@ export const sampleSets4Search = async (db: LXCatTestDatabase) => {
  * 1. archived = CO2
  */
 export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
+  await db.addOrganization({
+    name: "Some published organization",
+    description: "",
+    contact: "",
+    howToReference: "",
+  });
+  await db.addOrganization({
+    name: "Some draft organization",
+    description: "",
+    contact: "",
+    howToReference: "",
+  });
+  await db.addOrganization({
+    name: "Some retracted organization",
+    description: "",
+    contact: "",
+    howToReference: "",
+  });
+  await db.addOrganization({
+    name: "Some archived organization",
+    description: "",
+    contact: "",
+    howToReference: "",
+  });
+
   const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",

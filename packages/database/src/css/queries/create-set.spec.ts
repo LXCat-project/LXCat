@@ -56,7 +56,7 @@ describe("giving draft set made with existing draft cross section", () => {
       },
     };
 
-    const organizationId = await db.upsertOrganization("Some organization");
+    const organizationId = await db.getOrganizationByName("Some organization");
     const stateLookup = await db.insertStateDict(states);
     const refLookup = await db.insertReferenceDict(references);
     const idcs1 = await db.createItem(
@@ -81,7 +81,7 @@ describe("giving draft set made with existing draft cross section", () => {
       },
       stateLookup,
       refLookup,
-      organizationId,
+      organizationId!,
       "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
@@ -210,7 +210,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
     };
 
-    const organizationId = await db.upsertOrganization(
+    const organizationId = await db.getOrganizationByName(
       "Some other organization",
     );
     const stateLookup = await db.insertStateDict(states);
@@ -237,7 +237,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       stateLookup,
       refLookup,
-      organizationId,
+      organizationId!,
     );
     keycs1 = idcs1.replace("CrossSection/", "");
     keycss1 = await db.createSet(

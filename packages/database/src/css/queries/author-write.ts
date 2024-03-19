@@ -16,15 +16,20 @@ import { mapReaction } from "../../shared/queries.js";
 // TODO some queries have duplication which could be de-duped
 export async function createSet(
   this: LXCatDatabase,
-  // FIXME: createSet should only accept
+  // FIXME: createSet should only accept NewLTPDocument. Currently this
+  //        function does too many different things.
   dataset: EditedLTPDocument,
   status: Status = "published",
   version = 1,
   commitMessage?: string,
 ) {
-  // FIXME: We do not want to allow the creation of organizations through `createSet`.
-  // Reuse Organization created by cross section drafting
-  const organizationId = await this.upsertOrganization(dataset.contributor);
+  const organizationId = await this.getOrganizationByName(dataset.contributor);
+
+  if (organizationId === undefined) {
+    throw new Error(
+      `Cannot create dataset for organization ${dataset.contributor}, it does not exist.`,
+    );
+  }
 
   const versionInfo: VersionInfo = {
     status,
@@ -219,7 +224,14 @@ export async function updateDraftSet(
   versionInfo: VersionInfo,
   message: string,
 ) {
-  const organizationId = await this.upsertOrganization(dataset.contributor);
+  const organizationId = await this.getOrganizationByName(dataset.contributor);
+
+  if (organizationId === undefined) {
+    throw new Error(
+      `Cannot update draft dataset ${key} for organization ${dataset.contributor}, the organization does not exist.`,
+    );
+  }
+
   versionInfo.commitMessage = message;
   versionInfo.createdOn = now();
   const set = {

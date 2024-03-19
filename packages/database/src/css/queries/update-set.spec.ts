@@ -1916,13 +1916,13 @@ describe("given draft cross section set where a cross section is added from anot
     keycss1 = await db.createSet(draft1, "draft");
 
     // Create cross section in another organization
-    const orgId = await db.upsertOrganization("Some other organization");
+    const orgId = await db.getOrganizationByName("Some other organization");
     const stateIds = await insertSampleStateIds(db);
     const idcs1 = await db.createItem(
       sampleCrossSection(),
       stateIds,
       {},
-      orgId,
+      orgId!,
       "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
