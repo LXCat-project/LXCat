@@ -23,6 +23,13 @@ const router = RouteBuilder
   .use(hasDeveloperOrDownloadRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
+    const mixture = await db().getMixtureByIds(ctx.parsedParams.query.ids);
+
+    const references = mapObject(
+      mixture.references,
+      ([key, reference]) => [key, reference2bibliography(reference)],
+    );
+
     const data: LTPMixtureWithReference = {
       // FIXME: Return correct $schema url.
       $schema: "",
@@ -32,13 +39,9 @@ const router = RouteBuilder
       termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
         ctx.parsedParams.query.ids.join(",")
       }#termsOfUse`,
-      ...await db().getMixtureByIds(ctx.parsedParams.query.ids),
+      ...mixture,
+      references,
     };
-
-    const references = mapObject(
-      data.references,
-      ([key, reference]) => [key, reference2bibliography(reference)],
-    );
 
     const { convertMixture } = await import("@lxcat/converter");
 

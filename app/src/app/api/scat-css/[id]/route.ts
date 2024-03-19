@@ -10,6 +10,7 @@ import {
   okJsonResponse,
 } from "../../../../shared/api-responses";
 import "@citation-js/plugin-bibtex";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { reference2bibliography } from "../../../../shared/cite";
 import { RouteBuilder } from "../../../api/route-builder";
 import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
@@ -32,7 +33,7 @@ const router = RouteBuilder
         return notFoundResponse();
       }
 
-      const dataWithRef = {
+      const dataWithRef: VersionedLTPDocumentWithReference = {
         // TODO: Schema endpoint does not exist.
         $schema:
           `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`,
@@ -44,14 +45,14 @@ const router = RouteBuilder
 
       if (params.query.refstyle === "csl") {
       } else if (params.query.refstyle === "bibtex") {
-        (dataWithRef as any).references = Object.fromEntries(
+        dataWithRef.references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const cite = new Cite(value);
-            return [key, cite.format("bibtex")];
+            return [key, cite.format("bibtex") as string];
           }),
         );
       } else if (params.query.refstyle === "apa") {
-        (dataWithRef as any).references = Object.fromEntries(
+        dataWithRef.references = Object.fromEntries(
           Object.entries(data.references).map(([key, value]) => {
             const bib = reference2bibliography(value);
             return [key, bib];

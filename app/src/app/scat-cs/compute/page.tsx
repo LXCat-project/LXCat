@@ -55,26 +55,30 @@ const fetchProps = async (
 
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
+
+  const mixture = await db().getMixtureByIds(ids);
+
+  const references = mapObject(
+    mixture.references,
+    ([key, reference]) => [key, reference2bibliography(reference)],
+  );
+
+  const referenceLinks = Object.entries(mixture.references).map((
+    [key, r],
+  ) => ({
+    ref: references[key],
+    url: r.URL,
+  }));
+
   const data: LTPMixtureWithReference = {
     // FIXME: Use proper schema reference.
     $schema: "",
     url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
     termsOfUse:
       `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
-    ...await db().getMixtureByIds(ids),
+    ...mixture,
+    references,
   };
-
-  const references = mapObject(
-    data.references,
-    ([key, reference]) => [key, reference2bibliography(reference)],
-  );
-
-  const referenceLinks = Object.entries(data.references).map((
-    [key, r],
-  ) => ({
-    ref: references[key],
-    url: r.URL,
-  }));
 
   let legacy: string = "";
   try {

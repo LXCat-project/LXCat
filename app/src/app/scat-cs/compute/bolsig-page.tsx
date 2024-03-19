@@ -4,7 +4,7 @@
 
 "use client";
 
-import { type LTPMixture } from "@lxcat/schema";
+import { type LTPMixtureWithReference } from "@lxcat/schema";
 import { type SerializedSpecies } from "@lxcat/schema/species";
 import { Button, Grid, Stack } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
@@ -20,7 +20,7 @@ import {
 import classes from "./bolsig.module.css";
 
 export interface BolsigPageProps {
-  data: LTPMixture;
+  data: LTPMixtureWithReference;
   references: Array<{ ref: string; url?: string }>;
   legacy: string;
   bolsigHost: string;

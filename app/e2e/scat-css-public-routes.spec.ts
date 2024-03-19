@@ -74,7 +74,12 @@ test.describe("given 2 dummy sets", () => {
         const res = await request.get(`/api/scat-css/${setId}`);
         const set = VersionedLTPDocumentWithReference.parse(await res.json());
         const ref0 = Object.values(set.references)[0];
-        expect(ref0.id).toEqual("SomeMainId");
+
+        if (typeof ref0 === "string") {
+          test.fail(true, "Expected references to be in CSL format.");
+        } else {
+          expect(ref0.id).toEqual("SomeMainId");
+        }
       });
 
       test("given bibtex refstyle should return bibtex string", async ({ request }) => {
