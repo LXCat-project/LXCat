@@ -285,7 +285,7 @@ impl Document {
         write!(
             legacy,
             "{}\nDATABASE:         {}\nDESCRIPTION:      {}\n{}\n\n",
-            END, self.contributor, self.description, END
+            END, self.contributor.name, self.description, END
         )?;
 
         for process in self.processes.into_iter() {
@@ -318,7 +318,7 @@ impl Mixture {
             write!(
                 legacy,
                 "{}\nDATABASE:         {}\nDESCRIPTION:      {}\n{}\n",
-                END, set.contributor, set.description, END
+                END, set.contributor.name, set.description, END
             )?;
 
             for process in self.processes.iter().filter(|&process| {
