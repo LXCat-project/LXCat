@@ -29,7 +29,7 @@
     "dprint": "^0.45.0",
     "eslint": "8.57.0",
     "tsx": "^4.7.1",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.3",
     "vitest": "^1.4.0"
   },
   "exports": {
