@@ -49,6 +49,7 @@
     "drop-database": "tsx src/cli/drop-database.ts",
     "drop-non-user": "tsx src/cli/drop-non-user.ts",
     "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
+    "load-orgs": "tsx src/cli/load-orgs.ts",
     "load-css": "tsx src/cli/load-css.ts",
     "format": "dprint fmt",
     "clean": "rm -rf dist",
