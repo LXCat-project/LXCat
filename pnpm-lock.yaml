@@ -108,7 +108,7 @@ importers:
         version: 1.0.0
       next-mdx-remote:
         specifier: canary
-        version: 0.0.0-canary-20240314172753(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
+        version: 0.0.0-canary-20240321205249(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
       nextjs-cors:
         specifier: ^2.2.0
         version: 2.2.0(next@14.1.3)
@@ -300,8 +300,8 @@ importers:
         specifier: workspace:^
         version: link:../schema
       arangojs:
-        specifier: ^8.8.0
-        version: 8.8.0
+        specifier: ^8.8.1
+        version: 8.8.1
       deep-equal:
         specifier: ^2.2.3
         version: 2.2.3
@@ -4303,8 +4303,8 @@ packages:
       default-require-extensions: 3.0.1
     dev: true
 
-  /arangojs@8.8.0:
-    resolution: {integrity: sha512-TQ1yDPGU6eh08jRavjdx64eRmjVABSDB1LUk+koloEmY2XybFTv4azW5xEZ07Ohai63gnkLWkaWh+4DdlPoAfw==}
+  /arangojs@8.8.1:
+    resolution: {integrity: sha512-gVc5BF91nT27lB97mt+XxcGbw7yOhPIkZ0f5Nmq/ZPt1/iP62rDpH961XUyWdzj5m4H8lx2OF/O2AVefZoolXg==}
     engines: {node: '>=14'}
     dependencies:
       '@types/node': 20.11.28
@@ -9810,8 +9810,8 @@ packages:
       regexparam: 2.0.1
     dev: false
 
-  /next-mdx-remote@0.0.0-canary-20240314172753(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-jZyxOJrOLDP83YzqymN94DHdX29i7rao0TJyee8Sq2/+z3xuH1QuW1tY+Aoa6yHehdUnsE5/pr7Mts4aVlk1Lw==}
+  /next-mdx-remote@0.0.0-canary-20240321205249(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-vqerW3tdmFCLtmENseqAF2GPRV6ka/b39//Rhl7zkAMalJ/OpQ6MYqrnLYFlyOc1aVyV/D5IpxjK4Uw071jq2A==}
     engines: {node: '>=14', npm: '>=7'}
     peerDependencies:
       react: '>=16.x <=18.x'
