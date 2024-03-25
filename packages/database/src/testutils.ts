@@ -57,13 +57,7 @@ export class LXCatTestDatabase extends LXCatDatabase {
   }
 
   public async setupTestUser() {
-    const testKeys = await loadTestUserAndOrg(this.db);
-    await this.addOrganization({
-      name: "Some other organization",
-      description: "Test description",
-      contact: "org@email.com",
-      howToReference: "Test reference",
-    });
+    const testKeys = await loadTestUserAndOrg(this);
     return this.toggleRole(testKeys.testUserKey, "author");
   }
 

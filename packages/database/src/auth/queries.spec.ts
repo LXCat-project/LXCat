@@ -4,6 +4,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { matchesId } from "../css/queries/testutils.js";
 import { systemDb } from "../system-db.js";
 import { LXCatTestDatabase } from "../testutils.js";
 import { loadTestUserAndOrg, TestKeys } from "./testutils.js";
@@ -14,7 +15,7 @@ describe("given filled ArangoDB container", () => {
 
   beforeAll(async () => {
     db = await LXCatTestDatabase.createTestInstance(systemDb(), "auth-test");
-    testKeys = await loadTestUserAndOrg(db.getDB());
+    testKeys = await loadTestUserAndOrg(db);
 
     return async () => systemDb().dropDatabase("auth-test");
   });
@@ -31,13 +32,13 @@ describe("given filled ArangoDB container", () => {
     expect(result).toEqual([expected]);
   });
 
-  it("should have a single org", async () => {
+  it("should have two organizations", async () => {
     const result = await db.listOrganizations();
-    const expected = {
-      _key: testKeys.testOrgKey,
-      name: "Some organization",
-    };
-    expect(result).toEqual([expected]);
+    const expected = [
+      { _key: testKeys.testOrgKey, name: "Some organization" },
+      { _key: matchesId, name: "Some other organization" },
+    ];
+    expect(result).toEqual(expected);
   });
 
   it("should list organization in users memberships", async () => {
