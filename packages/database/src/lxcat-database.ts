@@ -229,8 +229,8 @@ export class LXCatDatabase {
   public async dropNonUserCollections() {
     const collections = await this.db.collections(true);
     for (const c of collections) {
-      console.log(`Dropping ${c.name}`);
       if (c.name !== "users") {
+        console.log(`Dropping ${c.name}`);
         await c.drop();
       }
     }
