@@ -6,7 +6,7 @@
 
 import { MaybePromise } from "@/app/api/util";
 import { reference2bibliography } from "@/shared/cite";
-import { type PartialKeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
@@ -35,7 +35,7 @@ import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
 
-type Process = PartialKeyedDocument["processes"][number];
+type Process = EditedLTPDocument["processes"][number];
 type ProcessInfo = Process["info"][number];
 
 function entryAsLatex(
@@ -325,11 +325,11 @@ const ProcessItem = (
 
 export const ProcessTab = (
   { processes, species, references, onChange, accordion }: {
-    processes: PartialKeyedDocument["processes"];
-    species: PartialKeyedDocument["states"];
-    references: PartialKeyedDocument["references"];
+    processes: EditedLTPDocument["processes"];
+    species: EditedLTPDocument["states"];
+    references: EditedLTPDocument["references"];
     onChange: (
-      processes: PartialKeyedDocument["processes"],
+      processes: EditedLTPDocument["processes"],
     ) => MaybePromise<void>;
     accordion: {
       value: string | null;

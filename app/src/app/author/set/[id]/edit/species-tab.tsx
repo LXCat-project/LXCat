@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { PartialKeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import { stateJSONSchema } from "@lxcat/schema/json-schema";
 import { type AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -10,13 +10,12 @@ import {
   ActionIcon,
   Button,
   Center,
-  Group,
   Modal,
   ScrollArea,
   Stack,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconTrack, IconTrash } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import { JSONSchema7 } from "json-schema";
 import { nanoid } from "nanoid";
 import { useState } from "react";
@@ -67,10 +66,10 @@ const getSpeciesMeta = (species: AnySpecies) => {
 
 export const SpeciesTab = (
   { species, meta, onChange }: {
-    species: PartialKeyedDocument["states"];
+    species: EditedLTPDocument["states"];
     meta: Record<string, any>;
     onChange: (
-      species: PartialKeyedDocument["states"],
+      species: EditedLTPDocument["states"],
       meta: Record<string, any>,
     ) => MaybePromise<void>;
   },

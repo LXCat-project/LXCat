@@ -4,7 +4,7 @@
 
 import { MaybePromise } from "@/app/api/util";
 import { LatexSelect } from "@/shared/latex-select";
-import { PartialKeyedDocument } from "@lxcat/database/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import {
   ActionIcon,
@@ -20,7 +20,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 
-type Process = PartialKeyedDocument["processes"][number];
+type Process = EditedLTPDocument["processes"][number];
 
 const SpeciesBuilder = (
   { entries, species, onChange }: {
