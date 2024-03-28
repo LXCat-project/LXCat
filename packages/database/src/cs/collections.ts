@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { VersionInfo } from "@lxcat/schema";
 import { type CrossSectionInfo } from "@lxcat/schema/process";
-import { VersionInfo } from "../shared/types/version-info.js";
 
 export type CrossSection = {
   versionInfo: VersionInfo;

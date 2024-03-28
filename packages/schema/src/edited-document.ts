@@ -2,22 +2,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { string, z } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
-import { AnyProcess } from "./process/any-process.js";
-import { SelfReference } from "./self-reference.js";
+import { partialKeyed } from "./partial-keyed.js";
+import { EditedProcess } from "./process/edited-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 
-const DocumentBody = z.object({
+const EditedDocumentBody = z.object({
   references: z.record(Reference),
   states: z.record(AnySpecies),
-  processes: z.array(AnyProcess(z.string(), ReferenceRef(z.string().min(1)))),
+  processes: z.array(
+    EditedProcess(z.string(), ReferenceRef(z.string().min(1))),
+  ),
 });
 
-export const LTPDocument = SelfReference
-  .merge(SetHeader)
-  .merge(DocumentBody)
+// Optionally contains _key information, version information can be omitted.
+// This type can be used to update existing documents.
+export const EditedLTPDocument = partialKeyed(
+  EditedDocumentBody.merge(SetHeader(string().min(1))),
+)
   .refine(
     (doc) =>
       doc.processes
@@ -41,4 +45,4 @@ export const LTPDocument = SelfReference
     "Referenced reference key is missing in references record.",
   );
 
-export type LTPDocument = z.output<typeof LTPDocument>;
+export type EditedLTPDocument = z.output<typeof EditedLTPDocument>;

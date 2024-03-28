@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { KeyedDocument } from "../../schema/document.js";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -15,7 +15,6 @@ import {
   StateChoices,
 } from "../../shared/queries/state.js";
 import { PagingOptions } from "../../shared/types/search.js";
-import { VersionInfo } from "../../shared/types/version-info.js";
 import {
   CrossSectionSetHeading,
   CrossSectionSetItem,
@@ -327,17 +326,17 @@ export async function byIdJSON(this: LXCatDatabase, id: string) {
                     )
                     RETURN {
                       reaction,
-                      info: [MERGE({ _key: cs._key, references: refs2 }, cs.info)]
+                      info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2 }, cs.info)]
                     }
         )
         LET contributor = FIRST(
             FOR o IN Organization
                 FILTER o._id == css.organization
-                RETURN o.name
+                RETURN UNSET(o, ["_key", "_id", "_rev"])
         )
-        RETURN MERGE(UNSET(css, ["_rev", "_id", "organization", "versionInfo"]), {references: refs, states, processes, contributor})
+        RETURN MERGE(UNSET(css, ["_rev", "_id", "organization"]), {references: refs, states, processes, contributor})
     `);
-  return KeyedDocument.parseAsync(await cursor.next());
+  return VersionedLTPDocument.parseAsync(await cursor.next());
 }
 
 export async function byId(this: LXCatDatabase, id: string) {
@@ -403,10 +402,7 @@ export interface KeyedVersionInfo extends VersionInfo {
 export async function setHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
   const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
-    FOR h
-      IN 0..9999999
-      ANY ${id}
-      CrossSectionSetHistory
+    FOR h IN 0..9999999 ANY ${id} CrossSectionSetHistory
       FILTER h.versionInfo.status != 'draft'
       SORT h.versionInfo.version DESC
       RETURN MERGE({_key: h._key, name: h.name}, h.versionInfo)

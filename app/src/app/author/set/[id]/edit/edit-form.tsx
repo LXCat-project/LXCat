@@ -5,8 +5,11 @@
 "use client";
 
 import { KeyedOrganization } from "@lxcat/database/auth";
-import { PartialKeyedDocument } from "@lxcat/database/schema";
-import { Reference } from "@lxcat/schema";
+import {
+  EditedLTPDocument,
+  Reference,
+  type VersionedLTPDocument,
+} from "@lxcat/schema";
 import {
   Button,
   Checkbox,
@@ -27,14 +30,14 @@ import { ReferenceTable } from "./reference-table";
 import { SpeciesTab } from "./species-tab";
 
 const EditFormValues = z.object({
-  set: PartialKeyedDocument,
+  set: EditedLTPDocument,
   commitMessage: z.string().min(1),
   meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = {
-  initialSet: PartialKeyedDocument;
+  initialSet: VersionedLTPDocument;
   organizations: Array<KeyedOrganization>;
 };
 
@@ -76,7 +79,10 @@ export const EditForm = (
       validate: zodResolver(EditFormValues),
       initialValues: {
         commitMessage: "",
-        set: initialSet,
+        set: EditedLTPDocument.parse({
+          ...initialSet,
+          contributor: initialSet.contributor.name,
+        }),
         meta: {
           set: {
             states: Object.fromEntries(

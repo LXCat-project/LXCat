@@ -6,18 +6,21 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { aql } from "arangojs";
 
-import { Reference } from "@lxcat/schema";
+import {
+  EditedLTPDocument,
+  Reference,
+  Status,
+  VersionedLTPDocument,
+} from "@lxcat/schema";
 import { ReactionEntry } from "@lxcat/schema/process";
-import { ArangojsError } from "arangojs/lib/request.node";
+import { SerializedSpecies } from "@lxcat/schema/species";
+import { ArangojsError } from "arangojs/lib/request.node.js";
 import {
   insertSampleStateIds,
   sampleCrossSection,
   sampleStates,
 } from "../../cs/queries/testutils.js";
-import { KeyedDocument, PartialKeyedDocument } from "../../schema/document.js";
 import { OwnedProcess } from "../../schema/process.js";
-import { SerializedSpecies } from "../../schema/species.js";
-import { Status } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
@@ -110,10 +113,14 @@ describe("given published cross section set where data of 1 published cross sect
         },
       ],
     });
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     draft.processes[1].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
@@ -201,6 +208,14 @@ describe("given published cross section set where data of 1 published cross sect
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 2,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           threshold: 42,
           data: {
@@ -274,6 +289,11 @@ describe("given published cross section set where data of 1 published cross sect
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "published",
+            createdOn: matches8601,
+          },
           type: "CrossSection",
           threshold: 13,
           data: {
@@ -345,14 +365,14 @@ describe("given published cross section set where data of 1 published cross sect
           createdOn: matches8601,
           name: "Some name",
           status: "published",
-          version: "2",
+          version: 2,
         },
         {
           _key: keycss1,
           createdOn: matches8601,
           name: "Some name",
           status: "archived",
-          version: "1",
+          version: 1,
         },
       ];
       expect(history).toEqual(expected);
@@ -404,6 +424,14 @@ describe("given published cross section set where data of 1 published cross sect
           },
           info: [{
             _key: matchesId,
+            versionInfo: {
+              version: 2,
+              status: "published",
+              createdOn: matches8601,
+              commitMessage: expect.stringContaining(
+                "Indirect draft by editing set",
+              ),
+            },
             type: "CrossSection",
             isPartOf: [
               {
@@ -467,6 +495,11 @@ describe("given published cross section set where data of 1 published cross sect
           },
           info: [{
             _key: matchesId,
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: matches8601,
+            },
             type: "CrossSection",
             isPartOf: [
               {
@@ -546,13 +579,17 @@ describe("given draft cross section set where its cross section data is altered"
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     draft.processes[0].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
@@ -637,6 +674,14 @@ describe("given draft cross section set where its cross section data is altered"
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -677,16 +722,20 @@ describe("given draft cross section set where its cross section data is added la
         processes: [],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft: PartialKeyedDocument | null = await db.getSetByOwnerAndId(
+    const css1 = await db.getSetByOwnerAndId(
       email,
       keycss1,
     );
-    if (draft === null) {
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     draft.states = {
       a: {
         particle: "A",
@@ -796,6 +845,14 @@ describe("given draft cross section set where its cross section data is added la
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -867,13 +924,17 @@ describe("given draft cross section set where its non cross section data is alte
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     draft.description = "Some altered description";
     keycss2 = await db.updateSet(
       keycss1,
@@ -955,6 +1016,14 @@ describe("given draft cross section set where its non cross section data is alte
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -1035,13 +1104,17 @@ describe("given draft cross section set where its cross section state is altered
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     draft.states.c = {
       particle: "C",
       charge: 2,
@@ -1108,6 +1181,14 @@ describe("given draft cross section set where its cross section state is altered
         info: [{
           _key: matchesId,
           type: "CrossSection",
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           isPartOf: [
             {
               _key: keycss2,
@@ -1178,13 +1259,18 @@ describe("given draft cross section set where a reference is added to a cross se
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
+
     const r1: Reference = {
       type: "article",
       id: "refid1",
@@ -1249,6 +1335,14 @@ describe("given draft cross section set where a reference is added to a cross se
         info: [{
           _key: matchesId,
           type: "CrossSection",
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           isPartOf: [
             {
               _key: keycss2,
@@ -1330,13 +1424,17 @@ describe("given draft cross section set where a reference is replaced in a cross
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     const r2: Reference = {
       type: "article",
       id: "refid2",
@@ -1398,6 +1496,14 @@ describe("given draft cross section set where a reference is replaced in a cross
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -1540,16 +1646,21 @@ describe("given draft cross section set where a reference is extended in a cross
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     if (draft.processes[0].info[0]) {
       const refid = draft.processes[0].info[0].references[0];
-      const ref = draft.references[refid];
+      const ref =
+        draft.references[typeof refid === "string" ? refid : refid.id];
       ref.abstract = "Some abstract";
     } else {
       throw new Error("Unable to extend ref");
@@ -1608,6 +1719,14 @@ describe("given draft cross section set where a reference is extended in a cross
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -1713,11 +1832,15 @@ describe("given updating published cross section set which already has draft", (
       states: {},
       processes: [],
     });
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    draft.description = "Some new description";
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+      description: "Some new description",
+    });
     keycss2 = await db.updateSet(keycss1, draft, "Altered description");
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
@@ -1725,10 +1848,14 @@ describe("given updating published cross section set which already has draft", (
     // expect.toThrowError() assert did not work with async db queries so use try/catch
     expect.assertions(1);
     try {
-      const secondDraft = await db.getSetByOwnerAndId(sampleEmail, keycss1);
-      if (secondDraft === null) {
+      const css1 = await db.getSetByOwnerAndId(email, keycss1);
+      if (css1 === null) {
         throw Error(`Failed to find ${keycss1}`);
       }
+      const secondDraft = EditedLTPDocument.parse({
+        ...css1,
+        contributor: css1.contributor.name,
+      });
       await db.updateSet(keycss1, secondDraft, "another draft please");
     } catch (error) {
       expect(`${error}`).toMatch(
@@ -1779,7 +1906,7 @@ describe.each(invalidUpdateStatuses)(
 describe("given draft cross section set where a cross section is added from another organization", () => {
   let keycss1: string;
   let keycs1: string;
-  let css1: KeyedDocument;
+  let css1: VersionedLTPDocument;
   beforeAll(async () => {
     // Create draft cross section set without cross sections
     const draft1 = sampleCrossSectionSet();
@@ -1789,13 +1916,13 @@ describe("given draft cross section set where a cross section is added from anot
     keycss1 = await db.createSet(draft1, "draft");
 
     // Create cross section in another organization
-    const orgId = await db.upsertOrganization("Some other organization");
+    const orgId = await db.getOrganizationByName("Some other organization");
     const stateIds = await insertSampleStateIds(db);
     const idcs1 = await db.createItem(
       sampleCrossSection(),
       stateIds,
       {},
-      orgId,
+      orgId!,
       "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
@@ -1804,10 +1931,14 @@ describe("given draft cross section set where a cross section is added from anot
       expect.fail("Unable to find cross section from another organization");
     }
 
-    const draft2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === null) {
-      expect.fail("Unable to find draft");
+    const css1versioned = await db.getSetByOwnerAndId(sampleEmail, keycss1);
+    if (css1versioned === null) {
+      expect.fail(`Failed to find draft with key ${keycss1}`);
     }
+    const draft2 = EditedLTPDocument.parse({
+      ...css1versioned,
+      contributor: css1versioned.contributor.name,
+    });
     draft2.processes.push({
       reaction: cs1.reaction,
       info: [{ ...cs1.info[0], _key: keycs1 }],
@@ -1826,6 +1957,7 @@ describe("given draft cross section set where a cross section is added from anot
       }
       draft2.states[s.state] = states[stateLabel];
     }
+
     cs1.reaction.lhs.forEach(gatherStateLabel);
     cs1.reaction.rhs.forEach(gatherStateLabel);
 
@@ -1943,13 +2075,17 @@ describe("given draft cross section set where its charge in cross section is alt
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     const stateA = Object.values(draft.states).find((s) => s.particle === "A");
     if (stateA === undefined) {
       throw Error(`Failed to find state with particle=A in ${keycss1}`);
@@ -2009,6 +2145,14 @@ describe("given draft cross section set where its charge in cross section is alt
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           isPartOf: [
             {
@@ -2087,13 +2231,17 @@ describe("given draft cross section set where its charge in cross section is alt
         ],
       },
       "draft",
-      "1",
+      1,
       "Initial draft",
     );
-    const draft = await db.getSetByOwnerAndId(email, keycss1);
-    if (draft === null) {
+    const css1 = await db.getSetByOwnerAndId(email, keycss1);
+    if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
     const stateA = Object.values(draft.states).find((s) => s.particle === "A");
     if (stateA === undefined) {
       throw Error(`Failed to find state with particle=A in ${keycss1}`);
@@ -2153,6 +2301,14 @@ describe("given draft cross section set where its charge in cross section is alt
         },
         info: [{
           _key: matchesId,
+          versionInfo: {
+            version: 1,
+            status: "draft",
+            createdOn: matches8601,
+            commitMessage: expect.stringContaining(
+              "Indirect draft by editing set",
+            ),
+          },
           type: "CrossSection",
           threshold: 42,
           isPartOf: [

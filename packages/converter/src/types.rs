@@ -85,9 +85,18 @@ pub struct State {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct Contributor {
+    pub name: String,
+    pub description: String,
+    pub contact: String,
+    pub how_to_reference: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Document {
     pub name: String,
-    pub contributor: String,
+    pub contributor: Contributor,
     pub description: String,
     pub complete: bool,
     pub processes: Vec<Process>,
@@ -113,5 +122,5 @@ pub struct SetHeader {
     pub name: String,
     pub description: String,
     pub complete: bool,
-    pub contributor: String,
+    pub contributor: Contributor,
 }

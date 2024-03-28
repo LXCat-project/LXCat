@@ -4,7 +4,8 @@
 
 "use client";
 
-import { KeyedLTPMixture, SerializedSpecies } from "@lxcat/database/schema";
+import { type LTPMixtureWithReference } from "@lxcat/schema";
+import { type SerializedSpecies } from "@lxcat/schema/species";
 import { Button, Grid, Stack } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useState } from "react";
@@ -19,7 +20,7 @@ import {
 import classes from "./bolsig.module.css";
 
 export interface BolsigPageProps {
-  data: KeyedLTPMixture;
+  data: LTPMixtureWithReference;
   references: Array<{ ref: string; url?: string }>;
   legacy: string;
   bolsigHost: string;

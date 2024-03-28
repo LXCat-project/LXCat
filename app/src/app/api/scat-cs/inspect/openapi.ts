@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
+import { LTPMixtureWithReference } from "@lxcat/schema";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
 import { querySchema } from "./schemas";
@@ -22,7 +22,7 @@ export async function register() {
         description: "LTP mixture data",
         content: {
           "application/json": {
-            schema: KeyedLTPMixtureReferenceable,
+            schema: LTPMixtureWithReference,
           },
         },
       },

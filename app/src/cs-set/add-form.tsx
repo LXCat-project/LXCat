@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { KeyedOrganization } from "@lxcat/database/auth";
-import { LTPDocument } from "@lxcat/schema";
+import { NewLTPDocument } from "@lxcat/schema";
 import { useMemo } from "react";
 import { EditForm } from "./edit-form";
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const AddForm = ({ onSubmit, organizations }: Props) => {
-  const newSet: LTPDocument = useMemo(() => {
+  const newSet: NewLTPDocument = useMemo(() => {
     return {
       $schema: "",
       url: "",

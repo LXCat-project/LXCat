@@ -10,7 +10,18 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
-          contributor: "TestOrganization",
+          _key: "setkey",
+          versionInfo: {
+            version: 1,
+            status: "published",
+            createdOn: (new Date()).toISOString(),
+          },
+          contributor: {
+            name: "TestOrganization",
+            description: "Description for test data.",
+            contact: "test@testmail.com",
+            howToReference: "",
+          },
           name: "TestContributor",
           description: "",
           complete: false,
@@ -27,6 +38,12 @@ describe("LTPMixture", () => {
             typeTags: ["Elastic"],
           },
           info: [{
+            _key: "cskey",
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: (new Date()).toISOString(),
+            },
             type: "CrossSection",
             references: [],
             threshold: 0,
@@ -49,7 +66,18 @@ describe("LTPMixture", () => {
     const doc: LTPMixture = {
       sets: {
         TestSet: {
-          contributor: "TestOrganization",
+          _key: "setkey",
+          versionInfo: {
+            version: 1,
+            status: "published",
+            createdOn: (new Date()).toISOString(),
+          },
+          contributor: {
+            name: "TestOrganization",
+            description: "Description for test data.",
+            contact: "test@testmail.com",
+            howToReference: "",
+          },
           name: "TestContributor",
           description: "",
           complete: false,
@@ -66,6 +94,12 @@ describe("LTPMixture", () => {
             typeTags: ["Elastic"],
           },
           info: [{
+            _key: "cskey",
+            versionInfo: {
+              version: 1,
+              status: "published",
+              createdOn: (new Date()).toISOString(),
+            },
             type: "CrossSection",
             references: ["FaultyKey"],
             threshold: 0,

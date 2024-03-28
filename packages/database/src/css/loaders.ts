@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Contributor, NewLTPDocument } from "@lxcat/schema";
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
 import { LXCatDatabase } from "../lxcat-database.js";
-import { PartialKeyedDocument } from "../schema/document.js";
 
 async function load_css(db: LXCatDatabase, fn: string) {
   const content = await readFile(fn, { encoding: "utf8" });
-  const body = PartialKeyedDocument.parse(JSON.parse(content));
-  const cs_set_id = await db.createSet(body);
-  console.log(`Inserted ${fn} as ${cs_set_id} into CrossSectionSet collection`);
+  const body = NewLTPDocument.parse(JSON.parse(content));
+  const id = await db.createSet(body);
+  console.log(`Inserted ${fn} as ${id} into CrossSectionSet collection`);
 }
 
 export async function load_css_dir(db: LXCatDatabase, dir: string) {
@@ -23,3 +23,22 @@ export async function load_css_dir(db: LXCatDatabase, dir: string) {
     }
   }
 }
+
+const load_organization_from_file = async (db: LXCatDatabase, path: string) => {
+  const content = await readFile(path, { encoding: "utf8" });
+  const org = Contributor.parse(JSON.parse(content));
+  const orgId = await db.addOrganization(org);
+  console.log(`Inserted organization ${org.name} with key ${orgId}.`);
+};
+
+export const load_organizations_dir = async (
+  db: LXCatDatabase,
+  dir: string,
+) => {
+  const files = await readdir(dir);
+  for (const file of files) {
+    if (file.endsWith(".json")) {
+      await load_organization_from_file(db, join(dir, file));
+    }
+  }
+};

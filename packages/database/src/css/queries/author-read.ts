@@ -2,39 +2,46 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Key, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
+import { boolean, object, string } from "zod";
 import { LXCatDatabase } from "../../lxcat-database.js";
-import { KeyedDocument } from "../../schema/document.js";
-import { VersionInfo } from "../../shared/types/version-info.js";
-import { KeyedSet } from "../public.js";
+// import { KeyedSet } from "../public.js";
+
+const KeyedSet = object({
+  _key: Key,
+  name: string(),
+  description: string(),
+  publishedIn: string().optional(),
+  complete: boolean(),
+  organization: string(),
+  versionInfo: VersionInfo,
+});
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<KeyedSet> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         LIMIT 1
-        FOR m IN MemberOf
-            FILTER m._from == u._id
-            FOR o IN Organization
-                FILTER m._to == o._id
-                FOR css IN CrossSectionSet
-                    FILTER css.organization == o._id
-                    FILTER css.versionInfo.status != 'archived'
-                    
-                    LET with_draft = FIRST(
-                        FILTER css.versionInfo.status == 'published'
-                        RETURN COUNT(
-                            FOR css_draft IN INBOUND css CrossSectionSetHistory
-                                LIMIT 1
-                                return 1
-                        )
+        FOR o IN OUTBOUND u MemberOf
+            FOR css IN CrossSectionSet
+                FILTER css.organization == o._id
+                FILTER css.versionInfo.status != 'archived'
+                
+                LET with_draft = FIRST(
+                    FILTER css.versionInfo.status == 'published'
+                    RETURN COUNT(
+                        FOR css_draft IN INBOUND css CrossSectionSetHistory
+                            LIMIT 1
+                            return 1
                     )
-                    
-                    FILTER with_draft != 1
-                        return MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
+                )
+                
+                FILTER with_draft != 1
+                    return MERGE(UNSET(css, ["_rev", "_id"]), {organization: o.name})
     `);
-  return await cursor.all();
+  return cursor.all().then((sets) => sets.map((set) => KeyedSet.parse(set)));
 }
 
 export async function byOwnerAndId(
@@ -90,13 +97,13 @@ export async function byOwnerAndId(
                   )
                   RETURN {
                     reaction,
-                    info: [MERGE(cs.info, { _key: cs._key, references: csRefs })]
+                    info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: csRefs }, cs.info)]
                   }
               )
-              RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), {contributor: org.name, references, states, processes})
+              RETURN MERGE(UNSET(css, ["_rev", "_id", "organization"]), {contributor: UNSET(org, ["_id", "_key", "_rev"]), references, states, processes})
     `);
   return await cursor.next().then((doc) =>
-    doc ? KeyedDocument.parse(doc) : null
+    doc ? VersionedLTPDocument.parse(doc) : null
   );
 }
 
@@ -121,10 +128,12 @@ export async function isOwnerOfSet(
 }
 
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<VersionInfo> = await this.db.query(aql`
+  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         RETURN css.versionInfo
   `);
-  return cursor.next();
+  return cursor.next().then((info) =>
+    info !== undefined ? VersionInfo.parse(info) : undefined
+  );
 }

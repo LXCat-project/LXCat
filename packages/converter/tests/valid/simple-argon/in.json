@@ -1,7 +1,12 @@
 {
   "url": "https://ng.lxcat.net/scat-css/test-id",
   "termsOfUse": "https://ng.lxcat.net/scat-css/test-id#terms_of_use",
-  "contributor": "test",
+  "contributor": {
+    "name": "test",
+    "contact": "info@email.com",
+    "description": "Test description.",
+    "howToReference": "Test reference."
+  },
   "name": "simple-argon",
   "id": "test-id",
   "description": "An example cross section set.",

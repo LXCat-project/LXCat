@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Organization } from "@lxcat/database/auth";
+import { Contributor } from "@lxcat/schema";
 import { z } from "zod";
 
 export const querySchema = z.object({
-  body: Organization,
+  body: Contributor,
 });

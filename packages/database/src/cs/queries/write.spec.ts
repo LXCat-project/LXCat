@@ -2,11 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AnyProcess } from "@lxcat/schema/process";
+import { VersionInfo } from "@lxcat/schema";
+import { NewProcess } from "@lxcat/schema/process";
 import { beforeAll, describe, expect, it } from "vitest";
 import { deepClone } from "../../css/queries/deep-clone.js";
-import { ISO_8601_UTC, matchesId } from "../../css/queries/testutils.js";
+import { matches8601, matchesId } from "../../css/queries/testutils.js";
 import { KeyedProcess } from "../../schema/process.js";
+import { KeyedVersionInfo } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
@@ -56,10 +58,10 @@ describe("given db with test user and organization", () => {
 
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs2);
-        const expected = {
+        const expected: VersionInfo = {
+          version: 2,
           status: "draft",
-          version: "2",
-          createdOn: expect.stringMatching(ISO_8601_UTC),
+          createdOn: matches8601,
           commitMessage: "My first update",
         };
         expect(info).toEqual(expected);
@@ -87,20 +89,19 @@ describe("given db with test user and organization", () => {
 
         it("should have 2 versions recorded in history", async () => {
           const history = await db.itemHistory(keycs2);
-          const expected = [
+          const expected: Array<KeyedVersionInfo> = [
             {
               _key: keycs2,
-              commitMessage: "My first update",
-              createdOn: expect.stringMatching(ISO_8601_UTC),
+              version: 2,
               status: "published",
-              version: "2",
+              createdOn: matches8601,
+              commitMessage: "My first update",
             },
             {
               _key: keycs1,
-              commitMessage: "",
-              createdOn: expect.stringMatching(ISO_8601_UTC),
+              version: 1,
               status: "archived",
-              version: "1",
+              createdOn: matches8601,
             },
           ];
           expect(history).toEqual(expected);
@@ -123,9 +124,9 @@ describe("given db with test user and organization", () => {
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs2);
         const expected = {
+          version: 2,
           status: "draft",
-          version: "2",
-          createdOn: expect.stringMatching(ISO_8601_UTC),
+          createdOn: matches8601,
           commitMessage: "My first update",
         };
         expect(info).toEqual(expected);
@@ -187,7 +188,7 @@ describe("given db with test user and organization", () => {
     describe("create draft cross section", () => {
       let keycs1: string;
       beforeAll(async () => {
-        const cs: AnyProcess<string, string> = {
+        const cs: NewProcess<string, string> = {
           reaction: {
             lhs: [{ count: 1, state: "s1" }],
             rhs: [{ count: 1, state: "s2" }],
@@ -220,10 +221,9 @@ describe("given db with test user and organization", () => {
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs1);
         const expected = {
+          version: 1,
           status: "draft",
-          version: "1",
-          createdOn: expect.stringMatching(ISO_8601_UTC),
-          commitMessage: "",
+          createdOn: matches8601,
         };
         expect(info).toEqual(expected);
       });
@@ -235,11 +235,10 @@ describe("given db with test user and organization", () => {
 
         it("should have published status", async () => {
           const info = await db.getItemVersionInfo(keycs1);
-          const expected = {
+          const expected: VersionInfo = {
+            version: 1,
             status: "published",
-            version: "1",
-            createdOn: expect.stringMatching(ISO_8601_UTC),
-            commitMessage: "",
+            createdOn: matches8601,
           };
           expect(info).toEqual(expected);
         });

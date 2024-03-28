@@ -119,7 +119,7 @@ export const ProcessTable = (
       }, {
         accessor: "database",
         title: "Database",
-        render: ({ info: { isPartOf } }) => isPartOf[0].contributor,
+        render: ({ info: { isPartOf } }) => isPartOf[0].contributor.name,
       }, {
         accessor: "set",
         title: "Set",

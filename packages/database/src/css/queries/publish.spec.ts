@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { EditedLTPDocument } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { systemDb } from "../../system-db.js";
@@ -27,15 +28,20 @@ beforeAll(async () => {
 describe("given 2 draft cross section sets which shares a draft cross section", () => {
   let keycss1: string;
   let keycss2: string;
+
   beforeAll(async () => {
     keycss1 = await db.createSet(sampleCrossSectionSet(), "draft");
 
-    const draft2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === null) {
+    const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
+    if (css1 === null) {
       expect.fail("Should have created first set");
     }
-    draft2.name = "Some other name";
-    keycss2 = await db.createSet(draft2, "draft");
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
+    draft.name = "Some other name";
+    keycss2 = await db.createSet(draft, "draft");
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
@@ -144,17 +150,22 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
 describe("given a published cross section set and a draft cross section with a draft of the published cross section", () => {
   let keycss1: string;
   let keycss2: string;
+
   beforeAll(async () => {
     keycss1 = await db.createSet(sampleCrossSectionSet(), "published");
 
-    const draft2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
-    if (draft2 === null) {
+    const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
+    if (css1 === null) {
       expect.fail("Should have created first set");
     }
-    draft2.name = "Some other name";
-    draft2.processes[0].info[0].threshold = 888;
-    draft2.processes.pop();
-    keycss2 = await db.createSet(draft2, "draft");
+    const draft = EditedLTPDocument.parse({
+      ...css1,
+      contributor: css1.contributor.name,
+    });
+    draft.name = "Some other name";
+    draft.processes[0].info[0].threshold = 888;
+    draft.processes.pop();
+    keycss2 = await db.createSet(draft, "draft");
 
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });

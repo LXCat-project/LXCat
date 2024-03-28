@@ -4,13 +4,17 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { Reference } from "@lxcat/schema";
+import { Reference, VersionedLTPDocument } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { matchesId, truncateCrossSectionSetCollections } from "./testutils.js";
+import {
+  matches8601,
+  matchesId,
+  truncateCrossSectionSetCollections,
+} from "./testutils.js";
 
 const email = "somename@example.com";
 
@@ -52,7 +56,7 @@ describe("giving draft set made with existing draft cross section", () => {
       },
     };
 
-    const organizationId = await db.upsertOrganization("Some organization");
+    const organizationId = await db.getOrganizationByName("Some organization");
     const stateLookup = await db.insertStateDict(states);
     const refLookup = await db.insertReferenceDict(references);
     const idcs1 = await db.createItem(
@@ -77,7 +81,7 @@ describe("giving draft set made with existing draft cross section", () => {
       },
       stateLookup,
       refLookup,
-      organizationId,
+      organizationId!,
       "draft",
     );
     keycs1 = idcs1.replace("CrossSection/", "");
@@ -130,8 +134,13 @@ describe("giving draft set made with existing draft cross section", () => {
 
   it("should have set with existing cross section", async () => {
     const set = await db.getSetByOwnerAndId(email, keycss1);
-    const expected = {
+    const expected: VersionedLTPDocument = {
       _key: matchesId,
+      versionInfo: {
+        version: 1,
+        status: "draft",
+        createdOn: matches8601,
+      },
       complete: false,
       description: "Some description",
       name: "Some name",
@@ -147,6 +156,11 @@ describe("giving draft set made with existing draft cross section", () => {
           },
           info: [{
             _key: keycs1,
+            versionInfo: {
+              version: 1,
+              status: "draft",
+              createdOn: matches8601,
+            },
             type: "CrossSection",
             threshold: 42,
             data: {
@@ -159,7 +173,12 @@ describe("giving draft set made with existing draft cross section", () => {
           }],
         },
       ],
-      contributor: "Some organization",
+      contributor: {
+        name: "Some organization",
+        contact: "info@some-org.com",
+        description: "Description of some organization.",
+        howToReference: "",
+      },
     };
     expect(set).toEqual(expected);
   });
@@ -191,7 +210,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
     };
 
-    const organizationId = await db.upsertOrganization(
+    const organizationId = await db.getOrganizationByName(
       "Some other organization",
     );
     const stateLookup = await db.insertStateDict(states);
@@ -218,7 +237,7 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       stateLookup,
       refLookup,
-      organizationId,
+      organizationId!,
     );
     keycs1 = idcs1.replace("CrossSection/", "");
     keycss1 = await db.createSet(

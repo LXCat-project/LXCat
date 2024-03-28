@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: LXCat team
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: Apache-2.0
 
-import { AnySpecies, StateSummary } from "@lxcat/schema/species";
 import { object, TypeOf } from "zod";
+import { AnySpecies } from "./any-species.js";
+import { StateSummary } from "./summary.js";
 
 export const SerializedSpecies = object({
   detailed: AnySpecies,

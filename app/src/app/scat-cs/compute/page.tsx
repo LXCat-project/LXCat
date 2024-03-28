@@ -4,7 +4,7 @@
 
 import { convertMixture } from "@lxcat/converter";
 import { db } from "@lxcat/database";
-import { KeyedLTPMixtureReferenceable } from "@lxcat/database/schema";
+import { LTPMixtureWithReference } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
@@ -55,26 +55,30 @@ const fetchProps = async (
 
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
-  const data: KeyedLTPMixtureReferenceable = {
-    // FIXME: Use proper schema reference.
-    $schema: "",
-    url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
-    termsOfUse:
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
-    ...await db().getMixtureByIds(ids),
-  };
+
+  const mixture = await db().getMixtureByIds(ids);
 
   const references = mapObject(
-    data.references,
+    mixture.references,
     ([key, reference]) => [key, reference2bibliography(reference)],
   );
 
-  const referenceLinks = Object.entries(data.references).map((
+  const referenceLinks = Object.entries(mixture.references).map((
     [key, r],
   ) => ({
     ref: references[key],
     url: r.URL,
   }));
+
+  const data: LTPMixtureWithReference = {
+    // FIXME: Use proper schema reference.
+    $schema: "",
+    url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
+    termsOfUse:
+      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
+    ...mixture,
+    references,
+  };
 
   let legacy: string = "";
   try {

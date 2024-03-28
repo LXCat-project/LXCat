@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { SerializedSpecies } from "@lxcat/database/schema";
-import { Reaction, ReactionEntry } from "@lxcat/schema/process";
+import type { Reaction, ReactionEntry } from "@lxcat/schema/process";
+import type { SerializedSpecies } from "@lxcat/schema/species";
 
 function entryAsLatex(entry: ReactionEntry<SerializedSpecies>) {
   if (entry.count === 1) {
