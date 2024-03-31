@@ -41,7 +41,7 @@
     "cookie": "^0.6.0",
     "deep-equal": "^2.2.3",
     "github-slugger": "^2.0.0",
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "immer": "^10.0.4",
     "mantine-datatable": "^7.6.1",
     "mdast-util-from-markdown": "^2.0.0",
