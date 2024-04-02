@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -45,13 +49,13 @@ importers:
         version: link:../packages/schema
       '@mantine/core':
         specifier: ^7.7.1
-        version: 7.7.1(@mantine/hooks@7.6.2)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.7.1(@mantine/hooks@7.7.1)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/form':
         specifier: ^7.7.1
         version: 7.7.1(react@18.2.0)
       '@mantine/hooks':
-        specifier: ^7.6.2
-        version: 7.6.2(react@18.2.0)
+        specifier: ^7.7.1
+        version: 7.7.1(react@18.2.0)
       '@mdx-js/mdx':
         specifier: ^3.0.1
         version: 3.0.1
@@ -87,7 +91,7 @@ importers:
         version: 10.0.4
       mantine-datatable:
         specifier: ^7.6.1
-        version: 7.6.1(@mantine/core@7.7.1)(@mantine/hooks@7.6.2)(clsx@2.1.0)(react@18.2.0)
+        version: 7.6.1(@mantine/core@7.7.1)(@mantine/hooks@7.7.1)(clsx@2.1.0)(react@18.2.0)
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0
@@ -2814,7 +2818,7 @@ packages:
       - supports-color
     dev: true
 
-  /@mantine/core@7.7.1(@mantine/hooks@7.6.2)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0):
+  /@mantine/core@7.7.1(@mantine/hooks@7.7.1)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-SdPzjvqvEK7uHFuVD3a8w3OZyQVoCwIXLSUfOtRNouDMQgsq6Ac7QjKXBBOk3wNweOWFVOU1vATLHobSmow0lQ==}
     peerDependencies:
       '@mantine/hooks': 7.7.1
@@ -2822,7 +2826,7 @@ packages:
       react-dom: ^18.2.0
     dependencies:
       '@floating-ui/react': 0.26.9(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.6.2(react@18.2.0)
+      '@mantine/hooks': 7.7.1(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -2844,8 +2848,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mantine/hooks@7.6.2(react@18.2.0):
-    resolution: {integrity: sha512-ZrOgrZHoIGCDKrr2/9njDgK0al+jjusYQFlmR0YyEFyRtgY6eNSI4zuYLcAPx1haHmUm5RsLBrqY6Iy/TLdGXA==}
+  /@mantine/hooks@7.7.1(react@18.2.0):
+    resolution: {integrity: sha512-3YH2FzKMlg840tb04PBDcDXyBCi9puFOxEBVgc6Y/pN6KFqfOoAnQE/YvgOtwSNXZlbTWyDlQoYj+3je7pA7og==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -8560,7 +8564,7 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /mantine-datatable@7.6.1(@mantine/core@7.7.1)(@mantine/hooks@7.6.2)(clsx@2.1.0)(react@18.2.0):
+  /mantine-datatable@7.6.1(@mantine/core@7.7.1)(@mantine/hooks@7.7.1)(clsx@2.1.0)(react@18.2.0):
     resolution: {integrity: sha512-iPxUEaO9n7RETSEZj9DY8TAL4m7d7hk8U3xULXWydt6ZnpNhv8hWkCsz0FSTZQZNoF/umH329xAtrTBEM8URkg==}
     peerDependencies:
       '@mantine/core': '>=7'
@@ -8568,8 +8572,8 @@ packages:
       clsx: '>=2'
       react: '>=18.2'
     dependencies:
-      '@mantine/core': 7.7.1(@mantine/hooks@7.6.2)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.6.2(react@18.2.0)
+      '@mantine/core': 7.7.1(@mantine/hooks@7.7.1)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.7.1(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
     dev: false
@@ -13956,7 +13960,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
