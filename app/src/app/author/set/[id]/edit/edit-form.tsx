@@ -32,7 +32,6 @@ import { SpeciesTab } from "./species-tab";
 const EditFormValues = z.object({
   set: EditedLTPDocument,
   commitMessage: z.string().min(1),
-  meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
@@ -68,7 +67,6 @@ const emptySet = () => ({
     states: {},
     processes: [],
   },
-  meta: {},
 });
 
 export const EditForm = (
@@ -83,92 +81,7 @@ export const EditForm = (
           ...initialSet,
           contributor: initialSet.contributor.name,
         }),
-        meta: {
-          set: {
-            states: Object.fromEntries(
-              Object.entries(initialSet.states).map((
-                [key, state],
-              ) => {
-                const metaState = {
-                  electronic: {
-                    anyOf: "0",
-                    vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
-                  },
-                };
-
-                if (state.type !== "simple" && state.type !== "unspecified") {
-                  if (Array.isArray(state.electronic)) {
-                    metaState.electronic.anyOf = "1";
-                  } else if (
-                    "vibrational" in state.electronic
-                    && state.electronic.vibrational
-                  ) {
-                    if (Array.isArray(state.electronic.vibrational)) {
-                      metaState.electronic.vibrational.anyOf = "1";
-                    } else if (
-                      typeof state.electronic.vibrational === "string"
-                    ) {
-                      metaState.electronic.vibrational.anyOf = "2";
-                    } else if ("rotational" in state.electronic.vibrational) {
-                      if (
-                        Array.isArray(state.electronic.vibrational.rotational)
-                      ) {
-                        metaState.electronic.vibrational.rotational.anyOf = "1";
-                      } else if (
-                        typeof state.electronic.vibrational.rotational
-                          === "string"
-                      ) {
-                        metaState.electronic.vibrational.rotational.anyOf = "2";
-                      }
-                    }
-                  }
-                }
-
-                return [key, metaState];
-              }),
-            ),
-          },
-        },
       },
-      // {
-      //   commitMessage: "",
-      //   set: {
-      //     name: "test",
-      //     contributor: "TestContributor",
-      //     description: "",
-      //     complete: false,
-      //     references: {},
-      //     states: {
-      //       test: {
-      //         type: "AtomLS",
-      //         particle: "He",
-      //         charge: 0,
-      //         electronic: {
-      //           config: [],
-      //           term: {
-      //             L: 0,
-      //             S: 0,
-      //             P: 1,
-      //             J: 0,
-      //           },
-      //         },
-      //       },
-      //     },
-      //     processes: [],
-      //   },
-      //   meta: {
-      //     set: {
-      //       states: {
-      //         test: {
-      //           electronic: {
-      //             anyOf: "0",
-      //             vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");
@@ -236,8 +149,7 @@ export const EditForm = (
           <Tabs.Panel value="species">
             <SpeciesTab
               species={form.values.set.states}
-              meta={form.values.meta}
-              onChange={(species, meta) => {
+              onChange={(species) => {
                 // NOTE: This is quite inefficient. However, it is far from the
                 //       bottleneck (rendering and state updates are the
                 //       problem).
@@ -260,7 +172,6 @@ export const EditForm = (
                 form.setValues(
                   {
                     ...form.values,
-                    meta,
                     set: { ...form.values.set, states: species, processes },
                   },
                 );

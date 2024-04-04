@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { EditedLTPDocument } from "@lxcat/schema";
-import { stateJSONSchema } from "@lxcat/schema/json-schema";
-import { type AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
   ActionIcon,
@@ -16,61 +15,19 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
-import { JSONSchema7 } from "json-schema";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import Latex from "react-latex-next";
 import { MaybePromise } from "../../../../api/util";
-import { generateSpeciesForm, SpeciesForm } from "./form-factory";
+import { SpeciesInput } from "./species-input";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
 import classes from "./species-tab.module.css";
 
-const getSpeciesMeta = (species: AnySpecies) => {
-  const speciesMeta = {
-    electronic: {
-      anyOf: "0",
-      vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
-    },
-  };
-
-  if (species.type !== "simple" && species.type !== "unspecified") {
-    if (Array.isArray(species.electronic)) {
-      speciesMeta.electronic.anyOf = "1";
-    } else if (
-      "vibrational" in species.electronic
-      && species.electronic.vibrational
-    ) {
-      if (Array.isArray(species.electronic.vibrational)) {
-        speciesMeta.electronic.vibrational.anyOf = "1";
-      } else if (
-        typeof species.electronic.vibrational === "string"
-      ) {
-        speciesMeta.electronic.vibrational.anyOf = "2";
-      } else if ("rotational" in species.electronic.vibrational) {
-        if (
-          Array.isArray(species.electronic.vibrational.rotational)
-        ) {
-          speciesMeta.electronic.vibrational.rotational.anyOf = "1";
-        } else if (
-          typeof species.electronic.vibrational.rotational
-            === "string"
-        ) {
-          speciesMeta.electronic.vibrational.rotational.anyOf = "2";
-        }
-      }
-    }
-  }
-
-  return speciesMeta;
-};
-
 export const SpeciesTab = (
-  { species, meta, onChange }: {
+  { species, onChange }: {
     species: EditedLTPDocument["states"];
-    meta: Record<string, any>;
     onChange: (
       species: EditedLTPDocument["states"],
-      meta: Record<string, any>,
     ) => MaybePromise<void>;
   },
 ) => {
@@ -105,21 +62,30 @@ export const SpeciesTab = (
                       color="red"
                       onClick={() => {
                         delete species[key];
-                        delete meta[key];
-                        return onChange(species, meta);
+                        return onChange(species);
                       }}
                     >
                       <IconTrash />
                     </ActionIcon>
                   </Center>
                   <Accordion.Panel>
-                    <SpeciesForm
-                      typeMap={generateSpeciesForm(
-                        stateJSONSchema as JSONSchema7,
-                        `set.states.${key}`,
-                      )}
-                      basePath={`set.states.${key}`}
-                    />
+                    {
+
+                        <SpeciesInput
+                          initialState={state}
+                          onChange={(value) =>
+                            onChange({ ...species, [key]: value })}
+                        />
+
+
+                      // <SpeciesForm
+                      //   typeMap={generateSpeciesForm(
+                      //     stateJSONSchema as JSONSchema7,
+                      //     `set.states.${key}`,
+                      //   )}
+                      //   basePath={`set.states.${key}`}
+                      // />
+                    }
                   </Accordion.Panel>
                 </Accordion.Item>
               );
@@ -138,17 +104,6 @@ export const SpeciesTab = (
                   type: "simple",
                   particle: "",
                   charge: 0,
-                },
-              }, {
-                ...meta,
-                [id]: {
-                  electronic: {
-                    anyOf: "0",
-                    vibrational: {
-                      anyOf: "0",
-                      rotational: { anyOf: "0" },
-                    },
-                  },
                 },
               });
             }}
@@ -176,16 +131,12 @@ export const SpeciesTab = (
           <Button
             onClick={() => {
               const clonedSpecies = { ...species };
-              const clonedMeta = { ...meta };
 
               for (const species of selectedSpecies) {
                 clonedSpecies[species._key] = species.species.detailed;
-                clonedMeta[species._key] = getSpeciesMeta(
-                  species.species.detailed,
-                );
               }
 
-              onChange(clonedSpecies, clonedMeta);
+              onChange(clonedSpecies);
 
               closeSpeciesPicker();
               setSelectedSpecies([]);
