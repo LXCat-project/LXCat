@@ -130,7 +130,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
       </table>
 
       <div>
-        <Link href="/author/scat-css/add">
+        <Link href="/author/set/add">
           <button>Add</button>
         </Link>
         <Link href="/author/scat-css/addraw">
