@@ -51,7 +51,7 @@ test.describe.skip("/author/scat-css", () => {
   // async calls (that e.g. reload the page data) to finish before
   // continuing
 
-  test.only("A simple edit should result in a draft", async ({ page }) => {
+  test("A simple edit should result in a draft", async ({ page }) => {
     await page.goto("/author/scat-css");
 
     const table = page.locator("table:has(thead th:text(\"Version\"))");
