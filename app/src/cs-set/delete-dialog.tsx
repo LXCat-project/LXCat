@@ -16,7 +16,7 @@ export const DeleteDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
     const confirmed = pressedButton === "default";
 
     if (confirmed) {
-      const result = await deleteSet(selectedSetId);
+      const result = await deleteSet(selectedSetId, "Delete draft");
       if (typeof result === "string") {
         return onClose(result);
       }
