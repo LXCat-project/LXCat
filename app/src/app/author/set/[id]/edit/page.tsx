@@ -24,7 +24,7 @@ const EditSetPage = async (props: URLParams) => {
     return <Unauthorized />;
   }
 
-  const set = await db().getSetById(id);
+  const set = await db().getSetById(id, true);
 
   if (!set) return <NotFound />;
 

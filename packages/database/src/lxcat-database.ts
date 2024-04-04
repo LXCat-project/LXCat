@@ -86,8 +86,7 @@ import {
 import { getSetAffiliation } from "./css/queries/get-affiliation.js";
 import {
   activeSetOfArchivedSet,
-  byId as getSetByIdOld,
-  byIdJSON,
+  byId as setById,
   getItemIdsInSet,
   search as searchSet,
   searchContributors,
@@ -344,8 +343,7 @@ export class LXCatDatabase {
   public getSetVersionInfo = getSetVersionInfo;
 
   // css/public
-  public getSetById = byIdJSON;
-  public getSetByIdOld = getSetByIdOld;
+  public getSetById = setById;
   public searchSet = searchSet;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;

@@ -179,7 +179,7 @@ describe("deleting a published cross section without shared cross sections", () 
   });
 
   it("should have retrievable by id", async () => {
-    const result = await db.getSetByIdOld(keycss1);
+    const result = await db.getSetById(keycss1);
     const expected: Omit<CrossSectionSetItem, "organization"> = {
       id: keycss1,
       complete: false,

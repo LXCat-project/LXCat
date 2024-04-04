@@ -17,7 +17,6 @@ import {
 import { PagingOptions } from "../../shared/types/search.js";
 import {
   CrossSectionSetHeading,
-  CrossSectionSetItem,
   FilterOptions,
   SortOptions,
 } from "../public.js";
@@ -252,12 +251,15 @@ export async function getItemIdsInSet(this: LXCatDatabase, setId: string) {
   return cursor.all();
 }
 
-// TODO: Merge byId and byIdJSON.
-export async function byIdJSON(this: LXCatDatabase, id: string) {
+export async function byId(
+  this: LXCatDatabase,
+  id: string,
+  allowDrafts: boolean = false,
+) {
   const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${id}
-        FILTER css.versionInfo.status != 'draft'
+        ${allowDrafts ? aql`` : aql`FILTER css.versionInfo.status != 'draft'`}
         LET refs = MERGE(
             FOR i IN IsPartOf
                 FILTER i._to == css._id
@@ -337,58 +339,6 @@ export async function byIdJSON(this: LXCatDatabase, id: string) {
         RETURN MERGE(UNSET(css, ["_rev", "_id", "organization"]), {references: refs, states, processes, contributor})
     `);
   return VersionedLTPDocument.parseAsync(await cursor.next());
-}
-
-export async function byId(this: LXCatDatabase, id: string) {
-  const cursor: ArrayCursor<CrossSectionSetItem> = await this.db.query(aql`
-      FOR css IN CrossSectionSet
-          FILTER css._key == ${id}
-          FILTER ['published' ,'retracted', 'archived'] ANY == css.versionInfo.status
-          LET processes = (
-              FOR m IN IsPartOf
-                  FILTER m._to == css._id
-                  FOR cs IN CrossSection
-                      FILTER cs._id == m._from
-                      LET refs = (
-                          FOR rs IN References
-                              FILTER rs._from == cs._id
-                              FOR r IN Reference
-                                  FILTER r._id == rs._to
-                                  RETURN UNSET(r, ["_key", "_rev", "_id"])
-                          )
-                      LET reaction = FIRST(
-                          FOR r in Reaction
-                              FILTER r._id == cs.reaction
-                              LET consumes = (
-                                  FOR c IN Consumes
-                                  FILTER c._from == r._id
-                                      FOR c2s IN State
-                                      FILTER c2s._id == c._to
-                                      RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-                              )
-                              LET produces = (
-                                  FOR p IN Produces
-                                  FILTER p._from == r._id
-                                      FOR p2s IN State
-                                      FILTER p2s._id == p._to
-                                      RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-                              )
-                              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
-                      )
-                      RETURN MERGE(
-                          UNSET(cs, ["_key", "_rev", "_id", "organization"]),
-                          { "id": cs._key, reaction, "reference": refs}
-                      )
-              )
-          LET contributor = FIRST(
-              FOR o IN Organization
-                  FILTER o._id == css.organization
-                  RETURN o.name
-          )
-          RETURN MERGE({'id': css._key, processes, contributor}, UNSET(css, ["_key", "_rev", "_id", "organization"]))
-      `);
-
-  return cursor.next();
 }
 
 export interface KeyedVersionInfo extends VersionInfo {
