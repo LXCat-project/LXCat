@@ -74,7 +74,15 @@ export const EditForm = (
           });
           const init = { method: "POST", body, headers };
           const res = await fetch(url, init);
-          const data = await res.json();
+          const data: unknown = await res.json();
+
+          if (
+            typeof data === "object" && data && "id" in data
+            && typeof data.id === "string"
+          ) {
+            form.setFieldValue("set._key", data.id);
+            window.history.pushState(null, "", `/author/set/${data.id}/edit`);
+          }
           // TODO: Handle user feedback.
           console.log(data);
         })}
