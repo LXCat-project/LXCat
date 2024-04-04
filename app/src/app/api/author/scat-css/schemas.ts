@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { EditedLTPDocument } from "@lxcat/schema";
-import { z } from "zod";
+import { object, string } from "zod";
 
-export const querySchema = z.object({
-  body: EditedLTPDocument,
+export const querySchema = object({
+  body: object({ doc: EditedLTPDocument, message: string().min(1) }),
 });

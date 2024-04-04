@@ -22,10 +22,9 @@ const postRouter = RouteBuilder
       .getAffiliations(ctx.user.email)
       .then((affiliations) => affiliations.map(({ name }) => name));
 
-    const doc = ctx.parsedParams.body;
+    const { doc, message } = ctx.parsedParams.body;
     if (affiliations.includes(doc.contributor)) {
-      // Add to CrossSectionSet with status=='draft' and version=='1'
-      const id = await db().createSet(doc, "draft");
+      const id = await db().createSet(doc, "draft", 1, message);
       return okJsonResponse({ id });
     } else {
       return forbiddenResponse({
@@ -33,7 +32,7 @@ const postRouter = RouteBuilder
           errors: [
             {
               message:
-                `You are not a member of the ${ctx.parsedParams.body.contributor} organization.`,
+                `You are not a member of the ${doc.contributor} organization.`,
             },
           ],
         },
