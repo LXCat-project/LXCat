@@ -22,7 +22,6 @@ import {
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
 import { useState } from "react";
-import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
 import { z } from "zod";
 import { JsonTab } from "./json-tab";
 import { ProcessTab } from "./process-tab";
@@ -38,15 +37,6 @@ export type EditFormValues = z.input<typeof EditFormValues>;
 type EditFormProps = {
   initialSet: VersionedLTPDocument;
   organizations: Array<KeyedOrganization>;
-};
-
-export const getError = (
-  errors: FieldErrors,
-  name: FieldPath<FieldValues>,
-): string => {
-  const error = get(errors, name);
-
-  return error ? error.message : "";
 };
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<
