@@ -39,22 +39,6 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<
   EditFormValues
 >();
 
-const emptySet = () => ({
-  commitMessage: "",
-  set: {
-    $schema: "",
-    url: "",
-    termsOfUse: "",
-    name: "",
-    contributor: "",
-    description: "",
-    complete: false,
-    references: {},
-    states: {},
-    processes: [],
-  },
-});
-
 export const EditForm = (
   { initialSet, organizations }: EditFormProps,
 ) => {
