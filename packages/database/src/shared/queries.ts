@@ -236,7 +236,9 @@ export async function insertReferenceDict(
   const id_dict: Record<string, string> = {};
 
   for (const [id, reference] of Object.entries(references)) {
-    const key = await this.getReferenceKeyByDOI(reference.DOI);
+    // TODO: Either ensure DOI is always there or add more machinery to compare
+    //       references.
+    const key = reference.DOI && await this.getReferenceKeyByDOI(reference.DOI);
 
     if (key) {
       id_dict[id] = `Reference/${key}`;
