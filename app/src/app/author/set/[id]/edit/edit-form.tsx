@@ -175,7 +175,10 @@ export const EditForm = (
           </Tabs.Panel>
           <Tabs.Panel value="references">
             <ReferenceTable
-              references={Object.values(getInputProps("set.references").value)}
+              // Use database _key as id property for existing references.
+              references={Object.entries(form.values.set.references).map((
+                [id, ref],
+              ) => ({ ...ref, id }))}
               onChange={(references: Array<Reference>) => {
                 const referenceMap = Object.fromEntries(
                   references.map((reference) => [reference.id, reference]),
