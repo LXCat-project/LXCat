@@ -5,7 +5,6 @@
 "use client";
 
 import { MaybePromise } from "@/app/api/util";
-import { reference2bibliography } from "@/shared/cite";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
@@ -324,10 +323,10 @@ const ProcessItem = (
 };
 
 export const ProcessTab = (
-  { processes, species, references, onChange, accordion }: {
+  { processes, species, referenceMap, onChange, accordion }: {
     processes: EditedLTPDocument["processes"];
     species: EditedLTPDocument["states"];
-    references: EditedLTPDocument["references"];
+    referenceMap: Record<string, string>;
     onChange: (
       processes: EditedLTPDocument["processes"],
     ) => MaybePromise<void>;
@@ -348,14 +347,6 @@ export const ProcessTab = (
       ),
     [species],
   );
-
-  const referenceMap = useMemo(() =>
-    Object.fromEntries(
-      Object.entries(references).map(([
-        key,
-        value,
-      ]) => [key, reference2bibliography(value)]),
-    ), [references]);
 
   const [ids, setIds] = useState(processes.map((_) => nanoid()));
 

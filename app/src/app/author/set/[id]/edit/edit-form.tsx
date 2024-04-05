@@ -4,6 +4,7 @@
 
 "use client";
 
+import { reference2bibliography } from "@/shared/cite";
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { EditedLTPDocument, Reference } from "@lxcat/schema";
 import {
@@ -17,7 +18,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { JsonTab } from "./json-tab";
 import { ProcessTab } from "./process-tab";
@@ -57,6 +58,14 @@ export const EditForm = (
   const [processAccordionState, processAccordionOnChange] = useState<
     string | null
   >(null);
+
+  const referenceMap = useMemo(() =>
+    Object.fromEntries(
+      Object.entries(form.values.set.references).map(([
+        key,
+        value,
+      ]) => [key, reference2bibliography(value)]),
+    ), [form.values.set.references]);
 
   return (
     <FormProvider form={form}>
@@ -189,7 +198,7 @@ export const EditForm = (
             <ProcessTab
               processes={form.values.set.processes}
               species={form.values.set.states}
-              references={form.values.set.references}
+              referenceMap={referenceMap}
               onChange={(processes) =>
                 form.setFieldValue("set.processes", processes)}
               accordion={{
