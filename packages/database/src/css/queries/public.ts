@@ -258,85 +258,68 @@ export async function byId(
 ) {
   const cursor: ArrayCursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
-        FILTER css._key == ${id}
-        ${allowDrafts ? aql`` : aql`FILTER css.versionInfo.status != 'draft'`}
-        LET refs = MERGE(
-            FOR i IN IsPartOf
-                FILTER i._to == css._id
-                FOR cs IN CrossSection
-                    FILTER cs._id == i._from
-                        FOR rs IN References
-                            FILTER rs._from == cs._id
-                            FOR r IN Reference
-                                FILTER r._id == rs._to
-                                RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
-                        )
-        LET states = MERGE(
-            FOR i IN IsPartOf
-                FILTER i._to == css._id
-                FOR cs IN CrossSection
-                    FILTER cs._id == i._from
-                        FOR r in Reaction
-                            FILTER r._id == cs.reaction
-                            LET consumes = (
-                                FOR c IN Consumes
-                                FILTER c._from == r._id
-                                    FOR c2s IN State
-                                    FILTER c2s._id == c._to
-                                    RETURN { [c2s._key]: c2s.detailed }
-                            )
-                            LET produces = (
-                                FOR p IN Produces
-                                FILTER p._from == r._id
-                                    FOR p2s IN State
-                                    FILTER p2s._id == p._to
-                                    RETURN { [p2s._key]: p2s.detailed }
-                            )
-                            RETURN MERGE(UNION(consumes, produces))
-
+      FILTER css._key == ${id}
+      ${allowDrafts ? aql`` : aql`FILTER css.versionInfo.status != 'draft'`}
+      LET pRef = FIRST(
+        FOR r IN Reference
+          FILTER r._id == css.publishedIn
+          RETURN r
+      )
+      LET procRefs = (
+        FOR cs IN INBOUND css IsPartOf
+          FOR r IN OUTBOUND cs References
+            RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
+      )
+      LET refs = MERGE(
+        NOT_NULL(pRef) 
+          ? PUSH(procRefs, {[pRef._key]: UNSET(pRef, ["_key", "_rev", "_id"])})
+          : procRefs
+      )
+      LET states = MERGE(
+        FOR cs IN INBOUND css IsPartOf
+          FOR r in Reaction
+            FILTER r._id == cs.reaction
+            LET consumes = (
+              FOR c IN OUTBOUND r Consumes
+                RETURN { [c._key]: c.detailed }
             )
-        LET processes = (
-            FOR i IN IsPartOf
-                FILTER i._to == css._id
-                FOR cs IN CrossSection
-                    FILTER cs._id == i._from
-                    LET refs2 = (
-                        FOR rs IN References
-                            FILTER rs._from == cs._id
-                            FOR r IN Reference
-                                FILTER r._id == rs._to
-                                RETURN r._key
-                        )
-                    LET reaction = FIRST(
-                        FOR r in Reaction
-                            FILTER r._id == cs.reaction
-                            LET consumes2 = (
-                                FOR c IN Consumes
-                                FILTER c._from == r._id
-                                    FOR c2s IN State
-                                    FILTER c2s._id == c._to
-                                    RETURN {state: c2s._key, count: c.count}
-                            )
-                            LET produces2 = (
-                                FOR p IN Produces
-                                FILTER p._from == r._id
-                                    FOR p2s IN State
-                                    FILTER p2s._id == p._to
-                                    RETURN {state: p2s._key, count: p.count}
-                            )
-                            RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
-                    )
-                    RETURN {
-                      reaction,
-                      info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2 }, cs.info)]
-                    }
-        )
-        LET contributor = FIRST(
-            FOR o IN Organization
-                FILTER o._id == css.organization
-                RETURN UNSET(o, ["_key", "_id", "_rev"])
-        )
-        RETURN MERGE(UNSET(css, ["_rev", "_id", "organization"]), {references: refs, states, processes, contributor})
+            LET produces = (
+              FOR p IN OUTBOUND r Produces
+                RETURN { [p._key]: p.detailed }
+            )
+            RETURN MERGE(UNION(consumes, produces))
+      )
+      LET processes = (
+        FOR cs IN INBOUND css IsPartOf
+          LET refs2 = (
+            FOR r, rs IN OUTBOUND cs References
+              RETURN HAS(rs, "comments") ? { id: r._key, comments: rs.comments } : r._key
+          )
+          LET reaction = FIRST(
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              LET consumes2 = (
+                FOR s, c IN OUTBOUND r Consumes
+                  RETURN {state: s._key, count: c.count}
+              )
+              LET produces2 = (
+                FOR s, p IN OUTBOUND r Produces
+                  RETURN {state: s._key, count: p.count}
+              )
+              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
+          )
+          RETURN {
+            reaction,
+            info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2 }, cs.info)]
+          }
+      )
+      LET contributor = FIRST(
+        FOR o IN Organization
+          FILTER o._id == css.organization
+          RETURN UNSET(o, ["_key", "_id", "_rev"])
+      )
+      LET set = MERGE(UNSET(css, ["_rev", "_id", "organization"]), { references: refs, states, processes, contributor})
+      RETURN HAS(set, "publishedIn") ? MERGE(set, {publishedIn: PARSE_IDENTIFIER(css.publishedIn).key}) : set
     `);
   return VersionedLTPDocument.parseAsync(await cursor.next());
 }
