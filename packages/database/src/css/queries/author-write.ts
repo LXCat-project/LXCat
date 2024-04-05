@@ -417,8 +417,11 @@ function isEqualProcess(
 ) {
   const newMappedCS = {
     reaction: mapReaction(stateLookup, newCS.reaction),
-    info: newCS.info.map((info) => ({
+    info: newCS.info.map((info, i) => ({
       ...info,
+      // We need to add the keys when comparing to prevCS, as prevCS info
+      // objects will always contain a key.
+      _key: prevCS.info[i]._key,
       references: mapReferences(referenceLookup, info.references),
     })),
   };
