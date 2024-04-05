@@ -323,9 +323,9 @@ const ProcessItem = (
 };
 
 export const ProcessTab = (
-  { processes, species, referenceMap, onChange, accordion }: {
+  { processes, speciesMap, referenceMap, onChange, accordion }: {
     processes: EditedLTPDocument["processes"];
-    species: EditedLTPDocument["states"];
+    speciesMap: Record<string, string>;
     referenceMap: Record<string, string>;
     onChange: (
       processes: EditedLTPDocument["processes"],
@@ -336,18 +336,6 @@ export const ProcessTab = (
     };
   },
 ) => {
-  // TODO: It might be better to supply these maps as a property, as this
-  //       component is often un- and remounted.
-  const speciesMap = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(species).map((
-          [key, species],
-        ) => [key, AnySpeciesSerializable.parse(species).serialize().latex]),
-      ),
-    [species],
-  );
-
   const [ids, setIds] = useState(processes.map((_) => nanoid()));
 
   return (

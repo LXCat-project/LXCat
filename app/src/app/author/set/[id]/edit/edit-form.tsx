@@ -7,6 +7,7 @@
 import { reference2bibliography } from "@/shared/cite";
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { EditedLTPDocument, Reference } from "@lxcat/schema";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Button,
   Checkbox,
@@ -58,6 +59,16 @@ export const EditForm = (
   const [processAccordionState, processAccordionOnChange] = useState<
     string | null
   >(null);
+
+  const speciesMap = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(form.values.set.states).map((
+          [key, species],
+        ) => [key, AnySpeciesSerializable.parse(species).serialize().latex]),
+      ),
+    [form.values.set.states],
+  );
 
   const referenceMap = useMemo(() =>
     Object.fromEntries(
@@ -197,7 +208,7 @@ export const EditForm = (
           <Tabs.Panel value="processes">
             <ProcessTab
               processes={form.values.set.processes}
-              species={form.values.set.states}
+              speciesMap={speciesMap}
               referenceMap={referenceMap}
               onChange={(processes) =>
                 form.setFieldValue("set.processes", processes)}
