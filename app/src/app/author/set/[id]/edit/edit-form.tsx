@@ -12,6 +12,7 @@ import {
   Button,
   Checkbox,
   NativeSelect,
+  Select,
   Space,
   Stack,
   Tabs,
@@ -134,6 +135,14 @@ export const EditForm = (
                 {...getInputProps("set.description")}
               />
               <Checkbox label="Complete" {...getInputProps("set.complete")} />
+              <Select
+                label="Published in"
+                allowDeselect={false}
+                data={Object.entries(referenceMap).map((
+                  [value, label],
+                ) => ({ value, label }))}
+                {...getInputProps("set.publishedIn")}
+              />
               <NativeSelect
                 label="Contributor"
                 data={organizations.map(({ name }) => name)}
