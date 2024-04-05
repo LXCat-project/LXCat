@@ -229,7 +229,6 @@ export async function insertStateTree(
   return ret_id;
 }
 
-// TODO: Check what happens when adding a string instead of a 'Reference' object.
 export async function insertReferenceDict(
   this: LXCatDatabase,
   references: Record<string, Reference>,
@@ -237,7 +236,13 @@ export async function insertReferenceDict(
   const id_dict: Record<string, string> = {};
 
   for (const [id, reference] of Object.entries(references)) {
-    id_dict[id] = (await this.upsertDocument("Reference", reference)).id;
+    const key = await this.getReferenceKeyByDOI(reference.DOI);
+
+    if (key) {
+      id_dict[id] = `Reference/${key}`;
+    } else {
+      id_dict[id] = (await this.upsertDocument("Reference", reference)).id;
+    }
   }
 
   return id_dict;
