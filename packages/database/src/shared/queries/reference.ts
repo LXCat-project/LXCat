@@ -57,3 +57,12 @@ export async function getReferencesForSelection(
     `);
   return cursor.next().then(bib => bib!);
 }
+
+export async function getReferenceKeyByDOI(this: LXCatDatabase, doi: string) {
+  const cursor: ArrayCursor<string> = await this.db.query(aql`
+            FOR ref IN Reference
+              FILTER ref.DOI == ${doi}
+              RETURN ref._key
+        `);
+  return cursor.next();
+}

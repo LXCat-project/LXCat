@@ -115,6 +115,7 @@ import {
 } from "./shared/queries/organization.js";
 import { findReactionId } from "./shared/queries/reaction.js";
 import {
+  getReferenceKeyByDOI,
   getReferences,
   getReferencesForSelection,
 } from "./shared/queries/reference.js";
@@ -260,6 +261,7 @@ export class LXCatDatabase {
   // references
   public getReferences = getReferences;
   public getReferencesForSelection = getReferencesForSelection;
+  public getReferenceKeyByDOI = getReferenceKeyByDOI;
 
   // auth/queries
   public listUsers = listUsers;
