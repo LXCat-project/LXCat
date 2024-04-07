@@ -97,7 +97,7 @@
     "@types/unist": "^3.0.2",
     "@vitest/coverage-v8": "^1.4.0",
     "dotenv": "^16.4.5",
-    "dprint": "^0.45.0",
+    "dprint": "^0.45.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.1.4",
     "nyc": "^15.1.0",
