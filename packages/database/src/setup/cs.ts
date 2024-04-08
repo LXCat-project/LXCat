@@ -14,7 +14,6 @@ export const setupCrossSectionCollections = async (db: Database) => {
   await createCrossSectionHistoryCollection(db);
   await createCrossSectionSetHistoryCollection(db);
 };
-export default setupCrossSectionCollections;
 
 const createCrossSectionSetCollection = async (db: Database) => {
   const collection = db.collection("CrossSectionSet");
