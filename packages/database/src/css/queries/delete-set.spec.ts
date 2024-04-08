@@ -4,15 +4,15 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
+import {
+  EditedLTPDocument,
+  Status,
+  VersionedLTPDocument,
+  VersionInfo,
+} from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import {
-  CrossSectionSetItem,
-  FilterOptions,
-  KeyedSet,
-  SortOptions,
-} from "../public.js";
+import { FilterOptions, KeyedSet, SortOptions } from "../public.js";
 import { KeyedVersionInfo } from "./public.js";
 import {
   matches8601,
@@ -180,18 +180,25 @@ describe("deleting a published cross section without shared cross sections", () 
 
   it("should have retrievable by id", async () => {
     const result = await db.getSetById(keycss1);
-    const expected: Omit<CrossSectionSetItem, "organization"> = {
-      id: keycss1,
-      complete: false,
-      description: "Some description",
+    const expected: VersionedLTPDocument = {
+      _key: keycss1,
       name: "Some name",
-      contributor: "Some organization", // TODO should have organization or contributor not both
+      description: "Some description",
+      contributor: {
+        name: "Some organization",
+        description: "Description of some organization.",
+        contact: "info@some-org.com",
+        howToReference: "",
+      },
+      complete: false,
       versionInfo: {
         createdOn: matches8601,
         status: "retracted",
         retractMessage: "My retract message",
         version: 1,
       },
+      references: expect.any(Object),
+      states: expect.any(Object),
       processes: expect.any(Array),
     };
     expect(result).toEqual(expected);

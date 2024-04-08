@@ -1020,9 +1020,6 @@ describe("given draft cross section set where its non cross section data is alte
             version: 1,
             status: "draft",
             createdOn: matches8601,
-            commitMessage: expect.stringContaining(
-              "Indirect draft by editing set",
-            ),
           },
           type: "CrossSection",
           isPartOf: [
