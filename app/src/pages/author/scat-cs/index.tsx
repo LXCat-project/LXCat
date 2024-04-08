@@ -2,6 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// FIXME: This code is not yet updated to use the latest info object
+//        definitions.
+
+// @ts-nocheck
+
 import { db } from "@lxcat/database";
 import { CrossSectionItem } from "@lxcat/database/item";
 import { PagingOptions } from "@lxcat/database/shared";

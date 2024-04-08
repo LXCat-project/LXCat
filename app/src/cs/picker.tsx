@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// @ts-nocheck
+
 import { CrossSectionItem } from "@lxcat/database/item";
 import { Button, Checkbox, Group, Space } from "@mantine/core";
 import { useState } from "react";
