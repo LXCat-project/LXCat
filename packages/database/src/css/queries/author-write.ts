@@ -268,7 +268,7 @@ export async function updateDraftSet(
           // Make cross sections part of set by adding to IsPartOf collection
           await this.insertEdge(
             "IsPartOf",
-            `CrossSection/${cs.info[0]._key}`,
+            `CrossSection/${prevCSKey}`,
             `CrossSectionSet/${key}`,
           );
         } else {
