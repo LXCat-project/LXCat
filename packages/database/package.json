@@ -80,6 +80,6 @@
     "testcontainers": "^10.8.1",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.0"
   }
 }
