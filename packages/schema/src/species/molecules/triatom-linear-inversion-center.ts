@@ -6,7 +6,7 @@ import { z } from "zod";
 import { SimpleParticle } from "../composition/simple/particle.js";
 import { makeMolecule } from "../generators.js";
 import { LinearInversionCenterElectronic } from "./components/electronic/linear-inversion-center.js";
-import { Rotational } from "./components/rotational.js";
+import { Rotational } from "./components/rotational/single.js";
 import { LinearTriatomVibrational } from "./components/vibrational/linear-triatomic.js";
 
 export const LinearTriatomInversionCenter = makeMolecule(
