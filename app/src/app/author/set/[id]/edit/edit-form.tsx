@@ -11,11 +11,13 @@ import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Button,
   Checkbox,
+  Group,
   NativeSelect,
   Select,
   Space,
   Stack,
   Tabs,
+  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
@@ -61,6 +63,8 @@ export const EditForm = (
     string | null
   >(null);
 
+  const [submitMessage, setSubmitMessage] = useState<string>();
+
   const speciesMap = useMemo(
     () =>
       Object.fromEntries(
@@ -102,6 +106,7 @@ export const EditForm = (
             && typeof data.id === "string"
           ) {
             form.setFieldValue("set._key", data.id);
+            setSubmitMessage(`Saved set with id ${data.id}.`);
             window.history.pushState(null, "", `/author/set/${data.id}/edit`);
           }
           // TODO: Handle user feedback.
@@ -241,9 +246,12 @@ export const EditForm = (
             placeholder="Describe which changes have been made."
             {...getInputProps("commitMessage")}
           />
-          <div>
+          <Group>
             <Button type="submit">Submit</Button>
-          </div>
+            <Text>
+              {submitMessage}
+            </Text>
+          </Group>
         </Stack>
       </form>
     </FormProvider>
