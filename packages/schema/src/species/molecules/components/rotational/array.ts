@@ -13,6 +13,6 @@ const RotationalArrayDescriptor = (size: number) =>
 export const RotationalArray = (size: number) =>
   makeComponent(
     RotationalArrayDescriptor(size),
-    (rot) => rot.J.join(","),
-    (rot) => rot.J.join(","),
+    (rot) => rot.J.join(""),
+    (rot) => rot.J.join(""),
   );
