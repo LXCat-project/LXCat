@@ -308,35 +308,35 @@ describe("State serialization", () => {
           summary: "X^1S_g^+",
           vibrational: [
             {
-              latex: "0,0,0",
-              summary: "0,0,0",
+              latex: "000",
+              summary: "000",
             },
             {
-              latex: "0,5,0",
-              summary: "0,5,0",
+              latex: "050",
+              summary: "050",
             },
             {
-              latex: "2,1,0",
-              summary: "2,1,0",
+              latex: "210",
+              summary: "210",
             },
             {
-              latex: "1,3,0",
-              summary: "1,3,0",
+              latex: "130",
+              summary: "130",
             },
             {
-              latex: "0,2,1",
-              summary: "0,2,1",
+              latex: "021",
+              summary: "021",
             },
             {
-              latex: "1,0,1",
-              summary: "1,0,1",
+              latex: "101",
+              summary: "101",
             },
           ],
         },
         latex:
-          "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1\\right)\\right)",
+          "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(000|050|210|130|021|101\\right)\\right)",
         particle: "CO2",
-        summary: "CO2{X^1S_g^+{0,0,0|0,5,0|2,1,0|1,3,0|0,2,1|1,0,1}}",
+        summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
       },
     ],
   ];
