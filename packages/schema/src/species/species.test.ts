@@ -339,6 +339,42 @@ describe("State serialization", () => {
         summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
       },
     ],
+    [
+      "H2O rotational",
+      {
+        particle: "H2O",
+        charge: 0,
+        type: "TriatomC2v",
+        electronic: {
+          energyId: "X",
+          vibrational: {
+            v: [0, 0, 0],
+            rotational: {
+              J: [0, 0, 0],
+            },
+          },
+        },
+      },
+      {
+        particle: "H2O",
+        charge: 0,
+        summary: "H2O{X{000{000}}}",
+        latex:
+          "\\mathrm{H2O}\\left(\\mathrm{X}\\left(000\\left(000\\right)\\right)\\right)",
+        electronic: {
+          summary: "X",
+          latex: "\\mathrm{X}",
+          vibrational: {
+            summary: "000",
+            latex: "000",
+            rotational: {
+              summary: "000",
+              latex: "000",
+            },
+          },
+        },
+      },
+    ],
   ];
 
   it.each(testCases)("%s", (_, input, summary) => {
