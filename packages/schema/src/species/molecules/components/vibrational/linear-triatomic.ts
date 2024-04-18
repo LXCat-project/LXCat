@@ -11,6 +11,6 @@ const LinearTriatomVibrationalDescriptor = object({
 
 export const LinearTriatomVibrational = makeComponent(
   LinearTriatomVibrationalDescriptor,
-  (vib) => vib.v.join(","),
-  (vib) => vib.v.join(","),
+  (vib) => vib.v.join(""),
+  (vib) => vib.v.join(""),
 );
