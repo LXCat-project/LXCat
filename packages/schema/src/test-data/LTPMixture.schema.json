@@ -1000,6 +1000,9 @@
           "$ref": "#/definitions/LinearTriatomInversionCenter"
         },
         {
+          "$ref": "#/definitions/TriatomC2v"
+        },
+        {
           "$ref": "#/definitions/unspecified"
         }
       ]
@@ -1914,6 +1917,162 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "particle",
+        "charge",
+        "electronic"
+      ],
+      "additionalProperties": false
+    },
+    "TriatomC2v": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "TriatomC2v"
+        },
+        "particle": {
+          "$ref": "#/definitions/simple/properties/particle"
+        },
+        "charge": {
+          "$ref": "#/definitions/simple/properties/charge"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "energyId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "energyId"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "vibrational": {
+                      "anyOf": [
+                        {
+                          "allOf": [
+                            {
+                              "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "rotational": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "J": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          },
+                                          "minItems": 3,
+                                          "maxItems": 3
+                                        }
+                                      },
+                                      "required": [
+                                        "J"
+                                      ],
+                                      "additionalProperties": false,
+                                      "description": "Singular"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "items": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "J": {
+                                                "$ref": "#/definitions/TriatomC2v/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
+                                              }
+                                            },
+                                            "required": [
+                                              "J"
+                                            ],
+                                            "additionalProperties": false,
+                                            "description": "Singular"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "description": "Unspecified"
+                                          }
+                                        ]
+                                      },
+                                      "minItems": 2,
+                                      "description": "Compound"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "description": "Unspecified"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ],
+                          "description": "Singular"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "v": {
+                                    "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
+                                  }
+                                },
+                                "required": [
+                                  "v"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Singular"
+                              },
+                              {
+                                "type": "string",
+                                "description": "Unspecified"
+                              }
+                            ]
+                          },
+                          "minItems": 2,
+                          "description": "Compound"
+                        },
+                        {
+                          "type": "string",
+                          "description": "Unspecified"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TriatomC2v/properties/electronic/anyOf/0/allOf/0"
               },
               "minItems": 2,
               "description": "Compound"
