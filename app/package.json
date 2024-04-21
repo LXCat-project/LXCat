@@ -23,7 +23,7 @@
     "@citation-js/plugin-bibtex": "^0.7.11",
     "@citation-js/plugin-csl": "^0.7.9",
     "@citation-js/plugin-doi": "^0.7.11",
-    "@citation-js/plugin-ris": "^0.7.10",
+    "@citation-js/plugin-ris": "^0.7.11",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.4",
     "@lxcat/converter": "workspace:^",

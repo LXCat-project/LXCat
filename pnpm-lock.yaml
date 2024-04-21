@@ -26,8 +26,8 @@ importers:
         specifier: ^0.7.11
         version: 0.7.11(@citation-js/core@0.7.9)
       '@citation-js/plugin-ris':
-        specifier: ^0.7.10
-        version: 0.7.10(@citation-js/core@0.7.9)
+        specifier: ^0.7.11
+        version: 0.7.11(@citation-js/core@0.7.9)
       '@hookform/error-message':
         specifier: ^2.0.1
         version: 2.0.1(react-dom@18.2.0)(react-hook-form@7.51.3)(react@18.2.0)
@@ -1688,8 +1688,8 @@ packages:
       '@citation-js/date': 0.5.1
     dev: false
 
-  /@citation-js/plugin-ris@0.7.10(@citation-js/core@0.7.9):
-    resolution: {integrity: sha512-bZvTLli7TQ+2o7jMkvzcGNpZf7vYWKOS8SG+PozOiyjjJ/XHHkSaAe9p/EGlfkAE6NxZhcRYoQ9xyBeZDWEDYA==}
+  /@citation-js/plugin-ris@0.7.11(@citation-js/core@0.7.9):
+    resolution: {integrity: sha512-e5aQO74QTTNgMlXVYkEVIghhsDTRUi0I1KeN4gAn/zNdBX+1XnxIBwPq/YE0//hWNp+khaKTa/xx72Hwd1s8cw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
