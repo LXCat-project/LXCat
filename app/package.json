@@ -31,7 +31,7 @@
     "@lxcat/schema": "workspace:^",
     "@mantine/core": "^7.6.2",
     "@mantine/form": "^7.8.0",
-    "@mantine/hooks": "^7.6.2",
+    "@mantine/hooks": "^7.8.0",
     "@mdx-js/mdx": "^3.0.1",
     "@next/bundle-analyzer": "^14.2.2",
     "@tabler/icons-react": "^3.2.0",
