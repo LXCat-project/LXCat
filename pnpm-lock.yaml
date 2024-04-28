@@ -267,8 +267,8 @@ importers:
         specifier: ^9.5.6
         version: 9.5.6(postcss@8.4.32)
       postcss-preset-mantine:
-        specifier: ^1.14.4
-        version: 1.14.4(postcss@8.4.32)
+        specifier: ^1.15.0
+        version: 1.15.0(postcss@8.4.32)
       swc-plugin-coverage-instrument:
         specifier: ^0.0.20
         version: 0.0.20
@@ -10948,8 +10948,8 @@ packages:
       postcss-selector-not: 7.0.2(postcss@8.4.32)
     dev: true
 
-  /postcss-preset-mantine@1.14.4(postcss@8.4.32):
-    resolution: {integrity: sha512-T1K3MVhU1hA9mJWfqoGvMcK5WKcHpVi4JUX6AYTbESvp78WneB/KFONUi+eXDG9Lpw62W/KNxEYl1ic3Dpm88w==}
+  /postcss-preset-mantine@1.15.0(postcss@8.4.32):
+    resolution: {integrity: sha512-OKPs6uoORSXlU/GFH1ZtFaslecHBPwuoSikdL5W3WKJm4ZPAQM0mw9x9m3toa/Mo1JhoBmYMM28i+zEdav5Edg==}
     peerDependencies:
       postcss: '>=8.0.0'
     dependencies:
