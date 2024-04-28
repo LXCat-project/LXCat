@@ -270,8 +270,8 @@ importers:
         specifier: ^1.14.4
         version: 1.14.4(postcss@8.4.32)
       swc-plugin-coverage-instrument:
-        specifier: ^0.0.20
-        version: 0.0.20
+        specifier: ^0.0.21
+        version: 0.0.21
       testcontainers:
         specifier: ^10.8.2
         version: 10.8.2
@@ -12541,8 +12541,8 @@ packages:
       - encoding
     dev: false
 
-  /swc-plugin-coverage-instrument@0.0.20:
-    resolution: {integrity: sha512-WXTGILCZE2hW61yrmxi6doN/UB4RT2K1JJSQVPn9JMJ6X4WJpZsesHi4lHy6qRKVsNIlHZvTWofkpuRi/WQUig==}
+  /swc-plugin-coverage-instrument@0.0.21:
+    resolution: {integrity: sha512-KC1VX4PhSnjoOYY/5HKRL08KwO3GsFfMFpcOxatY9EeeEycsmKQFRj2kNAv/602d9l1Qgodhz1BDAdsT7OQrUA==}
     dev: true
 
   /swr@2.2.5(react@18.2.0):
