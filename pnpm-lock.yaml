@@ -273,8 +273,8 @@ importers:
         specifier: ^0.0.20
         version: 0.0.20
       testcontainers:
-        specifier: ^10.8.2
-        version: 10.8.2
+        specifier: ^10.9.0
+        version: 10.9.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -343,8 +343,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       testcontainers:
-        specifier: ^10.8.2
-        version: 10.8.2
+        specifier: ^10.9.0
+        version: 10.9.0
       tsx:
         specifier: ^4.7.2
         version: 4.7.2
@@ -3375,7 +3375,7 @@ packages:
   /@testcontainers/arangodb@10.8.2:
     resolution: {integrity: sha512-vFlW4Z9jWSQZ3O5Yz6Xfgdvixz6qfnbUkkrL1ioclYcWk01ScDAlB+BUpecqPJ/VeDmA+muyKM6IWER943OQXw==}
     dependencies:
-      testcontainers: 10.8.2
+      testcontainers: 10.9.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -12671,8 +12671,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@10.8.2:
-    resolution: {integrity: sha512-9Ink7NUyYZwOjQhk0C6R6basWy2WADNly+md3D9YDap0pcDr3C+vrO8Ah1bkYco/9Zg8VoYTHO+blkLeebBYkA==}
+  /testcontainers@10.9.0:
+    resolution: {integrity: sha512-LN+cKAOd61Up9SVMJW+3VFVGeVQG8JBqZhEQo2U0HBfIsAynyAXcsLBSo+KZrOfy9SBz7pGHctWN/KabLDbNFA==}
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.24
