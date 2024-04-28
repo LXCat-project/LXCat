@@ -19,7 +19,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "zod": "3.22.5",
+    "zod": "3.23.4",
     "zod-to-json-schema": "^3.22.5"
   },
   "devDependencies": {
