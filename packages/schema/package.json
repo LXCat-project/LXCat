@@ -27,7 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@vitest/coverage-v8": "^1.5.2",
     "dprint": "^0.45.1",
-    "eslint": "8.57.0",
+    "eslint": "9.1.1",
     "tsx": "^4.7.3",
     "typescript": "^5.4.5",
     "vitest": "^1.5.2"
