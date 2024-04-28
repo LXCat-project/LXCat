@@ -78,7 +78,7 @@
     "dprint": "^0.45.1",
     "eslint": "8.57.0",
     "testcontainers": "^10.9.0",
-    "tsx": "^4.7.2",
+    "tsx": "^4.7.3",
     "typescript": "^5.4.5",
     "vitest": "^1.5.0"
   }
