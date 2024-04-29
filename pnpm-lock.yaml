@@ -128,8 +128,8 @@ importers:
         specifier: ^7.51.3
         version: 7.51.3(react@18.3.1)
       react-latex-next:
-        specifier: ^2.3.0
-        version: 2.3.0(react-dom@18.3.1)(react@18.3.1)
+        specifier: ^3.0.0
+        version: 3.0.0(react-dom@18.3.1)(react@18.3.1)
       react-plotly.js:
         specifier: ^2.6.0
         version: 2.6.0(plotly.js@2.28.0)(react@18.3.1)
@@ -8545,13 +8545,6 @@ packages:
       object.assign: 4.1.4
     dev: true
 
-  /katex@0.13.24:
-    resolution: {integrity: sha512-jZxYuKCma3VS5UuxOx/rFV1QyGSl3Uy/i0kTJF3HgQ5xMinCQVF8Zd4bMY/9aI9b9A2pjIBOsjSSm68ykTAr8w==}
-    hasBin: true
-    dependencies:
-      commander: 8.3.0
-    dev: false
-
   /katex@0.16.9:
     resolution: {integrity: sha512-fsSYjWS0EEOwvy81j3vRA8TEAhQhKiqO+FQaKWp0m39qwOzHVBgAUBIXWj1pB+O2W3fIpNa6Y9KSKCVbfPhyAQ==}
     hasBin: true
@@ -11549,14 +11542,14 @@ packages:
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
 
-  /react-latex-next@2.3.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-R6Q3fML5JHr7x50C22TIulsBBBz5dHefCbx1+rUQjjDnfAq3c3MbjNj1RGH8pOMV6UgAkrJyNHLTU3wOuIedQg==}
-    engines: {node: '>=8', npm: '>=5'}
+  /react-latex-next@3.0.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-x70f1b1G7TronVigsRgKHKYYVUNfZk/3bciFyYX1lYLQH2y3/TXku3+5Vap8MDbJhtopePSYBsYWS6jhzIdz+g==}
+    engines: {node: '>=12', npm: '>=5'}
     peerDependencies:
       react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      katex: 0.13.24
+      katex: 0.16.9
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
