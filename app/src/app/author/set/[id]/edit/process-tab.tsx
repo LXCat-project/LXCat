@@ -15,6 +15,7 @@ import {
   Button,
   Center,
   Fieldset,
+  FileButton,
   Group,
   MultiSelect,
   ScrollArea,
@@ -23,6 +24,9 @@ import {
   TextInput,
 } from "@mantine/core";
 import {
+  IconFilePlus,
+  IconFileTypeCsv,
+  IconJson,
   IconPlaylistAdd,
   IconRowInsertBottom,
   IconTrash,
@@ -195,7 +199,10 @@ const ProcessInfoItem = (
           <Fieldset legend="Data">
             <ProcessInfoData
               data={info.data}
-              onChange={(data) => onChange({ ...info, data })}
+              onChange={(data) => {
+                console.log(data);
+                return onChange({ ...info, data });
+              }}
             />
           </Fieldset>
         </Stack>
@@ -282,8 +289,12 @@ const ProcessItem = (
                         info={info}
                         references={references}
                         onChange={(info) => {
-                          process.info[index] = info;
-                          onChange(process);
+                          return onChange({
+                            ...process,
+                            info: process.info.map((item, curIndex) =>
+                              index === curIndex ? info : item
+                            ),
+                          });
                         }}
                         onDelete={() => {
                           setIds((ids) =>
@@ -351,8 +362,12 @@ export const ProcessTab = (
                 species={speciesMap}
                 references={referenceMap}
                 onChange={(process) => {
-                  processes[index] = process;
-                  onChange(processes);
+                  // processes[index] = process;
+                  return onChange(
+                    processes.map((item, curIndex) =>
+                      curIndex === index ? process : item
+                    ),
+                  );
                 }}
                 onDelete={() => {
                   setIds((ids) =>
