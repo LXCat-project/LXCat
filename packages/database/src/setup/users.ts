@@ -38,7 +38,9 @@ const createUserCollection = async (
 ): Promise<Result<Unit, Error>> => {
   const users = db.collection<UserWithAccountSessionInDb>("users");
   if (await users.exists()) {
-    return err(ArangoError("The User collection already exists"));
+    // The "users" collection is allowed to exist. This is required to get the
+    // `drop-non-user` command to work.
+    return ok();
   }
   await users.create({
     // schema: {
