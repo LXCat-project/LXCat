@@ -365,8 +365,8 @@ importers:
         version: 5.0.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.24.1
-        version: 7.24.1(@babel/core@7.24.4)
+        specifier: ^7.24.5
+        version: 7.24.5(@babel/core@7.24.4)
       '@babel/core':
         specifier: ^7.24.4
         version: 7.24.4
@@ -439,8 +439,8 @@ packages:
       zod: 3.23.6
     dev: false
 
-  /@babel/cli@7.24.1(@babel/core@7.24.4):
-    resolution: {integrity: sha512-HbmrtxyFUr34LwAlV9jS+sSIjUp4FpdtIMGwgufY3AsxrIfsh/HxlMTywsONAZsU0RMYbZtbZFpUCrSGs7o0EA==}
+  /@babel/cli@7.24.5(@babel/core@7.24.4):
+    resolution: {integrity: sha512-2qg1mYtJRsOOWF6IUwLP5jI42P8Cc0hQ5TmnjLrik/4DKouO8dFJN80HEz81VmVeUs97yuuf3vQ/9j7Elrcjlg==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
