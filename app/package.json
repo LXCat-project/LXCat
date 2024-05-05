@@ -34,7 +34,7 @@
     "@mantine/hooks": "^7.8.1",
     "@mdx-js/mdx": "^3.0.1",
     "@next/bundle-analyzer": "^14.2.3",
-    "@tabler/icons-react": "^3.2.0",
+    "@tabler/icons-react": "^3.3.0",
     "ajv": "^8.13.0",
     "ajv-errors": "^3.0.0",
     "clsx": "^2.1.1",
