@@ -11,14 +11,14 @@ const dbName = process.env.ARANGO_DB ?? "lxcat";
 const username = process.env.ARANGO_USERNAME ?? "lxcat";
 const password = process.env.ARANGO_PASSWORD!;
 
-const db = await LXCatDatabase.create(systemDb(), dbName);
+const db = await LXCatDatabase.setup(systemDb(), dbName);
 
 if (db.isErr) {
   console.log(db.error.message);
   exit();
 }
 
-console.log(`Created ${dbName} database.`);
+console.log(`Successfully setup the ${dbName} database.`);
 
 // Create the `lxcat` user if it doesn't already exist.
 if (!(await systemDb().listUsers()).find((user) => user.user === username)) {
