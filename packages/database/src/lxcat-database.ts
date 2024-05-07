@@ -5,7 +5,7 @@
 import { Database } from "arangojs";
 import { CreateDatabaseOptions } from "arangojs/database.js";
 import { Result } from "true-myth";
-import { ok } from "true-myth/result";
+import { err, ok } from "true-myth/result";
 import {
   addOrganization,
   addSession,
@@ -131,19 +131,24 @@ export class LXCatDatabase {
     this.db = db;
   }
 
-  public static async create(
+  public static async setup(
     system: Database,
     name: string,
     options?: CreateDatabaseOptions,
   ): Promise<Result<LXCatDatabase, Error>> {
-    const dbResult = await setupDatabase(system, name, options);
+    let db: Database;
 
-    // if (dbResult.isErr) {
-    //   return err(dbResult.error);
-    // }
+    if (await system.database(name).exists()) {
+      db = system.database(name);
+    } else {
+      const dbResult = await setupDatabase(system, name, options);
 
-    // The `setupDatabase` function errors when the database already exists.
-    const db = dbResult.isErr ? system.database(name) : dbResult.value;
+      if (dbResult.isErr) {
+        return err(dbResult.error);
+      }
+
+      db = dbResult.value;
+    }
 
     await setupUserCollections(db);
     await setupSharedCollections(db);
