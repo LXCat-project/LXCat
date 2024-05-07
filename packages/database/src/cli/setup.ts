@@ -23,4 +23,6 @@ console.log(`Created ${dbName} database.`);
 // Create the `lxcat` user if it doesn't already exist.
 if (!(await systemDb().listUsers()).find((user) => user.user === username)) {
   await db.value.createUser(systemDb(), username, password);
+} else {
+  await db.value.setupUserPrivileges(systemDb(), username);
 }
