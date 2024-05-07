@@ -14,7 +14,7 @@ export async function register() {
     method: "get",
     path: "/species",
     tags: ["Species"],
-    description: "Get all species.",
+    description: "Get all top-level species.",
     responses: {
       200: {
         description: "Species objects",
