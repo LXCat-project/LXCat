@@ -8,6 +8,8 @@ import { LXCatDatabase } from "../lxcat-database.js";
 import { systemDb } from "../system-db.js";
 
 const dbName = process.env.ARANGO_DB ?? "lxcat";
+const username = process.env.ARANGO_USERNAME ?? "lxcat";
+const password = process.env.ARANGO_PASSWORD!;
 
 const db = await LXCatDatabase.create(systemDb(), dbName);
 
@@ -18,8 +20,9 @@ if (db.isErr) {
 
 console.log(`Created ${dbName} database.`);
 
-await db.value.createUser(
-  systemDb(),
-  process.env.ARANGO_USERNAME ?? "lxcat",
-  process.env.ARANGO_PASSWORD!,
-);
+// Create the `lxcat` user if it doesn't already exist.
+if (!(await systemDb().listUsers()).find((user) => user.user === username)) {
+  await db.value.createUser(systemDb(), username, password);
+} else {
+  await db.value.setupUserPrivileges(systemDb(), username);
+}
