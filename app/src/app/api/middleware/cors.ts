@@ -7,7 +7,7 @@ import { err, ok } from "true-myth/result";
 import { Headers, Middleware } from "../route-builder";
 
 export type CORSOptions = {
-  allowedOrigins: string[];
+  allowedOrigins: Array<RegExp>;
   allowedMethods: string[];
   allowedHeaders?: string[];
   allowCredentials?: boolean;
@@ -17,10 +17,11 @@ export type CORSOptions = {
 };
 
 const DEFAULTS: CORSOptions = {
-  allowedOrigins: ["*"],
+  allowedOrigins: [/http:\/\/localhost:\d+/],
   allowedMethods: ["GET", "HEAD"],
-  allowedHeaders: ["Authorization"],
+  allowedHeaders: ["Authorization", "Content-Type"],
   preflightStatusCode: 204,
+  allowCredentials: true,
 };
 
 /**
@@ -39,11 +40,22 @@ export const applyCORS =
   ) => {
     let method = req.method && req.method.toUpperCase
       && req.method.toUpperCase();
+
     let cors_headers: [string, string][] = [];
-    cors_headers.push([
-      "Access-Control-Allow-Origin",
-      options.allowedOrigins.join(", "),
-    ]);
+
+    const origin = req.headers.get("origin");
+
+    if (
+      origin
+      && options.allowedOrigins.find((originFilter) =>
+          originFilter.test(origin)
+        ) !== undefined
+    ) {
+      cors_headers.push([
+        "Access-Control-Allow-Origin",
+        origin,
+      ]);
+    }
 
     if (options.allowCredentials && options.allowCredentials === true) {
       cors_headers.push(["Access-Control-Allow-Credentials", "true"]);
