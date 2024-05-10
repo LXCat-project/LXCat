@@ -33,8 +33,8 @@ const csTest = test.extend({
   },
 });
 
-test.describe("Cross section page", () => {
-  test.beforeAll(async ({ browser }) => {
+csTest.describe("Cross section page", () => {
+  csTest.beforeAll(async ({ browser }) => {
     // await rootDb().setupCollections();
     // await rootDb().setupUserPrivileges(
     //   systemDb(),
@@ -44,7 +44,7 @@ test.describe("Cross section page", () => {
     await uploadAndPublishDummySet(browser);
   });
 
-  test.afterAll(async () => {
+  csTest.afterAll(async () => {
     await rootDb().truncateNonUserCollections();
   });
 
