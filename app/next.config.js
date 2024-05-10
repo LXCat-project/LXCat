@@ -19,6 +19,8 @@ const nextConfig = {
     ]
   },
 
+  transpilePackages: ["next-mdx-remote"],
+
   webpack: (config, { nextRuntime }) => {
     if (nextRuntime === "nodejs") {
       config.module.rules = [
