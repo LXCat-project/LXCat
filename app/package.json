@@ -88,7 +88,7 @@
     "@types/cookie": "^0.6.0",
     "@types/deep-equal": "^1.0.4",
     "@types/json-schema": "^7.0.15",
-    "@types/mdast": "^4.0.3",
+    "@types/mdast": "^4.0.4",
     "@types/node": "20.12.11",
     "@types/oidc-provider": "^8.4.4",
     "@types/plotly.js-basic-dist": "^1.54.4",
