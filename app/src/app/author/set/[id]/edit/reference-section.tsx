@@ -22,6 +22,9 @@ type ReferenceButtonProps = {
   onChange: (selected: Array<ReferenceRef<string>>) => MaybePromise<void>;
 };
 
+const getRefKey = (ref: ReferenceRef<string>): string =>
+  typeof ref === "string" ? ref : ref.id;
+
 const ReferenceButton = (
   { selected, references, onChange }: ReferenceButtonProps,
 ) => {
@@ -32,9 +35,7 @@ const ReferenceButton = (
   const options = Object.entries(references).map(([key, ref]) => (
     <Combobox.Option value={key} key={key}>
       <Group>
-        {selected.map((ref) => typeof ref === "string" ? ref : ref.id).includes(
-          key,
-        ) && <CheckIcon size={12} />}
+        {selected.map(getRefKey).includes(key) && <CheckIcon size={12} />}
         <Latex>{ref}</Latex>
       </Group>
     </Combobox.Option>
@@ -48,11 +49,11 @@ const ReferenceButton = (
       arrowPosition="center"
       withinPortal={false}
       positionDependencies={[selected]}
-      onOptionSubmit={(val) => {
+      onOptionSubmit={(refKey) => {
         onChange(
-          selected.includes(val)
-            ? selected.filter((item) => item !== val)
-            : [...selected, val],
+          selected.map(getRefKey).includes(refKey)
+            ? selected.filter((item) => getRefKey(item) !== refKey)
+            : [...selected, refKey],
         );
       }}
     >
