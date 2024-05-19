@@ -139,7 +139,10 @@ export const EditForm = (
                 rows={10}
                 {...getInputProps("set.description")}
               />
-              <Checkbox label="Complete" {...getInputProps("set.complete")} />
+              <Checkbox
+                label="Complete"
+                {...getInputProps("set.complete", { type: "checkbox" })}
+              />
               <Select
                 label="Published in"
                 allowDeselect={false}
