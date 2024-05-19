@@ -8,25 +8,17 @@ import { MaybePromise } from "@/app/api/util";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
-import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
   ActionIcon,
   Button,
   Center,
   Fieldset,
-  FileButton,
-  Group,
-  MultiSelect,
   ScrollArea,
   Select,
   Stack,
-  TextInput,
 } from "@mantine/core";
 import {
-  IconFilePlus,
-  IconFileTypeCsv,
-  IconJson,
   IconPlaylistAdd,
   IconRowInsertBottom,
   IconTrash,
@@ -34,6 +26,7 @@ import {
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
 import Latex from "react-latex-next";
+import { CommentSection } from "./comment-section";
 import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
@@ -92,52 +85,6 @@ const ProcessInfoData = (
       data={data}
       onChange={onChange}
     />
-  </Stack>
-);
-
-const CommentSection = (
-  { comments, onChange }: {
-    comments: Array<string> | undefined;
-    onChange: (comments: Array<string> | undefined) => MaybePromise<void>;
-  },
-) => (
-  <Stack justify="stretch">
-    {comments?.map((comment, index) => {
-      return (
-        <Group key={index} justify="center">
-          <TextInput
-            style={{ flexGrow: 1 }}
-            value={comment}
-            onChange={(event) => {
-              const newComments = [...comments];
-              newComments[index] = event.currentTarget.value;
-              return onChange(newComments);
-            }}
-          />
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={() =>
-              onChange(
-                comments
-                  ? comments.filter((_, curIndex) => curIndex !== index)
-                  : undefined,
-              )}
-          >
-            <IconTrash />
-          </ActionIcon>
-        </Group>
-      );
-    })}
-    <Center>
-      <Button
-        variant="light"
-        onClick={() => onChange(comments ? [...comments, ""] : [""])}
-        rightSection={<IconPlaylistAdd />}
-      >
-        Add comment
-      </Button>
-    </Center>
   </Stack>
 );
 
