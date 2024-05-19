@@ -30,6 +30,7 @@ import { CommentSection } from "./comment-section";
 import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
+import { ReferenceSection } from "./reference-section";
 
 type Process = EditedLTPDocument["processes"][number];
 type ProcessInfo = Process["info"][number];
@@ -131,18 +132,13 @@ const ProcessInfoItem = (
               onChange={(comments) => onChange({ ...info, comments })}
             />
           </Fieldset>
-          <MultiSelect
-            label="References"
-            data={Object.entries(references).map(([value, label]) => ({
-              value,
-              label,
-            }))}
-            // TODO: Use a component that allows for adding reference comments.
-            value={info.references.map(ref =>
-              typeof ref === "object" ? ref.id : ref
-            )}
-            onChange={(references) => onChange({ ...info, references })}
-          />
+          <Fieldset legend="References">
+            <ReferenceSection
+              selected={info.references}
+              references={references}
+              onChange={(references) => onChange({ ...info, references })}
+            />
+          </Fieldset>
           <Fieldset legend="Data">
             <ProcessInfoData
               data={info.data}
