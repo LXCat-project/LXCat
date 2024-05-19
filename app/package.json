@@ -25,7 +25,7 @@
     "@citation-js/plugin-doi": "^0.7.11",
     "@citation-js/plugin-ris": "^0.7.11",
     "@hookform/error-message": "^2.0.1",
-    "@hookform/resolvers": "^3.3.4",
+    "@hookform/resolvers": "^3.4.0",
     "@lxcat/converter": "workspace:^",
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
