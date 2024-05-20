@@ -90,6 +90,7 @@ export const ReferenceSection = (
   <Stack>
     <DataTable
       withTableBorder
+      borderRadius="sm"
       records={selected.map(entry =>
         typeof entry === "string"
           ? { id: entry, reference: references[entry], comments: [] }
