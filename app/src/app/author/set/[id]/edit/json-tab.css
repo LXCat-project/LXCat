@@ -1,0 +1,3 @@
+.mantine-CodeHighlight-root .mantine-ScrollArea-viewport {
+  max-height: calc(100vh - 280px);
+}

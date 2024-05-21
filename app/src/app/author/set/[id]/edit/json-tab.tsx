@@ -3,12 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CodeHighlight } from "@mantine/code-highlight";
-import classes from "./json-tab.module.css";
+import "./json-tab.css";
 
 export const JsonTab = ({ json }: { json: string }) => (
-  <CodeHighlight
-    classNames={classes}
-    code={json}
-    language="json"
-  />
+  <CodeHighlight code={json} language="json" />
 );
