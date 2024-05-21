@@ -31,6 +31,7 @@ import { LookupTable } from "./lookup-table";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
 import { ReferenceSection } from "./reference-section";
+import accordionClasses from "./top-level-accordion.module.css";
 
 type Process = EditedLTPDocument["processes"][number];
 type ProcessInfo = Process["info"][number];
@@ -295,7 +296,12 @@ export const ProcessTab = (
   return (
     <Stack>
       <ScrollArea classNames={{ viewport: classes.processList }} type="auto">
-        <Accordion {...accordion} variant="contained" chevronPosition="left">
+        <Accordion
+          {...accordion}
+          classNames={accordionClasses}
+          variant="contained"
+          chevronPosition="left"
+        >
           {processes.map((process, index) => {
             return (
               <ProcessItem

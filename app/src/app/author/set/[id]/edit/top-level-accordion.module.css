@@ -1,0 +1,6 @@
+.root {
+  :global(.mantine-Accordion-item):first-child {
+    border-top: 0;
+    border-radius: 0;
+  }
+}

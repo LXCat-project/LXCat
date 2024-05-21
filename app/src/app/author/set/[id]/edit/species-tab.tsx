@@ -22,6 +22,7 @@ import { MaybePromise } from "../../../../api/util";
 import { SpeciesInput } from "./species-input";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
 import classes from "./species-tab.module.css";
+import accordionClasses from "./top-level-accordion.module.css";
 
 export const SpeciesTab = (
   { species, onChange }: {
@@ -42,7 +43,11 @@ export const SpeciesTab = (
   return (
     <Stack>
       <ScrollArea classNames={{ viewport: classes.speciesList }} type="auto">
-        <Accordion variant="contained" chevronPosition="left">
+        <Accordion
+          classNames={accordionClasses}
+          variant="contained"
+          chevronPosition="left"
+        >
           {Object.entries(species).map(
             ([key, state]) => {
               const parsed = AnySpeciesSerializable.safeParse(state);
