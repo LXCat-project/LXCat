@@ -438,7 +438,11 @@ function isEqualProcess(
     reaction: mapReaction(prevStateLookup, prevCS.reaction),
     info: prevCS.info.map((info) => ({
       ...info,
-      references: info.references.map((r) => `Reference/${r}`),
+      references: info.references.map((r) =>
+        typeof r === "string"
+          ? `Reference/${r}`
+          : { ...r, id: `Reference/${r.id}` }
+      ),
     })),
   };
 
