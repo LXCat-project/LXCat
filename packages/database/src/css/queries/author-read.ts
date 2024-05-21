@@ -79,8 +79,8 @@ export async function byOwnerAndId(
               LET processes = (
                 FOR cs IN INBOUND css IsPartOf
                   LET csRefs = (
-                    FOR ref IN OUTBOUND cs References
-                      RETURN ref._key
+                    FOR r, rs IN OUTBOUND cs References
+                      RETURN HAS(rs, "comments") ? { id: r._key, comments: rs.comments } : r._key
                   )
                   LET reaction = FIRST(
                     FOR r in Reaction
