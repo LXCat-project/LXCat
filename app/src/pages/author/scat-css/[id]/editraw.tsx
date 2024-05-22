@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
