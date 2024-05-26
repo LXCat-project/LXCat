@@ -176,8 +176,8 @@ importers:
         specifier: 2.2.5
         version: 2.2.5(react@18.3.1)
       true-myth:
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^7.3.0
+        version: 7.3.0
       unified:
         specifier: ^11.0.4
         version: 11.0.4
@@ -309,8 +309,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       true-myth:
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^7.3.0
+        version: 7.3.0
       zod:
         specifier: 3.23.6
         version: 3.23.6
@@ -13468,8 +13468,8 @@ packages:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
     dev: false
 
-  /true-myth@7.2.0:
-    resolution: {integrity: sha512-EoN2xFLbZ1AS9/j5zxUeBhvlpPkJhBkOCl5HSSiGQr6a+wCP9+jXR6SyIqfGTP731LqKs7wcdk32hT/Ni4+60w==}
+  /true-myth@7.3.0:
+    resolution: {integrity: sha512-kbtDomawnft9aoAe3RMIntB/mqtlSuo9yVhNy3wCwcLoTeth1dyp+NMmBF1FbDMMvdaqFQ2ksP8Y6s1/gUhyQg==}
     engines: {node: 18.* || >= 20.*}
     dev: false
 
