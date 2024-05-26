@@ -365,8 +365,8 @@ importers:
         version: 5.0.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.24.5
-        version: 7.24.5(@babel/core@7.24.5)
+        specifier: ^7.24.6
+        version: 7.24.6(@babel/core@7.24.5)
       '@babel/core':
         specifier: ^7.24.5
         version: 7.24.5
@@ -439,8 +439,8 @@ packages:
       zod: 3.23.6
     dev: false
 
-  /@babel/cli@7.24.5(@babel/core@7.24.5):
-    resolution: {integrity: sha512-2qg1mYtJRsOOWF6IUwLP5jI42P8Cc0hQ5TmnjLrik/4DKouO8dFJN80HEz81VmVeUs97yuuf3vQ/9j7Elrcjlg==}
+  /@babel/cli@7.24.6(@babel/core@7.24.5):
+    resolution: {integrity: sha512-Sm/YhG/0REw9SKByFHDf4hkk7PYsjcsOyZgHGz1nvab4tUTQ9N4XVv+ykK0Y+VCJ3OshA/7EDyxnwCd8NEP/mQ==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -448,7 +448,7 @@ packages:
     dependencies:
       '@babel/core': 7.24.5
       '@jridgewell/trace-mapping': 0.3.25
-      commander: 4.1.1
+      commander: 6.2.1
       convert-source-map: 2.0.0
       fs-readdir-recursive: 1.1.0
       glob: 7.2.3
@@ -5430,8 +5430,8 @@ packages:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
     dev: false
 
-  /commander@4.1.1:
-    resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
+  /commander@6.2.1:
+    resolution: {integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==}
     engines: {node: '>= 6'}
     dev: true
 
@@ -8151,6 +8151,7 @@ packages:
 
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
