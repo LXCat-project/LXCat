@@ -108,7 +108,7 @@ importers:
         version: 1.0.0
       next-mdx-remote:
         specifier: canary
-        version: 0.0.0-canary-20240321205249(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
+        version: 0.0.0-canary-20240522052620(@types/react@18.3.2)(react@18.3.1)
       nextjs-cors:
         specifier: ^2.2.0
         version: 2.2.0(next@14.1.4)
@@ -291,8 +291,8 @@ importers:
         specifier: ^20.12.12
         version: 20.12.12
       tsx:
-        specifier: ^4.10.5
-        version: 4.10.5
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/database:
     dependencies:
@@ -346,8 +346,8 @@ importers:
         specifier: ^10.9.0
         version: 10.9.0
       tsx:
-        specifier: ^4.10.5
-        version: 4.10.5
+        specifier: ^4.11.0
+        version: 4.11.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -405,8 +405,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       tsx:
-        specifier: ^4.10.5
-        version: 4.10.5
+        specifier: ^4.11.0
+        version: 4.11.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -10318,18 +10318,16 @@ packages:
       regexparam: 2.0.1
     dev: false
 
-  /next-mdx-remote@0.0.0-canary-20240321205249(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-vqerW3tdmFCLtmENseqAF2GPRV6ka/b39//Rhl7zkAMalJ/OpQ6MYqrnLYFlyOc1aVyV/D5IpxjK4Uw071jq2A==}
+  /next-mdx-remote@0.0.0-canary-20240522052620(@types/react@18.3.2)(react@18.3.1):
+    resolution: {integrity: sha512-oTJqY/Lb36NUnMReD5r7Rb1h0XEslSqgr+Jwd2rrvDMhklz3GPYj4sAS8JEvxgGnRU+AbVWNIp79m6sXYZEgGA==}
     engines: {node: '>=14', npm: '>=7'}
     peerDependencies:
-      react: '>=16.x <=18.x'
-      react-dom: '>=16.x <=18.x'
+      react: '>=16'
     dependencies:
       '@babel/code-frame': 7.24.2
       '@mdx-js/mdx': 3.0.1
       '@mdx-js/react': 3.0.1(@types/react@18.3.2)(react@18.3.1)
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
       unist-util-remove: 3.1.1
       vfile: 6.0.1
       vfile-matter: 5.0.0
@@ -13443,8 +13441,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: true
 
-  /tsx@4.10.5:
-    resolution: {integrity: sha512-twDSbf7Gtea4I2copqovUiNTEDrT8XNFXsuHpfGbdpW/z9ZW4fTghzzhAG0WfrCuJmJiOEY1nLIjq4u3oujRWQ==}
+  /tsx@4.11.0:
+    resolution: {integrity: sha512-vzGGELOgAupsNVssAmZjbUDfdm/pWP4R+Kg8TVdsonxbXk0bEpE1qh0yV6/QxUVXaVlNemgcPajGdJJ82n3stg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
