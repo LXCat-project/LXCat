@@ -62,11 +62,11 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0(react@18.3.1)
       ajv:
-        specifier: ^8.13.0
-        version: 8.13.0
+        specifier: ^8.14.0
+        version: 8.14.0
       ajv-errors:
         specifier: ^3.0.0
-        version: 3.0.0(ajv@8.13.0)
+        version: 3.0.0(ajv@8.14.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -108,7 +108,7 @@ importers:
         version: 1.0.0
       next-mdx-remote:
         specifier: canary
-        version: 0.0.0-canary-20240321205249(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
+        version: 0.0.0-canary-20240522052620(@types/react@18.3.2)(react@18.3.1)
       nextjs-cors:
         specifier: ^2.2.0
         version: 2.2.0(next@14.1.4)
@@ -4464,12 +4464,12 @@ packages:
       indent-string: 5.0.0
     dev: true
 
-  /ajv-errors@3.0.0(ajv@8.13.0):
+  /ajv-errors@3.0.0(ajv@8.14.0):
     resolution: {integrity: sha512-V3wD15YHfHz6y0KdhYFjyy9vWtEVALT9UrxfN3zqlI6dMioHnJrqOYfyPKol3oqrnCM9uwkcdCwkJ0WUcbLMTQ==}
     peerDependencies:
       ajv: ^8.0.1
     dependencies:
-      ajv: 8.13.0
+      ajv: 8.14.0
     dev: false
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
@@ -4488,8 +4488,8 @@ packages:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  /ajv@8.13.0:
-    resolution: {integrity: sha512-PRA911Blj99jR5RMeTunVbNXMF6Lp4vZXnk5GQjcnUWUTsrXtekg/pnmFFI2u/I36Y/2bITGS30GZCXei6uNkA==}
+  /ajv@8.14.0:
+    resolution: {integrity: sha512-oYs1UUtO97ZO2lJ4bwnWeQW8/zvOIQLGKcvPTsWmvc2SYgBb+upuNS5NxoLaMU4h8Ju3Nbj6Cq8mD2LQoqVKFA==}
     dependencies:
       fast-deep-equal: 3.1.3
       json-schema-traverse: 1.0.0
@@ -10318,18 +10318,16 @@ packages:
       regexparam: 2.0.1
     dev: false
 
-  /next-mdx-remote@0.0.0-canary-20240321205249(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-vqerW3tdmFCLtmENseqAF2GPRV6ka/b39//Rhl7zkAMalJ/OpQ6MYqrnLYFlyOc1aVyV/D5IpxjK4Uw071jq2A==}
+  /next-mdx-remote@0.0.0-canary-20240522052620(@types/react@18.3.2)(react@18.3.1):
+    resolution: {integrity: sha512-oTJqY/Lb36NUnMReD5r7Rb1h0XEslSqgr+Jwd2rrvDMhklz3GPYj4sAS8JEvxgGnRU+AbVWNIp79m6sXYZEgGA==}
     engines: {node: '>=14', npm: '>=7'}
     peerDependencies:
-      react: '>=16.x <=18.x'
-      react-dom: '>=16.x <=18.x'
+      react: '>=16'
     dependencies:
       '@babel/code-frame': 7.24.2
       '@mdx-js/mdx': 3.0.1
       '@mdx-js/react': 3.0.1(@types/react@18.3.2)(react@18.3.1)
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
       unist-util-remove: 3.1.1
       vfile: 6.0.1
       vfile-matter: 5.0.0
