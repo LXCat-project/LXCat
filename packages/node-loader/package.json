@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.24.5",
     "@babel/core": "^7.24.5",
-    "@babel/preset-env": "^7.24.5",
+    "@babel/preset-env": "^7.24.6",
     "cross-env": "^7.0.3",
     "del-cli": "^5.1.0"
   }
