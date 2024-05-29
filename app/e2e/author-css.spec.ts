@@ -30,29 +30,25 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe.skip("/author/scat-css", () => {
+test.describe("/author/set", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
     return db().dropNonUserCollections;
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto("/author/scat-css");
+    await page.goto("/author/set");
     await page.locator("button:text-is(\"Edit\")").click();
     await page.getByPlaceholder("Describe which changes have").fill(
       "Edited description",
     );
     await page.getByRole("button", { name: "Submit" }).click();
-    await page.goto("/author/scat-css");
+    await page.getByText("Saved set with id").waitFor({ state: "visible" });
+    await page.goto("/author/set");
   });
 
-  // FIXME: Playwright is too fast in its actions, and the expect calls
-  // will receive incorrect data. We need to find a way to wait for all
-  // async calls (that e.g. reload the page data) to finish before
-  // continuing
-
   test("A simple edit should result in a draft", async ({ page }) => {
-    await page.goto("/author/scat-css");
+    await page.goto("/author/set");
 
     const table = page.locator("table:has(thead th:text(\"Version\"))");
 
@@ -70,6 +66,9 @@ test.describe.skip("/author/scat-css", () => {
         .click();
 
       const table = page.locator("table:has(thead th:text(\"Version\"))");
+      await page.locator("button:text-is(\"Delete\"):visible").waitFor({
+        state: "hidden",
+      });
 
       // Status = published
       expect(table.locator("td").nth(1)).toHaveText("published");
