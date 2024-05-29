@@ -308,7 +308,18 @@ describe("deleting a draft cross section with no shared cross sections", () => {
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
-  it.each(["CrossSectionSet", "CrossSection", "IsPartOf"])(
+  it.each([
+    "CrossSectionSet",
+    "IsPartOf",
+    "CrossSection",
+    "Reaction",
+    "Consumes",
+    "Produces",
+    "State",
+    "HasDirectSubstate",
+    "Reference",
+    "References",
+  ])(
     "should have emptied the %s collection",
     async (collection) => {
       const info = await db.getDB().collection(collection).count();
