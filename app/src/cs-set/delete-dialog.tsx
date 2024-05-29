@@ -8,7 +8,7 @@ import { deleteSet } from "./client";
 interface Props {
   isOpened: boolean;
   selectedSetId: string;
-  onClose: (error?: string) => void;
+  onClose: (confirmed: boolean, error?: string) => void;
 }
 
 export const DeleteDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
@@ -17,12 +17,10 @@ export const DeleteDialog = ({ isOpened, selectedSetId, onClose }: Props) => {
 
     if (confirmed) {
       const result = await deleteSet(selectedSetId, "Delete draft");
-      if (typeof result === "string") {
-        return onClose(result);
-      }
+      return onClose(true, result === "string" ? result : undefined);
     }
 
-    return onClose();
+    return onClose(false);
   }
   return (
     <Dialog isOpened={isOpened} onSubmit={onSubmit}>

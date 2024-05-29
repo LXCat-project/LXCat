@@ -157,10 +157,13 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
       <DeleteDialog
         isOpened={openDeleteDialog}
         selectedSetId={selectedSetId}
-        onClose={async (confirmed) => {
-          // TODO give user feed back
+        onClose={async (confirmed, error) => {
           setOpenDeleteDialog(false);
           if (confirmed) {
+            if (error) {
+              // TODO give user feed back
+              console.log(error);
+            }
             await reloadItems();
           }
         }}
