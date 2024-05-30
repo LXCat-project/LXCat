@@ -299,7 +299,7 @@ describe("deleting a published cross section with one shared cross section", () 
   });
 });
 
-describe("deleting a draft cross section with no shared cross sections", () => {
+describe("deleting a draft cross section set with no shared cross sections", () => {
   beforeAll(async () => {
     const keycss1 = await db.createSet(sampleCrossSectionSet(), "draft");
 
@@ -327,6 +327,56 @@ describe("deleting a draft cross section with no shared cross sections", () => {
     },
   );
 });
+
+describe(
+  "deleting a new draft cross section set that references a compound state that does not occur in other sets",
+  () => {
+    beforeAll(async () => {
+      const set = sampleCrossSectionSet();
+      set.states["compound"] = {
+        type: "HeteronuclearDiatom",
+        particle: "M",
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          S: 0,
+          Lambda: 1,
+          vibrational: [
+            { v: 0 },
+            { v: 1 },
+          ],
+        },
+      };
+      set.processes[0].reaction.lhs.push({ count: 1, state: "compound" });
+      set.processes[0].reaction.rhs.push({ count: 1, state: "compound" });
+
+      const setKey = await db.createSet(set, "draft");
+      await db.deleteSet(setKey, "My delete message");
+
+      return async () => truncateCrossSectionSetCollections(db.getDB());
+    });
+
+    it.each([
+      "CrossSectionSet",
+      "IsPartOf",
+      "CrossSection",
+      "Reaction",
+      "Consumes",
+      "Produces",
+      "State",
+      "InCompound",
+      "HasDirectSubstate",
+      "Reference",
+      "References",
+    ])(
+      "should empty the %s collection",
+      async (collection) => {
+        const info = await db.getDB().collection(collection).count();
+        expect(info.count).toEqual(0);
+      },
+    );
+  },
+);
 
 describe("deleting a draft cross section set with one shared cross section", () => {
   beforeAll(async () => {
