@@ -162,7 +162,7 @@ const defaultInfoItem = (): CrossSectionInfo<ReferenceRef<string>> => ({
   data: {
     type: "LUT",
     labels: ["Energy", "Cross Section"],
-    units: ["eV", "m2"],
+    units: ["eV", "m^2"],
     values: [[0, 0]],
   },
 });

@@ -107,7 +107,7 @@ export const SpeciesTab = (
                 ...species,
                 [id]: {
                   type: "simple",
-                  particle: "",
+                  particle: "H",
                   charge: 0,
                 },
               });
