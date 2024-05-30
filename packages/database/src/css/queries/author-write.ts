@@ -422,8 +422,6 @@ export async function removeDraftUnchecked(this: LXCatDatabase, key: string) {
   let stateList = [...new Set(consumed.concat(produced))];
 
   while (stateList.length != 0) {
-    // FIXME: Remove dangling `InCompound` edges, and check whether the compound
-    //        can be removed.
     const removedStatesCursor = await this.db.query(aql`
       FOR s IN State
         FILTER ${stateList} ANY == s._id
@@ -437,19 +435,38 @@ export async function removeDraftUnchecked(this: LXCatDatabase, key: string) {
             FILTER p._to == s._id
             RETURN 1
         )
-        FILTER hasConsumes == null AND hasProduces == null
+        Let hasCompound = FIRST(
+          FOR ic IN InCompound
+            FILTER ic._from == s._id
+            RETURN 1
+        )
+        FILTER hasConsumes == null AND hasProduces == null AND hasCompound == null
         REMOVE s IN State
         RETURN s._id
     `);
     const removedStates = await removedStatesCursor.all();
+
+    // Get constituent states if state is a compound
+    const compoundPromise = this.db.query(aql`
+      FOR sub IN InCompound
+        FILTER ${removedStates} ANY == sub._to
+        REMOVE sub IN InCompound
+        RETURN DISTINCT sub._from
+    `).then((cursor) => cursor.all());
+
     // Get parents of removed states
-    const parentCursor = await this.db.query(aql`
+    const parentPromise = this.db.query(aql`
       FOR sub IN HasDirectSubstate
         FILTER ${removedStates} ANY == sub._to
         REMOVE sub IN HasDirectSubstate
         RETURN DISTINCT sub._from
-    `);
-    stateList = await parentCursor.all();
+    `).then((cursor) => cursor.all());
+
+    stateList = [
+      ...new Set(
+        (await Promise.all([parentPromise, compoundPromise])).flat(),
+      ),
+    ];
   }
 }
 
