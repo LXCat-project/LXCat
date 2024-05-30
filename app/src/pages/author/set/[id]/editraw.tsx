@@ -106,7 +106,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
         (Please do not change identifiers, they are used to determine to update
         or create a nested item.)
       </p>
-      <Link href={`/author/scat-css`}>Back</Link>
+      <Link href={`/author/set`}>Back</Link>
     </Layout>
   );
 };

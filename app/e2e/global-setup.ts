@@ -138,7 +138,7 @@ export async function uploadAndPublishDummySet(
   await page.waitForSelector(`div:has-text("${org}")`);
 
   // Add a set
-  await page.goto("/author/scat-css/addraw");
+  await page.goto("/author/set/addraw");
   const dummySet = await readFile(
     `../packages/database/src/test/seed/cross-sections/${file}`,
     { encoding: "utf8" },
@@ -148,8 +148,7 @@ export async function uploadAndPublishDummySet(
   await page.waitForSelector("span:has-text(\"Upload successful\")");
 
   // Publish set
-  await page.goto("/author/scat-css");
-  await page.reload(); // TODO sometimes no set is listed, use reload to give server some time as workaround
+  await page.goto("/author/set");
   await page.waitForSelector("td:has-text(\"draft\")");
   await page.locator("tbody button:has-text(\"Publish\")").click();
   // Press publish in dialog

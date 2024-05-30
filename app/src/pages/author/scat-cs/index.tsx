@@ -45,7 +45,7 @@ function renderItem(item: CrossSectionItem) {
           {item.isPartOf.map((s) => (
             <li key={s.id}>
               <Link
-                href={`/author/scat-css/${s.id}/edit`}
+                href={`/author/set/${s.id}/edit`}
                 title="Click to edit set"
               >
                 {s.name}({s.versionInfo.version})

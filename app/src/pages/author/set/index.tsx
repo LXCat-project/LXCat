@@ -71,7 +71,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                         <Link href={`/author/set/${item._key}/edit`}>
                           <button>Edit</button>
                         </Link>
-                        <Link href={`/author/scat-css/${item._key}/editraw`}>
+                        <Link href={`/author/set/${item._key}/editraw`}>
                           <button>Edit JSON</button>
                         </Link>
                         <button
@@ -105,7 +105,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                           <Link href={`/author/set/${item._key}/edit`}>
                             <button>Edit</button>
                           </Link>
-                          <Link href={`/author/scat-css/${item._key}/editraw`}>
+                          <Link href={`/author/set/${item._key}/editraw`}>
                             <button>Edit JSON</button>
                           </Link>
                         </>
@@ -133,7 +133,7 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
         <Link href="/author/set/add">
           <button>Add</button>
         </Link>
-        <Link href="/author/scat-css/addraw">
+        <Link href="/author/set/addraw">
           <button>Add as JSON document</button>
         </Link>
       </div>
