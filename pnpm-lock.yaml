@@ -358,8 +358,8 @@ importers:
   packages/node-loader:
     dependencies:
       loader-utils:
-        specifier: ^3.2.1
-        version: 3.2.1
+        specifier: ^3.2.2
+        version: 3.2.2
       webpack:
         specifier: ^5.0.0
         version: 5.0.0
@@ -8906,8 +8906,8 @@ packages:
     engines: {node: '>=6.11.5'}
     dev: false
 
-  /loader-utils@3.2.1:
-    resolution: {integrity: sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==}
+  /loader-utils@3.2.2:
+    resolution: {integrity: sha512-vjJi4vQDasD8t0kMpxe+9URAcgbSuASqoj/Wuk3MawTk97LYa2KfdHreAkd1G/pmPLMvzZEw7/OsydADNemerQ==}
     engines: {node: '>= 12.13.0'}
     dev: false
 
