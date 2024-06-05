@@ -76,7 +76,7 @@ export const UserPanel = (
             >
               <NavLink
                 component="a"
-                href="/author/scat-css"
+                href="/author/set"
                 leftSection=<IconEdit size="1.3rem" />
                 label="Manage cross section sets"
               />

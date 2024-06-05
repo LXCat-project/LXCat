@@ -4,15 +4,15 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
+import {
+  EditedLTPDocument,
+  Status,
+  VersionedLTPDocument,
+  VersionInfo,
+} from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import {
-  CrossSectionSetItem,
-  FilterOptions,
-  KeyedSet,
-  SortOptions,
-} from "../public.js";
+import { FilterOptions, KeyedSet, SortOptions } from "../public.js";
 import { KeyedVersionInfo } from "./public.js";
 import {
   matches8601,
@@ -179,19 +179,26 @@ describe("deleting a published cross section without shared cross sections", () 
   });
 
   it("should have retrievable by id", async () => {
-    const result = await db.getSetByIdOld(keycss1);
-    const expected: Omit<CrossSectionSetItem, "organization"> = {
-      id: keycss1,
-      complete: false,
-      description: "Some description",
+    const result = await db.getSetById(keycss1);
+    const expected: VersionedLTPDocument = {
+      _key: keycss1,
       name: "Some name",
-      contributor: "Some organization", // TODO should have organization or contributor not both
+      description: "Some description",
+      contributor: {
+        name: "Some organization",
+        description: "Description of some organization.",
+        contact: "info@some-org.com",
+        howToReference: "",
+      },
+      complete: false,
       versionInfo: {
         createdOn: matches8601,
         status: "retracted",
         retractMessage: "My retract message",
         version: 1,
       },
+      references: expect.any(Object),
+      states: expect.any(Object),
       processes: expect.any(Array),
     };
     expect(result).toEqual(expected);
@@ -292,7 +299,7 @@ describe("deleting a published cross section with one shared cross section", () 
   });
 });
 
-describe("deleting a draft cross section with no shared cross sections", () => {
+describe("deleting a draft cross section set with no shared cross sections", () => {
   beforeAll(async () => {
     const keycss1 = await db.createSet(sampleCrossSectionSet(), "draft");
 
@@ -301,7 +308,18 @@ describe("deleting a draft cross section with no shared cross sections", () => {
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
-  it.each(["CrossSectionSet", "CrossSection", "IsPartOf"])(
+  it.each([
+    "CrossSectionSet",
+    "IsPartOf",
+    "CrossSection",
+    "Reaction",
+    "Consumes",
+    "Produces",
+    "State",
+    "HasDirectSubstate",
+    "Reference",
+    "References",
+  ])(
     "should have emptied the %s collection",
     async (collection) => {
       const info = await db.getDB().collection(collection).count();
@@ -309,6 +327,56 @@ describe("deleting a draft cross section with no shared cross sections", () => {
     },
   );
 });
+
+describe(
+  "deleting a new draft cross section set that references a compound state that does not occur in other sets",
+  () => {
+    beforeAll(async () => {
+      const set = sampleCrossSectionSet();
+      set.states["compound"] = {
+        type: "HeteronuclearDiatom",
+        particle: "M",
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          S: 0,
+          Lambda: 1,
+          vibrational: [
+            { v: 0 },
+            { v: 1 },
+          ],
+        },
+      };
+      set.processes[0].reaction.lhs.push({ count: 1, state: "compound" });
+      set.processes[0].reaction.rhs.push({ count: 1, state: "compound" });
+
+      const setKey = await db.createSet(set, "draft");
+      await db.deleteSet(setKey, "My delete message");
+
+      return async () => truncateCrossSectionSetCollections(db.getDB());
+    });
+
+    it.each([
+      "CrossSectionSet",
+      "IsPartOf",
+      "CrossSection",
+      "Reaction",
+      "Consumes",
+      "Produces",
+      "State",
+      "InCompound",
+      "HasDirectSubstate",
+      "Reference",
+      "References",
+    ])(
+      "should empty the %s collection",
+      async (collection) => {
+        const info = await db.getDB().collection(collection).count();
+        expect(info.count).toEqual(0);
+      },
+    );
+  },
+);
 
 describe("deleting a draft cross section set with one shared cross section", () => {
   beforeAll(async () => {

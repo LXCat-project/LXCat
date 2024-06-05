@@ -25,7 +25,15 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
       "Content-Type": "application/json",
     });
 
-    const init = { method: "POST", body: doc, headers };
+    const init = {
+      method: "POST",
+      body: JSON.stringify({
+        doc: JSON.parse(doc),
+        message: "Initial upload.",
+      }),
+      headers,
+    };
+
     const res = await fetch(url, init);
     let resp_str = await res.text();
     try {
@@ -88,7 +96,7 @@ const AddRawCrossSectionSetPage: NextPage<Props> = () => {
         )}
         {id && <span>Upload successful, id is {id}</span>}
       </form>
-      <Link href={`/author/scat-css`}>Back</Link>
+      <Link href={`/author/set`}>Back</Link>
     </Layout>
   );
 };

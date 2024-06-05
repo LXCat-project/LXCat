@@ -1,0 +1,13 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.viewport {
+  max-height: 500px;
+}
+
+.thumb {
+  z-index: 10;
+}

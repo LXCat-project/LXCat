@@ -86,8 +86,7 @@ import {
 import { getSetAffiliation } from "./css/queries/get-affiliation.js";
 import {
   activeSetOfArchivedSet,
-  byId as getSetByIdOld,
-  byIdJSON,
+  byId as setById,
   getItemIdsInSet,
   search as searchSet,
   searchContributors,
@@ -116,6 +115,7 @@ import {
 } from "./shared/queries/organization.js";
 import { findReactionId } from "./shared/queries/reaction.js";
 import {
+  getReferenceKeyByDOI,
   getReferences,
   getReferencesForSelection,
 } from "./shared/queries/reference.js";
@@ -261,6 +261,7 @@ export class LXCatDatabase {
   // references
   public getReferences = getReferences;
   public getReferencesForSelection = getReferencesForSelection;
+  public getReferenceKeyByDOI = getReferenceKeyByDOI;
 
   // auth/queries
   public listUsers = listUsers;
@@ -344,8 +345,7 @@ export class LXCatDatabase {
   public getSetVersionInfo = getSetVersionInfo;
 
   // css/public
-  public getSetById = byIdJSON;
-  public getSetByIdOld = getSetByIdOld;
+  public getSetById = setById;
   public searchSet = searchSet;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;

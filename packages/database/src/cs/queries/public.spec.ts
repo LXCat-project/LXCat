@@ -326,7 +326,7 @@ describe("given 4 published cross sections in 2 sets", () => {
     });
 
     it("given 1 good and 1 bad ids should return 1 good cross sections", async () => {
-      const result = await db.getMixtureByIds([csids[0], "bad2"]);
+      const result = await db.getMixtureByIds([csids[1], "bad2"]);
       const expected: LTPMixture = {
         states: {
           "524": {

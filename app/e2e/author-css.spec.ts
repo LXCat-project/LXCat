@@ -30,28 +30,26 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe.skip("/author/scat-css", () => {
+test.describe("/author/set", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
     return db().dropNonUserCollections;
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto("/author/scat-css");
+    await page.goto("/author/set");
     await page.locator("button:text-is(\"Edit\")").click();
-    await page.locator("textarea[name=\"set\\.description\"]").fill(
+    await page.getByPlaceholder("Describe which changes have").fill(
       "Edited description",
     );
-    await page.locator("button:has-text(\"Submit\")").click();
-    await page.goto("/author/scat-css");
+    await page.getByRole("button", { name: "Submit" }).click();
+    await page.getByText("Saved set with id").waitFor({ state: "visible" });
+    await page.goto("/author/set");
   });
 
-  // FIXME: Playwright is too fast in its actions, and the expect calls
-  // will receive incorrect data. We need to find a way to wait for all
-  // async calls (that e.g. reload the page data) to finish before
-  // continuing
-
   test("A simple edit should result in a draft", async ({ page }) => {
+    await page.goto("/author/set");
+
     const table = page.locator("table:has(thead th:text(\"Version\"))");
 
     // Status = draft
@@ -68,6 +66,9 @@ test.describe.skip("/author/scat-css", () => {
         .click();
 
       const table = page.locator("table:has(thead th:text(\"Version\"))");
+      await page.locator("button:text-is(\"Delete\"):visible").waitFor({
+        state: "hidden",
+      });
 
       // Status = published
       expect(table.locator("td").nth(1)).toHaveText("published");
@@ -77,9 +78,9 @@ test.describe.skip("/author/scat-css", () => {
   );
 });
 
-test.describe.skip("/author/scat-css/add", () => {
+test.describe("/author/set/add", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/author/scat-css/add");
+    await page.goto("/author/set/add");
   });
   test.describe("give empty name field", () => {
     test("after submit should show warning", async ({ page }) => {
@@ -87,10 +88,10 @@ test.describe.skip("/author/scat-css/add", () => {
 
       await page.locator("button:has-text(\"Submit\")").click();
 
-      const warning = page.locator(
-        "text=Name *must NOT have fewer than 1 characters",
+      const warning = page.getByText(
+        "String must contain at least 1 character(s)",
       );
-      await expect(warning).toBeVisible();
+      await expect(warning).toHaveCount(3);
     });
   });
 
@@ -100,46 +101,59 @@ test.describe.skip("/author/scat-css/add", () => {
       name,
     );
     await page.locator("button:has-text(\"Add\")").click();
+    await page.locator("li").getByText(name).waitFor({ state: "visible" });
+
     await page.goto("/admin/users");
+    await page.waitForLoadState("domcontentloaded");
     await page
-      .locator("[aria-label=\"Memberships of admin\\@ng\\.lxcat\\.net\"]")
+      .getByRole("row", { name: "admin admin@ng.lxcat.net" }).locator("div")
+      .first()
       .click();
     await page.locator(`text=${name}`).click();
   }
 
   async function fillAddSetForm(page: Page) {
-    await page.goto("/author/scat-css/add");
+    await page.goto("/author/set/add");
     // General
-    await page.locator("input[name=\"set\\.name\"]").fill("My name");
-    await page
-      .locator("select[name=\"set\\.contributor\"]")
-      .selectOption("MyOrg");
+    await page.getByLabel("Name *").fill("My name");
+    await page.getByLabel("Contributor").selectOption("MyOrg");
     // States
-    await page.locator("button[role=\"tab\"]:has-text(\"States\")").click();
-    await page.locator("[aria-label=\"Add a state\"]").click();
-    await page.locator("input[name=\"set\\.states\\.s0\\.particle\"]").fill(
-      "Ar",
+    await page.getByRole("tab", { name: "Species" }).click();
+    await page.getByRole("button", { name: "+" }).click();
+    await page.locator("span.mantine-Accordion-label").first().click();
+    await page.getByLabel("Species definition").fill(
+      "{\"type\": \"simple\", \"particle\": \"Ar\", \"charge\": 0}",
     );
-    await page.locator("input[name=\"set\\.states\\.s0\\.charge\"]").fill("0");
     // Processes
-    await page.locator("button[role=\"tab\"]:has-text(\"Processes\")").click();
-    await page.locator("[aria-label=\"Add process\"]").click();
-    await page.locator("[aria-label=\"Add data row to process\"]").click();
-    await page
-      .locator("input[name=\"set\\.processes\\.0\\.data\\.0\\.0\"]")
-      .fill("1.2");
-    await page
-      .locator("input[name=\"set\\.processes\\.0\\.data\\.0\\.1\"]")
-      .fill("3.4e-5");
-    await page.locator("[aria-label=\"Add consumed reaction entry\"]").click();
-    await page
-      .locator(
-        "[aria-controls=\"set\\.processes\\.0\\.reaction\\.lhs\\.0\\.state\"]",
-      )
+    await page.getByRole("tab", { name: "Processes" }).click();
+    await page.getByRole("button", { name: "Add process" }).click();
+    await page.locator("span.mantine-Accordion-label").first().click();
+
+    // Add reactant
+    await page.getByRole("group", { name: "Reactants" }).getByRole("button")
       .click();
     await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Ar}\")")
+      .getByRole("group", { name: "Reactants" })
+      .locator("button.mantine-UnstyledButton-root")
+      .nth(2)
       .click();
+    await page.getByRole("menuitem").click();
+
+    // Add product
+    await page.getByRole("group", { name: "Products" }).getByRole("button")
+      .click();
+    await page
+      .getByRole("group", { name: "Products" })
+      .locator("button.mantine-UnstyledButton-root")
+      .nth(2)
+      .click();
+    await page.getByRole("menuitem").click();
+
+    // Add data entry
+    await page.getByRole("button", { name: "Add info object" }).click();
+    await page.getByRole("button", { name: "Cross section" }).click();
+    await page.locator("td").nth(1).locator("input").fill("1.2");
+    await page.locator("td").nth(2).locator("input").fill("3.4e-5");
   }
 
   test.describe("given minimal set", () => {
@@ -153,7 +167,7 @@ test.describe.skip("/author/scat-css/add", () => {
     });
 
     test("should have json document", async ({ page }) => {
-      await page.locator("button[role=\"tab\"]:has-text(\"JSON\")").click();
+      await page.getByRole("tab", { name: "JSON" }).click();
       const json = await page.locator("pre").innerText();
       const expected = {
         name: "My name",
@@ -166,36 +180,47 @@ test.describe.skip("/author/scat-css/add", () => {
               lhs: [
                 {
                   count: 1,
-                  state: "s0",
+                  state: expect.any(String),
                 },
               ],
-              rhs: [],
+              rhs: [
+                {
+                  count: 1,
+                  state: expect.any(String),
+                },
+              ],
               reversible: false,
-              type_tags: [],
+              typeTags: [],
             },
-            threshold: 0,
-            type: "LUT",
-            labels: ["Energy", "CrossSection"],
-            units: ["eV", "m^2"],
-            data: [[1.2, 3.4e-5]],
-            parameters: {},
+            info: [
+              {
+                type: "CrossSection",
+                threshold: 0,
+                references: [],
+                data: {
+                  type: "LUT",
+                  labels: ["Energy", "Cross Section"],
+                  units: ["eV", "m^2"],
+                  values: [[1.2, 3.4e-5]],
+                },
+              },
+            ],
           },
         ],
-        states: {
-          s0: {
-            particle: "Ar",
-            charge: 0,
-          },
-        },
+        // TODO: This is not very strict, we can assert on the expected values.
+        states: expect.any(Object),
         references: {},
       };
       expect(JSON.parse(json)).toEqual(expected);
     });
 
     test("after submit should have success message", async ({ page }) => {
-      await page.locator("button:has-text(\"Submit\")").click();
+      await page
+        .getByPlaceholder("Describe which changes have")
+        .fill("Initial upload");
+      await page.getByRole("button", { name: "Submit" }).click();
 
-      await expect(page.locator(".status")).toContainText("Adding successful");
+      await expect(page.getByText("Saved set with id")).toBeVisible();
     });
   });
 });

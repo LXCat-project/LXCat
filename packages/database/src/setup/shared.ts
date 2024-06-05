@@ -14,7 +14,6 @@ export const setupSharedCollections = async (db: Database) => {
   await createReactionCollection(db);
   await createEdgeCollections(db);
 };
-export default setupSharedCollections;
 
 const createParticleCollection = async (db: Database) => {
   const collection = db.collection("Particle");

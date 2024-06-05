@@ -1,0 +1,13 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.speciesList {
+  max-height: calc(100vh - 300px);
+}
+
+.speciesList > div[style] {
+  display: block !important;
+}

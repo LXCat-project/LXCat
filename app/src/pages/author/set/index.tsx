@@ -68,10 +68,10 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                   <>
                     {user.roles?.includes("author") && (
                       <>
-                        <Link href={`/author/scat-css/${item._key}/edit`}>
+                        <Link href={`/author/set/${item._key}/edit`}>
                           <button>Edit</button>
                         </Link>
-                        <Link href={`/author/scat-css/${item._key}/editraw`}>
+                        <Link href={`/author/set/${item._key}/editraw`}>
                           <button>Edit JSON</button>
                         </Link>
                         <button
@@ -102,10 +102,10 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
                     {user.roles?.includes("author")
                       && (
                         <>
-                          <Link href={`/author/scat-css/${item._key}/edit`}>
+                          <Link href={`/author/set/${item._key}/edit`}>
                             <button>Edit</button>
                           </Link>
-                          <Link href={`/author/scat-css/${item._key}/editraw`}>
+                          <Link href={`/author/set/${item._key}/editraw`}>
                             <button>Edit JSON</button>
                           </Link>
                         </>
@@ -130,10 +130,10 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
       </table>
 
       <div>
-        <Link href="/author/scat-css/add">
+        <Link href="/author/set/add">
           <button>Add</button>
         </Link>
-        <Link href="/author/scat-css/addraw">
+        <Link href="/author/set/addraw">
           <button>Add as JSON document</button>
         </Link>
       </div>
@@ -157,11 +157,14 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
       <DeleteDialog
         isOpened={openDeleteDialog}
         selectedSetId={selectedSetId}
-        onClose={(confirmed) => {
-          // TODO give user feed back
+        onClose={async (confirmed, error) => {
           setOpenDeleteDialog(false);
           if (confirmed) {
-            reloadItems();
+            if (error) {
+              // TODO give user feed back
+              console.log(error);
+            }
+            await reloadItems();
           }
         }}
       />

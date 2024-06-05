@@ -25,7 +25,12 @@ const AdminOrganizations: NextPage<Props> = ({ organizations }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: newOrgName }),
+      body: JSON.stringify({
+        name: newOrgName,
+        description: "",
+        contact: "",
+        howToReference: "",
+      }),
     });
     if (res.ok) {
       const newOrg = KeyedOrganization.parse(await res.json());

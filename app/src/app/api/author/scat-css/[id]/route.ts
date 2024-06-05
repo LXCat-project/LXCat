@@ -5,7 +5,7 @@
 import { LXCatID } from "@/shared/lxcatid";
 import { db } from "@lxcat/database";
 import { EditedLTPDocument } from "@lxcat/schema";
-import { z } from "zod";
+import { object, string } from "zod";
 import {
   badRequestResponse,
   forbiddenResponse,
@@ -17,14 +17,14 @@ import { hasAuthorRole, hasSessionOrAPIToken } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
 
-export const postSchema = z.object({
-  path: z.object({ id: LXCatID }),
-  body: z.object({ doc: EditedLTPDocument, message: z.string() }),
+export const postSchema = object({
+  path: object({ id: LXCatID }),
+  body: object({ doc: EditedLTPDocument, message: string().min(1) }),
 });
 
-export const deleteSchema = z.object({
-  path: z.object({ id: LXCatID }),
-  body: z.object({ message: z.optional(z.string().min(1)) }),
+export const deleteSchema = object({
+  path: object({ id: LXCatID }),
+  body: object({ message: string().min(1) }),
 });
 
 const postRouter = RouteBuilder

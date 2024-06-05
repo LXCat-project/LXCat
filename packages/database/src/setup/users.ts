@@ -31,7 +31,6 @@ export const setupUserCollections = async (
 
   return createMemberOfCollection(db);
 };
-export default setupUserCollections;
 
 const createUserCollection = async (
   db: Database,

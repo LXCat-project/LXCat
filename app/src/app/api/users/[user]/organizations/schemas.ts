@@ -9,5 +9,5 @@ export const querySchema = z.object({
   path: z.object({
     user: z.string(),
   }),
-  body: z.array(LXCatID).min(1),
+  body: z.array(LXCatID),
 });

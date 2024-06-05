@@ -13,7 +13,7 @@ const headers = new Headers({
   "Content-Type": "application/json",
 });
 
-export async function deleteSet(key: string, message?: string) {
+export async function deleteSet(key: string, message: string) {
   const url = `/api/author/scat-css/${key}`;
   const body = JSON.stringify({ message: message });
   const init = { method: "DELETE", body, headers };

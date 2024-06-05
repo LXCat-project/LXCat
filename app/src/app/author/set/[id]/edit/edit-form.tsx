@@ -4,74 +4,45 @@
 
 "use client";
 
+import { reference2bibliography } from "@/shared/cite";
 import { KeyedOrganization } from "@lxcat/database/auth";
-import { EditedLTPDocument, type VersionedLTPDocument } from "@lxcat/schema";
-import { stateJSONSchema } from "@lxcat/schema/json-schema";
+import { EditedLTPDocument, Reference } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
-  Accordion,
   Button,
   Checkbox,
-  Modal,
+  Group,
   NativeSelect,
+  Select,
   Space,
   Stack,
   Tabs,
+  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
 import { createFormContext, zodResolver } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
-import { JSONSchema7 } from "json-schema";
-import { nanoid } from "nanoid";
-import { useState } from "react";
-import { FieldErrors, FieldPath, FieldValues, get } from "react-hook-form";
+import { useMemo, useState } from "react";
 import { z } from "zod";
-import { Latex } from "../../../../../shared/latex";
-import { generateSpeciesForm, SpeciesForm } from "./form-factory";
-import { SpeciesNode, SpeciesPicker } from "./species-picker";
+import { JsonTab } from "./json-tab";
+import { ProcessTab } from "./process-tab";
+import { ReferenceTable } from "./reference-table";
+import { SpeciesTab } from "./species-tab";
 
 const EditFormValues = z.object({
   set: EditedLTPDocument,
   commitMessage: z.string().min(1),
-  meta: z.record(z.any()),
 });
 export type EditFormValues = z.input<typeof EditFormValues>;
 
 type EditFormProps = {
-  initialSet: VersionedLTPDocument;
+  initialSet: EditedLTPDocument;
   organizations: Array<KeyedOrganization>;
-};
-
-export const getError = (
-  errors: FieldErrors,
-  name: FieldPath<FieldValues>,
-): string => {
-  const error = get(errors, name);
-
-  return error ? error.message : "";
 };
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<
   EditFormValues
 >();
-
-const emptySet = () => ({
-  commitMessage: "",
-  set: {
-    $schema: "",
-    url: "",
-    termsOfUse: "",
-    name: "",
-    contributor: "",
-    description: "",
-    complete: false,
-    references: {},
-    states: {},
-    processes: [],
-  },
-  meta: {},
-});
 
 export const EditForm = (
   { initialSet, organizations }: EditFormProps,
@@ -81,114 +52,64 @@ export const EditForm = (
       validate: zodResolver(EditFormValues),
       initialValues: {
         commitMessage: "",
-        set: EditedLTPDocument.parse({
-          ...initialSet,
-          contributor: initialSet.contributor.name,
-        }),
-        meta: {
-          set: {
-            states: Object.fromEntries(
-              Object.entries(initialSet.states).map((
-                [key, state],
-              ) => {
-                const metaState = {
-                  electronic: {
-                    anyOf: "0",
-                    vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
-                  },
-                };
-
-                if (state.type !== "simple" && state.type !== "unspecified") {
-                  if (Array.isArray(state.electronic)) {
-                    metaState.electronic.anyOf = "1";
-                  } else if (
-                    "vibrational" in state.electronic
-                    && state.electronic.vibrational
-                  ) {
-                    if (Array.isArray(state.electronic.vibrational)) {
-                      metaState.electronic.vibrational.anyOf = "1";
-                    } else if (
-                      typeof state.electronic.vibrational === "string"
-                    ) {
-                      metaState.electronic.vibrational.anyOf = "2";
-                    } else if ("rotational" in state.electronic.vibrational) {
-                      if (
-                        Array.isArray(state.electronic.vibrational.rotational)
-                      ) {
-                        metaState.electronic.vibrational.rotational.anyOf = "1";
-                      } else if (
-                        typeof state.electronic.vibrational.rotational
-                          === "string"
-                      ) {
-                        metaState.electronic.vibrational.rotational.anyOf = "2";
-                      }
-                    }
-                  }
-                }
-
-                return [key, metaState];
-              }),
-            ),
-          },
-        },
+        set: initialSet,
       },
-      // {
-      //   commitMessage: "",
-      //   set: {
-      //     name: "test",
-      //     contributor: "TestContributor",
-      //     description: "",
-      //     complete: false,
-      //     references: {},
-      //     states: {
-      //       test: {
-      //         type: "AtomLS",
-      //         particle: "He",
-      //         charge: 0,
-      //         electronic: {
-      //           config: [],
-      //           term: {
-      //             L: 0,
-      //             S: 0,
-      //             P: 1,
-      //             J: 0,
-      //           },
-      //         },
-      //       },
-      //     },
-      //     processes: [],
-      //   },
-      //   meta: {
-      //     set: {
-      //       states: {
-      //         test: {
-      //           electronic: {
-      //             anyOf: "0",
-      //             vibrational: { anyOf: "0", rotational: { anyOf: "0" } },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
     },
   );
   const [activeTab, setActiveTab] = useState<string | null>("general");
-  const [
-    speciesPickerOpened,
-    { open: openSpeciesPicker, close: closeSpeciesPicker },
-  ] = useDisclosure(false);
-  const [selectedSpecies, setSelectedSpecies] = useState<Array<SpeciesNode>>(
-    [],
+  const { getInputProps } = form;
+
+  const [processAccordionState, processAccordionOnChange] = useState<
+    string | null
+  >(null);
+
+  const [submitMessage, setSubmitMessage] = useState<string>();
+
+  const speciesMap = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(form.values.set.states).map((
+          [key, species],
+        ) => [key, AnySpeciesSerializable.parse(species).serialize().latex]),
+      ),
+    [form.values.set.states],
   );
 
-  const { getInputProps } = form;
+  const referenceMap = useMemo(() =>
+    Object.fromEntries(
+      Object.entries(form.values.set.references).map(([
+        key,
+        value,
+      ]) => [key, reference2bibliography(value)]),
+    ), [form.values.set.references]);
 
   return (
     <FormProvider form={form}>
       <form
         style={{ margin: 10 }}
-        onSubmit={form.onSubmit((data) => {
+        onSubmit={form.onSubmit(async (formData) => {
+          const url = `/api/author/scat-css/${formData.set._key ?? ""}`;
+          const body = JSON.stringify({
+            doc: formData.set,
+            message: formData.commitMessage,
+          });
+          const headers = new Headers({
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          });
+          const init = { method: "POST", body, headers };
+          const res = await fetch(url, init);
+          const data: unknown = await res.json();
+
+          if (
+            typeof data === "object" && data && "id" in data
+            && typeof data.id === "string"
+          ) {
+            form.setFieldValue("set._key", data.id);
+            setSubmitMessage(`Saved set with id ${data.id}.`);
+            window.history.pushState(null, "", `/author/set/${data.id}/edit`);
+          }
+          // TODO: Handle user feedback.
           console.log(data);
         })}
       >
@@ -196,10 +117,11 @@ export const EditForm = (
           defaultValue="general"
           value={activeTab}
           onChange={setActiveTab}
+          keepMounted={false}
         >
           <Tabs.List>
             <Tabs.Tab value="general">General</Tabs.Tab>
-            <Tabs.Tab value="states">States</Tabs.Tab>
+            <Tabs.Tab value="species">Species</Tabs.Tab>
             <Tabs.Tab value="references">References</Tabs.Tab>
             <Tabs.Tab value="processes">Processes</Tabs.Tab>
             <Tabs.Tab value="json">JSON</Tabs.Tab>
@@ -217,7 +139,18 @@ export const EditForm = (
                 rows={10}
                 {...getInputProps("set.description")}
               />
-              <Checkbox label="Complete" {...getInputProps("set.complete")} />
+              <Checkbox
+                label="Complete"
+                {...getInputProps("set.complete", { type: "checkbox" })}
+              />
+              <Select
+                label="Published in"
+                allowDeselect={false}
+                data={Object.entries(referenceMap).map((
+                  [value, label],
+                ) => ({ value, label }))}
+                {...getInputProps("set.publishedIn")}
+              />
               <NativeSelect
                 label="Contributor"
                 data={organizations.map(({ name }) => name)}
@@ -225,99 +158,88 @@ export const EditForm = (
               />
             </Stack>
           </Tabs.Panel>
-          <Tabs.Panel value="states">
-            <Stack>
-              <Accordion>
-                {getInputProps(`set.states`).value
-                  && Object.entries(form.values.set.states).map(
-                    ([key, state]) => {
-                      const parsed = AnySpeciesSerializable.safeParse(state);
-                      const controlNode = parsed.success
-                        ? parsed.data.serialize().latex
-                        : "...";
-
-                      return (
-                        <Accordion.Item key={key} value={key}>
-                          <Accordion.Control>
-                            <Latex>{controlNode}</Latex>
-                          </Accordion.Control>
-                          <Accordion.Panel>
-                            <SpeciesForm
-                              typeMap={generateSpeciesForm(
-                                stateJSONSchema as JSONSchema7,
-                                `set.states.${key}`,
-                              )}
-                              basePath={`set.states.${key}`}
-                            />
-                          </Accordion.Panel>
-                        </Accordion.Item>
-                      );
+          <Tabs.Panel value="species">
+            <SpeciesTab
+              species={form.values.set.states}
+              onChange={(species) => {
+                // NOTE: This is quite inefficient. However, it is far from the
+                //       bottleneck (rendering and state updates are the
+                //       problem).
+                const processes = Object.keys(species).length
+                    < Object.keys(form.values.set.states).length
+                  ? form.values.set.processes.map((process) => ({
+                    ...process,
+                    reaction: {
+                      ...process.reaction,
+                      lhs: process.reaction.lhs.filter((entry) =>
+                        entry.state in species
+                      ),
+                      rhs: process.reaction.rhs.filter((entry) =>
+                        entry.state in species
+                      ),
                     },
-                  )}
-              </Accordion>
-              <Button.Group>
-                <Button
-                  onClick={() => {
-                    const id = nanoid();
-                    form.setFieldValue(
-                      "set.states",
-                      {
-                        ...form.values.set.states,
-                        [id]: {
-                          type: "simple",
-                          particle: "",
-                          charge: 0,
-                        },
-                      },
-                    );
-                    form.setFieldValue("meta.set.states", {
-                      ...form.values.meta.set.states,
-                      [id]: {
-                        electronic: {
-                          anyOf: "0",
-                          vibrational: {
-                            anyOf: "0",
-                            rotational: { anyOf: "0" },
-                          },
-                        },
-                      },
-                    });
-                  }}
-                >
-                  +
-                </Button>
-                <Button
-                  variant="light"
-                  onClick={openSpeciesPicker}
-                >
-                  Add from database
-                </Button>
-              </Button.Group>
-              <Modal
-                opened={speciesPickerOpened}
-                onClose={closeSpeciesPicker}
-                title="Choose existing species from the database"
-              >
-                <Stack>
-                  <SpeciesPicker
-                    selected={selectedSpecies}
-                    setSelected={setSelectedSpecies}
-                  />
-                  <Button
-                    onClick={() => {
-                      for (const species of selectedSpecies) {
-                        form.values.set.states[species._key] =
-                          species.species.detailed;
-                      }
-                      closeSpeciesPicker();
-                      setSelectedSpecies([]);
-                    }}
-                  >
-                    Add
-                  </Button>
-                </Stack>
-              </Modal>
-            </Stack>
+                  }))
+                  : form.values.set.processes;
+
+                form.setValues(
+                  {
+                    ...form.values,
+                    set: { ...form.values.set, states: species, processes },
+                  },
+                );
+              }}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="references">
+            <ReferenceTable
+              // Use database _key as id property for existing references.
+              references={Object.entries(form.values.set.references).map((
+                [id, ref],
+              ) => ({ ...ref, id }))}
+              onChange={(references: Array<Reference>) => {
+                const referenceMap = Object.fromEntries(
+                  references.map((reference) => [reference.id, reference]),
+                );
+
+                // NOTE: This is quite inefficient. However, it is far from the
+                //       bottleneck (rendering and state updates are the
+                //       problem).
+                const processes = references.length
+                    < Object.keys(form.values.set.references).length
+                  ? form.values.set.processes.map((process) => ({
+                    ...process,
+                    info: process.info.map((info) => ({
+                      ...info,
+                      references: info.references.filter((ref) =>
+                        (typeof ref === "object" ? ref.id : ref) in referenceMap
+                      ),
+                    })),
+                  }))
+                  : form.values.set.processes;
+
+                getInputProps("set").onChange({
+                  ...form.values.set,
+                  processes,
+                  references: referenceMap,
+                });
+              }}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="processes">
+            <ProcessTab
+              processes={form.values.set.processes}
+              speciesMap={speciesMap}
+              referenceMap={referenceMap}
+              onChange={(processes) =>
+                form.setFieldValue("set.processes", processes)}
+              accordion={{
+                value: processAccordionState,
+                onChange: processAccordionOnChange,
+              }}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="json">
+            <JsonTab json={JSON.stringify(form.values.set, null, 2)} />
           </Tabs.Panel>
         </Tabs>
         <Space h="md" />
@@ -327,9 +249,12 @@ export const EditForm = (
             placeholder="Describe which changes have been made."
             {...getInputProps("commitMessage")}
           />
-          <div>
+          <Group>
             <Button type="submit">Submit</Button>
-          </div>
+            <Text>
+              {submitMessage}
+            </Text>
+          </Group>
         </Stack>
       </form>
     </FormProvider>

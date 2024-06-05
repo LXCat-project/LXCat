@@ -72,7 +72,7 @@ const AdminUsers: NextPage<Props> = ({
     <Layout>
       <h1>Administrate users</h1>
 
-      <table style={{ width: "100%" }}>
+      <table>
         <thead>
           <tr>
             <th>Name</th>

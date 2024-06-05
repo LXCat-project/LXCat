@@ -131,39 +131,33 @@ export async function byOrgAndId(
   const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
     .db
     .query(aql`
-        FOR o IN Organization
-            FILTER o.name == ${org}
-            FOR cs IN CrossSection
-                FILTER cs.organization == o._id
-                FILTER cs._key == ${key}
-                FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
-                LET references = (
-                  FOR rs IN References
-                      FILTER rs._from == cs._id
-                      FOR r IN Reference
-                          FILTER r._id == rs._to
-                          RETURN r._key
-                  )
-                LET reaction = FIRST(
-                  FOR r in Reaction
-                    FILTER r._id == cs.reaction
-                    LET consumes2 = (
-                        FOR c IN Consumes
-                        FILTER c._from == r._id
-                            FOR c2s IN State
-                            FILTER c2s._id == c._to
-                            RETURN {state: c2s._key, count: c.count}
-                    )
-                    LET produces2 = (
-                        FOR p IN Produces
-                        FILTER p._from == r._id
-                            FOR p2s IN State
-                            FILTER p2s._id == p._to
-                            RETURN {state: p2s._key, count: p.count}
-                    )
-                    RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes2}, {"rhs": produces2})
-                )
-                RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
+      FOR o IN Organization
+        FILTER o.name == ${org}
+        FOR cs IN CrossSection
+          FILTER cs.organization == o._id
+          FILTER cs._key == ${key}
+          FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+
+          LET references = (
+            FOR r, rs IN OUTBOUND cs References
+              RETURN HAS(rs, "comments") ? { id: r._key, comments: rs.comments } : r._key
+          )
+
+          LET reaction = FIRST(
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              LET consumes = (
+                FOR s, c IN OUTBOUND r Consumes
+                  RETURN {state: s._key, count: c.count}
+              )
+              LET produces = (
+                FOR s, p IN OUTBOUND r Produces
+                  RETURN {state: s._key, count: p.count}
+              )
+              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs": consumes}, {"rhs": produces})
+          )
+
+          RETURN { reaction, info: [MERGE(cs.info, { _key: cs._key, references })] }
       `);
   return await cursor.next();
 }

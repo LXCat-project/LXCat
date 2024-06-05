@@ -128,16 +128,21 @@ export async function insertStateTree(
     }
   } else if (state.type !== "simple") {
     if (Array.isArray(state.electronic)) {
+      const compound = await this.insertState(state);
+
       for (const electronic of state.electronic) {
         const elec_state = { ...state, electronic };
         const e_ret = await this.insertState(AnySpecies.parse(elec_state));
+
         if (e_ret.new) {
           await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
         }
+        if (e_ret.new || compound.new) {
+          await this.insertEdge("InCompound", e_ret.id, compound.id);
+        }
       }
 
-      // TODO: Link compound state to its substates.
-      ret_id = (await this.insertState(state)).id;
+      ret_id = compound.id;
     } else {
       // Copy electronic descriptor without vibrational description.
       const { vibrational, ...electronic } = state.electronic;
@@ -159,7 +164,9 @@ export async function insertStateTree(
           }
           ret_id = v_ret.id;
         } else if (Array.isArray(state.electronic.vibrational)) {
+          const compound = await this.insertState(state);
           const { vibrational, ...electronic } = state.electronic;
+
           for (const vib of vibrational) {
             const vib_state = {
               ...state,
@@ -169,10 +176,12 @@ export async function insertStateTree(
             if (v_ret.new) {
               await this.insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
             }
+            if (v_ret.new || compound.new) {
+              await this.insertEdge("InCompound", v_ret.id, compound.id);
+            }
           }
 
-          // TODO: Link compound state to its substates.
-          ret_id = (await this.insertState(state)).id;
+          ret_id = compound.id;
         } else {
           const { rotational, ...vibrational } = state.electronic.vibrational;
           const vib_state = {
@@ -187,6 +196,8 @@ export async function insertStateTree(
 
           if (state.electronic.vibrational.rotational) {
             if (Array.isArray(state.electronic.vibrational.rotational)) {
+              const compound = await this.insertState(state);
+
               for (const rot of state.electronic.vibrational.rotational) {
                 const rot_state = {
                   ...state,
@@ -209,10 +220,12 @@ export async function insertStateTree(
                     r_ret.id,
                   );
                 }
+                if (r_ret.new || compound.new) {
+                  await this.insertEdge("InCompound", r_ret.id, compound.id);
+                }
               }
 
-              // TODO: Link compound state to its substates.
-              ret_id = (await this.insertState(state)).id;
+              ret_id = compound.id;
             } else {
               const r_ret = await this.insertState(state);
               if (r_ret.new) {
@@ -229,7 +242,6 @@ export async function insertStateTree(
   return ret_id;
 }
 
-// TODO: Check what happens when adding a string instead of a 'Reference' object.
 export async function insertReferenceDict(
   this: LXCatDatabase,
   references: Record<string, Reference>,
@@ -237,7 +249,15 @@ export async function insertReferenceDict(
   const id_dict: Record<string, string> = {};
 
   for (const [id, reference] of Object.entries(references)) {
-    id_dict[id] = (await this.upsertDocument("Reference", reference)).id;
+    // TODO: Either ensure DOI is always there or add more machinery to compare
+    //       references.
+    const key = reference.DOI && await this.getReferenceKeyByDOI(reference.DOI);
+
+    if (key) {
+      id_dict[id] = `Reference/${key}`;
+    } else {
+      id_dict[id] = (await this.upsertDocument("Reference", reference)).id;
+    }
   }
 
   return id_dict;

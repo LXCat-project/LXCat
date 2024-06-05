@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
+import { EditedLTPDocument } from "@lxcat/schema";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -106,7 +106,7 @@ const EditRawCrossSectionSetPage: NextPage<Props> = ({
         (Please do not change identifiers, they are used to determine to update
         or create a nested item.)
       </p>
-      <Link href={`/author/scat-css`}>Back</Link>
+      <Link href={`/author/set`}>Back</Link>
     </Layout>
   );
 };

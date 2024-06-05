@@ -32,10 +32,10 @@ describe("State serialization", () => {
         particle: "Ar",
         charge: 0,
         summary: "Ar{*}",
-        latex: "\\mathrm{Ar}\\left(*\\right)",
+        latex: "\\mathrm{Ar}\\left(\\mathrm{*}\\right)",
         electronic: {
           summary: "*",
-          latex: "*",
+          latex: "\\mathrm{*}",
         },
       },
     ],

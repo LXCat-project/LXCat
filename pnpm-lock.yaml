@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -28,12 +32,6 @@ importers:
       '@citation-js/plugin-ris':
         specifier: ^0.7.11
         version: 0.7.11(@citation-js/core@0.7.11)
-      '@hookform/error-message':
-        specifier: ^2.0.1
-        version: 2.0.1(react-dom@18.3.1)(react-hook-form@7.51.5)(react@18.3.1)
-      '@hookform/resolvers':
-        specifier: ^3.4.2
-        version: 3.4.2(react-hook-form@7.51.5)
       '@lxcat/converter':
         specifier: workspace:^
         version: link:../packages/converter
@@ -43,6 +41,9 @@ importers:
       '@lxcat/schema':
         specifier: workspace:^
         version: link:../packages/schema
+      '@mantine/code-highlight':
+        specifier: ^7.10.1
+        version: 7.10.1(@mantine/core@7.10.1)(@mantine/hooks@7.10.1)(react-dom@18.3.1)(react@18.3.1)
       '@mantine/core':
         specifier: ^7.10.1
         version: 7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -124,9 +125,6 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
-      react-hook-form:
-        specifier: ^7.51.5
-        version: 7.51.5(react@18.3.1)
       react-latex-next:
         specifier: ^3.0.0
         version: 3.0.0(react-dom@18.3.1)(react@18.3.1)
@@ -2713,26 +2711,6 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: false
 
-  /@hookform/error-message@2.0.1(react-dom@18.3.1)(react-hook-form@7.51.5)(react@18.3.1):
-    resolution: {integrity: sha512-U410sAr92xgxT1idlu9WWOVjndxLdgPUHEB8Schr27C9eh7/xUnITWpCMF93s+lGiG++D4JnbSnrb5A21AdSNg==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-      react-hook-form: ^7.0.0
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-hook-form: 7.51.5(react@18.3.1)
-    dev: false
-
-  /@hookform/resolvers@3.4.2(react-hook-form@7.51.5):
-    resolution: {integrity: sha512-1m9uAVIO8wVf7VCDAGsuGA0t6Z3m6jVGAN50HkV9vYLl0yixKK/Z1lr01vaRvYCkIKGoy1noVRxMzQYb4y/j1Q==}
-    peerDependencies:
-      react-hook-form: ^7.0.0
-    dependencies:
-      react-hook-form: 7.51.5(react@18.3.1)
-    dev: false
-
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
@@ -3059,6 +3037,22 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@mantine/code-highlight@7.10.1(@mantine/core@7.10.1)(@mantine/hooks@7.10.1)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-ZeqBnd/i6CNF8avmjgYNqo9hKFnrzYoKV13OrKAHNRZk7vdbBGoSeVYF1vq+ChDBOZQfLOW+2naTi3VdzwLOhg==}
+    peerDependencies:
+      '@mantine/core': 7.10.1
+      '@mantine/hooks': 7.10.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@mantine/core': 7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@mantine/hooks': 7.10.1(react@18.3.1)
+      clsx: 2.1.1
+      highlight.js: 11.9.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
 
   /@mantine/core@7.10.1(@mantine/hooks@7.10.1)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-l9ypojKN3PjwO1CSLIsqxi7mA25+7w+xc71Q+JuCCREI0tuGwkZsKbIOpuTATIJOjPh8ycLiW7QxX1LYsRTq6w==}
@@ -11754,15 +11748,6 @@ packages:
       scheduler: 0.23.2
     dev: false
 
-  /react-hook-form@7.51.5(react@18.3.1):
-    resolution: {integrity: sha512-J2ILT5gWx1XUIJRETiA7M19iXHlG74+6O3KApzvqB/w8S5NQR7AbU8HVZrMALdmDgWpRPYiZJl0zx8Z4L2mP6Q==}
-    engines: {node: '>=12.22.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      react: 18.3.1
-    dev: false
-
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -14566,7 +14551,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

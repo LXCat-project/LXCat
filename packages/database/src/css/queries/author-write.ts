@@ -268,7 +268,7 @@ export async function updateDraftSet(
           // Make cross sections part of set by adding to IsPartOf collection
           await this.insertEdge(
             "IsPartOf",
-            `CrossSection/${cs.info[0]._key}`,
+            `CrossSection/${prevCSKey}`,
             `CrossSectionSet/${key}`,
           );
         } else {
@@ -314,44 +314,160 @@ export async function updateDraftSet(
 }
 
 export async function removeDraftUnchecked(this: LXCatDatabase, key: string) {
-  // Remove draft cross sections belonging to set, but skip sections which are in another set
+  const setId = `CrossSectionSet/${key}`;
+
   await this.db.query(aql`
-      FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
+    FOR css IN CrossSectionSet
+      FILTER css._key == ${key}
+      REMOVE css IN CrossSectionSet
+  `);
+  await this.db.query(aql`
+    FOR history IN CrossSectionSetHistory
+      FILTER history._from == ${setId}
+      REMOVE history IN CrossSectionSetHistory
+  `);
+  const touchedCSCursor = await this.db.query(aql`
+    FOR p IN IsPartOf
+      FILTER p._to == ${setId}
+      REMOVE p IN IsPartOf
+      RETURN OLD._from
+  `);
+  const touchedCS = await touchedCSCursor.all();
+
+  // Remove draft cross sections that belong to this set, but skip cross
+  // sections that are in another set. Also removes dangling
+  // `CrossSectionHistory`, `Reaction`, `Consumes`, `Produces`, `State`,
+  // `Reference`, and `References` entries.
+  const removedCSCursor = await this.db.query(aql`
+    FOR cs IN CrossSection
+      FILTER ${touchedCS} ANY == cs._id
+      FILTER cs.versionInfo.status == 'draft'
+      LET isInSet = FIRST(
         FOR p IN IsPartOf
-          FILTER p._to == css._id
-          FOR cs IN CrossSection
-            FILTER cs._id == p._from AND cs.versionInfo.status == 'draft'
-            LET nrOtherSets = LENGTH(
-              FOR p2 IN IsPartOf
-                FILTER cs._id == p2._from AND p2._to != css._id
-                RETURN 1
-            )
-            FILTER nrOtherSets == 0
-            REMOVE cs IN CrossSection
-    `);
-  // TODO also remove history of draft cross sections belonging to set,
-  // but skip cross sections which are in another set
+          FILTER p._from == cs._id
+          RETURN 1
+      )
+      FILTER isInSet == null
+      REMOVE cs IN CrossSection
+      RETURN {id: OLD._id, reaction: OLD.reaction}
+  `);
+  const removedCS = await removedCSCursor.all();
+
   await this.db.query(aql`
-      FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        FOR p IN IsPartOf
-          FILTER p._to == css._id
-          REMOVE p IN IsPartOf
-    `);
+    FOR history IN CrossSectionHistory
+      FILTER ${removedCS.map((rem) => rem.id)} ANY == history._from
+      REMOVE history IN CrossSectionHistory
+  `);
+
+  // Remove dangling `References` edges.
+  const refEdgeCursor = await this.db.query(aql`
+    FOR refs IN References
+      FILTER ${removedCS.map((rem) => rem.id)} ANY == refs._from
+      REMOVE refs IN References
+      RETURN DISTINCT OLD._to
+  `);
+  const touchedRefs = await refEdgeCursor.all();
+
+  // Remove dangling references.
   await this.db.query(aql`
-      FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        FOR history IN CrossSectionSetHistory
-          FILTER history._from == css._id
-          REMOVE history IN CrossSectionSetHistory
+    FOR ref IN Reference
+      FILTER ${touchedRefs} ANY == ref._id
+      LET hasCSRefs = FIRST(
+        FOR refs IN References
+          FILTER refs._to == ref._id
+          RETURN 1
+      )
+      LET hasSetRefs = FIRST(
+        FOR set IN CrossSectionSet
+          FILTER HAS(set, "publishedIn")
+          FILTER set.publishedIn == ref._id
+          RETURN 1
+      )
+      FILTER hasCSRefs == null AND hasSetRefs == null
+      REMOVE ref IN Reference
+  `);
+
+  const removedReactionsCursor = await this.db.query(aql`
+    FOR reac IN Reaction
+      FILTER ${removedCS.map((rem) => rem.reaction)} ANY == reac._id
+      // Test whether reaction is used elsewhere.
+      LET keepReaction = FIRST(
+        FOR csOther IN CrossSection
+          FILTER csOther.reaction == reac._id
+          RETURN 1
+      )
+      FILTER keepReaction == null
+      // Remove the reaction.
+      REMOVE reac IN Reaction
+      RETURN OLD._id
+  `);
+  const reactions = await removedReactionsCursor.all();
+
+  const consumedCursor = await this.db.query(aql`
+    FOR c IN Consumes
+      FILTER ${reactions} ANY == c._from
+      REMOVE c IN Consumes
+      RETURN OLD._to
+  `);
+  const consumed = await consumedCursor.all();
+
+  const producedCursor = await this.db.query(aql`
+    FOR p IN Produces
+      FILTER ${reactions} ANY == p._from
+      REMOVE p IN Produces
+      RETURN OLD._to
+  `);
+  const produced = await producedCursor.all();
+
+  let stateList = [...new Set(consumed.concat(produced))];
+
+  while (stateList.length != 0) {
+    const removedStatesCursor = await this.db.query(aql`
+      FOR s IN State
+        FILTER ${stateList} ANY == s._id
+        LET hasConsumes = FIRST(
+          FOR c IN Consumes
+            FILTER c._to == s._id
+            RETURN 1
+        )
+        LET hasProduces = FIRST(
+          FOR p IN Produces
+            FILTER p._to == s._id
+            RETURN 1
+        )
+        Let hasCompound = FIRST(
+          FOR ic IN InCompound
+            FILTER ic._from == s._id
+            RETURN 1
+        )
+        FILTER hasConsumes == null AND hasProduces == null AND hasCompound == null
+        REMOVE s IN State
+        RETURN s._id
     `);
-  await this.db.query(aql`
-      FOR css IN CrossSectionSet
-        FILTER css._key == ${key}
-        REMOVE css IN CrossSectionSet
-    `);
-  // TODO remove orphaned reactions, states, references
+    const removedStates = await removedStatesCursor.all();
+
+    // Get constituent states if state is a compound
+    const compoundPromise = this.db.query(aql`
+      FOR sub IN InCompound
+        FILTER ${removedStates} ANY == sub._to
+        REMOVE sub IN InCompound
+        RETURN DISTINCT sub._from
+    `).then((cursor) => cursor.all());
+
+    // Get parents of removed states
+    const parentPromise = this.db.query(aql`
+      FOR sub IN HasDirectSubstate
+        FILTER ${removedStates} ANY == sub._to
+        REMOVE sub IN HasDirectSubstate
+        RETURN DISTINCT sub._from
+    `).then((cursor) => cursor.all());
+
+    stateList = [
+      ...new Set(
+        (await Promise.all([parentPromise, compoundPromise])).flat(),
+      ),
+    ];
+  }
 }
 
 export async function retractSetUnchecked(
@@ -417,8 +533,11 @@ function isEqualProcess(
 ) {
   const newMappedCS = {
     reaction: mapReaction(stateLookup, newCS.reaction),
-    info: newCS.info.map((info) => ({
+    info: newCS.info.map((info, i) => ({
       ...info,
+      // We need to add the keys when comparing to prevCS, as prevCS info
+      // objects will always contain a key.
+      _key: prevCS.info[i]._key,
       references: mapReferences(referenceLookup, info.references),
     })),
   };
@@ -435,7 +554,11 @@ function isEqualProcess(
     reaction: mapReaction(prevStateLookup, prevCS.reaction),
     info: prevCS.info.map((info) => ({
       ...info,
-      references: info.references.map((r) => `Reference/${r}`),
+      references: info.references.map((r) =>
+        typeof r === "string"
+          ? `Reference/${r}`
+          : { ...r, id: `Reference/${r.id}` }
+      ),
     })),
   };
 
