@@ -1,0 +1,21 @@
+changelog:
+  categories:
+    - title: Features
+      labels:
+        - enhancement
+        - feature request
+    - title: Documentation updates
+      labels:
+        - documentation
+    - title: Bug fixes
+      labels:
+        - bug
+    - title: Dependency updates
+      labels:
+        - "dependencies: github actions"
+        - "dependencies: node"
+        - "dependencies: rust"
+    - title: Other changes
+      labels:
+        - "*"
+     
