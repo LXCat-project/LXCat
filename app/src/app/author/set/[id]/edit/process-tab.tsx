@@ -28,6 +28,7 @@ import { useMemo, useState } from "react";
 import Latex from "react-latex-next";
 import { CommentSection } from "./comment-section";
 import { LookupTable } from "./lookup-table";
+import { ParameterSection } from "./parameter-section";
 import classes from "./process-tab.module.css";
 import { ReactionBuilder } from "./reaction-builder";
 import { ReferenceSection } from "./reference-section";
@@ -149,6 +150,10 @@ const ProcessInfoItem = (
               }}
             />
           </Fieldset>
+          <ParameterSection
+            parameters={info.parameters}
+            setParameters={(parameters) => onChange({ ...info, parameters })}
+          />
         </Stack>
       </Accordion.Panel>
     </Accordion.Item>
