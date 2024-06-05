@@ -13,6 +13,11 @@ changelog:
     - title: Other changes
       labels:
         - "*"
+      exclude:
+        labels:
+          - "dependencies: github actions"
+          - "dependencies: node"
+          - "dependencies: rust"
     - title: Dependency updates
       labels:
         - "dependencies: github actions"
