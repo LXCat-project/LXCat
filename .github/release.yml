@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+changelog:
+  categories:
+    - title: Enhancements and new features
+      labels:
+        - enhancement
+        - feature request
+    - title: Documentation updates
+      labels:
+        - documentation
+    - title: Bug fixes
+      labels:
+        - bug
+    - title: Other changes
+      labels:
+        - "*"
+      exclude:
+        labels:
+          - "dependencies: github actions"
+          - "dependencies: node"
+          - "dependencies: rust"
+    - title: Dependency updates
+      labels:
+        - "dependencies: github actions"
+        - "dependencies: node"
+        - "dependencies: rust"
+     
