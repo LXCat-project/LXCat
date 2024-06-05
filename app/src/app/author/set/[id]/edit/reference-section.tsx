@@ -15,10 +15,13 @@ import {
   Stack,
   useCombobox,
 } from "@mantine/core";
-import { IconPlaylistAdd } from "@tabler/icons-react";
+import { IconChevronRight, IconPlaylistAdd } from "@tabler/icons-react";
+import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
+import { useState } from "react";
 import Latex from "react-latex-next";
 import { CommentSection } from "./comment-section";
+import classes from "./reference-section.module.css";
 
 type ReferenceButtonProps = {
   references: Record<string, string>;
@@ -90,46 +93,66 @@ export const ReferenceSection = (
     selected: Array<ReferenceRef<string>>;
     onChange: (references: Array<ReferenceRef<string>>) => MaybePromise<void>;
   },
-) => (
-  <Stack>
-    <DataTable
-      withTableBorder
-      borderRadius="sm"
-      records={selected.map(entry =>
-        typeof entry === "string"
-          ? { id: entry, reference: references[entry], comments: [] }
-          : { ...entry, reference: references[entry.id] }
-      )}
-      columns={[{
-        accessor: "reference",
-        title: "Name",
-        render: (record) => <Latex>{record.reference}</Latex>,
-      }]}
-      rowExpansion={{
-        content: ({ record, index }) => (
-          <Fieldset style={{ margin: 5 }} legend="Comments for this reference">
-            <CommentSection
-              comments={record.comments}
-              onChange={(comments) =>
-                onChange(selected.map((ref, curIdx) => {
-                  if (curIdx === index) {
-                    if (comments === undefined) {
-                      return record.id;
-                    }
-                    return { id: record.id, comments };
-                  }
+) => {
+  const [expandedRefs, setExpandedRefs] = useState<Array<string>>([]);
 
-                  return ref;
-                }))}
-            />
-          </Fieldset>
-        ),
-      }}
-    />
-    <ReferenceButton
-      references={references}
-      selected={selected}
-      onChange={onChange}
-    />
-  </Stack>
-);
+  return (
+    <Stack>
+      <DataTable
+        withTableBorder
+        borderRadius="sm"
+        records={selected.map(entry =>
+          typeof entry === "string"
+            ? { id: entry, reference: references[entry], comments: [] }
+            : { ...entry, reference: references[entry.id] }
+        )}
+        columns={[{
+          accessor: "reference",
+          title: "Name",
+          render: (record) => (
+            <Group gap="xs" wrap="nowrap">
+              <IconChevronRight
+                className={clsx(classes.expandIcon, {
+                  [classes.expandIconRotated]: expandedRefs.includes(record.id),
+                })}
+              />
+              <Latex>{record.reference}</Latex>
+            </Group>
+          ),
+        }]}
+        rowExpansion={{
+          expanded: {
+            recordIds: expandedRefs,
+            onRecordIdsChange: setExpandedRefs,
+          },
+          content: ({ record, index }) => (
+            <Fieldset
+              style={{ margin: 5 }}
+              legend="Comments for this reference"
+            >
+              <CommentSection
+                comments={record.comments}
+                onChange={(comments) =>
+                  onChange(selected.map((ref, curIdx) => {
+                    if (curIdx === index) {
+                      if (comments === undefined) {
+                        return record.id;
+                      }
+                      return { id: record.id, comments };
+                    }
+
+                    return ref;
+                  }))}
+              />
+            </Fieldset>
+          ),
+        }}
+      />
+      <ReferenceButton
+        references={references}
+        selected={selected}
+        onChange={onChange}
+      />
+    </Stack>
+  );
+};
