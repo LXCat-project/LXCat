@@ -5,6 +5,7 @@
 "use client";
 
 import { MaybePromise } from "@/app/api/util";
+import { ScientificInput } from "@/shared/scientific-input";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
@@ -141,6 +142,12 @@ const ProcessInfoItem = (
               onChange={(references) => onChange({ ...info, references })}
             />
           </Fieldset>
+          <ScientificInput
+            label="Energy loss (eV)"
+            value={info.threshold}
+            onChange={(threshold) =>
+              onChange({ ...info, threshold: threshold ?? 0 })}
+          />
           <Fieldset legend="Data">
             <ProcessInfoData
               data={info.data}
