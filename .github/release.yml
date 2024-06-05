@@ -1,6 +1,6 @@
 changelog:
   categories:
-    - title: Features
+    - title: Enhancements and new features
       labels:
         - enhancement
         - feature request
@@ -10,12 +10,12 @@ changelog:
     - title: Bug fixes
       labels:
         - bug
+    - title: Other changes
+      labels:
+        - "*"
     - title: Dependency updates
       labels:
         - "dependencies: github actions"
         - "dependencies: node"
         - "dependencies: rust"
-    - title: Other changes
-      labels:
-        - "*"
      
