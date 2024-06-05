@@ -5,16 +5,14 @@
 import { z, ZodType } from "zod";
 import { ProcessInfoBase } from "../process-info-base.js";
 import { CrossSectionData } from "./data-types.js";
+import { CrossSectionParameters } from "./parameters.js";
 
 export const CrossSectionInfo = <ReferenceType extends z.ZodTypeAny>(
   ReferenceType: ReferenceType,
 ) =>
   ProcessInfoBase("CrossSection", CrossSectionData, ReferenceType).merge(
     z.object({
-      parameters: z.object({
-        massRatio: z.number().positive().optional(),
-        statisticalWeightRatio: z.number().positive().optional(),
-      }).optional(),
+      parameters: CrossSectionParameters.optional(),
       // TODO: Should this be nonnegative, i.e. how do we treat reverse processes?
       threshold: z.number(),
     }),

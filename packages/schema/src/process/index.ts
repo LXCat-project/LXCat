@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export { CrossSectionInfo } from "./cross-section/cross-section.js";
+export { CrossSectionParameters } from "./cross-section/parameters.js";
 export { EditedProcess } from "./edited-process.js";
 export { NewProcess } from "./new-process.js";
 export { ProcessInfo } from "./process-info.js";
