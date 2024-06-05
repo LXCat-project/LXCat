@@ -41,7 +41,7 @@ const ReferenceButton = (
 
   const options = Object.entries(references).map(([key, ref]) => (
     <Combobox.Option value={key} key={key}>
-      <Group>
+      <Group wrap="nowrap">
         {selected.map(getRefKey).includes(key) && <CheckIcon size={12} />}
         <Latex>{ref}</Latex>
       </Group>
