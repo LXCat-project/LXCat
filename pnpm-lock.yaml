@@ -359,8 +359,8 @@ importers:
         version: 5.0.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.24.6
-        version: 7.24.6(@babel/core@7.24.7)
+        specifier: ^7.24.7
+        version: 7.24.7(@babel/core@7.24.7)
       '@babel/core':
         specifier: ^7.24.7
         version: 7.24.7
@@ -433,8 +433,8 @@ packages:
       zod: 3.23.6
     dev: false
 
-  /@babel/cli@7.24.6(@babel/core@7.24.7):
-    resolution: {integrity: sha512-Sm/YhG/0REw9SKByFHDf4hkk7PYsjcsOyZgHGz1nvab4tUTQ9N4XVv+ykK0Y+VCJ3OshA/7EDyxnwCd8NEP/mQ==}
+  /@babel/cli@7.24.7(@babel/core@7.24.7):
+    resolution: {integrity: sha512-8dfPprJgV4O14WTx+AQyEA+opgUKPrsIXX/MdL50J1n06EQJ6m1T+CdsJe0qEC0B/Xl85i+Un5KVAxd/PACX9A==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
