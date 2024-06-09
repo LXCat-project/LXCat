@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
-    "@citation-js/core": "^0.7.11",
+    "@citation-js/core": "^0.7.13",
     "@citation-js/plugin-bibtex": "^0.7.13",
     "@citation-js/plugin-csl": "^0.7.13",
     "@citation-js/plugin-doi": "^0.7.13",
