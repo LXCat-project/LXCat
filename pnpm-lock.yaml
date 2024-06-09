@@ -20,8 +20,8 @@ importers:
         specifier: ^0.7.12
         version: 0.7.12(@citation-js/core@0.7.11)
       '@citation-js/plugin-csl':
-        specifier: ^0.7.11
-        version: 0.7.11(@citation-js/core@0.7.11)
+        specifier: ^0.7.13
+        version: 0.7.13(@citation-js/core@0.7.11)
       '@citation-js/plugin-doi':
         specifier: ^0.7.11
         version: 0.7.11(@citation-js/core@0.7.11)
@@ -1658,8 +1658,8 @@ packages:
       moo: 0.5.2
     dev: false
 
-  /@citation-js/plugin-csl@0.7.11(@citation-js/core@0.7.11):
-    resolution: {integrity: sha512-4OGZ9wHZDfpgiPU2cOXWGuKt7P+ndGWAeLG95nOG+DXe5U+f9EEZTXfaM4C99x8Ri+g6JklR96A3kuYZxYLllg==}
+  /@citation-js/plugin-csl@0.7.13(@citation-js/core@0.7.11):
+    resolution: {integrity: sha512-u8H/eR1PCBbtDQhD9W97siXSGbtyCQLjeeKghlT6+ZzprShg/684+HoeLScxUlBTBp0y8Cu1ZtUwneY8UVnnkw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
