@@ -3,15 +3,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { parseCharge, parseChargeLatex } from "../common.js";
+import {
+  parseComposition,
+  parseCompositionLatex,
+} from "../composition/universal.js";
 import { StateSummary } from "../summary.js";
 import { AnyAtomSerializable } from "./any-atom.js";
 
 export const serializeAtom = (atom: AnyAtomSerializable): StateSummary => {
+  const compositionSummary = parseComposition(atom.composition);
+  const compositionLatex = parseCompositionLatex(atom.composition);
+
   const serialized: StateSummary = {
-    particle: atom.particle,
+    particle: compositionLatex,
     charge: atom.charge,
-    summary: `${atom.particle}${parseCharge(atom.charge)}`,
-    latex: `\\mathrm{${atom.particle}}${parseChargeLatex(atom.charge)}`,
+    summary: `${compositionSummary}${parseCharge(atom.charge)}`,
+    latex: `${compositionLatex}${parseChargeLatex(atom.charge)}`,
   };
   const electronic = atom.electronic;
 
