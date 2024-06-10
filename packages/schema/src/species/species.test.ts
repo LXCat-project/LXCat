@@ -12,7 +12,7 @@ describe("State serialization", () => {
   const testCases: TestCases = [
     [
       "Electron",
-      { type: "simple", particle: "e", charge: -1 },
+      { type: "simple", composition: "e", charge: -1 },
       {
         particle: "e",
         charge: -1,

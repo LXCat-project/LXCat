@@ -1326,9 +1326,16 @@
           "type": "string",
           "const": "simple"
         },
-        "particle": {
-          "type": "string",
-          "minLength": 1
+        "composition": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/Composition"
+            }
+          ]
         },
         "charge": {
           "type": "integer"
@@ -1336,7 +1343,7 @@
       },
       "required": [
         "type",
-        "particle",
+        "composition",
         "charge"
       ],
       "additionalProperties": false
@@ -2430,10 +2437,11 @@
       "type": "object",
       "properties": {
         "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+          "type": "string",
+          "minLength": 1
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "summary": {
           "type": "string",
