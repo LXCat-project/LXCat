@@ -92,7 +92,7 @@ export async function insertStateTree(
 
   const topLevelState: AnySpecies = {
     type: "simple",
-    particle: state.particle,
+    composition: state.composition,
     charge: state.charge,
   };
 

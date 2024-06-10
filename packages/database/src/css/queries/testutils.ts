@@ -59,17 +59,17 @@ export function sampleCrossSectionSet(): z.input<typeof NewLTPDocument> {
     states: {
       a: {
         type: "simple",
-        particle: "A",
+        composition: "A",
         charge: 0,
       },
       b: {
         type: "simple",
-        particle: "B",
+        composition: "B",
         charge: 1,
       },
       c: {
         type: "simple",
-        particle: "C",
+        composition: "C",
         charge: 2,
       },
     },
@@ -127,42 +127,42 @@ export const sampleSets4Search = async (db: LXCatTestDatabase) => {
   const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
-      particle: "e",
+      composition: "e",
       charge: -1,
     },
     H2: {
       type: "simple",
-      particle: "H2",
+      composition: "H2",
       charge: 0,
     },
     N2: {
       type: "simple",
-      particle: "N2",
+      composition: "N2",
       charge: 0,
     },
     Arp: {
       type: "simple",
-      particle: "Ar",
+      composition: "Ar",
       charge: 1,
     },
     Ar: {
       type: "simple",
-      particle: "Ar",
+      composition: "Ar",
       charge: 0,
     },
     "He{1S0}": {
-      particle: "He",
-      charge: 0,
       type: "AtomLS",
+      composition: [["He", 1]],
+      charge: 0,
       electronic: {
         config: [],
         term: { L: 0, S: 0, J: 0, P: 1 },
       },
     },
     "He{*}": {
-      particle: "He",
-      charge: 0,
       type: "unspecified",
+      composition: [["He", 1]],
+      charge: 0,
       electronic: "*",
     },
   };
@@ -288,42 +288,42 @@ export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
   const states: Record<string, AnySpecies> = {
     e: {
       type: "simple",
-      particle: "e",
+      composition: "e",
       charge: -1,
     },
     H2: {
       type: "simple",
-      particle: "H2",
+      composition: "H2",
       charge: 0,
     },
     N2: {
       type: "simple",
-      particle: "N2",
+      composition: "N2",
       charge: 0,
     },
     Arp: {
       type: "simple",
-      particle: "Ar",
+      composition: "Ar",
       charge: 1,
     },
     Ar: {
       type: "simple",
-      particle: "Ar",
+      composition: "Ar",
       charge: 0,
     },
     "He{1S0}": {
-      particle: "He",
-      charge: 0,
       type: "AtomLS",
+      composition: [["He", 1]],
+      charge: 0,
       electronic: {
         config: [],
         term: { L: 0, S: 0, J: 0, P: 1 },
       },
     },
     "He{*}": {
-      particle: "He",
-      charge: 0,
       type: "unspecified",
+      composition: [["He", 1]],
+      charge: 0,
       electronic: "*",
     },
   };
