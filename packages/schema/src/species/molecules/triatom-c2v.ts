@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { SimpleParticle } from "../composition/simple/particle.js";
+import { SpeciesBase } from "../composition/species-base.js";
+import { LTICComposition } from "../composition/triatom/ltic.js";
 import { makeMolecule } from "../generators.js";
 import { SpectroscopicElectronic } from "./components/electronic/spectroscopic.js";
 import { RotationalArray } from "./components/rotational/array.js";
@@ -10,7 +11,7 @@ import { LinearTriatomVibrational } from "./components/vibrational/linear-triato
 
 export const TriatomC2v = makeMolecule(
   "TriatomC2v",
-  SimpleParticle,
+  SpeciesBase(LTICComposition),
   SpectroscopicElectronic,
   LinearTriatomVibrational,
   RotationalArray(3),
