@@ -7,8 +7,13 @@ export const Composition = array(
 export type Composition = TypeOf<typeof Composition>;
 
 export const parseComposition = (composition: Composition): string =>
-  composition.map(([element, count]) => `${element}${count}`).join();
+  composition.map(([element, count]) =>
+    count === 1 ? `${element}` : `${element}${count}`
+  ).join("");
 
 export const parseCompositionLatex = (composition: Composition): string =>
-  composition.map(([element, count]) => `\\mathrm{${element}}_{${count}}`)
-    .join();
+  `\\mathrm{${
+    composition.map(([element, count]) =>
+      count === 1 ? element : `${element}_{${count}}`
+    ).join("")
+  }}`;

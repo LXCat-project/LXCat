@@ -11,6 +11,8 @@ const SummarizedComponent = z.object({
   latex: z.string().min(1),
 });
 
+// FIXME: Update this type definition to better fit the new chemical composition
+//        work.
 export const StateSummary = SimpleParticle.merge(SummarizedComponent).merge(
   z.object({
     electronic: OneOrMultiple(SummarizedComponent.merge(
