@@ -24,7 +24,7 @@ describe("State serialization", () => {
       "Argon star",
       {
         type: "unspecified",
-        particle: "Ar",
+        composition: [["Ar", 1]],
         charge: 0,
         electronic: "*",
       },
@@ -43,7 +43,7 @@ describe("State serialization", () => {
       "Helium LS ground",
       {
         type: "AtomLS",
-        particle: "He",
+        composition: [["He", 1]],
         charge: 0,
         electronic: { config: [], term: { L: 0, S: 0, J: 0, P: 1 } },
       },
@@ -58,9 +58,9 @@ describe("State serialization", () => {
     [
       "Argon J1L2",
       {
-        particle: "Ar",
-        charge: 0,
         type: "AtomJ1L2",
+        composition: [["Ar", 1]],
+        charge: 0,
         electronic: {
           config: {
             core: {
@@ -91,9 +91,9 @@ describe("State serialization", () => {
     [
       "Phosphorus ion LS1",
       {
-        particle: "P",
-        charge: 1,
         type: "AtomLS1",
+        composition: [["P", 1]],
+        charge: 1,
         electronic: {
           config: {
             core: {
@@ -124,9 +124,9 @@ describe("State serialization", () => {
     [
       "Helium compound",
       {
-        particle: "He",
-        charge: 0,
         type: "AtomLS",
+        composition: [["He", 1]],
+        charge: 0,
         electronic: [
           {
             config: [{ n: 2, l: 1, occupance: 1 }],
@@ -167,9 +167,9 @@ describe("State serialization", () => {
     [
       "N2 rotational",
       {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -202,9 +202,9 @@ describe("State serialization", () => {
     [
       "N2 rotational compound",
       {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -258,9 +258,9 @@ describe("State serialization", () => {
     [
       "CO electronic",
       {
-        particle: "CO",
-        charge: 0,
         type: "HeteronuclearDiatom",
+        composition: [["C", 1], ["O", 1]],
+        charge: 0,
         electronic: {
           energyId: "X",
           S: 0,
@@ -282,9 +282,9 @@ describe("State serialization", () => {
     [
       "CO2 vibrational compound",
       {
-        particle: "CO2",
-        charge: 0,
         type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
