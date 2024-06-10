@@ -6,14 +6,14 @@ import { discriminatedUnion, output } from "zod";
 import { AnyAtom, AnyAtomSerializable } from "./atoms/any-atom.js";
 import { serializeAtom } from "./atoms/serialize.js";
 import { isSerializableAtom } from "./atoms/type-guard.js";
-import { AnyParticle } from "./composition/any-particle.js";
-import { serializeSimpleParticle } from "./composition/simple/serialize.js";
 import {
   AnyMolecule,
   AnyMoleculeSerializable,
 } from "./molecules/any-molecule.js";
 import { serializeMolecule } from "./molecules/serialize.js";
 import { isSerializableMolecule } from "./molecules/type-guard.js";
+import { AnyParticle } from "./particles/any-particle.js";
+import { serializeAnyParticle } from "./particles/serialize.js";
 import { StateSummary } from "./summary.js";
 import { serializeUnspecified, Unspecified } from "./unspecified/index.js";
 
@@ -43,7 +43,7 @@ export const AnySpeciesSerializable = discriminatedUnion("type", [
           return serializeMolecule(state);
         }
 
-        return serializeSimpleParticle(state);
+        return serializeAnyParticle(state);
       },
     }),
   );
