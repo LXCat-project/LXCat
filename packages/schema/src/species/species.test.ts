@@ -29,7 +29,7 @@ describe("State serialization", () => {
         electronic: "*",
       },
       {
-        particle: "Ar",
+        particle: "\\mathrm{Ar}",
         charge: 0,
         summary: "Ar{*}",
         latex: "\\mathrm{Ar}\\left(\\mathrm{*}\\right)",
@@ -48,7 +48,7 @@ describe("State serialization", () => {
         electronic: { config: [], term: { L: 0, S: 0, J: 0, P: 1 } },
       },
       {
-        particle: "He",
+        particle: "\\mathrm{He}",
         charge: 0,
         summary: "He{^1S_0}",
         latex: "\\mathrm{He}\\left({}^{1}\\mathrm{S}_{0}\\right)",
@@ -76,7 +76,7 @@ describe("State serialization", () => {
         },
       },
       {
-        particle: "Ar",
+        particle: "\\mathrm{Ar}",
         charge: 0,
         summary: "Ar{3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2}",
         latex:
@@ -109,16 +109,16 @@ describe("State serialization", () => {
         },
       },
       {
+        particle: "\\mathrm{P}",
         charge: 1,
+        summary: "P^+{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
+        latex:
+          "\\mathrm{P}^+\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
         electronic: {
           latex:
             "3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}",
           summary: "3p{^2P^o}4f{^2F^o}F^2[5/2]_3",
         },
-        latex:
-          "\\mathrm{P}^+\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
-        particle: "P",
-        summary: "P^+{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
       },
     ],
     [
@@ -143,7 +143,11 @@ describe("State serialization", () => {
         ],
       },
       {
+        particle: "\\mathrm{He}",
         charge: 0,
+        summary: "He{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
+        latex:
+          "\\mathrm{He}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
         electronic: [
           {
             latex: "2p:{}^{3}\\mathrm{P}^o_{2}",
@@ -158,10 +162,6 @@ describe("State serialization", () => {
             summary: "2p:^3P^o_0",
           },
         ],
-        latex:
-          "\\mathrm{He}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
-        particle: "He",
-        summary: "He{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
       },
     ],
     [
@@ -180,7 +180,11 @@ describe("State serialization", () => {
         },
       },
       {
+        particle: "\\mathrm{N_{2}}",
         charge: 0,
+        summary: "N2{X^1S_g^+{0{0}}}",
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -193,10 +197,6 @@ describe("State serialization", () => {
             summary: "0",
           },
         },
-        latex:
-          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
-        particle: "N2",
-        summary: "N2{X^1S_g^+{0{0}}}",
       },
     ],
     [
@@ -218,7 +218,11 @@ describe("State serialization", () => {
         },
       },
       {
+        particle: "\\mathrm{N_{2}}",
         charge: 0,
+        summary: "N2{X^1S_g^+{0{1|2|3|4|5}}}",
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -249,10 +253,6 @@ describe("State serialization", () => {
             summary: "0",
           },
         },
-        latex:
-          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
-        particle: "N2",
-        summary: "N2{X^1S_g^+{0{1|2|3|4|5}}}",
       },
     ],
     [
@@ -269,14 +269,14 @@ describe("State serialization", () => {
         },
       },
       {
+        particle: "\\mathrm{CO}",
         charge: 0,
+        summary: "CO{X^1S^+}",
+        latex: "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma^+",
           summary: "X^1S^+",
         },
-        latex: "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
-        particle: "CO",
-        summary: "CO{X^1S^+}",
       },
     ],
     [
@@ -302,7 +302,11 @@ describe("State serialization", () => {
         },
       },
       {
+        particle: "\\mathrm{CO_{2}}",
         charge: 0,
+        summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
+        latex:
+          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(000|050|210|130|021|101\\right)\\right)",
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -333,16 +337,12 @@ describe("State serialization", () => {
             },
           ],
         },
-        latex:
-          "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(000|050|210|130|021|101\\right)\\right)",
-        particle: "CO2",
-        summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
       },
     ],
     [
       "H2O rotational",
       {
-        particle: "H2O",
+        composition: [["H", 2], ["O", 1]],
         charge: 0,
         type: "TriatomC2v",
         electronic: {
@@ -356,11 +356,11 @@ describe("State serialization", () => {
         },
       },
       {
-        particle: "H2O",
+        particle: "\\mathrm{H_{2}O}",
         charge: 0,
         summary: "H2O{X{000{000}}}",
         latex:
-          "\\mathrm{H2O}\\left(\\mathrm{X}\\left(000\\left(000\\right)\\right)\\right)",
+          "\\mathrm{H_{2}O}\\left(\\mathrm{X}\\left(000\\left(000\\right)\\right)\\right)",
         electronic: {
           summary: "X",
           latex: "\\mathrm{X}",
