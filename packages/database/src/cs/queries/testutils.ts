@@ -91,22 +91,22 @@ export function sampleStates(): Record<string, AnySpecies> {
   return {
     s1: {
       type: "simple",
-      particle: "A",
+      composition: "A",
       charge: 0,
     },
     s2: {
       type: "simple",
-      particle: "B",
+      composition: "B",
       charge: 1,
     },
     s3: {
       type: "simple",
-      particle: "C",
+      composition: "C",
       charge: 2,
     },
     s4: {
       type: "simple",
-      particle: "D",
+      composition: "D",
       charge: 3,
     },
   };
