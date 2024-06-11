@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { systemDb } from "@lxcat/database";
-import { expect, test } from "playwright-test-coverage";
 import { readFile } from "fs/promises";
+import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";
 
@@ -26,12 +25,12 @@ test.afterAll(async () => {
   await rootDb().truncateNonUserCollections();
 });
 
-test.describe("cross section index page with Uo selected", () => {
+test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
+      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
       .click();
   });
 
@@ -90,7 +89,7 @@ test.describe("cross section inspect page", () => {
     await page.goto("/scat-cs");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
+      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
       .click();
     await page.locator("text=Plot selection").click();
     await page.locator("text=I agree with the terms of use").click();
