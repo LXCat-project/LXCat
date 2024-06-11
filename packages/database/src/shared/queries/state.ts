@@ -46,7 +46,9 @@ function generateParticleFilter(
   stateVarName: string,
 ) {
   const stateVarAql = literal(stateVarName);
-  const filters = [aql`${stateVarAql}.detailed.particle == ${particle}`];
+  const filters = [
+    aql`${stateVarAql}.serialized.composition.summary == ${particle}`,
+  ];
   Object.entries(selection.charge).forEach(([charge, { electronic }]) => {
     const iCharge = parseInt(charge);
     filters.push(aql`${stateVarAql}.detailed.charge == ${iCharge}`);

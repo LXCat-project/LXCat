@@ -38,12 +38,12 @@ describe("giving draft set made with existing draft cross section", () => {
     const states: Record<string, AnySpecies> = {
       s1: {
         type: "simple",
-        particle: "A",
+        composition: "A",
         charge: 0,
       },
       s2: {
         type: "simple",
-        particle: "B",
+        composition: "B",
         charge: 1,
       },
     };
@@ -192,12 +192,12 @@ describe("giving draft set made with someone else's published cross section", ()
     const states: Record<string, AnySpecies> = {
       s1: {
         type: "simple",
-        particle: "A",
+        composition: "A",
         charge: 0,
       },
       s2: {
         type: "simple",
-        particle: "B",
+        composition: "B",
         charge: 1,
       },
     };
