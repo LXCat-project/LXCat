@@ -25,7 +25,7 @@
       "composition": "e",
       "charge": -1
     },
-    "UoV1": {
+    "N2V1": {
       "type": "HomonuclearDiatom",
       "composition": [["N", 2]],
       "charge": 0,
@@ -39,7 +39,7 @@
         }
       }
     },
-    "UoV2": {
+    "N2V2": {
       "type": "HomonuclearDiatom",
       "composition": [["N", 2]],
       "charge": 0,
@@ -64,7 +64,7 @@
           },
           {
             "count": 1,
-            "state": "UoV1"
+            "state": "N2V1"
           }
         ],
         "rhs": [
@@ -74,7 +74,7 @@
           },
           {
             "count": 1,
-            "state": "UoV2"
+            "state": "N2V2"
           }
         ],
         "typeTags": ["Electronic", "Vibrational"],
