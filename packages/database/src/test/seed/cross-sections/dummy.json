@@ -25,15 +25,15 @@
       "composition": "e",
       "charge": -1
     },
-    "Unobtainium": {
+    "N2": {
       "type": "simple",
-      "composition": "Uo",
+      "composition": [["N", 2]],
       "charge": 0
     },
-    "UnobtainiumCharged": {
+    "N2Charged": {
       "type": "simple",
-      "composition": "Uo",
-      "charge": -42
+      "composition": [["N", 2]],
+      "charge": 1
     }
   },
   "processes": [
@@ -46,13 +46,13 @@
           },
           {
             "count": 1,
-            "state": "Unobtainium"
+            "state": "N2"
           }
         ],
         "rhs": [
           {
             "count": 1,
-            "state": "UnobtainiumCharged"
+            "state": "N2Charged"
           }
         ],
         "reversible": false,
