@@ -12,7 +12,6 @@ import {
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { insertStateDict } from "../queries.js";
-import { State } from "../types/collections.js";
 import {
   ChoiceRow,
   generateStateChoicesAql,
@@ -40,10 +39,10 @@ const makeStateInputs = (states: Array<[string, AnySpecies]>) =>
 
 const sampleTwoParticlesTwoCharges = () =>
   makeStateInputs([
-    ["H2", { type: "simple", particle: "H2", charge: 0 }],
-    ["H2p", { type: "simple", particle: "H2", charge: 1 }],
-    ["N2", { type: "simple", particle: "N2", charge: 0 }],
-    ["N2p", { type: "simple", particle: "N2", charge: 1 }],
+    ["H2", { type: "simple", composition: [["H", 2]], charge: 0 }],
+    ["H2p", { type: "simple", composition: [["H", 2]], charge: 1 }],
+    ["N2", { type: "simple", composition: [["N", 2]], charge: 0 }],
+    ["N2p", { type: "simple", composition: [["N", 2]], charge: 1 }],
   ]);
 
 describe.skip("generateStateFilterAql()", () => {
@@ -124,13 +123,13 @@ describe.skip("generateStateFilterAql()", () => {
     beforeAll(async () => {
       const states = makeStateInputs([
         ["H2g", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: { energyId: "I", Lambda: 1, S: 0, parity: "g" },
         }],
         ["H2u", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: { energyId: "I", Lambda: 1, S: 0, parity: "u" },
@@ -190,7 +189,7 @@ describe.skip("generateStateFilterAql()", () => {
     beforeAll(async () => {
       const states = makeStateInputs([
         ["H2v0", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -202,7 +201,7 @@ describe.skip("generateStateFilterAql()", () => {
           },
         }],
         ["H2v2", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -277,7 +276,7 @@ describe.skip("generateStateFilterAql()", () => {
       const states = makeStateInputs(
         [
           ["H2J1", {
-            particle: "H2",
+            composition: [["H", 2]],
             charge: 0,
             type: "HomonuclearDiatom",
             electronic: {
@@ -294,7 +293,7 @@ describe.skip("generateStateFilterAql()", () => {
             },
           }],
           ["H2J3", {
-            particle: "H2",
+            composition: [["H", 2]],
             charge: 0,
             type: "HomonuclearDiatom",
             electronic: {
@@ -371,7 +370,7 @@ describe.skip("generateStateFilterAql()", () => {
     beforeAll(async () => {
       const states = makeStateInputs([
         ["H212", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: [
@@ -390,7 +389,7 @@ describe.skip("generateStateFilterAql()", () => {
           ],
         }],
         ["H234", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: [
@@ -441,7 +440,7 @@ describe.skip("generateStateFilterAql()", () => {
     beforeAll(async () => {
       const states = makeStateInputs([
         ["H2v12", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -460,7 +459,7 @@ describe.skip("generateStateFilterAql()", () => {
           },
         }],
         ["H2v34", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -544,7 +543,7 @@ describe.skip("generateStateFilterAql()", () => {
     beforeAll(async () => {
       const states = makeStateInputs([
         ["H2J12", {
-          particle: "H2",
+          composition: [["H", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -707,7 +706,7 @@ describe.skip("generateStateChoicesAql() + groupStateChoices()", () => {
       description: "2 with different rotational",
       states: makeStateInputs([
         ["N2a", {
-          particle: "N2",
+          composition: [["N", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -720,7 +719,7 @@ describe.skip("generateStateChoicesAql() + groupStateChoices()", () => {
           },
         }],
         ["N2b", {
-          particle: "N2",
+          composition: [["N", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {
@@ -757,7 +756,7 @@ describe.skip("generateStateChoicesAql() + groupStateChoices()", () => {
       description: "1 particle with 2 vibrational",
       states: makeStateInputs([
         ["CO2", {
-          particle: "CO2",
+          composition: [["C", 1], ["O", 2]],
           charge: 0,
           type: "LinearTriatomInversionCenter",
           electronic: {
@@ -800,7 +799,7 @@ describe.skip("generateStateChoicesAql() + groupStateChoices()", () => {
       description: "1 particle with 2 rotational",
       states: makeStateInputs([
         ["N2a", {
-          particle: "N2",
+          composition: [["N", 2]],
           charge: 0,
           type: "HomonuclearDiatom",
           electronic: {

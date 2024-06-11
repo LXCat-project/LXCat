@@ -335,7 +335,7 @@ describe(
       const set = sampleCrossSectionSet();
       set.states["compound"] = {
         type: "HeteronuclearDiatom",
-        particle: "M",
+        composition: [["C", 1], ["O", 1]],
         charge: 0,
         electronic: {
           energyId: "X",

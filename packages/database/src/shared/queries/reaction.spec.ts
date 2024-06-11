@@ -25,7 +25,7 @@ describe("given db with test user and organization", () => {
     beforeAll(async () => {
       const states: Record<string, AnySpecies> = {
         s1: {
-          particle: "A",
+          composition: "A",
           charge: 0,
           type: "simple",
         },

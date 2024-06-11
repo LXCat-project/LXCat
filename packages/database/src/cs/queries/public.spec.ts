@@ -59,12 +59,14 @@ describe("given 4 published cross sections in 2 sets", () => {
           "528": {
             detailed: {
               type: "simple",
-              particle: "A",
+              composition: "A",
               charge: 0,
             },
             serialized: {
-              particle: "A",
-              charge: 0,
+              composition: {
+                summary: "A",
+                latex: "\\mathrm{A}",
+              },
               summary: "A",
               latex: "\\mathrm{A}",
             },
@@ -72,12 +74,14 @@ describe("given 4 published cross sections in 2 sets", () => {
           "531": {
             detailed: {
               type: "simple",
-              particle: "B",
+              composition: "B",
               charge: 1,
             },
             serialized: {
-              particle: "B",
-              charge: 1,
+              composition: {
+                summary: "B^+",
+                latex: "\\mathrm{B}^+",
+              },
               summary: "B^+",
               latex: "\\mathrm{B}^+",
             },
@@ -85,12 +89,14 @@ describe("given 4 published cross sections in 2 sets", () => {
           "534": {
             detailed: {
               type: "simple",
-              particle: "C",
+              composition: "C",
               charge: 2,
             },
             serialized: {
-              particle: "C",
-              charge: 2,
+              composition: {
+                summary: "C^2+",
+                latex: "\\mathrm{C}^{2+}",
+              },
               summary: "C^2+",
               latex: "\\mathrm{C}^{2+}",
             },
@@ -332,12 +338,14 @@ describe("given 4 published cross sections in 2 sets", () => {
           "524": {
             detailed: {
               type: "simple",
-              particle: "A",
+              composition: "A",
               charge: 0,
             },
             serialized: {
-              particle: "A",
-              charge: 0,
+              composition: {
+                summary: "A",
+                latex: "\\mathrm{A}",
+              },
               summary: "A",
               latex: "\\mathrm{A}",
             },
@@ -345,12 +353,14 @@ describe("given 4 published cross sections in 2 sets", () => {
           "527": {
             detailed: {
               type: "simple",
-              particle: "B",
+              composition: "B",
               charge: 1,
             },
             serialized: {
-              particle: "B",
-              charge: 1,
+              composition: {
+                summary: "B^+",
+                latex: "\\mathrm{B}^+",
+              },
               summary: "B^+",
               latex: "\\mathrm{B}^+",
             },

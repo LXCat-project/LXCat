@@ -57,17 +57,17 @@ describe("given published cross section set where data of 1 published cross sect
       references: {},
       states: {
         a: {
-          particle: "A",
+          composition: "A",
           charge: 0,
           type: "simple",
         },
         b: {
-          particle: "B",
+          composition: "B",
           charge: 1,
           type: "simple",
         },
         c: {
-          particle: "C",
+          composition: "C",
           charge: 2,
           type: "simple",
         },
@@ -172,13 +172,15 @@ describe("given published cross section set where data of 1 published cross sect
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -190,13 +192,15 @@ describe("given published cross section set where data of 1 published cross sect
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -253,13 +257,15 @@ describe("given published cross section set where data of 1 published cross sect
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -271,13 +277,15 @@ describe("given published cross section set where data of 1 published cross sect
               count: 3,
               state: {
                 detailed: {
-                  particle: "C",
+                  composition: "C",
                   charge: 2,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "C",
-                  charge: 2,
+                  composition: {
+                    summary: "C^2+",
+                    latex: "\\mathrm{C}^{2+}",
+                  },
                   summary: "C^2+",
                   latex: "\\mathrm{C}^{2+}",
                 },
@@ -388,13 +396,15 @@ describe("given published cross section set where data of 1 published cross sect
                 count: 1,
                 state: {
                   detailed: {
-                    particle: "A",
+                    composition: "A",
                     charge: 0,
                     type: "simple",
                   },
                   serialized: {
-                    particle: "A",
-                    charge: 0,
+                    composition: {
+                      summary: "A",
+                      latex: "\\mathrm{A}",
+                    },
                     summary: "A",
                     latex: "\\mathrm{A}",
                   },
@@ -406,13 +416,15 @@ describe("given published cross section set where data of 1 published cross sect
                 count: 2,
                 state: {
                   detailed: {
-                    particle: "B",
+                    composition: "B",
                     charge: 1,
                     type: "simple",
                   },
                   serialized: {
-                    particle: "B",
-                    charge: 1,
+                    composition: {
+                      summary: "B^+",
+                      latex: "\\mathrm{B}^+",
+                    },
                     summary: "B^+",
                     latex: "\\mathrm{B}^+",
                   },
@@ -459,13 +471,15 @@ describe("given published cross section set where data of 1 published cross sect
                 count: 1,
                 state: {
                   detailed: {
-                    particle: "A",
+                    composition: "A",
                     charge: 0,
                     type: "simple",
                   },
                   serialized: {
-                    particle: "A",
-                    charge: 0,
+                    composition: {
+                      summary: "A",
+                      latex: "\\mathrm{A}",
+                    },
                     summary: "A",
                     latex: "\\mathrm{A}",
                   },
@@ -477,13 +491,15 @@ describe("given published cross section set where data of 1 published cross sect
                 count: 3,
                 state: {
                   detailed: {
-                    particle: "C",
+                    composition: "C",
                     charge: 2,
                     type: "simple",
                   },
                   serialized: {
-                    particle: "C",
-                    charge: 2,
+                    composition: {
+                      summary: "C^2+",
+                      latex: "\\mathrm{C}^{2+}",
+                    },
                     summary: "C^2+",
                     latex: "\\mathrm{C}^{2+}",
                   },
@@ -546,12 +562,12 @@ describe("given draft cross section set where its cross section data is altered"
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -638,13 +654,15 @@ describe("given draft cross section set where its cross section data is altered"
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -656,13 +674,15 @@ describe("given draft cross section set where its cross section data is altered"
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -738,12 +758,12 @@ describe("given draft cross section set where its cross section data is added la
     });
     draft.states = {
       a: {
-        particle: "A",
+        composition: "A",
         charge: 0,
         type: "simple",
       },
       b: {
-        particle: "B",
+        composition: "B",
         charge: 1,
         type: "simple",
       },
@@ -809,13 +829,15 @@ describe("given draft cross section set where its cross section data is added la
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -827,13 +849,15 @@ describe("given draft cross section set where its cross section data is added la
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -891,12 +915,12 @@ describe("given draft cross section set where its non cross section data is alte
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -980,13 +1004,15 @@ describe("given draft cross section set where its non cross section data is alte
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -998,13 +1024,15 @@ describe("given draft cross section set where its non cross section data is alte
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -1068,12 +1096,12 @@ describe("given draft cross section set where its cross section state is altered
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -1113,7 +1141,7 @@ describe("given draft cross section set where its cross section state is altered
       contributor: css1.contributor.name,
     });
     draft.states.c = {
-      particle: "C",
+      composition: "C",
       charge: 2,
       type: "simple",
     };
@@ -1141,13 +1169,15 @@ describe("given draft cross section set where its cross section state is altered
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -1159,13 +1189,15 @@ describe("given draft cross section set where its cross section state is altered
               count: 2,
               state: {
                 detailed: {
-                  particle: "C",
+                  composition: "C",
                   charge: 2,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "C",
-                  charge: 2,
+                  composition: {
+                    summary: "C^2+",
+                    latex: "\\mathrm{C}^{2+}",
+                  },
                   summary: "C^2+",
                   latex: "\\mathrm{C}^{2+}",
                 },
@@ -1223,12 +1255,12 @@ describe("given draft cross section set where a reference is added to a cross se
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -1295,13 +1327,15 @@ describe("given draft cross section set where a reference is added to a cross se
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -1313,13 +1347,15 @@ describe("given draft cross section set where a reference is added to a cross se
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -1388,12 +1424,12 @@ describe("given draft cross section set where a reference is replaced in a cross
         references: { r1 },
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -1457,13 +1493,15 @@ describe("given draft cross section set where a reference is replaced in a cross
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -1475,13 +1513,15 @@ describe("given draft cross section set where a reference is replaced in a cross
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -1557,7 +1597,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     //         {
     //           count: 1,
     //           state: {
-    //             particle: "A",
+    //             composition: "A",
     //             charge: 0,
     //             id: "A",
     //             latex: "\\mathrm{A}",
@@ -1568,7 +1608,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     //         {
     //           count: 2,
     //           state: {
-    //             particle: "B",
+    //             composition: "B",
     //             charge: 1,
     //             id: "B^+",
     //             latex: "\\mathrm{B^+}",
@@ -1610,12 +1650,12 @@ describe("given draft cross section set where a reference is extended in a cross
         references: { r1 },
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -1680,13 +1720,15 @@ describe("given draft cross section set where a reference is extended in a cross
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: 0,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: 0,
+                  composition: {
+                    summary: "A",
+                    latex: "\\mathrm{A}",
+                  },
                   summary: "A",
                   latex: "\\mathrm{A}",
                 },
@@ -1698,13 +1740,15 @@ describe("given draft cross section set where a reference is extended in a cross
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -1781,7 +1825,7 @@ describe("given draft cross section set where a reference is extended in a cross
     //           {
     //             count: 1,
     //             state: {
-    //               particle: "A",
+    //               composition: "A",
     //               charge: 0,
     //               id: "A",
     //               latex: "\\mathrm{A}",
@@ -1792,7 +1836,7 @@ describe("given draft cross section set where a reference is extended in a cross
     //           {
     //             count: 2,
     //             state: {
-    //               particle: "B",
+    //               composition: "B",
     //               charge: 1,
     //               id: "B^+",
     //               latex: "\\mathrm{B^+}",
@@ -2039,12 +2083,12 @@ describe("given draft cross section set where its charge in cross section is alt
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -2083,9 +2127,11 @@ describe("given draft cross section set where its charge in cross section is alt
       ...css1,
       contributor: css1.contributor.name,
     });
-    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
+    const stateA = Object.values(draft.states).find((s) =>
+      s.composition === "A"
+    );
     if (stateA === undefined) {
-      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+      throw Error(`Failed to find state with composition=A in ${keycss1}`);
     }
     stateA.charge = -2;
     keycss2 = await db.updateSet(
@@ -2106,13 +2152,15 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: -2,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: -2,
+                  composition: {
+                    summary: "A^2-",
+                    latex: "\\mathrm{A}^{2-}",
+                  },
                   summary: "A^2-",
                   latex: "\\mathrm{A}^{2-}",
                 },
@@ -2124,13 +2172,15 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -2181,7 +2231,7 @@ describe("given draft cross section set where its charge in cross section is alt
   beforeAll(async () => {
     await db.insertStateDict({
       a0: {
-        particle: "A",
+        composition: "A",
         charge: -13,
         type: "simple",
       },
@@ -2195,12 +2245,12 @@ describe("given draft cross section set where its charge in cross section is alt
         references: {},
         states: {
           a: {
-            particle: "A",
+            composition: "A",
             charge: 0,
             type: "simple",
           },
           b: {
-            particle: "B",
+            composition: "B",
             charge: 1,
             type: "simple",
           },
@@ -2239,9 +2289,11 @@ describe("given draft cross section set where its charge in cross section is alt
       ...css1,
       contributor: css1.contributor.name,
     });
-    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
+    const stateA = Object.values(draft.states).find((s) =>
+      s.composition === "A"
+    );
     if (stateA === undefined) {
-      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+      throw Error(`Failed to find state with composition=A in ${keycss1}`);
     }
     stateA.charge = -12;
     keycss2 = await db.updateSet(
@@ -2262,13 +2314,15 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
+                  composition: "A",
                   charge: -12,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "A",
-                  charge: -12,
+                  composition: {
+                    summary: "A^12-",
+                    latex: "\\mathrm{A}^{12-}",
+                  },
                   summary: "A^12-",
                   latex: "\\mathrm{A}^{12-}",
                 },
@@ -2280,13 +2334,15 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 2,
               state: {
                 detailed: {
-                  particle: "B",
+                  composition: "B",
                   charge: 1,
                   type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
+                  composition: {
+                    summary: "B^+",
+                    latex: "\\mathrm{B}^+",
+                  },
                   summary: "B^+",
                   latex: "\\mathrm{B}^+",
                 },
@@ -2339,52 +2395,60 @@ describe("given draft cross section set where its charge in cross section is alt
     const expected: Array<SerializedSpecies> = [
       {
         detailed: {
-          particle: "A",
+          composition: "A",
           charge: -13,
           type: "simple",
         },
         serialized: {
-          particle: "A",
-          charge: -13,
+          composition: {
+            summary: "A^13-",
+            latex: "\\mathrm{A}^{13-}",
+          },
           summary: "A^13-",
           latex: "\\mathrm{A}^{13-}",
         },
       },
       {
         detailed: {
-          particle: "A",
+          composition: "A",
           charge: 0,
           type: "simple",
         },
         serialized: {
-          particle: "A",
-          charge: 0,
+          composition: {
+            summary: "A",
+            latex: "\\mathrm{A}",
+          },
           summary: "A",
           latex: "\\mathrm{A}",
         },
       },
       {
         detailed: {
-          particle: "B",
+          composition: "B",
           charge: 1,
           type: "simple",
         },
         serialized: {
-          particle: "B",
-          charge: 1,
+          composition: {
+            summary: "B^+",
+            latex: "\\mathrm{B}^+",
+          },
           summary: "B^+",
           latex: "\\mathrm{B}^+",
         },
       },
       {
         detailed: {
-          particle: "A",
+          composition: "A",
           charge: -12,
           type: "simple",
         },
         serialized: {
-          particle: "A",
-          charge: -12,
+          composition: {
+            summary: "A^12-",
+            latex: "\\mathrm{A}^{12-}",
+          },
           summary: "A^12-",
           latex: "\\mathrm{A}^{12-}",
         },

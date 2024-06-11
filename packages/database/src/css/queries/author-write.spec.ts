@@ -245,22 +245,22 @@ describe("given filled ArangoDB container", () => {
           },
           states: {
             s1: {
-              particle: "A",
+              composition: "A",
               charge: 0,
               type: "simple",
             },
             s2: {
-              particle: "B",
+              composition: "B",
               charge: 1,
               type: "simple",
             },
             s3: {
-              particle: "C",
+              composition: "C",
               charge: 2,
               type: "simple",
             },
             s4: {
-              particle: "D",
+              composition: "D",
               charge: 3,
               type: "simple",
             },
@@ -328,7 +328,7 @@ describe("given filled ArangoDB container", () => {
           contributor: css1.contributor.name,
         });
         const stateA = Object.values(cssdraft.states).find(
-          (species) => species.particle === "A",
+          (species) => species.composition === "A",
         );
 
         if (stateA !== undefined) {
@@ -352,10 +352,10 @@ describe("given filled ArangoDB container", () => {
 
       it("draft set should have new id for state with particle A", () => {
         const oldStateEntry = Object.entries(css1.states).find(
-          ([, species]) => species.particle === "A",
+          ([, species]) => species.composition === "A",
         );
         const newStateEntry = Object.entries(css2.states).find(
-          ([, species]) => species.particle === "A",
+          ([, species]) => species.composition === "A",
         );
 
         expect(oldStateEntry![0]).not.toEqual(newStateEntry![0]);
@@ -378,7 +378,7 @@ describe("given filled ArangoDB container", () => {
             expect(info).toEqual(otherInfo);
           } else {
             const other = css2.processes.find(({ reaction }) =>
-              css2.states[reaction.lhs[0].state].particle === "A"
+              css2.states[reaction.lhs[0].state].composition === "A"
             )!;
 
             expect(process.info[0]._key).not.toEqual(other.info[0]._key);
