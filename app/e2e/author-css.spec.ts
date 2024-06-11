@@ -122,7 +122,7 @@ test.describe("/author/set/add", () => {
     await page.getByRole("button", { name: "+" }).click();
     await page.locator("span.mantine-Accordion-label").first().click();
     await page.getByLabel("Species definition").fill(
-      "{\"type\": \"simple\", \"particle\": \"Ar\", \"charge\": 0}",
+      "{\"type\": \"simple\", \"composition\": \"Ar\", \"charge\": 0}",
     );
     // Processes
     await page.getByRole("tab", { name: "Processes" }).click();
