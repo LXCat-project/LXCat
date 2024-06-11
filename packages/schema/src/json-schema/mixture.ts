@@ -18,6 +18,7 @@ import {
   AnySpecies,
   SerializedSpecies,
   StateSummary,
+  SummarizedComponent,
 } from "../species/index.js";
 import { VersionInfo } from "../version-info.js";
 
@@ -36,6 +37,7 @@ export const LTPMixtureJSONSchema = zodToJsonSchema(LTPMixture, {
     AtomComposition,
     AnySpecies,
     ...Object.fromEntries(AnySpecies.optionsMap),
+    SummarizedComponent,
     StateSummary,
     SerializedSpecies,
   },

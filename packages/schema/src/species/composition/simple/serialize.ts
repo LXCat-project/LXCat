@@ -8,9 +8,13 @@ import { SimpleParticle } from "./particle.js";
 
 export const serializeSimpleParticle = (
   state: SimpleParticle,
-): StateSummary => ({
-  particle: state.particle,
-  charge: state.charge,
-  summary: `${state.particle}${parseCharge(state.charge)}`,
-  latex: `\\mathrm{${state.particle}}${parseChargeLatex(state.charge)}`,
-});
+): StateSummary => {
+  const composition = {
+    summary: `${state.composition}${parseCharge(state.charge)}`,
+    latex: `\\mathrm{${state.composition}}${parseChargeLatex(state.charge)}`,
+  };
+  return ({
+    composition,
+    ...composition,
+  });
+};

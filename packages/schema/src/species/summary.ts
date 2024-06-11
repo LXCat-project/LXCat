@@ -2,28 +2,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { object, string, TypeOf } from "zod";
 import { OneOrMultiple } from "../common/util.js";
-import { SimpleParticle } from "./composition/simple/particle.js";
 
-const SummarizedComponent = z.object({
-  summary: z.string().min(1),
-  latex: z.string().min(1),
+export const SummarizedComponent = object({
+  summary: string().min(1),
+  latex: string().min(1),
 });
+export type SummarizedComponent = TypeOf<typeof SummarizedComponent>;
 
-// FIXME: Update this type definition to better fit the new chemical composition
-//        work.
-export const StateSummary = SimpleParticle.merge(SummarizedComponent).merge(
-  z.object({
-    electronic: OneOrMultiple(SummarizedComponent.merge(
-      z.object({
-        vibrational: OneOrMultiple(SummarizedComponent.merge(
-          z.object({
-            rotational: OneOrMultiple(SummarizedComponent).optional(),
-          }),
-        )).optional(),
-      }),
-    )).optional(),
-  }),
-);
-export type StateSummary = z.infer<typeof StateSummary>;
+export const StateSummary = SummarizedComponent.merge(object({
+  composition: SummarizedComponent,
+  electronic: OneOrMultiple(SummarizedComponent.merge(
+    object({
+      vibrational: OneOrMultiple(SummarizedComponent.merge(
+        object({
+          rotational: OneOrMultiple(SummarizedComponent).optional(),
+        }),
+      )).optional(),
+    }),
+  )).optional(),
+}));
+export type StateSummary = TypeOf<typeof StateSummary>;

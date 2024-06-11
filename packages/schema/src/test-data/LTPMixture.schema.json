@@ -2433,16 +2433,9 @@
       ],
       "additionalProperties": false
     },
-    "StateSummary": {
+    "SummarizedComponent": {
       "type": "object",
       "properties": {
-        "particle": {
-          "type": "string",
-          "minLength": 1
-        },
-        "charge": {
-          "type": "integer"
-        },
         "summary": {
           "type": "string",
           "minLength": 1
@@ -2450,6 +2443,25 @@
         "latex": {
           "type": "string",
           "minLength": 1
+        }
+      },
+      "required": [
+        "summary",
+        "latex"
+      ],
+      "additionalProperties": false
+    },
+    "StateSummary": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "$ref": "#/definitions/SummarizedComponent/properties/summary"
+        },
+        "latex": {
+          "$ref": "#/definitions/SummarizedComponent/properties/latex"
+        },
+        "composition": {
+          "$ref": "#/definitions/SummarizedComponent"
         },
         "electronic": {
           "anyOf": [
@@ -2457,10 +2469,10 @@
               "type": "object",
               "properties": {
                 "summary": {
-                  "$ref": "#/definitions/StateSummary/properties/summary"
+                  "$ref": "#/definitions/SummarizedComponent/properties/summary"
                 },
                 "latex": {
-                  "$ref": "#/definitions/StateSummary/properties/latex"
+                  "$ref": "#/definitions/SummarizedComponent/properties/latex"
                 },
                 "vibrational": {
                   "anyOf": [
@@ -2468,33 +2480,20 @@
                       "type": "object",
                       "properties": {
                         "summary": {
-                          "$ref": "#/definitions/StateSummary/properties/summary"
+                          "$ref": "#/definitions/SummarizedComponent/properties/summary"
                         },
                         "latex": {
-                          "$ref": "#/definitions/StateSummary/properties/latex"
+                          "$ref": "#/definitions/SummarizedComponent/properties/latex"
                         },
                         "rotational": {
                           "anyOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "summary": {
-                                  "$ref": "#/definitions/StateSummary/properties/summary"
-                                },
-                                "latex": {
-                                  "$ref": "#/definitions/StateSummary/properties/latex"
-                                }
-                              },
-                              "required": [
-                                "summary",
-                                "latex"
-                              ],
-                              "additionalProperties": false
+                              "$ref": "#/definitions/SummarizedComponent"
                             },
                             {
                               "type": "array",
                               "items": {
-                                "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0/properties/vibrational/anyOf/0/properties/rotational/anyOf/0"
+                                "$ref": "#/definitions/SummarizedComponent"
                               },
                               "minItems": 2
                             }
@@ -2534,10 +2533,9 @@
         }
       },
       "required": [
-        "particle",
-        "charge",
         "summary",
-        "latex"
+        "latex",
+        "composition"
       ],
       "additionalProperties": false
     },
