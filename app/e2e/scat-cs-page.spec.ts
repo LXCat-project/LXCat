@@ -15,7 +15,7 @@ const csTest = test.extend({
     await page.goto("/scat-cs");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{Uo}\")")
+      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
       .click();
 
     const row = page.getByRole("row", {
