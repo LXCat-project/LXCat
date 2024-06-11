@@ -10,7 +10,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ATTACHMENT
 CO2{X^1S_g^+{0,0,0}} -> CO{X^1S^+} + O^-{^2P^o_3/2}
  3.900000e0
-SPECIES: e / CO2 / CO / O
+SPECIES: e / CO2
 PROCESS: e + CO2{X^1S_g^+{0,0,0}} -> CO{X^1S^+} + O^-{^2P^o_3/2}, Attachment
 PARAM.:  E = 3.9 eV
 COMMENT: Test reference
