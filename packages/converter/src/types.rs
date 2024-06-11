@@ -68,9 +68,14 @@ pub struct Process {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct SummarizedComponent {
+    pub summary: String,
+    pub latex: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct SerializedState {
-    pub particle: String,
-    pub charge: i32,
+    pub composition: SummarizedComponent,
     pub summary: String,
     pub latex: String,
 }

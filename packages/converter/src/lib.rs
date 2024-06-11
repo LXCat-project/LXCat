@@ -21,8 +21,14 @@ fn get_particles<'a>(
     reaction
         .lhs
         .iter()
-        .chain(reaction.rhs.iter())
-        .map(|entry| state_map[entry.state.as_str()].serialized.particle.as_str())
+        .map(|entry| {
+            state_map[entry.state.as_str()]
+                .serialized
+                .composition
+                .summary
+                .as_str()
+        })
+        .map(simplify_electrons)
         .for_each(|particle| {
             if !particles.contains(&particle) {
                 particles.push(particle);
