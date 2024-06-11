@@ -2,23 +2,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { parseCharge, parseChargeLatex } from "../common.js";
-import {
-  parseComposition,
-  parseCompositionLatex,
-} from "../composition/universal.js";
+import { compositionSummary } from "../composition/universal.js";
 import { StateSummary } from "../summary.js";
 import { type Unspecified } from "./unspecified.js";
 
 export const serializeUnspecified = (state: Unspecified): StateSummary => {
-  const compositionSummary = parseComposition(state.composition);
-  const compositionLatex = parseCompositionLatex(state.composition);
+  const composition = compositionSummary(state.composition, state.charge);
 
   const serialized: StateSummary = {
-    particle: compositionLatex,
-    charge: state.charge,
-    summary: `${compositionSummary}${parseCharge(state.charge)}`,
-    latex: `${compositionLatex}${parseChargeLatex(state.charge)}`,
+    composition,
+    ...composition,
   };
   const latex = `\\mathrm{${state.electronic}}`;
 

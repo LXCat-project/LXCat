@@ -5,7 +5,7 @@
 import { number, object, output, string } from "zod";
 
 export const SimpleParticle = object({
-  particle: string().min(1),
+  composition: string().min(1),
   charge: number().int(),
 });
 export type SimpleParticle = output<typeof SimpleParticle>;
