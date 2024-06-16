@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -285,8 +289,8 @@ importers:
         specifier: ^20.14.2
         version: 20.14.2
       tsx:
-        specifier: ^4.15.1
-        version: 4.15.1
+        specifier: ^4.15.5
+        version: 4.15.5
 
   packages/database:
     dependencies:
@@ -340,8 +344,8 @@ importers:
         specifier: ^10.9.0
         version: 10.9.0
       tsx:
-        specifier: ^4.15.1
-        version: 4.15.1
+        specifier: ^4.15.5
+        version: 4.15.5
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -399,8 +403,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       tsx:
-        specifier: ^4.15.1
-        version: 4.15.1
+        specifier: ^4.15.5
+        version: 4.15.5
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -13506,8 +13510,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: true
 
-  /tsx@4.15.1:
-    resolution: {integrity: sha512-k/6h17jA1KfUR7SpcteOa880zGmF56s8gMIcSqUR5avyNFi9nlCEKpMiHLrzrqyARGr52A/JablmGey1DEWbCA==}
+  /tsx@4.15.5:
+    resolution: {integrity: sha512-iKi8jQ2VBmZ2kU/FkGkL2OSHBHsazsUzsdC/W/RwhKIEsIoZ1alCclZHP5jGfNHEaEWUJFM1GquzCf+4db3b0w==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
@@ -14627,7 +14631,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
