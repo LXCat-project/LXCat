@@ -42,8 +42,8 @@ importers:
         specifier: workspace:^
         version: link:../packages/schema
       '@mantine/code-highlight':
-        specifier: ^7.10.1
-        version: 7.10.1(@mantine/core@7.10.2)(@mantine/hooks@7.10.2)(react-dom@18.3.1)(react@18.3.1)
+        specifier: ^7.10.2
+        version: 7.10.2(@mantine/core@7.10.2)(@mantine/hooks@7.10.2)(react-dom@18.3.1)(react@18.3.1)
       '@mantine/core':
         specifier: ^7.10.2
         version: 7.10.2(@mantine/hooks@7.10.2)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -3084,11 +3084,11 @@ packages:
       - supports-color
     dev: true
 
-  /@mantine/code-highlight@7.10.1(@mantine/core@7.10.2)(@mantine/hooks@7.10.2)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-ZeqBnd/i6CNF8avmjgYNqo9hKFnrzYoKV13OrKAHNRZk7vdbBGoSeVYF1vq+ChDBOZQfLOW+2naTi3VdzwLOhg==}
+  /@mantine/code-highlight@7.10.2(@mantine/core@7.10.2)(@mantine/hooks@7.10.2)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-fzWUSr4Vj2s8y0k0l1FrtcBmYrOkP13lKzPbyYN76TSiACN8A5BimDQCGdd2V9CJgI4KTIPtD+F3Di3kBUPuSQ==}
     peerDependencies:
-      '@mantine/core': 7.10.1
-      '@mantine/hooks': 7.10.1
+      '@mantine/core': 7.10.2
+      '@mantine/hooks': 7.10.2
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
