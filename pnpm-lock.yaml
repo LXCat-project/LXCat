@@ -30,8 +30,8 @@ importers:
         specifier: ^0.7.13
         version: 0.7.13(@citation-js/core@0.7.14)
       '@citation-js/plugin-ris':
-        specifier: ^0.7.13
-        version: 0.7.13(@citation-js/core@0.7.14)
+        specifier: ^0.7.14
+        version: 0.7.14(@citation-js/core@0.7.14)
       '@lxcat/converter':
         specifier: workspace:^
         version: link:../packages/converter
@@ -1762,8 +1762,8 @@ packages:
       '@citation-js/date': 0.5.1
     dev: false
 
-  /@citation-js/plugin-ris@0.7.13(@citation-js/core@0.7.14):
-    resolution: {integrity: sha512-fEMQAwEdu+ySSX2nzclLDhS8u09xdkpchFIxREXvZYlBn+gOUpTx0Cm1TIFLVA832chBq8ff4EZ/CHpO6+/blQ==}
+  /@citation-js/plugin-ris@0.7.14(@citation-js/core@0.7.14):
+    resolution: {integrity: sha512-FZz1fa9dOrLAV/8NXgnqK1PfNKW/pOAXj1WDwoyGBrG+mbLtAwvTNhHDHGS5LvPoBbizqWkx8M8dYagke+FGOg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
