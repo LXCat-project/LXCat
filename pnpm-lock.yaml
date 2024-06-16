@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -20,8 +24,8 @@ importers:
         specifier: ^0.7.13
         version: 0.7.13(@citation-js/core@0.7.13)
       '@citation-js/plugin-csl':
-        specifier: ^0.7.13
-        version: 0.7.13(@citation-js/core@0.7.13)
+        specifier: ^0.7.14
+        version: 0.7.14(@citation-js/core@0.7.13)
       '@citation-js/plugin-doi':
         specifier: ^0.7.13
         version: 0.7.13(@citation-js/core@0.7.13)
@@ -1720,8 +1724,8 @@ packages:
       moo: 0.5.2
     dev: false
 
-  /@citation-js/plugin-csl@0.7.13(@citation-js/core@0.7.13):
-    resolution: {integrity: sha512-u8H/eR1PCBbtDQhD9W97siXSGbtyCQLjeeKghlT6+ZzprShg/684+HoeLScxUlBTBp0y8Cu1ZtUwneY8UVnnkw==}
+  /@citation-js/plugin-csl@0.7.14(@citation-js/core@0.7.13):
+    resolution: {integrity: sha512-7AKB8lMz1IqdtoE33NnWIpteLYMuSl3xqT+Cax7sQKwAIJEoq2HBmb43Ja8xQQ36nREAupQJv1V6XksIAmYnCg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
@@ -14627,7 +14631,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
