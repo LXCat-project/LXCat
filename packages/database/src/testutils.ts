@@ -8,6 +8,7 @@ import { Wait } from "testcontainers";
 import { PortWithOptionalBinding } from "testcontainers/build/utils/port.js";
 import { loadTestUserAndOrg } from "./auth/testutils.js";
 import { LXCatDatabase } from "./lxcat-database.js";
+import { setupCompositionCollections } from "./setup/composition.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupSharedCollections } from "./setup/shared.js";
 import { setupUserCollections } from "./setup/users.js";
@@ -43,9 +44,12 @@ export class LXCatTestDatabase extends LXCatDatabase {
   static async createTestInstance(system: Database, name: string) {
     const db = await system.createDatabase(name);
 
-    await setupUserCollections(db);
-    await setupSharedCollections(db);
-    await setupCrossSectionCollections(db);
+    await Promise.all([
+      setupUserCollections(db),
+      setupSharedCollections(db),
+      setupCompositionCollections(db),
+      setupCrossSectionCollections(db),
+    ]);
 
     return new LXCatTestDatabase(db);
   }

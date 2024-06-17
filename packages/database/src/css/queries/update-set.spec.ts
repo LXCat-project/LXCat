@@ -2389,7 +2389,12 @@ describe("given draft cross section set where its charge in cross section is alt
   it("should have 4 states: a0, a, a2, b=b2", async () => {
     const cursor = await db.getDB().query(aql`
       FOR s IN State
-        RETURN UNSET(s, ['_key', '_id' , '_rev'])
+        LET composition = FIRST(
+          FOR co IN Composition
+            FILTER s.detailed.composition == co._id
+            return co.definition
+        )
+        RETURN MERGE_RECURSIVE(UNSET(s, ['_key', '_id' , '_rev']), {detailed: {composition}})
     `);
     const states = await cursor.all();
     const expected: Array<SerializedSpecies> = [

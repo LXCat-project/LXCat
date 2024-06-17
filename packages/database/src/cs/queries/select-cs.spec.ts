@@ -631,24 +631,6 @@ describe("Selecting individual cross sections", () => {
               state: {
                 detailed: {
                   type: "simple",
-                  composition: "e",
-                  charge: -1,
-                },
-                serialized: {
-                  composition: {
-                    summary: "e^-",
-                    latex: "\\mathrm{e}^-",
-                  },
-                  summary: "e^-",
-                  latex: "\\mathrm{e}^-",
-                },
-              },
-              count: 1,
-            },
-            {
-              state: {
-                detailed: {
-                  type: "simple",
                   composition: "H2",
                   charge: 0,
                 },
@@ -659,6 +641,24 @@ describe("Selecting individual cross sections", () => {
                   },
                   summary: "H2",
                   latex: "\\mathrm{H2}",
+                },
+              },
+              count: 1,
+            },
+            {
+              state: {
+                detailed: {
+                  type: "simple",
+                  composition: "e",
+                  charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
                 },
               },
               count: 1,
