@@ -4,3 +4,4 @@
 
 export { Element } from "./element.js";
 export { Composition } from "./universal.js";
+export { uniqueElementsInComposition } from "./util.js";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { array, lazy, number, tuple, TypeOf, ZodType } from "zod";
 import { parseCharge, parseChargeLatex } from "../common.js";
 import { SummarizedComponent } from "../summary.js";
@@ -5,7 +9,7 @@ import { Element } from "./element.js";
 
 // Recursive types cannot be automatically inferred, see:
 // https://zod.dev/?id=recursive-types.
-type Composition = Array<[TypeOf<typeof Element> | Composition, number]>;
+export type Composition = Array<[TypeOf<typeof Element> | Composition, number]>;
 
 export const Composition: ZodType<Composition> = array(
   tuple([Element.or(lazy(() => Composition)), number().int().positive()]),

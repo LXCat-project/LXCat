@@ -1,4 +1,8 @@
-import { z } from "zod";
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { TypeOf, z } from "zod";
 
 // dprint-ignore
 export const Element = z.enum([
@@ -15,3 +19,4 @@ export const Element = z.enum([
   'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds',
   'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og'
 ]);
+export type Element = TypeOf<typeof Element>;

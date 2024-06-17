@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { SimpleParticle } from "../composition/simple/particle.js";
 import { serializeSimpleParticle } from "../composition/simple/serialize.js";
 import { compositionSummary } from "../composition/universal.js";
