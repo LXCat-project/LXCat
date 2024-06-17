@@ -97,6 +97,7 @@ import {
 } from "./css/queries/public.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupDatabase } from "./setup/db.js";
+import { setupElementCollections } from "./setup/elements.js";
 import { setupSharedCollections } from "./setup/shared.js";
 import { setupUserCollections } from "./setup/users.js";
 import {
@@ -150,9 +151,12 @@ export class LXCatDatabase {
       db = dbResult.value;
     }
 
-    await setupUserCollections(db);
-    await setupSharedCollections(db);
-    await setupCrossSectionCollections(db);
+    await Promise.all([
+      setupUserCollections(db),
+      setupSharedCollections(db),
+      setupElementCollections(db),
+      setupCrossSectionCollections(db),
+    ]);
 
     return ok(new this(db));
   }
