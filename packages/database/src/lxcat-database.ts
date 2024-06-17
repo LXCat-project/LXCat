@@ -95,12 +95,13 @@ import {
   stateChoices,
   tagChoices,
 } from "./css/queries/public.js";
+import { setupCompositionCollections } from "./setup/composition.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupDatabase } from "./setup/db.js";
-import { setupElementCollections } from "./setup/elements.js";
 import { setupSharedCollections } from "./setup/shared.js";
 import { setupUserCollections } from "./setup/users.js";
 import {
+  insertComposition,
   insertDocument,
   insertEdge,
   insertReactionWithDict,
@@ -154,7 +155,7 @@ export class LXCatDatabase {
     await Promise.all([
       setupUserCollections(db),
       setupSharedCollections(db),
-      setupElementCollections(db),
+      setupCompositionCollections(db),
       setupCrossSectionCollections(db),
     ]);
 
@@ -254,6 +255,7 @@ export class LXCatDatabase {
   public insertStateDict = insertStateDict;
   protected insertStateTree = insertStateTree;
   protected insertState = insertState;
+  protected insertComposition = insertComposition;
 
   public insertReferenceDict = insertReferenceDict;
 

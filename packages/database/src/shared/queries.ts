@@ -7,6 +7,7 @@ import { Reaction } from "@lxcat/schema/process";
 import {
   AnySpecies,
   AnySpeciesSerializable,
+  Composition,
   uniqueElementsInComposition,
 } from "@lxcat/schema/species";
 import { isAtom } from "@lxcat/schema/species/atoms";
@@ -73,22 +74,16 @@ export async function insertStateDict(
   return id_dict;
 }
 
-export async function insertState(
+export async function insertComposition(
   this: LXCatDatabase,
-  state: AnySpecies,
+  composition: Composition | string,
 ): Promise<{ id: string; new: boolean }> {
-  const dbState = {
-    detailed: state,
-    serialized: AnySpeciesSerializable.parse(state).serialize(),
-  };
+  const entry = await this.upsertDocument("Composition", {
+    definition: composition,
+  });
 
-  const entry = await this.upsertDocument("State", dbState);
-
-  // TODO: Split the current `State` collection into `State` and `Composition`,
-  //       where every `State` references a `Composition`, and the `Composition`
-  //       in turn references the individual elements.
-  if (entry.new && typeof state.composition !== "string") {
-    const elements = uniqueElementsInComposition(state.composition);
+  if (entry.new && typeof composition !== "string") {
+    const elements = uniqueElementsInComposition(composition);
 
     for (const element of elements) {
       await this.insertEdge("ContainsElement", entry.id, `Element/${element}`);
@@ -96,6 +91,20 @@ export async function insertState(
   }
 
   return entry;
+}
+
+export async function insertState(
+  this: LXCatDatabase,
+  state: AnySpecies,
+): Promise<{ id: string; new: boolean }> {
+  const composition = await this.insertComposition(state.composition);
+
+  const dbState = {
+    detailed: { ...state, composition: composition.id },
+    serialized: AnySpeciesSerializable.parse(state).serialize(),
+  };
+
+  return await this.upsertDocument("State", dbState);
 }
 
 /**

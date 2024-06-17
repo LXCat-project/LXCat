@@ -22,9 +22,14 @@ export async function getTopLevelSpecies(this: LXCatDatabase) {
           LIMIT 1
           RETURN 1
       ) == 1
+      LET composition = FIRST(
+        FOR c IN Composition
+          FILTER state.detailed.composition == c._id
+          return c.definition
+      )
       RETURN {
         _key: state._key, 
-        species: UNSET(state, ["_key", "_id", "_rev"]), 
+        species: MERGE_RECURSIVE(UNSET(state, ["_key", "_id", "_rev"]), {detailed: {composition}}), 
         hasChildren
       }
   `;
@@ -44,9 +49,14 @@ export async function getSpeciesChildren(this: LXCatDatabase, key: string) {
             LIMIT 1
             RETURN 1
         ) == 1
+        LET composition = FIRST(
+          FOR c IN Composition
+            FILTER child.detailed.composition == c._id
+            return c.definition
+        )
         RETURN {
           _key: child._key, 
-          species: UNSET(child, ["_key", "_id", "_rev"]), 
+          species: MERGE_RECURSIVE(UNSET(child, ["_key", "_id", "_rev"]), {detailed: {composition}}), 
           hasChildren
         }
   `;
