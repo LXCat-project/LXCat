@@ -37,14 +37,21 @@ export async function byId(this: LXCatDatabase, id: string) {
         FILTER r._id == cs.reaction
         LET consumes = (
           FOR c, e IN OUTBOUND r Consumes
-            RETURN {state: UNSET(c, ["_key", "_rev", "_id"]), count: e.count}
+            LET composition = FIRST(
+              FOR co IN Composition
+                FILTER c.detailed.composition == co._id
+                return co.definition
+            )
+            RETURN {state: MERGE_RECURSIVE(UNSET(c, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: e.count}
         )
         LET produces = (
-          FOR p IN Produces
-          FILTER p._from == r._id
-            FOR p2s IN State
-            FILTER p2s._id == p._to
-            RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
+          FOR p, e IN OUTBOUND r Produces
+            LET composition = FIRST(
+              FOR co IN Composition
+                FILTER p.detailed.composition == co._id
+                return co.definition
+            )
+            RETURN {state: MERGE_RECURSIVE(UNSET(p, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: e.count}
         )
         RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes}, {"rhs": produces})
     )
@@ -81,14 +88,24 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
               FILTER c._from == r._id
               FOR c2s IN State
                 FILTER c2s._id == c._to
-                RETURN {[c2s._key]: UNSET(c2s, ["_key", "_rev", "_id"])}
+                LET composition = FIRST(
+                  FOR co IN Composition
+                    FILTER c2s.detailed.composition == co._id
+                    return co.definition
+                )
+                RETURN {[c2s._key]: MERGE_RECURSIVE(UNSET(c2s, ["_key", "_rev", "_id"]), {detailed: {composition}})}
           )
           LET produces = (
             FOR p IN Produces
               FILTER p._from == r._id
               FOR p2s IN State
                 FILTER p2s._id == p._to
-                RETURN {[p2s._key]: UNSET(p2s, ["_key", "_rev", "_id"])}
+                LET composition = FIRST(
+                  FOR co IN Composition
+                    FILTER p2s.detailed.composition == co._id
+                    return co.definition
+                )
+                RETURN {[p2s._key]: MERGE_RECURSIVE(UNSET(p2s, ["_key", "_rev", "_id"]), {detailed: {composition}})}
           )
           RETURN MERGE(UNION(consumes, produces))
     )
@@ -166,11 +183,21 @@ export async function getCSHeadings(
           FILTER reaction._id == cs.reaction
           LET produces = (
             FOR state, stoich IN OUTBOUND reaction Produces
-		  	      RETURN {state: UNSET(state, ["_key", "_rev", "_id"]), count: stoich.count}
+              LET composition = FIRST(
+                FOR co IN Composition
+                  FILTER state.detailed.composition == co._id
+                  return co.definition
+              )
+		  	      RETURN {state: MERGE_RECURSIVE(UNSET(state, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: stoich.count}
           )
           LET consumes = (
             FOR state, stoich IN OUTBOUND reaction Consumes
-		  	      RETURN {state: UNSET(state, ["_key", "_rev", "_id"]), count: stoich.count}
+              LET composition = FIRST(
+                FOR co IN Composition
+                  FILTER state.detailed.composition == co._id
+                  return co.definition
+              )
+		  	      RETURN {state: MERGE_RECURSIVE(UNSET(state, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: stoich.count}
           )
 		      RETURN MERGE(
             UNSET(reaction, ["_key", "_rev", "_id"]), 

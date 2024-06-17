@@ -7,11 +7,14 @@ import { Database } from "arangojs";
 import { Unit } from "true-myth";
 import Result, { err, ok } from "true-myth/result";
 
-export const setupElementCollections = async (
+export const setupCompositionCollections = async (
   db: Database,
 ): Promise<Result<Unit, Error>> => {
-  const collection = await createElementCollection(db);
-  if (collection.isErr) return collection;
+  const compositionCollection = await createCompositionCollection(db);
+  if (compositionCollection.isErr) return compositionCollection;
+
+  const elementCollection = await createElementCollection(db);
+  if (elementCollection.isErr) return elementCollection;
 
   const edgeCol = await createContainsElementCollection(db);
   if (edgeCol.isErr) return edgeCol;
@@ -26,6 +29,21 @@ export const setupElementCollections = async (
     }
   }
 
+  return ok();
+};
+
+const createCompositionCollection = async (
+  db: Database,
+): Promise<Result<Unit, Error>> => {
+  const compositionCollection = db.collection("Composition");
+
+  try {
+    await compositionCollection.create();
+  } catch (error) {
+    return err(error as Error);
+  }
+
+  console.log("Composition collection created");
   return ok();
 };
 
