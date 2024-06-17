@@ -373,6 +373,22 @@ describe("State serialization", () => {
         },
       },
     ],
+    [
+      "Tetramethylsilane (recursive composition)",
+      {
+        type: "simple",
+        composition: [["Si", 1], [[["C", 1], ["H", 3]], 4]],
+        charge: 0,
+      },
+      {
+        summary: "Si(CH3)4",
+        latex: "\\mathrm{Si\\left(CH_{3}\\right)_{4}}",
+        composition: {
+          summary: "Si(CH3)4",
+          latex: "\\mathrm{Si\\left(CH_{3}\\right)_{4}}",
+        },
+      },
+    ],
   ];
 
   it.each(testCases)("%s", (_, input, summary) => {
