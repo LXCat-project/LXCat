@@ -19,7 +19,7 @@ export const setupElementCollections = async (
   for (const element of Element.options) {
     const result = await db.query(
       "INSERT @object INTO @@collection LET r = NEW return r._id",
-      { object: { symbol: element }, "@collection": "Element" },
+      { object: { _key: element }, "@collection": "Element" },
     );
     if (!result.hasNext) {
       return err(new Error(`Could not add element ${element}.`));
@@ -36,11 +36,6 @@ const createElementCollection = async (
 
   try {
     await elementCollection.create();
-    await elementCollection.ensureIndex({
-      type: "persistent",
-      fields: ["symbol"],
-      unique: true,
-    });
   } catch (error) {
     return err(error as Error);
   }
