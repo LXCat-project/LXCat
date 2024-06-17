@@ -1107,7 +1107,14 @@
         "maxItems": 2,
         "items": [
           {
-            "$ref": "#/definitions/Element"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Element"
+              },
+              {
+                "$ref": "#/definitions/Composition"
+              }
+            ]
           },
           {
             "type": "integer",
