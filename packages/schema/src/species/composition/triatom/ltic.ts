@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // NOTE: LTIC is short for LinearTriatomInversionCenter.
 
 import { literal, tuple, union } from "zod";

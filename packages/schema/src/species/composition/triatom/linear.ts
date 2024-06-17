@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { array, literal, tuple, union } from "zod";
 import { Element } from "../element.js";
 
