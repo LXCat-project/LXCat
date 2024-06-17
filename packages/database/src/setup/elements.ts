@@ -1,0 +1,62 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import { Element } from "@lxcat/schema/species";
+import { Database } from "arangojs";
+import { Unit } from "true-myth";
+import Result, { err, ok } from "true-myth/result";
+
+export const setupElementCollections = async (
+  db: Database,
+): Promise<Result<Unit, Error>> => {
+  const collection = await createElementCollection(db);
+  if (collection.isErr) return collection;
+
+  const edgeCol = await createContainsElementCollection(db);
+  if (edgeCol.isErr) return edgeCol;
+
+  for (const element of Element.options) {
+    const result = await db.query(
+      "INSERT @object INTO @@collection LET r = NEW return r._id",
+      { object: { symbol: element }, "@collection": "Element" },
+    );
+    if (!result.hasNext) {
+      return err(new Error(`Could not add element ${element}.`));
+    }
+  }
+
+  return ok();
+};
+
+const createElementCollection = async (
+  db: Database,
+): Promise<Result<Unit, Error>> => {
+  const elementCollection = db.collection("Element");
+
+  try {
+    await elementCollection.create();
+    await elementCollection.ensureIndex({
+      type: "persistent",
+      fields: ["symbol"],
+      unique: true,
+    });
+  } catch (error) {
+    return err(error as Error);
+  }
+
+  console.log("Element collection created");
+  return ok();
+};
+
+const createContainsElementCollection = async (
+  db: Database,
+): Promise<Result<Unit, Error>> => {
+  try {
+    await db.createEdgeCollection("ContainsElement");
+  } catch (error) {
+    return err(error as Error);
+  }
+
+  return ok();
+};

@@ -19,7 +19,6 @@ export async function insertDocument(
   );
 
   return result.next();
-  /* return result.toArray()[0]; */
 }
 
 export async function upsertDocument(
