@@ -4,7 +4,11 @@
 
 import { type Reference } from "@lxcat/schema";
 import { Reaction } from "@lxcat/schema/process";
-import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
+import {
+  AnySpecies,
+  AnySpeciesSerializable,
+  uniqueElementsInComposition,
+} from "@lxcat/schema/species";
 import { isAtom } from "@lxcat/schema/species/atoms";
 import { LXCatDatabase } from "../lxcat-database.js";
 
@@ -77,7 +81,21 @@ export async function insertState(
     detailed: state,
     serialized: AnySpeciesSerializable.parse(state).serialize(),
   };
-  return this.upsertDocument("State", dbState);
+
+  const entry = await this.upsertDocument("State", dbState);
+
+  // TODO: Split the current `State` collection into `State` and `Composition`,
+  //       where every `State` references a `Composition`, and the `Composition`
+  //       in turn references the individual elements.
+  if (entry.new && typeof state.composition !== "string") {
+    const elements = uniqueElementsInComposition(state.composition);
+
+    for (const element of elements) {
+      await this.insertEdge("ContainsElement", entry.id, `Element/${element}`);
+    }
+  }
+
+  return entry;
 }
 
 /**
