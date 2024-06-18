@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { enum as zEnum, number, object, optional, string } from "zod";
 import { makeComponent } from "../../../component.js";
 import { molecularOrbital, molecularOrbitalLatex } from "../../common.js";
 
-export const LinearElectronicDescriptor = z.object({
-  energyId: z.string(),
-  Lambda: z.number().multipleOf(0.5),
-  S: z.number().multipleOf(0.5),
-  reflection: z.optional(z.enum(["-", "+"])),
+export const LinearElectronicDescriptor = object({
+  energyId: string(),
+  Lambda: number().multipleOf(0.5),
+  S: number().multipleOf(0.5),
+  reflection: optional(zEnum(["-", "+"])),
 });
 
 export const LinearElectronic = makeComponent(

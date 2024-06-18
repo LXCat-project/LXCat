@@ -2,7 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, z, ZodTypeAny } from "zod";
+import {
+  array,
+  intersection,
+  object,
+  record,
+  string,
+  TypeOf,
+  ZodTypeAny,
+} from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
 import { ProcessInfo } from "./process/process-info.js";
@@ -16,15 +24,15 @@ import { versioned } from "./versioned.js";
 const MixtureBody = <ReferenceType extends ZodTypeAny>(
   Reference: ReferenceType,
 ) =>
-  z.object({
-    sets: z.record(versioned(SetHeader(Contributor))),
-    references: z.record(Reference),
-    states: z.record(SerializedSpecies),
-    processes: z.array(
+  object({
+    sets: record(versioned(SetHeader(Contributor))),
+    references: record(Reference),
+    states: record(SerializedSpecies),
+    processes: array(
       Process(
-        z.string(),
+        string(),
         versioned(
-          ProcessInfo(ReferenceRef(z.string().min(1))).merge(SetReference),
+          ProcessInfo(ReferenceRef(string().min(1))).merge(SetReference),
         ),
       ),
     ),
@@ -53,10 +61,10 @@ const MixtureBody = <ReferenceType extends ZodTypeAny>(
     );
 
 export const LTPMixture = MixtureBody(Reference);
-export type LTPMixture = output<typeof LTPMixture>;
+export type LTPMixture = TypeOf<typeof LTPMixture>;
 
-export const LTPMixtureWithReference = z.intersection(
+export const LTPMixtureWithReference = intersection(
   SelfReference,
-  MixtureBody(Reference.or(z.string().min(1))),
+  MixtureBody(Reference.or(string().min(1))),
 );
-export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;
+export type LTPMixtureWithReference = TypeOf<typeof LTPMixtureWithReference>;

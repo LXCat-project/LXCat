@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { string, z } from "zod";
+import { array, object, record, string, TypeOf } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { NewProcess } from "./process/new-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 
-const NewDocumentBody = z.object({
-  references: z.record(Reference),
-  states: z.record(AnySpecies),
-  processes: z.array(NewProcess(z.string(), ReferenceRef(z.string().min(1)))),
+const NewDocumentBody = object({
+  references: record(Reference),
+  states: record(AnySpecies),
+  processes: array(NewProcess(string(), ReferenceRef(string().min(1)))),
 });
 
 // Does not contain any _key or version information. Fresh datasets that are
@@ -41,4 +41,4 @@ export const NewLTPDocument = NewDocumentBody
     "Referenced reference key is missing in references record.",
   );
 
-export type NewLTPDocument = z.output<typeof NewLTPDocument>;
+export type NewLTPDocument = TypeOf<typeof NewLTPDocument>;

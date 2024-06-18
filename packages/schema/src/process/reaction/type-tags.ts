@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { enum as zEnum, TypeOf } from "zod";
 
-export const ReactionTypeTag = z.enum([
+export const ReactionTypeTag = zEnum([
   "Elastic",
   "Effective",
   "Electronic",
@@ -13,4 +13,4 @@ export const ReactionTypeTag = z.enum([
   "Attachment",
   "Ionization",
 ]);
-export type ReactionTypeTag = z.output<typeof ReactionTypeTag>;
+export type ReactionTypeTag = TypeOf<typeof ReactionTypeTag>;

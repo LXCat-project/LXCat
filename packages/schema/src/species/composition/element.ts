@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { TypeOf, z } from "zod";
+import { enum as zEnum, TypeOf } from "zod";
 
 // dprint-ignore
-export const Element = z.enum([
+export const Element = zEnum([
   'H',  'He', 'Li', 'Be', 'B',  'C',  'N',  'O',  'F',  'Ne',
   'Na', 'Mg', 'Al', 'Si', 'P',  'S',  'Cl', 'Ar', 'K',  'Ca',
   'Sc', 'Ti', 'V',  'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn',

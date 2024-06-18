@@ -2,18 +2,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { string, z } from "zod";
+import { array, object, record, string, TypeOf } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { partialKeyed } from "./partial-keyed.js";
 import { EditedProcess } from "./process/edited-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 
-const EditedDocumentBody = z.object({
-  references: z.record(Reference),
-  states: z.record(AnySpecies),
-  processes: z.array(
-    EditedProcess(z.string(), ReferenceRef(z.string().min(1))),
+const EditedDocumentBody = object({
+  references: record(Reference),
+  states: record(AnySpecies),
+  processes: array(
+    EditedProcess(string(), ReferenceRef(string().min(1))),
   ),
 });
 
@@ -45,4 +45,4 @@ export const EditedLTPDocument = partialKeyed(
     "Referenced reference key is missing in references record.",
   );
 
-export type EditedLTPDocument = z.output<typeof EditedLTPDocument>;
+export type EditedLTPDocument = TypeOf<typeof EditedLTPDocument>;

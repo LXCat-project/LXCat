@@ -2,33 +2,41 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z, ZodType } from "zod";
+import {
+  array,
+  boolean,
+  number,
+  object,
+  TypeOf,
+  ZodType,
+  ZodTypeAny,
+} from "zod";
 import { ReactionTypeTag } from "./type-tags.js";
 
-export const ReactionEntry = <StateType extends z.ZodTypeAny>(
+export const ReactionEntry = <StateType extends ZodTypeAny>(
   StateType: StateType,
-) => z.object({ count: z.number().int().positive(), state: StateType });
+) => object({ count: number().int().positive(), state: StateType });
 
-type ReactionEntryType<StateType extends z.ZodTypeAny> = ReturnType<
+type ReactionEntryType<StateType extends ZodTypeAny> = ReturnType<
   typeof ReactionEntry<StateType>
 >;
 
-export type ReactionEntry<StateType> = z.infer<
+export type ReactionEntry<StateType> = TypeOf<
   ReactionEntryType<ZodType<StateType>>
 >;
 
-export const Reaction = <StateType extends z.ZodTypeAny>(
+export const Reaction = <StateType extends ZodTypeAny>(
   StateType: StateType,
 ) =>
-  z.object({
-    lhs: z.array(ReactionEntry(StateType)),
-    rhs: z.array(ReactionEntry(StateType)),
-    reversible: z.boolean(),
-    typeTags: z.array(ReactionTypeTag),
+  object({
+    lhs: array(ReactionEntry(StateType)),
+    rhs: array(ReactionEntry(StateType)),
+    reversible: boolean(),
+    typeTags: array(ReactionTypeTag),
   });
 
-type ReactionType<StateType extends z.ZodTypeAny> = ReturnType<
+type ReactionType<StateType extends ZodTypeAny> = ReturnType<
   typeof Reaction<StateType>
 >;
 
-export type Reaction<StateType> = z.infer<ReactionType<ZodType<StateType>>>;
+export type Reaction<StateType> = TypeOf<ReactionType<ZodType<StateType>>>;

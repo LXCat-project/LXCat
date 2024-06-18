@@ -2,23 +2,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import {
+  array,
+  boolean,
+  enum as zEnum,
+  number,
+  object,
+  string,
+  union,
+} from "zod";
 
-export const CSLNameVariable = z
-  .object({
-    family: z.string().optional(),
-    given: z.string().optional(),
-    "dropping-particle": z.string().optional(),
-    "non-dropping-particle": z.string().optional(),
-    suffix: z.string().optional(),
-    "comma-suffix": z.union([z.string(), z.number(), z.boolean()]).optional(),
-    "static-ordering": z
-      .union([z.string(), z.number(), z.boolean()])
-      .optional(),
-    literal: z.string().optional(),
-    "parse-names": z.union([z.string(), z.number(), z.boolean()]).optional(),
-    ORCID: z.string().url().optional(),
-    "authenticated-orcid": z.boolean().optional(),
-    sequence: z.enum(["first", "additional"]).optional(),
-    affiliation: z.array(z.string().min(1)).optional(),
-  });
+export const CSLNameVariable = object({
+  family: string().optional(),
+  given: string().optional(),
+  "dropping-particle": string().optional(),
+  "non-dropping-particle": string().optional(),
+  suffix: string().optional(),
+  "comma-suffix": union([string(), number(), boolean()]).optional(),
+  "static-ordering": union([string(), number(), boolean()])
+    .optional(),
+  literal: string().optional(),
+  "parse-names": union([string(), number(), boolean()]).optional(),
+  ORCID: string().url().optional(),
+  "authenticated-orcid": boolean().optional(),
+  sequence: zEnum(["first", "additional"]).optional(),
+  affiliation: array(string().min(1)).optional(),
+});
