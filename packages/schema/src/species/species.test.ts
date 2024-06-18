@@ -4,11 +4,14 @@
 
 import { describe, expect, it } from "vitest";
 import { type AnySpecies, AnySpeciesSerializable } from "./any-species.js";
+import { Element } from "./composition/element.js";
+import { Composition } from "./composition/universal.js";
+import { uniqueElementsInComposition } from "./composition/util.js";
 import { type StateSummary } from "./summary.js";
 
-type TestCases = Array<[string, AnySpecies, StateSummary]>;
-
 describe("State serialization", () => {
+  type TestCases = Array<[string, AnySpecies, StateSummary]>;
+
   const testCases: TestCases = [
     [
       "Electron",
@@ -394,5 +397,23 @@ describe("State serialization", () => {
   it.each(testCases)("%s", (_, input, summary) => {
     const state = AnySpeciesSerializable.parse(input);
     expect(state.serialize()).toStrictEqual(summary);
+  });
+});
+
+describe("uniqueElementsInComposition", () => {
+  type TestCases = Array<[string, Composition, Array<Element>]>;
+
+  const testCases: TestCases = [
+    ["Ar", [["Ar", 1]], ["Ar"]],
+    ["H2", [["H", 2]], ["H"]],
+    ["CO", [["C", 1], ["O", 1]], ["C", "O"]],
+    ["CO2", [["C", 1], ["O", 2]], ["C", "O"]],
+    ["H2O", [["H", 2], ["O", 1]], ["H", "O"]],
+    ["Si(CH3)4", [["Si", 1], [[["C", 1], ["H", 3]], 4]], ["Si", "C", "H"]],
+  ];
+
+  it.each(testCases)("%s", (_, input, elements) => {
+    const predicted = uniqueElementsInComposition(input);
+    expect(predicted).toStrictEqual(elements);
   });
 });
