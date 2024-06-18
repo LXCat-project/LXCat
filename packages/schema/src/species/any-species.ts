@@ -35,7 +35,7 @@ export const AnySpeciesSerializable = discriminatedUnion("type", [
     (state) => ({
       ...state,
       serialize: (): StateSummary => {
-        if (state.type === "unspecified") {
+        if (state.type === "Unspecified") {
           return serializeUnspecified(state);
         } else if (isSerializableAtom(state)) {
           return serializeAtom(state);

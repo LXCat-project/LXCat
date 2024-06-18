@@ -126,7 +126,7 @@ export async function insertStateTree(
   const t_ret = await this.insertState(topLevelState);
   ret_id = t_ret.id;
 
-  if (state.type === "unspecified") {
+  if (state.type === "Unspecified") {
     const e_ret = await this.insertState(state);
     if (e_ret.new) {
       await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
