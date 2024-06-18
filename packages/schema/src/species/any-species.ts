@@ -12,13 +12,13 @@ import {
 } from "./molecules/any-molecule.js";
 import { serializeMolecule } from "./molecules/serialize.js";
 import { isSerializableMolecule } from "./molecules/type-guard.js";
-import { AnyParticle } from "./particles/any-particle.js";
-import { serializeAnyParticle } from "./particles/serialize.js";
+import { Electron } from "./particles/electron.js";
+import { serializeSimpleParticle } from "./particles/serialize.js";
 import { StateSummary } from "./summary.js";
 import { serializeUnspecified, Unspecified } from "./unspecified/index.js";
 
 export const AnySpecies = discriminatedUnion("type", [
-  AnyParticle,
+  Electron,
   ...AnyAtom.options,
   ...AnyMolecule.options,
   Unspecified,
@@ -26,7 +26,7 @@ export const AnySpecies = discriminatedUnion("type", [
 export type AnySpecies = output<typeof AnySpecies>;
 
 export const AnySpeciesSerializable = discriminatedUnion("type", [
-  AnyParticle,
+  Electron,
   ...AnyAtomSerializable.options,
   ...AnyMoleculeSerializable.options,
   Unspecified,
@@ -43,7 +43,7 @@ export const AnySpeciesSerializable = discriminatedUnion("type", [
           return serializeMolecule(state);
         }
 
-        return serializeAnyParticle(state);
+        return serializeSimpleParticle(state);
       },
     }),
   );
