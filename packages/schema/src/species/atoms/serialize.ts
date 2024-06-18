@@ -13,32 +13,35 @@ export const serializeAtom = (atom: AnyAtomSerializable): StateSummary => {
     composition,
     ...composition,
   };
-  const electronic = atom.electronic;
 
-  serialized.summary += "{";
-  serialized.latex += "\\left(";
+  if ("electronic" in atom) {
+    const electronic = atom.electronic;
 
-  if (Array.isArray(electronic)) {
-    serialized.electronic = electronic.map(({ summary, latex }) => ({
-      summary: summary(),
-      latex: latex(),
-    }));
+    serialized.summary += "{";
+    serialized.latex += "\\left(";
 
-    serialized.summary += serialized.electronic
-      .map(({ summary }) => summary).join("|");
-    serialized.latex += serialized.electronic
-      .map(({ latex }) => latex).join("|");
-  } else {
-    serialized.electronic = {
-      summary: electronic.summary(),
-      latex: electronic.latex(),
-    };
-    serialized.summary += serialized.electronic.summary;
-    serialized.latex += serialized.electronic.latex;
+    if (Array.isArray(electronic)) {
+      serialized.electronic = electronic.map(({ summary, latex }) => ({
+        summary: summary(),
+        latex: latex(),
+      }));
+
+      serialized.summary += serialized.electronic
+        .map(({ summary }) => summary).join("|");
+      serialized.latex += serialized.electronic
+        .map(({ latex }) => latex).join("|");
+    } else {
+      serialized.electronic = {
+        summary: electronic.summary(),
+        latex: electronic.latex(),
+      };
+      serialized.summary += serialized.electronic.summary;
+      serialized.latex += serialized.electronic.latex;
+    }
+
+    serialized.summary += "}";
+    serialized.latex += "\\right)";
   }
-
-  serialized.summary += "}";
-  serialized.latex += "\\right)";
 
   return serialized;
 };
