@@ -4,5 +4,7 @@
 
 export * from "./any-species.js";
 export * from "./composition/index.js";
+export { Electron } from "./particles/electron.js";
 export { SerializedSpecies } from "./serialized.js";
 export * from "./summary.js";
+export { Unspecified } from "./unspecified/index.js";

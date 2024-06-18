@@ -39,46 +39,48 @@ export const makeMoleculeSchema = <
     .merge(composition)
     .merge(
       object({
-        electronic: union([
-          intersection(
-            electronic,
-            object({
-              vibrational: optional(
-                union([
-                  intersection(
-                    vibrational,
-                    object({
-                      rotational: optional(
-                        union([
-                          rotational.describe("Singular"),
-                          array(
-                            union([
-                              rotational.describe("Singular"),
-                              string().describe("Unspecified"),
-                            ]),
-                          )
-                            .min(2)
-                            .describe("Compound"),
-                          string().describe("Unspecified"),
-                        ]),
-                      ),
-                    }),
-                  ).describe("Singular"),
-                  array(
-                    union([
-                      vibrational.describe("Singular"),
-                      string().describe("Unspecified"),
-                    ]),
-                  )
-                    .min(2)
-                    .describe("Compound"),
-                  string().describe("Unspecified"),
-                ]),
-              ),
-            }),
-          ).describe("Singular"),
-          array(electronic).min(2).describe("Compound"),
-        ]),
+        electronic: optional(
+          union([
+            intersection(
+              electronic,
+              object({
+                vibrational: optional(
+                  union([
+                    intersection(
+                      vibrational,
+                      object({
+                        rotational: optional(
+                          union([
+                            rotational.describe("Singular"),
+                            array(
+                              union([
+                                rotational.describe("Singular"),
+                                string().describe("Unspecified"),
+                              ]),
+                            )
+                              .min(2)
+                              .describe("Compound"),
+                            string().describe("Unspecified"),
+                          ]),
+                        ),
+                      }),
+                    ).describe("Singular"),
+                    array(
+                      union([
+                        vibrational.describe("Singular"),
+                        string().describe("Unspecified"),
+                      ]),
+                    )
+                      .min(2)
+                      .describe("Compound"),
+                    string().describe("Unspecified"),
+                  ]),
+                ),
+              }),
+            ).describe("Singular"),
+            array(electronic).min(2).describe("Compound"),
+          ]),
+        ),
       }),
     );
 

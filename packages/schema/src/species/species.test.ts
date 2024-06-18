@@ -379,7 +379,7 @@ describe("State serialization", () => {
     [
       "Tetramethylsilane (recursive composition)",
       {
-        type: "simple",
+        type: "Unspecified",
         composition: [["Si", 1], [[["C", 1], ["H", 3]], 4]],
         charge: 0,
       },

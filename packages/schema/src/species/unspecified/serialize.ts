@@ -15,16 +15,18 @@ export const serializeUnspecified = (state: Unspecified): StateSummary => {
   };
   const latex = `\\mathrm{${state.electronic}}`;
 
-  serialized.summary += "{";
-  serialized.latex += "\\left(";
+  if (state.electronic) {
+    serialized.summary += "{";
+    serialized.latex += "\\left(";
 
-  serialized.electronic = { summary: state.electronic, latex };
+    serialized.electronic = { summary: state.electronic, latex };
 
-  serialized.summary += state.electronic;
-  serialized.latex += latex;
+    serialized.summary += state.electronic;
+    serialized.latex += latex;
 
-  serialized.summary += "}";
-  serialized.latex += "\\right)";
+    serialized.summary += "}";
+    serialized.latex += "\\right)";
+  }
 
   return serialized;
 };
