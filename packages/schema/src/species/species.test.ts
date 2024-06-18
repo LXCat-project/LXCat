@@ -25,7 +25,7 @@ describe("State serialization", () => {
     [
       "Argon star",
       {
-        type: "unspecified",
+        type: "Unspecified",
         composition: [["Ar", 1]],
         charge: 0,
         electronic: "*",

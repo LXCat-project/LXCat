@@ -160,7 +160,7 @@ export const sampleSets4Search = async (db: LXCatTestDatabase) => {
       },
     },
     "He{*}": {
-      type: "unspecified",
+      type: "Unspecified",
       composition: [["He", 1]],
       charge: 0,
       electronic: "*",
@@ -321,7 +321,7 @@ export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
       },
     },
     "He{*}": {
-      type: "unspecified",
+      type: "Unspecified",
       composition: [["He", 1]],
       charge: 0,
       electronic: "*",
