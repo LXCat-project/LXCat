@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, it } from "vitest";
-import { type AnySpecies, AnySpeciesSerializable } from "./any-species.js";
+import { AnySpecies, AnySpeciesSerializable } from "./any-species.js";
 import { Element } from "./composition/element.js";
 import { Composition } from "./composition/universal.js";
 import { uniqueElementsInComposition } from "./composition/util.js";
@@ -415,5 +415,32 @@ describe("uniqueElementsInComposition", () => {
   it.each(testCases)("%s", (_, input, elements) => {
     const predicted = uniqueElementsInComposition(input);
     expect(predicted).toStrictEqual(elements);
+  });
+});
+
+describe("Invalid compositions that should error at runtime", () => {
+  type TestCases = Array<[string, AnySpecies, string]>;
+
+  const testCases: TestCases = [
+    [
+      "A heteronuclear diatom with equivalent constituents",
+      {
+        type: "HeteronuclearDiatom",
+        composition: [["H", 1], ["H", 1]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          S: 0,
+          Lambda: 0,
+          reflection: "+",
+        },
+      },
+      "Chemical composition of heteronuclear diatom contains equal elements H, use the \"HomonuclearDiatom\" species type instead.",
+    ],
+  ];
+
+  it.each(testCases)("%s", (_, input, message) => {
+    const result = AnySpecies.safeParse(input);
+    expect(result.error?.issues[0].message).toStrictEqual(message);
   });
 });
