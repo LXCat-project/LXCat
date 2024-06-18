@@ -9,8 +9,10 @@ import {
   AnySpeciesSerializable,
   Composition,
   uniqueElementsInComposition,
+  Unspecified,
 } from "@lxcat/schema/species";
-import { isAtom } from "@lxcat/schema/species/atoms";
+import { AnyAtom, isAtom } from "@lxcat/schema/species/atoms";
+import { AnyMolecule, isMolecule } from "@lxcat/schema/species/molecules";
 import { LXCatDatabase } from "../lxcat-database.js";
 
 export async function insertDocument(
@@ -107,35 +109,43 @@ export async function insertState(
   return await this.upsertDocument("State", dbState);
 }
 
-/**
- * Strategy: add states in a top down fashion.
- */
-export async function insertStateTree(
+export async function insertUnspecified(
   this: LXCatDatabase,
-  state: AnySpecies,
+  unspecified: Unspecified,
+): Promise<string> {
+  const { electronic: _, ...topLevelState } = unspecified;
+  let { id: retId } = await this.insertState(topLevelState);
+
+  if (unspecified.electronic) {
+    const ret = await this.insertState(unspecified);
+    if (ret.new) {
+      await this.insertEdge("HasDirectSubstate", retId, ret.id);
+    }
+    retId = ret.id;
+  }
+
+  return retId;
+}
+
+export async function insertAtom(
+  this: LXCatDatabase,
+  atom: AnyAtom,
 ): Promise<string> {
   let ret_id = "";
 
-  const topLevelState: AnySpecies = {
-    type: "simple",
-    composition: state.composition,
-    charge: state.charge,
-  };
+  if ("electronic" in atom) {
+    const topLevelState: AnyAtom = {
+      type: "Atom",
+      composition: atom.composition,
+      charge: atom.charge,
+    };
 
-  // FIXME: Link top level states to particle.
-  const t_ret = await this.insertState(topLevelState);
-  ret_id = t_ret.id;
+    const t_ret = await this.insertState(topLevelState);
+    ret_id = t_ret.id;
 
-  if (state.type === "Unspecified") {
-    const e_ret = await this.insertState(state);
-    if (e_ret.new) {
-      await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
-    }
-    ret_id = e_ret.id;
-  } else if (isAtom(state)) {
-    if (Array.isArray(state.electronic)) {
-      for (const electronic of state.electronic) {
-        const elec_state = { ...state, electronic };
+    if (Array.isArray(atom.electronic)) {
+      for (const electronic of atom.electronic) {
+        const elec_state = { ...atom, electronic };
         // FIXME: This parse should not be necessary.
         const e_ret = await this.insertState(AnySpecies.parse(elec_state));
         if (e_ret.new) {
@@ -144,15 +154,32 @@ export async function insertStateTree(
       }
 
       // TODO: Link compound state to its substates.
-      ret_id = (await this.insertState(state)).id;
+      ret_id = (await this.insertState(atom)).id;
     } else {
-      const e_ret = await this.insertState(state);
+      const e_ret = await this.insertState(atom);
       if (e_ret.new) {
         await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
       }
       ret_id = e_ret.id;
     }
-  } else if (state.type !== "simple") {
+  } else {
+    const t_ret = await this.insertState(atom);
+    ret_id = t_ret.id;
+  }
+
+  return ret_id;
+}
+
+export async function insertMolecule(
+  this: LXCatDatabase,
+  state: AnyMolecule,
+): Promise<string> {
+  const { electronic: _, ...topLevelState } = state;
+  const topRet = await this.insertState(topLevelState);
+
+  let retId = topRet.id;
+
+  if (state.electronic) {
     if (Array.isArray(state.electronic)) {
       const compound = await this.insertState(state);
 
@@ -161,14 +188,14 @@ export async function insertStateTree(
         const e_ret = await this.insertState(AnySpecies.parse(elec_state));
 
         if (e_ret.new) {
-          await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
+          await this.insertEdge("HasDirectSubstate", topRet.id, e_ret.id);
         }
         if (e_ret.new || compound.new) {
           await this.insertEdge("InCompound", e_ret.id, compound.id);
         }
       }
 
-      ret_id = compound.id;
+      retId = compound.id;
     } else {
       // Copy electronic descriptor without vibrational description.
       const { vibrational, ...electronic } = state.electronic;
@@ -178,9 +205,9 @@ export async function insertStateTree(
       };
       const e_ret = await this.insertState(AnySpecies.parse(ele_state));
       if (e_ret.new) {
-        await this.insertEdge("HasDirectSubstate", t_ret.id, e_ret.id);
+        await this.insertEdge("HasDirectSubstate", topRet.id, e_ret.id);
       }
-      ret_id = e_ret.id;
+      retId = e_ret.id;
 
       if (state.electronic.vibrational) {
         if (typeof (state.electronic.vibrational) === "string") {
@@ -188,7 +215,7 @@ export async function insertStateTree(
           if (v_ret.new) {
             await this.insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
-          ret_id = v_ret.id;
+          retId = v_ret.id;
         } else if (Array.isArray(state.electronic.vibrational)) {
           const compound = await this.insertState(state);
           const { vibrational, ...electronic } = state.electronic;
@@ -207,7 +234,7 @@ export async function insertStateTree(
             }
           }
 
-          ret_id = compound.id;
+          retId = compound.id;
         } else {
           const { rotational, ...vibrational } = state.electronic.vibrational;
           const vib_state = {
@@ -218,7 +245,7 @@ export async function insertStateTree(
           if (v_ret.new) {
             await this.insertEdge("HasDirectSubstate", e_ret.id, v_ret.id);
           }
-          ret_id = v_ret.id;
+          retId = v_ret.id;
 
           if (state.electronic.vibrational.rotational) {
             if (Array.isArray(state.electronic.vibrational.rotational)) {
@@ -251,13 +278,17 @@ export async function insertStateTree(
                 }
               }
 
-              ret_id = compound.id;
+              retId = compound.id;
             } else {
               const r_ret = await this.insertState(state);
               if (r_ret.new) {
-                await this.insertEdge("HasDirectSubstate", v_ret.id, r_ret.id);
+                await this.insertEdge(
+                  "HasDirectSubstate",
+                  v_ret.id,
+                  r_ret.id,
+                );
               }
-              ret_id = r_ret.id;
+              retId = r_ret.id;
             }
           }
         }
@@ -265,7 +296,26 @@ export async function insertStateTree(
     }
   }
 
-  return ret_id;
+  return retId;
+}
+
+/**
+ * Strategy: add states in a top down fashion.
+ */
+export async function insertStateTree(
+  this: LXCatDatabase,
+  state: AnySpecies,
+): Promise<string> {
+  if (state.type === "Unspecified") {
+    return this.insertUnspecified(state);
+  } else if (isAtom(state)) {
+    return this.insertAtom(state);
+  } else if (isMolecule(state)) {
+    return this.insertMolecule(state);
+  }
+
+  const ret = await this.insertState(state);
+  return ret.id;
 }
 
 export async function insertReferenceDict(

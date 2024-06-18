@@ -101,14 +101,17 @@ import { setupDatabase } from "./setup/db.js";
 import { setupSharedCollections } from "./setup/shared.js";
 import { setupUserCollections } from "./setup/users.js";
 import {
+  insertAtom,
   insertComposition,
   insertDocument,
   insertEdge,
+  insertMolecule,
   insertReactionWithDict,
   insertReferenceDict,
   insertState,
   insertStateDict,
   insertStateTree,
+  insertUnspecified,
   upsertDocument,
 } from "./shared/queries.js";
 import {
@@ -254,6 +257,9 @@ export class LXCatDatabase {
 
   public insertStateDict = insertStateDict;
   protected insertStateTree = insertStateTree;
+  protected insertUnspecified = insertUnspecified;
+  protected insertAtom = insertAtom;
+  protected insertMolecule = insertMolecule;
   protected insertState = insertState;
   protected insertComposition = insertComposition;
 
