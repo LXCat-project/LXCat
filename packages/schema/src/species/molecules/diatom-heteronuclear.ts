@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { TypeOf } from "zod";
 import { HeteronuclearDiatomComposition } from "../composition/diatom/heteronuclear.js";
 import { SpeciesBase } from "../composition/species-base.js";
 import { makeMolecule } from "../generators.js";
@@ -17,4 +17,4 @@ export const HeteronuclearDiatom = makeMolecule(
   DiatomicVibrational,
   Rotational,
 );
-export type HeteronuclearDiatom = z.input<typeof HeteronuclearDiatom.plain>;
+export type HeteronuclearDiatom = TypeOf<typeof HeteronuclearDiatom.plain>;

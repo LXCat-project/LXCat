@@ -2,7 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z, ZodTypeAny } from "zod";
+import {
+  array,
+  intersection,
+  object,
+  record,
+  string,
+  TypeOf,
+  ZodTypeAny,
+} from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
 import { VersionedProcess } from "./process/versioned-process.js";
@@ -16,11 +24,11 @@ const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
 ) =>
   versioned(
     SetHeader(Contributor).merge(
-      z.object({
-        references: z.record(Reference),
-        states: z.record(AnySpecies),
-        processes: z.array(
-          VersionedProcess(z.string(), ReferenceRef(z.string().min(1))),
+      object({
+        references: record(Reference),
+        states: record(AnySpecies),
+        processes: array(
+          VersionedProcess(string(), ReferenceRef(string().min(1))),
         ),
       }),
     ),
@@ -51,12 +59,12 @@ const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
 // Contains _key and version information. Datasets downloaded from LXCat use
 // this schema.
 export const VersionedLTPDocument = VersionedDocumentBody(Reference);
-export type VersionedLTPDocument = z.output<typeof VersionedLTPDocument>;
+export type VersionedLTPDocument = TypeOf<typeof VersionedLTPDocument>;
 
-export const VersionedLTPDocumentWithReference = z.intersection(
+export const VersionedLTPDocumentWithReference = intersection(
   SelfReference,
-  VersionedDocumentBody(Reference.or(z.string().min(1))),
+  VersionedDocumentBody(Reference.or(string().min(1))),
 );
-export type VersionedLTPDocumentWithReference = z.output<
+export type VersionedLTPDocumentWithReference = TypeOf<
   typeof VersionedLTPDocumentWithReference
 >;

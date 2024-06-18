@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { array, literal, number, object, string, TypeOf } from "zod";
 import { Pair } from "./util.js";
 
-export const LUT = z.object({
-  type: z.literal("LUT"),
-  labels: Pair(z.string().min(1)),
-  units: Pair(z.string().min(1)),
-  values: z.array(Pair(z.number())),
+export const LUT = object({
+  type: literal("LUT"),
+  labels: Pair(string().min(1)),
+  units: Pair(string().min(1)),
+  values: array(Pair(number())),
 });
-export type LUT = z.infer<typeof LUT>;
+export type LUT = TypeOf<typeof LUT>;
