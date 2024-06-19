@@ -66,8 +66,12 @@ describe("Species functionality", () => {
 
   it("getTopLevelSpecies()", async () => {
     const result: Array<AnySpecies> = [
-      { type: "simple", composition: [["N", 2]], charge: 0 },
-      { type: "simple", composition: [["C", 1], ["O", 2]], charge: 0 },
+      { type: "HomonuclearDiatom", composition: [["N", 2]], charge: 0 },
+      {
+        type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
+      },
     ];
     const species = await db.getTopLevelSpecies();
     expect(species.map(({ species }) => species.detailed)).toEqual(result);

@@ -21,7 +21,7 @@
   },
   "states": {
     "e": {
-      "type": "simple",
+      "type": "Electron",
       "composition": "e",
       "charge": -1
     },

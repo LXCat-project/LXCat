@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
+import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { KeyedSet } from "../public.js";
 import { deepClone } from "./deep-clone.js";
@@ -214,7 +215,7 @@ describe("given filled ArangoDB container", () => {
     });
   });
 
-  describe("given published set with 3 refs, 4 simple particle states and 2 processes", () => {
+  describe("given published set with 3 refs, 3 species and 2 processes", () => {
     let keycss1: string;
     let css1: VersionedLTPDocument;
 
@@ -244,32 +245,21 @@ describe("given filled ArangoDB container", () => {
             },
           },
           states: {
-            s1: {
-              composition: "A",
-              charge: 0,
-              type: "simple",
-            },
-            s2: {
-              composition: "B",
-              charge: 1,
-              type: "simple",
-            },
-            s3: {
-              composition: "C",
-              charge: 2,
-              type: "simple",
-            },
-            s4: {
-              composition: "D",
-              charge: 3,
-              type: "simple",
-            },
+            electron: testSpecies.electron.detailed,
+            argon: testSpecies.argon.detailed,
+            ion: testSpecies.ion.detailed,
           },
           processes: [
             {
               reaction: {
-                lhs: [{ count: 1, state: "s1" }],
-                rhs: [{ count: 1, state: "s2" }],
+                lhs: [
+                  { count: 1, state: "argon" },
+                  { count: 1, state: "electron" },
+                ],
+                rhs: [
+                  { count: 1, state: "argon" },
+                  { count: 1, state: "electron" },
+                ],
                 reversible: false,
                 typeTags: [],
               },
@@ -287,8 +277,14 @@ describe("given filled ArangoDB container", () => {
             },
             {
               reaction: {
-                lhs: [{ count: 1, state: "s3" }],
-                rhs: [{ count: 1, state: "s4" }],
+                lhs: [
+                  { count: 1, state: "argon" },
+                  { count: 1, state: "electron" },
+                ],
+                rhs: [
+                  { count: 1, state: "ion" },
+                  { count: 2, state: "electron" },
+                ],
                 reversible: false,
                 typeTags: [],
               },
@@ -318,7 +314,7 @@ describe("given filled ArangoDB container", () => {
       }
     });
 
-    describe("when draft is made with only change to charge of state with particle A", () => {
+    describe("when draft is made with only change to the charge of the ion", () => {
       let keycss2: string;
       let css2: VersionedLTPDocument;
 
@@ -327,15 +323,15 @@ describe("given filled ArangoDB container", () => {
           ...css1,
           contributor: css1.contributor.name,
         });
-        const stateA = Object.values(cssdraft.states).find(
-          (species) => species.composition === "A",
+        const ion = Object.values(cssdraft.states).find(
+          (species) => species.charge === 1,
         );
 
-        if (stateA !== undefined) {
-          stateA.charge = 99;
-        } else {
-          throw Error("Could not find state with particle A");
+        if (!ion) {
+          throw Error("Could not find species with charge +1");
         }
+
+        ion.charge = 99;
 
         keycss2 = await db.updateSet(keycss1, cssdraft, "First edit");
         const css = await db.getSetByOwnerAndId(
@@ -352,16 +348,16 @@ describe("given filled ArangoDB container", () => {
 
       it("draft set should have new id for state with particle A", () => {
         const oldStateEntry = Object.entries(css1.states).find(
-          ([, species]) => species.composition === "A",
+          ([, species]) => species.charge === 1,
         );
         const newStateEntry = Object.entries(css2.states).find(
-          ([, species]) => species.composition === "A",
+          ([, species]) => species.charge === 99,
         );
 
         expect(oldStateEntry![0]).not.toEqual(newStateEntry![0]);
       });
 
-      it("draft set should have a different id for the cross sections that involve particle A", () => {
+      it("draft set should have a different id for the cross sections that involve the ion", () => {
         for (const process of css1.processes) {
           const other = css2.processes.find(({ info }) =>
             info[0]._key === process.info[0]._key
@@ -378,7 +374,7 @@ describe("given filled ArangoDB container", () => {
             expect(info).toEqual(otherInfo);
           } else {
             const other = css2.processes.find(({ reaction }) =>
-              css2.states[reaction.lhs[0].state].composition === "A"
+              css2.states[reaction.rhs[0].state].charge === 99
             )!;
 
             expect(process.info[0]._key).not.toEqual(other.info[0]._key);

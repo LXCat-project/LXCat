@@ -9,6 +9,7 @@ import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
 import { systemDb } from "../../system-db.js";
+import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
   matches8601,
@@ -36,16 +37,8 @@ describe("giving draft set made with existing draft cross section", () => {
 
   beforeAll(async () => {
     const states: Record<string, AnySpecies> = {
-      s1: {
-        type: "simple",
-        composition: "A",
-        charge: 0,
-      },
-      s2: {
-        type: "simple",
-        composition: "B",
-        charge: 1,
-      },
+      electron: testSpecies.electron.detailed,
+      argon: testSpecies.argon.detailed,
     };
 
     const references: Record<string, Reference> = {
@@ -62,8 +55,14 @@ describe("giving draft set made with existing draft cross section", () => {
     const idcs1 = await db.createItem(
       {
         reaction: {
-          lhs: [{ count: 1, state: "s1" }],
-          rhs: [{ count: 1, state: "s2" }],
+          lhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
+          rhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
           reversible: false,
           typeTags: [],
         },
@@ -97,8 +96,14 @@ describe("giving draft set made with existing draft cross section", () => {
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "s1" }],
-              rhs: [{ count: 1, state: "s2" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -149,8 +154,14 @@ describe("giving draft set made with existing draft cross section", () => {
       processes: [
         {
           reaction: {
-            lhs: [{ count: 1, state: matchesId }],
-            rhs: [{ count: 1, state: matchesId }],
+            lhs: [
+              { count: 1, state: matchesId },
+              { count: 1, state: matchesId },
+            ],
+            rhs: [
+              { count: 1, state: matchesId },
+              { count: 1, state: matchesId },
+            ],
             reversible: false,
             typeTags: [],
           },
@@ -190,16 +201,8 @@ describe("giving draft set made with someone else's published cross section", ()
 
   beforeAll(async () => {
     const states: Record<string, AnySpecies> = {
-      s1: {
-        type: "simple",
-        composition: "A",
-        charge: 0,
-      },
-      s2: {
-        type: "simple",
-        composition: "B",
-        charge: 1,
-      },
+      electron: testSpecies.electron.detailed,
+      argon: testSpecies.argon.detailed,
     };
 
     const references: Record<string, Reference> = {
@@ -218,8 +221,14 @@ describe("giving draft set made with someone else's published cross section", ()
     const idcs1 = await db.createItem(
       {
         reaction: {
-          lhs: [{ count: 1, state: "s1" }],
-          rhs: [{ count: 1, state: "s2" }],
+          lhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
+          rhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
           reversible: false,
           typeTags: [],
         },
@@ -251,8 +260,14 @@ describe("giving draft set made with someone else's published cross section", ()
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "s1" }],
-              rhs: [{ count: 1, state: "s2" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
