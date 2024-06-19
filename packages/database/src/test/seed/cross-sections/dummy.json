@@ -21,17 +21,17 @@
   },
   "states": {
     "e": {
-      "type": "simple",
+      "type": "Electron",
       "composition": "e",
       "charge": -1
     },
     "N2": {
-      "type": "simple",
+      "type": "HomonuclearDiatom",
       "composition": [["N", 2]],
       "charge": 0
     },
     "N2Charged": {
-      "type": "simple",
+      "type": "HomonuclearDiatom",
       "composition": [["N", 2]],
       "charge": 1
     }

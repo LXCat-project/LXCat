@@ -90,23 +90,23 @@ export async function insertSampleStateIds(db: LXCatDatabase) {
 export function sampleStates(): Record<string, AnySpecies> {
   return {
     s1: {
-      type: "simple",
-      composition: "A",
+      type: "Atom",
+      composition: [["He", 1]],
       charge: 0,
     },
     s2: {
-      type: "simple",
-      composition: "B",
+      type: "Atom",
+      composition: [["Ne", 1]],
       charge: 1,
     },
     s3: {
-      type: "simple",
-      composition: "C",
+      type: "Atom",
+      composition: [["Ar", 1]],
       charge: 2,
     },
     s4: {
-      type: "simple",
-      composition: "D",
+      type: "Atom",
+      composition: [["Kr", 1]],
       charge: 3,
     },
   };

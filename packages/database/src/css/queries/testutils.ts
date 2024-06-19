@@ -57,27 +57,36 @@ export function sampleCrossSectionSet(): z.input<typeof NewLTPDocument> {
       },
     },
     states: {
-      a: {
-        type: "simple",
-        composition: "A",
+      argon: {
+        type: "Atom",
+        composition: [["Ar", 1]],
         charge: 0,
       },
-      b: {
-        type: "simple",
-        composition: "B",
-        charge: 1,
+      electron: {
+        type: "Electron",
+        composition: "e",
+        charge: -1,
       },
-      c: {
-        type: "simple",
-        composition: "C",
-        charge: 2,
+      ion: {
+        type: "AtomLS",
+        composition: [["Ar", 1]],
+        charge: 1,
+        electronic: {
+          config: [],
+          term: {
+            S: 0.5,
+            L: 1,
+            J: 1.5,
+            P: -1,
+          },
+        },
       },
     },
     processes: [
       {
         reaction: {
-          lhs: [{ count: 1, state: "a" }],
-          rhs: [{ count: 2, state: "b" }],
+          lhs: [{ count: 1, state: "argon" }],
+          rhs: [{ count: 1, state: "electron" }],
           reversible: false,
           typeTags: [],
         },
@@ -95,8 +104,8 @@ export function sampleCrossSectionSet(): z.input<typeof NewLTPDocument> {
       },
       {
         reaction: {
-          lhs: [{ count: 1, state: "a" }],
-          rhs: [{ count: 3, state: "c" }],
+          lhs: [{ count: 1, state: "ion" }],
+          rhs: [{ count: 2, state: "electron" }],
           reversible: false,
           typeTags: [],
         },
@@ -126,28 +135,28 @@ export const sampleEmail = "somename@example.com";
 export const sampleSets4Search = async (db: LXCatTestDatabase) => {
   const states: Record<string, AnySpecies> = {
     e: {
-      type: "simple",
+      type: "Electron",
       composition: "e",
       charge: -1,
     },
     H2: {
-      type: "simple",
-      composition: "H2",
+      type: "HomonuclearDiatom",
+      composition: [["H", 2]],
       charge: 0,
     },
     N2: {
-      type: "simple",
-      composition: "N2",
+      type: "HomonuclearDiatom",
+      composition: [["N", 2]],
       charge: 0,
     },
     Arp: {
-      type: "simple",
-      composition: "Ar",
+      type: "Atom",
+      composition: [["Ar", 1]],
       charge: 1,
     },
     Ar: {
-      type: "simple",
-      composition: "Ar",
+      type: "Atom",
+      composition: [["Ar", 1]],
       charge: 0,
     },
     "He{1S0}": {
@@ -287,28 +296,28 @@ export const sampleSets4SearchWithVersions = async (db: LXCatTestDatabase) => {
 
   const states: Record<string, AnySpecies> = {
     e: {
-      type: "simple",
+      type: "Electron",
       composition: "e",
       charge: -1,
     },
     H2: {
-      type: "simple",
-      composition: "H2",
+      type: "HomonuclearDiatom",
+      composition: [["H", 2]],
       charge: 0,
     },
     N2: {
-      type: "simple",
-      composition: "N2",
+      type: "HomonuclearDiatom",
+      composition: [["N", 2]],
       charge: 0,
     },
     Arp: {
-      type: "simple",
-      composition: "Ar",
+      type: "Atom",
+      composition: [["Ar", 1]],
       charge: 1,
     },
     Ar: {
-      type: "simple",
-      composition: "Ar",
+      type: "Atom",
+      composition: [["Ar", 1]],
       charge: 0,
     },
     "He{1S0}": {

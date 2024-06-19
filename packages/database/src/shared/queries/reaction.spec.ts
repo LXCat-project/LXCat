@@ -25,9 +25,9 @@ describe("given db with test user and organization", () => {
     beforeAll(async () => {
       const states: Record<string, AnySpecies> = {
         s1: {
-          composition: "A",
+          type: "Atom",
+          composition: [["Ar", 1]],
           charge: 0,
-          type: "simple",
         },
       };
       state_ids = await db.insertStateDict(states);

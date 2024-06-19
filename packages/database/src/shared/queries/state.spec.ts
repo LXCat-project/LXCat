@@ -39,17 +39,17 @@ const makeStateInputs = (states: Array<[string, AnySpecies]>) =>
 
 const sampleTwoParticlesTwoCharges = () =>
   makeStateInputs([
-    ["H2", { type: "simple", composition: [["H", 2]], charge: 0 }],
-    ["H2p", { type: "simple", composition: [["H", 2]], charge: 1 }],
-    ["N2", { type: "simple", composition: [["N", 2]], charge: 0 }],
-    ["N2p", { type: "simple", composition: [["N", 2]], charge: 1 }],
+    ["H2", { type: "HomonuclearDiatom", composition: [["H", 2]], charge: 0 }],
+    ["H2p", { type: "HomonuclearDiatom", composition: [["H", 2]], charge: 1 }],
+    ["N2", { type: "HomonuclearDiatom", composition: [["N", 2]], charge: 0 }],
+    ["N2p", { type: "HomonuclearDiatom", composition: [["N", 2]], charge: 1 }],
   ]);
 
 describe.skip("generateStateFilterAql()", () => {
   describe("2 particles with each 2 different charges", () => {
     beforeAll(async () => {
       const states = sampleTwoParticlesTwoCharges();
-      await insertStateDict(states);
+      await db.insertStateDict(states);
       return truncateCrossSectionSetCollections;
     });
 
