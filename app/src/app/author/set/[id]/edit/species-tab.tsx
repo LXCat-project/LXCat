@@ -106,7 +106,7 @@ export const SpeciesTab = (
               onChange({
                 ...species,
                 [id]: {
-                  type: "simple",
+                  type: "Atom",
                   composition: [["H", 1]],
                   charge: 0,
                 },
