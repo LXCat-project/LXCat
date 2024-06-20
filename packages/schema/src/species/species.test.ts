@@ -254,6 +254,88 @@ describe("State serialization", () => {
       },
     ],
     [
+      "N2 rotational unspecified",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          Lambda: 0,
+          S: 0,
+          parity: "g",
+          reflection: "+",
+          vibrational: {
+            v: 0,
+            rotational: "10+",
+          },
+        },
+      },
+      {
+        composition: {
+          latex: "\\mathrm{N_{2}}",
+          summary: "N2",
+        },
+        electronic: {
+          latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
+          summary: "X^1S_g^+",
+          vibrational: {
+            latex: "0",
+            rotational: {
+              latex: "10+",
+              summary: "10+",
+            },
+            summary: "0",
+          },
+        },
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(10+\\right)\\right)\\right)",
+        summary: "N2{X^1S_g^+{0{10+}}}",
+      },
+    ],
+    [
+      "N2 electronic compound",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
+        electronic: [
+          {
+            energyId: "A",
+            S: 1,
+            Lambda: 0,
+            parity: "u",
+            reflection: "+",
+          },
+          {
+            energyId: "B",
+            S: 1,
+            Lambda: 1,
+            parity: "g",
+          },
+        ],
+      },
+      {
+        composition: {
+          latex: "\\mathrm{N_{2}}",
+          summary: "N2",
+        },
+        electronic: [
+          {
+            latex: "\\mathrm{A}^{3}\\Sigma_\\mathrm{u}^+",
+            summary: "A^3S_u^+",
+          },
+          {
+            latex: "\\mathrm{B}^{3}\\Pi_\\mathrm{g}",
+            summary: "B^3P_g",
+          },
+        ],
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{A}^{3}\\Sigma_\\mathrm{u}^+|\\mathrm{B}^{3}\\Pi_\\mathrm{g}\\right)",
+        summary: "N2{A^3S_u^+|B^3P_g}",
+      },
+    ],
+    [
       "CO electronic",
       {
         type: "HeteronuclearDiatom",
@@ -339,6 +421,39 @@ describe("State serialization", () => {
             },
           ],
         },
+      },
+    ],
+    [
+      "CO2 vibrational unspecified",
+      {
+        type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          Lambda: 0,
+          S: 0,
+          parity: "g",
+          reflection: "+",
+          vibrational: "10+",
+        },
+      },
+      {
+        composition: {
+          latex: "\\mathrm{CO_{2}}",
+          summary: "CO2",
+        },
+        electronic: {
+          latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
+          summary: "X^1S_g^+",
+          vibrational: {
+            latex: "10+",
+            summary: "10+",
+          },
+        },
+        latex:
+          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(10+\\right)\\right)",
+        summary: "CO2{X^1S_g^+{10+}}",
       },
     ],
     [
