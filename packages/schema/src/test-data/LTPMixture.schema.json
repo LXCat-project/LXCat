@@ -1298,7 +1298,10 @@
     "AnySpecies": {
       "anyOf": [
         {
-          "$ref": "#/definitions/simple"
+          "$ref": "#/definitions/Electron"
+        },
+        {
+          "$ref": "#/definitions/Atom"
         },
         {
           "$ref": "#/definitions/AtomLS"
@@ -1322,27 +1325,42 @@
           "$ref": "#/definitions/TriatomC2v"
         },
         {
-          "$ref": "#/definitions/unspecified"
+          "$ref": "#/definitions/Unspecified"
         }
       ]
     },
-    "simple": {
+    "Electron": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "const": "simple"
+          "const": "Electron"
         },
         "composition": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "$ref": "#/definitions/Composition"
-            }
-          ]
+          "type": "string",
+          "const": "e"
+        },
+        "charge": {
+          "type": "number",
+          "const": -1
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge"
+      ],
+      "additionalProperties": false
+    },
+    "Atom": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Atom"
+        },
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
         },
         "charge": {
           "type": "integer"
@@ -1931,8 +1949,7 @@
       "required": [
         "type",
         "composition",
-        "charge",
-        "electronic"
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -2091,8 +2108,7 @@
       "required": [
         "type",
         "composition",
-        "charge",
-        "electronic"
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -2253,8 +2269,7 @@
       "required": [
         "type",
         "composition",
-        "charge",
-        "electronic"
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -2409,17 +2424,16 @@
       "required": [
         "type",
         "composition",
-        "charge",
-        "electronic"
+        "charge"
       ],
       "additionalProperties": false
     },
-    "unspecified": {
+    "Unspecified": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "const": "unspecified"
+          "const": "Unspecified"
         },
         "composition": {
           "$ref": "#/definitions/Composition"
@@ -2435,8 +2449,7 @@
       "required": [
         "type",
         "composition",
-        "charge",
-        "electronic"
+        "charge"
       ],
       "additionalProperties": false
     },
