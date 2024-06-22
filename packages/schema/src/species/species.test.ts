@@ -25,7 +25,7 @@ describe("State serialization", () => {
     [
       "Argon star",
       {
-        type: "Unspecified",
+        type: "AtomUnspecified",
         composition: [["Ar", 1]],
         charge: 0,
         electronic: "*",
@@ -156,6 +156,27 @@ describe("State serialization", () => {
             summary: "2p:^3P^o_0",
           },
         ],
+      },
+    ],
+    [
+      "H2 electronic unspecified",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["H", 2]],
+        charge: 0,
+        electronic: "*",
+      },
+      {
+        summary: "H2{*}",
+        latex: "\\mathrm{H_{2}}\\left(\\mathrm{*}\\right)",
+        composition: {
+          summary: "H2",
+          latex: "\\mathrm{H_{2}}",
+        },
+        electronic: {
+          summary: "*",
+          latex: "\\mathrm{*}",
+        },
       },
     ],
     [
