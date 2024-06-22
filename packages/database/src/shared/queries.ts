@@ -180,7 +180,13 @@ export async function insertMolecule(
   let retId = topRet.id;
 
   if (state.electronic) {
-    if (Array.isArray(state.electronic)) {
+    if (typeof state.electronic === "string") {
+      const e_ret = await this.insertState(state);
+      if (e_ret.new) {
+        await this.insertEdge("HasDirectSubstate", topRet.id, e_ret.id);
+      }
+      retId = e_ret.id;
+    } else if (Array.isArray(state.electronic)) {
       const compound = await this.insertState(state);
 
       for (const electronic of state.electronic) {
