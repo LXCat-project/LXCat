@@ -22,7 +22,15 @@ export const serializeMolecule = (
     serialized.summary += "{";
     serialized.latex += "\\left(";
 
-    if (Array.isArray(electronic)) {
+    if (typeof electronic === "string") {
+      serialized.electronic = {
+        summary: electronic,
+        latex: `\\mathrm{${electronic}}`,
+      };
+
+      serialized.summary += serialized.electronic.summary;
+      serialized.latex += serialized.electronic.latex;
+    } else if (Array.isArray(electronic)) {
       serialized.electronic = electronic.map(({ summary, latex }) => ({
         summary: summary(),
         latex: latex(),

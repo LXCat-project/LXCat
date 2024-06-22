@@ -79,6 +79,7 @@ export const makeMoleculeSchema = <
               }),
             ).describe("Singular"),
             array(electronic).min(2).describe("Compound"),
+            string().min(1).describe("Unspecified"),
           ]),
         ),
       }),
