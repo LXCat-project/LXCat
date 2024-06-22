@@ -1304,6 +1304,9 @@
           "$ref": "#/definitions/Atom"
         },
         {
+          "$ref": "#/definitions/AtomUnspecified"
+        },
+        {
           "$ref": "#/definitions/AtomLS"
         },
         {
@@ -1370,6 +1373,46 @@
         "type",
         "composition",
         "charge"
+      ],
+      "additionalProperties": false
+    },
+    "AtomUnspecified": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AtomUnspecified"
+        },
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
+        },
+        "charge": {
+          "type": "integer"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge",
+        "electronic"
       ],
       "additionalProperties": false
     },
@@ -1942,6 +1985,11 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -2101,6 +2149,11 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -2262,6 +2315,11 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -2417,6 +2475,11 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
