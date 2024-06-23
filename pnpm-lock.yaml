@@ -320,8 +320,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.9.0
-        version: 10.9.0
+        specifier: ^10.10.0
+        version: 10.10.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -3649,8 +3649,8 @@ packages:
     resolution: {integrity: sha512-Zv0Ofc64RCMpZ2F8CvsWAphrSjerx5hEErt/RMmE+W8r4E5l5Lizi+My9KbbZQ4NyAtrtrOX80OY1oROZrRzEA==}
     dev: false
 
-  /@testcontainers/arangodb@10.9.0:
-    resolution: {integrity: sha512-kXgCMbvOvs+ERp0q8XcaRB9aGZ86KTWIcnXq/E2WAQHoTOKjxhaQybXByi3hqKzVujpvwuYgQCiZ4yjkG8yKmw==}
+  /@testcontainers/arangodb@10.10.0:
+    resolution: {integrity: sha512-tUMTGiWkcRxqo/fvIea1fDT54QDZksguKfm/m/Cp5XITRHMLuzKOlz+hSRokBmZI4nL94/kgmIOeePAYIxPrOA==}
     dependencies:
       testcontainers: 10.10.0
     transitivePeerDependencies:
@@ -11781,6 +11781,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: true
 
   /quick-lru@5.1.1:
