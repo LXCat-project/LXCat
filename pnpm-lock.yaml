@@ -289,8 +289,8 @@ importers:
         specifier: ^20.14.2
         version: 20.14.2
       tsx:
-        specifier: ^4.15.5
-        version: 4.15.5
+        specifier: ^4.15.7
+        version: 4.15.7
 
   packages/database:
     dependencies:
@@ -344,8 +344,8 @@ importers:
         specifier: ^10.9.0
         version: 10.9.0
       tsx:
-        specifier: ^4.15.5
-        version: 4.15.5
+        specifier: ^4.15.7
+        version: 4.15.7
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -403,8 +403,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       tsx:
-        specifier: ^4.15.5
-        version: 4.15.5
+        specifier: ^4.15.7
+        version: 4.15.7
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -13519,8 +13519,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: true
 
-  /tsx@4.15.5:
-    resolution: {integrity: sha512-iKi8jQ2VBmZ2kU/FkGkL2OSHBHsazsUzsdC/W/RwhKIEsIoZ1alCclZHP5jGfNHEaEWUJFM1GquzCf+4db3b0w==}
+  /tsx@4.15.7:
+    resolution: {integrity: sha512-u3H0iSFDZM3za+VxkZ1kywdCeHCn+8/qHQS1MNoO2sONDgD95HlWtt8aB23OzeTmFP9IU4/8bZUdg58Uu5J4cg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
