@@ -72,7 +72,7 @@
     "sharp": "^0.33.4",
     "swr": "2.2.5",
     "true-myth": "^7.3.0",
-    "unified": "^11.0.4",
+    "unified": "^11.0.5",
     "unist-util-remove": "^4.0.0",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.1",
