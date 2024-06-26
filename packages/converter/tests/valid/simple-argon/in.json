@@ -17,34 +17,42 @@
   "states": {
     "e": {
       "serialized": {
-        "particle": "e",
-        "charge": -1,
+        "composition": {
+          "summary": "e^-",
+          "latex": "e^-"
+        },
         "summary": "e^-",
-        "latex": "e^{-1}"
+        "latex": "e^-"
       }
     },
     "Ar{1S0}": {
       "serialized": {
-        "particle": "Ar",
-        "charge": 0,
+        "composition": {
+          "summary": "Ar",
+          "latex": "\\mathrm{Ar}"
+        },
         "summary": "Ar{1S0}",
-        "latex": "Ar\\left({}^1S_0\\right)"
+        "latex": "\\mathrm{Ar}\\left({}^1S_0\\right)"
       }
     },
     "Ar{*}": {
       "serialized": {
-        "particle": "Ar",
-        "charge": 0,
+        "composition": {
+          "summary": "Ar",
+          "latex": "\\mathrm{Ar}"
+        },
         "summary": "Ar{*}",
-        "latex": "Ar\\left(*\\right)"
+        "latex": "\\mathrm{Ar}\\left(*\\right)"
       }
     },
     "Ar^+": {
       "serialized": {
-        "particle": "Ar",
-        "charge": 1,
+        "composition": {
+          "summary": "Ar^+",
+          "latex": "\\mathrm{Ar}^+"
+        },
         "summary": "Ar^+",
-        "latex": "Ar^+"
+        "latex": "\\mathrm{Ar}^+"
       }
     }
   },

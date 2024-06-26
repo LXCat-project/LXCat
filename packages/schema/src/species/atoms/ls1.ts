@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { array, input, literal, number, object, TypeOf, union } from "zod";
 import { makeComponent } from "../component.js";
-import { SimpleParticle } from "../composition/simple/particle.js";
+import { AtomComposition } from "../composition/atom.js";
+import { SpeciesBase } from "../composition/species-base.js";
 import { makeAtom } from "../generators.js";
 import {
   atomicOrbital,
@@ -21,22 +22,22 @@ import {
   serializeLSTermImpl,
 } from "./ls.js";
 
-export const LS1Term = z.object({
-  L: z.number().int().nonnegative(),
-  K: z.number().multipleOf(0.5).nonnegative(),
-  S: z.number().multipleOf(0.5).nonnegative(),
-  P: z.union([z.literal(-1), z.literal(1)]),
+export const LS1Term = object({
+  L: number().int().nonnegative(),
+  K: number().multipleOf(0.5).nonnegative(),
+  S: number().multipleOf(0.5).nonnegative(),
+  P: union([literal(-1), literal(1)]),
 }).merge(TotalAngularSpecifier);
-export type LS1Term = z.infer<typeof LS1Term>;
+export type LS1Term = TypeOf<typeof LS1Term>;
 
 export const LS1Descriptor = buildTerm(
   buildTwoTerm(
-    buildTerm(z.array(ShellEntry), LSTermUncoupled),
-    buildTerm(z.array(ShellEntry), LSTermUncoupled),
+    buildTerm(array(ShellEntry), LSTermUncoupled),
+    buildTerm(array(ShellEntry), LSTermUncoupled),
   ),
   LS1Term,
 );
-export type LS1Descriptor = z.infer<typeof LS1Descriptor>;
+export type LS1Descriptor = TypeOf<typeof LS1Descriptor>;
 
 /// Serializer functions
 
@@ -88,5 +89,9 @@ export const LS1Component = makeComponent(
   serializeLatexLS1,
 );
 
-export const AtomLS1 = makeAtom("AtomLS1", SimpleParticle, LS1Component);
-export type AtomLS1 = z.input<typeof AtomLS1.plain>;
+export const AtomLS1 = makeAtom(
+  "AtomLS1",
+  SpeciesBase(AtomComposition),
+  LS1Component,
+);
+export type AtomLS1 = input<typeof AtomLS1.plain>;

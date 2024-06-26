@@ -21,19 +21,19 @@
   },
   "states": {
     "e": {
-      "particle": "e",
-      "charge": -1,
-      "type": "simple"
+      "type": "Electron",
+      "composition": "e",
+      "charge": -1
     },
-    "Unobtainium": {
-      "particle": "Uo",
-      "charge": 0,
-      "type": "simple"
+    "N2": {
+      "type": "HomonuclearDiatom",
+      "composition": [["N", 2]],
+      "charge": 0
     },
-    "UnobtainiumCharged": {
-      "particle": "Uo",
-      "charge": -42,
-      "type": "simple"
+    "N2Charged": {
+      "type": "HomonuclearDiatom",
+      "composition": [["N", 2]],
+      "charge": 1
     }
   },
   "processes": [
@@ -46,13 +46,13 @@
           },
           {
             "count": 1,
-            "state": "Unobtainium"
+            "state": "N2"
           }
         ],
         "rhs": [
           {
             "count": 1,
-            "state": "UnobtainiumCharged"
+            "state": "N2Charged"
           }
         ],
         "reversible": false,

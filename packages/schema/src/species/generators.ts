@@ -2,20 +2,32 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { UnknownKeysParam, z, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+import {
+  array,
+  intersection,
+  literal,
+  object,
+  optional,
+  string,
+  union,
+  UnknownKeysParam,
+  ZodObject,
+  ZodRawShape,
+  ZodTypeAny,
+} from "zod";
 import { type Component } from "./component.js";
 
 export const typeTag = <Tag extends string>(tag: Tag) =>
-  z.object({ type: z.literal(tag) });
+  object({ type: literal(tag) });
 
 export const makeMoleculeSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  ElectronicSchema extends z.ZodTypeAny,
-  VibrationalSchema extends z.ZodTypeAny,
-  RotationalSchema extends z.ZodTypeAny,
+  ElectronicSchema extends ZodTypeAny,
+  VibrationalSchema extends ZodTypeAny,
+  RotationalSchema extends ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,
@@ -26,47 +38,50 @@ export const makeMoleculeSchema = <
   typeTag(tag)
     .merge(composition)
     .merge(
-      z.object({
-        electronic: z.union([
-          z.intersection(
-            electronic,
-            z.object({
-              vibrational: z.optional(
-                z.union([
-                  z.intersection(
-                    vibrational,
-                    z.object({
-                      rotational: z.optional(
-                        z.union([
-                          rotational.describe("Singular"),
-                          z.array(
-                            z.union([
-                              rotational.describe("Singular"),
-                              z.string().describe("Unspecified"),
-                            ]),
-                          )
-                            .min(2)
-                            .describe("Compound"),
-                          z.string().describe("Unspecified"),
-                        ]),
-                      ),
-                    }),
-                  ).describe("Singular"),
-                  z.array(
-                    z.union([
-                      vibrational.describe("Singular"),
-                      z.string().describe("Unspecified"),
-                    ]),
-                  )
-                    .min(2)
-                    .describe("Compound"),
-                  z.string().describe("Unspecified"),
-                ]),
-              ),
-            }),
-          ).describe("Singular"),
-          z.array(electronic).min(2).describe("Compound"),
-        ]),
+      object({
+        electronic: optional(
+          union([
+            intersection(
+              electronic,
+              object({
+                vibrational: optional(
+                  union([
+                    intersection(
+                      vibrational,
+                      object({
+                        rotational: optional(
+                          union([
+                            rotational.describe("Singular"),
+                            array(
+                              union([
+                                rotational.describe("Singular"),
+                                string().describe("Unspecified"),
+                              ]),
+                            )
+                              .min(2)
+                              .describe("Compound"),
+                            string().describe("Unspecified"),
+                          ]),
+                        ),
+                      }),
+                    ).describe("Singular"),
+                    array(
+                      union([
+                        vibrational.describe("Singular"),
+                        string().describe("Unspecified"),
+                      ]),
+                    )
+                      .min(2)
+                      .describe("Compound"),
+                    string().describe("Unspecified"),
+                  ]),
+                ),
+              }),
+            ).describe("Singular"),
+            array(electronic).min(2).describe("Compound"),
+            string().min(1).describe("Unspecified"),
+          ]),
+        ),
       }),
     );
 
@@ -75,9 +90,9 @@ export const makeMolecule = <
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  ElectronicSchema extends z.ZodTypeAny,
-  VibrationalSchema extends z.ZodTypeAny,
-  RotationalSchema extends z.ZodTypeAny,
+  ElectronicSchema extends ZodTypeAny,
+  VibrationalSchema extends ZodTypeAny,
+  RotationalSchema extends ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,
@@ -106,17 +121,17 @@ export const makeAtomSchema = <
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  ElectronicSchema extends z.ZodTypeAny,
+  ElectronicSchema extends ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,
   electronic: ElectronicSchema,
 ) =>
   typeTag(tag).merge(composition).merge(
-    z.object({
-      electronic: z.union([
+    object({
+      electronic: union([
         electronic.describe("Singular"),
-        z.array(electronic).min(2).describe("Compound"),
+        array(electronic).min(2).describe("Compound"),
       ]),
     }),
   );
@@ -126,7 +141,7 @@ export const makeAtom = <
   Shape extends ZodRawShape,
   UnknownKeys extends UnknownKeysParam,
   Catchall extends ZodTypeAny,
-  ElectronicSchema extends z.ZodTypeAny,
+  ElectronicSchema extends ZodTypeAny,
 >(
   tag: Tag,
   composition: ZodObject<Shape, UnknownKeys, Catchall>,

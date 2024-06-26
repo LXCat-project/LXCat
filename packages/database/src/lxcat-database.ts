@@ -95,18 +95,23 @@ import {
   stateChoices,
   tagChoices,
 } from "./css/queries/public.js";
+import { setupCompositionCollections } from "./setup/composition.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupDatabase } from "./setup/db.js";
 import { setupSharedCollections } from "./setup/shared.js";
 import { setupUserCollections } from "./setup/users.js";
 import {
+  insertAtom,
+  insertComposition,
   insertDocument,
   insertEdge,
+  insertMolecule,
   insertReactionWithDict,
   insertReferenceDict,
   insertState,
   insertStateDict,
   insertStateTree,
+  insertUnspecified,
   upsertDocument,
 } from "./shared/queries.js";
 import {
@@ -150,9 +155,12 @@ export class LXCatDatabase {
       db = dbResult.value;
     }
 
-    await setupUserCollections(db);
-    await setupSharedCollections(db);
-    await setupCrossSectionCollections(db);
+    await Promise.all([
+      setupUserCollections(db),
+      setupSharedCollections(db),
+      setupCompositionCollections(db),
+      setupCrossSectionCollections(db),
+    ]);
 
     return ok(new this(db));
   }
@@ -249,7 +257,11 @@ export class LXCatDatabase {
 
   public insertStateDict = insertStateDict;
   protected insertStateTree = insertStateTree;
+  protected insertUnspecified = insertUnspecified;
+  protected insertAtom = insertAtom;
+  protected insertMolecule = insertMolecule;
   protected insertState = insertState;
+  protected insertComposition = insertComposition;
 
   public insertReferenceDict = insertReferenceDict;
 

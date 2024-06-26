@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
+import { number, object, TypeOf, ZodTypeAny } from "zod";
 import { electronicOrbital } from "../common.js";
 
 /**
@@ -16,8 +16,8 @@ export const atomicOrbital = ["S", "P", "D", "F", "G", "H"] as const;
 /**
  * Zod type that represents the total angular momentum quantum J.
  */
-export const TotalAngularSpecifier = z.object({
-  J: z.number().multipleOf(0.5).nonnegative(),
+export const TotalAngularSpecifier = object({
+  J: number().multipleOf(0.5).nonnegative(),
 });
 
 /**
@@ -28,10 +28,10 @@ export const TotalAngularSpecifier = z.object({
  * @returns A zod object representing an atomic state configuration.
  */
 export const buildTerm = <
-  EConfig extends z.ZodTypeAny,
-  TermSymbol extends z.ZodTypeAny,
+  EConfig extends ZodTypeAny,
+  TermSymbol extends ZodTypeAny,
 >(electronConfig: EConfig, term: TermSymbol) =>
-  z.object({ config: electronConfig, term });
+  object({ config: electronConfig, term });
 
 /**
  * @typeParam Core - A zod type representing an atomic configuration for the
@@ -43,16 +43,16 @@ export const buildTerm = <
  *          e.g. LS1 and J1L2 coupling).
  */
 export const buildTwoTerm = <
-  Core extends z.ZodTypeAny,
-  Excited extends z.ZodTypeAny,
->(core: Core, excited: Excited) => z.object({ core, excited });
+  Core extends ZodTypeAny,
+  Excited extends ZodTypeAny,
+>(core: Core, excited: Excited) => object({ core, excited });
 
-export const ShellEntry = z.object({
-  n: z.number().int().min(1),
-  l: z.number().int().nonnegative(),
-  occupance: z.number().int().nonnegative(),
+export const ShellEntry = object({
+  n: number().int().min(1),
+  l: number().int().nonnegative(),
+  occupance: number().int().nonnegative(),
 });
-export type ShellEntry = z.infer<typeof ShellEntry>;
+export type ShellEntry = TypeOf<typeof ShellEntry>;
 
 /// Serializer functions
 

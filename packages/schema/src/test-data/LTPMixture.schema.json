@@ -976,10 +976,335 @@
       "additionalProperties": false,
       "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
     },
+    "Element": {
+      "type": "string",
+      "enum": [
+        "H",
+        "He",
+        "Li",
+        "Be",
+        "B",
+        "C",
+        "N",
+        "O",
+        "F",
+        "Ne",
+        "Na",
+        "Mg",
+        "Al",
+        "Si",
+        "P",
+        "S",
+        "Cl",
+        "Ar",
+        "K",
+        "Ca",
+        "Sc",
+        "Ti",
+        "V",
+        "Cr",
+        "Mn",
+        "Fe",
+        "Co",
+        "Ni",
+        "Cu",
+        "Zn",
+        "Ga",
+        "Ge",
+        "As",
+        "Se",
+        "Br",
+        "Kr",
+        "Rb",
+        "Sr",
+        "Y",
+        "Zr",
+        "Nb",
+        "Mo",
+        "Tc",
+        "Ru",
+        "Rh",
+        "Pd",
+        "Ag",
+        "Cd",
+        "In",
+        "Sn",
+        "Sb",
+        "Te",
+        "I",
+        "Xe",
+        "Cs",
+        "Ba",
+        "La",
+        "Ce",
+        "Pr",
+        "Nd",
+        "Pm",
+        "Sm",
+        "Eu",
+        "Gd",
+        "Tb",
+        "Dy",
+        "Ho",
+        "Er",
+        "Tm",
+        "Yb",
+        "Lu",
+        "Hf",
+        "Ta",
+        "W",
+        "Re",
+        "Os",
+        "Ir",
+        "Pt",
+        "Au",
+        "Hg",
+        "Tl",
+        "Pb",
+        "Bi",
+        "Po",
+        "At",
+        "Rn",
+        "Fr",
+        "Ra",
+        "Ac",
+        "Th",
+        "Pa",
+        "U",
+        "Np",
+        "Pu",
+        "Am",
+        "Cm",
+        "Bk",
+        "Cf",
+        "Es",
+        "Fm",
+        "Md",
+        "No",
+        "Lr",
+        "Rf",
+        "Db",
+        "Sg",
+        "Bh",
+        "Hs",
+        "Mt",
+        "Ds",
+        "Rg",
+        "Cn",
+        "Nh",
+        "Fl",
+        "Mc",
+        "Lv",
+        "Ts",
+        "Og"
+      ]
+    },
+    "Composition": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Element"
+              },
+              {
+                "$ref": "#/definitions/Composition"
+              }
+            ]
+          },
+          {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          }
+        ]
+      }
+    },
+    "HomonuclearCompositionDescriptor": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "$ref": "#/definitions/Element"
+            },
+            {
+              "type": "number",
+              "const": 2
+            }
+          ]
+        }
+      ]
+    },
+    "HeteronuclearDiatomComposition": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "$ref": "#/definitions/Element"
+            },
+            {
+              "type": "number",
+              "const": 1
+            }
+          ]
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "$ref": "#/definitions/Element"
+            },
+            {
+              "type": "number",
+              "const": 1
+            }
+          ]
+        }
+      ]
+    },
+    "LTICComposition": {
+      "anyOf": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "$ref": "#/definitions/Element"
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "$ref": "#/definitions/Element"
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "$ref": "#/definitions/Element"
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "$ref": "#/definitions/Element"
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": [
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "$ref": "#/definitions/Element"
+                },
+                {
+                  "type": "number",
+                  "const": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "AtomComposition": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "$ref": "#/definitions/Element"
+            },
+            {
+              "type": "number",
+              "const": 1
+            }
+          ]
+        }
+      ]
+    },
     "AnySpecies": {
       "anyOf": [
         {
-          "$ref": "#/definitions/simple"
+          "$ref": "#/definitions/Electron"
+        },
+        {
+          "$ref": "#/definitions/Atom"
+        },
+        {
+          "$ref": "#/definitions/AtomUnspecified"
         },
         {
           "$ref": "#/definitions/AtomLS"
@@ -1003,20 +1328,42 @@
           "$ref": "#/definitions/TriatomC2v"
         },
         {
-          "$ref": "#/definitions/unspecified"
+          "$ref": "#/definitions/Unspecified"
         }
       ]
     },
-    "simple": {
+    "Electron": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "const": "simple"
+          "const": "Electron"
         },
-        "particle": {
+        "composition": {
           "type": "string",
-          "minLength": 1
+          "const": "e"
+        },
+        "charge": {
+          "type": "number",
+          "const": -1
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge"
+      ],
+      "additionalProperties": false
+    },
+    "Atom": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Atom"
+        },
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
         },
         "charge": {
           "type": "integer"
@@ -1024,8 +1371,48 @@
       },
       "required": [
         "type",
-        "particle",
+        "composition",
         "charge"
+      ],
+      "additionalProperties": false
+    },
+    "AtomUnspecified": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AtomUnspecified"
+        },
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
+        },
+        "charge": {
+          "type": "integer"
+        },
+        "electronic": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Singular"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 2,
+              "description": "Compound"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge",
+        "electronic"
       ],
       "additionalProperties": false
     },
@@ -1036,11 +1423,11 @@
           "type": "string",
           "const": "AtomLS"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1140,7 +1527,7 @@
       },
       "required": [
         "type",
-        "particle",
+        "composition",
         "charge",
         "electronic"
       ],
@@ -1153,11 +1540,11 @@
           "type": "string",
           "const": "AtomLS1"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1300,7 +1687,7 @@
       },
       "required": [
         "type",
-        "particle",
+        "composition",
         "charge",
         "electronic"
       ],
@@ -1313,11 +1700,11 @@
           "type": "string",
           "const": "AtomJ1L2"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/AtomComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1422,7 +1809,7 @@
       },
       "required": [
         "type",
-        "particle",
+        "composition",
         "charge",
         "electronic"
       ],
@@ -1435,11 +1822,11 @@
           "type": "string",
           "const": "HomonuclearDiatom"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/HomonuclearCompositionDescriptor"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1598,15 +1985,19 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
       },
       "required": [
         "type",
-        "particle",
-        "charge",
-        "electronic"
+        "composition",
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -1617,11 +2008,11 @@
           "type": "string",
           "const": "HeteronuclearDiatom"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/HeteronuclearDiatomComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1758,15 +2149,19 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
       },
       "required": [
         "type",
-        "particle",
-        "charge",
-        "electronic"
+        "composition",
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -1777,11 +2172,11 @@
           "type": "string",
           "const": "LinearTriatomInversionCenter"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/LTICComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -1920,15 +2315,19 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
       },
       "required": [
         "type",
-        "particle",
-        "charge",
-        "electronic"
+        "composition",
+        "charge"
       ],
       "additionalProperties": false
     },
@@ -1939,11 +2338,11 @@
           "type": "string",
           "const": "TriatomC2v"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/LTICComposition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "anyOf": [
@@ -2076,30 +2475,34 @@
               },
               "minItems": 2,
               "description": "Compound"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
       },
       "required": [
         "type",
-        "particle",
-        "charge",
-        "electronic"
+        "composition",
+        "charge"
       ],
       "additionalProperties": false
     },
-    "unspecified": {
+    "Unspecified": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "const": "unspecified"
+          "const": "Unspecified"
         },
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
+        "composition": {
+          "$ref": "#/definitions/Composition"
         },
         "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
+          "type": "integer"
         },
         "electronic": {
           "type": "string",
@@ -2108,21 +2511,14 @@
       },
       "required": [
         "type",
-        "particle",
-        "charge",
-        "electronic"
+        "composition",
+        "charge"
       ],
       "additionalProperties": false
     },
-    "StateSummary": {
+    "SummarizedComponent": {
       "type": "object",
       "properties": {
-        "particle": {
-          "$ref": "#/definitions/simple/properties/particle"
-        },
-        "charge": {
-          "$ref": "#/definitions/simple/properties/charge"
-        },
         "summary": {
           "type": "string",
           "minLength": 1
@@ -2130,6 +2526,25 @@
         "latex": {
           "type": "string",
           "minLength": 1
+        }
+      },
+      "required": [
+        "summary",
+        "latex"
+      ],
+      "additionalProperties": false
+    },
+    "StateSummary": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "$ref": "#/definitions/SummarizedComponent/properties/summary"
+        },
+        "latex": {
+          "$ref": "#/definitions/SummarizedComponent/properties/latex"
+        },
+        "composition": {
+          "$ref": "#/definitions/SummarizedComponent"
         },
         "electronic": {
           "anyOf": [
@@ -2137,10 +2552,10 @@
               "type": "object",
               "properties": {
                 "summary": {
-                  "$ref": "#/definitions/StateSummary/properties/summary"
+                  "$ref": "#/definitions/SummarizedComponent/properties/summary"
                 },
                 "latex": {
-                  "$ref": "#/definitions/StateSummary/properties/latex"
+                  "$ref": "#/definitions/SummarizedComponent/properties/latex"
                 },
                 "vibrational": {
                   "anyOf": [
@@ -2148,33 +2563,20 @@
                       "type": "object",
                       "properties": {
                         "summary": {
-                          "$ref": "#/definitions/StateSummary/properties/summary"
+                          "$ref": "#/definitions/SummarizedComponent/properties/summary"
                         },
                         "latex": {
-                          "$ref": "#/definitions/StateSummary/properties/latex"
+                          "$ref": "#/definitions/SummarizedComponent/properties/latex"
                         },
                         "rotational": {
                           "anyOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "summary": {
-                                  "$ref": "#/definitions/StateSummary/properties/summary"
-                                },
-                                "latex": {
-                                  "$ref": "#/definitions/StateSummary/properties/latex"
-                                }
-                              },
-                              "required": [
-                                "summary",
-                                "latex"
-                              ],
-                              "additionalProperties": false
+                              "$ref": "#/definitions/SummarizedComponent"
                             },
                             {
                               "type": "array",
                               "items": {
-                                "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0/properties/vibrational/anyOf/0/properties/rotational/anyOf/0"
+                                "$ref": "#/definitions/SummarizedComponent"
                               },
                               "minItems": 2
                             }
@@ -2214,10 +2616,9 @@
         }
       },
       "required": [
-        "particle",
-        "charge",
         "summary",
-        "latex"
+        "latex",
+        "composition"
       ],
       "additionalProperties": false
     },

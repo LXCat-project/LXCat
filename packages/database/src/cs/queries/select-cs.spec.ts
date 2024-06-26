@@ -61,8 +61,8 @@ describe("Selecting individual cross sections", () => {
       it("should consume e, Ar, H2, and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
-          { children: [], latex: "\\mathrm{H2}", valid: true },
-          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{H_{2}}", valid: true },
+          { children: [], latex: "\\mathrm{N_{2}}", valid: true },
           { children: [], latex: "\\mathrm{Ar}", valid: true },
           {
             children: [
@@ -84,8 +84,8 @@ describe("Selecting individual cross sections", () => {
       it("should produce e, Ar^+, H2, and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
-          { children: [], latex: "\\mathrm{H2}", valid: true },
-          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{H_{2}}", valid: true },
+          { children: [], latex: "\\mathrm{N_{2}}", valid: true },
           { children: [], latex: "\\mathrm{Ar}^+", valid: true },
           {
             children: [
@@ -128,7 +128,7 @@ describe("Selecting individual cross sections", () => {
 
         const [particle] = allOptions.consumes
           .flatMap(Object.entries)
-          .find(([, particle]) => particle.latex === "\\mathrm{N2}")!;
+          .find(([, particle]) => particle.latex === "\\mathrm{N_{2}}")!;
         selection[0].consumes = [{ particle }, {}];
 
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
@@ -138,8 +138,8 @@ describe("Selecting individual cross sections", () => {
       it("first select has all consumable states", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
-          { children: [], latex: "\\mathrm{H2}", valid: true },
-          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{H_{2}}", valid: true },
+          { children: [], latex: "\\mathrm{N_{2}}", valid: true },
           { children: [], latex: "\\mathrm{Ar}", valid: true },
           {
             children: [
@@ -170,7 +170,7 @@ describe("Selecting individual cross sections", () => {
       it("can produce e and N2", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
-          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{N_{2}}", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[0])).toEqual(
           expected,
@@ -225,8 +225,8 @@ describe("Selecting individual cross sections", () => {
       it("first select has all producable states", () => {
         const expected: ReadonlyArray<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
-          { children: [], latex: "\\mathrm{H2}", valid: true },
-          { children: [], latex: "\\mathrm{N2}", valid: true },
+          { children: [], latex: "\\mathrm{H_{2}}", valid: true },
+          { children: [], latex: "\\mathrm{N_{2}}", valid: true },
           { children: [], latex: "\\mathrm{Ar}^+", valid: true },
           {
             children: [{ children: [], latex: "\\mathrm{*}", valid: true }],
@@ -383,8 +383,8 @@ describe("Selecting individual cross sections", () => {
       it("should consume e, Ar, H2, and N2", () => {
         const expected: ReadonlyArray<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
-          { children: {}, latex: "\\mathrm{H2}", valid: true },
-          { children: {}, latex: "\\mathrm{N2}", valid: true },
+          { children: {}, latex: "\\mathrm{H_{2}}", valid: true },
+          { children: {}, latex: "\\mathrm{N_{2}}", valid: true },
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
         ];
         expect(reactionOptions.consumes.flatMap(Object.values)).toEqual(
@@ -395,8 +395,8 @@ describe("Selecting individual cross sections", () => {
       it("should produce e, Ar^+, H2, N2", () => {
         const expected: ReadonlyArray<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
-          { children: {}, latex: "\\mathrm{H2}", valid: true },
-          { children: {}, latex: "\\mathrm{N2}", valid: true },
+          { children: {}, latex: "\\mathrm{H_{2}}", valid: true },
+          { children: {}, latex: "\\mathrm{N_{2}}", valid: true },
           { children: {}, latex: "\\mathrm{Ar}^+", valid: true },
         ];
         expect(reactionOptions.produces.flatMap(Object.values)).toEqual(
@@ -452,7 +452,7 @@ describe("Selecting individual cross sections", () => {
     it("should only return consumable species from published sets", () => {
       const expected: ReadonlyArray<NestedState> = [
         { children: [], latex: "\\mathrm{e}^-", valid: true },
-        { children: [], latex: "\\mathrm{H2}", valid: true },
+        { children: [], latex: "\\mathrm{H_{2}}", valid: true },
       ];
       expect(publishedOptions.consumes.flatMap(removeIdsFromTree)).toEqual(
         expected,
@@ -462,7 +462,7 @@ describe("Selecting individual cross sections", () => {
     it("should only return producable species from published sets", () => {
       const expected: ReadonlyArray<NestedState> = [
         { children: [], latex: "\\mathrm{e}^-", valid: true },
-        { children: [], latex: "\\mathrm{H2}", valid: true },
+        { children: [], latex: "\\mathrm{H_{2}}", valid: true },
       ];
       expect(publishedOptions.produces.flatMap(removeIdsFromTree)).toEqual(
         expected,
@@ -491,15 +491,17 @@ describe("Selecting individual cross sections", () => {
               {
                 state: {
                   detailed: {
-                    type: "simple",
-                    particle: "H2",
+                    type: "HomonuclearDiatom",
+                    composition: [["H", 2]],
                     charge: 0,
                   },
                   serialized: {
                     summary: "H2",
-                    latex: "\\mathrm{H2}",
-                    particle: "H2",
-                    charge: 0,
+                    latex: "\\mathrm{H_{2}}",
+                    composition: {
+                      summary: "H2",
+                      latex: "\\mathrm{H_{2}}",
+                    },
                   },
                 },
                 count: 1,
@@ -507,13 +509,15 @@ describe("Selecting individual cross sections", () => {
               {
                 state: {
                   detailed: {
-                    type: "simple",
-                    particle: "e",
+                    type: "Electron",
+                    composition: "e",
                     charge: -1,
                   },
                   serialized: {
-                    particle: "e",
-                    charge: -1,
+                    composition: {
+                      summary: "e^-",
+                      latex: "\\mathrm{e}^-",
+                    },
                     summary: "e^-",
                     latex: "\\mathrm{e}^-",
                   },
@@ -525,15 +529,17 @@ describe("Selecting individual cross sections", () => {
               {
                 state: {
                   detailed: {
-                    type: "simple",
-                    particle: "H2",
+                    type: "HomonuclearDiatom",
+                    composition: [["H", 2]],
                     charge: 0,
                   },
                   serialized: {
                     summary: "H2",
-                    latex: "\\mathrm{H2}",
-                    particle: "H2",
-                    charge: 0,
+                    latex: "\\mathrm{H_{2}}",
+                    composition: {
+                      summary: "H2",
+                      latex: "\\mathrm{H_{2}}",
+                    },
                   },
                 },
                 count: 1,
@@ -541,13 +547,15 @@ describe("Selecting individual cross sections", () => {
               {
                 state: {
                   detailed: {
-                    type: "simple",
-                    particle: "e",
+                    type: "Electron",
+                    composition: "e",
                     charge: -1,
                   },
                   serialized: {
-                    particle: "e",
-                    charge: -1,
+                    composition: {
+                      summary: "e^-",
+                      latex: "\\mathrm{e}^-",
+                    },
                     summary: "e^-",
                     latex: "\\mathrm{e}^-",
                   },
@@ -578,19 +586,21 @@ describe("Selecting individual cross sections", () => {
       const cs = await db.getItemById(csIds[0].split("/")[1]);
       expect(cs).toEqual({
         reaction: {
-          lhs: [
+          rhs: [
             {
               state: {
                 detailed: {
-                  type: "simple",
-                  particle: "H2",
+                  type: "HomonuclearDiatom",
+                  composition: [["H", 2]],
                   charge: 0,
                 },
                 serialized: {
                   summary: "H2",
-                  latex: "\\mathrm{H2}",
-                  particle: "H2",
-                  charge: 0,
+                  latex: "\\mathrm{H_{2}}",
+                  composition: {
+                    summary: "H2",
+                    latex: "\\mathrm{H_{2}}",
+                  },
                 },
               },
               count: 1,
@@ -598,13 +608,53 @@ describe("Selecting individual cross sections", () => {
             {
               state: {
                 detailed: {
-                  type: "simple",
-                  particle: "e",
+                  type: "Electron",
+                  composition: "e",
                   charge: -1,
                 },
                 serialized: {
-                  particle: "e",
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
+                },
+              },
+              count: 1,
+            },
+          ],
+          lhs: [
+            {
+              state: {
+                detailed: {
+                  type: "HomonuclearDiatom",
+                  composition: [["H", 2]],
+                  charge: 0,
+                },
+                serialized: {
+                  summary: "H2",
+                  latex: "\\mathrm{H_{2}}",
+                  composition: {
+                    summary: "H2",
+                    latex: "\\mathrm{H_{2}}",
+                  },
+                },
+              },
+              count: 1,
+            },
+            {
+              state: {
+                detailed: {
+                  type: "Electron",
+                  composition: "e",
                   charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
                   summary: "e^-",
                   latex: "\\mathrm{e}^-",
                 },
@@ -614,40 +664,6 @@ describe("Selecting individual cross sections", () => {
           ],
           reversible: false,
           typeTags: ["Effective"],
-          rhs: [
-            {
-              state: {
-                detailed: {
-                  type: "simple",
-                  particle: "e",
-                  charge: -1,
-                },
-                serialized: {
-                  particle: "e",
-                  charge: -1,
-                  summary: "e^-",
-                  latex: "\\mathrm{e}^-",
-                },
-              },
-              count: 1,
-            },
-            {
-              state: {
-                detailed: {
-                  type: "simple",
-                  particle: "H2",
-                  charge: 0,
-                },
-                serialized: {
-                  summary: "H2",
-                  latex: "\\mathrm{H2}",
-                  particle: "H2",
-                  charge: 0,
-                },
-              },
-              count: 1,
-            },
-          ],
         },
         info: [{
           type: "CrossSection",
