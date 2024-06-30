@@ -220,8 +220,8 @@ importers:
         specifier: 20.14.8
         version: 20.14.8
       '@types/oidc-provider':
-        specifier: ^8.4.4
-        version: 8.4.4
+        specifier: ^8.5.0
+        version: 8.5.0
       '@types/plotly.js-basic-dist':
         specifier: ^1.54.4
         version: 1.54.4
@@ -253,8 +253,8 @@ importers:
         specifier: ^17.0.0
         version: 17.0.0
       oidc-provider:
-        specifier: ^8.4.7
-        version: 8.4.7
+        specifier: ^8.5.0
+        version: 8.5.0
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.40.0)
@@ -3915,8 +3915,8 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
-  /@types/oidc-provider@8.4.4:
-    resolution: {integrity: sha512-+SlmKc4qlCJLjpw6Du/8cXw18JsPEYyQwoy+xheLkiuNsCz1mPEYI/lRXLQHvfJD9TH6+2/WDTLZQ2UUJ5G4bw==}
+  /@types/oidc-provider@8.5.0:
+    resolution: {integrity: sha512-nlCxJI6kZHD/+mMVKKvcmI8JA9dPa5XbdZF7vpfdQLbVfj2EXQaPt1m6jyg/2fz7aR5blMbqmaVTl2GNBasFtw==}
     dependencies:
       '@types/koa': 2.13.6
       '@types/node': 20.14.8
@@ -8713,8 +8713,8 @@ packages:
     resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
     dev: false
 
-  /jose@5.4.1:
-    resolution: {integrity: sha512-U6QajmpV/nhL9SyfAewo000fkiRQ+Yd2H0lBxJJ9apjpOgkOcBQJWOrMo917lxLptdS/n/o/xPzMkXhF46K8hQ==}
+  /jose@5.6.2:
+    resolution: {integrity: sha512-F1t1/WZJ4JdmCE/XoMYw1dPOW5g8JF0xGm6Ox2fwaCAPlCzt+4Bh0EWP59iQuZNHHauDkCdjx+kCZSh5z/PGow==}
     dev: true
 
   /js-levenshtein@1.1.6:
@@ -10745,15 +10745,15 @@ packages:
       define-properties: 1.2.1
       es-abstract: 1.23.3
 
-  /oidc-provider@8.4.7:
-    resolution: {integrity: sha512-WjURLNh0cAacyZMItl/KimFPBTFZBTE/PVu/+W0JW3T2fWYMUVTDFMOUFcY1tlMDPASUCORgZkyLPCywe4tyDA==}
+  /oidc-provider@8.5.0:
+    resolution: {integrity: sha512-cgnC94nwM7AE8lqVAR2vZ6Uag4WihiZ53zugPjwxA3FzsXmMzO+eQFqhWhiEHvb2kFZRq50PjhusWTEd02+g2A==}
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
       debug: 4.3.5
       eta: 3.4.0
       got: 13.0.0
-      jose: 5.4.1
+      jose: 5.6.2
       jsesc: 3.0.2
       koa: 2.15.3
       nanoid: 5.0.7
