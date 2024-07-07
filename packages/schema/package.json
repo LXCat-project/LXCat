@@ -26,7 +26,7 @@
     "@lxcat/tsconfig": "workspace:^",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@vitest/coverage-v8": "^1.6.0",
-    "dprint": "^0.46.3",
+    "dprint": "^0.47.1",
     "eslint": "8.57.0",
     "tsx": "^4.16.0",
     "typescript": "^5.5.2",
