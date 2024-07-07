@@ -28,7 +28,7 @@
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
     "@mantine/code-highlight": "^7.11.1",
-    "@mantine/core": "^7.11.0",
+    "@mantine/core": "^7.11.1",
     "@mantine/form": "^7.11.1",
     "@mantine/hooks": "^7.11.1",
     "@mdx-js/mdx": "^3.0.1",
