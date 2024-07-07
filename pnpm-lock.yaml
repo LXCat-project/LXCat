@@ -220,8 +220,8 @@ importers:
         specifier: 20.14.9
         version: 20.14.9
       '@types/oidc-provider':
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       '@types/plotly.js-basic-dist':
         specifier: ^1.54.4
         version: 1.54.4
@@ -253,8 +253,8 @@ importers:
         specifier: ^17.0.0
         version: 17.0.0
       oidc-provider:
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.40.0)
@@ -3915,8 +3915,8 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
-  /@types/oidc-provider@8.5.0:
-    resolution: {integrity: sha512-nlCxJI6kZHD/+mMVKKvcmI8JA9dPa5XbdZF7vpfdQLbVfj2EXQaPt1m6jyg/2fz7aR5blMbqmaVTl2GNBasFtw==}
+  /@types/oidc-provider@8.5.1:
+    resolution: {integrity: sha512-NS8tBPOj9GG6SxyrUHWBzglOtAYNDX41J4cRE45oeK0iSqI6V6tDW70aPWg25pJFNSC1evccXFm9evfwjxm7HQ==}
     dependencies:
       '@types/koa': 2.13.6
       '@types/node': 20.14.9
@@ -10745,8 +10745,8 @@ packages:
       define-properties: 1.2.1
       es-abstract: 1.23.3
 
-  /oidc-provider@8.5.0:
-    resolution: {integrity: sha512-cgnC94nwM7AE8lqVAR2vZ6Uag4WihiZ53zugPjwxA3FzsXmMzO+eQFqhWhiEHvb2kFZRq50PjhusWTEd02+g2A==}
+  /oidc-provider@8.5.1:
+    resolution: {integrity: sha512-Bm3EyxN68/KS76IlciJ3+4pnVtfdRWL+NghWpIF0XQbiRT1gzc6Qf/cyFmpL9yieko/jXYZ/uLHUv77jD00qww==}
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 12.0.1
