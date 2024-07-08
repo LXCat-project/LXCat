@@ -1,0 +1,47 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.periodicElement {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+    text-align: center;
+    /* padding: 10px; */
+    box-sizing: border-box;
+}
+
+.periodicElement:disabled {
+    background-color: lightgray;
+    color: gray;
+}
+
+.selected {
+    background-color: #99FF99;
+}
+
+.topLeft {
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    font-size: 8px;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    font-size: 7px;
+}
