@@ -95,6 +95,10 @@ import {
   stateChoices,
   tagChoices,
 } from "./css/queries/public.js";
+import {
+  getActiveElements,
+  getSetHeaderByElements,
+} from "./elements/queries.js";
 import { setupCompositionCollections } from "./setup/composition.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupDatabase } from "./setup/db.js";
@@ -308,6 +312,10 @@ export class LXCatDatabase {
   // species
   public getTopLevelSpecies = getTopLevelSpecies;
   public getSpeciesChildren = getSpeciesChildren;
+
+  // elements
+  public getActiveElements = getActiveElements;
+  public getSetHeaderByElements = getSetHeaderByElements;
 
   // reaction
   protected findReactionId = findReactionId;
