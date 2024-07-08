@@ -562,6 +562,22 @@ function isEqualProcess(
     })),
   };
 
+  const sortEntries = (
+    one: { state: string; count: number },
+    two: { state: string; count: number },
+  ) => {
+    if (one.state == two.state) {
+      return two.count - one.count;
+    }
+
+    return one.state.localeCompare(two.state);
+  };
+
+  prevMappedCS.reaction.lhs.sort(sortEntries);
+  prevMappedCS.reaction.rhs.sort(sortEntries);
+  newMappedCS.reaction.lhs.sort(sortEntries);
+  newMappedCS.reaction.rhs.sort(sortEntries);
+
   return deepEqual(newMappedCS, prevMappedCS);
 }
 

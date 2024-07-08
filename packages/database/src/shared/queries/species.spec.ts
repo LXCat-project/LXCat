@@ -21,9 +21,9 @@ describe("Species functionality", () => {
   beforeAll(async () => {
     const states: StateDict = {
       N2_rot_1: {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -34,9 +34,9 @@ describe("Species functionality", () => {
         },
       },
       N2_rot_2: {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -47,9 +47,9 @@ describe("Species functionality", () => {
         },
       },
       CO2: {
-        particle: "CO2",
-        charge: 0,
         type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -65,9 +65,13 @@ describe("Species functionality", () => {
   });
 
   it("getTopLevelSpecies()", async () => {
-    const result = [
-      { type: "simple", particle: "N2", charge: 0 },
-      { type: "simple", particle: "CO2", charge: 0 },
+    const result: Array<AnySpecies> = [
+      { type: "HomonuclearDiatom", composition: [["N", 2]], charge: 0 },
+      {
+        type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
+      },
     ];
     const species = await db.getTopLevelSpecies();
     expect(species.map(({ species }) => species.detailed)).toEqual(result);
@@ -81,16 +85,16 @@ describe("Species functionality", () => {
 
     it("Single electronic", async () => {
       const parent = topLevel.find(({ species }) =>
-        species.detailed.particle === "N2"
+        species.serialized.summary === "N2"
       );
 
       expect(parent).toBeDefined();
 
       const children = await db.getSpeciesChildren(parent!._key);
-      const actual = [
+      const actual: Array<AnySpecies> = [
         {
           type: "HomonuclearDiatom",
-          particle: "N2",
+          composition: [["N", 2]],
           charge: 0,
           electronic: {
             energyId: "X",
@@ -107,7 +111,7 @@ describe("Species functionality", () => {
 
     it("Single vibrational", async () => {
       const parent = topLevel.find(({ species }) =>
-        species.detailed.particle === "N2"
+        species.serialized.summary === "N2"
       );
 
       expect(parent).toBeDefined();
@@ -118,10 +122,10 @@ describe("Species functionality", () => {
 
       const vibChildren = await db.getSpeciesChildren(children[0]._key);
 
-      const actual = [
+      const actual: Array<AnySpecies> = [
         {
           type: "HomonuclearDiatom",
-          particle: "N2",
+          composition: [["N", 2]],
           charge: 0,
           electronic: {
             energyId: "X",
@@ -141,7 +145,7 @@ describe("Species functionality", () => {
 
     it("Two vibrational children from compound", async () => {
       const parent = topLevel.find(({ species }) =>
-        species.detailed.particle === "CO2"
+        species.serialized.summary === "CO2"
       );
 
       expect(parent).toBeDefined();
@@ -157,7 +161,7 @@ describe("Species functionality", () => {
 
     it("Two rotational children from different sources", async () => {
       const parent = topLevel.find(({ species }) =>
-        species.detailed.particle === "N2"
+        species.serialized.summary === "N2"
       );
 
       expect(parent).toBeDefined();

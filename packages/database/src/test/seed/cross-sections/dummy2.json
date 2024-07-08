@@ -21,14 +21,14 @@
   },
   "states": {
     "e": {
-      "particle": "e",
-      "charge": -1,
-      "type": "simple"
+      "type": "Electron",
+      "composition": "e",
+      "charge": -1
     },
-    "UoV1": {
-      "particle": "Uo",
-      "charge": 0,
+    "N2V1": {
       "type": "HomonuclearDiatom",
+      "composition": [["N", 2]],
+      "charge": 0,
       "electronic": {
         "energyId": "X",
         "Lambda": 0,
@@ -39,10 +39,10 @@
         }
       }
     },
-    "UoV2": {
-      "particle": "Uo",
-      "charge": 0,
+    "N2V2": {
       "type": "HomonuclearDiatom",
+      "composition": [["N", 2]],
+      "charge": 0,
       "electronic": {
         "energyId": "B",
         "Lambda": 0,
@@ -64,7 +64,7 @@
           },
           {
             "count": 1,
-            "state": "UoV1"
+            "state": "N2V1"
           }
         ],
         "rhs": [
@@ -74,7 +74,7 @@
           },
           {
             "count": 1,
-            "state": "UoV2"
+            "state": "N2V2"
           }
         ],
         "typeTags": ["Electronic", "Vibrational"],

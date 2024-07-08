@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { z } from "zod";
-import { SimpleParticle } from "../composition/simple/particle.js";
+import { TypeOf } from "zod";
+import { SpeciesBase } from "../composition/species-base.js";
+import { LTICComposition } from "../composition/triatom/ltic.js";
 import { makeMolecule } from "../generators.js";
 import { LinearInversionCenterElectronic } from "./components/electronic/linear-inversion-center.js";
 import { Rotational } from "./components/rotational/single.js";
@@ -11,11 +12,11 @@ import { LinearTriatomVibrational } from "./components/vibrational/linear-triato
 
 export const LinearTriatomInversionCenter = makeMolecule(
   "LinearTriatomInversionCenter",
-  SimpleParticle,
+  SpeciesBase(LTICComposition),
   LinearInversionCenterElectronic,
   LinearTriatomVibrational,
   Rotational,
 );
-export type LinearTriatomInversionCenter = z.infer<
+export type LinearTriatomInversionCenter = TypeOf<
   typeof LinearTriatomInversionCenter.plain
 >;

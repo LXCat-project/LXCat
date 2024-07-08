@@ -58,41 +58,60 @@ describe("given 4 published cross sections in 2 sets", () => {
         states: {
           "528": {
             detailed: {
-              type: "simple",
-              particle: "A",
+              type: "Atom",
+              composition: [["Ar", 1]],
               charge: 0,
             },
             serialized: {
-              particle: "A",
-              charge: 0,
-              summary: "A",
-              latex: "\\mathrm{A}",
+              composition: {
+                summary: "Ar",
+                latex: "\\mathrm{Ar}",
+              },
+              summary: "Ar",
+              latex: "\\mathrm{Ar}",
             },
           },
           "531": {
             detailed: {
-              type: "simple",
-              particle: "B",
-              charge: 1,
+              type: "Electron",
+              composition: "e",
+              charge: -1,
             },
             serialized: {
-              particle: "B",
-              charge: 1,
-              summary: "B^+",
-              latex: "\\mathrm{B}^+",
+              composition: {
+                summary: "e^-",
+                latex: "\\mathrm{e}^-",
+              },
+              summary: "e^-",
+              latex: "\\mathrm{e}^-",
             },
           },
           "534": {
             detailed: {
-              type: "simple",
-              particle: "C",
-              charge: 2,
+              type: "AtomLS",
+              composition: [["Ar", 1]],
+              charge: 1,
+              electronic: {
+                config: [],
+                term: {
+                  S: 0.5,
+                  L: 1,
+                  J: 1.5,
+                  P: -1,
+                },
+              },
             },
             serialized: {
-              particle: "C",
-              charge: 2,
-              summary: "C^2+",
-              latex: "\\mathrm{C}^{2+}",
+              composition: {
+                latex: "\\mathrm{Ar}^+",
+                summary: "Ar^+",
+              },
+              electronic: {
+                latex: "{}^{2}\\mathrm{P}^o_{3/2}",
+                summary: "^2P^o_3/2",
+              },
+              latex: "\\mathrm{Ar}^+\\left({}^{2}\\mathrm{P}^o_{3/2}\\right)",
+              summary: "Ar^+{^2P^o_3/2}",
             },
           },
         },
@@ -113,7 +132,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               rhs: [
                 {
                   state: matchesId,
-                  count: 2,
+                  count: 1,
                 },
               ],
             },
@@ -149,7 +168,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               rhs: [
                 {
                   state: matchesId,
-                  count: 3,
+                  count: 2,
                 },
               ],
             },
@@ -190,7 +209,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               rhs: [
                 {
                   state: matchesId,
-                  count: 2,
+                  count: 1,
                 },
               ],
             },
@@ -226,7 +245,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               rhs: [
                 {
                   state: matchesId,
-                  count: 3,
+                  count: 2,
                 },
               ],
             },
@@ -331,28 +350,32 @@ describe("given 4 published cross sections in 2 sets", () => {
         states: {
           "524": {
             detailed: {
-              type: "simple",
-              particle: "A",
+              type: "Atom",
+              composition: [["Ar", 1]],
               charge: 0,
             },
             serialized: {
-              particle: "A",
-              charge: 0,
-              summary: "A",
-              latex: "\\mathrm{A}",
+              composition: {
+                summary: "Ar",
+                latex: "\\mathrm{Ar}",
+              },
+              summary: "Ar",
+              latex: "\\mathrm{Ar}",
             },
           },
           "527": {
             detailed: {
-              type: "simple",
-              particle: "B",
-              charge: 1,
+              type: "Electron",
+              composition: "e",
+              charge: -1,
             },
             serialized: {
-              particle: "B",
-              charge: 1,
-              summary: "B^+",
-              latex: "\\mathrm{B}^+",
+              composition: {
+                summary: "e^-",
+                latex: "\\mathrm{e}^-",
+              },
+              summary: "e^-",
+              latex: "\\mathrm{e}^-",
             },
           },
         },
@@ -373,7 +396,7 @@ describe("given 4 published cross sections in 2 sets", () => {
               rhs: [
                 {
                   state: matchesId,
-                  count: 2,
+                  count: 1,
                 },
               ],
             },

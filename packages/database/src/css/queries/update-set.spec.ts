@@ -22,6 +22,7 @@ import {
 } from "../../cs/queries/testutils.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { systemDb } from "../../system-db.js";
+import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
   matches8601,
@@ -56,46 +57,21 @@ describe("given published cross section set where data of 1 published cross sect
       description: "Some description",
       references: {},
       states: {
-        a: {
-          particle: "A",
-          charge: 0,
-          type: "simple",
-        },
-        b: {
-          particle: "B",
-          charge: 1,
-          type: "simple",
-        },
-        c: {
-          particle: "C",
-          charge: 2,
-          type: "simple",
-        },
+        electron: testSpecies.electron.detailed,
+        argon: testSpecies.argon.detailed,
+        ion: testSpecies.ion.detailed,
       },
       processes: [
         {
           reaction: {
-            lhs: [{ count: 1, state: "a" }],
-            rhs: [{ count: 2, state: "b" }],
-            reversible: false,
-            typeTags: [],
-          },
-          info: [{
-            type: "CrossSection",
-            threshold: 42,
-            data: {
-              type: "LUT",
-              labels: ["Energy", "Cross Section"],
-              units: ["eV", "m^2"],
-              values: [[1, 3.14e-20]],
-            },
-            references: [],
-          }],
-        },
-        {
-          reaction: {
-            lhs: [{ count: 1, state: "a" }],
-            rhs: [{ count: 3, state: "c" }],
+            lhs: [{ count: 1, state: "argon" }, {
+              count: 1,
+              state: "electron",
+            }],
+            rhs: [{ count: 1, state: "argon" }, {
+              count: 1,
+              state: "electron",
+            }],
             reversible: false,
             typeTags: [],
           },
@@ -107,6 +83,31 @@ describe("given published cross section set where data of 1 published cross sect
               labels: ["Energy", "Cross Section"],
               units: ["eV", "m^2"],
               values: [[2, 5.12e-10]],
+            },
+            references: [],
+          }],
+        },
+        {
+          reaction: {
+            lhs: [{ count: 1, state: "argon" }, {
+              count: 1,
+              state: "electron",
+            }],
+            rhs: [{ count: 1, state: "ion" }, {
+              count: 2,
+              state: "electron",
+            }],
+            reversible: false,
+            typeTags: [],
+          },
+          info: [{
+            type: "CrossSection",
+            threshold: 42,
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross Section"],
+              units: ["eV", "m^2"],
+              values: [[1, 3.14e-20]],
             },
             references: [],
           }],
@@ -168,40 +169,12 @@ describe("given published cross section set where data of 1 published cross sect
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -217,7 +190,7 @@ describe("given published cross section set where data of 1 published cross sect
             ),
           },
           type: "CrossSection",
-          threshold: 42,
+          threshold: 13,
           data: {
             type: "LUT",
             labels: ["Energy", "Cross Section"],
@@ -249,40 +222,12 @@ describe("given published cross section set where data of 1 published cross sect
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 3,
-              state: {
-                detailed: {
-                  particle: "C",
-                  charge: 2,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "C",
-                  charge: 2,
-                  summary: "C^2+",
-                  latex: "\\mathrm{C}^{2+}",
-                },
-              },
-            },
+            { count: 2, state: testSpecies.electron },
+            { count: 1, state: testSpecies.ion },
           ],
           reversible: false,
           typeTags: [],
@@ -295,12 +240,12 @@ describe("given published cross section set where data of 1 published cross sect
             createdOn: matches8601,
           },
           type: "CrossSection",
-          threshold: 13,
+          threshold: 42,
           data: {
             type: "LUT",
             labels: ["Energy", "Cross Section"],
             units: ["eV", "m^2"],
-            values: [[2, 5.12e-10]],
+            values: [[1, 3.14e-20]],
           },
           isPartOf: [
             {
@@ -384,40 +329,12 @@ describe("given published cross section set where data of 1 published cross sect
         {
           reaction: {
             lhs: [
-              {
-                count: 1,
-                state: {
-                  detailed: {
-                    particle: "A",
-                    charge: 0,
-                    type: "simple",
-                  },
-                  serialized: {
-                    particle: "A",
-                    charge: 0,
-                    summary: "A",
-                    latex: "\\mathrm{A}",
-                  },
-                },
-              },
+              { count: 1, state: testSpecies.electron },
+              { count: 1, state: testSpecies.argon },
             ],
             rhs: [
-              {
-                count: 2,
-                state: {
-                  detailed: {
-                    particle: "B",
-                    charge: 1,
-                    type: "simple",
-                  },
-                  serialized: {
-                    particle: "B",
-                    charge: 1,
-                    summary: "B^+",
-                    latex: "\\mathrm{B}^+",
-                  },
-                },
-              },
+              { count: 1, state: testSpecies.electron },
+              { count: 1, state: testSpecies.argon },
             ],
             reversible: false,
             typeTags: [],
@@ -449,46 +366,18 @@ describe("given published cross section set where data of 1 published cross sect
               values: [[1, 3.14e-20], [2, 3.15e-20]],
             },
             references: [],
-            threshold: 42,
+            threshold: 13,
           }],
         },
         {
           reaction: {
             lhs: [
-              {
-                count: 1,
-                state: {
-                  detailed: {
-                    particle: "A",
-                    charge: 0,
-                    type: "simple",
-                  },
-                  serialized: {
-                    particle: "A",
-                    charge: 0,
-                    summary: "A",
-                    latex: "\\mathrm{A}",
-                  },
-                },
-              },
+              { count: 1, state: testSpecies.electron },
+              { count: 1, state: testSpecies.argon },
             ],
             rhs: [
-              {
-                count: 3,
-                state: {
-                  detailed: {
-                    particle: "C",
-                    charge: 2,
-                    type: "simple",
-                  },
-                  serialized: {
-                    particle: "C",
-                    charge: 2,
-                    summary: "C^2+",
-                    latex: "\\mathrm{C}^{2+}",
-                  },
-                },
-              },
+              { count: 2, state: testSpecies.electron },
+              { count: 1, state: testSpecies.ion },
             ],
             reversible: false,
             typeTags: [],
@@ -521,10 +410,10 @@ describe("given published cross section set where data of 1 published cross sect
               type: "LUT",
               labels: ["Energy", "Cross Section"],
               units: ["eV", "m^2"],
-              values: [[2, 5.12e-10]],
+              values: [[1, 3.14e-20]],
             },
             references: [],
-            threshold: 13,
+            threshold: 42,
           }],
         },
       ];
@@ -545,22 +434,20 @@ describe("given draft cross section set where its cross section data is altered"
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          electron: testSpecies.electron.detailed,
+          argon: testSpecies.argon.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -634,40 +521,12 @@ describe("given draft cross section set where its cross section data is altered"
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -737,22 +596,20 @@ describe("given draft cross section set where its cross section data is added la
       contributor: css1.contributor.name,
     });
     draft.states = {
-      a: {
-        particle: "A",
-        charge: 0,
-        type: "simple",
-      },
-      b: {
-        particle: "B",
-        charge: 1,
-        type: "simple",
-      },
+      electron: testSpecies.electron.detailed,
+      argon: testSpecies.argon.detailed,
     };
     draft.processes = [
       {
         reaction: {
-          lhs: [{ count: 1, state: "a" }],
-          rhs: [{ count: 2, state: "b" }],
+          lhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
+          rhs: [
+            { count: 1, state: "argon" },
+            { count: 1, state: "electron" },
+          ],
           reversible: false,
           typeTags: [],
         },
@@ -805,40 +662,12 @@ describe("given draft cross section set where its cross section data is added la
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -890,22 +719,20 @@ describe("given draft cross section set where its non cross section data is alte
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          electron: testSpecies.electron.detailed,
+          argon: testSpecies.argon.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -976,40 +803,12 @@ describe("given draft cross section set where its non cross section data is alte
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -1067,22 +866,20 @@ describe("given draft cross section set where its cross section state is altered
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          electron: testSpecies.electron.detailed,
+          argon: testSpecies.argon.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -1112,12 +909,8 @@ describe("given draft cross section set where its cross section state is altered
       ...css1,
       contributor: css1.contributor.name,
     });
-    draft.states.c = {
-      particle: "C",
-      charge: 2,
-      type: "simple",
-    };
-    draft.processes[0].reaction.rhs[0].state = "c";
+    draft.states.ion = testSpecies.ion.detailed;
+    draft.processes[0].reaction.rhs[1].state = "ion";
     try {
       keycss2 = await db.updateSet(
         keycss1,
@@ -1137,40 +930,12 @@ describe("given draft cross section set where its cross section state is altered
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.argon },
+            { count: 1, state: testSpecies.electron },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "C",
-                  charge: 2,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "C",
-                  charge: 2,
-                  summary: "C^2+",
-                  latex: "\\mathrm{C}^{2+}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.ion },
+            { count: 1, state: testSpecies.electron },
           ],
           reversible: false,
           typeTags: [],
@@ -1222,22 +987,20 @@ describe("given draft cross section set where a reference is added to a cross se
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          argon: testSpecies.argon.detailed,
+          electron: testSpecies.electron.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -1291,40 +1054,12 @@ describe("given draft cross section set where a reference is added to a cross se
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -1387,22 +1122,20 @@ describe("given draft cross section set where a reference is replaced in a cross
         description: "Some description",
         references: { r1 },
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          argon: testSpecies.argon.detailed,
+          electron: testSpecies.electron.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -1453,40 +1186,12 @@ describe("given draft cross section set where a reference is replaced in a cross
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -1557,7 +1262,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     //         {
     //           count: 1,
     //           state: {
-    //             particle: "A",
+    //             composition: "A",
     //             charge: 0,
     //             id: "A",
     //             latex: "\\mathrm{A}",
@@ -1568,7 +1273,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     //         {
     //           count: 2,
     //           state: {
-    //             particle: "B",
+    //             composition: "B",
     //             charge: 1,
     //             id: "B^+",
     //             latex: "\\mathrm{B^+}",
@@ -1609,22 +1314,20 @@ describe("given draft cross section set where a reference is extended in a cross
         description: "Some description",
         references: { r1 },
         states: {
-          a: {
-            particle: "A",
-            charge: 0,
-            type: "simple",
-          },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
-          },
+          argon: testSpecies.argon.detailed,
+          electron: testSpecies.electron.detailed,
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
+              rhs: [
+                { count: 1, state: "argon" },
+                { count: 1, state: "electron" },
+              ],
               reversible: false,
               typeTags: [],
             },
@@ -1676,40 +1379,12 @@ describe("given draft cross section set where a reference is extended in a cross
       {
         reaction: {
           lhs: [
-            {
-              count: 1,
-              state: {
-                detailed: {
-                  particle: "A",
-                  charge: 0,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "A",
-                  charge: 0,
-                  summary: "A",
-                  latex: "\\mathrm{A}",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           rhs: [
-            {
-              count: 2,
-              state: {
-                detailed: {
-                  particle: "B",
-                  charge: 1,
-                  type: "simple",
-                },
-                serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
-                },
-              },
-            },
+            { count: 1, state: testSpecies.electron },
+            { count: 1, state: testSpecies.argon },
           ],
           reversible: false,
           typeTags: [],
@@ -1781,7 +1456,7 @@ describe("given draft cross section set where a reference is extended in a cross
     //           {
     //             count: 1,
     //             state: {
-    //               particle: "A",
+    //               composition: "A",
     //               charge: 0,
     //               id: "A",
     //               latex: "\\mathrm{A}",
@@ -1792,7 +1467,7 @@ describe("given draft cross section set where a reference is extended in a cross
     //           {
     //             count: 2,
     //             state: {
-    //               particle: "B",
+    //               composition: "B",
     //               charge: 1,
     //               id: "B^+",
     //               latex: "\\mathrm{B^+}",
@@ -2038,22 +1713,28 @@ describe("given draft cross section set where its charge in cross section is alt
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
+          argon: {
+            type: "Atom",
+            composition: [["Ar", 1]],
             charge: 0,
-            type: "simple",
           },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
+          electron: {
+            type: "Electron",
+            composition: "e",
+            charge: -1,
           },
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [{ count: 1, state: "argon" }, {
+                count: 1,
+                state: "electron",
+              }],
+              rhs: [{ count: 1, state: "argon" }, {
+                count: 1,
+                state: "electron",
+              }],
               reversible: false,
               typeTags: [],
             },
@@ -2083,11 +1764,11 @@ describe("given draft cross section set where its charge in cross section is alt
       ...css1,
       contributor: css1.contributor.name,
     });
-    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
+    const stateA = Object.values(draft.states).find((s) => s.type === "Atom");
     if (stateA === undefined) {
-      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+      throw Error(`Failed to find state with composition=A in ${keycss1}`);
     }
-    stateA.charge = -2;
+    stateA.charge = 1;
     keycss2 = await db.updateSet(
       keycss1,
       draft,
@@ -2096,7 +1777,7 @@ describe("given draft cross section set where its charge in cross section is alt
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
-  it("should list 1 section", async () => {
+  it("should list one cross section", async () => {
     const list = await db.searchOwnedItems(email);
     const expected: Array<OwnedProcess> = [
       {
@@ -2106,33 +1787,73 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
-                  charge: -2,
-                  type: "simple",
+                  type: "Atom",
+                  composition: [["Ar", 1]],
+                  charge: 1,
                 },
                 serialized: {
-                  particle: "A",
-                  charge: -2,
-                  summary: "A^2-",
-                  latex: "\\mathrm{A}^{2-}",
+                  composition: {
+                    summary: "Ar^+",
+                    latex: "\\mathrm{Ar}^+",
+                  },
+                  summary: "Ar^+",
+                  latex: "\\mathrm{Ar}^+",
+                },
+              },
+            },
+            {
+              count: 1,
+              state: {
+                detailed: {
+                  type: "Electron",
+                  composition: "e",
+                  charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
                 },
               },
             },
           ],
           rhs: [
             {
-              count: 2,
+              count: 1,
               state: {
                 detailed: {
-                  particle: "B",
+                  type: "Atom",
+                  composition: [["Ar", 1]],
                   charge: 1,
-                  type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
+                  composition: {
+                    summary: "Ar^+",
+                    latex: "\\mathrm{Ar}^+",
+                  },
+                  summary: "Ar^+",
+                  latex: "\\mathrm{Ar}^+",
+                },
+              },
+            },
+            {
+              count: 1,
+              state: {
+                detailed: {
+                  type: "Electron",
+                  composition: "e",
+                  charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
                 },
               },
             },
@@ -2179,13 +1900,6 @@ describe("given draft cross section set where its charge in cross section is alt
   let keycss1: string;
   let keycss2: string;
   beforeAll(async () => {
-    await db.insertStateDict({
-      a0: {
-        particle: "A",
-        charge: -13,
-        type: "simple",
-      },
-    });
     keycss1 = await db.createSet(
       {
         complete: false,
@@ -2194,22 +1908,28 @@ describe("given draft cross section set where its charge in cross section is alt
         description: "Some description",
         references: {},
         states: {
-          a: {
-            particle: "A",
+          argon: {
+            type: "Atom",
+            composition: [["Ar", 1]],
             charge: 0,
-            type: "simple",
           },
-          b: {
-            particle: "B",
-            charge: 1,
-            type: "simple",
+          electron: {
+            type: "Electron",
+            composition: "e",
+            charge: -1,
           },
         },
         processes: [
           {
             reaction: {
-              lhs: [{ count: 1, state: "a" }],
-              rhs: [{ count: 2, state: "b" }],
+              lhs: [{ count: 1, state: "argon" }, {
+                count: 1,
+                state: "electron",
+              }],
+              rhs: [{ count: 1, state: "argon" }, {
+                count: 1,
+                state: "electron",
+              }],
               reversible: false,
               typeTags: [],
             },
@@ -2239,11 +1959,11 @@ describe("given draft cross section set where its charge in cross section is alt
       ...css1,
       contributor: css1.contributor.name,
     });
-    const stateA = Object.values(draft.states).find((s) => s.particle === "A");
+    const stateA = Object.values(draft.states).find((s) => s.type === "Atom");
     if (stateA === undefined) {
-      throw Error(`Failed to find state with particle=A in ${keycss1}`);
+      throw Error(`Failed to find state with composition=A in ${keycss1}`);
     }
-    stateA.charge = -12;
+    stateA.charge = 1;
     keycss2 = await db.updateSet(
       keycss1,
       draft,
@@ -2262,33 +1982,73 @@ describe("given draft cross section set where its charge in cross section is alt
               count: 1,
               state: {
                 detailed: {
-                  particle: "A",
-                  charge: -12,
-                  type: "simple",
+                  type: "Atom",
+                  composition: [["Ar", 1]],
+                  charge: 1,
                 },
                 serialized: {
-                  particle: "A",
-                  charge: -12,
-                  summary: "A^12-",
-                  latex: "\\mathrm{A}^{12-}",
+                  composition: {
+                    summary: "Ar^+",
+                    latex: "\\mathrm{Ar}^+",
+                  },
+                  summary: "Ar^+",
+                  latex: "\\mathrm{Ar}^+",
+                },
+              },
+            },
+            {
+              count: 1,
+              state: {
+                detailed: {
+                  type: "Electron",
+                  composition: "e",
+                  charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
                 },
               },
             },
           ],
           rhs: [
             {
-              count: 2,
+              count: 1,
               state: {
                 detailed: {
-                  particle: "B",
+                  type: "Atom",
+                  composition: [["Ar", 1]],
                   charge: 1,
-                  type: "simple",
                 },
                 serialized: {
-                  particle: "B",
-                  charge: 1,
-                  summary: "B^+",
-                  latex: "\\mathrm{B}^+",
+                  composition: {
+                    summary: "Ar^+",
+                    latex: "\\mathrm{Ar}^+",
+                  },
+                  summary: "Ar^+",
+                  latex: "\\mathrm{Ar}^+",
+                },
+              },
+            },
+            {
+              count: 1,
+              state: {
+                detailed: {
+                  type: "Electron",
+                  composition: "e",
+                  charge: -1,
+                },
+                serialized: {
+                  composition: {
+                    summary: "e^-",
+                    latex: "\\mathrm{e}^-",
+                  },
+                  summary: "e^-",
+                  latex: "\\mathrm{e}^-",
                 },
               },
             },
@@ -2333,60 +2093,58 @@ describe("given draft cross section set where its charge in cross section is alt
   it("should have 4 states: a0, a, a2, b=b2", async () => {
     const cursor = await db.getDB().query(aql`
       FOR s IN State
-        RETURN UNSET(s, ['_key', '_id' , '_rev'])
+        LET composition = FIRST(
+          FOR co IN Composition
+            FILTER s.detailed.composition == co._id
+            return co.definition
+        )
+        RETURN MERGE_RECURSIVE(UNSET(s, ['_key', '_id' , '_rev']), {detailed: {composition}})
     `);
     const states = await cursor.all();
     const expected: Array<SerializedSpecies> = [
       {
         detailed: {
-          particle: "A",
-          charge: -13,
-          type: "simple",
-        },
-        serialized: {
-          particle: "A",
-          charge: -13,
-          summary: "A^13-",
-          latex: "\\mathrm{A}^{13-}",
-        },
-      },
-      {
-        detailed: {
-          particle: "A",
+          type: "Atom",
+          composition: [["Ar", 1]],
           charge: 0,
-          type: "simple",
         },
         serialized: {
-          particle: "A",
-          charge: 0,
-          summary: "A",
-          latex: "\\mathrm{A}",
+          composition: {
+            summary: "Ar",
+            latex: "\\mathrm{Ar}",
+          },
+          summary: "Ar",
+          latex: "\\mathrm{Ar}",
         },
       },
       {
         detailed: {
-          particle: "B",
-          charge: 1,
-          type: "simple",
+          type: "Electron",
+          composition: "e",
+          charge: -1,
         },
         serialized: {
-          particle: "B",
-          charge: 1,
-          summary: "B^+",
-          latex: "\\mathrm{B}^+",
+          composition: {
+            summary: "e^-",
+            latex: "\\mathrm{e}^-",
+          },
+          summary: "e^-",
+          latex: "\\mathrm{e}^-",
         },
       },
       {
         detailed: {
-          particle: "A",
-          charge: -12,
-          type: "simple",
+          type: "Atom",
+          composition: [["Ar", 1]],
+          charge: 1,
         },
         serialized: {
-          particle: "A",
-          charge: -12,
-          summary: "A^12-",
-          latex: "\\mathrm{A}^{12-}",
+          composition: {
+            summary: "Ar^+",
+            latex: "\\mathrm{Ar}^+",
+          },
+          summary: "Ar^+",
+          latex: "\\mathrm{Ar}^+",
         },
       },
     ];

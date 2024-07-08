@@ -3,64 +3,61 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, it } from "vitest";
-import { type AnySpecies, AnySpeciesSerializable } from "./any-species.js";
+import { AnySpecies, AnySpeciesSerializable } from "./any-species.js";
+import { Element } from "./composition/element.js";
+import { Composition } from "./composition/universal.js";
+import { uniqueElementsInComposition } from "./composition/util.js";
 import { type StateSummary } from "./summary.js";
 
-type TestCases = Array<[string, AnySpecies, StateSummary]>;
-
 describe("State serialization", () => {
+  type TestCases = Array<[string, AnySpecies, StateSummary]>;
+
   const testCases: TestCases = [
     [
       "Electron",
-      { type: "simple", particle: "e", charge: -1 },
+      { type: "Electron", composition: "e", charge: -1 },
       {
-        particle: "e",
-        charge: -1,
         summary: "e^-",
         latex: "\\mathrm{e}^-",
+        composition: { summary: "e^-", latex: "\\mathrm{e}^-" },
       },
     ],
     [
       "Argon star",
       {
-        type: "unspecified",
-        particle: "Ar",
+        type: "AtomUnspecified",
+        composition: [["Ar", 1]],
         charge: 0,
         electronic: "*",
       },
       {
-        particle: "Ar",
-        charge: 0,
         summary: "Ar{*}",
         latex: "\\mathrm{Ar}\\left(\\mathrm{*}\\right)",
-        electronic: {
-          summary: "*",
-          latex: "\\mathrm{*}",
-        },
+        composition: { summary: "Ar", latex: "\\mathrm{Ar}" },
+        electronic: { summary: "*", latex: "\\mathrm{*}" },
       },
     ],
     [
       "Helium LS ground",
       {
         type: "AtomLS",
-        particle: "He",
+        composition: [["He", 1]],
         charge: 0,
         electronic: { config: [], term: { L: 0, S: 0, J: 0, P: 1 } },
       },
       {
-        particle: "He",
-        charge: 0,
         summary: "He{^1S_0}",
         latex: "\\mathrm{He}\\left({}^{1}\\mathrm{S}_{0}\\right)",
+        composition: { summary: "He", latex: "\\mathrm{He}" },
         electronic: { summary: "^1S_0", latex: "{}^{1}\\mathrm{S}_{0}" },
       },
     ],
     [
       "Argon J1L2",
       {
-        particle: "Ar",
-        charge: 0,
         type: "AtomJ1L2",
+        composition: [["Ar", 1]],
+        charge: 0,
         electronic: {
           config: {
             core: {
@@ -76,11 +73,10 @@ describe("State serialization", () => {
         },
       },
       {
-        particle: "Ar",
-        charge: 0,
         summary: "Ar{3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2}",
         latex:
           "\\mathrm{Ar}\\left(3p^{5}({}^{2}\\mathrm{P}^o_{3/2})4s({}^{2}\\mathrm{S}){}^{2}[3/2]^o_{2}\\right)",
+        composition: { summary: "Ar", latex: "\\mathrm{Ar}" },
         electronic: {
           summary: "3p^{5}{^2P^o_3/2}4s{^2S}2[3/2]^o_2",
           latex:
@@ -91,9 +87,9 @@ describe("State serialization", () => {
     [
       "Phosphorus ion LS1",
       {
-        particle: "P",
-        charge: 1,
         type: "AtomLS1",
+        composition: [["P", 1]],
+        charge: 1,
         electronic: {
           config: {
             core: {
@@ -109,24 +105,23 @@ describe("State serialization", () => {
         },
       },
       {
-        charge: 1,
+        summary: "P^+{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
+        latex:
+          "\\mathrm{P}^+\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
+        composition: { summary: "P^+", latex: "\\mathrm{P}^+" },
         electronic: {
           latex:
             "3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}",
           summary: "3p{^2P^o}4f{^2F^o}F^2[5/2]_3",
         },
-        latex:
-          "\\mathrm{P}^+\\left(3p({}^{2}\\mathrm{P}^o)4f({}^{2}\\mathrm{F}^o)\\mathrm{F}^{2}[5/2]_{3}\\right)",
-        particle: "P",
-        summary: "P^+{3p{^2P^o}4f{^2F^o}F^2[5/2]_3}",
       },
     ],
     [
       "Helium compound",
       {
-        particle: "He",
-        charge: 0,
         type: "AtomLS",
+        composition: [["He", 1]],
+        charge: 0,
         electronic: [
           {
             config: [{ n: 2, l: 1, occupance: 1 }],
@@ -143,7 +138,10 @@ describe("State serialization", () => {
         ],
       },
       {
-        charge: 0,
+        summary: "He{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
+        latex:
+          "\\mathrm{He}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
+        composition: { summary: "He", latex: "\\mathrm{He}" },
         electronic: [
           {
             latex: "2p:{}^{3}\\mathrm{P}^o_{2}",
@@ -158,18 +156,35 @@ describe("State serialization", () => {
             summary: "2p:^3P^o_0",
           },
         ],
-        latex:
-          "\\mathrm{He}\\left(2p:{}^{3}\\mathrm{P}^o_{2}|2p:{}^{3}\\mathrm{P}^o_{1}|2p:{}^{3}\\mathrm{P}^o_{0}\\right)",
-        particle: "He",
-        summary: "He{2p:^3P^o_2|2p:^3P^o_1|2p:^3P^o_0}",
+      },
+    ],
+    [
+      "H2 electronic unspecified",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["H", 2]],
+        charge: 0,
+        electronic: "*",
+      },
+      {
+        summary: "H2{*}",
+        latex: "\\mathrm{H_{2}}\\left(\\mathrm{*}\\right)",
+        composition: {
+          summary: "H2",
+          latex: "\\mathrm{H_{2}}",
+        },
+        electronic: {
+          summary: "*",
+          latex: "\\mathrm{*}",
+        },
       },
     ],
     [
       "N2 rotational",
       {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -180,7 +195,13 @@ describe("State serialization", () => {
         },
       },
       {
-        charge: 0,
+        summary: "N2{X^1S_g^+{0{0}}}",
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
+        composition: {
+          summary: "N2",
+          latex: "\\mathrm{N_{2}}",
+        },
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -193,18 +214,14 @@ describe("State serialization", () => {
             summary: "0",
           },
         },
-        latex:
-          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(0\\right)\\right)\\right)",
-        particle: "N2",
-        summary: "N2{X^1S_g^+{0{0}}}",
       },
     ],
     [
       "N2 rotational compound",
       {
-        particle: "N2",
-        charge: 0,
         type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -218,7 +235,13 @@ describe("State serialization", () => {
         },
       },
       {
-        charge: 0,
+        summary: "N2{X^1S_g^+{0{1|2|3|4|5}}}",
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
+        composition: {
+          summary: "N2",
+          latex: "\\mathrm{N_{2}}",
+        },
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -249,18 +272,96 @@ describe("State serialization", () => {
             summary: "0",
           },
         },
+      },
+    ],
+    [
+      "N2 rotational unspecified",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          Lambda: 0,
+          S: 0,
+          parity: "g",
+          reflection: "+",
+          vibrational: {
+            v: 0,
+            rotational: "10+",
+          },
+        },
+      },
+      {
+        composition: {
+          latex: "\\mathrm{N_{2}}",
+          summary: "N2",
+        },
+        electronic: {
+          latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
+          summary: "X^1S_g^+",
+          vibrational: {
+            latex: "0",
+            rotational: {
+              latex: "10+",
+              summary: "10+",
+            },
+            summary: "0",
+          },
+        },
         latex:
-          "\\mathrm{N2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(1|2|3|4|5\\right)\\right)\\right)",
-        particle: "N2",
-        summary: "N2{X^1S_g^+{0{1|2|3|4|5}}}",
+          "\\mathrm{N_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0\\left(10+\\right)\\right)\\right)",
+        summary: "N2{X^1S_g^+{0{10+}}}",
+      },
+    ],
+    [
+      "N2 electronic compound",
+      {
+        type: "HomonuclearDiatom",
+        composition: [["N", 2]],
+        charge: 0,
+        electronic: [
+          {
+            energyId: "A",
+            S: 1,
+            Lambda: 0,
+            parity: "u",
+            reflection: "+",
+          },
+          {
+            energyId: "B",
+            S: 1,
+            Lambda: 1,
+            parity: "g",
+          },
+        ],
+      },
+      {
+        composition: {
+          latex: "\\mathrm{N_{2}}",
+          summary: "N2",
+        },
+        electronic: [
+          {
+            latex: "\\mathrm{A}^{3}\\Sigma_\\mathrm{u}^+",
+            summary: "A^3S_u^+",
+          },
+          {
+            latex: "\\mathrm{B}^{3}\\Pi_\\mathrm{g}",
+            summary: "B^3P_g",
+          },
+        ],
+        latex:
+          "\\mathrm{N_{2}}\\left(\\mathrm{A}^{3}\\Sigma_\\mathrm{u}^+|\\mathrm{B}^{3}\\Pi_\\mathrm{g}\\right)",
+        summary: "N2{A^3S_u^+|B^3P_g}",
       },
     ],
     [
       "CO electronic",
       {
-        particle: "CO",
-        charge: 0,
         type: "HeteronuclearDiatom",
+        composition: [["C", 1], ["O", 1]],
+        charge: 0,
         electronic: {
           energyId: "X",
           S: 0,
@@ -269,22 +370,24 @@ describe("State serialization", () => {
         },
       },
       {
-        charge: 0,
+        summary: "CO{X^1S^+}",
+        latex: "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
+        composition: {
+          summary: "CO",
+          latex: "\\mathrm{CO}",
+        },
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma^+",
           summary: "X^1S^+",
         },
-        latex: "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
-        particle: "CO",
-        summary: "CO{X^1S^+}",
       },
     ],
     [
       "CO2 vibrational compound",
       {
-        particle: "CO2",
-        charge: 0,
         type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
         electronic: {
           energyId: "X",
           Lambda: 0,
@@ -302,7 +405,13 @@ describe("State serialization", () => {
         },
       },
       {
-        charge: 0,
+        summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
+        latex:
+          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(000|050|210|130|021|101\\right)\\right)",
+        composition: {
+          summary: "CO2",
+          latex: "\\mathrm{CO_{2}}",
+        },
         electronic: {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
@@ -333,16 +442,45 @@ describe("State serialization", () => {
             },
           ],
         },
+      },
+    ],
+    [
+      "CO2 vibrational unspecified",
+      {
+        type: "LinearTriatomInversionCenter",
+        composition: [["C", 1], ["O", 2]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          Lambda: 0,
+          S: 0,
+          parity: "g",
+          reflection: "+",
+          vibrational: "10+",
+        },
+      },
+      {
+        composition: {
+          latex: "\\mathrm{CO_{2}}",
+          summary: "CO2",
+        },
+        electronic: {
+          latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
+          summary: "X^1S_g^+",
+          vibrational: {
+            latex: "10+",
+            summary: "10+",
+          },
+        },
         latex:
-          "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(000|050|210|130|021|101\\right)\\right)",
-        particle: "CO2",
-        summary: "CO2{X^1S_g^+{000|050|210|130|021|101}}",
+          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(10+\\right)\\right)",
+        summary: "CO2{X^1S_g^+{10+}}",
       },
     ],
     [
       "H2O rotational",
       {
-        particle: "H2O",
+        composition: [["H", 2], ["O", 1]],
         charge: 0,
         type: "TriatomC2v",
         electronic: {
@@ -356,11 +494,10 @@ describe("State serialization", () => {
         },
       },
       {
-        particle: "H2O",
-        charge: 0,
         summary: "H2O{X{000{000}}}",
         latex:
-          "\\mathrm{H2O}\\left(\\mathrm{X}\\left(000\\left(000\\right)\\right)\\right)",
+          "\\mathrm{H_{2}O}\\left(\\mathrm{X}\\left(000\\left(000\\right)\\right)\\right)",
+        composition: { summary: "H2O", latex: "\\mathrm{H_{2}O}" },
         electronic: {
           summary: "X",
           latex: "\\mathrm{X}",
@@ -375,10 +512,71 @@ describe("State serialization", () => {
         },
       },
     ],
+    [
+      "Tetramethylsilane (recursive composition)",
+      {
+        type: "Unspecified",
+        composition: [["Si", 1], [[["C", 1], ["H", 3]], 4]],
+        charge: 0,
+      },
+      {
+        summary: "Si(CH3)4",
+        latex: "\\mathrm{Si\\left(CH_{3}\\right)_{4}}",
+        composition: {
+          summary: "Si(CH3)4",
+          latex: "\\mathrm{Si\\left(CH_{3}\\right)_{4}}",
+        },
+      },
+    ],
   ];
 
   it.each(testCases)("%s", (_, input, summary) => {
     const state = AnySpeciesSerializable.parse(input);
     expect(state.serialize()).toStrictEqual(summary);
+  });
+});
+
+describe("uniqueElementsInComposition", () => {
+  type TestCases = Array<[string, Composition, Array<Element>]>;
+
+  const testCases: TestCases = [
+    ["Ar", [["Ar", 1]], ["Ar"]],
+    ["H2", [["H", 2]], ["H"]],
+    ["CO", [["C", 1], ["O", 1]], ["C", "O"]],
+    ["CO2", [["C", 1], ["O", 2]], ["C", "O"]],
+    ["H2O", [["H", 2], ["O", 1]], ["H", "O"]],
+    ["Si(CH3)4", [["Si", 1], [[["C", 1], ["H", 3]], 4]], ["Si", "C", "H"]],
+  ];
+
+  it.each(testCases)("%s", (_, input, elements) => {
+    const predicted = uniqueElementsInComposition(input);
+    expect(predicted).toStrictEqual(elements);
+  });
+});
+
+describe("Invalid compositions that should error at runtime", () => {
+  type TestCases = Array<[string, AnySpecies, string]>;
+
+  const testCases: TestCases = [
+    [
+      "A heteronuclear diatom with equivalent constituents",
+      {
+        type: "HeteronuclearDiatom",
+        composition: [["H", 1], ["H", 1]],
+        charge: 0,
+        electronic: {
+          energyId: "X",
+          S: 0,
+          Lambda: 0,
+          reflection: "+",
+        },
+      },
+      "Chemical composition of heteronuclear diatom contains equal elements H, use the \"HomonuclearDiatom\" species type instead.",
+    ],
+  ];
+
+  it.each(testCases)("%s", (_, input, message) => {
+    const result = AnySpecies.safeParse(input);
+    expect(result.error?.issues[0].message).toStrictEqual(message);
   });
 });

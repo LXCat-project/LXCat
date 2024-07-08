@@ -14,7 +14,7 @@
     "CO2(X^{1}\\Sigma_{g}^+(v=0,0,0))": {
       "detailed": {
         "type": "LinearTriatomInversionCenter",
-        "particle": "CO2",
+        "composition": [["C", 1], ["O", 2]],
         "charge": 0,
         "electronic": {
           "energyId": "X",
@@ -26,10 +26,12 @@
         }
       },
       "serialized": {
-        "particle": "CO2",
-        "charge": 0,
         "summary": "CO2{X^1S_g^+{0,0,0}}",
         "latex": "\\mathrm{CO2}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,0,0\\right)\\right)",
+        "composition": {
+          "summary": "CO2",
+          "latex": "\\mathrm{CO_{2}}"
+        },
         "electronic": {
           "summary": "X^1S_g^+",
           "latex": "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
@@ -38,36 +40,44 @@
       }
     },
     "e": {
-      "detailed": { "type": "simple", "particle": "e", "charge": -1 },
-      "serialized": { "particle": "e", "charge": -1, "summary": "e^-", "latex": "\\mathrm{e}^-" }
+      "detailed": { "type": "simple", "composition": "e", "charge": -1 },
+      "serialized": {
+        "composition": { "summary": "e^-", "latex": "\\mathrm{e}^-" },
+        "summary": "e^-",
+        "latex": "\\mathrm{e}^-"
+      }
     },
     "O^-(^{2}P^o_{3/2})": {
       "detailed": {
         "type": "AtomLS",
-        "particle": "O",
+        "composition": [["O", 1]],
         "charge": -1,
         "electronic": { "config": [], "term": { "L": 1, "S": 0.5, "P": -1, "J": 1.5 } }
       },
       "serialized": {
-        "particle": "O",
-        "charge": -1,
         "summary": "O^-{^2P^o_3/2}",
         "latex": "\\mathrm{O}^-\\left({}^{2}\\mathrm{P}^o_{3/2}\\right)",
+        "composition": {
+          "summary": "O^-",
+          "latex": "\\mathrm{O}^-"
+        },
         "electronic": { "summary": "^2P^o_3/2", "latex": "{}^{2}\\mathrm{P}^o_{3/2}" }
       }
     },
     "CO(X^{1}\\Sigma^+)": {
       "detailed": {
         "type": "HeteronuclearDiatom",
-        "particle": "CO",
+        "composition": [["C", 1], ["O", 1]],
         "charge": 0,
         "electronic": { "energyId": "X", "Lambda": 0, "S": 0, "reflection": "+" }
       },
       "serialized": {
-        "particle": "CO",
-        "charge": 0,
         "summary": "CO{X^1S^+}",
         "latex": "\\mathrm{CO}\\left(\\mathrm{X}^{1}\\Sigma^+\\right)",
+        "composition": {
+          "summary": "CO",
+          "latex": "\\mathrm{CO}"
+        },
         "electronic": { "summary": "X^1S^+", "latex": "\\mathrm{X}^{1}\\Sigma^+" }
       }
     }

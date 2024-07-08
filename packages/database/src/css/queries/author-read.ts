@@ -68,11 +68,21 @@ export async function byOwnerAndId(
                     FILTER r._id == cs.reaction
                     LET consumes = (
                       FOR state IN OUTBOUND r Consumes
-                        RETURN {[state._key]: state.detailed}
+                        LET composition = FIRST(
+                          FOR co IN Composition
+                            FILTER state.detailed.composition == co._id
+                            return co.definition
+                        )
+                        RETURN {[state._key]: MERGE_RECURSIVE(state.detailed, {composition})}
                     )
                     LET produces = (
                       FOR state IN OUTBOUND r Produces
-                        RETURN {[state._key]: state.detailed}
+                        LET composition = FIRST(
+                          FOR co IN Composition
+                            FILTER state.detailed.composition == co._id
+                            return co.definition
+                        )
+                        RETURN {[state._key]: MERGE_RECURSIVE(state.detailed, {composition})}
                     )
                     RETURN MERGE(UNION(produces, consumes))
               )

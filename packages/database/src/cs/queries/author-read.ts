@@ -29,12 +29,12 @@ export async function searchOwned(
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
   const cursor: ArrayCursor<unknown> = await this.db.query(aql`
-		FOR u IN users
-			FILTER u.email == ${email}
+    FOR u IN users
+      FILTER u.email == ${email}
       FOR o IN OUTBOUND u MemberOf
-				FOR cs IN CrossSection
-					FILTER cs.organization == o._id
-					FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
+        FOR cs IN CrossSection
+          FILTER cs.organization == o._id
+          FILTER ['published' ,'draft', 'retracted'] ANY == cs.versionInfo.status
           LET with_draft = FIRST(
             FILTER cs.versionInfo.status == 'published'
             RETURN COUNT(
@@ -44,24 +44,34 @@ export async function searchOwned(
             )
           )
           FILTER with_draft != 1
-					LET sets = (
-						FOR css IN OUTBOUND cs IsPartOf
+          LET sets = (
+            FOR css IN OUTBOUND cs IsPartOf
               RETURN MERGE(UNSET(css, ["_rev", "_id", "versionInfo", "organization"]), { contributor: DOCUMENT(css.organization).name })
-					)
+          )
           ${reactionsAql}
-					LET reaction = FIRST(
-						FOR r in Reaction
-							FILTER r._id == cs.reaction
-							LET consumes = (
+          LET reaction = FIRST(
+            FOR r in Reaction
+              FILTER r._id == cs.reaction
+              LET consumes = (
                 FOR species, c IN OUTBOUND r Consumes
-									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: c.count}
-							)
-							LET produces = (
+                  LET composition = FIRST(
+                    FOR co IN Composition
+                      FILTER species.detailed.composition == co._id
+                      return co.definition
+                  )
+                  RETURN {state: MERGE_RECURSIVE(UNSET(species, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: c.count}
+              )
+              LET produces = (
                 FOR species, p IN OUTBOUND r Produces
-									RETURN {state: UNSET(species, ["_key", "_rev", "_id"]), count: p.count}
-							)
-							RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), { lhs: consumes, rhs: produces })
-					)
+                  LET composition = FIRST(
+                    FOR co IN Composition
+                      FILTER species.detailed.composition == co._id
+                      return co.definition
+                  )
+                  RETURN {state: MERGE_RECURSIVE(UNSET(species, ["_key", "_rev", "_id"]), {detailed: {composition}}), count: p.count}
+              )
+              RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), { lhs: consumes, rhs: produces })
+          )
           LET references = (
             FOR r IN OUTBOUND cs References
               RETURN UNSET(r, ["_key", "_rev", "_id"])
