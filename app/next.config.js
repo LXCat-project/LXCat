@@ -11,6 +11,7 @@ if (process.env.LXCAT_BUILD_ENV !== "production") {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  swcMinify: false,
   reactStrictMode: true,
 
   experimental: {
@@ -18,6 +19,8 @@ const nextConfig = {
       ["swc-plugin-coverage-instrument", {}],
     ]
   },
+
+  transpilePackages: ["next-mdx-remote"],
 
   webpack: (config, { nextRuntime }) => {
     if (nextRuntime === "nodejs") {
