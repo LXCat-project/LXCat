@@ -25,7 +25,7 @@
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.2",
     "dprint": "^0.47.2",
     "eslint": "8.57.0",
     "tsx": "^4.16.2",
