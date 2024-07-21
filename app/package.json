@@ -103,7 +103,7 @@
     "playwright-test-coverage": "^1.2.12",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^9.5.16",
-    "postcss-preset-mantine": "^1.15.0",
+    "postcss-preset-mantine": "^1.17.0",
     "swc-plugin-coverage-instrument": "^0.0.24",
     "testcontainers": "^10.10.3",
     "typescript": "^5.5.3",
