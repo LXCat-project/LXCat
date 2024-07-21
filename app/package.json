@@ -107,6 +107,6 @@
     "swc-plugin-coverage-instrument": "^0.0.24",
     "testcontainers": "^10.10.4",
     "typescript": "^5.5.3",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.3"
   }
 }
