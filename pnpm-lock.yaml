@@ -320,8 +320,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.10.3
-        version: 10.10.3
+        specifier: ^10.10.4
+        version: 10.10.4
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -3699,8 +3699,8 @@ packages:
     resolution: {integrity: sha512-/vZinJNvCYhdAB+RUsyCpanSPuOEKHHIZi4Uu0Bw7ilewHnQhCWUPrT704uHCRli2ROl7spADPmWzAqOganA5A==}
     dev: false
 
-  /@testcontainers/arangodb@10.10.3:
-    resolution: {integrity: sha512-B1uvaoLT7hJrIo/3D5VS78ScA0P2g+P79GY4MCVesYOJiIx/xcoL/cAu7Z/N9YPkTQGYjEEZkXUA8WPXOZqPOg==}
+  /@testcontainers/arangodb@10.10.4:
+    resolution: {integrity: sha512-nOXB3GrbKUXZwX3b0HUykuKBF0fU7urRUcWRkDYX6Eff3c3CAFbfVRMD1KfQo00lPrYXYZq4rhvCXos8NPaGaQ==}
     dependencies:
       testcontainers: 10.10.4
     transitivePeerDependencies:
