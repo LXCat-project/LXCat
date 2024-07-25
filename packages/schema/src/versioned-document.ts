@@ -19,7 +19,7 @@ import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
 
-const VersionedDocumentBody = <ReferenceType extends ZodType>(
+export const VersionedDocumentBody = <ReferenceType extends ZodType>(
   Reference: ReferenceType,
 ) =>
   versioned(
