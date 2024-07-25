@@ -7,6 +7,7 @@
   "scripts": {
     "json:doc": "bun src/cli/document-schema.ts",
     "json:mix": "bun src/cli/mixture-schema.ts",
+    "json:migration": "bun src/cli/migration-schema.ts",
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint src",
