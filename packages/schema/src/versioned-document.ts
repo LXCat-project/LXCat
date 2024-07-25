@@ -20,7 +20,7 @@ import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
 import { versioned } from "./versioned.js";
 
-const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
+export const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
   Reference: ReferenceType,
 ) =>
   versioned(
