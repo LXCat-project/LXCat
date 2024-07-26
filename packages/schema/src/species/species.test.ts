@@ -456,7 +456,7 @@ describe("State serialization", () => {
           S: 0,
           parity: "g",
           reflection: "+",
-          vibrational: "10+",
+          vibrational: "0,n,0",
         },
       },
       {
@@ -468,13 +468,13 @@ describe("State serialization", () => {
           latex: "\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+",
           summary: "X^1S_g^+",
           vibrational: {
-            latex: "10+",
-            summary: "10+",
+            latex: "0,n,0",
+            summary: "0,n,0",
           },
         },
         latex:
-          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(10+\\right)\\right)",
-        summary: "CO2{X^1S_g^+{10+}}",
+          "\\mathrm{CO_{2}}\\left(\\mathrm{X}^{1}\\Sigma_\\mathrm{g}^+\\left(0,n,0\\right)\\right)",
+        summary: "CO2{X^1S_g^+{0,n,0}}",
       },
     ],
     [
