@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "zod": "3.23.6",
-    "zod-to-json-schema": "^3.23.1"
+    "zod-to-json-schema": "^3.23.2"
   },
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
