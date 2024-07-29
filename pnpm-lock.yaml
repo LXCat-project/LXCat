@@ -282,6 +282,12 @@ importers:
 
   packages/database:
     dependencies:
+      '@citation-js/core':
+        specifier: ^0.7.14
+        version: 0.7.14
+      '@citation-js/plugin-doi':
+        specifier: ^0.7.14
+        version: 0.7.16(@citation-js/core@0.7.14)
       '@lxcat/schema':
         specifier: workspace:^
         version: link:../schema
