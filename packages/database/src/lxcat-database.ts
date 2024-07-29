@@ -59,6 +59,12 @@ import {
   updateVersionStatus as updateItemVersionStatus,
 } from "./cs/queries/write.js";
 import {
+  createHistoricDraftItem,
+  createHistoricItem,
+  loadHistoricDataset,
+  updateHistoricItem,
+} from "./css/migrate.js";
+import {
   byOwnerAndId,
   getVersionInfo as getSetVersionInfo,
   isOwnerOfSet,
@@ -376,4 +382,10 @@ export class LXCatDatabase {
   public getReversible = getReversible;
   public getAvailableSets = getCSSets;
   public getItemIdsByReactionTemplate = getCSIdByReactionTemplate;
+
+  // css/migration
+  public loadHistoricDataset = loadHistoricDataset;
+  public createHistoricItem = createHistoricItem;
+  public createHistoricDraftItem = createHistoricDraftItem;
+  public updateHistoricItem = updateHistoricItem;
 }
