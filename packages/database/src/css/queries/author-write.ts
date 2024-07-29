@@ -537,7 +537,7 @@ export async function deleteSet(
   }
 }
 
-function isEqualProcess(
+export function isEqualProcess(
   newCS: NewProcess<string, ReferenceRef<string>>,
   prevCS: KeyedProcess<string, ReferenceRef<string>>,
   stateLookup: Record<string, string>,
