@@ -43,10 +43,10 @@ importers:
         version: link:../packages/schema
       '@mantine/code-highlight':
         specifier: ^7.11.2
-        version: 7.11.2(@mantine/core@7.11.2)(@mantine/hooks@7.11.2)(react-dom@18.3.1)(react@18.3.1)
+        version: 7.11.2(@mantine/core@7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.2(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/core':
         specifier: ^7.11.2
-        version: 7.11.2(@mantine/hooks@7.11.2)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+        version: 7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/form':
         specifier: ^7.11.2
         version: 7.11.2(react@18.3.1)
@@ -88,7 +88,7 @@ importers:
         version: 10.1.1
       mantine-datatable:
         specifier: ^7.11.2
-        version: 7.11.2(@mantine/core@7.11.2)(@mantine/hooks@7.11.2)(clsx@2.1.1)(react@18.3.1)
+        version: 7.11.2(@mantine/core@7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.2(react@18.3.1))(clsx@2.1.1)(react@18.3.1)
       mdast-util-from-markdown:
         specifier: ^2.0.1
         version: 2.0.1
@@ -100,19 +100,19 @@ importers:
         version: 5.0.7
       next:
         specifier: ^14.2.5
-        version: 14.2.5(@babel/core@7.24.9)(@playwright/test@1.44.0)(react-dom@18.3.1)(react@18.3.1)
+        version: 14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.7
-        version: 4.24.7(next@14.2.5)(react-dom@18.3.1)(react@18.3.1)
+        version: 4.24.7(next@14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-connect:
         specifier: ^1.0.0
         version: 1.0.0
       next-mdx-remote:
         specifier: canary
-        version: 0.0.0-canary-20240321205249(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+        version: 0.0.0-canary-20240522052620(@types/react@18.3.3)(react@18.3.1)
       nextjs-cors:
         specifier: ^2.2.0
-        version: 2.2.0(next@14.2.5)
+        version: 2.2.0(next@14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -127,16 +127,16 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-latex-next:
         specifier: ^3.0.0
-        version: 3.0.0(react-dom@18.3.1)(react@18.3.1)
+        version: 3.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-plotly.js:
         specifier: ^2.6.0
-        version: 2.6.0(plotly.js@2.28.0)(react@18.3.1)
+        version: 2.6.0(plotly.js@2.28.0(mapbox-gl@1.10.1))(react@18.3.1)
       react-schemaorg:
         specifier: ^2.0.0
-        version: 2.0.0(react@18.3.1)(schema-dts@1.1.2)(typescript@5.5.4)
+        version: 2.0.0(react@18.3.1)(schema-dts@1.1.2(typescript@5.5.4))(typescript@5.5.4)
       redoc:
         specifier: ^2.1.5
-        version: 2.1.5(core-js@3.35.1)(enzyme@3.11.0)(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1)(styled-components@6.1.8)
+        version: 2.1.5(core-js@3.35.1)(enzyme@3.11.0)(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       rehype-autolink-headings:
         specifier: ^7.1.0
         version: 7.1.0
@@ -217,8 +217,8 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4
       '@types/node':
-        specifier: 20.14.11
-        version: 20.14.11
+        specifier: 22.0.0
+        version: 22.0.0
       '@types/oidc-provider':
         specifier: ^8.5.1
         version: 8.5.1
@@ -236,7 +236,7 @@ importers:
         version: 3.0.2
       '@vitest/coverage-v8':
         specifier: ^2.0.4
-        version: 2.0.4(vitest@2.0.4)
+        version: 2.0.4(vitest@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0))
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -278,7 +278,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^2.0.4
-        version: 2.0.4(@types/node@20.14.11)
+        version: 2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/converter:
     devDependencies:
@@ -286,8 +286,8 @@ importers:
         specifier: ^2.18.4
         version: 2.18.4
       '@types/node':
-        specifier: ^20.14.11
-        version: 20.14.11
+        specifier: ^22.0.0
+        version: 22.0.0
       tsx:
         specifier: ^4.16.2
         version: 4.16.2
@@ -326,14 +326,14 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       '@types/node':
-        specifier: ^20.14.11
-        version: 20.14.11
+        specifier: ^22.0.0
+        version: 22.0.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.17.0
-        version: 7.17.0(@typescript-eslint/parser@7.0.1)(eslint@8.57.0)(typescript@5.5.4)
+        version: 7.17.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
       '@vitest/coverage-v8':
         specifier: ^2.0.4
-        version: 2.0.4(vitest@2.0.4)
+        version: 2.0.4(vitest@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -351,7 +351,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^2.0.4
-        version: 2.0.4(@types/node@20.14.11)
+        version: 2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/node-loader:
     dependencies:
@@ -392,10 +392,10 @@ importers:
         version: link:../tsconfig
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.17.0
-        version: 7.17.0(@typescript-eslint/parser@7.0.1)(eslint@8.57.0)(typescript@5.5.4)
+        version: 7.17.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
       '@vitest/coverage-v8':
         specifier: ^2.0.4
-        version: 2.0.4(vitest@2.0.4)
+        version: 2.0.4(vitest@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -410,7 +410,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: ^2.0.4
-        version: 2.0.4(@types/node@20.14.11)
+        version: 2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/tsconfig: {}
 
@@ -1742,6 +1742,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -1749,6 +1750,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.2':
     resolution: {integrity: sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==}
+    deprecated: Use @eslint/object-schema instead
 
   '@img/sharp-darwin-arm64@0.33.4':
     resolution: {integrity: sha512-p0suNqXufJs9t3RqLBO6vvrgr5OhgbWp76s5gTRvdmxmuv9E1rcaqGUsl3l4mKVmXPkTkTErXediAui4x+8PSA==}
@@ -2334,8 +2336,8 @@ packages:
   '@types/ms@0.7.31':
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
 
-  '@types/node@20.14.11':
-    resolution: {integrity: sha512-kprQpL8MMeszbz6ojB5/tU8PLN4kesnN8Gjzw349rDlNgsSzg90lAVj3llK99Dh7JON+t9AuscPPFW6mPbTnSA==}
+  '@types/node@22.0.0':
+    resolution: {integrity: sha512-VT7KSYudcPOzP5Q0wfbowyNLaVR8QWUdw+088uFWwfvpY6uCWaXpqV6ieLAu9WBcnTa7H4Z5RLK8I5t2FuOcqw==}
 
   '@types/normalize-package-data@2.4.1':
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -5614,12 +5616,11 @@ packages:
     resolution: {integrity: sha512-FeLURm9MdvzY1SDUGE74tk66mukSqL6MAzxajW7Gqh6DZKBZLrXmXnGWtHJZXkfvoi+V/DUe9Hhtfkl4+nTlYA==}
     engines: {node: '>=16'}
 
-  next-mdx-remote@0.0.0-canary-20240321205249:
-    resolution: {integrity: sha512-vqerW3tdmFCLtmENseqAF2GPRV6ka/b39//Rhl7zkAMalJ/OpQ6MYqrnLYFlyOc1aVyV/D5IpxjK4Uw071jq2A==}
+  next-mdx-remote@0.0.0-canary-20240522052620:
+    resolution: {integrity: sha512-oTJqY/Lb36NUnMReD5r7Rb1h0XEslSqgr+Jwd2rrvDMhklz3GPYj4sAS8JEvxgGnRU+AbVWNIp79m6sXYZEgGA==}
     engines: {node: '>=14', npm: '>=7'}
     peerDependencies:
-      react: '>=16.x <=18.x'
-      react-dom: '>=16.x <=18.x'
+      react: '>=16'
 
   next-tick@1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
@@ -6647,6 +6648,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   robust-predicates@3.0.2:
@@ -7337,8 +7339,8 @@ packages:
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
-  undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+  undici-types@6.11.1:
+    resolution: {integrity: sha512-mIDEX2ek50x0OlRgxryxsenE5XaQD4on5U2inY7RApK3SOJpofyw7uW2AyfMKkhAxXIceo2DeWGVGwyvng1GNQ==}
 
   unicode-canonical-property-names-ecmascript@2.0.0:
     resolution: {integrity: sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ==}
@@ -8658,7 +8660,7 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.2': {}
 
-  '@cfaester/enzyme-adapter-react-18@0.8.0(enzyme@3.11.0)(react-dom@18.3.1)(react@18.3.1)':
+  '@cfaester/enzyme-adapter-react-18@0.8.0(enzyme@3.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       enzyme: 3.11.0
       enzyme-shallow-equal: 1.0.7
@@ -8710,22 +8712,22 @@ snapshots:
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
 
-  '@csstools/cascade-layer-name-parser@1.0.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)':
+  '@csstools/cascade-layer-name-parser@1.0.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)':
     dependencies:
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
 
   '@csstools/color-helpers@4.2.1': {}
 
-  '@csstools/css-calc@1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)':
+  '@csstools/css-calc@1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)':
     dependencies:
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
 
-  '@csstools/css-color-parser@2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)':
+  '@csstools/css-color-parser@2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)':
     dependencies:
       '@csstools/color-helpers': 4.2.1
-      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
 
@@ -8735,7 +8737,7 @@ snapshots:
 
   '@csstools/css-tokenizer@2.4.1': {}
 
-  '@csstools/media-query-list-parser@2.1.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)':
+  '@csstools/media-query-list-parser@2.1.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)':
     dependencies:
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
@@ -8748,7 +8750,7 @@ snapshots:
 
   '@csstools/postcss-color-function@3.0.19(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8757,7 +8759,7 @@ snapshots:
 
   '@csstools/postcss-color-mix-function@2.0.19(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8774,7 +8776,7 @@ snapshots:
 
   '@csstools/postcss-exponential-functions@1.0.9(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       postcss: 8.4.32
@@ -8787,14 +8789,14 @@ snapshots:
 
   '@csstools/postcss-gamut-mapping@1.0.11(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       postcss: 8.4.32
 
   '@csstools/postcss-gradients-interpolation-method@4.0.20(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8803,7 +8805,7 @@ snapshots:
 
   '@csstools/postcss-hwb-function@3.0.18(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8860,17 +8862,17 @@ snapshots:
 
   '@csstools/postcss-media-minmax@1.1.8(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
-      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       postcss: 8.4.32
 
   '@csstools/postcss-media-queries-aspect-ratio-number-values@2.0.11(postcss@8.4.32)':
     dependencies:
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
-      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       postcss: 8.4.32
 
   '@csstools/postcss-nested-calc@3.0.2(postcss@8.4.32)':
@@ -8886,7 +8888,7 @@ snapshots:
 
   '@csstools/postcss-oklab-function@3.0.19(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8900,7 +8902,7 @@ snapshots:
 
   '@csstools/postcss-relative-color-syntax@2.0.19(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -8914,7 +8916,7 @@ snapshots:
 
   '@csstools/postcss-stepped-value-functions@3.0.10(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       postcss: 8.4.32
@@ -8927,7 +8929,7 @@ snapshots:
 
   '@csstools/postcss-trigonometric-functions@3.0.10(postcss@8.4.32)':
     dependencies:
-      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-calc': 1.2.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       postcss: 8.4.32
@@ -9161,15 +9163,15 @@ snapshots:
       '@floating-ui/core': 1.5.0
       '@floating-ui/utils': 0.2.1
 
-  '@floating-ui/react-dom@2.0.8(react-dom@18.3.1)(react@18.3.1)':
+  '@floating-ui/react-dom@2.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/dom': 1.6.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@floating-ui/react@0.26.9(react-dom@18.3.1)(react@18.3.1)':
+  '@floating-ui/react@0.26.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/react-dom': 2.0.8(react-dom@18.3.1)(react@18.3.1)
+      '@floating-ui/react-dom': 2.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@floating-ui/utils': 0.2.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -9323,23 +9325,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mantine/code-highlight@7.11.2(@mantine/core@7.11.2)(@mantine/hooks@7.11.2)(react-dom@18.3.1)(react@18.3.1)':
+  '@mantine/code-highlight@7.11.2(@mantine/core@7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.2(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@mantine/core': 7.11.2(@mantine/hooks@7.11.2)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@mantine/core': 7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.11.2(react@18.3.1)
       clsx: 2.1.1
       highlight.js: 11.9.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@mantine/core@7.11.2(@mantine/hooks@7.11.2)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)':
+  '@mantine/core@7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/react': 0.26.9(react-dom@18.3.1)(react@18.3.1)
+      '@floating-ui/react': 0.26.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.11.2(react@18.3.1)
       clsx: 2.1.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-number-format: 5.3.1(react-dom@18.3.1)(react@18.3.1)
+      react-number-format: 5.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-remove-scroll: 2.5.7(@types/react@18.3.3)(react@18.3.1)
       react-textarea-autosize: 8.5.3(@types/react@18.3.3)(react@18.3.1)
       type-fest: 4.12.0
@@ -9675,7 +9677,7 @@ snapshots:
 
   '@types/accepts@1.3.5':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/acorn@4.0.6':
     dependencies:
@@ -9684,11 +9686,11 @@ snapshots:
   '@types/body-parser@1.19.2':
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/connect@3.4.35':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/content-disposition@0.5.5': {}
 
@@ -9699,7 +9701,7 @@ snapshots:
       '@types/connect': 3.4.35
       '@types/express': 4.17.17
       '@types/keygrip': 1.0.2
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/d3-scale-chromatic@3.0.0': {}
 
@@ -9717,13 +9719,13 @@ snapshots:
 
   '@types/docker-modem@3.0.6':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       '@types/ssh2': 0.5.52
 
   '@types/dockerode@3.3.29':
     dependencies:
       '@types/docker-modem': 3.0.6
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       '@types/ssh2': 0.5.52
 
   '@types/eslint-scope@3.7.4':
@@ -9746,7 +9748,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.17.35':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -9789,7 +9791,7 @@ snapshots:
       '@types/http-errors': 2.0.1
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/mdast@3.0.11':
     dependencies:
@@ -9809,16 +9811,16 @@ snapshots:
 
   '@types/ms@0.7.31': {}
 
-  '@types/node@20.14.11':
+  '@types/node@22.0.0':
     dependencies:
-      undici-types: 5.26.5
+      undici-types: 6.11.1
 
   '@types/normalize-package-data@2.4.1': {}
 
   '@types/oidc-provider@8.5.1':
     dependencies:
       '@types/koa': 2.13.6
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/plotly.js-basic-dist@1.54.4':
     dependencies:
@@ -9845,20 +9847,20 @@ snapshots:
   '@types/send@0.17.1':
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/serve-static@1.15.1':
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/ssh2-streams@0.1.9':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
 
   '@types/ssh2@0.5.52':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       '@types/ssh2-streams': 0.1.9
 
   '@types/stylis@4.2.0': {}
@@ -9869,7 +9871,7 @@ snapshots:
 
   '@types/unist@3.0.2': {}
 
-  '@typescript-eslint/eslint-plugin@7.17.0(@typescript-eslint/parser@7.0.1)(eslint@8.57.0)(typescript@5.5.4)':
+  '@typescript-eslint/eslint-plugin@7.17.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@eslint-community/regexpp': 4.10.0
       '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
@@ -9882,6 +9884,7 @@ snapshots:
       ignore: 5.3.1
       natural-compare: 1.4.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -9894,6 +9897,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 7.0.1
       debug: 4.3.5
       eslint: 8.57.0
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -9915,6 +9919,7 @@ snapshots:
       debug: 4.3.5
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -9933,6 +9938,7 @@ snapshots:
       minimatch: 9.0.3
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -9947,6 +9953,7 @@ snapshots:
       minimatch: 9.0.4
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
@@ -9974,7 +9981,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/coverage-v8@2.0.4(vitest@2.0.4)':
+  '@vitest/coverage-v8@2.0.4(vitest@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -9988,7 +9995,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.4(@types/node@20.14.11)
+      vitest: 2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10199,7 +10206,7 @@ snapshots:
 
   arangojs@8.8.1:
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       multi-part: 4.0.0
       path-browserify: 1.0.1
       x3-linkedlist: 1.2.0
@@ -11652,11 +11659,12 @@ snapshots:
       '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.57.0)
       eslint-plugin-react: 7.33.2(eslint@8.57.0)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.0)
+    optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
@@ -11670,13 +11678,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.3.5
       enhanced-resolve: 5.15.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
       get-tsconfig: 4.7.5
       globby: 13.1.4
       is-core-module: 2.13.0
@@ -11688,19 +11696,19 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
-      '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
       debug: 3.2.7
+    optionalDependencies:
+      '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
+  eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
     dependencies:
-      '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
       array-includes: 3.1.6
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.1
@@ -11709,7 +11717,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       has: 1.0.4
       is-core-module: 2.13.0
       is-glob: 4.0.3
@@ -11719,6 +11727,8 @@ snapshots:
       object.values: 1.1.6
       semver: 6.3.1
       tsconfig-paths: 3.14.2
+    optionalDependencies:
+      '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.5.4)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -12912,7 +12922,7 @@ snapshots:
 
   jest-worker@26.6.2:
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.0.0
       merge-stream: 2.0.0
       supports-color: 7.2.0
 
@@ -13138,9 +13148,9 @@ snapshots:
     dependencies:
       semver: 7.6.0
 
-  mantine-datatable@7.11.2(@mantine/core@7.11.2)(@mantine/hooks@7.11.2)(clsx@2.1.1)(react@18.3.1):
+  mantine-datatable@7.11.2(@mantine/core@7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.11.2(react@18.3.1))(clsx@2.1.1)(react@18.3.1):
     dependencies:
-      '@mantine/core': 7.11.2(@mantine/hooks@7.11.2)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+      '@mantine/core': 7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.11.2(react@18.3.1)
       clsx: 2.1.1
       react: 18.3.1
@@ -13939,18 +13949,20 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mobx-react-lite@4.0.7(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1):
+  mobx-react-lite@4.0.7(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       mobx: 6.12.0
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
       use-sync-external-store: 1.2.0(react@18.3.1)
+    optionalDependencies:
+      react-dom: 18.3.1(react@18.3.1)
 
-  mobx-react@9.1.1(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1):
+  mobx-react@9.1.1(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       mobx: 6.12.0
-      mobx-react-lite: 4.0.7(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1)
+      mobx-react-lite: 4.0.7(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
+    optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
 
   mobx@6.12.0: {}
@@ -14024,13 +14036,13 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@4.24.7(next@14.2.5)(react-dom@18.3.1)(react@18.3.1):
+  next-auth@4.24.7(next@14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.22.5
       '@panva/hkdf': 1.1.1
       cookie: 0.5.0
       jose: 4.15.5
-      next: 14.2.5(@babel/core@7.24.9)(@playwright/test@1.44.0)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.4.2
       preact: 10.15.1
@@ -14044,13 +14056,12 @@ snapshots:
       '@tsconfig/node16': 1.0.4
       regexparam: 2.0.1
 
-  next-mdx-remote@0.0.0-canary-20240321205249(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+  next-mdx-remote@0.0.0-canary-20240522052620(@types/react@18.3.3)(react@18.3.1):
     dependencies:
       '@babel/code-frame': 7.24.2
       '@mdx-js/mdx': 3.0.1
       '@mdx-js/react': 3.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
       unist-util-remove: 3.1.1
       vfile: 6.0.1
       vfile-matter: 5.0.0
@@ -14060,10 +14071,9 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@14.2.5(@babel/core@7.24.9)(@playwright/test@1.44.0)(react-dom@18.3.1)(react@18.3.1):
+  next@14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.5
-      '@playwright/test': 1.44.0
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
       caniuse-lite: 1.0.30001640
@@ -14071,7 +14081,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.24.9)(react@18.3.1)
+      styled-jsx: 5.1.1(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.5
       '@next/swc-darwin-x64': 14.2.5
@@ -14082,14 +14092,15 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.5
       '@next/swc-win32-ia32-msvc': 14.2.5
       '@next/swc-win32-x64-msvc': 14.2.5
+      '@playwright/test': 1.44.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-cors@2.2.0(next@14.2.5):
+  nextjs-cors@2.2.0(next@14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
       cors: 2.8.5
-      next: 14.2.5(@babel/core@7.24.9)(@playwright/test@1.44.0)(react-dom@18.3.1)(react@18.3.1)
+      next: 14.2.5(@playwright/test@1.44.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   node-domexception@1.0.0: {}
 
@@ -14608,7 +14619,7 @@ snapshots:
 
   postcss-color-functional-notation@6.0.14(postcss@8.4.32):
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -14629,15 +14640,15 @@ snapshots:
 
   postcss-custom-media@10.0.8(postcss@8.4.32):
     dependencies:
-      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
-      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/media-query-list-parser': 2.1.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       postcss: 8.4.32
 
   postcss-custom-properties@13.3.12(postcss@8.4.32):
     dependencies:
-      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/utilities': 1.0.0(postcss@8.4.32)
@@ -14646,7 +14657,7 @@ snapshots:
 
   postcss-custom-selectors@7.1.12(postcss@8.4.32):
     dependencies:
-      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/cascade-layer-name-parser': 1.0.13(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       postcss: 8.4.32
@@ -14699,7 +14710,7 @@ snapshots:
 
   postcss-lab-function@6.0.19(postcss@8.4.32):
     dependencies:
-      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1)(@csstools/css-tokenizer@2.4.1)
+      '@csstools/css-color-parser': 2.0.4(@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1))(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-parser-algorithms': 2.7.1(@csstools/css-tokenizer@2.4.1)
       '@csstools/css-tokenizer': 2.4.1
       '@csstools/postcss-progressive-custom-properties': 3.3.0(postcss@8.4.32)
@@ -14961,19 +14972,19 @@ snapshots:
 
   react-is@18.2.0: {}
 
-  react-latex-next@3.0.0(react-dom@18.3.1)(react@18.3.1):
+  react-latex-next@3.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       katex: 0.16.9
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-number-format@5.3.1(react-dom@18.3.1)(react@18.3.1):
+  react-number-format@5.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-plotly.js@2.6.0(plotly.js@2.28.0)(react@18.3.1):
+  react-plotly.js@2.6.0(plotly.js@2.28.0(mapbox-gl@1.10.1))(react@18.3.1):
     dependencies:
       plotly.js: 2.28.0(mapbox-gl@1.10.1)
       prop-types: 15.8.1
@@ -14981,22 +14992,24 @@ snapshots:
 
   react-remove-scroll-bar@2.3.4(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       react: 18.3.1
       react-style-singleton: 2.2.1(@types/react@18.3.3)(react@18.3.1)
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   react-remove-scroll@2.5.7(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       react: 18.3.1
       react-remove-scroll-bar: 2.3.4(@types/react@18.3.3)(react@18.3.1)
       react-style-singleton: 2.2.1(@types/react@18.3.3)(react@18.3.1)
       tslib: 2.5.3
       use-callback-ref: 1.3.0(@types/react@18.3.3)(react@18.3.1)
       use-sidecar: 1.1.2(@types/react@18.3.3)(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
 
-  react-schemaorg@2.0.0(react@18.3.1)(schema-dts@1.1.2)(typescript@5.5.4):
+  react-schemaorg@2.0.0(react@18.3.1)(schema-dts@1.1.2(typescript@5.5.4))(typescript@5.5.4):
     dependencies:
       react: 18.3.1
       schema-dts: 1.1.2(typescript@5.5.4)
@@ -15010,11 +15023,12 @@ snapshots:
 
   react-style-singleton@2.2.1(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.3.1
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   react-tabs@6.0.2(react@18.3.1):
     dependencies:
@@ -15089,9 +15103,9 @@ snapshots:
       indent-string: 5.0.0
       strip-indent: 4.0.0
 
-  redoc@2.1.5(core-js@3.35.1)(enzyme@3.11.0)(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1)(styled-components@6.1.8):
+  redoc@2.1.5(core-js@3.35.1)(enzyme@3.11.0)(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
-      '@cfaester/enzyme-adapter-react-18': 0.8.0(enzyme@3.11.0)(react-dom@18.3.1)(react@18.3.1)
+      '@cfaester/enzyme-adapter-react-18': 0.8.0(enzyme@3.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@redocly/openapi-core': 1.7.0
       classnames: 2.5.1
       core-js: 3.35.1
@@ -15103,7 +15117,7 @@ snapshots:
       mark.js: 8.11.1
       marked: 4.3.0
       mobx: 6.12.0
-      mobx-react: 9.1.1(mobx@6.12.0)(react-dom@18.3.1)(react@18.3.1)
+      mobx-react: 9.1.1(mobx@6.12.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       openapi-sampler: 1.5.0
       path-browserify: 1.0.1
       perfect-scrollbar: 1.5.5
@@ -15115,7 +15129,7 @@ snapshots:
       react-tabs: 6.0.2(react@18.3.1)
       slugify: 1.4.7
       stickyfill: 1.1.1
-      styled-components: 6.1.8(react-dom@18.3.1)(react@18.3.1)
+      styled-components: 6.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swagger2openapi: 7.0.8
       url-template: 2.0.8
     transitivePeerDependencies:
@@ -15781,7 +15795,7 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.2
 
-  styled-components@6.1.8(react-dom@18.3.1)(react@18.3.1):
+  styled-components@6.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.2.1
       '@emotion/unitless': 0.8.0
@@ -15795,9 +15809,8 @@ snapshots:
       stylis: 4.3.1
       tslib: 2.5.0
 
-  styled-jsx@5.1.1(@babel/core@7.24.9)(react@18.3.1):
+  styled-jsx@5.1.1(react@18.3.1):
     dependencies:
-      '@babel/core': 7.24.9
       client-only: 0.0.1
       react: 18.3.1
 
@@ -16168,7 +16181,7 @@ snapshots:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
 
-  undici-types@5.26.5: {}
+  undici-types@6.11.1: {}
 
   unicode-canonical-property-names-ecmascript@2.0.0: {}
 
@@ -16289,9 +16302,10 @@ snapshots:
 
   use-callback-ref@1.3.0(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       react: 18.3.1
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   use-composed-ref@1.3.0(react@18.3.1):
     dependencies:
@@ -16299,21 +16313,24 @@ snapshots:
 
   use-isomorphic-layout-effect@1.1.2(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   use-latest@1.2.1(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       react: 18.3.1
       use-isomorphic-layout-effect: 1.1.2(@types/react@18.3.3)(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   use-sidecar@1.1.2(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@types/react': 18.3.3
       detect-node-es: 1.1.0
       react: 18.3.1
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   use-sync-external-store@1.2.0(react@18.3.1):
     dependencies:
@@ -16378,13 +16395,13 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-node@2.0.4(@types/node@20.14.11):
+  vite-node@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.5
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.0.10(@types/node@20.14.11)
+      vite: 5.0.10(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16395,19 +16412,20 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.0.10(@types/node@20.14.11):
+  vite@5.0.10(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
-      '@types/node': 20.14.11
       esbuild: 0.19.10
       postcss: 8.4.32
       rollup: 4.9.1
     optionalDependencies:
+      '@types/node': 22.0.0
       fsevents: 2.3.3
+      sugarss: 4.0.1(postcss@8.4.32)
+      terser: 5.18.0
 
-  vitest@2.0.4(@types/node@20.14.11):
+  vitest@2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@types/node': 20.14.11
       '@vitest/expect': 2.0.4
       '@vitest/pretty-format': 2.0.4
       '@vitest/runner': 2.0.4
@@ -16423,9 +16441,11 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.0.10(@types/node@20.14.11)
-      vite-node: 2.0.4(@types/node@20.14.11)
+      vite: 5.0.10(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
+      vite-node: 2.0.4(@types/node@22.0.0)(sugarss@4.0.1)(terser@5.18.0)
       why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 22.0.0
     transitivePeerDependencies:
       - less
       - lightningcss
