@@ -59,6 +59,8 @@
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src"
   },
   "dependencies": {
+    "@citation-js/core": "^0.7.14",
+    "@citation-js/plugin-doi": "^0.7.14",
     "@lxcat/schema": "workspace:^",
     "arangojs": "^10.2.2",
     "deep-equal": "^2.2.3",
