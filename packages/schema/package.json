@@ -59,8 +59,12 @@
       "default": "./dist/common/reference.js"
     },
     "./json-schema": {
-      "types": "./dist/json-schema/index.js",
+      "types": "./dist/json-schema/index.d.ts",
       "default": "./dist/json-schema/index.js"
+    },
+    "./migration": {
+      "types": "./dist/migration/index.d.ts",
+      "default": "./dist/migration/index.js"
     }
   },
   "files": [
