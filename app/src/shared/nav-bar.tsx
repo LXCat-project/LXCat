@@ -21,7 +21,7 @@ const entries = [
         label: "Cross sections",
       },
       {
-        link: "/scat-css",
+        link: "/cs-set",
         label: "Cross section sets",
       },
     ],
