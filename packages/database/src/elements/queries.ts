@@ -34,6 +34,7 @@ export async function getActiveElements(
 export type PeriodicSearchResult = {
   _key: string;
   name: string;
+  organization: string;
   complete: boolean;
   description: string;
   versionInfo: VersionInfo;
