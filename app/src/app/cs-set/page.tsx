@@ -3,17 +3,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { Center } from "@mantine/core";
-import { PeriodicTable } from "./periodic-table";
+import { PageClient } from "./page-client";
 
 const Page = async () => {
   const activeElements = new Set(await db().getActiveElements());
 
-  return (
-    <Center>
-      <PeriodicTable activeElements={activeElements} />
-    </Center>
-  );
+  return <PageClient activeElements={activeElements} />;
 };
 
 export default Page;
