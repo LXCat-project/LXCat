@@ -25,28 +25,30 @@ export const PageClient = (
             onChange={setHeaders}
           />
         </Fieldset>
-        <DataTable
-          idAccessor="_key"
-          minHeight={150}
-          highlightOnHover
-          withTableBorder
-          borderRadius="sm"
-          onRowClick={({ record }) => router.push(`/scat-css/${record._key}`)}
-          columns={[
-            { accessor: "organization", title: "Contributor" },
-            { accessor: "name" },
-            {
-              accessor: "complete",
-              render: ({ complete }) => complete ? <IconCheck /> : <IconX />,
-            },
-            {
-              accessor: "versionInfo",
-              title: "Version",
-              render: (record) => record.versionInfo.version,
-            },
-          ]}
-          records={headers}
-        />
+        <Fieldset legend="Search results">
+          <DataTable
+            idAccessor="_key"
+            minHeight={150}
+            highlightOnHover
+            withTableBorder
+            borderRadius="sm"
+            onRowClick={({ record }) => router.push(`/scat-css/${record._key}`)}
+            columns={[
+              { accessor: "organization", title: "Contributor" },
+              { accessor: "name" },
+              {
+                accessor: "complete",
+                render: ({ complete }) => complete ? <IconCheck /> : <IconX />,
+              },
+              {
+                accessor: "versionInfo",
+                title: "Version",
+                render: (record) => record.versionInfo.version,
+              },
+            ]}
+            records={headers}
+          />
+        </Fieldset>
       </Stack>
     </Center>
   );
