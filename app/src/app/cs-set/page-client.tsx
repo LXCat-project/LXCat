@@ -1,7 +1,7 @@
 "use client";
 
 import { Element } from "@lxcat/schema/species";
-import { Center, Fieldset, Group, Stack } from "@mantine/core";
+import { Center, Fieldset, Stack } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ export const PageClient = (
 
   return (
     <Center>
-      <Stack style={{ marginTop: 50 }}>
+      <Stack style={{ marginTop: 10 }}>
         <Fieldset legend="Select elements to search for datasets">
           <PeriodicTable
             activeElements={activeElements}
@@ -29,6 +29,7 @@ export const PageClient = (
           <DataTable
             idAccessor="_key"
             minHeight={150}
+            maxHeight={280}
             highlightOnHover
             withTableBorder
             borderRadius="sm"
