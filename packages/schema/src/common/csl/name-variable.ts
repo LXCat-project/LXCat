@@ -26,5 +26,5 @@ export const CSLNameVariable = object({
   ORCID: string().url().optional(),
   "authenticated-orcid": boolean().optional(),
   sequence: zEnum(["first", "additional"]).optional(),
-  affiliation: array(string().min(1)).optional(),
+  affiliation: array(object({ name: string().min(1) })).optional(),
 });
