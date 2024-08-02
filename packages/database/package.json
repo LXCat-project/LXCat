@@ -67,6 +67,7 @@
     "deep-equal": "^2.2.3",
     "dotenv": "^16.4.7",
     "true-myth": "^8.4.0",
+    "jsonpatch": "^3.1.0",
     "zod": "3.23.6",
     "zod-to-json-schema": "^3.24.1"
   },
