@@ -88,12 +88,7 @@ import {
   activeSetOfArchivedSet,
   byId as setById,
   getItemIdsInSet,
-  search as searchSet,
-  searchContributors,
-  searchFacets,
   setHistory,
-  stateChoices,
-  tagChoices,
 } from "./css/queries/public.js";
 import {
   getActiveElements,
@@ -366,7 +361,6 @@ export class LXCatDatabase {
 
   // css/public
   public getSetById = setById;
-  public searchSet = searchSet;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;
   public getItemIdsInSet = getItemIdsInSet;
@@ -374,12 +368,6 @@ export class LXCatDatabase {
 
   // css/get-affiliation
   public getSetAffiliation = getSetAffiliation;
-
-  // css/picker
-  public searchFacets = searchFacets;
-  protected searchContributors = searchContributors;
-  public stateChoices = stateChoices;
-  protected tagChoices = tagChoices;
 
   // cs/picker
   public getSearchOptions = getSearchOptions;

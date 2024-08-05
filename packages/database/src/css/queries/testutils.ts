@@ -12,7 +12,6 @@ import { LXCatTestDatabase } from "../../testutils.js";
 
 import { NewLTPDocument } from "@lxcat/schema";
 import testCsCreator from "../../test/seed/2_cs.js";
-import { FilterOptions } from "../public.js";
 
 export async function loadTestSets(db: LXCatDatabase) {
   await testCsCreator(db);
@@ -458,9 +457,3 @@ function setFrom(
     },
   );
 }
-
-export const emptySelection: Readonly<FilterOptions> = {
-  state: { particle: {} },
-  contributor: [],
-  tag: [],
-};
