@@ -88,6 +88,7 @@ import {
   activeSetOfArchivedSet,
   byId as setById,
   getItemIdsInSet,
+  listSets,
   setHistory,
 } from "./css/queries/public.js";
 import {
@@ -360,6 +361,7 @@ export class LXCatDatabase {
   public getSetVersionInfo = getSetVersionInfo;
 
   // css/public
+  public listSets = listSets;
   public getSetById = setById;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;
