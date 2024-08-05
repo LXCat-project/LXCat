@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 
 import { Reference } from "@lxcat/schema";
 import { LXCatDatabase } from "../../lxcat-database.js";

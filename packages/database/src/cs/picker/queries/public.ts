@@ -4,9 +4,9 @@
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { literal } from "arangojs/aql.js";
-import { AqlLiteral } from "arangojs/aql.js";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { literal } from "arangojs/aql";
+import { AqlLiteral } from "arangojs/aql";
+import { ArrayCursor } from "arangojs/cursor";
 import { LXCatDatabase } from "../../../lxcat-database.js";
 import { getStateLeaf, StateLeaf } from "../../../shared/get-state-leaf.js";
 import {

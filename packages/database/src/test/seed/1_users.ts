@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "dotenv/config";
-import { EdgeCollection } from "arangojs/collection.js";
+import { EdgeCollection } from "arangojs/collection";
 import { dirname, join } from "path";
 import { UserWithAccountSessionInDb } from "../../auth/schema.js";
 import { load_organizations_dir } from "../../css/loaders.js";

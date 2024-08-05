@@ -6,7 +6,7 @@ import { Status, VersionInfo } from "@lxcat/schema";
 import { EditedProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 

@@ -7,9 +7,9 @@
 // NOTE: Soon deprecated
 
 import { aql } from "arangojs";
-import { join, literal } from "arangojs/aql.js";
-import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql.js";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { join, literal } from "arangojs/aql";
+import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
+import { ArrayCursor } from "arangojs/cursor";
 import { db } from "../../db.js";
 import { State } from "../types/collections.js";
 

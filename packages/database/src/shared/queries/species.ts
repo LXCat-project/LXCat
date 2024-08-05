@@ -4,7 +4,7 @@
 
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export type SpeciesNode = {

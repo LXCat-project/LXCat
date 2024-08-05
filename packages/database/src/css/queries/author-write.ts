@@ -6,7 +6,7 @@ import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
 import { NewProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import deepEqual from "deep-equal";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
