@@ -29,7 +29,7 @@ export const PeriodicTable = (
         Element.parse(symbol)
       ),
     ).then(onChange);
-  }, [selected]);
+  }, [selected, onChange]);
 
   const disabled = useMemo(() =>
     elements.map((element) => {
