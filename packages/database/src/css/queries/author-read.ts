@@ -4,7 +4,7 @@
 
 import { Key, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { boolean, object, string } from "zod";
 import { LXCatDatabase } from "../../lxcat-database.js";
 // import { KeyedSet } from "../public.js";

@@ -5,7 +5,7 @@
 import { VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import {
   ChoiceRow,

@@ -4,7 +4,7 @@
 
 import { AnySpecies, AnySpeciesSerializable } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   truncateCrossSectionSetCollections,
