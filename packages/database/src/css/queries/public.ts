@@ -18,7 +18,7 @@ export async function listSets(this: LXCatDatabase, contributor?: string) {
       ? aql`FILTER DOCUMENT(css.organization).name == ${contributor}`
       : aql``
   }
-          RETURN { id: css._key, name: DOCUMENT(css.organization).name }
+          RETURN { id: css._key, name: css.name }
       `);
   return cursor.all();
 }
