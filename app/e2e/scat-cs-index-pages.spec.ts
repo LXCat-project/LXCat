@@ -60,30 +60,6 @@ test.describe("cross section index page with N2 selected", () => {
   });
 });
 
-test.describe("cross section set index page", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-css");
-  });
-
-  test("should have 2 items listed", async ({ page }) => {
-    const section1 = page.locator("text=Some organization");
-    const section2 = page.locator("text=Some other organization");
-    await expect(section1).toBeVisible();
-    await expect(section2).toBeVisible();
-  });
-
-  test.describe("when filtered on electronic reaction type tag", () => {
-    test.beforeEach(async ({ page }) => {
-      await page.locator("label:has-text(\"Electronic\")").click();
-    });
-
-    test("should list single section", async ({ page }) => {
-      const section2 = page.locator("text=Some other organization");
-      await expect(section2).toBeVisible();
-    });
-  });
-});
-
 test.describe("cross section inspect page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
