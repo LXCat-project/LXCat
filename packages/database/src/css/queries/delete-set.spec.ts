@@ -12,7 +12,7 @@ import {
 } from "@lxcat/schema";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
-import { FilterOptions, KeyedSet, SortOptions } from "../public.js";
+import { KeyedSet } from "../public.js";
 import { KeyedVersionInfo } from "./public.js";
 import {
   matches8601,
@@ -132,14 +132,7 @@ describe("deleting a published cross section without shared cross sections", () 
   });
 
   it("should not be in public listing", async () => {
-    const filter: FilterOptions = {
-      contributor: [],
-      state: { particle: {} },
-      tag: [],
-    };
-    const sort: SortOptions = { field: "name", dir: "DESC" };
-    const paging = { offset: 0, count: 10 };
-    const result = await db.searchSet(filter, sort, paging);
+    const result = await db.listSets();
     expect(result.some((s) => s.id === keycss1)).toBeFalsy();
   });
 

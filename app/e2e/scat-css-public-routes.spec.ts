@@ -13,12 +13,6 @@ test.use({ storageState: "adminStorageState.json" });
 
 test.describe("given 2 dummy sets", () => {
   test.beforeAll(async ({ browser }) => {
-    // await rootDb().setupCollections();
-    // await rootDb().setupUserPrivileges(
-    //   systemDb(),
-    //   process.env.ARANGO_USERNAME!,
-    // );
-
     await uploadAndPublishDummySet(browser);
     await uploadAndPublishDummySet(
       browser,
@@ -31,14 +25,16 @@ test.describe("given 2 dummy sets", () => {
     await rootDb().truncateNonUserCollections();
   });
 
-  test.describe("cross section set list page", () => {
+  test.describe("periodic table select page", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("/scat-css");
+      await page.goto("/cs-set");
     });
 
-    test("should list 2 sets", async ({ page }) => {
-      const set1 = page.locator("text=Some name");
-      const set2 = page.locator("text=Some other name");
+    test("should list 2 sets when selecting nitrogen", async ({ page }) => {
+      await page.getByRole("button", { name: "N Nitrogen" }).click();
+
+      const set1 = page.getByRole("cell", { name: "Some organization" });
+      const set2 = page.getByRole("cell", { name: "Some other organization" });
       await expect(set1).toBeVisible();
       await expect(set2).toBeVisible();
     });
@@ -124,8 +120,11 @@ test.describe("given 2 dummy sets", () => {
 
   test.describe("cross section set details page", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("/scat-css");
-      await page.locator("text=Some name").click();
+      await page.goto("/cs-set");
+
+      await page.getByRole("button", { name: "N Nitrogen" }).click();
+
+      await page.getByRole("cell", { name: "Some organization" }).click();
       await page.locator("text=I agree with the terms of use").click();
     });
 

@@ -19,20 +19,10 @@ const router = RouteBuilder
   .use(hasDeveloperOrDownloadRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    const { contributor, tag, offset, count, state } = ctx.parsedParams.query;
-
-    // TODO make sort adjustable by user
-    const sort: SortOptions = {
-      field: "name",
-      dir: "ASC",
-    };
-
-    const items = await db().searchSet(
-      { contributor, tag, state },
-      sort,
-      { offset, count },
-    );
-    return NextResponse.json(items);
+    // TODO add pagination and sorting.
+    const { contributor } = ctx.parsedParams.query;
+    const sets = await db().listSets(contributor);
+    return NextResponse.json(sets);
   })
   .compile();
 

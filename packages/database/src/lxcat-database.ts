@@ -88,13 +88,13 @@ import {
   activeSetOfArchivedSet,
   byId as setById,
   getItemIdsInSet,
-  search as searchSet,
-  searchContributors,
-  searchFacets,
+  listSets,
   setHistory,
-  stateChoices,
-  tagChoices,
 } from "./css/queries/public.js";
+import {
+  getActiveElements,
+  getSetHeaderByElements,
+} from "./elements/queries.js";
 import { setupCompositionCollections } from "./setup/composition.js";
 import { setupCrossSectionCollections } from "./setup/cs.js";
 import { setupDatabase } from "./setup/db.js";
@@ -233,8 +233,8 @@ export class LXCatDatabase {
   public async truncateNonUserCollections() {
     const collections = await this.db.collections(true);
     for (const c of collections) {
-      console.log(`Truncating ${c.name}`);
-      if (c.name !== "users") {
+      if (c.name !== "users" && c.name !== "Element") {
+        console.log(`Truncating ${c.name}`);
         await c.truncate();
       }
     }
@@ -309,6 +309,10 @@ export class LXCatDatabase {
   public getTopLevelSpecies = getTopLevelSpecies;
   public getSpeciesChildren = getSpeciesChildren;
 
+  // elements
+  public getActiveElements = getActiveElements;
+  public getSetHeaderByElements = getSetHeaderByElements;
+
   // reaction
   protected findReactionId = findReactionId;
 
@@ -357,8 +361,8 @@ export class LXCatDatabase {
   public getSetVersionInfo = getSetVersionInfo;
 
   // css/public
+  public listSets = listSets;
   public getSetById = setById;
-  public searchSet = searchSet;
   public getMixtureByIds = byIds;
   public setHistory = setHistory;
   public getItemIdsInSet = getItemIdsInSet;
@@ -366,12 +370,6 @@ export class LXCatDatabase {
 
   // css/get-affiliation
   public getSetAffiliation = getSetAffiliation;
-
-  // css/picker
-  public searchFacets = searchFacets;
-  protected searchContributors = searchContributors;
-  public stateChoices = stateChoices;
-  protected tagChoices = tagChoices;
 
   // cs/picker
   public getSearchOptions = getSearchOptions;
