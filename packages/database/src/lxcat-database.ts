@@ -233,8 +233,8 @@ export class LXCatDatabase {
   public async truncateNonUserCollections() {
     const collections = await this.db.collections(true);
     for (const c of collections) {
-      console.log(`Truncating ${c.name}`);
-      if (c.name !== "users") {
+      if (c.name !== "users" && c.name !== "Element") {
+        console.log(`Truncating ${c.name}`);
         await c.truncate();
       }
     }
