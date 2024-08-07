@@ -4,7 +4,6 @@
 
 import { AppShell, AppShellMain } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
-import classes from "./docs.module.css";
 import { DocsSidebar } from "./sidebar";
 
 export const MarkdownLayout = ({
@@ -15,16 +14,14 @@ export const MarkdownLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <AppShell>
+    <AppShell
+      header={{ height: 60 }}
+      navbar={{ width: 300, breakpoint: "sm" }}
+    >
       <DocsSidebar docFiles={docFiles} />
       <AppShellMain>
         {children}
       </AppShellMain>
-      {
-        // <div className={classes.main}>
-        //   {children}
-        // </div>
-      }
     </AppShell>
   );
 };
