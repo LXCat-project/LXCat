@@ -1,0 +1,79 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: Create and publish Docker images to use in production
+
+on:
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+jobs:
+  build-and-push-admin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          tags: ghcr.io/lxcat-project/admin-cli:${{ github.ref_name }}, ghcr.io/lxcat-project/admin-cli:latest
+          file: packages/database/Dockerfile
+          push: true
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/lxcat-project/admin-cli
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+  build-and-push-app:
+     runs-on: ubuntu-latest
+
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
+
+       - name: Log in to the container registry
+         uses: docker/login-action@v3
+         with:
+           registry: ${{ env.REGISTRY }}
+           username: ${{ github.actor }}
+           password: ${{ secrets.GITHUB_TOKEN }}
+
+       - name: Build and push Docker image
+         id: push
+         uses: docker/build-push-action@v6
+         with:
+           context: .
+           tags: ghcr.io/lxcat-project/app:${{ github.ref_name }}, ghcr.io/lxcat-project/app:latest
+           file: app/Dockerfile
+           push: true
+
+       - name: Generate artifact attestation
+         uses: actions/attest-build-provenance@v1
+         with:
+           subject-name: ${{ env.REGISTRY }}/lxcat-project/app
+           subject-digest: ${{ steps.push.outputs.digest }}
+           push-to-registry: true
