@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 .bar {
+    position: sticky;
+    top: 0;
     background-color: var(--mantine-color-brand-6);
     align-items: center;
     display: flex;
