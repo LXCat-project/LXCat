@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Install dependencies only when needed
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat git rust cargo
@@ -24,6 +24,7 @@ RUN pnpm build --no-cache
 WORKDIR /code/app
 
 ENV NODE_ENV production
+ENV LXCAT_BUILD_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
