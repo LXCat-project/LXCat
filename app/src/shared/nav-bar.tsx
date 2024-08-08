@@ -33,7 +33,7 @@ const entries = [
   },
   {
     icon: <IconFileText />,
-    link: "/docs/index",
+    link: "/docs/0-index",
     label: "Documentation",
   },
 ];
