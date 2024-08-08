@@ -12,7 +12,7 @@ test("/", async ({ page }) => {
 
 test("/docs/index", async ({ page }) => {
   test.slow();
-  await page.goto("/docs/index");
+  await page.goto("/docs/0-index");
   const h1 = page.locator("h1");
   await expect(h1).toContainText("LXCat documentation");
 });
