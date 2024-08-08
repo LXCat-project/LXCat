@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+
 .main {
-    position: absolute;
-    left: 310;
-    top: 60;
-    bottom: 0;
-    right: 0;
-    overflowY: scroll;
+  padding-top: 0px;
+  :is(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: calc(60px + var(--app-shell-padding));
+  }
 }

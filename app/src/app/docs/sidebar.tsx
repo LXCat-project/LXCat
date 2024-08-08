@@ -14,7 +14,7 @@ export const DocsSidebar = ({
   docFiles: Array<DocFile>;
 }) => {
   return (
-    <AppShellNavbar style={{ width: 300, zIndex: 10 }} p="xs">
+    <AppShellNavbar p="xs">
       <AppShellSection grow component={ScrollArea} type="scroll">
         {docFiles.flatMap((file) =>
           file.entries

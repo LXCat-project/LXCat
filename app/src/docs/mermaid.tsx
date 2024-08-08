@@ -14,9 +14,7 @@ export type MermaidProps = {
 export const Mermaid = ({ chart }: MermaidProps) => {
   const [svg, setSvg] = useState("<svg></svg>");
   useEffect(() => {
-    mermaid.render("mermaid", chart, (html: string) => {
-      setSvg(html);
-    });
+    mermaid.render("mermaid", chart).then(({ svg }) => setSvg(svg));
   }, [chart]);
   return <div dangerouslySetInnerHTML={{ __html: svg }} />;
 };
