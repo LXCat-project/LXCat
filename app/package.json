@@ -33,7 +33,7 @@
     "@mantine/hooks": "^7.11.2",
     "@mdx-js/mdx": "^3.0.1",
     "@next/bundle-analyzer": "^14.2.5",
-    "@tabler/icons-react": "^3.11.0",
+    "@tabler/icons-react": "^3.12.0",
     "ajv": "^8.17.1",
     "clsx": "^2.1.1",
     "cookie": "^0.6.0",
