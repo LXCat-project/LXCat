@@ -205,8 +205,8 @@ importers:
         specifier: 22.2.0
         version: 22.2.0
       '@types/oidc-provider':
-        specifier: ^8.5.1
-        version: 8.5.1
+        specifier: ^8.5.2
+        version: 8.5.2
       '@types/plotly.js-basic-dist':
         specifier: ^1.54.4
         version: 1.54.4
@@ -2294,8 +2294,8 @@ packages:
   '@types/normalize-package-data@2.4.1':
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
 
-  '@types/oidc-provider@8.5.1':
-    resolution: {integrity: sha512-NS8tBPOj9GG6SxyrUHWBzglOtAYNDX41J4cRE45oeK0iSqI6V6tDW70aPWg25pJFNSC1evccXFm9evfwjxm7HQ==}
+  '@types/oidc-provider@8.5.2':
+    resolution: {integrity: sha512-NiD3VG49+cRCAAe8+uZLM4onOcX8y9+cwaml8JG1qlgc98rWoCRgsnOB4Ypx+ysays5jiwzfUgT0nWyXPB/9uQ==}
 
   '@types/plotly.js-basic-dist@1.54.4':
     resolution: {integrity: sha512-4Hwb5fB4sa3+SlgIDu4kfnUzhfJO789Drh7w5LvU6VglzYRcziztckvejbsnaP/TTRuiqIzLLRwqoflD6o1mKg==}
@@ -9691,7 +9691,7 @@ snapshots:
 
   '@types/normalize-package-data@2.4.1': {}
 
-  '@types/oidc-provider@8.5.1':
+  '@types/oidc-provider@8.5.2':
     dependencies:
       '@types/koa': 2.13.6
       '@types/node': 22.2.0
