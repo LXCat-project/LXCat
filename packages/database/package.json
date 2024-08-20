@@ -64,7 +64,7 @@
     "arangojs": "^8.8.1",
     "deep-equal": "^2.2.3",
     "dotenv": "^16.4.5",
-    "true-myth": "^7.4.0",
+    "true-myth": "^8.0.0",
     "zod": "3.23.6",
     "zod-to-json-schema": "^3.23.2"
   },
