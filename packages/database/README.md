@@ -32,10 +32,11 @@ ARANGO_ROOT_PASSWORD=<Arangodb root password>
 
 Spin up a database container, referencing `.env.development`, bind-mounting
 `./arangodb3` to `/var/lib/arangodb3`, and exposing chosen ArangoDB API port
-(`8529` by default).
+(`8529` by default). Note that all shell commands should be run from the current
+directory (`/packages/database`).
 
 ```shell
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env.development -p 8529:8529 arangodb/arangodb:3.12.0
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file ../../.env.development -p 8529:8529 arangodb/arangodb:3.12.0
 ```
 
 The `./arangodb3` directory is used to persist the collection data. The
