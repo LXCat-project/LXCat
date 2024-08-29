@@ -54,7 +54,7 @@ To create the database and setup the collections run the following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-cd pnpm install && pnpm -C ../schema build
+pnpm install && pnpm -C ../schema build
 pnpm run setup
 ```
 
