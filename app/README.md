@@ -165,12 +165,12 @@ Goto http://localhost:8080/admin/master/console and login with admin:admin.
 
 1. [Create realm](http://localhost:8080/admin/master/console/#/create/realm)
    called `lxcat-test-realm`
-2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-real/users)
+2. [Create users](http://localhost:8080/admin/master/console/#/realms/lxcat-test-realm/users)
    - The password must be set in Credentials tab, dont forget to turn off
      `temporary` field.
    - Set `orcid` and `picture` in Attributes tab to `0000-0001-2345-6789` and
      `/lxcat.png` respectively.
-3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-real).
+3. [Create client](http://localhost:8080/admin/master/console/#/create/client/lxcat-test-realm).
    This is the oauth provider the lxcat app will authenticate against.
    - Client ID: lxcat-test
    - Client protocol: openid-connect
