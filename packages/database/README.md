@@ -35,7 +35,7 @@ Spin up a database container, referencing `.env.development`, bind-mounting
 (`8529` by default).
 
 ```shell
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.11.0
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env.development -p 8529:8529 arangodb/arangodb:3.12.0
 ```
 
 The `./arangodb3` directory is used to persist the collection data. The
