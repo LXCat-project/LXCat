@@ -42,15 +42,16 @@ The `./arangodb3` directory is used to persist the collection data. The
 container will listen on [http://localhost:8529](http://localhost:8529) (or the
 value of `ARANGO_URL` if set).
 
-The ArangoDB dashboard (built-in admin web interface) can be accessed in a web
-browser by visiting [http://localhost:8529](http://localhost:8529) and login
-with `ARANGO_USERNAME` as username and value of `ARANGO_PASSWORD` environment
-variable as password and select `lxcat` (or value of ARANGO_DB environment
-variable if set) as DB.
+After setting up the database (see the next section), the ArangoDB dashboard
+(built-in admin web interface) can be accessed in a web browser by visiting
+[http://localhost:8529](http://localhost:8529) and login with `ARANGO_USERNAME`
+as username and value of `ARANGO_PASSWORD` environment variable as password and
+select `lxcat` (or value of ARANGO_DB environment variable if set) as DB.
 
 ## Setup
 
-To create the database and setup the collections run the following command:
+To create the database, create the `ARANGO_USERNAME` user, and setup the
+collections run the following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
