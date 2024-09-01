@@ -274,8 +274,8 @@ importers:
         specifier: ^22.5.1
         version: 22.5.1
       tsx:
-        specifier: ^4.18.0
-        version: 4.18.0
+        specifier: ^4.19.0
+        version: 4.19.0
 
   packages/database:
     dependencies:
@@ -329,8 +329,8 @@ importers:
         specifier: ^10.12.0
         version: 10.12.0
       tsx:
-        specifier: ^4.18.0
-        version: 4.18.0
+        specifier: ^4.19.0
+        version: 4.19.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -388,8 +388,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       tsx:
-        specifier: ^4.18.0
-        version: 4.18.0
+        specifier: ^4.19.0
+        version: 4.19.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -7121,8 +7121,8 @@ packages:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
 
-  tsx@4.18.0:
-    resolution: {integrity: sha512-a1jaKBSVQkd6yEc1/NI7G6yHFfefIcuf3QJST7ZEyn4oQnxLYrZR5uZAM8UrwUa3Ge8suiZHcNS1gNrEvmobqg==}
+  tsx@4.19.0:
+    resolution: {integrity: sha512-bV30kM7bsLZKZIOCHeMNVMJ32/LuJzLVajkQI/qf92J2Qr08ueLQvW00PUZGiuLPP760UINwupgUj8qrSCPUKg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -15787,7 +15787,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsx@4.18.0:
+  tsx@4.19.0:
     dependencies:
       esbuild: 0.23.0
       get-tsconfig: 4.7.5
