@@ -32,29 +32,31 @@ ARANGO_ROOT_PASSWORD=<Arangodb root password>
 
 Spin up a database container, referencing `.env.development`, bind-mounting
 `./arangodb3` to `/var/lib/arangodb3`, and exposing chosen ArangoDB API port
-(`8529` by default).
+(`8529` by default). Note that all shell commands should be run from the current
+directory (`/packages/database`).
 
 ```shell
-docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file .env -p 8529:8529 arangodb/arangodb:3.11.0
+docker run --rm --volume $PWD/arangodb3:/var/lib/arangodb3 --env-file ../../.env.development -p 8529:8529 arangodb/arangodb:3.12.0
 ```
 
 The `./arangodb3` directory is used to persist the collection data. The
 container will listen on [http://localhost:8529](http://localhost:8529) (or the
 value of `ARANGO_URL` if set).
 
-The ArangoDB dashboard (built-in admin web interface) can be accessed in a web
-browser by visiting [http://localhost:8529](http://localhost:8529) and login
-with `ARANGO_USERNAME` as username and value of `ARANGO_PASSWORD` environment
-variable as password and select `lxcat` (or value of ARANGO_DB environment
-variable if set) as DB.
+After setting up the database (see the next section), the ArangoDB dashboard
+(built-in admin web interface) can be accessed in a web browser by visiting
+[http://localhost:8529](http://localhost:8529) and login with `ARANGO_USERNAME`
+as username and value of `ARANGO_PASSWORD` environment variable as password and
+select `lxcat` (or value of ARANGO_DB environment variable if set) as DB.
 
 ## Setup
 
-To create the database and setup the collections run the following command:
+To create the database, create the `ARANGO_USERNAME` user, and setup the
+collections run the following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-cd pnpm install && pnpm -C ../schema build
+pnpm install && pnpm -C ../schema build
 pnpm run setup
 ```
 
