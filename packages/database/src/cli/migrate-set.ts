@@ -58,7 +58,7 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
     exit();
   }
 
-  db().loadHistoricDataset(result.data, "Migrated from LXCat 2.");
+  await db().loadHistoricDataset(result.data, "Migrated from LXCat 2.");
 
   let version = 2;
 
@@ -71,7 +71,7 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
         ),
       );
       data = patchDocument(data, patch);
-      db().loadHistoricDataset(data, "Migrated from LXCat 2.");
+      await db().loadHistoricDataset(data, "Migrated from LXCat 2.");
     } catch (err) {
       console.log(err);
       break;
