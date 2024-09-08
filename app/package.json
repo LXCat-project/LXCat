@@ -43,7 +43,7 @@
     "immer": "^10.1.1",
     "mantine-datatable": "^7.11.3",
     "mdast-util-from-markdown": "^2.0.1",
-    "mermaid": "^11.0.2",
+    "mermaid": "^11.1.1",
     "nanoid": "^5.0.7",
     "next": "^14.2.7",
     "next-auth": "^4.24.7",
