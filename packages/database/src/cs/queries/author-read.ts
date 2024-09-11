@@ -4,7 +4,7 @@
 
 import { VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
