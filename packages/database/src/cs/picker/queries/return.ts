@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { aql, AqlLiteral } from "arangojs/aql.js";
+import { aql, AqlLiteral } from "arangojs/aql";
 import { ReactionFunction } from "../types.js";
 
 export const returnTypeTags: ReactionFunction = (reaction: AqlLiteral) =>
