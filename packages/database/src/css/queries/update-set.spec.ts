@@ -14,7 +14,7 @@ import {
 } from "@lxcat/schema";
 import { ReactionEntry } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
-import { ArangojsError } from "arangojs/lib/request.node.js";
+import { ArangojsError } from "arangojs/lib/request.node";
 import {
   insertSampleStateIds,
   sampleCrossSection,
