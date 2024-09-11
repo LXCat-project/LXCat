@@ -18,7 +18,7 @@ export async function startDbContainer(
   password = "testpw",
   port: PortWithOptionalBinding = 8529,
 ) {
-  const dbImage = "arangodb/arangodb:3.11.0";
+  const dbImage = "arangodb/arangodb:3.12.0";
   const container = await new ArangoDBContainer(dbImage, password)
     .withExposedPorts(port)
     .withWaitStrategy(Wait.forLogMessage("is ready for business. Have fun"))
