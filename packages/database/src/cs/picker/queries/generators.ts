@@ -4,8 +4,8 @@
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { literal } from "arangojs/aql";
-import { AqlLiteral, GeneratedAqlQuery } from "arangojs/aql";
+import { AqlQuery, literal } from "arangojs/aql";
+import { AqlLiteral } from "arangojs/aql";
 import { StateLeaf } from "../../../shared/get-state-leaf.js";
 import { ReactionFunction, StateProcess } from "../types.js";
 import { getCSSetFilterAQL } from "./filters.js";
@@ -177,7 +177,7 @@ function getPartakingStateChildren(
   states: Array<string> | AqlLiteral,
   ignoredStates: Array<string> | AqlLiteral,
   depth = 0,
-): GeneratedAqlQuery {
+): AqlQuery {
   const levels = ["particle", "electronic", "vibrational", "rotational"];
 
   const parent = literal(levels[depth]);
