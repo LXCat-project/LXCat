@@ -1,36 +1,43 @@
-/*
- * SPDX-FileCopyrightText: LXCat team
- *
- * SPDX-License-Identifier: AGPL-3.0-or-later
- */
-.bar {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: var(--mantine-color-brand-6);
-    align-items: center;
-    display: flex;
-    padding-left: 24px;
-    padding-right: 24px;
-    height: 60px;
+.header {
+  position: sticky;
+  top: 0;
+  height: rem(60px);
+  background-color: var(--mantine-color-brand-6);
+  border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
-.dropdownItem {
-    &:hover {
-        text-decoration-line: none;
-    }
+.inner {
+  height: rem(60px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.menuItem {
-    color: var(--mantine-color-brand-0);
-    background-color: var(--mantine-color-brand-6);
-    padding: 8px 12px;
-    border-radius: var(--mantine-radius-sm);
+.link {
+  display: block;
+  line-height: 1;
+  padding: rem(8px) rem(12px);
+  border-radius: var(--mantine-radius-sm);
+  text-decoration: none;
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-0));
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
 
-    &:hover {
-        background-color: var(--mantine-color-brand-5);
-        text-decoration-line: none;
-    }
+  @mixin hover {
+    text-decoration-line: none;
+    background-color: light-dark(var(--mantine-color-brand-5), var(--mantine-color-dark-6));
+  }
+}
+
+.item {
+  @mixin hover {
+    text-decoration-line: none;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.linkLabel {
+  margin-right: rem(5px);
 }
 
 .logoBox {
@@ -39,6 +46,5 @@
 }
 
 .logoPath {
-    stroke-width: 0.08466667px;
-    fill: var(--mantine-color-brand-0);
+    fill: var(--mantine-color-white);
 }
