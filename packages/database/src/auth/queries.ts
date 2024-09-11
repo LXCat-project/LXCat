@@ -4,8 +4,8 @@
 
 import { Contributor } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
-import { ArangoError } from "arangojs/error.js";
+import { ArrayCursor } from "arangojs/cursor";
+import { ArangoError } from "arangojs/error";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import { LXCatDatabase } from "../lxcat-database.js";

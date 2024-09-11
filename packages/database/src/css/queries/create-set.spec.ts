@@ -7,7 +7,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { Reference, VersionedLTPDocument } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { ArrayCursor } from "arangojs/cursor";
 import { systemDb } from "../../system-db.js";
 import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
