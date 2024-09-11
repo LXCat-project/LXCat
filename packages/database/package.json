@@ -1,6 +1,6 @@
 {
   "name": "@lxcat/database",
-  "version": "0.1.0",
+  "version": "0.0.0.beta.3",
   "description": "Database abstraction layer for LXCat web application.",
   "license": "AGPL-3.0-or-later",
   "type": "module",
