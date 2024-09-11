@@ -4,17 +4,25 @@
 
 "use client";
 
-import { Container, Group, Menu, Text, UnstyledButton } from "@mantine/core";
-import { IconDatabase, IconFileText, IconUsers } from "@tabler/icons-react";
-import Link from "next/link";
-import { UserAnchor } from "../auth/user-anchor";
+import { UserAnchor } from "@/auth/user-anchor";
+import { Burger, Center, Container, Group, Menu } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconChevronDown,
+  IconDatabase,
+  IconFileText,
+  IconUsers,
+} from "@tabler/icons-react";
 import { LXCatLogo } from "./logo";
 import classes from "./nav-bar.module.css";
 
-const entries = [
+const links = [
   {
-    icon: <IconDatabase />,
+    icon: (
+      <IconDatabase size="1.0rem" style={{ marginRight: 5 }} strokeWidth={2} />
+    ),
     label: "Data center",
+    link: "#1",
     links: [
       {
         link: "/scat-cs",
@@ -27,44 +35,70 @@ const entries = [
     ],
   },
   {
-    icon: <IconUsers />,
+    icon: (
+      <IconUsers
+        size="1.0rem"
+        style={{ marginRight: 5 }}
+        strokeWidth={2}
+      />
+    ),
     link: "/team",
     label: "Team",
   },
   {
-    icon: <IconFileText />,
+    icon: (
+      <IconFileText size="1.0rem" style={{ marginRight: 5 }} strokeWidth={2} />
+    ),
     link: "/docs/0-index",
     label: "Documentation",
+    links: [
+      {
+        link: "/docs/0-index",
+        label: "General",
+      },
+      {
+        link: "/api-doc",
+        label: "API",
+      },
+    ],
   },
 ];
 
-export const NavBar = () => {
-  const barItems = entries.map((entry) => {
-    const menuItems = entry.links?.map((item) => (
-      <Menu.Item
-        component="a"
-        className={classes.dropdownItem}
-        key={item.link}
-        href={item.link}
-      >
-        {item.label}
+export function NavBar() {
+  const [opened, { toggle }] = useDisclosure(false);
+
+  const items = links.map((link) => {
+    const menuItems = link.links?.map((item) => (
+      <Menu.Item key={item.link}>
+        <a
+          href={item.link}
+          className={classes.item}
+        >
+          {item.label}
+        </a>
       </Menu.Item>
     ));
 
     if (menuItems) {
       return (
         <Menu
-          key={entry.label}
+          key={link.label}
           trigger="hover"
           transitionProps={{ exitDuration: 0 }}
+          withinPortal
         >
           <Menu.Target>
-            <UnstyledButton className={classes.menuItem}>
-              <Group gap="xs">
-                {entry.icon}
-                <Text>{entry.label}</Text>
-              </Group>
-            </UnstyledButton>
+            <a
+              href={link.link}
+              className={classes.link}
+              onClick={(event) => event.preventDefault()}
+            >
+              <Center>
+                {link.icon}
+                <span className={classes.linkLabel}>{link.label}</span>
+                <IconChevronDown size="0.9rem" stroke={1.5} />
+              </Center>
+            </a>
           </Menu.Target>
           <Menu.Dropdown>{menuItems}</Menu.Dropdown>
         </Menu>
@@ -72,32 +106,34 @@ export const NavBar = () => {
     }
 
     return (
-      <UnstyledButton
-        key={entry.label}
-        component="a"
-        className={classes.menuItem}
-        href={entry.link}
+      <a
+        key={link.label}
+        href={link.link}
+        className={classes.link}
       >
-        <Group gap="xs">
-          {entry.icon}
-          <Text>{entry.label}</Text>
-        </Group>
-      </UnstyledButton>
+        <Center>
+          {link.icon}
+          <span className={classes.linkLabel}>{link.label}</span>
+        </Center>
+      </a>
     );
   });
 
   return (
-    <header className={classes.bar}>
-      <Link href="/">
-        <LXCatLogo
-          boxClassName={classes.logoBox}
-          pathClassName={classes.logoPath}
-        />
-      </Link>
-      <Container style={{ display: "flex" }}>
-        <Group gap={3}>{barItems}</Group>
+    <header className={classes.header}>
+      <Container size="md">
+        <div className={classes.inner}>
+          <LXCatLogo
+            boxClassName={classes.logoBox}
+            pathClassName={classes.logoPath}
+          />
+          <Group gap={5} visibleFrom="sm">
+            {items}
+          </Group>
+          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
+          <UserAnchor />
+        </div>
       </Container>
-      <UserAnchor />
     </header>
   );
-};
+}
