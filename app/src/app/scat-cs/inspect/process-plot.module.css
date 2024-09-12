@@ -1,0 +1,5 @@
+.plotBox {
+  > div > div > svg {
+    border-radius: var(--mantine-radius-sm);
+  }
+}
