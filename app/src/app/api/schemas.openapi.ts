@@ -9,6 +9,7 @@ import { Reference, VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import {
   AnySpecies,
+  Composition,
   SerializedSpecies,
   StateSummary,
 } from "@lxcat/schema/species";
@@ -122,6 +123,10 @@ export const reactionQuerySchema = z.object({
 });
 
 export async function register() {
+  (Composition._def as any).type._def.items[0].options[1]._def.openapi = {
+    _internal: { refId: "Composition" },
+    metadata: { type: "object" },
+  };
   AnySpecies._def.openapi = { _internal: { refId: "AnySpecies" } };
   VersionedLTPDocumentWithReference._def.openapi = {
     _internal: { refId: "VersionedLTPDocumentWithReference" },
