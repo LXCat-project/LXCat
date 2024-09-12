@@ -10,12 +10,11 @@
     padding-top: var(--mantine-spacing-xs);
     padding-bottom: var(--mantine-spacing-xs);
     margin-right: 0px;
-    color: var(--mantine-color-black);
+    color: var(--mantine-color-text);
     font-size: var(--mantine-fontsize-md);
 
     &:hover {
-        background-color: var(--mantine-color-gray-0);
-        color: var(--mantine-color-black);
+        background-color: var(--mantine-color-hover);
         text-decoration: none;
     }
 }
