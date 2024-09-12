@@ -5,22 +5,22 @@
  */
 
 .periodicElement {
+    background-color: light-dark(var(--mantine-color-brand-2), var(--mantine-color-brand-6));
     position: relative;
     width: 60px;
     height: 60px;
     border: 1px solid black;
     text-align: center;
-    /* padding: 10px; */
     box-sizing: border-box;
 }
 
 .periodicElement:disabled {
-    background-color: lightgray;
-    color: gray;
+    background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
+    color: var(--mantine-color-text);
 }
 
 .selected {
-    background-color: #99FF99;
+    background-color: light-dark(var(--mantine-color-green-2), var(--mantine-color-green-9));
 }
 
 .topLeft {
