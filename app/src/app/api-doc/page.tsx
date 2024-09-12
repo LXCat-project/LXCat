@@ -2,14 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-"use client";
-import { RedocStandalone } from "redoc";
+import { generateOpenAPI } from "@/docs/openapi";
+import { DocsPageClient } from "./page-client";
 
-export default function IndexPage() {
-  const url = "/api/doc/";
-  return (
-    <section className="container">
-      <RedocStandalone specUrl={url} />
-    </section>
-  );
+export default async function DocsPage() {
+  const spec = await generateOpenAPI();
+  return <DocsPageClient spec={spec} />;
 }
