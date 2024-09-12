@@ -144,8 +144,8 @@ export function NavBar() {
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
 
           <Group gap="sm">
-            <UserAnchor />
             <ColorSchemeToggle />
+            <UserAnchor />
           </Group>
         </div>
       </Container>
