@@ -21,7 +21,11 @@ import { ColorSchemeToggle } from "./color-scheme-toggle";
 const links = [
   {
     icon: (
-      <IconDatabase size="1.0rem" style={{ marginRight: 5 }} strokeWidth={2} />
+      <IconDatabase
+        size="1.2rem"
+        strokeWidth={2}
+        className={classes.linkIcon}
+      />
     ),
     label: "Data center",
     link: "#1",
@@ -39,9 +43,9 @@ const links = [
   {
     icon: (
       <IconUsers
-        size="1.0rem"
-        style={{ marginRight: 5 }}
+        size="1.2rem"
         strokeWidth={2}
+        className={classes.linkIcon}
       />
     ),
     link: "/team",
@@ -49,7 +53,11 @@ const links = [
   },
   {
     icon: (
-      <IconFileText size="1.0rem" style={{ marginRight: 5 }} strokeWidth={2} />
+      <IconFileText
+        size="1.2rem"
+        strokeWidth={2}
+        className={classes.linkIcon}
+      />
     ),
     link: "/docs/0-index",
     label: "Documentation",
