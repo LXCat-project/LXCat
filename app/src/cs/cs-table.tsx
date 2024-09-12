@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import classes from "./cs-table.module.css";
+
 import { CrossSectionHeading } from "@lxcat/database/item";
 import { Group, Stack, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
@@ -10,7 +12,6 @@ import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Reference } from "../shared/reference";
-import classes from "./cs-table.module.css";
 import { ReactionSummary } from "./reaction-summary";
 
 interface Props {

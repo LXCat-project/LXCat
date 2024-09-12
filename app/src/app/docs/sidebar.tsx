@@ -4,9 +4,9 @@
 
 "use client";
 
+import { DocFile } from "@/docs/generator";
+import { DocEntry } from "@/shared/doc-entry";
 import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
-import { DocFile } from "../../docs/generator";
-import { DocEntry } from "../../shared/doc-entry";
 
 export const DocsSidebar = ({
   docFiles,

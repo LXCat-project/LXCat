@@ -5,11 +5,11 @@
 import "@mantine/core/styles.css";
 import "@mantine/code-highlight/styles.css";
 import "mantine-datatable/styles.css";
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
+import ErrorBoundary from "@/shared/error-boundary";
+import { NavBar } from "@/shared/header/nav-bar";
 import { ColorSchemeScript } from "@mantine/core";
-import ErrorBoundary from "../shared/error-boundary";
-import { NavBar } from "../shared/nav-bar";
 import { Provider } from "./provider";
 
 interface RootLayoutProps {

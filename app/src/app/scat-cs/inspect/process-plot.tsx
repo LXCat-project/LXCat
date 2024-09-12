@@ -4,6 +4,8 @@
 
 "use client";
 
+import classes from "./process-plot.module.css";
+
 import Plotly from "plotly.js-basic-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
 import { DenormalizedProcess } from "../denormalized-process";
@@ -18,6 +20,7 @@ const Plot = createPlotlyComponent(Plotly);
 export const ProcessPlot = ({ processes, colors }: ChartProps) => {
   return (
     <Plot
+      className={classes.plotBox}
       data={processes.map((process, index) => ({
         x: process.info.data.values.map(([x, _]) => x),
         y: process.info.data.values.map(([_, y]) => y),
