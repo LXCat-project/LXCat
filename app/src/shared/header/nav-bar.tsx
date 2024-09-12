@@ -4,6 +4,8 @@
 
 "use client";
 
+import classes from "./nav-bar.module.css";
+
 import { UserAnchor } from "@/auth/user-anchor";
 import { Burger, Center, Container, Group, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -13,8 +15,8 @@ import {
   IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
-import { LXCatLogo } from "./logo";
-import classes from "./nav-bar.module.css";
+import { LXCatLogo } from "../logo";
+import { ColorSchemeToggle } from "./color-scheme-toggle";
 
 const links = [
   {
@@ -127,11 +129,16 @@ export function NavBar() {
             boxClassName={classes.logoBox}
             pathClassName={classes.logoPath}
           />
+
           <Group gap={5} visibleFrom="sm">
             {items}
           </Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
-          <UserAnchor />
+
+          <Group gap="sm">
+            <UserAnchor />
+            <ColorSchemeToggle />
+          </Group>
         </div>
       </Container>
     </header>

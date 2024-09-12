@@ -8,7 +8,7 @@
   position: sticky;
   top: 0;
   height: rem(60px);
-  background-color: var(--mantine-color-brand-6);
+  background-color: light-dark(var(--mantine-color-brand-5), var(--mantine-color-brand-7));
   border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
@@ -31,7 +31,7 @@
 
   @mixin hover {
     text-decoration-line: none;
-    background-color: light-dark(var(--mantine-color-brand-5), var(--mantine-color-dark-6));
+    background-color: light-dark(var(--mantine-color-brand-4), var(--mantine-color-brand-6));
   }
 }
 

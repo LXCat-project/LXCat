@@ -5,7 +5,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { NavBar } from "./nav-bar";
+import { NavBar } from "./header/nav-bar";
 
 interface Props {
   children: ReactNode;
