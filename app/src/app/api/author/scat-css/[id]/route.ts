@@ -2,10 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LXCatID } from "@/shared/lxcatid";
 import { db } from "@lxcat/database";
-import { EditedLTPDocument } from "@lxcat/schema";
-import { object, string } from "zod";
 import {
   badRequestResponse,
   forbiddenResponse,
@@ -16,16 +13,7 @@ import {
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";
-
-export const postSchema = object({
-  path: object({ id: LXCatID }),
-  body: object({ doc: EditedLTPDocument, message: string().min(1) }),
-});
-
-export const deleteSchema = object({
-  path: object({ id: LXCatID }),
-  body: object({ message: string().min(1) }),
-});
+import { deleteSchema, postSchema } from "./schemas";
 
 const postRouter = RouteBuilder
   .init()

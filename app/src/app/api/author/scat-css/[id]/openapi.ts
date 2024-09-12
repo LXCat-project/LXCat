@@ -5,7 +5,7 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { registry, requestParamsFromSchema } from "../../../../../docs/openapi";
-import { deleteSchema, postSchema } from "./route";
+import { deleteSchema, postSchema } from "./schemas";
 
 export async function register() {
   extendZodWithOpenApi(z);
