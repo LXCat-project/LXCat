@@ -8,6 +8,9 @@ import jsonpatch from "jsonpatch";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { exit } from "node:process";
+import { Result } from "true-myth";
+import { err, ok } from "true-myth/result";
+import { deepClone } from "../css/queries/deep-clone.js";
 import { db } from "../db.js";
 
 const fixTimestamps = (dataset: any) => {
@@ -26,8 +29,8 @@ const fixTimestamps = (dataset: any) => {
   return dataset;
 };
 
-const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
-  let data = jsonpatch.apply_patch(document, patch);
+const patchDocument = (document: any) => {
+  let data = deepClone(document);
   data["processes"] = Object.values(data["processes"]);
   data = fixTimestamps(data);
 
@@ -41,15 +44,25 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
   return result.data;
 };
 
+const readJSONFile = async (
+  path: string,
+): Promise<Result<any, unknown>> => {
+  try {
+    const raw = await fs.readFile(path, "utf8");
+    return ok(JSON.parse(raw));
+  } catch (e) {
+    return err(e);
+  }
+};
+
 (async () => {
   const dir = process.argv[2];
 
   const v1 = path.join(dir, "v1.json");
   console.log(v1);
 
-  let data = JSON.parse(await fs.readFile(v1, "utf8"));
-  data["processes"] = Object.values(data["processes"]);
-  data = fixTimestamps(data);
+  let curRaw = JSON.parse(await fs.readFile(v1, "utf8"));
+  let data = patchDocument(curRaw);
 
   const result = await LXCatMigrationDocument.safeParseAsync(data);
 
@@ -69,26 +82,27 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
   let version = 2;
 
   while (true) {
-    try {
-      const patch = JSON.parse(
-        await fs.readFile(
-          path.join(dir, `v${version}_patch.json`),
-          "utf8",
-        ),
-      );
-      data = patchDocument(data, patch);
-      setKey = await db().createHistoricDraftSet(
-        data,
-        "Migrated from LXCat 2.",
-        setKey,
-        itemKeyDict,
-      );
-      await db().publishSet(setKey);
-      console.log(`Loaded version ${version}.`);
-    } catch (err) {
-      // console.log(err);
-      break;
-    }
+    const patch = await readJSONFile(path.join(dir, `v${version}_patch.json`));
+    if (patch.isErr) break;
+
+    curRaw = jsonpatch.apply_patch(curRaw, patch.value);
+
+    const manualPatch = await readJSONFile(
+      path.join(dir, `v${version}_manual_patch.json`),
+    );
+    if (manualPatch.isErr) throw manualPatch.error;
+
+    curRaw = jsonpatch.apply_patch(curRaw, manualPatch.value);
+
+    data = patchDocument(curRaw);
+    setKey = await db().createHistoricDraftSet(
+      data,
+      "Migrated from LXCat 2.",
+      setKey,
+      itemKeyDict,
+    );
+    await db().publishSet(setKey);
+    console.log(`Loaded version ${version}.`);
 
     version += 1;
   }
