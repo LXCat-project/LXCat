@@ -60,6 +60,7 @@ import {
 } from "./cs/queries/write.js";
 import {
   createHistoricDraftItem,
+  createHistoricDraftSet,
   createHistoricItem,
   loadHistoricDataset,
   updateHistoricItem,
@@ -388,6 +389,7 @@ export class LXCatDatabase {
 
   // css/migration
   public loadHistoricDataset = loadHistoricDataset;
+  public createHistoricDraftSet = createHistoricDraftSet;
   public createHistoricItem = createHistoricItem;
   public createHistoricDraftItem = createHistoricDraftItem;
   public updateHistoricItem = updateHistoricItem;
