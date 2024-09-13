@@ -58,7 +58,13 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
     exit();
   }
 
-  await db().loadHistoricDataset(result.data, "Migrated from LXCat 2.");
+  const itemKeyDict: Record<string, string> = {};
+
+  let setKey = await db().loadHistoricDataset(
+    result.data,
+    "Migrated from LXCat 2.",
+    itemKeyDict,
+  );
 
   let version = 2;
 
@@ -71,9 +77,16 @@ const patchDocument = (document: LXCatMigrationDocument, patch: any) => {
         ),
       );
       data = patchDocument(data, patch);
-      await db().loadHistoricDataset(data, "Migrated from LXCat 2.");
+      setKey = await db().createHistoricDraftSet(
+        data,
+        "Migrated from LXCat 2.",
+        setKey,
+        itemKeyDict,
+      );
+      await db().publishSet(setKey);
+      console.log(`Loaded version ${version}.`);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       break;
     }
 
