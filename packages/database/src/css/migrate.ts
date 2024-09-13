@@ -1,5 +1,5 @@
 import { Cite } from "@citation-js/core";
-import { VersionInfo } from "@lxcat/schema";
+import { Status, VersionInfo } from "@lxcat/schema";
 import { LXCatMigrationDocument } from "@lxcat/schema/migration";
 import { VersionedProcess } from "@lxcat/schema/process";
 import { Reference, ReferenceRef } from "@lxcat/schema/reference";
@@ -7,6 +7,8 @@ import { LXCatDatabase } from "../lxcat-database.js";
 import { isEqualProcess } from "./queries/author-write.js";
 
 import "@citation-js/plugin-doi";
+
+const arangoKeyFromId = (id: string) => id.split("/")[1];
 
 export async function createHistoricItem(
   this: LXCatDatabase,
@@ -73,7 +75,7 @@ export async function createHistoricDraftItem(
     commitMessage,
   );
 
-  // Add previous version (published )and current version (draft) to CrossSectionHistory collection
+  // Add previous version (published) and current version (draft) to CrossSectionHistory collection
   await this.insertEdge(
     "CrossSectionHistory",
     idOfDraft,
@@ -107,7 +109,7 @@ export async function updateHistoricItem(
   }
 
   if (status === "published") {
-    return await this.createHistoricDraftItem(
+    return this.createHistoricDraftItem(
       key,
       item,
       commitMessage,
@@ -140,10 +142,37 @@ async function resolveReferences(
   );
 }
 
+export async function createHistoricDraftSet(
+  this: LXCatDatabase,
+  set: LXCatMigrationDocument,
+  message: string,
+  prevKey: string,
+  itemKeyDict: Record<string, string>,
+) {
+  // check whether a draft already exists
+  await this.isDraftlessSet(prevKey);
+  // TODO perform createSet+insert_edge inside single transaction
+  const keyOfDraft = await this.loadHistoricDataset(
+    set,
+    message,
+    itemKeyDict,
+    "draft",
+  );
+  // Add previous version (published )and current version (draft) to CrossSectionSetHistory collection
+  await this.insertEdge(
+    "CrossSectionSetHistory",
+    `CrossSectionSet/${keyOfDraft}`,
+    `CrossSectionSet/${prevKey}`,
+  );
+  return keyOfDraft;
+}
+
 export async function loadHistoricDataset(
   this: LXCatDatabase,
   dataset: LXCatMigrationDocument,
   commitMessage: string,
+  itemKeyDict: Record<string, string>,
+  status: Status = "published",
 ) {
   const organizationId = await this.getOrganizationByName(
     dataset.contributor.name,
@@ -157,6 +186,7 @@ export async function loadHistoricDataset(
 
   const versionInfo: VersionInfo = {
     ...dataset.versionInfo,
+    status,
     commitMessage,
   };
 
@@ -165,7 +195,7 @@ export async function loadHistoricDataset(
     await resolveReferences(dataset.references),
   );
 
-  const cs_set_id = await this.insertDocument("CrossSectionSet", {
+  const setId = await this.insertDocument("CrossSectionSet", {
     name: dataset.name,
     description: dataset.description,
     publishedIn: dataset.publishedIn && reference_ids[dataset.publishedIn],
@@ -180,41 +210,55 @@ export async function loadHistoricDataset(
     )
   ) {
     // check so a crosssection can only be in sets from same organization
-    const prevCs = await this.getItemByOrgAndId(
-      dataset.contributor.name,
-      item.info[0]._key,
-    );
-    if (prevCs !== undefined) {
-      if (isEqualProcess(item, prevCs, state_ids, reference_ids)) {
+    const legacyKey = item.info[0]._key;
+    const prevDBKey = legacyKey in itemKeyDict
+      ? itemKeyDict[legacyKey]
+      : undefined;
+    const prevItem = prevDBKey
+      ? await this.getItemByOrgAndId(
+        dataset.contributor.name,
+        prevDBKey,
+      )
+      : undefined;
+
+    const { versionInfo: _, ...infoWithoutVersion } = item.info[0];
+    const itemWithoutVersion = { ...item, info: [infoWithoutVersion] };
+
+    if (prevDBKey !== undefined && prevItem !== undefined) {
+      if (
+        isEqualProcess(itemWithoutVersion, prevItem, state_ids, reference_ids)
+      ) {
         // the cross section in db with id cs.id has same content as given cs
         // Make cross sections part of set by adding to IsPartOf collection
         await this.insertEdge(
           "IsPartOf",
-          `CrossSection/${item.info[0]._key}`,
-          cs_set_id,
+          `CrossSection/${prevDBKey}`,
+          setId,
         );
       } else {
-        const cs_id = await this.updateHistoricItem(
-          item.info[0]._key,
+        const itemKey = await this.updateHistoricItem(
+          prevDBKey,
           item,
-          `Indirect draft by editing set ${dataset.name} / ${cs_set_id}`,
+          `Indirect draft by editing set ${dataset.name} / ${setId}`,
           state_ids,
           reference_ids,
           organizationId,
         );
-        await this.insertEdge("IsPartOf", cs_id, cs_set_id);
+        await this.insertEdge("IsPartOf", itemKey, setId);
+        itemKeyDict[legacyKey] = arangoKeyFromId(itemKey);
       }
     } else {
-      const cs_id = await this.createHistoricItem(
+      const itemKey = await this.createHistoricItem(
         item,
         state_ids,
         reference_ids,
         organizationId,
         commitMessage,
       );
-      await this.insertEdge("IsPartOf", cs_id, cs_set_id);
+      await this.insertEdge("IsPartOf", itemKey, setId);
+      itemKeyDict[legacyKey] = arangoKeyFromId(itemKey);
     }
   }
 
-  return cs_set_id.replace("CrossSectionSet/", "");
+  return arangoKeyFromId(setId);
 }
