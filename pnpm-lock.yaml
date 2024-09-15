@@ -57,8 +57,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       '@next/bundle-analyzer':
-        specifier: ^14.2.8
-        version: 14.2.8
+        specifier: ^14.2.11
+        version: 14.2.11
       '@tabler/icons-react':
         specifier: ^3.14.0
         version: 3.14.0(react@18.3.1)
@@ -1964,8 +1964,8 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@next/bundle-analyzer@14.2.8':
-    resolution: {integrity: sha512-1AVsLkZhCsLwY9u7WLw6TOdYbSiAqz2avpJXPJBfIU7zvYpGiHzZkAJLSdbf9o3DwyFVoxTuDrErj6NmgDSWVg==}
+  '@next/bundle-analyzer@14.2.11':
+    resolution: {integrity: sha512-wFPjuXVlLkheng8BTG/K8UN8lRg93E5ZdE9gSmxpRP0XwC58w1B8wITXWeTD/Js4ObxyhxhiCrZzt2X+QJrrMw==}
 
   '@next/env@14.2.8':
     resolution: {integrity: sha512-L44a+ynqkolyNBnYfF8VoCiSrjSZWgEHYKkKLGcs/a80qh7AkfVUD/MduVPgdsWZ31tgROR+yJRA0PZjSVBXWQ==}
@@ -9423,7 +9423,7 @@ snapshots:
 
   '@napi-rs/cli@2.18.4': {}
 
-  '@next/bundle-analyzer@14.2.8':
+  '@next/bundle-analyzer@14.2.11':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
@@ -10207,6 +10207,10 @@ snapshots:
   acorn-jsx@5.3.2(acorn@8.11.2):
     dependencies:
       acorn: 8.11.2
+
+  acorn-jsx@5.3.2(acorn@8.12.1):
+    dependencies:
+      acorn: 8.12.1
 
   acorn-walk@8.3.2: {}
 
@@ -13666,8 +13670,8 @@ snapshots:
 
   micromark-extension-mdxjs@3.0.0:
     dependencies:
-      acorn: 8.11.2
-      acorn-jsx: 5.3.2(acorn@8.11.2)
+      acorn: 8.12.1
+      acorn-jsx: 5.3.2(acorn@8.12.1)
       micromark-extension-mdx-expression: 3.0.0
       micromark-extension-mdx-jsx: 3.0.0
       micromark-extension-mdx-md: 2.0.0
@@ -15924,7 +15928,7 @@ snapshots:
   terser@5.18.0:
     dependencies:
       '@jridgewell/source-map': 0.3.3
-      acorn: 8.11.2
+      acorn: 8.12.1
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -16451,7 +16455,7 @@ snapshots:
   webpack-bundle-analyzer@4.10.1:
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
-      acorn: 8.11.2
+      acorn: 8.12.1
       acorn-walk: 8.3.2
       commander: 7.2.0
       debounce: 1.2.1
