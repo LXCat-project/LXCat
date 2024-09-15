@@ -256,8 +256,8 @@ importers:
         specifier: ^0.0.24
         version: 0.0.24
       testcontainers:
-        specifier: ^10.13.0
-        version: 10.13.0
+        specifier: ^10.13.1
+        version: 10.13.1
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
@@ -326,8 +326,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       testcontainers:
-        specifier: ^10.13.0
-        version: 10.13.0
+        specifier: ^10.13.1
+        version: 10.13.1
       tsx:
         specifier: ^4.19.1
         version: 4.19.1
@@ -7123,8 +7123,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.13.0:
-    resolution: {integrity: sha512-SDblQvirbJw1ZpenxaAairGtAesw5XMOCHLbRhTTUBJtBkZJGce8Vx/I8lXQxWIM8HRXsg3HILTHGQvYo4x7wQ==}
+  testcontainers@10.13.1:
+    resolution: {integrity: sha512-JBbOhxmygj/ouH/47GnoVNt+c55Telh/45IjVxEbDoswsLchVmJiuKiw/eF6lE5i7LN+/99xsrSCttI3YRtirg==}
 
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
@@ -9657,7 +9657,7 @@ snapshots:
 
   '@testcontainers/arangodb@10.13.0':
     dependencies:
-      testcontainers: 10.13.0
+      testcontainers: 10.13.1
     transitivePeerDependencies:
       - supports-color
 
@@ -12981,7 +12981,7 @@ snapshots:
   istanbul-lib-source-maps@5.0.6:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      debug: 4.3.5
+      debug: 4.3.7
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
       - supports-color
@@ -15947,14 +15947,14 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.4
 
-  testcontainers@10.13.0:
+  testcontainers@10.13.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.29
       archiver: 7.0.1
       async-lock: 1.4.1
       byline: 5.0.0
-      debug: 4.3.5
+      debug: 4.3.7
       docker-compose: 0.24.8
       dockerode: 3.3.5
       get-port: 5.1.1
