@@ -8,9 +8,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 There is documentation for different audiences.
 
-- [Visitors of the website](visitor)
-- [Data contributors](data-contributor)
-- [Maintainers](maintainer)
-- [Administrators](administrator)
-- [Developers](developer)
-- [Code contributors](code-contributor)
+- [Visitors of the website](1-visitor)
+- [Data contributors](2-data-contributor)
+- [Maintainers](3-maintainer)
+- [Administrators](4-administrator)
+- [Developers](5-developer)
+- [Code contributors](6-code-contributor)
