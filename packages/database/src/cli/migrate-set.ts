@@ -90,9 +90,9 @@ const readJSONFile = async (
     const manualPatch = await readJSONFile(
       path.join(dir, `v${version}_manual_patch.json`),
     );
-    if (manualPatch.isErr) throw manualPatch.error;
-
-    curRaw = jsonpatch.apply_patch(curRaw, manualPatch.value);
+    if (manualPatch.isOk) {
+      curRaw = jsonpatch.apply_patch(curRaw, manualPatch.value);
+    }
 
     data = patchDocument(curRaw);
     setKey = await db().createHistoricDraftSet(
