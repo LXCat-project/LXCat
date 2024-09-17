@@ -18,7 +18,10 @@ declare module "@citation-js/core" {
     lang?: string;
   }
   export declare class Cite {
-    constructor(csl: Reference | Array<Reference>, { forceType: string }?);
+    constructor(
+      csl: Reference | Array<Reference> | string,
+      options?: InputOptions,
+    );
     format(
       format: string,
       { format: string, template: string }?,
