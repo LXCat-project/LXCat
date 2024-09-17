@@ -122,22 +122,20 @@ export async function updateHistoricItem(
   throw Error("Can not update cross section due to invalid status");
 }
 
-async function resolveReferences(
+function resolveReferences(
   refs: Record<string, string | Reference>,
-): Promise<Record<string, Reference>> {
+): Record<string, Reference> {
   return Object.fromEntries(
-    await Promise.all(
-      Object.entries(refs).map(async ([key, value]) =>
-        typeof value == "string"
-          ? [
-            key,
-            (await Cite.async(value, {
-              forceType: "@doi/id",
-              generateGraph: false,
-            })).get({ format: "real", type: "json", style: "csl" })[0],
-          ]
-          : [key, value]
-      ),
+    Object.entries(refs).map(([key, value]) =>
+      typeof value == "string"
+        ? [
+          key,
+          (new Cite(value, {
+            forceType: "@doi/id",
+            generateGraph: false,
+          })).get({ format: "real", type: "json", style: "csl" })[0],
+        ]
+        : [key, value]
     ),
   );
 }
