@@ -280,7 +280,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
             typeTags,
             reversible,
             set,
-          }: ReactionTemplate) => {
+          }) => {
             const consumes = consumesPaths
               .map(getStateLeaf)
               .filter((leaf): leaf is StateLeaf => leaf !== undefined);
