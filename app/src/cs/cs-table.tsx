@@ -107,6 +107,7 @@ export const CSTable = ({ items }: Props) => {
               highlightOnHover={true}
               columns={[
                 { accessor: "reaction" },
+                { accessor: "threshold", title: "Threshold (eV)" },
                 {
                   accessor: "typeTags",
                   title: "Type",
