@@ -26,7 +26,7 @@ export const CSSetFilter = ({
   onSetChecked,
 }: CSSetFilterProps) => {
   return (
-    <Stack gap={3} align="flex-start">
+    <Stack gap={3} align="center" justify="center">
       {Object.entries(data).map(([id, summary]) => {
         const numSelected = Object.keys(summary.sets).filter((setId) =>
           selection.has(setId)

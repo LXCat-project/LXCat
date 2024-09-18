@@ -22,7 +22,7 @@ import {
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import { Box, Button, Group, Space, Text } from "@mantine/core";
+import { Button, Fieldset, Group, Space, Text } from "@mantine/core";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import deepEqual from "deep-equal";
 import { GetServerSideProps, NextPage } from "next";
@@ -35,7 +35,6 @@ import { BAG_SIZE, PAGE_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
 import { Paging } from "../../cs/paging";
-import classes from "../../cs/scat-cs.module.css";
 import {
   emptyFilter,
   informationFromTemplates,
@@ -184,14 +183,14 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
             ]),
         }}
       >
-        <Box className={classes.list}>
+        <Fieldset>
           <Filter
             selection={selection}
             onChange={onChange}
             editableReaction={editableReaction}
             onEditableReactionChange={setEditableReaction}
           />
-        </Box>
+        </Fieldset>
       </SWRConfig>
       <Space h="sm" />
       <Group justify="center">
