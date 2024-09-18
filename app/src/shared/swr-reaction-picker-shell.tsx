@@ -5,6 +5,7 @@
 import { Reversible } from "@lxcat/database/item/picker";
 import {
   Box,
+  Fieldset,
   Group,
   MultiSelect,
   MultiSelectProps,
@@ -12,7 +13,6 @@ import {
 } from "@mantine/core";
 import { CSSetFilter, CSSetFilterProps } from "./cs-set-filter";
 import { LatexSelect, LatexSelectProps } from "./latex-select";
-import classes from "./reaction-picker.module.css";
 import { SWRStateList, SWRStateListProps } from "./swr-state-list";
 
 interface SWRReactionPickerShellProps {
@@ -42,9 +42,9 @@ export const SWRReactionPickerShell = ({
     <Group gap="xs">
       <Stack gap="xs">
         <Group gap="xs">
-          <Box className={classes.list}>
+          <Fieldset legend="Left-hand side">
             <SWRStateList {...consumes} />
-          </Box>
+          </Fieldset>
           <LatexSelect
             {...reversible}
             data={Object.fromEntries(
@@ -52,20 +52,19 @@ export const SWRReactionPickerShell = ({
                 choices.includes(key as Reversible)
               ),
             )}
-            style={{ borderStyle: "none" }}
           />
-          <Box className={classes.list}>
+          <Fieldset legend="Right-hand side">
             <SWRStateList {...produces} />
-          </Box>
+          </Fieldset>
         </Group>
         <MultiSelect
           placeholder="Reaction type tag(s)"
           {...typeTags}
         />
       </Stack>
-      <Box className={classes.list}>
+      <Fieldset legend="Set selection">
         <CSSetFilter {...sets} />
-      </Box>
+      </Fieldset>
     </Group>
   );
 };
