@@ -373,8 +373,15 @@ describe("Selecting individual cross sections", () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
         selection[0].typeTags = ["Effective", "Ionization"];
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
-        // FIXME: This function does not use the provided selection.
-        searchResults = await db.searchItem(selection, {
+
+        const ids = await db.getItemIdsByReactionTemplate(
+          [],
+          [],
+          ["Effective", "Ionization"],
+          Reversible.Both,
+          [],
+        );
+        searchResults = await db.getItemHeadings(ids, {
           count: 100,
           offset: 0,
         });
@@ -404,7 +411,7 @@ describe("Selecting individual cross sections", () => {
         );
       });
 
-      it("should have Effective and Ionization reaction type tags", () => {
+      it("should have Effective, Electronic,  and Ionization reaction type tags", () => {
         const expected = ["Effective", "Ionization", "Electronic"];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
@@ -418,8 +425,8 @@ describe("Selecting individual cross sections", () => {
         ).toEqual(expected);
       });
 
-      it("should have all 3 cross sections in search() results", () => {
-        expect(searchResults.length).toEqual(4);
+      it("should have all 3 cross sections in search results", () => {
+        expect(searchResults.length).toEqual(3);
       });
     });
   });
@@ -564,6 +571,7 @@ describe("Selecting individual cross sections", () => {
               },
             ],
           },
+          threshold: 0,
           reference: [],
           isPartOf: [
             {

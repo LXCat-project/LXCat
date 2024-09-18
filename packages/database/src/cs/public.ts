@@ -15,5 +15,5 @@ export interface CrossSectionHeading {
   })[];
   reaction: Reaction<SerializedSpecies>;
   reference: Reference[];
-  // TODO add CrossSection.threshold? Is it useful when searching for a section?
+  threshold: number;
 }
