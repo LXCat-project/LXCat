@@ -15,7 +15,7 @@
     transition: background-color 150ms ease;
     border-width: calc(rem(1));
     border-style: solid;
-    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
 
     &:hover {
