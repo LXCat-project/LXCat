@@ -52,7 +52,6 @@ export const SWRReactionPickerShell = ({
                 choices.includes(key as Reversible)
               ),
             )}
-            style={{ borderStyle: "none" }}
           />
           <Fieldset legend="Right-hand side">
             <SWRStateList {...produces} />
