@@ -44,13 +44,7 @@ import {
   getVersionInfo as getItemVersionInfo,
   searchOwned,
 } from "./cs/queries/author-read.js";
-import {
-  byId,
-  byIds,
-  csHistory,
-  getCSHeadings,
-  search,
-} from "./cs/queries/public.js";
+import { byId, byIds, csHistory, getCSHeadings } from "./cs/queries/public.js";
 import {
   createCS,
   createDraftCS,
@@ -339,7 +333,6 @@ export class LXCatDatabase {
   public itemHistory = csHistory;
   public getItemHeadings = getCSHeadings;
   public getItemById = byId;
-  public searchItem = search;
 
   // write
   public createItem = createCS;

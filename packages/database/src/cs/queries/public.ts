@@ -9,7 +9,6 @@ import { LXCatDatabase } from "../../lxcat-database.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
 import { KeyedVersionInfo } from "../../shared/types/version-info.js";
-import { ReactionTemplate } from "../picker/types.js";
 import { CrossSectionHeading } from "../public.js";
 
 export async function byId(this: LXCatDatabase, id: string) {
@@ -221,52 +220,6 @@ export async function getCSHeadings(
 	    )
 	    ${limitAql}
 	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs, isPartOf: setNames }
-	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
-  return await cursor.all();
-}
-
-// TODO: Can this function be removed?
-export async function search(
-  this: LXCatDatabase,
-  _templates: Array<ReactionTemplate>,
-  paging: PagingOptions,
-) {
-  const reactionsAql = aql``; // TODO implement
-  const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-  const q = aql`
-	FOR cs IN CrossSection
-    FILTER cs.versionInfo.status == 'published'
-	  LET refs = (
-		FOR rs IN References
-		  FILTER rs._from == cs._id
-		  FOR r IN Reference
-			FILTER r._id == rs._to
-			RETURN UNSET(r, ["_key", "_rev", "_id"])
-	  )
-    ${reactionsAql}
-	  LET reaction = FIRST(
-		FOR r in Reaction
-		  FILTER r._id == cs.reaction
-		  LET consumes = (
-			FOR c IN Consumes
-			FILTER c._from == r._id
-			  FOR c2s IN State
-			  FILTER c2s._id == c._to
-			  RETURN {state: UNSET(c2s, ["_key", "_rev", "_id"]), count: c.count}
-		  )
-		  LET produces = (
-			FOR p IN Produces
-			FILTER p._from == r._id
-			  FOR p2s IN State
-			  FILTER p2s._id == p._to
-			  RETURN {state: UNSET(p2s, ["_key", "_rev", "_id"]), count: p.count}
-		  )
-		  RETURN MERGE(UNSET(r, ["_key", "_rev", "_id"]), {"lhs":consumes, "rhs": produces})
-	  )
-	  LET setNames = [] // TODO implement
-	  ${limitAql}
-	  RETURN { "id": cs._key, "reaction": reaction, "reference": refs, "isPartOf": setNames}
 	`;
   const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
