@@ -564,6 +564,7 @@ describe("Selecting individual cross sections", () => {
               },
             ],
           },
+          threshold: 0,
           reference: [],
           isPartOf: [
             {
