@@ -585,6 +585,13 @@ export function isEqualProcess(
     return one.state.localeCompare(two.state);
   };
 
+  for (const info of prevMappedCS.info) {
+    info.references = info.references.sort();
+  }
+  for (const info of newMappedCS.info) {
+    info.references = info.references.sort();
+  }
+
   prevMappedCS.reaction.lhs.sort(sortEntries);
   prevMappedCS.reaction.rhs.sort(sortEntries);
   newMappedCS.reaction.lhs.sort(sortEntries);
