@@ -190,7 +190,7 @@ export async function loadHistoricDataset(
 
   const state_ids = await this.insertStateDict(dataset.states);
   const reference_ids = await this.insertReferenceDict(
-    await resolveReferences(dataset.references),
+    resolveReferences(dataset.references),
   );
 
   const setId = await this.insertDocument("CrossSectionSet", {
