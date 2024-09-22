@@ -9,6 +9,7 @@ import {
   record,
   string,
   TypeOf,
+  ZodIssueCode,
   ZodTypeAny,
 } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
@@ -33,27 +34,42 @@ const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
       }),
     ),
   )
-    .refine(
-      (doc) =>
-        doc.processes
-          .flatMap((process) => process.reaction.lhs)
-          .every(({ state }) => state in doc.states)
-        && doc.processes
-          .flatMap((process) => process.reaction.rhs)
-          .every(({ state }) => state in doc.states),
-      "Referenced state key is missing in states record.",
-    )
-    .refine(
-      (doc) =>
-        doc.processes
-          .flatMap(({ info }) => info)
-          .flatMap(({ references }) => references)
-          .every((reference) =>
-            typeof reference === "string"
-              ? reference in doc.references
-              : reference.id in doc.references
-          ),
-      "Referenced reference key is missing in references record.",
+    .superRefine((doc, ctx) => {
+      const checkState = (key: string) => {
+        const valid = key in doc.states;
+
+        if (!valid) {
+          ctx.addIssue({
+            code: ZodIssueCode.custom,
+            message:
+              `Referenced state key (${key}) is missing in the states record.`,
+          });
+        }
+      };
+
+      doc.processes
+        .flatMap((process) => process.reaction.lhs)
+        .forEach(({ state }) => checkState(state));
+      doc.processes
+        .flatMap((process) => process.reaction.rhs)
+        .every(({ state }) => checkState(state));
+    })
+    .superRefine((doc, ctx) =>
+      doc.processes
+        .flatMap(({ info }) => info)
+        .flatMap(({ references }) => references)
+        .forEach((reference) => {
+          const key = typeof reference === "string" ? reference : reference.id;
+          const valid = key in doc.references;
+
+          if (!valid) {
+            ctx.addIssue({
+              code: ZodIssueCode.custom,
+              message:
+                `Referenced reference key (${key}) is missing in the references record.`,
+            });
+          }
+        })
     );
 
 // Contains _key and version information. Datasets downloaded from LXCat use

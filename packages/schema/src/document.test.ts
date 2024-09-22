@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, expect, test } from "vitest";
+import { ZodError, ZodIssueCode } from "zod";
 import { EditedLTPDocument } from "./edited-document.js";
 import { NewLTPDocument } from "./new-document.js";
 import { VersionedLTPDocument } from "./versioned-document.js";
@@ -39,7 +40,14 @@ describe("LTPDocument", () => {
       ],
     };
     expect(() => NewLTPDocument.parse(doc)).toThrowError(
-      "Referenced state key is missing in states record.",
+      new ZodError([
+        {
+          code: ZodIssueCode.custom,
+          message:
+            "Referenced state key (FaultyKey) is missing in the states record.",
+          path: [],
+        },
+      ]),
     );
   });
   test("Should throw when referencing faulty reference key", () => {
@@ -73,7 +81,14 @@ describe("LTPDocument", () => {
       ],
     };
     expect(() => NewLTPDocument.parse(doc)).toThrowError(
-      "Referenced reference key is missing in references record.",
+      new ZodError([
+        {
+          code: ZodIssueCode.custom,
+          message:
+            "Referenced reference key (FaultyKey) is missing in the references record.",
+          path: [],
+        },
+      ]),
     );
   });
   test("An edited document can contain both new and existing processes", () => {
