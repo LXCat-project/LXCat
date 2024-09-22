@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, object, record, string, TypeOf } from "zod";
+import { array, object, record, string, TypeOf, ZodIssueCode } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { NewProcess } from "./process/new-process.js";
 import { SetHeader } from "./set-header.js";
@@ -18,27 +18,42 @@ const NewDocumentBody = object({
 // uploaded by contributors use this type.
 export const NewLTPDocument = NewDocumentBody
   .merge(SetHeader(string().min(1)))
-  .refine(
-    (doc) =>
-      doc.processes
-        .flatMap((process) => process.reaction.lhs)
-        .every(({ state }) => state in doc.states)
-      && doc.processes
-        .flatMap((process) => process.reaction.rhs)
-        .every(({ state }) => state in doc.states),
-    "Referenced state key is missing in states record.",
-  )
-  .refine(
-    (doc) =>
-      doc.processes
-        .flatMap(({ info }) => info)
-        .flatMap(({ references }) => references)
-        .every((reference) =>
-          typeof reference === "string"
-            ? reference in doc.references
-            : reference.id in doc.references
-        ),
-    "Referenced reference key is missing in references record.",
+  .superRefine((doc, ctx) => {
+    const checkState = (key: string) => {
+      const valid = key in doc.states;
+
+      if (!valid) {
+        ctx.addIssue({
+          code: ZodIssueCode.custom,
+          message:
+            `Referenced state key (${key}) is missing in the states record.`,
+        });
+      }
+    };
+
+    doc.processes
+      .flatMap((process) => process.reaction.lhs)
+      .forEach(({ state }) => checkState(state));
+    doc.processes
+      .flatMap((process) => process.reaction.rhs)
+      .every(({ state }) => checkState(state));
+  })
+  .superRefine((doc, ctx) =>
+    doc.processes
+      .flatMap(({ info }) => info)
+      .flatMap(({ references }) => references)
+      .forEach((reference) => {
+        const key = typeof reference === "string" ? reference : reference.id;
+        const valid = key in doc.references;
+
+        if (!valid) {
+          ctx.addIssue({
+            code: ZodIssueCode.custom,
+            message:
+              `Referenced reference key (${key}) is missing in the references record.`,
+          });
+        }
+      })
   );
 
 export type NewLTPDocument = TypeOf<typeof NewLTPDocument>;
