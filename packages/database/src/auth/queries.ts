@@ -206,6 +206,14 @@ export async function listUsers(this: LXCatDatabase) {
   return await cursor.all();
 }
 
+export async function listContributors(this: LXCatDatabase) {
+  const cursor: ArrayCursor<Contributor> = await this.db.query(aql`
+    FOR o IN Organization
+        RETURN UNSET(o, ["_id", "_rev", "_key"])
+  `);
+  return await cursor.all();
+}
+
 export async function listOrganizations(this: LXCatDatabase) {
   const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
     FOR o IN Organization

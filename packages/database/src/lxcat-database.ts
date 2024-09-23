@@ -19,6 +19,7 @@ import {
   getUserByEmail,
   getUserByKey,
   linkAccount,
+  listContributors,
   listOrganizations,
   listUsers,
   makeAdmin,
@@ -287,6 +288,8 @@ export class LXCatDatabase {
   public getSessionAndUser = getSessionAndUser;
   public updateSession = updateSession;
   public dropSession = dropSession;
+
+  public listContributors = listContributors;
 
   public listOrganizations = listOrganizations;
   public addOrganization = addOrganization;
