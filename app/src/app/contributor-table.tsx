@@ -10,7 +10,8 @@ import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
 
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconChevronRight, IconExternalLink } from "@tabler/icons-react";
+import clsx from "clsx";
 import classes from "./contributor-table.module.css";
 
 export const ContributorTable = (
@@ -26,7 +27,20 @@ export const ContributorTable = (
       records={contributors}
       idAccessor="name"
       columns={[
-        { accessor: "name" },
+        {
+          accessor: "name",
+          width: 180,
+          render: ({ name }) => (
+            <>
+              <IconChevronRight
+                className={clsx(classes.icon, classes.expandIcon, {
+                  [classes.expandIconRotated]: expanded.includes(name),
+                })}
+              />
+              <span>{name}</span>
+            </>
+          ),
+        },
         { accessor: "contact" },
         {
           accessor: "link",

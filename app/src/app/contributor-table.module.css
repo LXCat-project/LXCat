@@ -8,3 +8,18 @@
   padding: 10px;
   background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));
 }
+
+.icon {
+  width: rem(13px);
+  height: auto;
+  vertical-align: rem(-1px);
+  margin-right: rem(8px);
+}
+
+.expandIcon {
+  transition: transform 0.2s;
+}
+
+.expandIconRotated {
+  transform: rotate(90deg);
+}
