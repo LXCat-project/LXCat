@@ -585,11 +585,21 @@ export function isEqualProcess(
     return one.state.localeCompare(two.state);
   };
 
+  const referenceSort = (
+    one: ReferenceRef<string>,
+    two: ReferenceRef<string>,
+  ) => {
+    const idOne = typeof one === "string" ? one : one.id;
+    const idTwo = typeof two === "string" ? two : two.id;
+
+    return idOne.localeCompare(idTwo);
+  };
+
   for (const info of prevMappedCS.info) {
-    info.references = info.references.sort();
+    info.references.sort(referenceSort);
   }
   for (const info of newMappedCS.info) {
-    info.references = info.references.sort();
+    info.references.sort(referenceSort);
   }
 
   prevMappedCS.reaction.lhs.sort(sortEntries);
