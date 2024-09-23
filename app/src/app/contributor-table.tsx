@@ -4,7 +4,6 @@
 
 "use client";
 
-import { Contributor } from "@lxcat/schema";
 import { ActionIcon, Box, Center, Text } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
@@ -12,10 +11,11 @@ import { useState } from "react";
 
 import { IconChevronRight, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
+import { ContributorWithStats } from "../../../packages/database/dist/auth/queries";
 import classes from "./contributor-table.module.css";
 
 export const ContributorTable = (
-  { contributors }: { contributors: Array<Contributor> },
+  { contributors }: { contributors: Array<ContributorWithStats> },
 ) => {
   const [expanded, setExpanded] = useState<Array<string>>([]);
 
@@ -42,6 +42,7 @@ export const ContributorTable = (
           ),
         },
         { accessor: "contact" },
+        { accessor: "nSets", title: "# converted sets", textAlign: "center" },
         {
           accessor: "link",
           title: "LXCat 2 link",
