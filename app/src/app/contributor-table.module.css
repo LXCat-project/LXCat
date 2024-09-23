@@ -1,0 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.nested {
+  padding: 10px;
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));
+}
