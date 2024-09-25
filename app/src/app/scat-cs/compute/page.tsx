@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { annotateMixture } from "@/shared/annotate-mixture";
 import { convertMixture } from "@lxcat/converter";
 import { db } from "@lxcat/database";
 import { LTPMixtureWithReference } from "@lxcat/schema";
@@ -48,11 +49,6 @@ export default async function ComputePage({ searchParams }: URLParams) {
 const fetchProps = async (
   rawIds: string | Array<string>,
 ): Promise<Omit<BolsigPageProps, "consumedStates">> => {
-  if (typeof rawIds === "string") {
-    rawIds = rawIds.split(",");
-  }
-  const idsString = rawIds.join(",");
-
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
 
@@ -70,15 +66,8 @@ const fetchProps = async (
     url: r.URL,
   }));
 
-  const data: LTPMixtureWithReference = {
-    // FIXME: Use proper schema reference.
-    $schema: "",
-    url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}`,
-    termsOfUse:
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${idsString}#termsOfUse`,
-    ...mixture,
-    references,
-  };
+  const data = annotateMixture(mixture);
+  data.references = references;
 
   let legacy: string = "";
   try {

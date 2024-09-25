@@ -4,6 +4,7 @@
 
 "use client";
 
+import { annotateMixture } from "@/shared/annotate-mixture";
 import { LTPMixture } from "@lxcat/schema";
 import {
   Alert,
@@ -128,7 +129,10 @@ export const PlotPageClient = (
                   entries={[{
                     text: "JSON",
                     link: async () =>
-                      downloadFile(JSON.stringify(data), "lxcat-data.json"),
+                      downloadFile(
+                        JSON.stringify(annotateMixture(data)),
+                        "lxcat-data.json",
+                      ),
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
                     text: "Plaintext",
