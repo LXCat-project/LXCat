@@ -10,7 +10,7 @@ import { IconChevronRight, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import classes from "./set-table.module.css";
 
@@ -23,14 +23,19 @@ export const SetTable = (
     referenceMarkers: Map<string, number>;
   },
 ) => {
-  const [expanded, setExpanded] = useState<Array<string>>([]);
+  const setArray = useMemo(() => Object.values(sets), [sets]);
+
+  const [expanded, setExpanded] = useState<Array<string>>(
+    setArray.length === 1 ? [setArray[0]._key] : [],
+  );
+
   return (
     <DataTable
       withTableBorder
       borderRadius="md"
       idAccessor="_key"
       highlightOnHover
-      records={Object.values(sets)}
+      records={setArray}
       columns={[
         {
           accessor: "name",
