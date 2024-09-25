@@ -48,6 +48,7 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
           title: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
           type: "log",
           tickformat: ".0e",
+          tickmode: "linear",
           ticks: "inside",
           tickwidth: 1,
           // @ts-ignore
