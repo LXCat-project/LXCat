@@ -91,13 +91,22 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
           UNSET(css, ["_rev", "_id", "organization", "publishedIn"]),
           {contributor: UNSET(DOCUMENT(css.organization), ["_id", "_key", "_rev"]), publishedIn: PARSE_IDENTIFIER(css.publishedIn).key})}
     )
-    LET references = MERGE(
+    LET itemReferences = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
         FOR r IN OUTBOUND cs References
           RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
     )
+    LET setReferences = MERGE(
+      FOR setId IN setIds
+        FOR set IN CrossSectionSet
+          FILTER set._id == setId
+          FOR r IN Reference
+            FILTER set.publishedIn == r._id
+            RETURN {[r._key]: UNSET(r, ["_key", "_rev", "_id"])}
+    )
+    LET references = MERGE([setReferences, itemReferences])
     LET states = MERGE(
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
