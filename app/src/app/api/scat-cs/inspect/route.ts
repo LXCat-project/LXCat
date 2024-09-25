@@ -23,8 +23,7 @@ const router = RouteBuilder
   .get(async (_, ctx) => {
     const params = ctx.parsedParams;
     const data: LTPMixtureWithReference = {
-      // FIXME: Return correct $schema url.
-      $schema: "",
+      $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,
       url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
         params.query.ids.join(",")
       }`,
