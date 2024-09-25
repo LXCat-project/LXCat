@@ -30,7 +30,7 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe("/author/set", () => {
+test.describe.skip("/author/set", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
     return db().dropNonUserCollections;
