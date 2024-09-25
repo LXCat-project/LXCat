@@ -167,9 +167,13 @@ test.describe("given 2 dummy sets", () => {
       test.beforeEach(async ({ page }) => {
         await page.locator("text=Download data").click();
 
-        const download = await page
-          .locator("a:has-text('JSON')")
-          .getAttribute("href");
+        const downloadPromise = page.waitForEvent("download");
+
+        await page
+          .locator(".mantine-Menu-itemLabel:has-text('JSON')")
+          .click();
+
+        const download = await downloadPromise;
 
         if (download === null) {
           test.fail();
@@ -177,8 +181,9 @@ test.describe("given 2 dummy sets", () => {
         }
 
         // TODO: Links should point to `/api/scat-css`.
-        const ids = download.replace("/api/scat-cs/inspect", "");
-        urlWithHash = `/scat-cs/inspect${ids}&termsOfUse=true`;
+        const path = await download.path();
+        const content = JSON.parse(await readFile(path, { encoding: "utf8" }));
+        urlWithHash = content.termsOfUse.replace("http://localhost:3000", "");
       });
 
       test("should show terms of use dialog", async ({ context }) => {
