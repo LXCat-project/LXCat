@@ -4,6 +4,8 @@
 
 "use client";
 
+import { annotateMixture } from "@/shared/annotate-mixture";
+import { LTPMixture } from "@lxcat/schema";
 import {
   Alert,
   Button,
@@ -29,6 +31,7 @@ import { ButtonClipboard } from "./button-clipboard";
 import { ButtonMultiDownload } from "./button-multi-download";
 import { colorScheme } from "./colors";
 import classes from "./inspect.module.css";
+import { toLegacyAction } from "./legacy-action";
 import { ProcessTable } from "./process-table";
 import { Reference } from "./reference";
 import { TermsOfUseCheck } from "./terms-of-use-check";
@@ -46,13 +49,28 @@ const Chart = dynamic(
   },
 );
 
+const downloadFile = (
+  jsonString: string,
+  fileName: string,
+  type: string = "application/json",
+) => {
+  const file = new Blob([jsonString], { type });
+  const element = document.createElement("a");
+  element.href = URL.createObjectURL(file);
+  element.download = fileName;
+  document.body.appendChild(element);
+  element.click();
+  element.remove();
+};
+
 const NUM_LINES_INIT = 5;
 
 export const PlotPageClient = (
-  { processes, refs, setMismatch, permaLink, forceTermsOfUse }: {
+  { processes, refs, setMismatch, data, permaLink, forceTermsOfUse }: {
     processes: Array<DenormalizedProcess>;
     refs: Array<FormattedReference>;
     setMismatch: boolean;
+    data: LTPMixture;
     permaLink: string;
     forceTermsOfUse?: boolean;
   },
@@ -110,11 +128,19 @@ export const PlotPageClient = (
                 <ButtonMultiDownload
                   entries={[{
                     text: "JSON",
-                    link: `/api/scat-cs/inspect?ids=${idsString}`,
+                    link: async () =>
+                      downloadFile(
+                        JSON.stringify(annotateMixture(data)),
+                        "lxcat-data.json",
+                      ),
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
                     text: "Plaintext",
-                    link: `/api/scat-cs/inspect/legacy?ids=${idsString}`,
+                    link: async () =>
+                      downloadFile(
+                        await toLegacyAction(data),
+                        "lxcat-data.txt",
+                      ),
                     icon: <IconFileText stroke={1.5} />,
                   }]}
                 >

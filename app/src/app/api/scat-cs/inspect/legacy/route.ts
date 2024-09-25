@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { annotateMixture } from "@/shared/annotate-mixture";
 import { db } from "@lxcat/database";
-import { LTPMixtureWithReference } from "@lxcat/schema";
 import { okResponse } from "../../../../../shared/api-responses";
 import { reference2bibliography } from "../../../../../shared/cite";
 import { mapObject } from "../../../../../shared/utils";
@@ -30,18 +30,8 @@ const router = RouteBuilder
       ([key, reference]) => [key, reference2bibliography(reference)],
     );
 
-    const data: LTPMixtureWithReference = {
-      // FIXME: Return correct $schema url.
-      $schema: "",
-      url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
-        ctx.parsedParams.query.ids.join(",")
-      }`,
-      termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
-        ctx.parsedParams.query.ids.join(",")
-      }#termsOfUse`,
-      ...mixture,
-      references,
-    };
+    const data = annotateMixture(mixture);
+    data.references = references;
 
     const { convertMixture } = await import("@lxcat/converter");
 

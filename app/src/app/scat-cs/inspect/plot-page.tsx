@@ -31,6 +31,7 @@ export const PlotPage = ({
       processes={processes}
       refs={formattedRefs}
       setMismatch={hasMixedCompleteSets}
+      data={bag}
       permaLink={permaLink}
       forceTermsOfUse={forceTermsOfUse}
     />

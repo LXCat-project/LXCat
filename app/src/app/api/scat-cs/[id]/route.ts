@@ -33,7 +33,7 @@ const router = RouteBuilder
     return okJsonResponse({
       url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`,
       termsOfUse:
-        `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}#termsOfUse`,
+        `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}&termsOfUse=true`,
       ...data,
     });
   }).compile();

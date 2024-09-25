@@ -34,9 +34,7 @@ const router = RouteBuilder
       }
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
-        // TODO: Schema endpoint does not exist.
-        $schema:
-          `${process.env.NEXT_PUBLIC_URL}/api/scat-css/CrossSectionSetRaw.schema.json`,
+        $schema: `${process.env.NEXT_PUBLIC_URL}/api/scat-css/LTPDocument`,
         url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${params.path.id}`,
         termsOfUse:
           `${process.env.NEXT_PUBLIC_URL}/scat-css/${params.path.id}#termsOfUse`,

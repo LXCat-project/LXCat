@@ -49,7 +49,7 @@ const router = RouteBuilder
       );
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
-        $schema: "",
+        $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,
         url:
           `${process.env.NEXT_PUBLIC_URL}/scat-css/${ctx.parsedParams.path.id}`,
         termsOfUse:
