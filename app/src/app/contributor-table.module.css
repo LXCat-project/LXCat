@@ -1,0 +1,25 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.nested {
+  padding: 10px;
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));
+}
+
+.icon {
+  width: rem(13px);
+  height: auto;
+  vertical-align: rem(-1px);
+  margin-right: rem(8px);
+}
+
+.expandIcon {
+  transition: transform 0.2s;
+}
+
+.expandIconRotated {
+  transform: rotate(90deg);
+}

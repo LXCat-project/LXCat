@@ -31,6 +31,18 @@ const load_organization_from_file = async (db: LXCatDatabase, path: string) => {
   console.log(`Inserted organization ${org.name} with key ${orgId}.`);
 };
 
+export const load_organizations_from_file = async (
+  db: LXCatDatabase,
+  path: string,
+) => {
+  const content = await readFile(path, { encoding: "utf8" });
+  const orgs = Contributor.array().parse(JSON.parse(content));
+  for (const org of orgs) {
+    const orgId = await db.addOrganization(org);
+    console.log(`Inserted organization ${org.name} with key ${orgId}.`);
+  }
+};
+
 export const load_organizations_dir = async (
   db: LXCatDatabase,
   dir: string,

@@ -206,6 +206,22 @@ export async function listUsers(this: LXCatDatabase) {
   return await cursor.all();
 }
 
+export type ContributorWithStats = Contributor & { nSets: number };
+
+export async function listContributors(this: LXCatDatabase) {
+  const cursor: ArrayCursor<ContributorWithStats> = await this.db.query(aql`
+    FOR o IN Organization
+      let nSets = COUNT(
+        FOR set IN CrossSectionSet
+          FILTER set.organization == o._id
+          RETURN 1
+      )
+      SORT nSets DESC, o.name
+      RETURN MERGE(UNSET(o, ["_id", "_rev", "_key"]), {nSets: nSets})
+  `);
+  return await cursor.all();
+}
+
 export async function listOrganizations(this: LXCatDatabase) {
   const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
     FOR o IN Organization
