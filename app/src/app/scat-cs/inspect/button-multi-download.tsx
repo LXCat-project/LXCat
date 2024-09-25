@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { MaybePromise } from "@/app/api/util";
 import { Button, Menu } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 import { LinkToggle } from "./link-toggle";
@@ -12,7 +13,7 @@ export const ButtonMultiDownload = (
     entries: Array<
       {
         text: string;
-        link: string;
+        link: string | (() => MaybePromise<void>);
         icon?: React.ReactNode;
         disabled?: boolean;
         fileName?: string;
@@ -37,21 +38,34 @@ export const ButtonMultiDownload = (
       </Menu.Target>
       <Menu.Dropdown>
         {entries.map(({ text, link, icon, disabled, fileName }, index) => (
-          <LinkToggle
-            key={index}
-            style={{
-              textDecoration: "none",
-            }}
-            href={disabled ? "" : link}
-            target="_blank"
-            rel="noreferrer"
-            download={fileName ?? true}
-            disabled={disabled}
-          >
-            <Menu.Item leftSection={icon} disabled={disabled}>
-              {text}
-            </Menu.Item>
-          </LinkToggle>
+          typeof link === "string"
+            ? (
+              <LinkToggle
+                key={index}
+                style={{
+                  textDecoration: "none",
+                }}
+                href={disabled ? "" : link}
+                target="_blank"
+                rel="noreferrer"
+                download={fileName ?? true}
+                disabled={disabled}
+              >
+                <Menu.Item leftSection={icon} disabled={disabled}>
+                  {text}
+                </Menu.Item>
+              </LinkToggle>
+            )
+            : (
+              <Menu.Item
+                key={index}
+                onClick={async () => await link()}
+                leftSection={icon}
+                disabled={disabled}
+              >
+                {text}
+              </Menu.Item>
+            )
         ))}
       </Menu.Dropdown>
     </Menu>
