@@ -4,13 +4,15 @@
 
 import type { Reaction } from "@lxcat/schema/process";
 
+import { mapObject } from "@/shared/utils";
+import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { DenormalizedProcess } from "../denormalized-process";
 import { formatReference } from "./cite";
 import { PlotPageClient } from "./plot-page-client";
 
-export const PlotPage = ({
+export const PlotPage = async ({
   bag,
   hasMixedCompleteSets,
   forceTermsOfUse,
@@ -26,10 +28,32 @@ export const PlotPage = ({
     bag.processes.flatMap(({ info }) => info).map(({ _key }) => _key).join(",")
   }`;
   const processes = denormalizeProcesses(bag.processes, bag.states, bag.sets);
+
+  const setStats = Object.fromEntries(
+    await Promise.all(
+      Object.entries(bag.sets).map(
+        async (
+          [_, set],
+        ) => [set._key, {
+          selected: 0,
+          total: (await db().getNumItemsInSet(set._key))!,
+        }],
+      ),
+    ),
+  );
+
+  for (const info of bag.processes.flatMap(({ info }) => info)) {
+    for (const setKey of info.isPartOf) {
+      setStats[setKey].selected += 1;
+    }
+  }
+
+  console.log(setStats);
   return (
     <PlotPageClient
       processes={processes}
       refs={formattedRefs}
+      setStats={setStats}
       setMismatch={hasMixedCompleteSets}
       data={bag}
       permaLink={permaLink}

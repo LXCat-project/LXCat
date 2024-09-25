@@ -65,10 +65,13 @@ const downloadFile = (
 
 const NUM_LINES_INIT = 5;
 
+type SetStats = Record<string, { selected: number; total: number }>;
+
 export const PlotPageClient = (
   { processes, refs, setMismatch, data, permaLink, forceTermsOfUse }: {
     processes: Array<DenormalizedProcess>;
     refs: Array<FormattedReference>;
+    setStats: SetStats;
     setMismatch: boolean;
     data: LTPMixture;
     permaLink: string;
