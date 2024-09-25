@@ -49,6 +49,10 @@ export default async function ComputePage({ searchParams }: URLParams) {
 const fetchProps = async (
   rawIds: string | Array<string>,
 ): Promise<Omit<BolsigPageProps, "consumedStates">> => {
+  if (typeof rawIds === "string") {
+    rawIds = rawIds.split(",");
+  }
+
   // TODO: We should probably use a context to share data between pages.
   const ids = IdsSchema.parse(rawIds);
 
