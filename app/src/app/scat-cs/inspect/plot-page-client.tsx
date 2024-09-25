@@ -34,6 +34,7 @@ import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
 import { ProcessTable } from "./process-table";
 import { Reference } from "./reference";
+import { SetStats, SetTable } from "./set-table";
 import { TermsOfUseCheck } from "./terms-of-use-check";
 import { FormattedReference } from "./types";
 
@@ -65,18 +66,17 @@ const downloadFile = (
 
 const NUM_LINES_INIT = 5;
 
-type SetStats = Record<string, { selected: number; total: number }>;
-
 export const PlotPageClient = (
-  { processes, refs, setMismatch, data, permaLink, forceTermsOfUse }: {
-    processes: Array<DenormalizedProcess>;
-    refs: Array<FormattedReference>;
-    setStats: SetStats;
-    setMismatch: boolean;
-    data: LTPMixture;
-    permaLink: string;
-    forceTermsOfUse?: boolean;
-  },
+  { processes, refs, setStats, setMismatch, data, permaLink, forceTermsOfUse }:
+    {
+      processes: Array<DenormalizedProcess>;
+      refs: Array<FormattedReference>;
+      setStats: SetStats;
+      setMismatch: boolean;
+      data: LTPMixture;
+      permaLink: string;
+      forceTermsOfUse?: boolean;
+    },
 ) => {
   const router = useRouter();
 
@@ -166,6 +166,11 @@ export const PlotPageClient = (
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack>
+            <SetTable
+              sets={data.sets}
+              stats={setStats}
+              referenceMarkers={referenceMarkers}
+            />
             <ProcessTable
               processes={processes}
               referenceMarkers={referenceMarkers}

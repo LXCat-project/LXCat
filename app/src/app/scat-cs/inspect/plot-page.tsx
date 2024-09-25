@@ -2,11 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { Reaction } from "@lxcat/schema/process";
-
-import { mapObject } from "@/shared/utils";
 import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
+import type { Reaction } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { DenormalizedProcess } from "../denormalized-process";
 import { formatReference } from "./cite";
@@ -48,7 +46,6 @@ export const PlotPage = async ({
     }
   }
 
-  console.log(setStats);
   return (
     <PlotPageClient
       processes={processes}
