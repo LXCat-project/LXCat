@@ -61,13 +61,33 @@ export async function byId(this: LXCatDatabase, id: string) {
 
 export async function byIds(this: LXCatDatabase, ids: string[]) {
   const cursor: ArrayCursor<LTPMixture> = await this.db.query(aql`
-    LET sets = MERGE(
+    LET setIdsUnfiltered = (
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
         FILTER cs.versionInfo.status != 'draft'
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status != 'draft'
-          RETURN {[css._key]:  MERGE(UNSET(css, ["_rev", "_id", "organization"]), {contributor: UNSET(DOCUMENT(css.organization), ["_id", "_key", "_rev"])})}
+          RETURN DISTINCT css._id
+    )
+    LET setIds = (
+      FOR setId IN setIdsUnfiltered
+        let hasNewer = FIRST(
+          FOR setNewer IN 1..1000000 INBOUND setId CrossSectionSetHistory
+            FILTER setNewer.versionInfo.status != 'draft'
+            FILTER setNewer._id IN setIdsUnfiltered
+            RETURN 1
+        )
+        FILTER IS_NULL(hasNewer)
+        return setId
+    )
+    LET sets = MERGE(
+      FOR setId IN setIds
+        LET css = FIRST(
+          FOR css IN CrossSectionSet
+            FILTER css._id == setId
+            RETURN css
+        )
+        RETURN {[css._key]: MERGE(UNSET(css, ["_rev", "_id", "organization"]), {contributor: UNSET(DOCUMENT(css.organization), ["_id", "_key", "_rev"])})}
     )
     LET references = MERGE(
       FOR cs IN CrossSection
@@ -141,6 +161,7 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
         LET sets2 = (
           FOR p IN IsPartOf
             FILTER cs._id == p._from
+            FILTER p._to IN setIds
             RETURN PARSE_IDENTIFIER(p._to).key
         )
         RETURN { reaction, info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2, isPartOf: sets2 }, cs.info)] }

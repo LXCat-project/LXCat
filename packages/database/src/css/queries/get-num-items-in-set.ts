@@ -13,11 +13,11 @@ export async function getNumItemsInSet(
   const query = aql`
     FOR set IN CrossSectionSet
       FILTER set._key == ${key}
-        let count = COUNT(
-          FOR cs IN INBOUND set IsPartOf
-            RETURN 1
-        )
-        return count
+      LET count = COUNT(
+        FOR cs IN INBOUND set IsPartOf
+          RETURN 1
+      )
+      RETURN count
   `;
 
   const cursor: ArrayCursor<number> = await this.db.query(query);
