@@ -86,17 +86,29 @@ export const PlotPageClient = (
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
-  let colorMap = new Map(
+  const colorMap = new Map(
     processes.map((
       { info: { _key: id } },
       index,
     ) => [id, colorScheme[index % colorScheme.length]]),
   );
 
-  let referenceMarkers = new Map(refs.map(({ id }, index) => [id, index + 1]));
+  const referenceMarkers = new Map(
+    refs.map(({ id }, index) => [id, index + 1]),
+  );
 
-  let idsString = processes.map(({ info: { _key: id } }) => id).join(",");
-  let idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
+  const idsString = processes.map(({ info: { _key: id } }) => id).join(",");
+  const idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
+
+  // The compute button should only be available when every process is either
+  // not from a complete set, or from a complete set whose items are all in the
+  // selection.
+  const canCompute = data.processes.flatMap(({ info }) => info).every((info) =>
+    info.isPartOf.some((setKey) =>
+      !data.sets[setKey].complete
+      || setStats[setKey].selected === setStats[setKey].total
+    )
+  );
 
   return (
     <>
@@ -152,14 +164,19 @@ export const PlotPageClient = (
                 <ButtonClipboard link={permaLink}>
                   Copy permalink
                 </ButtonClipboard>
-                <Button
-                  size="md"
-                  rightSection={<IconCalculator size="1.2rem" stroke={1.5} />}
-                  onClick={() =>
-                    router.push(`/scat-cs/compute?ids=${idsString}`)}
-                >
-                  Compute
-                </Button>
+                {canCompute
+                  && (
+                    <Button
+                      size="md"
+                      rightSection={
+                        <IconCalculator size="1.2rem" stroke={1.5} />
+                      }
+                      onClick={() =>
+                        router.push(`/scat-cs/compute?ids=${idsString}`)}
+                    >
+                      Compute
+                    </Button>
+                  )}
               </Button.Group>
             </Center>
           </Stack>
