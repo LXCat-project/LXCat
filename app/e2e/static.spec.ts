@@ -6,11 +6,11 @@ import { expect, test } from "playwright-test-coverage";
 
 test("/", async ({ page }) => {
   await page.goto("/");
-  const h1 = page.locator("h1");
-  await expect(h1).toContainText("Welcome to LXCat");
+  const legend = page.locator("legend");
+  await expect(legend).toContainText("List of data contributors");
 });
 
-test("/docs/index", async ({ page }) => {
+test("/docs/0-index", async ({ page }) => {
   test.slow();
   await page.goto("/docs/0-index");
   const h1 = page.locator("h1");
