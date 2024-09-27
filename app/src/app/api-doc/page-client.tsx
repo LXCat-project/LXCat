@@ -7,10 +7,9 @@
 import { RedocStandalone } from "redoc";
 
 export function DocsPageClient({ spec }: { spec: any }) {
-  const url = "/api/doc/";
   return (
-    <section className="container">
-      <RedocStandalone spec={spec} />
+    <section className="container" style={{ marginTop: 10 }}>
+      <RedocStandalone options={{ scrollYOffset: 30 }} spec={spec} />
     </section>
   );
 }
