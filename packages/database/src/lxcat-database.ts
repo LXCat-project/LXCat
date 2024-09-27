@@ -79,6 +79,7 @@ import {
   updateVersionStatus as updateSetVersionStatus,
 } from "./css/queries/author-write.js";
 import { getSetAffiliation } from "./css/queries/get-affiliation.js";
+import { getNumItemsInSet } from "./css/queries/get-num-items-in-set.js";
 import {
   activeSetOfArchivedSet,
   byId as setById,
@@ -366,6 +367,9 @@ export class LXCatDatabase {
 
   // css/get-affiliation
   public getSetAffiliation = getSetAffiliation;
+
+  // css/get-num-items-in-set
+  public getNumItemsInSet = getNumItemsInSet;
 
   // cs/picker
   public getSearchOptions = getSearchOptions;

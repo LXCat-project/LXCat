@@ -48,6 +48,7 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
           title: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
           type: "log",
           tickformat: ".0e",
+          tickmode: "linear",
           ticks: "inside",
           tickwidth: 1,
           // @ts-ignore
@@ -59,7 +60,10 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
         width: 700,
         height: 600,
         yaxis: {
-          title: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
+          title: {
+            text: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
+            standoff: 15,
+          },
           type: "log",
           tickformat: ".0e",
           ticks: "inside",

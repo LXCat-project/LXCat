@@ -15,6 +15,7 @@ import {
   IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { LXCatLogo } from "../logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 
@@ -79,14 +80,11 @@ export function NavBar() {
 
   const items = links.map((link) => {
     const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>
-        <a
-          href={item.link}
-          className={classes.item}
-        >
+      <Link key={item.link} href={item.link} className={classes.item}>
+        <Menu.Item key={item.link}>
           {item.label}
-        </a>
-      </Menu.Item>
+        </Menu.Item>
+      </Link>
     ));
 
     if (menuItems) {
@@ -133,10 +131,12 @@ export function NavBar() {
     <header className={classes.header}>
       <Container size="md">
         <div className={classes.inner}>
-          <LXCatLogo
-            boxClassName={classes.logoBox}
-            pathClassName={classes.logoPath}
-          />
+          <Link href="/">
+            <LXCatLogo
+              boxClassName={classes.logoBox}
+              pathClassName={classes.logoPath}
+            />
+          </Link>
 
           <Group gap={5} visibleFrom="sm">
             {items}

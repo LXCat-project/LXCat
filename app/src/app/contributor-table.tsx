@@ -24,6 +24,7 @@ export const ContributorTable = (
       withTableBorder
       height={600}
       borderRadius="sm"
+      highlightOnHover
       records={contributors}
       idAccessor="name"
       columns={[
