@@ -36,17 +36,10 @@ const Home = async () => {
       <Script key="jsonld-logo" {...jsonLdScriptProps(jsonLDLogo)} />
       <Script key="jsonld-website" {...jsonLdScriptProps(jsonLDWebsite)} />
 
-      <Title order={1} style={{ margin: 10 }}>Welcome to LXCat!</Title>
-
-      <Text style={{ margin: 10 }}>
-        This is the next version of the LXCat web site and is under heavy
-        construction.
-      </Text>
-
-      <Fieldset>
-        <Title order={2} style={{ marginLeft: 10, marginBottom: 10 }}>
-          List of data contributors
-        </Title>
+      <Fieldset
+        legend=<Text fw={700}>List of data contributors</Text>
+        style={{ marginTop: 15, marginLeft: 10, marginRight: 10 }}
+      >
         <ContributorTable contributors={contributors} />
       </Fieldset>
     </>
