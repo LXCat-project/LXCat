@@ -80,14 +80,11 @@ export function NavBar() {
 
   const items = links.map((link) => {
     const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>
-        <a
-          href={item.link}
-          className={classes.item}
-        >
+      <Link key={item.link} href={item.link} className={classes.item}>
+        <Menu.Item key={item.link}>
           {item.label}
-        </a>
-      </Menu.Item>
+        </Menu.Item>
+      </Link>
     ));
 
     if (menuItems) {
