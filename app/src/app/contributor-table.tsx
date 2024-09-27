@@ -22,7 +22,7 @@ export const ContributorTable = (
   return (
     <DataTable
       withTableBorder
-      height={600}
+      height={800}
       borderRadius="sm"
       highlightOnHover
       records={contributors}
