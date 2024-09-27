@@ -15,6 +15,7 @@ import {
   IconFileText,
   IconUsers,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { LXCatLogo } from "../logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 
@@ -133,10 +134,12 @@ export function NavBar() {
     <header className={classes.header}>
       <Container size="md">
         <div className={classes.inner}>
-          <LXCatLogo
-            boxClassName={classes.logoBox}
-            pathClassName={classes.logoPath}
-          />
+          <Link href="/">
+            <LXCatLogo
+              boxClassName={classes.logoBox}
+              pathClassName={classes.logoPath}
+            />
+          </Link>
 
           <Group gap={5} visibleFrom="sm">
             {items}
