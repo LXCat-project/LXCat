@@ -60,8 +60,8 @@ importers:
         specifier: ^14.2.13
         version: 14.2.13
       '@tabler/icons-react':
-        specifier: ^3.17.0
-        version: 3.17.0(react@18.3.1)
+        specifier: ^3.19.0
+        version: 3.19.0(react@18.3.1)
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
@@ -221,7 +221,7 @@ importers:
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^2.1.1
-        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -263,7 +263,7 @@ importers:
         version: 5.6.2
       vitest:
         specifier: ^2.1.1
-        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/converter:
     devDependencies:
@@ -318,7 +318,7 @@ importers:
         version: 7.17.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)
       '@vitest/coverage-v8':
         specifier: ^2.1.1
-        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -336,7 +336,7 @@ importers:
         version: 5.6.2
       vitest:
         specifier: ^2.1.1
-        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/node-loader:
     dependencies:
@@ -380,7 +380,7 @@ importers:
         version: 7.17.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)
       '@vitest/coverage-v8':
         specifier: ^2.1.1
-        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -395,7 +395,7 @@ importers:
         version: 5.6.2
       vitest:
         specifier: ^2.1.1
-        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/tsconfig: {}
 
@@ -2181,13 +2181,13 @@ packages:
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
     engines: {node: '>=14.16'}
 
-  '@tabler/icons-react@3.17.0':
-    resolution: {integrity: sha512-Ndm9Htv7KpIU1PYYrzs5EMhyA3aZGcgaxUp9Q1XOxcRZ+I0X+Ub2WS5f4bkRyDdL1s0++k2T9XRgmg2pG113sw==}
+  '@tabler/icons-react@3.19.0':
+    resolution: {integrity: sha512-AqEWGI0tQWgqo6ZjMO5yJ9sYT8oXLuAM/up0hN9iENS6IdtNZryKrkNSiMgpwweNTpl8wFFG/dAZ959S91A/uQ==}
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons@3.17.0':
-    resolution: {integrity: sha512-sCSfAQ0w93KSnSL7tS08n73CdIKpuHP8foeLMWgDKiZaCs8ZE//N3ytazCk651ZtruTtByI3b+ZDj7nRf+hHvA==}
+  '@tabler/icons@3.19.0':
+    resolution: {integrity: sha512-A4WEWqpdbTfnpFEtwXqwAe9qf9sp1yRPvzppqAuwcoF0q5YInqB+JkJtSFToCyBpPVeLxJUxxkapLvt2qQgnag==}
 
   '@testcontainers/arangodb@10.13.1':
     resolution: {integrity: sha512-ZrtUE7U/xLYGXE/mfgx18UaMdNnTr47hsug3IkS27KG43jLG/KjPDojzhzsj/NK59tYZdiTk0Vp2mrITgvfxWg==}
@@ -9594,12 +9594,12 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tabler/icons-react@3.17.0(react@18.3.1)':
+  '@tabler/icons-react@3.19.0(react@18.3.1)':
     dependencies:
-      '@tabler/icons': 3.17.0
+      '@tabler/icons': 3.19.0
       react: 18.3.1
 
-  '@tabler/icons@3.17.0': {}
+  '@tabler/icons@3.19.0': {}
 
   '@testcontainers/arangodb@10.13.1':
     dependencies:
@@ -9926,7 +9926,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/coverage-v8@2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
+  '@vitest/coverage-v8@2.1.1(vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -9940,7 +9940,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vitest: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9951,13 +9951,13 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
+  '@vitest/mocker@2.1.1(@vitest/spy@2.1.1)(vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))':
     dependencies:
       '@vitest/spy': 2.1.1
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
 
   '@vitest/pretty-format@2.1.1':
     dependencies:
@@ -11641,8 +11641,8 @@ snapshots:
       '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.6.2)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.57.0)
       eslint-plugin-react: 7.33.2(eslint@8.57.0)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.0)
@@ -11660,13 +11660,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.7
       enhanced-resolve: 5.15.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
       get-tsconfig: 4.7.5
       globby: 13.1.4
       is-core-module: 2.13.0
@@ -11678,18 +11678,18 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.0.1(eslint@8.57.0)(typescript@5.6.2)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.6
       array.prototype.findlastindex: 1.2.3
@@ -11699,7 +11699,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.28.1)(eslint@8.57.0))(eslint@8.57.0)
       has: 1.0.4
       is-core-module: 2.13.0
       is-glob: 4.0.3
@@ -16209,12 +16209,12 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-node@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vite-node@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16225,7 +16225,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       esbuild: 0.19.10
       postcss: 8.4.32
@@ -16236,10 +16236,10 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.32)
       terser: 5.18.0
 
-  vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vitest@2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       '@vitest/expect': 2.1.1
-      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+      '@vitest/mocker': 2.1.1(@vitest/spy@2.1.1)(vite@5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0))
       '@vitest/pretty-format': 2.1.1
       '@vitest/runner': 2.1.1
       '@vitest/snapshot': 2.1.1
@@ -16254,8 +16254,8 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
-      vite-node: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
+      vite-node: 2.1.1(@types/node@22.5.5)(sugarss@4.0.1)(terser@5.18.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.5.5
