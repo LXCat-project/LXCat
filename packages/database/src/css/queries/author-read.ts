@@ -73,7 +73,10 @@ export async function byOwnerAndId(
                             FILTER state.detailed.composition == co._id
                             return co.definition
                         )
-                        RETURN {[state._key]: MERGE_RECURSIVE(state.detailed, {composition})}
+                        RETURN {[state._key]: {
+                          detailed: MERGE_RECURSIVE(state.detailed, {composition}), 
+                          serialized: state.serialized
+                        }}
                     )
                     LET produces = (
                       FOR state IN OUTBOUND r Produces
@@ -82,7 +85,10 @@ export async function byOwnerAndId(
                             FILTER state.detailed.composition == co._id
                             return co.definition
                         )
-                        RETURN {[state._key]: MERGE_RECURSIVE(state.detailed, {composition})}
+                        RETURN {[state._key]: {
+                          detailed: MERGE_RECURSIVE(state.detailed, {composition}), 
+                          serialized: state.serialized
+                        }}
                     )
                     RETURN MERGE(UNION(produces, consumes))
               )
