@@ -30,10 +30,10 @@ export const ArangoAdapter = (db: LXCatDatabase): Adapter => {
     return user;
   }
   return {
-    async createUser(user) {
+    async createUser(user: unknown) {
       const profile = UserWithAccountSessionInDb.parse(user);
       const id = await db.addUser(profile);
-      const newUser: AdapterUser = { ...user, id: id! };
+      const newUser = { ...profile, id: id! };
       return newUser;
     },
     getUser: async (id) => toAdapterUser(await db.getUserByKey(id)),
@@ -46,14 +46,18 @@ export const ArangoAdapter = (db: LXCatDatabase): Adapter => {
       return toAdapterUser(await db.updateUser(profile))!;
     },
     deleteUser: async (id) => db.dropUser(id),
-    async linkAccount(data) {
+    async linkAccount(data: any) {
       const { userId, ...account } = data;
       const prunedAccount = Account.parse(account); // Removes extra keys
       await db.linkAccount(userId, prunedAccount);
       return data;
     },
-    unlinkAccount: async ({ providerAccountId, provider }) =>
-      db.unlinkAccount(provider, providerAccountId),
+    unlinkAccount: async (
+      { providerAccountId, provider }: {
+        providerAccountId: string;
+        provider: string;
+      },
+    ) => db.unlinkAccount(provider, providerAccountId),
     async createSession(s) {
       const { sessionToken, userId, expires } = s;
       const session = Session.parse({
