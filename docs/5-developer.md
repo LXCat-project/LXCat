@@ -32,7 +32,11 @@ Send the mail from the same email you used to login to LXCat.
 Authentication is done using a [JWT](https://jwt.io) token. The token can be generated and
 copied from the [/developer](/developer) page.
 
-Use `Authorization: Bearer <token>` as header in all of the HTTP requests.
+Use `Authorization: Bearer <token>` as header in all of the HTTP requests. For example, using `curl`:
+
+```bash
+curl -H "Authorization: Bearer <token>" https://example.url.net
+```
 
 <!-- TODO: Needs a review. Endpoints have been added and removed. -->
 
