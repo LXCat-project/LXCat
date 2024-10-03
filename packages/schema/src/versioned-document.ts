@@ -17,7 +17,7 @@ import { Contributor } from "./contributor.js";
 import { VersionedProcess } from "./process/versioned-process.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
-import { AnySpecies } from "./species/any-species.js";
+import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
 
 const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
@@ -27,7 +27,7 @@ const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
     SetHeader(Contributor).merge(
       object({
         references: record(Reference),
-        states: record(AnySpecies),
+        states: record(SerializedSpecies),
         processes: array(
           VersionedProcess(string(), ReferenceRef(string().min(1))),
         ),
