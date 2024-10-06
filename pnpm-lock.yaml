@@ -144,8 +144,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       remark-embed-images:
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.0.0
+        version: 5.0.0
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
@@ -3932,6 +3932,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   esniff@2.0.1:
@@ -5342,9 +5343,9 @@ packages:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
 
-  mime@3.0.0:
-    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
-    engines: {node: '>=10.0.0'}
+  mime@4.0.4:
+    resolution: {integrity: sha512-v8yqInVjhXyqP6+Kw4fV3ZzeMRqEW6FotRsKXjRS5VMTNIuXsdRoAvklpoRgSqXm6o9VNH4/C0mgedko9DdLsQ==}
+    engines: {node: '>=16'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -6522,8 +6523,8 @@ packages:
     resolution: {integrity: sha512-gUAyHVHPPC5wdqX/LG4LWtRYtgjxyX78oanFNTMMyFEfOqdC54s3eE82imuWKbOeqYht2CrNf64Qb8vgmmtZGA==}
     engines: {node: '>=4'}
 
-  remark-embed-images@4.0.0:
-    resolution: {integrity: sha512-c8qQMdhNTSO9TMMfbvf5CWI+HhIX5UZPTBVNaNSpxaEuRt0KCLFk68s5CQ7szbSERLnpos+c9K6xZoILWRh+eQ==}
+  remark-embed-images@5.0.0:
+    resolution: {integrity: sha512-7adjhglB+7Pp3BBVQgTT49mJvf6zw12jIt4K7kBWcy69j493qOyM5yGklcBiRcqeyCVdqS6pm5EXyGb4zlhuAw==}
 
   remark-gfm@4.0.0:
     resolution: {integrity: sha512-U92vJgBPkbw4Zfu/IiW2oTZLSL3Zpv+uI7My2eq8JxKgqraFdU8YUGicEJCEgSbeaG+QDFqIcwwfMTOEelPxuA==}
@@ -13697,7 +13698,7 @@ snapshots:
     dependencies:
       mime-db: 1.52.0
 
-  mime@3.0.0: {}
+  mime@4.0.4: {}
 
   mimic-fn@2.1.0: {}
 
@@ -15129,11 +15130,11 @@ snapshots:
     dependencies:
       es6-error: 4.1.1
 
-  remark-embed-images@4.0.0:
+  remark-embed-images@5.0.0:
     dependencies:
       '@types/mdast': 4.0.4
       is-relative-url: 4.0.0
-      mime: 3.0.0
+      mime: 4.0.4
       unist-util-visit: 5.0.0
       vfile: 6.0.1
 
