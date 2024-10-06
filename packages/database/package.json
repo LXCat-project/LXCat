@@ -77,7 +77,7 @@
     "@vitest/coverage-v8": "^2.1.1",
     "dprint": "^0.47.2",
     "eslint": "8.57.0",
-    "testcontainers": "^10.13.1",
+    "testcontainers": "^10.13.2",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "vitest": "^2.1.2"
