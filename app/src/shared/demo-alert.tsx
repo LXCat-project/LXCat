@@ -32,10 +32,13 @@ export const DemoAlert = () => (
       <Link className={classes.link} href="mailto:info@lxcat.net">
         info@lxcat.net
       </Link>.{" "}
+      Likewise, existing and new contributors that want to display their data on
+      LXCat 3 can reach out to the LXCat team by using the aforementioned links.
+      {" "}
       <b>
-        Do not use data downloaded from this deployment in publications. Until
-        the platform is officially released, unique identifiers of datasets and
-        cross sections will be unstable.
+        Do not use data downloaded from this deployment in publications yet.
+        Until the platform is officially released, unique identifiers of
+        datasets and cross sections will be unstable.
       </b>{" "}
       For now, please obtain your cross section data from{" "}
       <Link
