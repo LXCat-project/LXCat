@@ -15,10 +15,10 @@ export const DemoAlert = () => (
       color="red"
       style={{ width: "90%", marginTop: 10 }}
     >
-      This is the next version of the LXCat web site. The purpose of this demo
-      is to gather feedback on the interfaces, data format, and general
-      usability of the new website. Please communicate such feedback in the form
-      of issues on the{" "}
+      This is the next version of the LXCat website. The purpose of this demo is
+      to gather feedback on the interfaces, data format, and general usability
+      of the new website. Please communicate such feedback in the form of issues
+      on the{" "}
       <Link href="https://github.com/LXCat-project/LXCat" target="_blank">
         LXCat GitHub page
       </Link>{" "}
