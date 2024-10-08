@@ -6,6 +6,8 @@ import { Alert, Center } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import Link from "next/link";
 
+import classes from "./demo-alert.module.css";
+
 export const DemoAlert = () => (
   <Center>
     <Alert
@@ -19,18 +21,28 @@ export const DemoAlert = () => (
       to gather feedback on the interfaces, data format, and general usability
       of the new website. Please communicate such feedback in the form of issues
       on the{" "}
-      <Link href="https://github.com/LXCat-project/LXCat" target="_blank">
+      <Link
+        className={classes.link}
+        href="https://github.com/LXCat-project/LXCat"
+        target="_blank"
+      >
         LXCat GitHub page
       </Link>{" "}
       or in the form of an e-mail to{" "}
-      <Link href="mailto:info@lxcat.net">info@lxcat.net</Link>.{" "}
+      <Link className={classes.link} href="mailto:info@lxcat.net">
+        info@lxcat.net
+      </Link>.{" "}
       <b>
         Do not use data downloaded from this deployment in publications. Until
         the platform is officially released, unique identifiers of datasets and
         cross sections will be unstable.
       </b>{" "}
       For now, please obtain your cross section data from{" "}
-      <Link href={"https://www.lxcat.net"} target="_blank">
+      <Link
+        className={classes.link}
+        href={"https://www.lxcat.net"}
+        target="_blank"
+      >
         the LXCat 2 website.
       </Link>
     </Alert>
