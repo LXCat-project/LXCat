@@ -10,6 +10,20 @@ import { Cursor } from "arangojs/cursors";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
+/**
+ * Creates a new cross section (CS) entry in the database.
+ *
+ * @param this - The LXCatDatabase instance.
+ * @param cs - The cross-section process to be created, containing reaction and info.
+ * @param stateDict - A dictionary mapping state strings used in cs to their database IDs.
+ * @param refDict - A dictionary mapping reference strings used in cs to their database IDs.
+ * @param organizationId - The ID of the organization creating the cross-section.
+ * @param status - The status of the cross-section, default is "published".
+ * @param version - The version number of the cross-section, default is 1.
+ * @param commitMessage - An optional commit message for the creation of the cross-section.
+ * @returns A promise that resolves to the ID of the created cross-section.
+ * @throws Error if the cross-section contains multiple info sections.
+ */
 export async function createCS(
   this: LXCatDatabase,
   cs: EditedProcess<string, ReferenceRef<string>>,
