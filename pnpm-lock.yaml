@@ -348,8 +348,8 @@ importers:
         version: 5.0.0
     devDependencies:
       '@babel/cli':
-        specifier: ^7.25.7
-        version: 7.25.7(@babel/core@7.25.8)
+        specifier: ^7.25.9
+        version: 7.25.9(@babel/core@7.25.8)
       '@babel/core':
         specifier: ^7.25.8
         version: 7.25.8
@@ -420,8 +420,8 @@ packages:
     peerDependencies:
       zod: ^3.20.2
 
-  '@babel/cli@7.25.7':
-    resolution: {integrity: sha512-vQw4QjrqjLSuL0Tt3gfVXbxEHOfsCcHN8tKyTclpSMYLq3Bp0BTzWYZfMKBs3PQ+to8q3BnumBIAsMdOqDJ6nw==}
+  '@babel/cli@7.25.9':
+    resolution: {integrity: sha512-I+02IfrTiSanpxJBlZQYb18qCxB6c2Ih371cVpfgIrPQrjAYkf45XxomTJOG8JBWX5GY35/+TmhCMdJ4ZPkL8Q==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -7569,7 +7569,7 @@ snapshots:
       openapi3-ts: 4.2.1
       zod: 3.23.6
 
-  '@babel/cli@7.25.7(@babel/core@7.25.8)':
+  '@babel/cli@7.25.9(@babel/core@7.25.8)':
     dependencies:
       '@babel/core': 7.25.8
       '@jridgewell/trace-mapping': 0.3.25
