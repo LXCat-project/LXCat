@@ -9,12 +9,13 @@ import "highlight.js/styles/github.css";
 import "katex/dist/katex.min.css";
 
 interface PageProps<ParamType> {
-  params: ParamType;
+  params: Promise<ParamType>;
 }
 
 const Page = async ({
-  params: { slug },
+  params,
 }: PageProps<{ slug: Array<string> }>) => {
+  const { slug } = await params;
   const mdxSource = await md2mdx(slug);
   return <MDXRenderer {...mdxSource} />;
 };

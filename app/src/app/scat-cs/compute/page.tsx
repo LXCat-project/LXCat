@@ -14,7 +14,7 @@ import { IdsSchema } from "../ids-schema";
 import { BolsigPage, BolsigPageProps } from "./bolsig-page";
 
 interface URLParams {
-  searchParams?: { ids?: string };
+  searchParams?: Promise<{ ids?: string }>;
 }
 
 const ParamsSchema = z.object({
@@ -22,7 +22,7 @@ const ParamsSchema = z.object({
 });
 
 export default async function ComputePage({ searchParams }: URLParams) {
-  const { ids } = ParamsSchema.parse(searchParams);
+  const { ids } = ParamsSchema.parse(await searchParams);
   const { data, ...props } = await fetchProps(ids);
 
   const consumedStates = [

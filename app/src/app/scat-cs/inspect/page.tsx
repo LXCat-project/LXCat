@@ -19,7 +19,7 @@ interface BagProps {
 }
 
 interface URLParams {
-  searchParams?: { ids?: string; termsOfUse?: boolean };
+  searchParams?: Promise<{ ids?: string; termsOfUse?: boolean }>;
 }
 
 const SearchParams = z.object({
@@ -30,6 +30,7 @@ const SearchParams = z.object({
 const ScatteringCrossSectionSelectionPage = async (
   { searchParams }: URLParams,
 ) => {
+  const { ids, termsOfUse } = SearchParams.parse(await searchParams);
   const canonicalUrl = "/scat-cs";
 
   return (
@@ -47,8 +48,8 @@ const ScatteringCrossSectionSelectionPage = async (
       {searchParams
         ? (
           <PlotPage
-            {...(await fetchProps(searchParams.ids ?? []))}
-            forceTermsOfUse={searchParams.termsOfUse ? true : false}
+            {...(await fetchProps(ids ?? []))}
+            forceTermsOfUse={termsOfUse ? true : false}
           />
         )
         : <></>}
