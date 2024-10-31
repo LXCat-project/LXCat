@@ -11,7 +11,6 @@ if (process.env.LXCAT_BUILD_ENV !== "production") {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  swcMinify: false,
   reactStrictMode: true,
 
   experimental: {
