@@ -18,7 +18,7 @@ interface BagProps {
 }
 
 interface URLParams {
-  params: { id: string };
+  params?: Promise<{ id: string }>;
 }
 
 const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
@@ -30,7 +30,7 @@ const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
       />
       {params
         // FIXME: Use a specialized component to render a single set.
-        ? <PlotPage {...(await fetchProps(params.id))} />
+        ? <PlotPage {...(await fetchProps((await params).id))} />
         : <></>}
     </>
   );

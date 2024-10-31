@@ -92,7 +92,7 @@ async function runDbCommand(command: string) {
 }
 
 async function signUp(page: Page, email: string) {
-  await page.goto("/");
+  await page.goto("/", { timeout: 60000 });
   await page.locator("text=Sign in").click();
   await page.locator("text=Sign in with Test dummy").click();
 
