@@ -17,11 +17,11 @@ type Params = {
 };
 
 export type NextContext = {
-  params?: Record<string, string>;
+  params: Promise<Record<string, string> | undefined>;
 };
 
 export type BaseContext = {
-  params: Params;
+  params?: Params;
 };
 
 type HttpMethods =
@@ -89,7 +89,7 @@ export class RouteBuilder<Context> {
 
         return ok([{
           params: {
-            path: ctx.params,
+            path: await ctx.params,
             query: Object.fromEntries(req.nextUrl.searchParams.entries()),
             body: body,
           },
