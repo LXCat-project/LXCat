@@ -1,0 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.link {
+  font-weight: 700;
+  color: var(--mantine-color-blue-4)
+}
