@@ -10,7 +10,7 @@ export default defineConfig({
     hookTimeout: 180_000, // Docker containers are being started, the default 5s is not enough
     coverage: {
       reporter: ["text", "json-summary", "json"],
-      include: ["src/**.ts"],
+      include: ["src/**/*.ts"],
       exclude: ["src/cli/*", "src/test/*", "**/*{.,-}spec.ts"],
     },
     globalSetup: "./src/test/global-setup.ts",
