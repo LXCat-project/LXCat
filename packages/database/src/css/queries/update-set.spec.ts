@@ -134,7 +134,7 @@ describe("given published cross section set where data of 1 published cross sect
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
-  it("should create a draft for the altered cross section set", async () => {
+  it("should create a draft for the altered cross section set", () => {
     expect(keycss1).not.toEqual(keycss2);
   });
 
