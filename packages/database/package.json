@@ -55,7 +55,7 @@
     "clean": "rm -rf dist",
     "dev": "tsc -p tsconfig.build.json --watch",
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint",
+    "lint": "eslint src",
     "test": "vitest",
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src"
   },

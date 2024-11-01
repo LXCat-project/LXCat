@@ -9,7 +9,7 @@
     "json:doc": "tsx src/cli/document-schema.ts",
     "json:mix": "tsx src/cli/mixture-schema.ts",
     "build": "tsc",
-    "lint": "eslint",
+    "lint": "eslint src",
     "format": "dprint fmt",
     "test": "vitest",
     "coverage": "vitest run --coverage",
