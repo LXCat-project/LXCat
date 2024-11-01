@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Role } from "@lxcat/database/auth";
-import cookie from "cookie";
+import * as cookie from "cookie";
 import { encode } from "next-auth/jwt";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import {
