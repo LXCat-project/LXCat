@@ -256,8 +256,8 @@ importers:
         specifier: ^0.0.25
         version: 0.0.25
       testcontainers:
-        specifier: ^10.13.2
-        version: 10.13.2
+        specifier: ^10.14.0
+        version: 10.14.0
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -329,8 +329,8 @@ importers:
         specifier: ^15.12.0
         version: 15.12.0
       testcontainers:
-        specifier: ^10.13.2
-        version: 10.13.2
+        specifier: ^10.14.0
+        version: 10.14.0
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -7042,8 +7042,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.13.2:
-    resolution: {integrity: sha512-LfEll+AG/1Ks3n4+IA5lpyBHLiYh/hSfI4+ERa6urwfQscbDU+M2iW1qPQrHQi+xJXQRYy4whyK1IEHdmxWa3Q==}
+  testcontainers@10.14.0:
+    resolution: {integrity: sha512-8fReFeQ4bk17T2vHHzcFavBG8UHuHwsdVj+48TchtsCSklwmSUTkg/b57hVjxZdxN1ed/GfF63WZ39I4syV5tQ==}
 
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
@@ -9451,7 +9451,7 @@ snapshots:
 
   '@testcontainers/arangodb@10.13.2':
     dependencies:
-      testcontainers: 10.13.2
+      testcontainers: 10.14.0
     transitivePeerDependencies:
       - supports-color
 
@@ -15781,7 +15781,7 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.4
 
-  testcontainers@10.13.2:
+  testcontainers@10.14.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.29
