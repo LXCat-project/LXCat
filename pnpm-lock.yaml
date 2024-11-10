@@ -238,8 +238,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       oidc-provider:
-        specifier: ^8.5.2
-        version: 8.5.2
+        specifier: ^8.5.3
+        version: 8.5.3
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.47.0)
@@ -4819,8 +4819,8 @@ packages:
   jose@4.15.5:
     resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
 
-  jose@5.9.4:
-    resolution: {integrity: sha512-WBBl6au1qg6OHj67yCffCgFR3BADJBXN8MdRvCgJDuMv3driV2nHr7jdGvaKX9IolosAsn+M0XRArqLXUhyJHQ==}
+  jose@5.9.6:
+    resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
 
   js-levenshtein@1.1.6:
     resolution: {integrity: sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==}
@@ -5650,8 +5650,8 @@ packages:
     resolution: {integrity: sha512-yBYjY9QX2hnRmZHAjG/f13MzmBzxzYgQhFrke06TTyKY5zSTEqkOeukBzIdVA3j3ulu8Qa3MbVFShV7T2RmGtQ==}
     engines: {node: '>= 0.4'}
 
-  oidc-provider@8.5.2:
-    resolution: {integrity: sha512-WhMIQ61KMgABvrYZJDuefOWFpX34DWgg+U4juKARplGhNUSNfHgJh6i6Mp+PTO08ZDk/oj1Ci7ScU6CAI/wgcg==}
+  oidc-provider@8.5.3:
+    resolution: {integrity: sha512-eSHoHiPxdJ7Ar+hgaogeBVdGgjtIPp6GXFuzuTYdQ4rhhWC6jFapa0GQ49zk0M6I6OnqTYU3dU8j/QDaLu5BaA==}
 
   oidc-token-hash@5.0.3:
     resolution: {integrity: sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==}
@@ -12739,7 +12739,7 @@ snapshots:
 
   jose@4.15.5: {}
 
-  jose@5.9.4: {}
+  jose@5.9.6: {}
 
   js-levenshtein@1.1.6: {}
 
@@ -13906,14 +13906,14 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.0.0
 
-  oidc-provider@8.5.2:
+  oidc-provider@8.5.3:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
       debug: 4.3.7
       eta: 3.5.0
       got: 13.0.0
-      jose: 5.9.4
+      jose: 5.9.6
       jsesc: 3.0.2
       koa: 2.15.3
       nanoid: 5.0.8
