@@ -214,6 +214,7 @@ export async function listContributors(this: LXCatDatabase) {
       let nSets = COUNT(
         FOR set IN CrossSectionSet
           FILTER set.organization == o._id
+          FILTER set.versionInfo.status == "published"
           RETURN 1
       )
       SORT nSets DESC, o.name
