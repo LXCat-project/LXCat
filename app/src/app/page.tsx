@@ -12,6 +12,7 @@ import { Center, Fieldset, Text } from "@mantine/core";
 import { readFile } from "fs/promises";
 import Script from "next/script";
 import path from "path";
+import { env } from "process";
 import logo from "../../public/lxcat.png";
 import { ContributorTable } from "./contributor-table";
 
@@ -34,9 +35,12 @@ const jsonLDWebsite: WithContext<WebSite> = {
 
 const readNews = async (): Promise<Array<NewsCardProps>> => {
   try {
-    const data = await readFile(path.join(process.cwd(), "news.json"), {
-      encoding: "utf8",
-    });
+    const data = await readFile(
+      env.NEWS_PATH ?? path.join(process.cwd(), "news.json"),
+      {
+        encoding: "utf8",
+      },
+    );
     return JSON.parse(data);
   } catch {
     return [];
