@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import "@mantine/core/styles.css";
+import "@mantine/carousel/styles.css";
 import "@mantine/code-highlight/styles.css";
 import "mantine-datatable/styles.css";
 import "@/styles/globals.css";

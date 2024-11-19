@@ -1,0 +1,23 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.card {
+  height: rem(160px);
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-items: stretch;
+}
+
+.title {
+  font-family:
+    Greycliff CF,
+    sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: rem(16px);
+  margin-top: var(--mantine-spacing-sm);
+}
