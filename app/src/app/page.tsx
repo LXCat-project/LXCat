@@ -33,10 +33,14 @@ const jsonLDWebsite: WithContext<WebSite> = {
 };
 
 const readNews = async (): Promise<Array<NewsCardProps>> => {
-  const data = await readFile(path.join(process.cwd(), "news.json"), {
-    encoding: "utf8",
-  });
-  return JSON.parse(data);
+  try {
+    const data = await readFile(path.join(process.cwd(), "news.json"), {
+      encoding: "utf8",
+    });
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
 };
 
 const Home = async () => {
@@ -49,7 +53,10 @@ const Home = async () => {
       <Script key="jsonld-website" {...jsonLdScriptProps(jsonLDWebsite)} />
 
       <Center>
-        <div style={{ width: "90%", marginTop: 20 }}>
+        <div
+          hidden={newsItems.length === 0}
+          style={{ width: "90%", marginTop: 20 }}
+        >
           <NewsCarousel newsItems={newsItems} />
         </div>
       </Center>
