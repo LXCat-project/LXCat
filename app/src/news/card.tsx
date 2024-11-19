@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Badge, Center, Group, Paper, Text } from "@mantine/core";
 
 import classes from "./card.module.css";
