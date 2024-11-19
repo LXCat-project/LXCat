@@ -43,7 +43,17 @@ export const ContributorTable = (
           ),
         },
         { accessor: "contact" },
-        { accessor: "nSets", title: "# converted sets", textAlign: "center" },
+        {
+          accessor: "convertedSets",
+          title: "# converted sets",
+          textAlign: "center",
+          render: ({ convertedSets, totalSets }) => (
+            <span>
+              {convertedSets}
+              {totalSets ? `/${totalSets}` : ""}
+            </span>
+          ),
+        },
         {
           accessor: "link",
           title: "LXCat 2 link",

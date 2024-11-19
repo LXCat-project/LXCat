@@ -21,6 +21,10 @@
               },
               "howToReference": {
                 "type": "string"
+              },
+              "totalSets": {
+                "type": "integer",
+                "minimum": 1
               }
             },
             "required": [
