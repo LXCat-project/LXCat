@@ -308,8 +308,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.14.0
-        version: 10.14.0
+        specifier: ^10.15.0
+        version: 10.15.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -2153,8 +2153,8 @@ packages:
   '@tabler/icons@3.22.0':
     resolution: {integrity: sha512-IfgGzhFph5OBr2wTieWL/hyAs0FThnq9O155a6kfGYxqx7h5LQw91wnRswhEaGhXCcfmR7ZVDUr9H+x4b9Pb8g==}
 
-  '@testcontainers/arangodb@10.14.0':
-    resolution: {integrity: sha512-kc4rCoTR0eLfRRy0M3D3q4WgB7stMWNmbXpuJrM7ZbG6amBD+AOhK5QIkHEWA+VtWZOTsL+muDZyYGE6X0qUNg==}
+  '@testcontainers/arangodb@10.15.0':
+    resolution: {integrity: sha512-ozvwBOJYFyJTAVVCIC2EnjRqYIA6fII7OGNEq9/0hksCMEsvG1TYin8zO9TtBErBnYqiILf2mIUNpneJDjXsqg==}
 
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
@@ -9548,7 +9548,7 @@ snapshots:
 
   '@tabler/icons@3.22.0': {}
 
-  '@testcontainers/arangodb@10.14.0':
+  '@testcontainers/arangodb@10.15.0':
     dependencies:
       testcontainers: 10.15.0
     transitivePeerDependencies:
