@@ -45,8 +45,8 @@ importers:
         specifier: ^7.14.2
         version: 7.14.2(@mantine/core@7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.1(react@18.3.1))(embla-carousel-react@8.4.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/code-highlight':
-        specifier: ^7.14.1
-        version: 7.14.1(@mantine/core@7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.14.2
+        version: 7.14.2(@mantine/core@7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/core':
         specifier: ^7.14.1
         version: 7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1857,11 +1857,11 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/code-highlight@7.14.1':
-    resolution: {integrity: sha512-5UXavtshCimRZK3r5BgXj4VpvVZiKkLH0RVNeR3EtNbcw0ZWuL6qpOYVJqeQ/6h/A1Qvwx9QP7KUTiz57sTFfw==}
+  '@mantine/code-highlight@7.14.2':
+    resolution: {integrity: sha512-H8I+AwoJRaFdRSWHAET+DMYJXTrGQUMZ56aYymXMQSW9SCn1qeJsWNU4HxoFYDM3QKhrj8YWsprVhDRA4LokVQ==}
     peerDependencies:
-      '@mantine/core': 7.14.1
-      '@mantine/hooks': 7.14.1
+      '@mantine/core': 7.14.2
+      '@mantine/hooks': 7.14.2
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
@@ -9223,7 +9223,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@mantine/code-highlight@7.14.1(@mantine/core@7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mantine/code-highlight@7.14.2(@mantine/core@7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.14.1(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@mantine/core': 7.14.1(@mantine/hooks@7.14.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.14.1(react@18.3.1)
