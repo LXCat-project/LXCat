@@ -37,7 +37,7 @@
     "@tabler/icons-react": "^3.22.0",
     "ajv": "^8.17.1",
     "clsx": "^2.1.1",
-    "cookie": "^1.0.1",
+    "cookie": "^1.0.2",
     "deep-equal": "^2.2.3",
     "github-slugger": "^2.0.0",
     "glob": "^11.0.0",
