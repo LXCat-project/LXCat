@@ -250,8 +250,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.4.32)
       postcss-preset-env:
-        specifier: ^10.1.0
-        version: 10.1.0(postcss@8.4.32)
+        specifier: ^10.1.1
+        version: 10.1.1(postcss@8.4.32)
       postcss-preset-mantine:
         specifier: ^1.17.0
         version: 1.17.0(postcss@8.4.32)
@@ -1218,8 +1218,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  '@csstools/postcss-sign-functions@1.0.0':
-    resolution: {integrity: sha512-cUpr5W8eookBi5TiLSvx1HL6DFoTTgcj2pmiVNd63y2JHhvtpnJs3sfsFMmLhB42yTRS02tFPsNz3Q5zeN8ZVA==}
+  '@csstools/postcss-sign-functions@1.1.0':
+    resolution: {integrity: sha512-SLcc20Nujx/kqbSwDmj6oaXgpy3UjFhBy1sfcqPgDkHfOIfUtUVH7OXO+j7BU4v/At5s61N5ZX6shvgPwluhsA==}
     engines: {node: '>=18'}
     peerDependencies:
       postcss: ^8.4
@@ -6144,8 +6144,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-preset-env@10.1.0:
-    resolution: {integrity: sha512-OfzbinZWpFcmuLB3mabsGa0NArzx5DVVtZ9G1k326iLvU7Jj9q/G3ihBu/Msi0mt96CjrM23HpbuEewDvT71KQ==}
+  postcss-preset-env@10.1.1:
+    resolution: {integrity: sha512-wqqsnBFD6VIwcHHRbhjTOcOi4qRVlB26RwSr0ordPj7OubRRxdWebv/aLjKLRR8zkZrbxZyuus03nOIgC5elMQ==}
     engines: {node: '>=18'}
     peerDependencies:
       postcss: ^8.4
@@ -8713,7 +8713,7 @@ snapshots:
       postcss: 8.4.32
       postcss-selector-parser: 7.0.0
 
-  '@csstools/postcss-sign-functions@1.0.0(postcss@8.4.32)':
+  '@csstools/postcss-sign-functions@1.1.0(postcss@8.4.32)':
     dependencies:
       '@csstools/css-calc': 2.1.0(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
@@ -14552,7 +14552,7 @@ snapshots:
       postcss: 8.4.32
       postcss-value-parser: 4.2.0
 
-  postcss-preset-env@10.1.0(postcss@8.4.32):
+  postcss-preset-env@10.1.1(postcss@8.4.32):
     dependencies:
       '@csstools/postcss-cascade-layers': 5.0.1(postcss@8.4.32)
       '@csstools/postcss-color-function': 4.0.6(postcss@8.4.32)
@@ -14581,7 +14581,7 @@ snapshots:
       '@csstools/postcss-random-function': 1.0.1(postcss@8.4.32)
       '@csstools/postcss-relative-color-syntax': 3.0.6(postcss@8.4.32)
       '@csstools/postcss-scope-pseudo-class': 4.0.1(postcss@8.4.32)
-      '@csstools/postcss-sign-functions': 1.0.0(postcss@8.4.32)
+      '@csstools/postcss-sign-functions': 1.1.0(postcss@8.4.32)
       '@csstools/postcss-stepped-value-functions': 4.0.5(postcss@8.4.32)
       '@csstools/postcss-text-decoration-shorthand': 4.0.1(postcss@8.4.32)
       '@csstools/postcss-trigonometric-functions': 4.0.5(postcss@8.4.32)
