@@ -7,7 +7,7 @@ import { NewProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
 import { Cursor } from "arangojs/cursors";
-import deepEqual from "deep-equal";
+import equal from "fast-deep-equal";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess } from "../../schema/process.js";
@@ -607,7 +607,7 @@ export function isEqualProcess(
   newMappedCS.reaction.lhs.sort(sortEntries);
   newMappedCS.reaction.rhs.sort(sortEntries);
 
-  return deepEqual(newMappedCS, prevMappedCS);
+  return equal(newMappedCS, prevMappedCS);
 }
 
 const mapReferences = (
