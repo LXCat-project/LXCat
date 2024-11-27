@@ -16,7 +16,7 @@ importers:
     dependencies:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.2.0
-        version: 7.2.0(zod@3.23.6)
+        version: 7.2.0(zod@3.23.8)
       '@citation-js/core':
         specifier: ^0.7.14
         version: 0.7.14
@@ -180,8 +180,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@lxcat/node-loader':
         specifier: workspace:^
@@ -298,11 +298,11 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
       zod-to-json-schema:
         specifier: ^3.23.5
-        version: 3.23.5(zod@3.23.6)
+        version: 3.23.5(zod@3.23.8)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -372,11 +372,11 @@ importers:
   packages/schema:
     dependencies:
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
       zod-to-json-schema:
         specifier: ^3.23.5
-        version: 3.23.5(zod@3.23.6)
+        version: 3.23.5(zod@3.23.8)
     devDependencies:
       '@eslint/js':
         specifier: ^9.15.0
@@ -7769,8 +7769,8 @@ packages:
     peerDependencies:
       zod: ^3.23.3
 
-  zod@3.23.6:
-    resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7791,10 +7791,10 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@asteasolutions/zod-to-openapi@7.2.0(zod@3.23.6)':
+  '@asteasolutions/zod-to-openapi@7.2.0(zod@3.23.8)':
     dependencies:
       openapi3-ts: 4.2.1
-      zod: 3.23.6
+      zod: 3.23.8
 
   '@babel/cli@7.25.9(@babel/core@7.26.0)':
     dependencies:
@@ -16632,10 +16632,10 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-to-json-schema@3.23.5(zod@3.23.6):
+  zod-to-json-schema@3.23.5(zod@3.23.8):
     dependencies:
-      zod: 3.23.6
+      zod: 3.23.8
 
-  zod@3.23.6: {}
+  zod@3.23.8: {}
 
   zwitch@2.0.4: {}
