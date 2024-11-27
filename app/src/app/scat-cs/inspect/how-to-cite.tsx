@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Reference } from "@lxcat/schema";
+import { Stack, Text } from "@mantine/core";
 import { ReferenceList } from "./reference-list";
 import { FormattedReference } from "./types";
 
@@ -309,11 +310,17 @@ export const HowToCite = (
   { references }: { references: Array<FormattedReference> },
 ) => {
   return (
-    <div>
-      <h2>How to reference data</h2>
-      <ReferenceList
-        references={[...references, ...FORMATTED_LXCAT_REFERENCES]}
-      />
-    </div>
+    <Stack>
+      <div>
+        <Text fw={700} size="lg" mb="xs">How to reference LXCat</Text>
+        <ReferenceList references={FORMATTED_LXCAT_REFERENCES} />
+      </div>
+      <div>
+        <Text fw={700} size="lg" mb="xs">
+          How to reference the selected data
+        </Text>
+        <ReferenceList references={references} />
+      </div>
+    </Stack>
   );
 };
