@@ -7,10 +7,13 @@ import { enum as zEnum, TypeOf } from "zod";
 export const ReactionTypeTag = zEnum([
   "Elastic",
   "Effective",
+  "MomentumTransfer",
+  "Excitation",
   "Electronic",
   "Vibrational",
   "Rotational",
   "Attachment",
   "Ionization",
+  "Dissociative",
 ]);
 export type ReactionTypeTag = TypeOf<typeof ReactionTypeTag>;
