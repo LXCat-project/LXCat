@@ -19,9 +19,17 @@ interface BagProps {
 
 interface URLParams {
   params?: Promise<{ id: string }>;
+  searchParams?: Promise<{ termsOfUse?: string }>;
 }
 
-const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
+const SearchParams = z.object({
+  termsOfUse: z.string().optional(),
+});
+
+const ScatteringCrossSectionSelectionPage = async (
+  { params, searchParams }: URLParams,
+) => {
+  const { termsOfUse } = SearchParams.parse(await searchParams);
   return (
     <>
       <Script
@@ -29,8 +37,12 @@ const ScatteringCrossSectionSelectionPage = async ({ params }: URLParams) => {
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       />
       {params
-        // FIXME: Use a specialized component to render a single set.
-        ? <PlotPage {...(await fetchProps((await params).id))} />
+        ? (
+          <PlotPage
+            {...(await fetchProps((await params).id))}
+            forceTermsOfUse={termsOfUse ? true : false}
+          />
+        )
         : <></>}
     </>
   );
