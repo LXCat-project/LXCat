@@ -5,7 +5,7 @@
 import { PAGE_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
 import { defaultSearchTemplate } from "@lxcat/database/item/picker";
-import deepEqual from "deep-equal";
+import deepEqual from "fast-deep-equal";
 import { getTemplateFromQuery } from "../../cs/template-from-query";
 import { CSClient } from "./client-page";
 import { searchItems } from "./search-items";
