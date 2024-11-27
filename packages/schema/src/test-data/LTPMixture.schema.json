@@ -138,11 +138,14 @@
                   "enum": [
                     "Elastic",
                     "Effective",
+                    "MomentumTransfer",
+                    "Excitation",
                     "Electronic",
                     "Vibrational",
                     "Rotational",
                     "Attachment",
-                    "Ionization"
+                    "Ionization",
+                    "Dissociative"
                   ]
                 }
               }
