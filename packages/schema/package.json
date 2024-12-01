@@ -23,7 +23,7 @@
     "zod-to-json-schema": "^3.23.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
+    "@eslint/js": "^9.16.0",
     "@lxcat/tsconfig": "workspace:^",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@vitest/coverage-v8": "^2.1.6",
