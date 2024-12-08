@@ -15,8 +15,8 @@ importers:
   app:
     dependencies:
       '@asteasolutions/zod-to-openapi':
-        specifier: ^7.2.0
-        version: 7.2.0(zod@3.23.6)
+        specifier: ^7.3.0
+        version: 7.3.0(zod@3.23.6)
       '@citation-js/core':
         specifier: ^0.7.14
         version: 0.7.14
@@ -430,8 +430,8 @@ packages:
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
 
-  '@asteasolutions/zod-to-openapi@7.2.0':
-    resolution: {integrity: sha512-Va+Fq1QzKkSgmiYINSp3cASFhMsbdRH/kmCk2feijhC+yNjGoC056CRqihrVFhR8MY8HOZHdlYm2Ns2lmszCiw==}
+  '@asteasolutions/zod-to-openapi@7.3.0':
+    resolution: {integrity: sha512-7tE/r1gXwMIvGnXVUdIqUhCU1RevEFC4Jk6Bussa0fk1ecbnnINkZzj1EOAJyE/M3AI25DnHT/zKQL1/FPFi8Q==}
     peerDependencies:
       zod: ^3.20.2
 
@@ -7796,7 +7796,7 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@asteasolutions/zod-to-openapi@7.2.0(zod@3.23.6)':
+  '@asteasolutions/zod-to-openapi@7.3.0(zod@3.23.6)':
     dependencies:
       openapi3-ts: 4.2.1
       zod: 3.23.6
