@@ -47,7 +47,7 @@
     "mermaid": "^11.4.1",
     "nanoid": "^5.0.9",
     "next": "^15.0.3",
-    "next-auth": "^4.24.10",
+    "next-auth": "^4.24.11",
     "next-connect": "^1.0.0",
     "next-mdx-remote": "canary",
     "node-fetch": "^3.3.2",
