@@ -250,8 +250,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.4.32)
       postcss-preset-env:
-        specifier: ^10.1.1
-        version: 10.1.1(postcss@8.4.32)
+        specifier: ^10.1.2
+        version: 10.1.2(postcss@8.4.32)
       postcss-preset-mantine:
         specifier: ^1.17.0
         version: 1.17.0(postcss@8.4.32)
@@ -3251,8 +3251,8 @@ packages:
   css-global-keywords@1.0.1:
     resolution: {integrity: sha512-X1xgQhkZ9n94WDwntqst5D/FKkmiU0GlJSFZSV3kLvyJ1WC5VeyoXDOuleUD+SIuH9C7W05is++0Woh0CGfKjQ==}
 
-  css-has-pseudo@7.0.1:
-    resolution: {integrity: sha512-EOcoyJt+OsuKfCADgLT7gADZI5jMzIe/AeI6MeAYKiFBDmNmM7kk46DtSfMj5AohUJisqVzopBpnQTlvbyaBWg==}
+  css-has-pseudo@7.0.2:
+    resolution: {integrity: sha512-nzol/h+E0bId46Kn2dQH5VElaknX2Sr0hFuB/1EomdC7j+OISt2ZzK7EHX9DZDY53WbIVAR7FYKSO2XnSf07MQ==}
     engines: {node: '>=18'}
     peerDependencies:
       postcss: ^8.4
@@ -3279,8 +3279,8 @@ packages:
   csscolorparser@1.0.3:
     resolution: {integrity: sha512-umPSgYwZkdFoUrH5hIq5kf0wPSXiro51nPw0j2K/c83KflkPSTBGMz6NJvMB+07VlL0y7VPo6QJcDjcgKTTm3w==}
 
-  cssdb@8.2.1:
-    resolution: {integrity: sha512-KwEPys7lNsC8OjASI8RrmwOYYDcm0JOW9zQhcV83ejYcQkirTEyeAGui8aO2F5PiS6SLpxuTzl6qlMElIdsgIg==}
+  cssdb@8.2.3:
+    resolution: {integrity: sha512-9BDG5XmJrJQQnJ51VFxXCAtpZ5ebDlAREmO8sxMOVU0aSxN/gocbctjIG5LMh3WBUq+xTlb/jw2LoljBEqraTA==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -6123,8 +6123,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-preset-env@10.1.1:
-    resolution: {integrity: sha512-wqqsnBFD6VIwcHHRbhjTOcOi4qRVlB26RwSr0ordPj7OubRRxdWebv/aLjKLRR8zkZrbxZyuus03nOIgC5elMQ==}
+  postcss-preset-env@10.1.2:
+    resolution: {integrity: sha512-OqUBZ9ByVfngWhMNuBEMy52Izj07oIFA6K/EOGBlaSv+P12MiE1+S2cqXtS1VuW82demQ/Tzc7typYk3uHunkA==}
     engines: {node: '>=18'}
     peerDependencies:
       postcss: ^8.4
@@ -10794,7 +10794,7 @@ snapshots:
 
   css-global-keywords@1.0.1: {}
 
-  css-has-pseudo@7.0.1(postcss@8.4.32):
+  css-has-pseudo@7.0.2(postcss@8.4.32):
     dependencies:
       '@csstools/selector-specificity': 5.0.0(postcss-selector-parser@7.0.0)
       postcss: 8.4.32
@@ -10825,7 +10825,7 @@ snapshots:
 
   csscolorparser@1.0.3: {}
 
-  cssdb@8.2.1: {}
+  cssdb@8.2.3: {}
 
   cssesc@3.0.0: {}
 
@@ -14479,7 +14479,7 @@ snapshots:
       postcss: 8.4.32
       postcss-value-parser: 4.2.0
 
-  postcss-preset-env@10.1.1(postcss@8.4.32):
+  postcss-preset-env@10.1.2(postcss@8.4.32):
     dependencies:
       '@csstools/postcss-cascade-layers': 5.0.1(postcss@8.4.32)
       '@csstools/postcss-color-function': 4.0.6(postcss@8.4.32)
@@ -14516,9 +14516,9 @@ snapshots:
       autoprefixer: 10.4.19(postcss@8.4.32)
       browserslist: 4.24.0
       css-blank-pseudo: 7.0.1(postcss@8.4.32)
-      css-has-pseudo: 7.0.1(postcss@8.4.32)
+      css-has-pseudo: 7.0.2(postcss@8.4.32)
       css-prefers-color-scheme: 10.0.0(postcss@8.4.32)
-      cssdb: 8.2.1
+      cssdb: 8.2.3
       postcss: 8.4.32
       postcss-attribute-case-insensitive: 7.0.1(postcss@8.4.32)
       postcss-clamp: 4.1.0(postcss@8.4.32)
