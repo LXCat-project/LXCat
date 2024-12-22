@@ -87,8 +87,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1
       mantine-datatable:
-        specifier: ^7.14.5
-        version: 7.14.5(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.1(react@18.3.1))(clsx@2.1.1)(react@18.3.1)
+        specifier: ^7.15.1
+        version: 7.15.1(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.1(react@18.3.1))(clsx@2.1.1)(react@18.3.1)
       mdast-util-from-markdown:
         specifier: ^2.0.2
         version: 2.0.2
@@ -5105,8 +5105,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  mantine-datatable@7.14.5:
-    resolution: {integrity: sha512-482OAurvyWq7VxshNx88z8nlFoy7yNQ20o6BT3h3Zayd2QI9PjEVqyRYjNEw9rZN7ZR4QgjgaA5ofo9r4m+fSw==}
+  mantine-datatable@7.15.1:
+    resolution: {integrity: sha512-MwehjtkdT6FQfuPgTXmGA2Y3DmHdCdLzcl4G4LoccSpG2ul2RwEdCO/dQmrPBsNo4mMepNN9dE3/1vSuYsU+7Q==}
     peerDependencies:
       '@mantine/core': '>=7.14'
       '@mantine/hooks': '>=7.14'
@@ -13124,7 +13124,7 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
-  mantine-datatable@7.14.5(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.1(react@18.3.1))(clsx@2.1.1)(react@18.3.1):
+  mantine-datatable@7.15.1(@mantine/core@7.15.1(@mantine/hooks@7.15.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.1(react@18.3.1))(clsx@2.1.1)(react@18.3.1):
     dependencies:
       '@mantine/core': 7.15.1(@mantine/hooks@7.15.1(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks': 7.15.1(react@18.3.1)
