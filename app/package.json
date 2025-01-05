@@ -70,7 +70,7 @@
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
     "swr": "2.3.0",
-    "true-myth": "^8.1.0",
+    "true-myth": "^8.2.0",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.1",
     "zod": "3.23.6"
