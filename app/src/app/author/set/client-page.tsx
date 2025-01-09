@@ -1,27 +1,22 @@
-// SPDX-FileCopyrightText: LXCat team
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
+"use client";
 
-import { db } from "@lxcat/database";
+import { listSetsOfOwner } from "@/cs-set/client";
+import { DeleteDialog } from "@/cs-set/delete-dialog";
+import { PublishDialog } from "@/cs-set/publish-dialog";
+import { RetractDialog } from "@/cs-set/retract-dialog";
+import { ErrorDialog } from "@/shared/error-dialog";
 import { User } from "@lxcat/database/auth";
 import { KeyedSet } from "@lxcat/database/set";
-import type { GetServerSideProps, NextPage } from "next";
+import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
-import { mustBeAuthor } from "../../../auth/middleware";
-import { listSetsOfOwner } from "../../../cs-set/client";
-import { DeleteDialog } from "../../../cs-set/delete-dialog";
-import { PublishDialog } from "../../../cs-set/publish-dialog";
-import { RetractDialog } from "../../../cs-set/retract-dialog";
-import { ErrorDialog } from "../../../shared/error-dialog";
-import { Layout } from "../../../shared/layout";
 
 interface Props {
-  items: KeyedSet[];
+  initialItems: KeyedSet[];
   user: User;
 }
 
-const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
+export const ClientPage = ({ initialItems, user }: Props) => {
   const [items, setItems] = useState(initialItems);
   const [selectedSetId, setselectedSetId] = useState("");
   const [openRestractDialog, setOpenRetractDialog] = useState(false);
@@ -36,8 +31,27 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
   }
 
   return (
-    <Layout>
+    <>
       <h1>Author scattering cross section sets</h1>
+
+      <DataTable
+        columns={[
+          { accessor: "name" },
+          {
+            accessor: "versionInfo.status",
+            title: "Status",
+          },
+          {
+            accessor: "versionInfo.createdOn",
+            title: "Timestamp",
+          },
+          {
+            accessor: "versionInfo.version",
+            title: "Version",
+          },
+        ]}
+        records={items}
+      />
 
       <table style={{ width: "100%" }}>
         <thead>
@@ -186,18 +200,6 @@ const Admin: NextPage<Props> = ({ items: initialItems, user }) => {
         error={error ?? ""}
         onClose={() => setError(undefined)}
       />
-    </Layout>
+    </>
   );
-};
-
-export default Admin;
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  const user = await mustBeAuthor(context);
-  const items = await db().listOwnedSets(user.email);
-  return {
-    props: { items, user },
-  };
 };
