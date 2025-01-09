@@ -240,7 +240,11 @@ export const SWRReactionPicker = ({
           selection: new Set(selection.set),
           unfolded: unfoldedOrgs,
           onSetChecked(setId, checked) {
-            const newSelectedCSSets = new Set(selection.set);
+            const newSelectedCSSets = new Set(
+              selection.set.filter((set) =>
+                Object.values(csSets).some((summ) => set in summ.sets)
+              ),
+            );
 
             checked
               ? newSelectedCSSets.add(setId)
@@ -249,7 +253,11 @@ export const SWRReactionPicker = ({
             onCSSetsChange(newSelectedCSSets);
           },
           onOrganizationChecked(id, checked) {
-            const newSelectedCSSets = new Set(selection.set);
+            const newSelectedCSSets = new Set(
+              selection.set.filter((set) =>
+                Object.values(csSets).some((summ) => set in summ.sets)
+              ),
+            );
 
             Object.keys(csSets[id].sets).forEach((setId) => {
               checked
