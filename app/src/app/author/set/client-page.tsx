@@ -1,15 +1,17 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 "use client";
 
-import { listSetsOfOwner } from "@/cs-set/client";
-import { DeleteDialog } from "@/cs-set/delete-dialog";
-import { PublishDialog } from "@/cs-set/publish-dialog";
-import { RetractDialog } from "@/cs-set/retract-dialog";
-import { ErrorDialog } from "@/shared/error-dialog";
 import { User } from "@lxcat/database/auth";
 import { KeyedSet } from "@lxcat/database/set";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
+import { deleteSet, listSetsOfOwner, publishSet } from "./client-queries";
 
 interface Props {
   initialItems: KeyedSet[];
@@ -18,25 +20,149 @@ interface Props {
 
 export const ClientPage = ({ initialItems, user }: Props) => {
   const [items, setItems] = useState(initialItems);
-  const [selectedSetId, setselectedSetId] = useState("");
-  const [openRestractDialog, setOpenRetractDialog] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openPublishDialog, setOpenPublishDialog] = useState(false);
-  const [error, setError] = useState<string>();
 
   async function reloadItems() {
-    // TODO instead of reloading whole list only alter the item that was changed
+    // TODO instead of reloading the whole list only alter the item that was changed.
     const newItems = await listSetsOfOwner();
     setItems(newItems);
   }
+
+  const openRetractModal = (key: string, name: string) =>
+    modals.openConfirmModal({
+      title:
+        `Are you sure you want to retract the ${name} dataset with key ${key}?`,
+      centered: true,
+      labels: { confirm: "Retract", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: async () => {
+        const response = deleteSet(key, "Retracted");
+
+        const notification_id = notifications.show({
+          loading: true,
+          title: `Retracting the ${name} set with key ${key}.`,
+          message: "",
+          autoClose: false,
+          withCloseButton: false,
+        });
+
+        const result = await response;
+
+        if (result.isOk) {
+          await reloadItems();
+          notifications.update({
+            id: notification_id,
+            color: "teal",
+            title: `Succesfully retracted the ${name} set!`,
+            message: "",
+            loading: false,
+            autoClose: 2000,
+          });
+        } else {
+          notifications.update({
+            id: notification_id,
+            color: "red",
+            title: `Error encountered when retracting the ${name} set`,
+            message: result.error,
+            loading: false,
+            autoClose: 2000,
+          });
+        }
+      },
+    });
+
+  const openDeleteModal = (key: string, name: string) =>
+    modals.openConfirmModal({
+      title:
+        `Are you sure you want to delete the ${name} dataset draft with key ${key}?`,
+      centered: true,
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: async () => {
+        const response = deleteSet(key, "Delete draft");
+
+        const notification_id = notifications.show({
+          loading: true,
+          title: `Deleting the ${name} draft set with key ${key}.`,
+          message: "",
+          autoClose: false,
+          withCloseButton: false,
+        });
+
+        const result = await response;
+
+        if (result.isOk) {
+          await reloadItems();
+          notifications.update({
+            id: notification_id,
+            color: "teal",
+            title: `Succesfully deleted the ${name} draft set!`,
+            message: "",
+            loading: false,
+            autoClose: 2000,
+          });
+        } else {
+          notifications.update({
+            id: notification_id,
+            color: "red",
+            title: `Error encountered when deleting the ${name} draft set`,
+            message: result.error,
+            loading: false,
+            autoClose: 2000,
+          });
+        }
+      },
+    });
+
+  const openPublishModal = (key: string, name: string) =>
+    modals.openConfirmModal({
+      title:
+        `Are you sure you want to publish the ${name} dataset with key ${key}?`,
+      centered: true,
+      labels: { confirm: "Publish", cancel: "Cancel" },
+      onConfirm: async () => {
+        const response = publishSet(key);
+
+        const notification_id = notifications.show({
+          loading: true,
+          title: `Publishing the ${name} set with key ${key}.`,
+          message: "",
+          autoClose: false,
+          withCloseButton: false,
+        });
+
+        const result = await response;
+
+        if (result.isOk) {
+          await reloadItems();
+          notifications.update({
+            id: notification_id,
+            color: "teal",
+            title: `Succesfully published the ${name} set!`,
+            message: "",
+            loading: false,
+            autoClose: 2000,
+          });
+        } else {
+          notifications.update({
+            id: notification_id,
+            color: "red",
+            title: `Error encountered when publishing the ${name} draft set`,
+            message: result.error,
+            loading: false,
+            autoClose: 2000,
+          });
+        }
+      },
+    });
 
   return (
     <>
       <h1>Author scattering cross section sets</h1>
 
       <DataTable
+        idAccessor="_key"
         columns={[
-          { accessor: "name" },
+          { accessor: "name", title: "Set name" },
           {
             accessor: "versionInfo.status",
             title: "Status",
@@ -49,36 +175,11 @@ export const ClientPage = ({ initialItems, user }: Props) => {
             accessor: "versionInfo.version",
             title: "Version",
           },
-        ]}
-        records={items}
-      />
-
-      <table style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Created on</th>
-            <th>Version</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* TODO a set can be published and a new version of it can be in draft. Should make clear to user which set is published and in draft. */}
-          {items.map((item) => (
-            <tr key={item.name}>
-              <td>
-                {item.versionInfo.status === "published"
-                    || item.versionInfo.status === "retracted"
-                  ? <Link href={`/scat-css/${item._key}`}>{item.name}</Link>
-                  : <>{item.name}</>}
-                {/* TODO link to preview a draft + create preview page reusing components from public page */}
-              </td>
-              <td>{item.versionInfo.status}</td>
-              <td>{item.versionInfo.createdOn}</td>
-              <td>{item.versionInfo.version}</td>
-              <td>
-                {item.versionInfo.status === "draft" && (
+          {
+            accessor: "actions",
+            render: (item) => {
+              if (item.versionInfo.status === "draft") {
+                return (
                   <>
                     {user.roles?.includes("author") && (
                       <>
@@ -89,10 +190,7 @@ export const ClientPage = ({ initialItems, user }: Props) => {
                           <button>Edit JSON</button>
                         </Link>
                         <button
-                          onClick={() => {
-                            setselectedSetId(item._key);
-                            setOpenDeleteDialog(true);
-                          }}
+                          onClick={() => openDeleteModal(item._key, item.name)}
                         >
                           Delete
                         </button>
@@ -101,17 +199,15 @@ export const ClientPage = ({ initialItems, user }: Props) => {
                     {user.roles?.includes("publisher")
                       && (
                         <button
-                          onClick={() => {
-                            setselectedSetId(item._key);
-                            setOpenPublishDialog(true);
-                          }}
+                          onClick={() => openPublishModal(item._key, item.name)}
                         >
                           Publish
                         </button>
                       )}
                   </>
-                )}
-                {item.versionInfo.status === "published" && (
+                );
+              } else if (item.versionInfo.status === "published") {
+                return (
                   <>
                     {user.roles?.includes("author")
                       && (
@@ -127,21 +223,19 @@ export const ClientPage = ({ initialItems, user }: Props) => {
                     {user.roles?.includes("publisher")
                       && (
                         <button
-                          onClick={() => {
-                            setselectedSetId(item._key);
-                            setOpenRetractDialog(true);
-                          }}
+                          onClick={() => openRetractModal(item._key, item.name)}
                         >
                           Retract
                         </button>
                       )}
                   </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                );
+              }
+            },
+          },
+        ]}
+        records={items}
+      />
 
       <div>
         <Link href="/author/set/add">
@@ -154,52 +248,6 @@ export const ClientPage = ({ initialItems, user }: Props) => {
       <div>
         <Link href="/author">Back</Link>
       </div>
-
-      <RetractDialog
-        isOpened={openRestractDialog}
-        selectedSetId={selectedSetId}
-        onClose={(error) => {
-          // TODO give user feed back
-          setOpenRetractDialog(false);
-          if (error === undefined) {
-            reloadItems();
-          }
-
-          setError(error);
-        }}
-      />
-      <DeleteDialog
-        isOpened={openDeleteDialog}
-        selectedSetId={selectedSetId}
-        onClose={async (confirmed, error) => {
-          setOpenDeleteDialog(false);
-          if (confirmed) {
-            if (error) {
-              // TODO give user feed back
-              console.log(error);
-            }
-            await reloadItems();
-          }
-        }}
-      />
-      <PublishDialog
-        isOpened={openPublishDialog}
-        selectedSetId={selectedSetId}
-        onClose={(error) => {
-          setOpenPublishDialog(false);
-
-          if (error === undefined) {
-            reloadItems();
-          }
-
-          setError(error);
-        }}
-      />
-      <ErrorDialog
-        opened={error !== undefined}
-        error={error ?? ""}
-        onClose={() => setError(undefined)}
-      />
     </>
   );
 };
