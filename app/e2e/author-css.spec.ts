@@ -38,7 +38,7 @@ test.describe("/author/set", () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/author/set");
-    await page.locator("button:text-is(\"Edit\")").click();
+    await page.locator("svg.tabler-icon-edit").click();
     await page.getByPlaceholder("Describe which changes have").fill(
       "Edited description",
     );
@@ -59,7 +59,7 @@ test.describe("/author/set", () => {
   test(
     "Deleting a draft should revert to the previous, published version",
     async ({ page }) => {
-      await page.locator("button:text-is(\"Delete\"):visible").click();
+      await page.locator("svg.tabler-icon-trash:visible").click();
       await page.getByLabel("Are you sure you want to")
         .getByRole("button", { name: "Delete" })
         .click();
