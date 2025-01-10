@@ -6,13 +6,12 @@
 
 import { User } from "@lxcat/database/auth";
 import { KeyedSet } from "@lxcat/database/set";
-import { ActionIcon, Group } from "@mantine/core";
+import { ActionIcon, Button, Group, Stack } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
   IconCode,
   IconEdit,
-  IconEye,
   IconFileCheck,
   IconTrash,
 } from "@tabler/icons-react";
@@ -20,6 +19,8 @@ import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
 import { deleteSet, listSetsOfOwner, publishSet } from "./client-queries";
+
+import classes from "./link-button.module.css";
 
 interface Props {
   initialItems: KeyedSet[];
@@ -167,76 +168,33 @@ export const ClientPage = ({ initialItems, user }: Props) => {
     <>
       <h1>Author scattering cross section sets</h1>
 
-      <DataTable
-        idAccessor="_key"
-        columns={[
-          { accessor: "name", title: "Set name" },
-          {
-            accessor: "versionInfo.status",
-            title: "Status",
-          },
-          {
-            accessor: "versionInfo.createdOn",
-            title: "Timestamp",
-          },
-          {
-            accessor: "versionInfo.version",
-            title: "Version",
-          },
-          {
-            accessor: "actions",
-            render: (item) => {
-              if (item.versionInfo.status === "draft") {
-                return (
-                  <Group gap={4} wrap="nowrap">
-                    {user.roles?.includes("author") && (
-                      <>
-                        <ActionIcon
-                          component={Link}
-                          href={`/author/set/${item._key}/edit`}
-                          size="sm"
-                          variant="subtle"
-                          color="yellow"
-                        >
-                          <IconEdit size={16} />
-                        </ActionIcon>
-                        <ActionIcon
-                          component={Link}
-                          href={`/author/set/${item._key}/editraw`}
-                          size="sm"
-                          variant="subtle"
-                          color="blue"
-                        >
-                          <IconCode size={16} />
-                        </ActionIcon>
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          color="red"
-                          onClick={() => openDeleteModal(item._key, item.name)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </>
-                    )}
-                    {user.roles?.includes("publisher")
-                      && (
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          color="green"
-                          onClick={() => openPublishModal(item._key, item.name)}
-                        >
-                          <IconFileCheck size={16} />
-                        </ActionIcon>
-                      )}
-                  </Group>
-                );
-              } else if (item.versionInfo.status === "published") {
-                return (
-                  <Group gap={4} wrap="nowrap">
-                    {user.roles?.includes("author")
-                      && (
+      <Stack align="center">
+        <DataTable
+          idAccessor="_key"
+          style={{ width: "70%" }}
+          withTableBorder
+          borderRadius="md"
+          columns={[
+            { accessor: "name", title: "Set name" },
+            {
+              accessor: "versionInfo.status",
+              title: "Status",
+            },
+            {
+              accessor: "versionInfo.createdOn",
+              title: "Timestamp",
+            },
+            {
+              accessor: "versionInfo.version",
+              title: "Version",
+            },
+            {
+              accessor: "actions",
+              render: (item) => {
+                if (item.versionInfo.status === "draft") {
+                  return (
+                    <Group gap={4} wrap="nowrap" justify="right">
+                      {user.roles?.includes("author") && (
                         <>
                           <ActionIcon
                             component={Link}
@@ -256,39 +214,95 @@ export const ClientPage = ({ initialItems, user }: Props) => {
                           >
                             <IconCode size={16} />
                           </ActionIcon>
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color="red"
+                            onClick={() =>
+                              openDeleteModal(item._key, item.name)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
                         </>
                       )}
-                    {user.roles?.includes("publisher")
-                      && (
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          color="red"
-                          onClick={() => openRetractModal(item._key, item.name)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      )}
-                  </Group>
-                );
-              }
+                      {user.roles?.includes("publisher")
+                        && (
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color="green"
+                            onClick={() =>
+                              openPublishModal(item._key, item.name)}
+                          >
+                            <IconFileCheck size={16} />
+                          </ActionIcon>
+                        )}
+                    </Group>
+                  );
+                } else if (item.versionInfo.status === "published") {
+                  return (
+                    <Group gap={4} wrap="nowrap">
+                      {user.roles?.includes("author")
+                        && (
+                          <>
+                            <ActionIcon
+                              component={Link}
+                              href={`/author/set/${item._key}/edit`}
+                              size="sm"
+                              variant="subtle"
+                              color="yellow"
+                            >
+                              <IconEdit size={16} />
+                            </ActionIcon>
+                            <ActionIcon
+                              component={Link}
+                              href={`/author/set/${item._key}/editraw`}
+                              size="sm"
+                              variant="subtle"
+                              color="blue"
+                            >
+                              <IconCode size={16} />
+                            </ActionIcon>
+                          </>
+                        )}
+                      {user.roles?.includes("publisher")
+                        && (
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color="red"
+                            onClick={() =>
+                              openRetractModal(item._key, item.name)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        )}
+                    </Group>
+                  );
+                }
+              },
             },
-          },
-        ]}
-        records={items}
-      />
-
-      <div>
-        <Link href="/author/set/add">
-          <button>Add</button>
-        </Link>
-        <Link href="/author/set/addraw">
-          <button>Add as JSON document</button>
-        </Link>
-      </div>
-      <div>
-        <Link href="/author">Back</Link>
-      </div>
+          ]}
+          records={items}
+        />
+        <Button.Group>
+          <Button
+            className={classes.linkButton}
+            component={Link}
+            href="/author/set/add"
+          >
+            Add
+          </Button>
+          <Button
+            className={classes.linkButton}
+            variant="light"
+            component={Link}
+            href="/author/set/addraw"
+          >
+            Add as JSON document
+          </Button>
+        </Button.Group>
+      </Stack>
     </>
   );
 };
