@@ -30,7 +30,7 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe.skip("/author/set", () => {
+test.describe("/author/set", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
     return db().dropNonUserCollections;
@@ -48,9 +48,7 @@ test.describe.skip("/author/set", () => {
   });
 
   test("A simple edit should result in a draft", async ({ page }) => {
-    await page.goto("/author/set");
-
-    const table = page.locator("table:has(thead th:text(\"Version\"))");
+    const table = page.locator("table:has(thead div:text(\"Version\"))");
 
     // Status = draft
     expect(table.locator("td").nth(1)).toHaveText("draft");
@@ -62,13 +60,15 @@ test.describe.skip("/author/set", () => {
     "Deleting a draft should revert to the previous, published version",
     async ({ page }) => {
       await page.locator("button:text-is(\"Delete\"):visible").click();
-      await page.locator("button[type=\"submit\"]:text-is(\"Delete\")")
+      await page.getByLabel("Are you sure you want to")
+        .getByRole("button", { name: "Delete" })
         .click();
 
-      const table = page.locator("table:has(thead th:text(\"Version\"))");
-      await page.locator("button:text-is(\"Delete\"):visible").waitFor({
-        state: "hidden",
-      });
+      await page
+        .getByText("Succesfully deleted the Some")
+        .waitFor({ state: "visible" });
+
+      const table = page.locator("table:has(thead div:text(\"Version\"))");
 
       // Status = published
       expect(table.locator("td").nth(1)).toHaveText("published");
