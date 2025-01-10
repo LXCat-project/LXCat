@@ -6,8 +6,16 @@
 
 import { User } from "@lxcat/database/auth";
 import { KeyedSet } from "@lxcat/database/set";
+import { ActionIcon, Group } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import {
+  IconCode,
+  IconEdit,
+  IconEye,
+  IconFileCheck,
+  IconTrash,
+} from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
@@ -180,55 +188,88 @@ export const ClientPage = ({ initialItems, user }: Props) => {
             render: (item) => {
               if (item.versionInfo.status === "draft") {
                 return (
-                  <>
+                  <Group gap={4} wrap="nowrap">
                     {user.roles?.includes("author") && (
                       <>
-                        <Link href={`/author/set/${item._key}/edit`}>
-                          <button>Edit</button>
-                        </Link>
-                        <Link href={`/author/set/${item._key}/editraw`}>
-                          <button>Edit JSON</button>
-                        </Link>
-                        <button
+                        <ActionIcon
+                          component={Link}
+                          href={`/author/set/${item._key}/edit`}
+                          size="sm"
+                          variant="subtle"
+                          color="yellow"
+                        >
+                          <IconEdit size={16} />
+                        </ActionIcon>
+                        <ActionIcon
+                          component={Link}
+                          href={`/author/set/${item._key}/editraw`}
+                          size="sm"
+                          variant="subtle"
+                          color="blue"
+                        >
+                          <IconCode size={16} />
+                        </ActionIcon>
+                        <ActionIcon
+                          size="sm"
+                          variant="subtle"
+                          color="red"
                           onClick={() => openDeleteModal(item._key, item.name)}
                         >
-                          Delete
-                        </button>
+                          <IconTrash size={16} />
+                        </ActionIcon>
                       </>
                     )}
                     {user.roles?.includes("publisher")
                       && (
-                        <button
+                        <ActionIcon
+                          size="sm"
+                          variant="subtle"
+                          color="green"
                           onClick={() => openPublishModal(item._key, item.name)}
                         >
-                          Publish
-                        </button>
+                          <IconFileCheck size={16} />
+                        </ActionIcon>
                       )}
-                  </>
+                  </Group>
                 );
               } else if (item.versionInfo.status === "published") {
                 return (
-                  <>
+                  <Group gap={4} wrap="nowrap">
                     {user.roles?.includes("author")
                       && (
                         <>
-                          <Link href={`/author/set/${item._key}/edit`}>
-                            <button>Edit</button>
-                          </Link>
-                          <Link href={`/author/set/${item._key}/editraw`}>
-                            <button>Edit JSON</button>
-                          </Link>
+                          <ActionIcon
+                            component={Link}
+                            href={`/author/set/${item._key}/edit`}
+                            size="sm"
+                            variant="subtle"
+                            color="yellow"
+                          >
+                            <IconEdit size={16} />
+                          </ActionIcon>
+                          <ActionIcon
+                            component={Link}
+                            href={`/author/set/${item._key}/editraw`}
+                            size="sm"
+                            variant="subtle"
+                            color="blue"
+                          >
+                            <IconCode size={16} />
+                          </ActionIcon>
                         </>
                       )}
                     {user.roles?.includes("publisher")
                       && (
-                        <button
+                        <ActionIcon
+                          size="sm"
+                          variant="subtle"
+                          color="red"
                           onClick={() => openRetractModal(item._key, item.name)}
                         >
-                          Retract
-                        </button>
+                          <IconTrash size={16} />
+                        </ActionIcon>
                       )}
-                  </>
+                  </Group>
                 );
               }
             },
