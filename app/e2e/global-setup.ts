@@ -152,6 +152,8 @@ export async function uploadAndPublishDummySet(
   await page.waitForSelector("td:has-text(\"draft\")");
   await page.locator("tbody button:has-text(\"Publish\")").click();
   // Press publish in dialog
-  await page.locator("dialog >> button:has-text(\"Publish\")").click();
+  await page.getByLabel("Are you sure you want to").getByRole("button", {
+    name: "Publish",
+  }).click();
   await page.waitForSelector("td:has-text(\"published\")");
 }
