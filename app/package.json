@@ -92,7 +92,7 @@
     "@vitest/coverage-v8": "^2.1.8",
     "dotenv": "^16.4.7",
     "dprint": "^0.48.0",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "eslint-config-next": "15.1.4",
     "nyc": "^17.1.0",
     "oidc-provider": "^8.6.0",
