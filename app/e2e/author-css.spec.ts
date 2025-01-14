@@ -31,12 +31,9 @@ test("/api/author/scat-css", async ({ request }) => {
 });
 
 test.describe.only("/author/set", () => {
-  test.beforeAll(async ({ browser }) => {
-    await uploadAndPublishDummySet(browser);
-    return db().dropNonUserCollections;
-  });
+  let publishedVersion = 1;
 
-  test.beforeEach(async ({ page }) => {
+  const makeDraft = async (page: Page) => {
     await page.goto("/author/set");
     await page.locator("svg.tabler-icon-edit").click();
     await page.getByPlaceholder("Describe which changes have").fill(
@@ -45,16 +42,25 @@ test.describe.only("/author/set", () => {
     await page.getByRole("button", { name: "Submit" }).click();
     await page.getByText("Saved set with id").waitFor({ state: "visible" });
     await page.goto("/author/set");
+  };
+
+  test.beforeAll(async ({ browser }) => {
+    await uploadAndPublishDummySet(browser);
+    return db().dropNonUserCollections;
   });
 
   test("A simple edit should result in a draft", async ({ page }) => {
+    await makeDraft(page);
+
     const table = page.locator("table:has(thead div:text(\"Version\"))");
 
     expect(table.locator("td").nth(1)).toHaveText("draft");
-    expect(table.locator("td").nth(3)).toHaveText("2");
+    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion + 1));
   });
 
   test("Publishing a draft should result in a new version", async ({ page }) => {
+    await page.goto("/author/set");
+
     await page.locator("svg.tabler-icon-file-check").click();
     await page.getByRole("button", { name: "Publish" }).click();
 
@@ -62,14 +68,18 @@ test.describe.only("/author/set", () => {
       .getByText("Succesfully published the")
       .waitFor({ state: "visible" });
 
+    publishedVersion += 1;
+
     const table = page.locator("table:has(thead div:text(\"Version\"))");
     expect(table.locator("td").nth(1)).toHaveText("published");
-    expect(table.locator("td").nth(3)).toHaveText("2");
+    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
   });
 
   test(
     "Deleting a draft should revert to the previous, published version",
     async ({ page }) => {
+      await makeDraft(page);
+
       await page.locator("svg.tabler-icon-trash:visible").click();
       await page.getByLabel("Are you sure you want to")
         .getByRole("button", { name: "Delete" })
@@ -82,7 +92,9 @@ test.describe.only("/author/set", () => {
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
       expect(table.locator("td").nth(1)).toHaveText("published");
-      expect(table.locator("td").nth(3)).toHaveText("2");
+      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+    },
+  );
     },
   );
 });
