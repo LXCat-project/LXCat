@@ -477,23 +477,35 @@ export async function retractSetUnchecked(
 ) {
   const newStatus: Status = "retracted";
 
+  // TODO Currently cross sections which are in another published or draft set
+  // are skipped aka not being retracted, is this OK?
+  await this.db.query(aql`
+    FOR set IN CrossSectionSet
+      FILTER set._key == ${key}
+
+      FOR cs IN INBOUND set IsPartOf
+        LET nrOtherSets = LENGTH(
+          FOR otherSet IN OUTBOUND cs IsPartOf
+            FILTER otherSet._id != set._id
+            AND ["published", "draft"] ANY == otherSet.versionInfo.status
+            RETURN 1
+        )
+        FILTER nrOtherSets == 0
+        UPDATE {
+          _key: cs._key,
+          versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}})
+        } IN CrossSection
+  `);
+
   return this.db.query(aql`
-        FOR css IN CrossSectionSet
-            FILTER css._key == ${key}
-            FOR p IN IsPartOf
-              FILTER p._to == css._id
-              FOR cs IN CrossSection
-                FILTER cs._id == p._from
-                LET nrOtherSets = LENGTH(
-                    FOR p2 IN IsPartOf
-                      FILTER cs._id == p2._from AND p2._to != css._id
-                      RETURN 1
-                )
-                FILTER nrOtherSets == 0
-                UPDATE { _key: cs._key, versionInfo: MERGE(cs.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSection
-            UPDATE { _key: css._key, versionInfo: MERGE(css.versionInfo, {status: ${newStatus}, retractMessage: ${message}}) } IN CrossSectionSet
-    `);
-  // TODO currently cross sections which are in another set are skipped aka not being retracted, is this OK?
+    FOR set IN CrossSectionSet
+      FILTER set._key == ${key}
+
+      UPDATE {
+        _key: set._key,
+        versionInfo: MERGE(set.versionInfo, {status: ${newStatus}, retractMessage: ${message}})
+      } IN CrossSectionSet
+  `);
 }
 
 export async function deleteSet(
