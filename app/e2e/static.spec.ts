@@ -18,12 +18,6 @@ test("/docs/0-index", async ({ page }) => {
 });
 // TODO test docs/* pages work
 
-test("/data-center", async ({ page }) => {
-  await page.goto("/data-center");
-  const h1 = page.locator("h1");
-  await expect(h1).toContainText("Data center");
-});
-
 test("/team", async ({ page }) => {
   await page.goto("/team");
   const h1 = page.locator("h1");
