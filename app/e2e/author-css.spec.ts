@@ -30,7 +30,7 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe("/author/set", () => {
+test.describe.only("/author/set", () => {
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
     return db().dropNonUserCollections;
@@ -50,9 +50,20 @@ test.describe("/author/set", () => {
   test("A simple edit should result in a draft", async ({ page }) => {
     const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-    // Status = draft
     expect(table.locator("td").nth(1)).toHaveText("draft");
-    // Version = 2
+    expect(table.locator("td").nth(3)).toHaveText("2");
+  });
+
+  test("Publishing a draft should result in a new version", async ({ page }) => {
+    await page.locator("svg.tabler-icon-file-check").click();
+    await page.getByRole("button", { name: "Publish" }).click();
+
+    await page
+      .getByText("Succesfully published the")
+      .waitFor({ state: "visible" });
+
+    const table = page.locator("table:has(thead div:text(\"Version\"))");
+    expect(table.locator("td").nth(1)).toHaveText("published");
     expect(table.locator("td").nth(3)).toHaveText("2");
   });
 
@@ -65,15 +76,13 @@ test.describe("/author/set", () => {
         .click();
 
       await page
-        .getByText("Succesfully deleted the Some")
+        .getByText("Succesfully deleted the")
         .waitFor({ state: "visible" });
 
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-      // Status = published
       expect(table.locator("td").nth(1)).toHaveText("published");
-      // Version = 1
-      expect(table.locator("td").nth(3)).toHaveText("1");
+      expect(table.locator("td").nth(3)).toHaveText("2");
     },
   );
 });
