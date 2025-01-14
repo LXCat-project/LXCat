@@ -96,12 +96,16 @@ describe("given filled ArangoDB container", () => {
   describe("addOrganization()", () => {
     let orgKey: string | undefined = "";
     beforeAll(async () => {
-      orgKey = await db.addOrganization({
+      const result = await db.addOrganization({
         name: "some new org",
         description: "description of some new org",
         contact: "test@email.com",
         howToReference: "",
       });
+
+      if (result.isOk) {
+        orgKey = result.value;
+      }
     });
 
     afterAll(async () => {
