@@ -5,6 +5,9 @@
 import { Contributor } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
+import { ArangoError } from "arangojs/error.js";
+import { Result } from "true-myth";
+import { err, ok } from "true-myth/result";
 import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
@@ -283,14 +286,20 @@ export async function stripAffiliations(this: LXCatDatabase, userKey: string) {
   return null;
 }
 
-export async function addOrganization(this: LXCatDatabase, org: Contributor) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
-        INSERT
-            ${org}
+export async function addOrganization(
+  this: LXCatDatabase,
+  org: Contributor,
+): Promise<Result<string, ArangoError>> {
+  try {
+    const cursor: ArrayCursor<string> = await this.db.query(aql`
+        INSERT ${org}
         IN Organization
         RETURN NEW._key
     `);
-  return await cursor.next();
+    return ok((await cursor.next())!);
+  } catch (error) {
+    return err(error as ArangoError);
+  }
 }
 
 export async function dropOrganization(this: LXCatDatabase, orgKey: string) {
