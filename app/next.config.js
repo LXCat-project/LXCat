@@ -14,6 +14,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   experimental: {
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
     swcPlugins: process.env.CI && [
       ["swc-plugin-coverage-instrument", {}],
     ]
