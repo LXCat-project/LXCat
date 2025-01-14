@@ -7,9 +7,9 @@ import { userIsAdmin } from "@/auth/page-guards";
 import { Unauthorized } from "@/shared/unauthorized";
 import { db } from "@lxcat/database";
 import { getServerSession } from "next-auth/next";
-import { AdminOrganizationsPage } from "./client-page";
+import { AdminOrganizationsClient } from "./client-page";
 
-export default async function() {
+export default async function AdminOrganizationsPage() {
   const session = await getServerSession(options);
 
   if (!userIsAdmin(session)) {
@@ -18,5 +18,5 @@ export default async function() {
 
   const organizations = await db().listOrganizations();
 
-  return <AdminOrganizationsPage organizations={organizations} />;
+  return <AdminOrganizationsClient organizations={organizations} />;
 }

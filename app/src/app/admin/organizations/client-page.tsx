@@ -27,7 +27,7 @@ interface Props {
   organizations: KeyedOrganization[];
 }
 
-export const AdminOrganizationsPage = ({ organizations }: Props) => {
+export const AdminOrganizationsClient = ({ organizations }: Props) => {
   const [orgs, setOrgs] = useState(organizations);
   const [newOrgName, setNewOrgName] = useState("");
 
