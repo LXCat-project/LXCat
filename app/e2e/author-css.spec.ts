@@ -137,11 +137,13 @@ test.describe("/author/set/add", () => {
 
   async function addOrganization(name: string, page: Page) {
     await page.goto("/admin/organizations");
-    await page.locator("[placeholder=\"Type new organization name\"]").fill(
+    await page.locator("[placeholder=\"New organization name\"]").fill(
       name,
     );
     await page.locator("button:has-text(\"Add\")").click();
-    await page.locator("li").getByText(name).waitFor({ state: "visible" });
+    await page
+      .getByRole("cell", { name: "MyOrg" })
+      .waitFor({ state: "visible" });
 
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
