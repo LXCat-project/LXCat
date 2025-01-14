@@ -2,15 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Title } from "@mantine/core";
 import { NextPage } from "next";
-import { Layout } from "../shared/layout";
 
 const TeamPage: NextPage = () => {
-  return (
-    <Layout title="Team">
-      <h1>Team page</h1>
-    </Layout>
-  );
+  return <Title order={1}>Team page</Title>;
 };
 
 export default TeamPage;
