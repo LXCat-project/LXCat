@@ -150,8 +150,10 @@ export async function uploadAndPublishDummySet(
   // Publish set
   await page.goto("/author/set");
   await page.waitForSelector("td:has-text(\"draft\")");
-  await page.locator("tbody button:has-text(\"Publish\")").click();
+  await page.locator("svg.tabler-icon-file-check").click();
   // Press publish in dialog
-  await page.locator("dialog >> button:has-text(\"Publish\")").click();
+  await page.getByLabel("Are you sure you want to").getByRole("button", {
+    name: "Publish",
+  }).click();
   await page.waitForSelector("td:has-text(\"published\")");
 }

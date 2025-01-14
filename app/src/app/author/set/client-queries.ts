@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { KeyedSet } from "@lxcat/database/set";
+import { Result } from "true-myth";
+import { err, ok } from "true-myth/result";
 
 /**
  * Functions that interact with API endpoints
@@ -13,30 +15,33 @@ const headers = new Headers({
   "Content-Type": "application/json",
 });
 
-export async function deleteSet(key: string, message: string) {
+export async function deleteSet(
+  key: string,
+  message: string,
+): Promise<Result<any, string>> {
   const url = `/api/author/scat-css/${key}`;
   const body = JSON.stringify({ message: message });
   const init = { method: "DELETE", body, headers };
   const res = await fetch(url, init);
 
-  // TODO: Use a library like true-myth for error handling.
   if (res.status === 200) {
-    return res.json();
+    return ok(await res.json());
   } else {
-    return res.text();
+    return err(await res.text());
   }
 }
 
-export async function publishSet(selectedSetId: string) {
+export async function publishSet(
+  selectedSetId: string,
+): Promise<Result<any, string>> {
   const url = `/api/author/scat-css/${selectedSetId}/publish`;
   const init = { method: "POST", headers };
   const res = await fetch(url, init);
 
-  // TODO: Use a library like true-myth for error handling.
   if (res.status === 200) {
-    return res.json();
+    return ok(await res.json());
   } else {
-    return res.text();
+    return err(await res.text());
   }
 }
 

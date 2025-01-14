@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { options } from "@/auth/options";
+import { userIsAuthor } from "@/auth/page-guards";
 import { NotFound } from "@/shared/not-found";
 import { Unauthorized } from "@/shared/unauthorized";
 import { db } from "@lxcat/database";
 import { EditedLTPDocument } from "@lxcat/schema";
-import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 import { EditForm } from "./edit-form";
@@ -49,13 +49,6 @@ const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
   }
 
   return userAffiliations.map(({ name }) => name).includes(setAffiliation);
-};
-
-const userIsAuthor = (session: Session | null): session is Session => {
-  if (session !== null && session.user.roles?.includes("author")) {
-    return true;
-  }
-  return false;
 };
 
 export default EditSetPage;

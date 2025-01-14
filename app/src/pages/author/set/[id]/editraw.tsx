@@ -4,6 +4,7 @@
 
 import { db } from "@lxcat/database";
 import { EditedLTPDocument } from "@lxcat/schema";
+import { intoEditable } from "@lxcat/schema/process";
 import type { ErrorObject } from "ajv";
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -119,9 +120,10 @@ export const getServerSideProps: GetServerSideProps<
 > = async (context) => {
   const me = await mustBeAuthor(context);
   const id = context.params?.id!;
-  const set = EditedLTPDocument.parse(
-    await db().getSetByOwnerAndId(me.email, id),
-  );
+
+  const versioned_set = await db().getSetByOwnerAndId(me.email, id);
+  const set = versioned_set && intoEditable(versioned_set);
+
   const info = await db().getSetVersionInfo(id);
   const commitMessage = info !== undefined && info.commitMessage
     ? info.commitMessage

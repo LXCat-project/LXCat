@@ -5,6 +5,7 @@
 export { CrossSectionInfo } from "./cross-section/cross-section.js";
 export { CrossSectionParameters } from "./cross-section/parameters.js";
 export { EditedProcess } from "./edited-process.js";
+export { intoEditable } from "./into-editable.js";
 export { NewProcess } from "./new-process.js";
 export { ProcessInfo } from "./process-info.js";
 export { Process } from "./process.js";

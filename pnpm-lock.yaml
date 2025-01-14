@@ -56,6 +56,12 @@ importers:
       '@mantine/hooks':
         specifier: ^7.15.3
         version: 7.15.3(react@18.3.1)
+      '@mantine/modals':
+        specifier: ^7.15.3
+        version: 7.15.3(@mantine/core@7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/notifications':
+        specifier: ^7.15.3
+        version: 7.15.3(@mantine/core@7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.0)
@@ -224,7 +230,7 @@ importers:
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -266,7 +272,7 @@ importers:
         version: 5.7.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
 
   packages/converter:
     devDependencies:
@@ -321,7 +327,7 @@ importers:
         version: 8.19.1(@typescript-eslint/parser@8.19.1(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
       dprint:
         specifier: ^0.48.0
         version: 0.48.0
@@ -342,7 +348,7 @@ importers:
         version: 5.7.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
 
   packages/node-loader:
     dependencies:
@@ -389,7 +395,7 @@ importers:
         version: 8.19.1(@typescript-eslint/parser@8.19.1(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
       dprint:
         specifier: ^0.48.0
         version: 0.48.0
@@ -410,7 +416,7 @@ importers:
         version: 8.19.1(eslint@9.18.0)(typescript@5.7.3)
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
 
   packages/tsconfig: {}
 
@@ -1880,6 +1886,27 @@ packages:
 
   '@mantine/hooks@7.15.3':
     resolution: {integrity: sha512-rZYObhrmww3OIb4O30pDox/rc+9k3AExO0FSw13t7cfz5/Di+Ho1cChswVFAshnp81ucGEod1fiDOfuyGW7JhA==}
+    peerDependencies:
+      react: ^18.x || ^19.x
+
+  '@mantine/modals@7.15.3':
+    resolution: {integrity: sha512-S/nu/4OcQw2sBbFVEIU1FfyiLDKVN9qOxnxhQBxaR9BFk4gEALzuU2uCorlu4f8TKUMo2kho0b0iTuYluQ07Dw==}
+    peerDependencies:
+      '@mantine/core': 7.15.3
+      '@mantine/hooks': 7.15.3
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
+
+  '@mantine/notifications@7.15.3':
+    resolution: {integrity: sha512-C1obM5dQsSHIB3B3Kajk0TdLnBpLXFMOIy0otG5khoL/8c8qOU4U0kHxtPVFBFvU/hw4rx7/idiiJdjp8DepDQ==}
+    peerDependencies:
+      '@mantine/core': 7.15.3
+      '@mantine/hooks': 7.15.3
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
+
+  '@mantine/store@7.15.3':
+    resolution: {integrity: sha512-E3pCEm5ozRF/iK/jM1liKntjqaKhotvPtNAqSBcx6AkWSJ8bt16JhNrmrs3J3RmWvfqzF+fftT8HI/3HYbgu9w==}
     peerDependencies:
       react: ^18.x || ^19.x
 
@@ -3668,6 +3695,9 @@ packages:
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
+
+  dom-helpers@5.2.1:
+    resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
@@ -6367,6 +6397,12 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  react-transition-group@4.4.5:
+    resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
+    peerDependencies:
+      react: '>=16.6.0'
+      react-dom: '>=16.6.0'
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -9191,6 +9227,26 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  '@mantine/modals@7.15.3(@mantine/core@7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.15.3(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@mantine/notifications@7.15.3(@mantine/core@7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mantine/hooks@7.15.3(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@mantine/core': 7.15.3(@mantine/hooks@7.15.3(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mantine/hooks': 7.15.3(react@18.3.1)
+      '@mantine/store': 7.15.3(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@mantine/store@7.15.3(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+
   '@mapbox/geojson-rewind@0.5.2':
     dependencies:
       get-stream: 6.0.1
@@ -9953,7 +10009,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/coverage-v8@2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))':
+  '@vitest/coverage-v8@2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -9967,7 +10023,7 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+      vitest: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9978,13 +10034,13 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))':
+  '@vitest/mocker@2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
     dependencies:
       '@vitest/spy': 2.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.12
     optionalDependencies:
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
 
   '@vitest/pretty-format@2.1.8':
     dependencies:
@@ -11292,6 +11348,11 @@ snapshots:
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
+
+  dom-helpers@5.2.1:
+    dependencies:
+      '@babel/runtime': 7.22.5
+      csstype: 3.1.2
 
   dom-serializer@2.0.0:
     dependencies:
@@ -14819,6 +14880,15 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
+  react-transition-group@4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.22.5
+      dom-helpers: 5.2.1
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -16182,13 +16252,13 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-node@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
+  vite-node@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       es-module-lexer: 1.5.4
       pathe: 1.1.2
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16199,7 +16269,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
+  vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
     dependencies:
       esbuild: 0.19.10
       postcss: 8.4.32
@@ -16210,10 +16280,10 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.32)
       terser: 5.18.0
 
-  vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
+  vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
     dependencies:
       '@vitest/expect': 2.1.8
-      '@vitest/mocker': 2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
+      '@vitest/mocker': 2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
       '@vitest/pretty-format': 2.1.8
       '@vitest/runner': 2.1.8
       '@vitest/snapshot': 2.1.8
@@ -16229,8 +16299,8 @@ snapshots:
       tinyexec: 0.3.1
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
-      vite-node: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite-node: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.10.5
