@@ -210,6 +210,7 @@ export async function listUsers(this: LXCatDatabase) {
 }
 
 export type ContributorWithStats = Contributor & {
+  _key: string;
   convertedSets: number;
   totalSets: number;
 };
@@ -224,7 +225,7 @@ export async function listContributors(this: LXCatDatabase) {
           RETURN 1
       )
       SORT nSets DESC, o.name
-      RETURN MERGE(UNSET(o, ["_id", "_rev", "_key"]), {convertedSets: nSets})
+      RETURN MERGE(UNSET(o, ["_id", "_rev"]), {convertedSets: nSets})
   `);
   return await cursor.all();
 }
