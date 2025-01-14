@@ -30,7 +30,7 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(data.items).toEqual([]);
 });
 
-test.describe.only("/author/set", () => {
+test.describe("/author/set", () => {
   let publishedVersion = 1;
 
   const makeDraft = async (page: Page) => {
@@ -95,6 +95,25 @@ test.describe.only("/author/set", () => {
       expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
     },
   );
+
+  test(
+    "Retracting a published set should change the status to retracted",
+    async ({ page }) => {
+      await page.goto("/author/set");
+
+      await page.locator("svg.tabler-icon-trash:visible").click();
+      await page.getByLabel("Are you sure you want to")
+        .getByRole("button", { name: "Retract" })
+        .click();
+
+      await page
+        .getByText("Succesfully retracted the")
+        .waitFor({ state: "visible" });
+
+      const table = page.locator("table:has(thead div:text(\"Version\"))");
+
+      expect(table.locator("td").nth(1)).toHaveText("retracted");
+      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
     },
   );
 });
