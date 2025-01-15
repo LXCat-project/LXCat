@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
+import { VersionedLTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 import { okJsonResponse } from "../../../../shared/api-responses";
 import { RouteBuilder } from "../../route-builder";
 
@@ -10,7 +10,7 @@ import { RouteBuilder } from "../../route-builder";
 const router = RouteBuilder
   .init()
   .get(async () => {
-    let res = okJsonResponse(LTPDocumentJSONSchema);
+    let res = okJsonResponse(VersionedLTPDocumentJSONSchema);
     res.headers.append("Content-Type", "application/schema+json");
     return res;
   })
