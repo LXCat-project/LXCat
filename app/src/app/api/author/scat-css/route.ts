@@ -41,14 +41,9 @@ const postRouter = RouteBuilder
       }
     } else {
       return forbiddenResponse({
-        json: {
-          errors: [
-            {
-              message:
-                `You are not a member of the ${doc.contributor} organization.`,
-            },
-          ],
-        },
+        json: [
+          `You are not a member of the ${doc.contributor} organization.`,
+        ],
       });
     }
   })
