@@ -80,12 +80,14 @@ export const UserPanel = (
                 leftSection=<IconEdit size="1.3rem" />
                 label="Manage cross section sets"
               />
-              <NavLink
-                component="a"
-                href="/author/scat-cs"
-                leftSection=<IconEdit size="1.3rem" />
-                label="Manage cross sections"
-              />
+              {
+                // <NavLink
+                //   component="a"
+                //   href="/author/scat-cs"
+                //   leftSection=<IconEdit size="1.3rem" />
+                //   label="Manage cross sections"
+                // />
+              }
             </NavLink>
           </>
         )}
