@@ -15,13 +15,11 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";
-import { MouseEvent, useState } from "react";
-import { ZodError } from "zod";
+import { useState } from "react";
 import { uploadCS } from "./client-queries";
 
 export const AddRawSetClient = () => {
   const [doc, setDoc] = useState("");
-  const [id, setId] = useState("");
 
   return (
     <>
@@ -56,7 +54,6 @@ export const AddRawSetClient = () => {
               type="submit"
               onClick={async (event) => {
                 event.preventDefault();
-                setId("");
 
                 const result = await uploadCS(doc);
 
@@ -80,8 +77,6 @@ export const AddRawSetClient = () => {
                     `The ID of the newly created draft is ${result.value}.`,
                   autoClose: false,
                 });
-
-                setId(result.value);
               }}
             >
               Upload cross section set
