@@ -6,6 +6,7 @@
 
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 import dynamic from "next/dynamic";
+import { JSX } from "react";
 import type { MermaidProps } from "../../../docs/mermaid";
 
 // FIXME: Why do we need this explicit cast?
