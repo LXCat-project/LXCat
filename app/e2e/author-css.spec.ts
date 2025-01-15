@@ -148,9 +148,8 @@ test.describe("/author/set/add", () => {
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
     await page
-      .getByRole("row", { name: "admin admin@ng.lxcat.net" }).locator("div")
-      .first()
-      .click();
+      .locator("div.mantine-MultiSelect-input")
+      .click({ position: { x: 1, y: 1 } });
     await page.locator(`text=${name}`).click();
   }
 
