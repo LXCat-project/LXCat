@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import {
   FilterComponentProps,
   ReactionInformation,
@@ -21,7 +21,7 @@ export const Filter = (
       reactions: JSON.stringify(newSelection.map(({ options }) => options)),
     }).toString();
 
-    router.push({ query }, undefined, { shallow: true });
+    router.push(`scat-cs?${query}`);
     onChange(newSelection);
   }
 
