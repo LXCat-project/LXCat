@@ -4,7 +4,7 @@
 
 import { registry } from "@/docs/openapi";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { LTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
+import { LTPMixtureJSONSchema } from "@lxcat/schema/json-schema";
 import { z } from "zod";
 
 export async function register() {
@@ -23,7 +23,7 @@ export async function register() {
         content: {
           "application/schema+json": {
             schema: {
-              $ref: LTPDocumentJSONSchema.$schema?.replace(/^http:/, "https:"),
+              $ref: LTPMixtureJSONSchema.$schema?.replace(/^http:/, "https:"),
             },
           },
         },
