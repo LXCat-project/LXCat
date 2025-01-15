@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: LXCat team
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Role, UserFromDB } from "@lxcat/database/auth";
 import { Result, Unit } from "true-myth";
 import { err, ok } from "true-myth/result";
