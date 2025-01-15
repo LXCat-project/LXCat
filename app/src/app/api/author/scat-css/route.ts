@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
 import {
+  badRequestResponse,
   forbiddenResponse,
   okJsonResponse,
-} from "../../../../shared/api-responses";
+} from "@/shared/api-responses";
+import { db } from "@lxcat/database";
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";
@@ -24,18 +25,25 @@ const postRouter = RouteBuilder
 
     const { doc, message } = ctx.parsedParams.body;
     if (affiliations.includes(doc.contributor)) {
-      const id = await db().createSet(doc, "draft", 1, message);
-      return okJsonResponse({ id });
+      try {
+        const id = await db().createSet(doc, "draft", 1, message);
+        return okJsonResponse({ id });
+      } catch (error: any) {
+        if (error.errorNum === 1210) {
+          return badRequestResponse({
+            json: [
+              `A dataset with name ${doc.name} already exists for ${doc.contributor}.`,
+            ],
+          });
+        } else {
+          return badRequestResponse({ json: [error.message] });
+        }
+      }
     } else {
       return forbiddenResponse({
-        json: {
-          errors: [
-            {
-              message:
-                `You are not a member of the ${doc.contributor} organization.`,
-            },
-          ],
-        },
+        json: [
+          `You are not a member of the ${doc.contributor} organization.`,
+        ],
       });
     }
   })

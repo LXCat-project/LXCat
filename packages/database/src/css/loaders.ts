@@ -27,8 +27,11 @@ export async function load_css_dir(db: LXCatDatabase, dir: string) {
 const load_organization_from_file = async (db: LXCatDatabase, path: string) => {
   const content = await readFile(path, { encoding: "utf8" });
   const org = Contributor.parse(JSON.parse(content));
-  const orgId = await db.addOrganization(org);
-  console.log(`Inserted organization ${org.name} with key ${orgId}.`);
+  const result = await db.addOrganization(org);
+
+  if (result.isOk) {
+    console.log(`Inserted organization ${org.name} with key ${result.value}.`);
+  }
 };
 
 export const load_organizations_from_file = async (
@@ -38,8 +41,13 @@ export const load_organizations_from_file = async (
   const content = await readFile(path, { encoding: "utf8" });
   const orgs = Contributor.array().parse(JSON.parse(content));
   for (const org of orgs) {
-    const orgId = await db.addOrganization(org);
-    console.log(`Inserted organization ${org.name} with key ${orgId}.`);
+    const result = await db.addOrganization(org);
+
+    if (result.isOk) {
+      console.log(
+        `Inserted organization ${org.name} with key ${result.value}.`,
+      );
+    }
   }
 };
 

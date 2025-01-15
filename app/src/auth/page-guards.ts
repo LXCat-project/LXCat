@@ -4,9 +4,8 @@
 
 import { Session } from "next-auth";
 
-export const userIsAuthor = (session: Session | null): session is Session => {
-  if (session !== null && session.user.roles?.includes("author")) {
-    return true;
-  }
-  return false;
-};
+export const userIsAuthor = (session: Session | null): session is Session =>
+  session !== null && session.user.roles?.includes("author");
+
+export const userIsAdmin = (session: Session | null): session is Session =>
+  session !== null && session.user.roles?.includes("admin");

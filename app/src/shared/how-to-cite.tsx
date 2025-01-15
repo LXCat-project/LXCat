@@ -2,14 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference as ReferenceRecord } from "@lxcat/schema";
-import { Reference } from "./reference";
+import { FormattedReference } from "@/app/scat-cs/inspect/types";
+import { type Reference } from "@lxcat/schema";
+import { Stack, Text } from "@mantine/core";
+import { ReferenceList } from "./reference-list";
 
-interface Props {
-  references: ReferenceRecord[];
-}
-
-const LXCAT_REFERENCES: ReferenceRecord[] = [
+const LXCAT_REFERENCES: Array<Reference> = [
   {
     author: [
       {
@@ -286,22 +284,45 @@ const LXCAT_REFERENCES: ReferenceRecord[] = [
   },
 ];
 
-export const HowToCite = ({ references }: Props) => {
+const FORMATTED_LXCAT_REFERENCES: Array<FormattedReference> = [
+  {
+    id: "atoms9010016",
+    ref:
+      "Carbone, E., Graef, W., Hagelaar, G., Boer, D., Hopkins, M. M., Stephens, J. C., Yee, B. T., Pancheshnyi, S., van Dijk, J., & Pitchford, L. (2021). Data Needs for Modeling Low-Temperature Non-Equilibrium Plasmas: The LXCat Project, History, Perspectives and a Tutorial. Atoms, 9(1). https://doi.org/10.3390/atoms9010016\n",
+    url: "https://doi.org/10.3390/atoms9010016",
+  },
+  {
+    id: "https://doi.org/10.1002/ppap.201600098",
+    ref:
+      "Pitchford, L. C., Alves, L. L., Bartschat, K., Biagi, S. F., Bordage, M.-C., Bray, I., Brion, C. E., Brunger, M. J., Campbell, L., Chachereau, A., Chaudhury, B., Christophorou, L. G., Carbone, E., Dyatko, N. A., Franck, C. M., Fursa, D. V., Gangwar, R. K., Guerra, V., Haefliger, P., … Pancheshnyi, S. (2017). LXCat: an Open-Access, Web-Based Platform for Data Needed for Modeling Low Temperature Plasmas. Plasma Processes and Polymers, 14(1–2), 1600098. https://doi.org/10.1002/ppap.201600098\n",
+    url: "https://doi.org/10.1002/ppap.201600098",
+  },
+  {
+    id: "PANCHESHNYI2012148",
+    ref:
+      "Pancheshnyi, S., Biagi, S., Bordage, M. C., Hagelaar, G. J. M., Morgan, W. L., Phelps, A. V., & Pitchford, L. C. (2012). The LXCat project: Electron scattering cross sections and swarm parameters for low temperature plasma modeling. Chemical Physics, 398, 148–153. https://doi.org/10.1016/j.chemphys.2011.04.020\n",
+    url: "https://doi.org/10.1016/j.chemphys.2011.04.020",
+  },
+];
+
+export const HowToCite = (
+  { references }: { references: Array<FormattedReference> },
+) => {
   return (
-    <div>
-      <h2>How to reference data</h2>
-      <ul>
-        {references.map((r, i) => (
-          <li key={i}>
-            <Reference {...r} />
-          </li>
-        ))}
-        {LXCAT_REFERENCES.map((r, i) => (
-          <li key={i}>
-            <Reference {...r} />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Stack>
+      {references.length > 0
+        && (
+          <div>
+            <Text fw={700} size="lg" mb="xs">
+              How to reference the selected data
+            </Text>
+            <ReferenceList references={references} />
+          </div>
+        )}
+      <div>
+        <Text fw={700} size="lg" mb="xs">How to reference LXCat</Text>
+        <ReferenceList references={FORMATTED_LXCAT_REFERENCES} />
+      </div>
+    </Stack>
   );
 };

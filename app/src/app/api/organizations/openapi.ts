@@ -26,6 +26,14 @@ export async function register() {
           },
         },
       },
+      400: {
+        description: "Failed to add organization",
+        content: {
+          "application/json": {
+            schema: z.string(),
+          },
+        },
+      },
     },
   });
 }

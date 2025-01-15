@@ -143,9 +143,11 @@ export async function uploadAndPublishDummySet(
     `../packages/database/src/test/seed/cross-sections/${file}`,
     { encoding: "utf8" },
   );
-  await page.locator("textarea").fill(dummySet);
+  await page.locator("textarea.mantine-JsonInput-input").fill(dummySet);
   await page.locator("text=Upload cross section set").click();
-  await page.waitForSelector("span:has-text(\"Upload successful\")");
+  await page.getByText("The ID of the newly created draft is").waitFor({
+    state: "visible",
+  });
 
   // Publish set
   await page.goto("/author/set");

@@ -2,6 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LTPDocumentJSONSchema } from "../json-schema/document.js";
+import { VersionedLTPDocumentJSONSchema } from "../json-schema/document.js";
 
-console.log(JSON.stringify(LTPDocumentJSONSchema, null, 2));
+console.log(JSON.stringify(VersionedLTPDocumentJSONSchema, null, 2));

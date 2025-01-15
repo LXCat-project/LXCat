@@ -4,38 +4,48 @@
 
 import { options } from "@/auth/options";
 import { userIsAuthor } from "@/auth/page-guards";
+import { Forbidden } from "@/shared/forbidden";
 import { NotFound } from "@/shared/not-found";
 import { Unauthorized } from "@/shared/unauthorized";
 import { db } from "@lxcat/database";
 import { intoEditable } from "@lxcat/schema/process";
 import { getServerSession } from "next-auth/next";
-import { z } from "zod";
-import { EditForm } from "./edit-form";
+import { object, promise, string, TypeOf } from "zod";
+import { EditRawSetClient } from "./client-page";
 
-const ArangoKey = z.string().regex(/\d+/);
-const URLParams = z.object({ params: z.promise(z.object({ id: ArangoKey })) });
+const ArangoKey = string().regex(/\d+/);
+const URLParams = object({
+  params: promise(object({ id: ArangoKey })),
+});
 
-type URLParams = z.infer<typeof URLParams>;
+type URLParams = TypeOf<typeof URLParams>;
 
-const EditSetPage = async (props: URLParams) => {
+export default async function EditRawSetPage(props: URLParams) {
   const { id } = await URLParams.parse(props).params;
   const session = await getServerSession(options);
 
-  if (!(userIsAuthor(session) && await userOwnsSet(session.user.email, id))) {
+  if (!userIsAuthor(session)) {
     return <Unauthorized />;
+  }
+
+  if (!await userOwnsSet(session.user.email, id)) {
+    return <Forbidden />;
   }
 
   const set = await db().getSetById(id, true);
 
   if (!set) return <NotFound />;
 
+  const versionInfo = await db().getSetVersionInfo(id);
+
   return (
-    <EditForm
-      initialSet={intoEditable(set)}
-      organizations={await db().getAffiliations(session.user.email)}
+    <EditRawSetClient
+      set={intoEditable(set)}
+      setKey={set._key}
+      commitMessage={versionInfo?.commitMessage ?? ""}
     />
   );
-};
+}
 
 const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
   const userAffiliations = await db().getAffiliations(email);
@@ -47,5 +57,3 @@ const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
 
   return userAffiliations.map(({ name }) => name).includes(setAffiliation);
 };
-
-export default EditSetPage;

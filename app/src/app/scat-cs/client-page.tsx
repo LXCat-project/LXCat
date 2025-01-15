@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
+"use client";
+
 import { CrossSectionHeading } from "@lxcat/database/item";
 import {
   CSSetTree,
   defaultReactionTemplate,
-  defaultSearchTemplate,
   ReactionOptions,
   ReactionTemplate,
   Reversible,
@@ -15,23 +15,20 @@ import {
   StateProcess,
 } from "@lxcat/database/item/picker";
 import {
-  getStateLeaf,
   getStateLeafs,
   PagingOptions,
-  StateLeaf,
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { Button, Fieldset, Group, Space, Text } from "@mantine/core";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
-import deepEqual from "deep-equal";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SWRConfig, unstable_serialize } from "swr";
-import { BAG_SIZE, PAGE_SIZE } from "../../cs/constants";
+import { BAG_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
 import { Paging } from "../../cs/paging";
@@ -40,8 +37,6 @@ import {
   informationFromTemplates,
   ReactionInformation,
 } from "../../cs/swr-filter-component";
-import { getTemplateFromQuery } from "../../cs/template-from-query";
-import { Layout } from "../../shared/layout";
 import { CacheMap } from "../../shared/swr-cache-map";
 import { omit } from "../../shared/utils";
 
@@ -114,7 +109,7 @@ const generateCachePairs = (
   ),
 ];
 
-const ScatteringCrossSectionsPage: NextPage<Props> = ({
+export const CSClient: NextPage<Props> = ({
   items: initialItems,
   options,
   selection: initialSelection,
@@ -130,7 +125,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
     initialSelection.length - 1,
   );
 
-  const router = useRouter();
+  const query = useSearchParams()!;
 
   const nrItems = items.length;
 
@@ -164,7 +159,7 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
   };
 
   return (
-    <Layout title="Scattering Cross Section">
+    <>
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
@@ -244,82 +239,9 @@ const ScatteringCrossSectionsPage: NextPage<Props> = ({
       <Paging
         paging={paging}
         nrOnPage={nrItems}
-        query={router.query}
+        query={{ reactions: query.get("reactions") }}
         onChange={onPageChange}
       />
-    </Layout>
+    </>
   );
-};
-
-export default ScatteringCrossSectionsPage;
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  const template = getTemplateFromQuery(context.query);
-  const paging = {
-    offset: context.query.offset && !Array.isArray(context.query.offset)
-      ? parseInt(context.query.offset)
-      : 0,
-    count: PAGE_SIZE,
-  };
-
-  const defaultTemplates = defaultSearchTemplate();
-  const defaultOptions = db().getSearchOptions(defaultTemplates);
-
-  const [options, items] = deepEqual(defaultTemplates, template)
-    ? [await defaultOptions, []]
-    : await Promise.all([
-      db().getSearchOptions(template),
-      Promise.all(
-        template.map(
-          async ({
-            consumes: consumesPaths,
-            produces: producesPaths,
-            typeTags,
-            reversible,
-            set,
-          }) => {
-            const consumes = consumesPaths
-              .map(getStateLeaf)
-              .filter((leaf): leaf is StateLeaf => leaf !== undefined);
-            const produces = producesPaths
-              .map(getStateLeaf)
-              .filter((leaf): leaf is StateLeaf => leaf !== undefined);
-
-            if (
-              !(
-                consumes.length === 0
-                && produces.length === 0
-                && typeTags.length === 0
-                && set.length === 0
-              )
-            ) {
-              return db().getItemIdsByReactionTemplate(
-                consumes,
-                produces,
-                typeTags,
-                reversible,
-                set,
-              );
-            } else {
-              return [];
-            }
-          },
-        ),
-      ).then((csIdsNested) =>
-        db().getItemHeadings([...new Set(csIdsNested.flat())], paging)
-      ),
-    ]);
-
-  return {
-    props: {
-      items,
-      options: options,
-      selection: template,
-      paging,
-      defaultReactionOptions: (await defaultOptions)[0],
-      examples: [],
-    },
-  };
 };

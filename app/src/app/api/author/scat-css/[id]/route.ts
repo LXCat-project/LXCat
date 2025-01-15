@@ -6,7 +6,6 @@ import { db } from "@lxcat/database";
 import {
   badRequestResponse,
   forbiddenResponse,
-  internalServerErrorResponse,
   notFoundResponse,
   okJsonResponse,
 } from "../../../../../shared/api-responses";
@@ -29,27 +28,18 @@ const postRouter = RouteBuilder
           params.body.doc,
           params.body.message,
         );
-        const data = { id: newId };
-        return okJsonResponse(data);
-      } catch (error) {
+        return okJsonResponse({ id: newId });
+      } catch (error: any) {
         console.error(error);
-        return internalServerErrorResponse({
-          json: {
-            errors: [
-              {
-                keyword: "server",
-                dataPath: "",
-                schemaPath: "",
-                params: {},
-                message: `${error}`,
-              },
-            ],
-          },
-        });
+        return badRequestResponse({ json: [error.message] });
       }
     } else {
       // TODO distinguish between not owned by or does not exist
-      return forbiddenResponse();
+      return forbiddenResponse({
+        json: [
+          `You are not a member of the ${params.body.doc.contributor} organization.`,
+        ],
+      });
     }
   })
   .compile();

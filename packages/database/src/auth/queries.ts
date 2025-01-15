@@ -5,6 +5,9 @@
 import { Contributor } from "@lxcat/schema";
 import { aql } from "arangojs";
 import { ArrayCursor } from "arangojs/cursor.js";
+import { ArangoError } from "arangojs/error.js";
+import { Result } from "true-myth";
+import { err, ok } from "true-myth/result";
 import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
@@ -207,6 +210,7 @@ export async function listUsers(this: LXCatDatabase) {
 }
 
 export type ContributorWithStats = Contributor & {
+  _key: string;
   convertedSets: number;
   totalSets: number;
 };
@@ -221,7 +225,7 @@ export async function listContributors(this: LXCatDatabase) {
           RETURN 1
       )
       SORT nSets DESC, o.name
-      RETURN MERGE(UNSET(o, ["_id", "_rev", "_key"]), {convertedSets: nSets})
+      RETURN MERGE(UNSET(o, ["_id", "_rev"]), {convertedSets: nSets})
   `);
   return await cursor.all();
 }
@@ -283,14 +287,20 @@ export async function stripAffiliations(this: LXCatDatabase, userKey: string) {
   return null;
 }
 
-export async function addOrganization(this: LXCatDatabase, org: Contributor) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
-        INSERT
-            ${org}
+export async function addOrganization(
+  this: LXCatDatabase,
+  org: Contributor,
+): Promise<Result<string, ArangoError>> {
+  try {
+    const cursor: ArrayCursor<string> = await this.db.query(aql`
+        INSERT ${org}
         IN Organization
         RETURN NEW._key
     `);
-  return await cursor.next();
+    return ok((await cursor.next())!);
+  } catch (error) {
+    return err(error as ArangoError);
+  }
 }
 
 export async function dropOrganization(this: LXCatDatabase, orgKey: string) {
