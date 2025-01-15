@@ -7,7 +7,7 @@ import { userIsAuthor } from "@/auth/page-guards";
 import { NotFound } from "@/shared/not-found";
 import { Unauthorized } from "@/shared/unauthorized";
 import { db } from "@lxcat/database";
-import { EditedLTPDocument } from "@lxcat/schema";
+import { intoEditable } from "@lxcat/schema/process";
 import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 import { EditForm } from "./edit-form";
@@ -31,10 +31,7 @@ const EditSetPage = async (props: URLParams) => {
 
   return (
     <EditForm
-      initialSet={EditedLTPDocument.parse({
-        ...set,
-        contributor: set.contributor.name,
-      })}
+      initialSet={intoEditable(set)}
       organizations={await db().getAffiliations(session.user.email)}
     />
   );
