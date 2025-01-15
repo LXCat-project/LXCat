@@ -16,7 +16,7 @@ importers:
     dependencies:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.3.0
-        version: 7.3.0(zod@3.23.6)
+        version: 7.3.0(zod@3.24.1)
       '@citation-js/core':
         specifier: ^0.7.14
         version: 0.7.14
@@ -103,10 +103,10 @@ importers:
         version: 5.0.9
       next:
         specifier: ^15.1.4
-        version: 15.1.4(@babel/core@7.26.0)(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 15.1.4(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.11
-        version: 4.24.11(next@15.1.4(@babel/core@7.26.0)(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.11(next@15.1.4(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-connect:
         specifier: ^1.0.0
         version: 1.0.0
@@ -183,8 +183,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.24.1
+        version: 3.24.1
     devDependencies:
       '@lxcat/node-loader':
         specifier: workspace:^
@@ -224,7 +224,7 @@ importers:
         version: 3.0.3
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -266,7 +266,7 @@ importers:
         version: 5.7.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/converter:
     devDependencies:
@@ -298,11 +298,11 @@ importers:
         specifier: ^8.4.0
         version: 8.4.0
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.24.1
+        version: 3.24.1
       zod-to-json-schema:
         specifier: ^3.24.1
-        version: 3.24.1(zod@3.23.6)
+        version: 3.24.1(zod@3.24.1)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -321,7 +321,7 @@ importers:
         version: 8.19.1(@typescript-eslint/parser@8.19.1(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.48.0
         version: 0.48.0
@@ -342,7 +342,7 @@ importers:
         version: 5.7.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/node-loader:
     dependencies:
@@ -372,11 +372,11 @@ importers:
   packages/schema:
     dependencies:
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.24.1
+        version: 3.24.1
       zod-to-json-schema:
         specifier: ^3.24.1
-        version: 3.24.1(zod@3.23.6)
+        version: 3.24.1(zod@3.24.1)
     devDependencies:
       '@eslint/js':
         specifier: ^9.18.0
@@ -389,7 +389,7 @@ importers:
         version: 8.19.1(@typescript-eslint/parser@8.19.1(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+        version: 2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
       dprint:
         specifier: ^0.48.0
         version: 0.48.0
@@ -410,7 +410,7 @@ importers:
         version: 8.19.1(eslint@9.18.0)(typescript@5.7.3)
       vitest:
         specifier: ^2.1.8
-        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+        version: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
 
   packages/tsconfig: {}
 
@@ -7722,8 +7722,8 @@ packages:
     peerDependencies:
       zod: ^3.24.1
 
-  zod@3.23.6:
-    resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7744,10 +7744,10 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@asteasolutions/zod-to-openapi@7.3.0(zod@3.23.6)':
+  '@asteasolutions/zod-to-openapi@7.3.0(zod@3.24.1)':
     dependencies:
       openapi3-ts: 4.2.1
-      zod: 3.23.6
+      zod: 3.24.1
 
   '@babel/cli@7.26.4(@babel/core@7.26.0)':
     dependencies:
@@ -9989,7 +9989,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/coverage-v8@2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
+  '@vitest/coverage-v8@2.1.8(vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -10003,7 +10003,7 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vitest: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10014,13 +10014,13 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))':
+  '@vitest/mocker@2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))':
     dependencies:
       '@vitest/spy': 2.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.12
     optionalDependencies:
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
 
   '@vitest/pretty-format@2.1.8':
     dependencies:
@@ -11691,8 +11691,8 @@ snapshots:
       '@typescript-eslint/parser': 8.19.0(eslint@9.18.0)(typescript@5.7.3)
       eslint: 9.18.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5)(eslint@9.18.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.18.0)
       eslint-plugin-react: 7.37.2(eslint@9.18.0)
       eslint-plugin-react-hooks: 5.0.0(eslint@9.18.0)
@@ -11710,13 +11710,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0):
+  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0):
     dependencies:
       debug: 4.3.7
       enhanced-resolve: 5.15.0
       eslint: 9.18.0
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0))(eslint@9.18.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5)(eslint@9.18.0)
       get-tsconfig: 4.7.5
       globby: 13.1.4
       is-core-module: 2.15.1
@@ -11728,18 +11728,18 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0))(eslint@9.18.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.19.0(eslint@9.18.0)(typescript@5.7.3)
       eslint: 9.18.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.5.5)(eslint@9.18.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -11750,7 +11750,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.18.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint@9.18.0))(eslint@9.18.0))(eslint@9.18.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@8.19.0(eslint@9.18.0)(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@9.18.0))(eslint@9.18.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -13849,13 +13849,13 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@4.24.11(next@15.1.4(@babel/core@7.26.0)(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.24.11(next@15.1.4(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.22.5
       '@panva/hkdf': 1.1.1
       cookie: 0.7.0
       jose: 4.15.5
-      next: 15.1.4(@babel/core@7.26.0)(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 15.1.4(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.4.2
       preact: 10.15.1
@@ -13885,7 +13885,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@15.1.4(@babel/core@7.26.0)(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@15.1.4(@playwright/test@1.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 15.1.4
       '@swc/counter': 0.1.3
@@ -13895,7 +13895,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.6(@babel/core@7.26.0)(react@18.3.1)
+      styled-jsx: 5.1.6(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.1.4
       '@next/swc-darwin-x64': 15.1.4
@@ -15664,12 +15664,10 @@ snapshots:
       stylis: 4.3.1
       tslib: 2.5.0
 
-  styled-jsx@5.1.6(@babel/core@7.26.0)(react@18.3.1):
+  styled-jsx@5.1.6(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
-    optionalDependencies:
-      '@babel/core': 7.26.0
 
   stylis@4.3.1: {}
 
@@ -16225,13 +16223,13 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-node@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vite-node@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       es-module-lexer: 1.5.4
       pathe: 1.1.2
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16242,7 +16240,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       esbuild: 0.19.10
       postcss: 8.4.32
@@ -16253,10 +16251,10 @@ snapshots:
       sugarss: 4.0.1(postcss@8.4.32)
       terser: 5.18.0
 
-  vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0):
+  vitest@2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0):
     dependencies:
       '@vitest/expect': 2.1.8
-      '@vitest/mocker': 2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0))
+      '@vitest/mocker': 2.1.8(vite@5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0))
       '@vitest/pretty-format': 2.1.8
       '@vitest/runner': 2.1.8
       '@vitest/snapshot': 2.1.8
@@ -16272,8 +16270,8 @@ snapshots:
       tinyexec: 0.3.1
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
-      vite-node: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1(postcss@8.4.32))(terser@5.18.0)
+      vite: 5.0.10(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
+      vite-node: 2.1.8(@types/node@22.10.5)(sugarss@4.0.1)(terser@5.18.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.10.5
@@ -16550,10 +16548,10 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-to-json-schema@3.24.1(zod@3.23.6):
+  zod-to-json-schema@3.24.1(zod@3.24.1):
     dependencies:
-      zod: 3.23.6
+      zod: 3.24.1
 
-  zod@3.23.6: {}
+  zod@3.24.1: {}
 
   zwitch@2.0.4: {}
