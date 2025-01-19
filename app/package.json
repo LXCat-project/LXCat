@@ -30,7 +30,7 @@
     "@mantine/carousel": "^7.15.3",
     "@mantine/code-highlight": "^7.15.3",
     "@mantine/core": "^7.15.3",
-    "@mantine/form": "^7.15.3",
+    "@mantine/form": "^7.16.1",
     "@mantine/hooks": "^7.16.1",
     "@mantine/modals": "^7.15.3",
     "@mantine/notifications": "^7.15.3",
