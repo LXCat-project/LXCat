@@ -153,7 +153,6 @@ const extractHeadingValue = (content: Heading["children"][0]): string => {
   }
 };
 
-// TODO: Introduce a system for ordering the documentation pages, e.g. enforce all documentation markdown files to start with a number to indicate their order.
 export const extractMarkdownHeaders = async () => {
   const files = await readdir(DOC_ROOT).then((files) =>
     files.filter((file) => file.endsWith(".md"))
