@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Database } from "arangojs";
-import { CreateDatabaseOptions } from "arangojs/database";
+import { CreateDatabaseOptions } from "arangojs/databases";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import {
@@ -182,21 +182,16 @@ export class LXCatDatabase {
   public async setupUserPrivileges(system: Database, username: string) {
     const collections = await this.db.listCollections();
 
-    await system.setUserAccessLevel(username, {
-      database: this.db.name,
-      grant: "ro",
-    });
+    await system.setUserAccessLevel(username, { database: this.db.name }, "ro");
 
-    await Promise.all(collections.map((collection) =>
-      system.setUserAccessLevel(
-        username,
-        {
+    await Promise.all(
+      collections.map((collection) =>
+        system.setUserAccessLevel(username, {
           database: this.db.name,
           collection: collection.name,
-          grant: "rw",
-        },
-      )
-    ));
+        }, "rw")
+      ),
+    );
   }
 
   public async setupCollections() {

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function getNumItemsInSet(
@@ -20,6 +20,6 @@ export async function getNumItemsInSet(
       RETURN count
   `;
 
-  const cursor: ArrayCursor<number> = await this.db.query(query);
+  const cursor: Cursor<number> = await this.db.query(query);
   return cursor.next();
 }

@@ -4,7 +4,7 @@
 
 import { LTPMixture } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
@@ -12,7 +12,7 @@ import { KeyedVersionInfo } from "../../shared/types/version-info.js";
 import { CrossSectionHeading } from "../public.js";
 
 export async function byId(this: LXCatDatabase, id: string) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
   FOR cs IN CrossSection
     FILTER cs._key == ${id}
     FILTER cs.versionInfo.status != 'draft'
@@ -60,7 +60,7 @@ export async function byId(this: LXCatDatabase, id: string) {
 }
 
 export async function byIds(this: LXCatDatabase, ids: string[]) {
-  const cursor: ArrayCursor<LTPMixture> = await this.db.query(aql`
+  const cursor: Cursor<LTPMixture> = await this.db.query(aql`
     LET setIdsUnfiltered = (
       FOR cs IN CrossSection
         FILTER cs._key IN ${ids}
@@ -255,7 +255,7 @@ export async function getCSHeadings(
 	    ${limitAql}
 	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs, isPartOf: setNames }
 	`;
-  const cursor: ArrayCursor<CrossSectionHeading> = await this.db.query(q);
+  const cursor: Cursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();
 }
 
@@ -264,7 +264,7 @@ export async function getCSHeadings(
  */
 export async function csHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSection/${key}`;
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
     FOR h IN 0..9999999
       ANY ${id}
       CrossSectionHistory

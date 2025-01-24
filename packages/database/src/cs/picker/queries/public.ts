@@ -6,7 +6,7 @@ import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { literal } from "arangojs/aql";
 import { AqlLiteral } from "arangojs/aql";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../../lxcat-database.js";
 import { getStateLeaf, StateLeaf } from "../../../shared/get-state-leaf.js";
 import {
@@ -65,7 +65,7 @@ export async function getPartakingStateSelection(
       )
     }`
     : getFullStateTreeAQL(process, typeTags);
-  const cursor: ArrayCursor<NestedStateArray> = await this.db.query(query);
+  const cursor: Cursor<NestedStateArray> = await this.db.query(query);
   return await cursor.all();
 }
 
@@ -76,7 +76,7 @@ export async function getStateSelection(
   ignoredStates: Array<string> | AqlLiteral,
 ) {
   const query = getStateSelectionAQL(process, reactions, ignoredStates);
-  const cursor: ArrayCursor<NestedStateArray> = await this.db.query(query);
+  const cursor: Cursor<NestedStateArray> = await this.db.query(query);
   return await cursor.all();
 }
 
@@ -88,7 +88,7 @@ export async function getCSIdByReactionTemplate(
   reversible: Reversible,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<string> = await this.db.query(
+  const cursor: Cursor<string> = await this.db.query(
     getReactionsAQL(consumes, produces, returnCSId(setIds), [
       getReversibleFilterAQL(reversible),
       getTypeTagFilterAQL(typeTags),
@@ -105,7 +105,7 @@ export async function getAvailableTypeTags(
   reversible: Reversible,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<Array<ReactionTypeTag>> = await this.db.query(
+  const cursor: Cursor<Array<ReactionTypeTag>> = await this.db.query(
     consumes.length === 0
       && produces.length === 0
       && setIds.length === 0
@@ -139,7 +139,7 @@ export async function getReversible(
   typeTags: Array<ReactionTypeTag>,
   setIds: Array<string>,
 ) {
-  const cursor: ArrayCursor<Array<boolean>> = await this.db.query(
+  const cursor: Cursor<Array<boolean>> = await this.db.query(
     aql`
     RETURN UNIQUE(FLATTEN(
       ${
@@ -170,7 +170,7 @@ export async function getCSSets(
   typeTags: Array<ReactionTypeTag>,
   reversible: Reversible,
 ) {
-  const cursor: ArrayCursor<{
+  const cursor: Cursor<{
     setId: string;
     setName: string;
     orgId: string;

@@ -4,7 +4,7 @@
 
 import "dotenv/config";
 import { Database } from "arangojs";
-import { CollectionType } from "arangojs/collection";
+import { CollectionType } from "arangojs/collections";
 import { Result, Unit } from "true-myth";
 import { err, ok } from "true-myth/result";
 import {

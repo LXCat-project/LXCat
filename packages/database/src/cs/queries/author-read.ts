@@ -4,13 +4,13 @@
 
 import { VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { KeyedProcess, OwnedProcess } from "../../schema/process.js";
 import { PagingOptions } from "../../shared/types/search.js";
 
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
       FOR cs IN CrossSection
           FILTER cs._key == ${key}
           RETURN cs.versionInfo
@@ -28,7 +28,7 @@ export async function searchOwned(
 ) {
   const reactionsAql = aql``; // TODO implement
   const limit_aql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
     FOR u IN users
       FILTER u.email == ${email}
       FOR o IN OUTBOUND u MemberOf
@@ -88,7 +88,7 @@ export async function byOwnerAndId(
   email: string,
   id: string,
 ) {
-  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+  const cursor: Cursor<KeyedProcess<string, string>> = await this
     .db
     .query(aql`
     FOR u IN users
@@ -138,7 +138,7 @@ export async function byOrgAndId(
   org: string,
   key: string,
 ) {
-  const cursor: ArrayCursor<KeyedProcess<string, string>> = await this
+  const cursor: Cursor<KeyedProcess<string, string>> = await this
     .db
     .query(aql`
       FOR o IN Organization
