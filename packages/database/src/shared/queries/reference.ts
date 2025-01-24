@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 
 import { Reference } from "@lxcat/schema";
 import { LXCatDatabase } from "../../lxcat-database.js";
@@ -13,7 +13,7 @@ export async function getReferences(
   this: LXCatDatabase,
   ids: Array<string>,
 ): Promise<Array<Reference>> {
-  const cursor: ArrayCursor<Reference> = await this.db.query(aql`
+  const cursor: Cursor<Reference> = await this.db.query(aql`
             FOR ref IN Reference
               FILTER ref._key IN ${ids}
               RETURN UNSET(ref, ["_key", "_id", "_rev"])
@@ -25,7 +25,7 @@ export async function getReferencesForSelection(
   this: LXCatDatabase,
   ids: Array<string>,
 ): Promise<Bibliography> {
-  const cursor: ArrayCursor<Bibliography> = await this.db.query(aql`
+  const cursor: Cursor<Bibliography> = await this.db.query(aql`
     LET sets = (
       FOR css IN CrossSectionSet
         FILTER css.versionInfo.status != 'draft'
@@ -59,7 +59,7 @@ export async function getReferencesForSelection(
 }
 
 export async function getReferenceKeyByDOI(this: LXCatDatabase, doi: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
             FOR ref IN Reference
               FILTER ref.DOI == ${doi}
               RETURN ref._key

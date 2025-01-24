@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function getSetAffiliation(
@@ -18,6 +18,6 @@ export async function getSetAffiliation(
         RETURN org.name
   `;
 
-  const cursor: ArrayCursor<string> = await this.db.query(query);
+  const cursor: Cursor<string> = await this.db.query(query);
   return cursor.next();
 }

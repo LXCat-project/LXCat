@@ -4,7 +4,7 @@
 
 import { Key, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { boolean, object, string } from "zod";
 import { LXCatDatabase } from "../../lxcat-database.js";
 // import { KeyedSet } from "../public.js";
@@ -20,7 +20,7 @@ const KeyedSet = object({
 });
 
 export async function listOwnedSets(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         LIMIT 1
@@ -49,7 +49,7 @@ export async function byOwnerAndId(
   email: string,
   id: string,
 ) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
             FOR user IN users
               FILTER user.email == ${email}
               FOR org IN OUTBOUND user MemberOf
@@ -131,7 +131,7 @@ export async function isOwnerOfSet(
   key: string,
   email: string,
 ) {
-  const cursor: ArrayCursor<boolean> = await this.db.query(aql`
+  const cursor: Cursor<boolean> = await this.db.query(aql`
     FOR u IN users
         FILTER u.email == ${email}
         FOR o IN OUTBOUND u MemberOf
@@ -144,7 +144,7 @@ export async function isOwnerOfSet(
 }
 
 export async function getVersionInfo(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
         FILTER css._key == ${key}
         RETURN css.versionInfo

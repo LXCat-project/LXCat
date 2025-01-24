@@ -6,7 +6,7 @@ import { EditedLTPDocument, Status, VersionInfo } from "@lxcat/schema";
 import { NewProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import deepEqual from "deep-equal";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
@@ -148,7 +148,7 @@ export async function publish(this: LXCatDatabase, key: string) {
 }
 
 export async function draftItemsFromSet(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
     FOR p IN IsPartOf
       FILTER p._to == CONCAT('CrossSectionSet/', ${key})
       FILTER DOCUMENT(p._from).versionInfo.status == 'draft'
@@ -182,7 +182,7 @@ export async function updateSet(
 }
 
 export async function isDraftlessSet(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
     FOR h IN CrossSectionSetHistory
       FILTER h._to == CONCAT('CrossSectionSet/', ${key})
       RETURN PARSE_IDENTIFIER(h._from).key
@@ -611,7 +611,7 @@ export async function doesPublishingEffectOtherSets(
     _id: string;
     publishedAs: null | { _id: string; otherSetIds: string[] };
   };
-  const cursor: ArrayCursor<R> = await this.db.query(aql`
+  const cursor: Cursor<R> = await this.db.query(aql`
     // Exclude self and any previous versions
     LET lineage = (
       FOR hs IN 0..999999 OUTBOUND CONCAT('CrossSectionSet/', ${key}) CrossSectionSetHistory

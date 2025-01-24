@@ -5,12 +5,12 @@
 import { VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { CrossSectionSetHeading } from "../public.js";
 
 export async function listSets(this: LXCatDatabase, contributor?: string) {
-  const cursor: ArrayCursor<CrossSectionSetHeading> = await this.db.query(aql`
+  const cursor: Cursor<CrossSectionSetHeading> = await this.db.query(aql`
         FOR css IN CrossSectionSet
           FILTER css.versionInfo.status == "published"
           ${
@@ -24,7 +24,7 @@ export async function listSets(this: LXCatDatabase, contributor?: string) {
 }
 
 export async function getItemIdsInSet(this: LXCatDatabase, setId: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
       FOR css IN CrossSectionSet
         FILTER css._key == ${setId}
         FOR cs IN INBOUND css IsPartOf
@@ -38,7 +38,7 @@ export async function byId(
   id: string,
   allowDrafts: boolean = false,
 ) {
-  const cursor: ArrayCursor<unknown> = await this.db.query(aql`
+  const cursor: Cursor<unknown> = await this.db.query(aql`
     FOR css IN CrossSectionSet
       FILTER css._key == ${id}
       ${allowDrafts ? aql`` : aql`FILTER css.versionInfo.status != 'draft'`}
@@ -132,7 +132,7 @@ export interface KeyedVersionInfo extends VersionInfo {
  */
 export async function setHistory(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
+  const cursor: Cursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h IN 0..9999999 ANY ${id} CrossSectionSetHistory
       FILTER h.versionInfo.status != 'draft'
       SORT h.versionInfo.version DESC
@@ -146,7 +146,7 @@ export async function setHistory(this: LXCatDatabase, key: string) {
  */
 export async function activeSetOfArchivedSet(this: LXCatDatabase, key: string) {
   const id = `CrossSectionSet/${key}`;
-  const cursor: ArrayCursor<KeyedVersionInfo> = await this.db.query(aql`
+  const cursor: Cursor<KeyedVersionInfo> = await this.db.query(aql`
     FOR h
       IN 0..9999999
       ANY ${id}
