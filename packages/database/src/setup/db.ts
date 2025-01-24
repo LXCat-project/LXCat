@@ -4,7 +4,7 @@
 
 import "dotenv/config";
 import { Database } from "arangojs";
-import { CreateDatabaseOptions } from "arangojs/database";
+import { CreateDatabaseOptions } from "arangojs/databases";
 import Result, { err, ok } from "true-myth/result";
 import { ArangoError } from "../error.js";
 

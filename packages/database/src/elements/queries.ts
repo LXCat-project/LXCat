@@ -5,13 +5,13 @@
 import { VersionInfo } from "@lxcat/schema";
 import { Element } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../lxcat-database.js";
 
 export async function getActiveElements(
   this: LXCatDatabase,
 ): Promise<Array<Element>> {
-  const cursor: ArrayCursor<Element> = await this.db.query(aql`
+  const cursor: Cursor<Element> = await this.db.query(aql`
     FOR elem IN Element
       LET hasSets = FIRST(
         FOR comp IN INBOUND elem ContainsElement
@@ -44,7 +44,7 @@ export async function getSetHeaderByElements(
   this: LXCatDatabase,
   elements: Array<Element>,
 ): Promise<Array<PeriodicSearchResult>> {
-  const cursor: ArrayCursor<PeriodicSearchResult> = await this.db.query(
+  const cursor: Cursor<PeriodicSearchResult> = await this.db.query(
     aql`
       FOR set IN CrossSectionSet
        FILTER set.versionInfo.status == "published"
