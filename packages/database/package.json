@@ -76,7 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@vitest/coverage-v8": "^3.0.2",
     "dprint": "^0.48.0",
-    "eslint": "9.18.0",
+    "eslint": "9.19.0",
     "globals": "^15.14.0",
     "testcontainers": "^10.16.0",
     "tsx": "^4.19.2",
