@@ -174,8 +174,8 @@ importers:
         specifier: 2.3.0
         version: 2.3.0(react@19.0.0)
       true-myth:
-        specifier: ^8.4.0
-        version: 8.4.0
+        specifier: ^8.5.0
+        version: 8.5.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
@@ -295,8 +295,8 @@ importers:
         specifier: ^16.4.7
         version: 16.4.7
       true-myth:
-        specifier: ^8.4.0
-        version: 8.4.0
+        specifier: ^8.5.0
+        version: 8.5.0
       zod:
         specifier: 3.23.6
         version: 3.23.6
@@ -7172,8 +7172,8 @@ packages:
   trough@2.1.0:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
 
-  true-myth@8.4.0:
-    resolution: {integrity: sha512-rrUewwM2pC5SLmwokBfJBT1fDk0xpRErUY38PIOAucGtVKa6q9SqUU9rV+t/tpslFWL+cvxTQF2+MPHYffKQ3g==}
+  true-myth@8.5.0:
+    resolution: {integrity: sha512-EkMeamfavFmcWk7K5daj9V90uQM3A4RVSiWqvhAKvdNqjsagXnTuR3+h4x8NZlo2APBqLSLxt2K7/mktP789MA==}
     engines: {node: 18.* || >= 20.*}
 
   ts-api-utils@2.0.0:
@@ -15933,7 +15933,7 @@ snapshots:
 
   trough@2.1.0: {}
 
-  true-myth@8.4.0: {}
+  true-myth@8.5.0: {}
 
   ts-api-utils@2.0.0(typescript@5.7.3):
     dependencies:
