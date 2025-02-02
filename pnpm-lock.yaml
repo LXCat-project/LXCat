@@ -27,8 +27,8 @@ importers:
         specifier: ^0.7.18
         version: 0.7.18(@citation-js/core@0.7.18)
       '@citation-js/plugin-doi':
-        specifier: ^0.7.16
-        version: 0.7.16(@citation-js/core@0.7.18)
+        specifier: ^0.7.18
+        version: 0.7.18(@citation-js/core@0.7.18)
       '@citation-js/plugin-ris':
         specifier: ^0.7.18
         version: 0.7.18(@citation-js/core@0.7.18)
@@ -997,8 +997,8 @@ packages:
     peerDependencies:
       '@citation-js/core': ^0.7.0
 
-  '@citation-js/plugin-doi@0.7.16':
-    resolution: {integrity: sha512-ghJ/ms5OnAsH4wmdSUPCroDoNXLbDHIvLVAczbLpEdB2pfCARCicUVWBGPuLpvG6pFPMt5ygRk9xEZXr2qIbSQ==}
+  '@citation-js/plugin-doi@0.7.18':
+    resolution: {integrity: sha512-7ccmhfJJSDUhUqpWxesLAp3m1P5dhnZ4QNMctwJnU41T9vKGF7MXPKqMONSvL5JDZ7o7iWQTj2BFhSmh0euQxw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
@@ -8568,7 +8568,7 @@ snapshots:
       '@citation-js/date': 0.5.1
       citeproc: 2.4.63
 
-  '@citation-js/plugin-doi@0.7.16(@citation-js/core@0.7.18)':
+  '@citation-js/plugin-doi@0.7.18(@citation-js/core@0.7.18)':
     dependencies:
       '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
