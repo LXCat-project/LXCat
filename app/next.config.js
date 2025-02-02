@@ -32,6 +32,9 @@ const nextConfig = {
         },
       ];
     }
+    if (process.env.CI) {
+      config.devtool = "source-map";
+    }
     return config;
   },
   images: {
