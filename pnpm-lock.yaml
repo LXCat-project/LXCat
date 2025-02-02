@@ -18,20 +18,20 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(zod@3.23.6)
       '@citation-js/core':
-        specifier: ^0.7.14
-        version: 0.7.14
+        specifier: ^0.7.18
+        version: 0.7.18
       '@citation-js/plugin-bibtex':
         specifier: ^0.7.17
-        version: 0.7.17(@citation-js/core@0.7.14)
+        version: 0.7.17(@citation-js/core@0.7.18)
       '@citation-js/plugin-csl':
         specifier: ^0.7.14
-        version: 0.7.14(@citation-js/core@0.7.14)
+        version: 0.7.14(@citation-js/core@0.7.18)
       '@citation-js/plugin-doi':
         specifier: ^0.7.16
-        version: 0.7.16(@citation-js/core@0.7.14)
+        version: 0.7.16(@citation-js/core@0.7.18)
       '@citation-js/plugin-ris':
         specifier: ^0.7.16
-        version: 0.7.16(@citation-js/core@0.7.14)
+        version: 0.7.16(@citation-js/core@0.7.18)
       '@lxcat/converter':
         specifier: workspace:^
         version: link:../packages/converter
@@ -998,8 +998,8 @@ packages:
     resolution: {integrity: sha512-YstAqNb0MCN8PjdLCDfRsBcGVRN41f3vgLvaI0IrIcBp4AqILRSS0DeWNGkicC+f/zRIPJLc+9RURVSepwvfBw==}
     hasBin: true
 
-  '@citation-js/core@0.7.14':
-    resolution: {integrity: sha512-dgeGqYDSQmn2MtnWZkwPGpJQPh43yr1lAAr9jl1NJ9pIY1RXUQxtlAUZVur0V9PHdbfQC+kkvB1KC3VpgVV3MA==}
+  '@citation-js/core@0.7.18':
+    resolution: {integrity: sha512-EjLuZWA5156dIFGdF7OnyPyWFBW43B8Ckje6Sn/W2RFxHDu0oACvW4/6TNgWT80jhEA4bVFm7ahrZe9MJ2B2UQ==}
     engines: {node: '>=16.0.0'}
 
   '@citation-js/date@0.5.1':
@@ -5650,8 +5650,8 @@ packages:
     resolution: {integrity: sha512-ofRW94Ab0T4AOh5Fk8t0h8OBWrmjb0SSB20xh1H8YnPV9EJ+f5AMoYSUQ2zgJ4Iq2HAK0I2l5/Nequ8YzFS3Hg==}
     engines: {node: 4.x || >=6.0.0}
 
-  node-fetch@2.6.12:
-    resolution: {integrity: sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==}
+  node-fetch@2.6.13:
+    resolution: {integrity: sha512-StxNAxh15zr77QvvkmveSQ8uCQ4+v5FkvNTj0OESmiHu+VRi/gXArXtkWMElOsOUNLtUEvI4yS+rdtOHZTwlQA==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -8550,7 +8550,7 @@ snapshots:
     dependencies:
       commander: 2.20.3
 
-  '@citation-js/core@0.7.14':
+  '@citation-js/core@0.7.18':
     dependencies:
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
@@ -8563,27 +8563,27 @@ snapshots:
 
   '@citation-js/name@0.4.2': {}
 
-  '@citation-js/plugin-bibtex@0.7.17(@citation-js/core@0.7.14)':
+  '@citation-js/plugin-bibtex@0.7.17(@citation-js/core@0.7.18)':
     dependencies:
-      '@citation-js/core': 0.7.14
+      '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
       moo: 0.5.2
 
-  '@citation-js/plugin-csl@0.7.14(@citation-js/core@0.7.14)':
+  '@citation-js/plugin-csl@0.7.14(@citation-js/core@0.7.18)':
     dependencies:
-      '@citation-js/core': 0.7.14
+      '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
       citeproc: 2.4.63
 
-  '@citation-js/plugin-doi@0.7.16(@citation-js/core@0.7.14)':
+  '@citation-js/plugin-doi@0.7.16(@citation-js/core@0.7.18)':
     dependencies:
-      '@citation-js/core': 0.7.14
+      '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
 
-  '@citation-js/plugin-ris@0.7.16(@citation-js/core@0.7.14)':
+  '@citation-js/plugin-ris@0.7.16(@citation-js/core@0.7.18)':
     dependencies:
-      '@citation-js/core': 0.7.14
+      '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
       '@citation-js/name': 0.4.2
 
@@ -12009,7 +12009,7 @@ snapshots:
 
   fetch-ponyfill@7.1.0:
     dependencies:
-      node-fetch: 2.6.12
+      node-fetch: 2.6.13
     transitivePeerDependencies:
       - encoding
 
@@ -13962,7 +13962,7 @@ snapshots:
     dependencies:
       http2-client: 1.3.5
 
-  node-fetch@2.6.12:
+  node-fetch@2.6.13:
     dependencies:
       whatwg-url: 5.0.0
 
