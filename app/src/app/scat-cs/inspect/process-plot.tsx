@@ -45,7 +45,10 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
           r: 10,
         },
         xaxis: {
-          title: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+          title: {
+            text: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+            standoff: 15,
+          },
           type: "log",
           tickformat: ".0e",
           tickmode: "linear",
