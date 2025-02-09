@@ -60,7 +60,7 @@
     "react-schemaorg": "^2.0.0",
     "redoc": "^2.4.0",
     "rehype-autolink-headings": "^7.1.0",
-    "rehype-highlight": "^7.0.1",
+    "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
     "rehype-slug": "^6.0.0",
     "remark-embed-images": "^5.0.0",
