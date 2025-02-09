@@ -20,6 +20,10 @@ const config: PlaywrightTestConfig = {
     port: 8001,
     // timeout: 2 * 60 * 1000, // Wait for 2 minutes to spinup app dev server
     reuseExistingServer: !process.env.CI,
+    gracefulShutdown: {
+      signal: "SIGTERM",
+      timeout: 500,
+    },
     env: {
       ARANGO_PASSWORD: "pw4tests",
       ARANGO_URL: process.env.GITLAB_CI
