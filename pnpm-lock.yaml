@@ -43,13 +43,13 @@ importers:
         version: link:../packages/schema
       '@mantine/carousel':
         specifier: ^7.16.3
-        version: 7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(embla-carousel-react@8.4.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(embla-carousel-react@8.4.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/code-highlight':
         specifier: ^7.16.3
-        version: 7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/core':
-        specifier: ^7.16.2
-        version: 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^7.16.3
+        version: 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/form':
         specifier: ^7.16.3
         version: 7.16.3(react@19.0.0)
@@ -58,10 +58,10 @@ importers:
         version: 7.16.3(react@19.0.0)
       '@mantine/modals':
         specifier: ^7.16.3
-        version: 7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/notifications':
         specifier: ^7.16.3
-        version: 7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.0)
@@ -91,7 +91,7 @@ importers:
         version: 10.1.1
       mantine-datatable:
         specifier: ^7.15.1
-        version: 7.15.1(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(clsx@2.1.1)(react@19.0.0)
+        version: 7.15.1(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(clsx@2.1.1)(react@19.0.0)
       mdast-util-from-markdown:
         specifier: ^2.0.2
         version: 2.0.2
@@ -1870,10 +1870,10 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/core@7.16.2':
-    resolution: {integrity: sha512-6dwFz+8HrOqFan7GezgpoWyZSCxedh10S8iILGVsc3GXiD4gzo+3VZndZKccktkYZ3GVC9E3cCS3SxbiyKSAVw==}
+  '@mantine/core@7.16.3':
+    resolution: {integrity: sha512-cxhIpfd2i0Zmk9TKdejYAoIvWouMGhzK3OOX+VRViZ5HEjnTQCGl2h3db56ThqB6NfVPCno6BPbt5lwekTtmuQ==}
     peerDependencies:
-      '@mantine/hooks': 7.16.2
+      '@mantine/hooks': 7.16.3
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
@@ -7286,8 +7286,8 @@ packages:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
 
-  type-fest@4.33.0:
-    resolution: {integrity: sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==}
+  type-fest@4.34.0:
+    resolution: {integrity: sha512-Qcg88ZJsJvRcUijtD6supagRSDf0y1FPZh4NroJpwRkoPYj6gGNidREwTgDuC0Pmq0PVAAzL8C8BZW7xhx5Q4A==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -9255,24 +9255,24 @@ snapshots:
       koa-compose: 4.1.0
       path-to-regexp: 6.3.0
 
-  '@mantine/carousel@7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(embla-carousel-react@8.4.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/carousel@7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(embla-carousel-react@8.4.0(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@mantine/core': 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/core': 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
       embla-carousel-react: 8.4.0(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@mantine/code-highlight@7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/code-highlight@7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@mantine/core': 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/core': 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
       clsx: 2.1.1
       highlight.js: 11.11.1
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@floating-ui/react': 0.26.28(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
@@ -9282,7 +9282,7 @@ snapshots:
       react-number-format: 5.4.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-remove-scroll: 2.6.3(@types/react@19.0.8)(react@19.0.0)
       react-textarea-autosize: 8.5.6(@types/react@19.0.8)(react@19.0.0)
-      type-fest: 4.33.0
+      type-fest: 4.34.0
     transitivePeerDependencies:
       - '@types/react'
 
@@ -9296,16 +9296,16 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  '@mantine/modals@7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/modals@7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@mantine/core': 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/core': 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@mantine/notifications@7.16.3(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@mantine/notifications@7.16.3(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@mantine/core': 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/core': 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
       '@mantine/store': 7.16.3(react@19.0.0)
       react: 19.0.0
@@ -13279,9 +13279,9 @@ snapshots:
     dependencies:
       semver: 7.7.1
 
-  mantine-datatable@7.15.1(@mantine/core@7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(clsx@2.1.1)(react@19.0.0):
+  mantine-datatable@7.15.1(@mantine/core@7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.16.3(react@19.0.0))(clsx@2.1.1)(react@19.0.0):
     dependencies:
-      '@mantine/core': 7.16.2(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mantine/core': 7.16.3(@mantine/hooks@7.16.3(react@19.0.0))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/hooks': 7.16.3(react@19.0.0)
       clsx: 2.1.1
       react: 19.0.0
@@ -16088,7 +16088,7 @@ snapshots:
 
   type-fest@0.8.1: {}
 
-  type-fest@4.33.0: {}
+  type-fest@4.34.0: {}
 
   type-is@1.6.18:
     dependencies:
