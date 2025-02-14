@@ -122,7 +122,7 @@ export async function updateHistoricItem(
   throw Error("Can not update cross section due to invalid status");
 }
 
-function resolveReferences(
+export function resolveReferences(
   refs: Record<string, string | Reference>,
 ): Record<string, Reference> {
   return Object.fromEntries(
