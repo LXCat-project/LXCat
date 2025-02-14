@@ -26,8 +26,11 @@ export async function findReactionId(
                         RETURN {state: s._to, count: s.count}
                 )
                 FILTER r.reversible == ${reaction.reversible} 
+                AND LENGTH(r.typeTags) == LENGTH(${reaction.typeTags})
                 AND r.typeTags ALL IN ${reaction.typeTags}
+                AND LENGTH(lhs) == LENGTH(${reaction.lhs})
                 AND lhs ALL IN ${reaction.lhs}
+                AND LENGTH(rhs) == LENGTH(${reaction.rhs})
                 AND rhs ALL IN ${reaction.rhs}
                 LIMIT 1 // Stop when found
                 RETURN r._id
