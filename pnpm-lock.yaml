@@ -241,8 +241,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       oidc-provider:
-        specifier: ^8.6.1
-        version: 8.6.1
+        specifier: ^8.7.0
+        version: 8.7.0
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.50.1)
@@ -3102,6 +3102,10 @@ packages:
     resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
     engines: {node: '>= 0.4'}
 
+  call-bind-apply-helpers@1.0.2:
+    resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
+    engines: {node: '>= 0.4'}
+
   call-bind@1.0.5:
     resolution: {integrity: sha512-C3nQxfFZxFRVoJoGKKI8y3MOEo129NQ+FgQ08iye+Mk4zNZZGdjfs06bVTr+DBSlA66Q2VEcMki/cUCP4SercQ==}
 
@@ -5126,8 +5130,8 @@ packages:
     resolution: {integrity: sha512-asOvN6bFlSnxewce2e/DK3p4tltyfC4VM7ZwuTuepI7dEQVcvpyFuBcEARu1+Hxg8DIwytce2n7jrZtRlPrARA==}
     engines: {node: '>= 10'}
 
-  koa@2.15.3:
-    resolution: {integrity: sha512-j/8tY9j5t+GVMLeioLaxweJiKUayFhlGqNTzf2ZGwL0ZCQijd2RLHK0SLW5Tsko8YyyqCZC2cojIb0/s62qTAg==}
+  koa@2.15.4:
+    resolution: {integrity: sha512-7fNBIdrU2PEgLljXoPWoyY4r1e+ToWCmzS/wwMPbUNs7X+5MMET1ObhJBlUkF5uZG9B6QhM2zS1TsH6adegkiQ==}
     engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
 
   kolorist@1.8.0:
@@ -5915,8 +5919,8 @@ packages:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
 
-  oidc-provider@8.6.1:
-    resolution: {integrity: sha512-wJ+nhwkCjRtQiwJKACjjV8FAIn7QXGDc1UOAE5WW0i8fsqN1GgXi42S/ccOxEx/JV3tyVLEwIipAvJNsJ/3djA==}
+  oidc-provider@8.7.0:
+    resolution: {integrity: sha512-H0AE07n7d5zBHwP8bDb1Yg+NokP+BybisUPB2kGG/lI0aPvLL/JcEhh3vJsz3UbThoz2p+6a0xGTBA8a3yDUGg==}
 
   oidc-token-hash@5.0.3:
     resolution: {integrity: sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==}
@@ -10867,6 +10871,11 @@ snapshots:
       es-errors: 1.3.0
       function-bind: 1.1.2
 
+  call-bind-apply-helpers@1.0.2:
+    dependencies:
+      es-errors: 1.3.0
+      function-bind: 1.1.2
+
   call-bind@1.0.5:
     dependencies:
       function-bind: 1.1.2
@@ -10890,7 +10899,7 @@ snapshots:
 
   call-bound@1.0.3:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
+      call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.2.7
 
   call-me-maybe@1.0.2: {}
@@ -11634,7 +11643,7 @@ snapshots:
 
   dunder-proto@1.0.1:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
+      call-bind-apply-helpers: 1.0.2
       es-errors: 1.3.0
       gopd: 1.2.0
 
@@ -13305,7 +13314,7 @@ snapshots:
       co: 4.6.0
       koa-compose: 4.1.0
 
-  koa@2.15.3:
+  koa@2.15.4:
     dependencies:
       accepts: 1.3.8
       cache-content-type: 1.0.1
@@ -14508,7 +14517,7 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  oidc-provider@8.6.1:
+  oidc-provider@8.7.0:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
@@ -14517,7 +14526,7 @@ snapshots:
       got: 13.0.0
       jose: 5.9.6
       jsesc: 3.1.0
-      koa: 2.15.3
+      koa: 2.15.4
       nanoid: 5.1.0
       object-hash: 3.0.0
       oidc-token-hash: 5.0.3
