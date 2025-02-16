@@ -66,8 +66,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.0)
       '@next/bundle-analyzer':
-        specifier: ^15.1.6
-        version: 15.1.6
+        specifier: ^15.1.7
+        version: 15.1.7
       '@tabler/icons-react':
         specifier: ^3.30.0
         version: 3.30.0(react@19.0.0)
@@ -1957,8 +1957,8 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@next/bundle-analyzer@15.1.6':
-    resolution: {integrity: sha512-hGzQyDqJzFHcHNCyTqM3o05BpVq5tGnRODccZBVJDBf5Miv/26UJPMB0wh9L9j3ylgHC+0/v8BaBnBBek1rC6Q==}
+  '@next/bundle-analyzer@15.1.7':
+    resolution: {integrity: sha512-tESiAwTUEpzzxKMLDbQuPHvD+PFDjY+0O3R4T5bpjIo0cr5fvppbbllQbtksQbBEquT55Eu8JmDoOlc9YFv6Kw==}
 
   '@next/env@15.1.6':
     resolution: {integrity: sha512-d9AFQVPEYNr+aqokIiPLNK/MTyt3DWa/dpKveiAaVccUadFbhFEvY6FXYX2LJO2Hv7PHnLBu2oWwB4uBuHjr/w==}
@@ -8023,7 +8023,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.9
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/parser@7.26.1':
     dependencies:
@@ -9383,7 +9383,7 @@ snapshots:
 
   '@napi-rs/cli@2.18.4': {}
 
-  '@next/bundle-analyzer@15.1.6':
+  '@next/bundle-analyzer@15.1.7':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
