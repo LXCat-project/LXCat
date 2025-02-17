@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference, SetHeader, versioned } from "@lxcat/schema";
+import { Key, Reference, SetHeader, versioned } from "@lxcat/schema";
 import { Process, ProcessInfo } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { array, object, string, TypeOf, ZodType, ZodTypeAny } from "zod";
@@ -12,7 +12,7 @@ export const KeyedProcess = <
   StateType extends ZodTypeAny,
   ReferenceType extends ZodTypeAny,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, Keyed(ProcessInfo(ReferenceType)));
+  Process(StateType, ProcessInfo(ReferenceType, object({ _key: Key })));
 
 type KeyedProcessType<
   StateType extends ZodTypeAny,
@@ -25,9 +25,9 @@ export type KeyedProcess<StateType, ReferenceType> = TypeOf<
 
 export const OwnedProcess = Process(
   SerializedSpecies,
-  versioned(
-    ProcessInfo(Reference)
-      .merge(object({ isPartOf: array(Keyed(SetHeader(string().min(1)))) })),
+  ProcessInfo(
+    Reference,
+    versioned(object({ isPartOf: array(Keyed(SetHeader(string().min(1)))) })),
   ),
 );
 export type OwnedProcess = TypeOf<typeof OwnedProcess>;
