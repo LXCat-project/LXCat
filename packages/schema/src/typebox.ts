@@ -1,5 +1,4 @@
 import { Static, TObject, TSchema, Type } from "@sinclair/typebox";
-import { serializeLatexLS, serializeLS } from "./species/atoms/ls.js";
 
 export const TReactionEntry = <StateType extends TSchema>(
   StateType: StateType,
@@ -97,9 +96,10 @@ export const UnitValue = <
 >(unitSchema: UnitType, valueSchema: ValueType) =>
   Type.Object({ unit: unitSchema, value: valueSchema });
 
-export const Constant = Type.Object({
-  type: Type.Literal("Constant"),
-}).merge(UnitValue(Type.String(), Type.Number()));
+export const Constant = Type.Composite([
+  Type.Object({ type: Type.Literal("Constant") }),
+  UnitValue(Type.String(), Type.Number()),
+]);
 
 export const Expression = Type.Object({
   type: Type.Literal("Expression"),
@@ -159,17 +159,6 @@ export type Component<ComponentSchema extends TSchema> =
   & Static<ComponentSchema>
   & Serializable;
 
-export const makeComponent = <ComponentSchema extends TSchema>(
-  schema: ComponentSchema,
-  summary: (object: Static<ComponentSchema>) => string,
-  latex: (object: Static<ComponentSchema>) => string,
-) =>
-  Type.Unsafe<Component<ComponentSchema>>({
-    ...schema,
-    summary: () => summary(schema),
-    latex: () => latex(schema),
-  });
-
 export const LSTermUncoupled = Type.Object({
   L: Type.Integer({ minimum: 0 }),
   S: Type.Number({ minimum: 0, multipleOf: 0.5 }),
@@ -196,16 +185,38 @@ export const ShellEntry = Type.Object({
 
 export const LSDescriptor = buildTerm(Type.Array(ShellEntry), LSTerm);
 
-export const LSComponent = makeComponent(
-  LSDescriptor,
-  serializeLS,
-  serializeLatexLS,
-);
-
 export const typeTag = <Tag extends string>(tag: Tag) =>
   Type.Object({ type: Type.Literal(tag) });
 
-export const makeAtomSchema = <
+// dprint-ignore
+export enum Element { 
+  H,  He, Li, Be, B,  C,  N,  O,  F,  Ne,
+  Na, Mg, Al, Si, P,  S,  Cl, Ar, K,  Ca,
+  Sc, Ti, V,  Cr, Mn, Fe, Co, Ni, Cu, Zn,
+  Ga, Ge, As, Se, Br, Kr, Rb, Sr, Y,  Zr,
+  Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd, In, Sn,
+  Sb, Te, I,  Xe, Cs, Ba, La, Ce, Pr, Nd,
+  Pm, Sm, Eu, Gd, Tb, Dy, Ho, Er, Tm, Yb,
+  Lu, Hf, Ta, W,  Re, Os, Ir, Pt, Au, Hg,
+  Tl, Pb, Bi, Po, At, Rn, Fr, Ra, Ac, Th,
+  Pa, U,  Np, Pu, Am, Cm, Bk, Cf, Es, Fm,
+  Md, No, Lr, Rf, Db, Sg, Bh, Hs, Mt, Ds,
+  Rg, Cn, Nh, Fl, Mc, Lv, Ts, Og
+}
+
+export const AtomComposition = Type.Tuple([
+  Type.Tuple([Type.Enum(Element), Type.Literal(1)]),
+]);
+
+export const SpeciesBase = <CompositionSchema extends TSchema>(
+  composition: CompositionSchema,
+) =>
+  Type.Object({
+    composition,
+    charge: Type.Integer(),
+  });
+
+export const makeAtom = <
   Tag extends string,
   CompositionSchema extends TObject,
   ElectronicSchema extends TSchema,
@@ -224,16 +235,3 @@ export const makeAtomSchema = <
       ]),
     }),
   ]);
-
-export const makeAtom = <
-  Tag extends string,
-  CompositionSchema extends TObject,
-  ElectronicSchema extends TSchema,
->(
-  tag: Tag,
-  composition: CompositionSchema,
-  electronic: Component<ElectronicSchema>,
-) => ({
-  plain: makeAtomSchema(tag, composition, electronic.innerType()),
-  serializable: makeAtomSchema(tag, composition, electronic),
-});
