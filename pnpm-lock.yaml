@@ -99,8 +99,8 @@ importers:
         specifier: ^11.4.1
         version: 11.4.1
       nanoid:
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^5.1.2
+        version: 5.1.2
       next:
         specifier: ^15.1.7
         version: 15.1.7(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -5672,8 +5672,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.1.0:
-    resolution: {integrity: sha512-zDAl/llz8Ue/EblwSYwdxGBYfj46IM1dhjVi8dyp9LQffoIGxJEAHj2oeZ4uNcgycSRcQ83CnfcZqEJzVDLcDw==}
+  nanoid@5.1.2:
+    resolution: {integrity: sha512-b+CiXQCNMUGe0Ri64S9SXFcP9hogjAJ2Rd6GdVxhPLRm7mhGaM7VgOvCAJ1ZshfHbqVDI3uqTI5C8/GaKuLI7g==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -14169,7 +14169,7 @@ snapshots:
 
   nanoid@3.3.8: {}
 
-  nanoid@5.1.0: {}
+  nanoid@5.1.2: {}
 
   native-promise-only@0.8.1: {}
 
@@ -14431,7 +14431,7 @@ snapshots:
       jose: 5.10.0
       jsesc: 3.1.0
       koa: 2.15.4
-      nanoid: 5.1.0
+      nanoid: 5.1.2
       object-hash: 3.0.0
       oidc-token-hash: 5.1.0
       quick-lru: 7.0.0
