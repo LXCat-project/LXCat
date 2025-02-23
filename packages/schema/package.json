@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "zod": "3.23.6",
-    "zod-to-json-schema": "^3.24.1"
+    "zod-to-json-schema": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
