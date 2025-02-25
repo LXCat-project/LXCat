@@ -145,7 +145,8 @@
                     "Rotational",
                     "Attachment",
                     "Ionization",
-                    "Dissociative"
+                    "Dissociative",
+                    "Recombination"
                   ]
                 }
               }
