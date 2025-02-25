@@ -15,5 +15,6 @@ export const ReactionTypeTag = zEnum([
   "Attachment",
   "Ionization",
   "Dissociative",
+  "Recombination",
 ]);
 export type ReactionTypeTag = TypeOf<typeof ReactionTypeTag>;
