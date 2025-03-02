@@ -133,7 +133,7 @@ importers:
         version: 2.6.0(plotly.js@2.28.0(mapbox-gl@1.10.1))(react@19.0.0)
       react-schemaorg:
         specifier: ^2.0.0
-        version: 2.0.0(react@19.0.0)(schema-dts@1.1.2(typescript@5.7.3))(typescript@5.7.3)
+        version: 2.0.0(react@19.0.0)(schema-dts@1.1.5)(typescript@5.7.3)
       redoc:
         specifier: ^2.4.0
         version: 2.4.0(core-js@3.35.1)(mobx@6.12.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(styled-components@6.1.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
@@ -162,8 +162,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       schema-dts:
-        specifier: ^1.1.2
-        version: 1.1.2(typescript@5.7.3)
+        specifier: ^1.1.5
+        version: 1.1.5
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -6775,10 +6775,8 @@ packages:
   scheduler@0.25.0:
     resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
-  schema-dts@1.1.2:
-    resolution: {integrity: sha512-MpNwH0dZJHinVxk9bT8XUdjKTxMYrA5bLtrrGmFA6PTLwlOKnhi67XoRd6/ty+Djt6ZC0slR57qFhZDNMI6DhQ==}
-    peerDependencies:
-      typescript: '>=4.1.0'
+  schema-dts@1.1.5:
+    resolution: {integrity: sha512-RJr9EaCmsLzBX2NDiO5Z3ux2BVosNZN5jo0gWgsyKvxKIUL5R3swNvoorulAeL9kLB0iTSX7V6aokhla2m7xbg==}
 
   schema-utils@3.3.0:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
@@ -15121,10 +15119,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.10
 
-  react-schemaorg@2.0.0(react@19.0.0)(schema-dts@1.1.2(typescript@5.7.3))(typescript@5.7.3):
+  react-schemaorg@2.0.0(react@19.0.0)(schema-dts@1.1.5)(typescript@5.7.3):
     dependencies:
       react: 19.0.0
-      schema-dts: 1.1.2(typescript@5.7.3)
+      schema-dts: 1.1.5
       typescript: 5.7.3
 
   react-style-singleton@2.2.3(@types/react@19.0.10)(react@19.0.0):
@@ -15607,9 +15605,7 @@ snapshots:
 
   scheduler@0.25.0: {}
 
-  schema-dts@1.1.2(typescript@5.7.3):
-    dependencies:
-      typescript: 5.7.3
+  schema-dts@1.1.5: {}
 
   schema-utils@3.3.0:
     dependencies:
