@@ -223,8 +223,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
-        specifier: ^3.0.5
-        version: 3.0.5(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+        specifier: ^3.0.7
+        version: 3.0.7(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -320,8 +320,8 @@ importers:
         specifier: ^8.25.0
         version: 8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
-        specifier: ^3.0.5
-        version: 3.0.5(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+        specifier: ^3.0.7
+        version: 3.0.7(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       dprint:
         specifier: ^0.49.0
         version: 0.49.0
@@ -388,8 +388,8 @@ importers:
         specifier: ^8.25.0
         version: 8.25.0(@typescript-eslint/parser@8.24.1(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3)
       '@vitest/coverage-v8':
-        specifier: ^3.0.5
-        version: 3.0.5(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+        specifier: ^3.0.7
+        version: 3.0.7(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       dprint:
         specifier: ^0.49.0
         version: 0.49.0
@@ -547,11 +547,6 @@ packages:
 
   '@babel/parser@7.26.1':
     resolution: {integrity: sha512-reoQYNiAJreZNsJzyrDNzFQ+IQ5JFiIzAHJg9bn94S3l+4++J7RsIhNMoB+lgP/9tpmiAQqspv+xfdxTSzREOw==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  '@babel/parser@7.26.8':
-    resolution: {integrity: sha512-TZIQ25pkSoaKEYYaHbbxkfL36GNsQ6iFiBbeuzAkLnXayKR1yP1zFe+NxuZWWsUyvt8icPU9CCq0sgWGXR1GEw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -943,10 +938,6 @@ packages:
 
   '@babel/traverse@7.26.9':
     resolution: {integrity: sha512-ZYW7L+pL8ahU5fXmNbPF+iZFHCv5scFak7MZ9bwaRPLUhHh7QQEMjZUg0HevihoqCM5iSYHN61EyCoZvqC+bxg==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.26.8':
-    resolution: {integrity: sha512-eUuWapzEGWFEpHFxgEaBG8e3n6S8L3MSu0oda755rOfabWPnh0Our1AozNFVUxGFIhbKgd1ksprsoDGMinTOTA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.26.9':
@@ -2453,11 +2444,11 @@ packages:
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  '@vitest/coverage-v8@3.0.5':
-    resolution: {integrity: sha512-zOOWIsj5fHh3jjGwQg+P+J1FW3s4jBu1Zqga0qW60yutsBtqEqNEJKWYh7cYn1yGD+1bdPsPdC/eL4eVK56xMg==}
+  '@vitest/coverage-v8@3.0.7':
+    resolution: {integrity: sha512-Av8WgBJLTrfLOer0uy3CxjlVuWK4CzcLBndW1Nm2vI+3hZ2ozHututkfc7Blu1u6waeQ7J8gzPK/AsBRnWA5mQ==}
     peerDependencies:
-      '@vitest/browser': 3.0.5
-      vitest: 3.0.5
+      '@vitest/browser': 3.0.7
+      vitest: 3.0.7
     peerDependenciesMeta:
       '@vitest/browser':
         optional: true
@@ -4103,6 +4094,10 @@ packages:
 
   foreground-child@3.3.0:
     resolution: {integrity: sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==}
+    engines: {node: '>=14'}
+
+  foreground-child@3.3.1:
+    resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
     engines: {node: '>=14'}
 
   form-data-encoder@2.1.4:
@@ -7943,10 +7938,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.26.9
 
-  '@babel/parser@7.26.8':
-    dependencies:
-      '@babel/types': 7.26.9
-
   '@babel/parser@7.26.9':
     dependencies:
       '@babel/types': 7.26.9
@@ -8436,11 +8427,6 @@ snapshots:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/types@7.26.8':
-    dependencies:
-      '@babel/helper-string-parser': 7.25.9
-      '@babel/helper-validator-identifier': 7.25.9
 
   '@babel/types@7.26.9':
     dependencies:
@@ -9989,7 +9975,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/coverage-v8@3.0.5(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))':
+  '@vitest/coverage-v8@3.0.7(vitest@3.0.7(@types/node@22.13.5)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -12003,6 +11989,11 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
+  foreground-child@3.3.1:
+    dependencies:
+      cross-spawn: 7.0.6
+      signal-exit: 4.1.0
+
   form-data-encoder@2.1.4: {}
 
   formdata-polyfill@4.0.10:
@@ -12156,7 +12147,7 @@ snapshots:
 
   glob@10.4.5:
     dependencies:
-      foreground-child: 3.3.0
+      foreground-child: 3.3.1
       jackspeak: 3.4.3
       minimatch: 9.0.5
       minipass: 7.1.2
@@ -13091,8 +13082,8 @@ snapshots:
 
   magicast@0.3.5:
     dependencies:
-      '@babel/parser': 7.26.8
-      '@babel/types': 7.26.8
+      '@babel/parser': 7.26.9
+      '@babel/types': 7.26.9
       source-map-js: 1.2.1
 
   make-dir@2.1.0:
