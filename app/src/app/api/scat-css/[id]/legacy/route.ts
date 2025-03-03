@@ -38,15 +38,6 @@ const router = RouteBuilder
         data.references,
         ([key, reference]) => [key, reference2bibliography(reference)],
       );
-      const states = mapObject(
-        data.states,
-        (
-          [key, state],
-        ) => [key, {
-          detailed: state,
-          serialized: AnySpeciesSerializable.parse(state).serialize(),
-        }],
-      );
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
         $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,
@@ -55,12 +46,11 @@ const router = RouteBuilder
         termsOfUse:
           `${process.env.NEXT_PUBLIC_URL}/scat-css/${ctx.parsedParams.path.id}#termsOfUse`,
         ...data,
+        references,
       };
 
       const { convertDocument } = await import("@lxcat/converter");
-      let res = okResponse(
-        convertDocument({ ...dataWithRef, states, references }),
-      );
+      let res = okResponse(convertDocument(dataWithRef));
       res.headers.append("Content-Type", "text/plain");
       res.headers.append(
         "Content-Disposition",
