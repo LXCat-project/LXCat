@@ -6,13 +6,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { aql } from "arangojs";
 
-import {
-  EditedLTPDocument,
-  Reference,
-  Status,
-  VersionedLTPDocument,
-} from "@lxcat/schema";
-import { ReactionEntry } from "@lxcat/schema/process";
+import { Reference, Status, VersionedLTPDocument } from "@lxcat/schema";
+import { intoEditable, ReactionEntry } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { ArangojsError } from "arangojs/lib/request.node.js";
 import {
@@ -118,10 +113,7 @@ describe("given published cross section set where data of 1 published cross sect
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.processes[1].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
@@ -473,10 +465,7 @@ describe("given draft cross section set where its cross section data is altered"
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.processes[0].info[0].data.values = [
       [1, 3.14e-20],
       [2, 3.15e-20],
@@ -591,10 +580,7 @@ describe("given draft cross section set where its cross section data is added la
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.states = {
       electron: testSpecies.electron.detailed,
       argon: testSpecies.argon.detailed,
@@ -758,10 +744,7 @@ describe("given draft cross section set where its non cross section data is alte
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.description = "Some altered description";
     keycss2 = await db.updateSet(
       keycss1,
@@ -905,10 +888,7 @@ describe("given draft cross section set where its cross section state is altered
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.states.ion = testSpecies.ion.detailed;
     draft.processes[0].reaction.rhs[1].state = "ion";
     try {
@@ -1026,10 +1006,7 @@ describe("given draft cross section set where a reference is added to a cross se
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
 
     const r1: Reference = {
       type: "article",
@@ -1161,10 +1138,7 @@ describe("given draft cross section set where a reference is replaced in a cross
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     const r2: Reference = {
       type: "article",
       id: "refid2",
@@ -1353,10 +1327,7 @@ describe("given draft cross section set where a reference is extended in a cross
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     if (draft.processes[0].info[0]) {
       const refid = draft.processes[0].info[0].references[0];
       const ref =
@@ -1508,11 +1479,8 @@ describe("given updating published cross section set which already has draft", (
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-      description: "Some new description",
-    });
+    const draft = intoEditable(css1);
+    draft.description = "Some new description";
     keycss2 = await db.updateSet(keycss1, draft, "Altered description");
     return async () => truncateCrossSectionSetCollections(db.getDB());
   });
@@ -1524,10 +1492,7 @@ describe("given updating published cross section set which already has draft", (
       if (css1 === null) {
         throw Error(`Failed to find ${keycss1}`);
       }
-      const secondDraft = EditedLTPDocument.parse({
-        ...css1,
-        contributor: css1.contributor.name,
-      });
+      const secondDraft = intoEditable(css1);
       await db.updateSet(keycss1, secondDraft, "another draft please");
     } catch (error) {
       expect(`${error}`).toMatch(
@@ -1607,10 +1572,7 @@ describe("given draft cross section set where a cross section is added from anot
     if (css1versioned === null) {
       expect.fail(`Failed to find draft with key ${keycss1}`);
     }
-    const draft2 = EditedLTPDocument.parse({
-      ...css1versioned,
-      contributor: css1versioned.contributor.name,
-    });
+    const draft2 = intoEditable(css1versioned);
     draft2.processes.push({
       reaction: cs1.reaction,
       info: [{ ...cs1.info[0], _key: keycs1 }],
@@ -1760,10 +1722,7 @@ describe("given draft cross section set where its charge in cross section is alt
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     const stateA = Object.values(draft.states).find((s) => s.type === "Atom");
     if (stateA === undefined) {
       throw Error(`Failed to find state with composition=A in ${keycss1}`);
@@ -1955,10 +1914,7 @@ describe("given draft cross section set where its charge in cross section is alt
     if (css1 === null) {
       throw Error(`Failed to find ${keycss1}`);
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     const stateA = Object.values(draft.states).find((s) => s.type === "Atom");
     if (stateA === undefined) {
       throw Error(`Failed to find state with composition=A in ${keycss1}`);

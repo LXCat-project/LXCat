@@ -10,5 +10,9 @@ export const intoEditable = (doc: VersionedLTPDocument): EditedLTPDocument => {
 
   editable.contributor = doc.contributor.name;
 
-  return editable as EditedLTPDocument;
+  editable.states = Object.fromEntries(
+    Object.entries(doc.states).map(([key, value]) => [key, value.detailed]),
+  );
+
+  return EditedLTPDocument.parse(editable);
 };

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EditedLTPDocument } from "@lxcat/schema";
+import { intoEditable } from "@lxcat/schema/process";
 import { aql } from "arangojs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { systemDb } from "../../system-db.js";
@@ -36,10 +36,7 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
     if (css1 === null) {
       expect.fail("Should have created first set");
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.name = "Some other name";
     keycss2 = await db.createSet(draft, "draft");
     return async () => truncateCrossSectionSetCollections(db.getDB());
@@ -158,10 +155,7 @@ describe("given a published cross section set and a draft cross section with a d
     if (css1 === null) {
       expect.fail("Should have created first set");
     }
-    const draft = EditedLTPDocument.parse({
-      ...css1,
-      contributor: css1.contributor.name,
-    });
+    const draft = intoEditable(css1);
     draft.name = "Some other name";
     draft.processes[0].info[0].threshold = 888;
     draft.processes.pop();
