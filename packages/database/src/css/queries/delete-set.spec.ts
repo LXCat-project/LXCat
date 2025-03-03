@@ -4,12 +4,8 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import {
-  EditedLTPDocument,
-  Status,
-  VersionedLTPDocument,
-  VersionInfo,
-} from "@lxcat/schema";
+import { Status, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
+import { intoEditable } from "@lxcat/schema/process";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { KeyedSet } from "../public.js";
@@ -209,13 +205,11 @@ describe("deleting a published cross section with one shared cross section", () 
       expect.fail("Should have created first set");
     }
 
-    const editedSet = EditedLTPDocument.parse({
-      ...css2,
-      name: "Some other name",
-      contributor: css2.contributor.name,
-    });
+    const editedSet = intoEditable(css2);
 
+    editedSet.name = "Some other name";
     editedSet.processes.pop(); // delete second cross section in second set
+
     keycss2 = await db.createSet(editedSet, "published");
 
     await db.deleteSet(keycss1, "My retract message");
@@ -380,11 +374,8 @@ describe("deleting a draft cross section set with one shared cross section", () 
       expect.fail("Should have created first set");
     }
 
-    const editedSet: EditedLTPDocument = {
-      ...css2,
-      name: "Some other name",
-      contributor: css2.contributor.name,
-    };
+    const editedSet = intoEditable(css2);
+    editedSet.name = "Some other name";
 
     editedSet.processes.pop(); // delete second section in second set
 

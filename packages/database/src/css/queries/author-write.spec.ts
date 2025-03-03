@@ -4,7 +4,8 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-import { EditedLTPDocument, VersionedLTPDocument } from "@lxcat/schema";
+import { VersionedLTPDocument } from "@lxcat/schema";
+import { intoEditable } from "@lxcat/schema/process";
 import { systemDb } from "../../system-db.js";
 import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
@@ -109,10 +110,7 @@ describe("given filled ArangoDB container", () => {
             css2.description = "Some description 1st edit";
             keycss2 = await db.updateSet(
               keycss1,
-              EditedLTPDocument.parse({
-                ...css2,
-                contributor: css2.contributor.name,
-              }),
+              intoEditable(css2),
               "First edit",
             );
           }
@@ -319,10 +317,7 @@ describe("given filled ArangoDB container", () => {
       let css2: VersionedLTPDocument;
 
       beforeAll(async () => {
-        const cssdraft = EditedLTPDocument.parse({
-          ...css1,
-          contributor: css1.contributor.name,
-        });
+        const cssdraft = intoEditable(deepClone(css1));
         const ion = Object.values(cssdraft.states).find(
           (species) => species.charge === 1,
         );
@@ -348,10 +343,10 @@ describe("given filled ArangoDB container", () => {
 
       it("draft set should have new id for state with particle A", () => {
         const oldStateEntry = Object.entries(css1.states).find(
-          ([, species]) => species.charge === 1,
+          ([, species]) => species.detailed.charge === 1,
         );
         const newStateEntry = Object.entries(css2.states).find(
-          ([, species]) => species.charge === 99,
+          ([, species]) => species.detailed.charge === 99,
         );
 
         expect(oldStateEntry![0]).not.toEqual(newStateEntry![0]);
@@ -374,7 +369,7 @@ describe("given filled ArangoDB container", () => {
             expect(info).toEqual(otherInfo);
           } else {
             const other = css2.processes.find(({ reaction }) =>
-              css2.states[reaction.rhs[0].state].charge === 99
+              css2.states[reaction.rhs[0].state].detailed.charge === 99
             )!;
 
             expect(process.info[0]._key).not.toEqual(other.info[0]._key);
