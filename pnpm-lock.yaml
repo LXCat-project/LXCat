@@ -171,8 +171,8 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       swr:
-        specifier: 2.3.2
-        version: 2.3.2(react@19.0.0)
+        specifier: 2.3.3
+        version: 2.3.3(react@19.0.0)
       true-myth:
         specifier: ^8.5.0
         version: 8.5.0
@@ -2522,6 +2522,11 @@ packages:
 
   acorn@8.14.0:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.14.1:
+    resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -6941,8 +6946,8 @@ packages:
   swc-plugin-coverage-instrument@0.0.25:
     resolution: {integrity: sha512-7watbzeySulr+7o3NbSaD2icOmEYBKf1uUQs2sBYv1cdWHEsUQETxI/CpXn+Q53vaBU0e3puWPO99OW3DVq34g==}
 
-  swr@2.3.2:
-    resolution: {integrity: sha512-RosxFpiabojs75IwQ316DGoDRmOqtiAj0tg8wCcbEu4CiLZBs/a9QNtHV7TUfDXmmlgqij/NqzKq/eLelyv9xA==}
+  swr@2.3.3:
+    resolution: {integrity: sha512-dshNvs3ExOqtZ6kJBaAsabhPdHyeY4P2cKwRCniDVifBMoG/SVI7tfLWqPXriVspf2Rg4tPzXJTnwaihIeFw2A==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -10009,6 +10014,8 @@ snapshots:
   acorn@7.4.1: {}
 
   acorn@8.14.0: {}
+
+  acorn@8.14.1: {}
 
   acorn@8.8.2: {}
 
@@ -15655,7 +15662,7 @@ snapshots:
 
   swc-plugin-coverage-instrument@0.0.25: {}
 
-  swr@2.3.2(react@19.0.0):
+  swr@2.3.3(react@19.0.0):
     dependencies:
       dequal: 2.0.3
       react: 19.0.0
@@ -15730,7 +15737,7 @@ snapshots:
   terser@5.18.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.14.0
+      acorn: 8.14.1
       commander: 2.20.3
       source-map-support: 0.5.21
 
