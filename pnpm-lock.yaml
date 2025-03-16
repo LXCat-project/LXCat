@@ -51,8 +51,8 @@ importers:
         specifier: ^7.17.2
         version: 7.17.2(@mantine/hooks@7.17.2(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mantine/form':
-        specifier: ^7.17.1
-        version: 7.17.1(react@19.0.0)
+        specifier: ^7.17.2
+        version: 7.17.2(react@19.0.0)
       '@mantine/hooks':
         specifier: ^7.17.2
         version: 7.17.2(react@19.0.0)
@@ -1765,8 +1765,8 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/form@7.17.1':
-    resolution: {integrity: sha512-IGZEzf/UUawIFYpLDI/F0oIkDImleaRzppkFqpTih4iBanlMIrguHOozm399xUK7+cTlQqWypd7vGVgBPTBnwQ==}
+  '@mantine/form@7.17.2':
+    resolution: {integrity: sha512-MxZPKXXhaZ7M1ZJOpS2wifhh186DMvNjcXa2bP04Tp9TdvTlbLAJZxKjZkQnGGgt8Atsf6/3gdeJMfG704Km6g==}
     peerDependencies:
       react: ^18.x || ^19.x
 
@@ -9268,7 +9268,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/form@7.17.1(react@19.0.0)':
+  '@mantine/form@7.17.2(react@19.0.0)':
     dependencies:
       fast-deep-equal: 3.1.3
       klona: 2.0.6
