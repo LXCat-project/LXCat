@@ -101,7 +101,7 @@
     "postcss-preset-env": "^10.1.5",
     "postcss-preset-mantine": "^1.17.0",
     "swc-plugin-coverage-instrument": "^0.0.25",
-    "testcontainers": "^10.18.0",
+    "testcontainers": "^10.20.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   }
