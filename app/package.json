@@ -46,7 +46,7 @@
     "mantine-datatable": "^7.17.1",
     "mdast-util-from-markdown": "^2.0.2",
     "mermaid": "^11.5.0",
-    "nanoid": "^5.1.4",
+    "nanoid": "^5.1.5",
     "next": "^15.1.7",
     "next-auth": "^4.24.11",
     "next-connect": "^1.0.0",
