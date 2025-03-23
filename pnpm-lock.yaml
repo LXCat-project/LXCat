@@ -301,8 +301,8 @@ importers:
         specifier: 3.23.6
         version: 3.23.6
       zod-to-json-schema:
-        specifier: ^3.24.3
-        version: 3.24.3(zod@3.23.6)
+        specifier: ^3.24.5
+        version: 3.24.5(zod@3.23.6)
     devDependencies:
       '@lxcat/tsconfig':
         specifier: workspace:^
@@ -375,8 +375,8 @@ importers:
         specifier: 3.23.6
         version: 3.23.6
       zod-to-json-schema:
-        specifier: ^3.24.3
-        version: 3.24.3(zod@3.23.6)
+        specifier: ^3.24.5
+        version: 3.24.5(zod@3.23.6)
     devDependencies:
       '@eslint/js':
         specifier: ^9.23.0
@@ -7976,8 +7976,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-to-json-schema@3.24.3:
-    resolution: {integrity: sha512-HIAfWdYIt1sssHfYZFCXp4rU1w2r8hVVXYIlmoa0r0gABLs5di3RCqPU5DDROogVz1pAdYBaz7HK5n9pSUNs3A==}
+  zod-to-json-schema@3.24.5:
+    resolution: {integrity: sha512-/AuWwMP+YqiPbsJx5D6TfgRTc4kTLjsh5SOcd4bLsfUg2RcEXrFMJl1DGgdHy2aCfsIA/cr/1JM0xcB2GZji8g==}
     peerDependencies:
       zod: ^3.24.1
 
@@ -17085,7 +17085,7 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.7.0
 
-  zod-to-json-schema@3.24.3(zod@3.23.6):
+  zod-to-json-schema@3.24.5(zod@3.23.6):
     dependencies:
       zod: 3.23.6
 

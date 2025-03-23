@@ -66,7 +66,7 @@
     "dotenv": "^16.4.7",
     "true-myth": "^8.5.0",
     "zod": "3.23.6",
-    "zod-to-json-schema": "^3.24.3"
+    "zod-to-json-schema": "^3.24.5"
   },
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
