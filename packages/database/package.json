@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@lxcat/tsconfig": "workspace:^",
-    "@testcontainers/arangodb": "^10.20.0",
+    "@testcontainers/arangodb": "^10.23.0",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^22.13.11",
     "@typescript-eslint/eslint-plugin": "^8.27.0",
