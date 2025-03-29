@@ -65,7 +65,7 @@
     "deep-equal": "^2.2.3",
     "dotenv": "^16.4.7",
     "true-myth": "^8.5.0",
-    "zod": "3.23.6",
+    "zod": "3.24.2",
     "zod-to-json-schema": "^3.24.5"
   },
   "devDependencies": {
