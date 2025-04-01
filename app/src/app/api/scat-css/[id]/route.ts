@@ -13,7 +13,7 @@ import "@citation-js/plugin-bibtex";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { reference2bibliography } from "../../../../shared/cite";
 import { RouteBuilder } from "../../../api/route-builder";
-import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
+// import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { applyCORS } from "../../middleware/cors";
 import { zodMiddleware } from "../../middleware/zod";
 import { querySchema } from "./schemas";
@@ -21,8 +21,8 @@ import { querySchema } from "./schemas";
 const router = RouteBuilder
   .init()
   .use(applyCORS())
-  .use(hasSessionOrAPIToken())
-  .use(hasDeveloperRole())
+  // .use(hasSessionOrAPIToken())
+  // .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx, __) => {
     const params = ctx.parsedParams;
