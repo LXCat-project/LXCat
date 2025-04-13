@@ -63,7 +63,7 @@
     "@lxcat/schema": "workspace:^",
     "arangojs": "^8.8.1",
     "deep-equal": "^2.2.3",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "true-myth": "^8.5.3",
     "zod": "3.23.6",
     "zod-to-json-schema": "^3.24.5"
