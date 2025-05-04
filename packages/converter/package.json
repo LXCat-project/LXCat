@@ -28,6 +28,6 @@
   "devDependencies": {
     "@napi-rs/cli": "^2.18.4",
     "@types/node": "^22.14.1",
-    "tsx": "^4.19.3"
+    "tsx": "^4.19.4"
   }
 }
