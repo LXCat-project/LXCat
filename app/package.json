@@ -100,7 +100,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.1.6",
     "postcss-preset-mantine": "^1.17.0",
-    "swc-plugin-coverage-instrument": "^0.0.25",
+    "swc-plugin-coverage-instrument": "^0.0.27",
     "testcontainers": "^10.25.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.3"

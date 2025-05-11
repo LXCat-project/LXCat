@@ -256,8 +256,8 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0(postcss@8.5.3)
       swc-plugin-coverage-instrument:
-        specifier: ^0.0.25
-        version: 0.0.25
+        specifier: ^0.0.27
+        version: 0.0.27
       testcontainers:
         specifier: ^10.25.0
         version: 10.25.0
@@ -7486,8 +7486,8 @@ packages:
     resolution: {integrity: sha512-upi/0ZGkYgEcLeGieoz8gT74oWHA0E7JivX7aN9mAf+Tc7BQoRBvnIGHoPDw+f9TXTW4s6kGYCZJtauP6OYp7g==}
     hasBin: true
 
-  swc-plugin-coverage-instrument@0.0.25:
-    resolution: {integrity: sha512-7watbzeySulr+7o3NbSaD2icOmEYBKf1uUQs2sBYv1cdWHEsUQETxI/CpXn+Q53vaBU0e3puWPO99OW3DVq34g==}
+  swc-plugin-coverage-instrument@0.0.27:
+    resolution: {integrity: sha512-+uXKfFGbouIHJDbAV9S4EwD5dR9Vc9Q+rYda3pubjCN+p4jWumoHPUcKzgHSFXYZndjShQbNcAVI+4KjrpZTNw==}
 
   swr@2.3.3:
     resolution: {integrity: sha512-dshNvs3ExOqtZ6kJBaAsabhPdHyeY4P2cKwRCniDVifBMoG/SVI7tfLWqPXriVspf2Rg4tPzXJTnwaihIeFw2A==}
@@ -16791,7 +16791,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  swc-plugin-coverage-instrument@0.0.25: {}
+  swc-plugin-coverage-instrument@0.0.27: {}
 
   swr@2.3.3(react@19.1.0):
     dependencies:
