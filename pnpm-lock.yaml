@@ -223,8 +223,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
-        specifier: ^3.1.2
-        version: 3.1.2(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
+        specifier: ^3.1.3
+        version: 3.1.3(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -320,8 +320,8 @@ importers:
         specifier: ^8.32.0
         version: 8.32.0(@typescript-eslint/parser@8.32.0(eslint@9.25.1)(typescript@5.8.3))(eslint@9.25.1)(typescript@5.8.3)
       '@vitest/coverage-v8':
-        specifier: ^3.1.2
-        version: 3.1.2(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
+        specifier: ^3.1.3
+        version: 3.1.3(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
       dprint:
         specifier: ^0.49.1
         version: 0.49.1
@@ -388,8 +388,8 @@ importers:
         specifier: ^8.32.0
         version: 8.32.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1)(typescript@5.8.3))(eslint@9.25.1)(typescript@5.8.3)
       '@vitest/coverage-v8':
-        specifier: ^3.1.2
-        version: 3.1.2(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
+        specifier: ^3.1.3
+        version: 3.1.3(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))
       dprint:
         specifier: ^0.49.1
         version: 0.49.1
@@ -525,10 +525,6 @@ packages:
     resolution: {integrity: sha512-Tub4ZKEXqbPjXgWLl2+3JpQAYBJ8+ikpQ2Ocj/q/r0LwE3UhENh7EUabyHjz2kCEsrRY83ew2DQdHluuiDQFzg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-string-parser@7.25.9':
-    resolution: {integrity: sha512-4A/SCr/2KLd5jrtOMFzaKjVtAei3+2r/NChoBNoZ3EyP/+GlhoaEGoWOZUmFmoITP7zOJyHIMm+DYRd8o3PvHA==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-string-parser@7.27.1':
     resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
     engines: {node: '>=6.9.0'}
@@ -559,11 +555,6 @@ packages:
 
   '@babel/parser@7.26.1':
     resolution: {integrity: sha512-reoQYNiAJreZNsJzyrDNzFQ+IQ5JFiIzAHJg9bn94S3l+4++J7RsIhNMoB+lgP/9tpmiAQqspv+xfdxTSzREOw==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  '@babel/parser@7.27.0':
-    resolution: {integrity: sha512-iaepho73/2Pz7w2eMS0Q5f83+0RKI7i4xmiYeBmDzfRVbQtTOG7Ts0S4HzJVsTMGI9keU8rNfuZr8DKfSt7Yyg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -964,10 +955,6 @@ packages:
 
   '@babel/traverse@7.27.1':
     resolution: {integrity: sha512-ZCYtZciz1IWJB4U61UPu4KEaqyfj+r5T1Q5mqPo+IBpcG9kHv30Z0aD8LXPgC1trYa6rK0orRyAhqUgk4MjmEg==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.27.0':
-    resolution: {integrity: sha512-H45s8fVLYjbhFH62dIJ3WtmJ6RSPt/3DRO0ZcT2SUiYiQyz3BLVb9ADEnLl91m74aQPS3AzzeajZHYOalWe3bg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.27.1':
@@ -2734,11 +2721,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@vitest/coverage-v8@3.1.2':
-    resolution: {integrity: sha512-XDdaDOeaTMAMYW7N63AqoK32sYUWbXnTkC6tEbVcu3RlU1bB9of32T+PGf8KZvxqLNqeXhafDFqCkwpf2+dyaQ==}
+  '@vitest/coverage-v8@3.1.3':
+    resolution: {integrity: sha512-cj76U5gXCl3g88KSnf80kof6+6w+K4BjOflCl7t6yRJPDuCrHtVu0SgNYOUARJOL5TI8RScDbm5x4s1/P9bvpw==}
     peerDependencies:
-      '@vitest/browser': 3.1.2
-      vitest: 3.1.2
+      '@vitest/browser': 3.1.3
+      vitest: 3.1.3
     peerDependenciesMeta:
       '@vitest/browser':
         optional: true
@@ -8188,8 +8175,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/helper-string-parser@7.25.9': {}
-
   '@babel/helper-string-parser@7.27.1': {}
 
   '@babel/helper-validator-identifier@7.25.9': {}
@@ -8219,10 +8204,6 @@ snapshots:
       picocolors: 1.1.1
 
   '@babel/parser@7.26.1':
-    dependencies:
-      '@babel/types': 7.27.1
-
-  '@babel/parser@7.27.0':
     dependencies:
       '@babel/types': 7.27.1
 
@@ -8723,11 +8704,6 @@ snapshots:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/types@7.27.0':
-    dependencies:
-      '@babel/helper-string-parser': 7.25.9
-      '@babel/helper-validator-identifier': 7.25.9
 
   '@babel/types@7.27.1':
     dependencies:
@@ -10477,7 +10453,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.7.2':
     optional: true
 
-  '@vitest/coverage-v8@3.1.2(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))':
+  '@vitest/coverage-v8@3.1.3(vitest@3.1.2(@types/node@22.15.3)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.19.4)(yaml@2.7.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -13551,8 +13527,8 @@ snapshots:
 
   magicast@0.3.5:
     dependencies:
-      '@babel/parser': 7.27.0
-      '@babel/types': 7.27.0
+      '@babel/parser': 7.27.2
+      '@babel/types': 7.27.1
       source-map-js: 1.2.1
 
   make-dir@2.1.0:
