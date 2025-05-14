@@ -26,8 +26,7 @@ export function NewsCarousel({ newsItems }: NewsCarouselProps) {
     <Carousel
       slideSize={{ base: "100%", sm: "30%" }}
       slideGap={{ base: "xl", sm: rem(5) }}
-      slidesToScroll={mobile ? 1 : 3}
-      align="center"
+      emblaOptions={{ slidesToScroll: mobile ? 1 : 3 }}
     >
       {slides}
     </Carousel>
