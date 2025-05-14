@@ -8,6 +8,7 @@ import "@mantine/code-highlight/styles.css";
 import "@mantine/notifications/styles.css";
 import "mantine-datatable/styles.css";
 import "@/styles/globals.css";
+import "highlight.js/styles/github.min.css";
 
 import { DemoAlert } from "@/shared/demo-alert";
 import ErrorBoundary from "@/shared/error-boundary";
