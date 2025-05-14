@@ -185,15 +185,15 @@ describe("LTPDocument", () => {
         "Parsing should not succeed when version info is missing.",
       );
     } else {
-      expect(result.error.errors).toHaveLength(2);
-      expect(result.error.errors[0].path).toEqual([
+      expect(result.error.issues).toHaveLength(2);
+      expect(result.error.issues[0].path).toEqual([
         "processes",
         0,
         "info",
         0,
         "versionInfo",
       ]);
-      expect(result.error.errors[1].path).toEqual(["versionInfo"]);
+      expect(result.error.issues[1].path).toEqual(["versionInfo"]);
     }
   });
 });

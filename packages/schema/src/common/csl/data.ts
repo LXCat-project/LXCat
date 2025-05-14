@@ -8,9 +8,9 @@ import {
   enum as zEnum,
   number,
   object,
+  output,
   record,
   string,
-  TypeOf,
   union,
 } from "zod";
 import { CSLDateVariable } from "./date-variable.js";
@@ -170,11 +170,11 @@ export const CSLData = object({
   "volume-title": string().optional(),
   "volume-title-short": string().optional(),
   "year-suffix": string().optional(),
-  custom: record(any())
+  custom: record(string(), any())
     .describe(
       "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles.",
     )
     .optional(),
 })
   .describe("Zod schema for CSL input data");
-export type CSLData = TypeOf<typeof CSLData>;
+export type CSLData = output<typeof CSLData>;

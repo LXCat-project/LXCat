@@ -10,10 +10,9 @@ import {
   optional,
   string,
   union,
-  UnknownKeysParam,
   ZodObject,
   ZodRawShape,
-  ZodTypeAny,
+  ZodType,
 } from "zod";
 import { type Component } from "./component.js";
 
@@ -23,79 +22,77 @@ export const typeTag = <Tag extends string>(tag: Tag) =>
 export const makeMoleculeSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
-  UnknownKeys extends UnknownKeysParam,
-  Catchall extends ZodTypeAny,
-  ElectronicSchema extends ZodTypeAny,
-  VibrationalSchema extends ZodTypeAny,
-  RotationalSchema extends ZodTypeAny,
+  InExtra extends Record<string, unknown>,
+  OutExtra extends Record<string, unknown>,
+  ElectronicSchema extends ZodType,
+  VibrationalSchema extends ZodType,
+  RotationalSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  composition: ZodObject<Shape, InExtra, OutExtra>,
   electronic: ElectronicSchema,
   vibrational: VibrationalSchema,
   rotational: RotationalSchema,
 ) =>
-  typeTag(tag)
-    .merge(composition)
-    .merge(
-      object({
-        electronic: optional(
-          union([
-            intersection(
-              electronic,
-              object({
-                vibrational: optional(
-                  union([
-                    intersection(
-                      vibrational,
-                      object({
-                        rotational: optional(
+  object({
+    ...typeTag(tag).shape,
+    ...composition.shape,
+    electronic: optional(
+      union([
+        intersection(
+          electronic,
+          object({
+            vibrational: optional(
+              union([
+                intersection(
+                  vibrational,
+                  object({
+                    rotational: optional(
+                      union([
+                        rotational.describe("Singular"),
+                        array(
                           union([
                             rotational.describe("Singular"),
-                            array(
-                              union([
-                                rotational.describe("Singular"),
-                                string().describe("Unspecified"),
-                              ]),
-                            )
-                              .min(2)
-                              .describe("Compound"),
                             string().describe("Unspecified"),
                           ]),
-                        ),
-                      }),
-                    ).describe("Singular"),
-                    array(
-                      union([
-                        vibrational.describe("Singular"),
+                        )
+                          .min(2)
+                          .describe("Compound"),
                         string().describe("Unspecified"),
                       ]),
-                    )
-                      .min(2)
-                      .describe("Compound"),
+                    ),
+                  }),
+                ).describe("Singular"),
+                array(
+                  union([
+                    vibrational.describe("Singular"),
                     string().describe("Unspecified"),
                   ]),
-                ),
-              }),
-            ).describe("Singular"),
-            array(electronic).min(2).describe("Compound"),
-            string().min(1).describe("Unspecified"),
-          ]),
-        ),
-      }),
-    );
+                )
+                  .min(2)
+                  .describe("Compound"),
+                string().describe("Unspecified"),
+              ]),
+            ),
+          }),
+        ).describe("Singular"),
+        array(electronic).min(2).describe("Compound"),
+        string().min(1).describe("Unspecified"),
+      ]),
+    ),
+  });
 
 export const makeMolecule = <
   Tag extends string,
   Shape extends ZodRawShape,
-  UnknownKeys extends UnknownKeysParam,
-  Catchall extends ZodTypeAny,
-  ElectronicSchema extends ZodTypeAny,
-  VibrationalSchema extends ZodTypeAny,
-  RotationalSchema extends ZodTypeAny,
+  InExtra extends Record<string, unknown>,
+  OutExtra extends Record<string, unknown>,
+  ElectronicSchema extends ZodType,
+  VibrationalSchema extends ZodType,
+  RotationalSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  composition: ZodObject<Shape, InExtra, OutExtra>,
   electronic: Component<ElectronicSchema>,
   vibrational: Component<VibrationalSchema>,
   rotational: Component<RotationalSchema>,
@@ -103,9 +100,9 @@ export const makeMolecule = <
   plain: makeMoleculeSchema(
     tag,
     composition,
-    electronic.innerType(),
-    vibrational.innerType(),
-    rotational.innerType(),
+    electronic.in,
+    vibrational.in,
+    rotational.in,
   ),
   serializable: makeMoleculeSchema(
     tag,
@@ -119,34 +116,34 @@ export const makeMolecule = <
 export const makeAtomSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
-  UnknownKeys extends UnknownKeysParam,
-  Catchall extends ZodTypeAny,
-  ElectronicSchema extends ZodTypeAny,
+  InExtra extends Record<string, unknown>,
+  OutExtra extends Record<string, unknown>,
+  ElectronicSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  composition: ZodObject<Shape, InExtra, OutExtra>,
   electronic: ElectronicSchema,
 ) =>
-  typeTag(tag).merge(composition).merge(
-    object({
-      electronic: union([
-        electronic.describe("Singular"),
-        array(electronic).min(2).describe("Compound"),
-      ]),
-    }),
-  );
+  object({
+    ...typeTag(tag).shape,
+    ...composition.shape,
+    electronic: union([
+      electronic.describe("Singular"),
+      array(electronic).min(2).describe("Compound"),
+    ]),
+  });
 
 export const makeAtom = <
   Tag extends string,
   Shape extends ZodRawShape,
-  UnknownKeys extends UnknownKeysParam,
-  Catchall extends ZodTypeAny,
-  ElectronicSchema extends ZodTypeAny,
+  InExtra extends Record<string, unknown>,
+  OutExtra extends Record<string, unknown>,
+  ElectronicSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, UnknownKeys, Catchall>,
+  composition: ZodObject<Shape, InExtra, OutExtra>,
   electronic: Component<ElectronicSchema>,
 ) => ({
-  plain: makeAtomSchema(tag, composition, electronic.innerType()),
+  plain: makeAtomSchema(tag, composition, electronic.in),
   serializable: makeAtomSchema(tag, composition, electronic),
 });

@@ -6,11 +6,10 @@ import {
   array,
   intersection,
   object,
+  output,
   record,
   string,
-  TypeOf,
-  ZodIssueCode,
-  ZodTypeAny,
+  ZodType,
 } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
@@ -20,27 +19,29 @@ import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
 
-const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
+const VersionedDocumentBody = <ReferenceType extends ZodType>(
   Reference: ReferenceType,
 ) =>
   versioned(
-    SetHeader(Contributor).merge(
-      object({
-        references: record(Reference),
-        states: record(SerializedSpecies),
-        processes: array(
-          VersionedProcess(string(), ReferenceRef(string().min(1))),
-        ),
-      }),
-    ),
+    object({
+      ...SetHeader(Contributor).shape,
+      references: record(string(), Reference),
+      states: record(string(), SerializedSpecies),
+      processes: array(
+        VersionedProcess(string(), ReferenceRef(string().min(1))),
+      ),
+    }),
   )
-    .superRefine((doc, ctx) => {
+    .check((ctx) => {
+      const doc = ctx.value;
+
       const checkState = (key: string) => {
         const valid = key in doc.states;
 
         if (!valid) {
-          ctx.addIssue({
-            code: ZodIssueCode.custom,
+          ctx.issues.push({
+            code: "custom",
+            input: key,
             message:
               `Referenced state key (${key}) is missing in the states record.`,
           });
@@ -53,34 +54,33 @@ const VersionedDocumentBody = <ReferenceType extends ZodTypeAny>(
       doc.processes
         .flatMap((process) => process.reaction.rhs)
         .every(({ state }) => checkState(state));
-    })
-    .superRefine((doc, ctx) =>
-      doc.processes
+    }, (ctx) =>
+      ctx.value.processes
         .flatMap(({ info }) => info)
         .flatMap(({ references }) => references)
         .forEach((reference) => {
           const key = typeof reference === "string" ? reference : reference.id;
-          const valid = key in doc.references;
+          const valid = key in ctx.value.references;
 
           if (!valid) {
-            ctx.addIssue({
-              code: ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
+              input: reference,
               message:
                 `Referenced reference key (${key}) is missing in the references record.`,
             });
           }
-        })
-    );
+        }));
 
 // Contains _key and version information. Datasets downloaded from LXCat use
 // this schema.
 export const VersionedLTPDocument = VersionedDocumentBody(Reference);
-export type VersionedLTPDocument = TypeOf<typeof VersionedLTPDocument>;
+export type VersionedLTPDocument = output<typeof VersionedLTPDocument>;
 
 export const VersionedLTPDocumentWithReference = intersection(
   SelfReference,
   VersionedDocumentBody(Reference.or(string().min(1))),
 );
-export type VersionedLTPDocumentWithReference = TypeOf<
+export type VersionedLTPDocumentWithReference = output<
   typeof VersionedLTPDocumentWithReference
 >;
