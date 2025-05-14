@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { toJSONSchema } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { CSLData } from "../common/csl/data.js";
 import { CSLDateVariable } from "../common/csl/date-variable.js";
@@ -22,24 +23,26 @@ import {
 } from "../species/index.js";
 import { VersionInfo } from "../version-info.js";
 
-export const LTPMixtureJSONSchema = zodToJsonSchema(LTPMixture, {
-  definitions: {
-    Key,
-    VersionInfo,
-    CSLData,
-    CSLNameVariable,
-    CSLDateVariable,
-    Element,
-    Composition,
-    HomonuclearCompositionDescriptor,
-    HeteronuclearDiatomComposition,
-    LTICComposition,
-    AtomComposition,
-    AnySpecies,
-    ...Object.fromEntries(AnySpecies.optionsMap),
-    SummarizedComponent,
-    StateSummary,
-    SerializedSpecies,
-  },
-  $refStrategy: "root",
-});
+export const LTPMixtureJSONSchema = toJSONSchema(LTPMixture);
+
+// export const LTPMixtureJSONSchema = zodToJsonSchema(LTPMixture, {
+//   definitions: {
+//     Key,
+//     VersionInfo,
+//     CSLData,
+//     CSLNameVariable,
+//     CSLDateVariable,
+//     Element,
+//     Composition,
+//     HomonuclearCompositionDescriptor,
+//     HeteronuclearDiatomComposition,
+//     LTICComposition,
+//     AtomComposition,
+//     AnySpecies,
+//     ...Object.fromEntries(AnySpecies.optionsMap),
+//     SummarizedComponent,
+//     StateSummary,
+//     SerializedSpecies,
+//   },
+//   $refStrategy: "root",
+// });

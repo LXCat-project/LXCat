@@ -17,7 +17,7 @@ import { serializeSimpleParticle } from "./particles/serialize.js";
 import { StateSummary } from "./summary.js";
 import { serializeUnspecified, Unspecified } from "./unspecified/index.js";
 
-export const AnySpecies = discriminatedUnion("type", [
+export const AnySpecies = discriminatedUnion([
   Electron,
   ...AnyAtom.options,
   ...AnyMolecule.options,

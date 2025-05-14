@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { number, object, ZodTypeAny } from "zod";
+import { number, object, ZodType } from "zod";
 
-export const SpeciesBase = <CompositionSchema extends ZodTypeAny>(
+export const SpeciesBase = <CompositionSchema extends ZodType>(
   composition: CompositionSchema,
 ) =>
   object({
