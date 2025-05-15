@@ -122,21 +122,15 @@ export const reactionQuerySchema = z.object({
   setIds: queryJSONSchema(z.array(z.string())),
 });
 
-export async function register() {
-  (Composition._def as any).type._def.items[0].options[1]._def.openapi = {
-    _internal: { refId: "Composition" },
-    metadata: { type: "object" },
-  };
-  AnySpecies._def.openapi = { _internal: { refId: "AnySpecies" } };
-  VersionedLTPDocumentWithReference._def.openapi = {
-    _internal: { refId: "VersionedLTPDocumentWithReference" },
-  };
-  ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };
-  OwnedProcess._def.openapi = { _internal: { refId: "OwnedProcess" } };
-  ReactionTypeTag._def.openapi = { _internal: { refId: "ReactionTypeTag" } };
-  Reference._def.openapi = { _internal: { refId: "Reference" } };
-  SerializedSpecies._def.openapi = {
-    _internal: { refId: "SerializedSpecies" },
-  };
-  StateSummary._def.openapi = { _internal: { refId: "StateSummary" } };
-}
+export const openapiRegistry = z.registry();
+openapiRegistry.add(Composition, { id: "Composition" });
+openapiRegistry.add(AnySpecies, { id: "AnySpecies" });
+openapiRegistry.add(
+  VersionedLTPDocumentWithReference,
+  { id: "VersionedLTPDocumentWithReference" },
+);
+openapiRegistry.add(ReactionTypeTag, { id: "ReactionTypeTag" });
+openapiRegistry.add(OwnedProcess, { id: "OwnedProcess" });
+openapiRegistry.add(Reference, { id: "Reference" });
+openapiRegistry.add(SerializedSpecies, { id: "SerializedSpecies" });
+openapiRegistry.add(StateSummary, { id: "StateSummary" });
