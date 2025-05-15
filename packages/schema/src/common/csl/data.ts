@@ -6,6 +6,7 @@ import {
   any,
   array,
   enum as zEnum,
+  globalRegistry,
   number,
   object,
   output,
@@ -178,3 +179,5 @@ export const CSLData = object({
 })
   .describe("Zod schema for CSL input data");
 export type CSLData = output<typeof CSLData>;
+
+globalRegistry.add(CSLData, { id: "CSLData" });
