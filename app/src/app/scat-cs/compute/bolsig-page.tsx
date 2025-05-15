@@ -4,19 +4,21 @@
 
 "use client";
 
-import { type LTPMixtureWithReference } from "@lxcat/schema";
-import { type SerializedSpecies } from "@lxcat/schema/species";
-import { Button, Grid, Stack } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import { useState } from "react";
-import { Maybe } from "true-myth";
-import { ErrorDialog } from "../../../shared/error-dialog";
-import { Bolsig, BolsigInputForm, BolsigPlot } from "../../../solvers/bolsig";
+import { ErrorDialog } from "@/shared/error-dialog";
+import { zodResolver } from "@/shared/zod-resolver";
+import { Bolsig, BolsigInputForm, BolsigPlot } from "@/solvers/bolsig";
 import {
   BolsigFormInput,
   BolsigInput,
   BolsigOutput,
-} from "../../../solvers/bolsig/io";
+} from "@/solvers/bolsig/io";
+import { type LTPMixtureWithReference } from "@lxcat/schema";
+import { type SerializedSpecies } from "@lxcat/schema/species";
+import { Button, Grid, Stack } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useState } from "react";
+import { Maybe } from "true-myth";
+
 import classes from "./bolsig.module.css";
 
 export interface BolsigPageProps {
