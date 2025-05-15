@@ -377,9 +377,6 @@ importers:
       zod:
         specifier: 4.0.0-beta.20250505T195954
         version: 4.0.0-beta.20250505T195954
-      zod-to-json-schema:
-        specifier: ^3.24.5
-        version: 3.24.5(zod@4.0.0-beta.20250505T195954)
     devDependencies:
       '@eslint/js':
         specifier: ^9.27.0
@@ -17217,10 +17214,6 @@ snapshots:
   zod-to-json-schema@3.24.5(zod@3.23.6):
     dependencies:
       zod: 3.23.6
-
-  zod-to-json-schema@3.24.5(zod@4.0.0-beta.20250505T195954):
-    dependencies:
-      zod: 4.0.0-beta.20250505T195954
 
   zod@3.23.6: {}
 
