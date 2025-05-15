@@ -5,6 +5,7 @@
 "use client";
 
 import { reference2bibliography } from "@/shared/cite";
+import { zodResolver } from "@/shared/zod-resolver";
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { EditedLTPDocument, Reference } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
@@ -21,7 +22,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { createFormContext, zodResolver } from "@mantine/form";
+import { createFormContext } from "@mantine/form";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { JsonTab } from "./json-tab";
