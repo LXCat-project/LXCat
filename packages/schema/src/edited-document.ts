@@ -4,7 +4,7 @@
 
 import { array, object, output, record, string } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
-import { partialKeyed } from "./partial-keyed.js";
+import { PartialKeyed } from "./partial-keyed.js";
 import { EditedProcess } from "./process/edited-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
@@ -19,7 +19,7 @@ const EditedDocumentBody = object({
 
 // Optionally contains _key information, version information can be omitted.
 // This type can be used to update existing documents.
-export const EditedLTPDocument = partialKeyed(
+export const EditedLTPDocument = PartialKeyed(
   object({ ...EditedDocumentBody.shape, ...SetHeader(string().min(1)).shape }),
 )
   .check((ctx) => {
