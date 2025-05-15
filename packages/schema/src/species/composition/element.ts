@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { enum as zEnum, output } from "zod";
+import { enum as zEnum, globalRegistry, output } from "zod";
 
 // dprint-ignore
 export const Element = zEnum([
@@ -20,3 +20,5 @@ export const Element = zEnum([
   'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og'
 ]);
 export type Element = output<typeof Element>;
+
+globalRegistry.add(Element, { id: "Element" });

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { object, string, TypeOf } from "zod";
+import { globalRegistry, object, string, TypeOf } from "zod";
 import { OneOrMultiple } from "../common/util.js";
 
 export const SummarizedComponent = object({
@@ -10,6 +10,8 @@ export const SummarizedComponent = object({
   latex: string().min(1),
 });
 export type SummarizedComponent = TypeOf<typeof SummarizedComponent>;
+
+globalRegistry.add(SummarizedComponent, { id: "SummarizedComponent" });
 
 export const StateSummary = SummarizedComponent.merge(object({
   composition: SummarizedComponent,
@@ -24,3 +26,5 @@ export const StateSummary = SummarizedComponent.merge(object({
   )).optional(),
 }));
 export type StateSummary = TypeOf<typeof StateSummary>;
+
+globalRegistry.add(StateSummary, { id: "StateSummary" });

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { discriminatedUnion, output } from "zod";
+import { discriminatedUnion, globalRegistry, output } from "zod";
 import { AnyAtom, AnyAtomSerializable } from "./atoms/any-atom.js";
 import { serializeAtom } from "./atoms/serialize.js";
 import { isSerializableAtom } from "./atoms/type-guard.js";
@@ -24,6 +24,8 @@ export const AnySpecies = discriminatedUnion([
   Unspecified,
 ]);
 export type AnySpecies = output<typeof AnySpecies>;
+
+globalRegistry.add(AnySpecies, { id: "AnySpecies" });
 
 export const AnySpeciesSerializable = discriminatedUnion("type", [
   Electron,
