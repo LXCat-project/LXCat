@@ -12,7 +12,7 @@ import { Element } from "./element.js";
 export type Composition = Array<[TypeOf<typeof Element> | Composition, number]>;
 
 export const Composition: ZodType<Composition> = array(
-  tuple([Element.or(lazy(() => Composition)), number().int().positive()]),
+  tuple([lazy(() => Element.or(Composition)), number().int().positive()]),
 );
 
 const parseCompositionImpl = (composition: Composition): string =>
