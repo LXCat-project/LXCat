@@ -6,6 +6,7 @@ import {
   array,
   boolean,
   enum as zEnum,
+  globalRegistry,
   number,
   object,
   string,
@@ -28,3 +29,5 @@ export const CSLNameVariable = object({
   sequence: zEnum(["first", "additional"]).optional(),
   affiliation: array(object({ name: string().min(1) })).optional(),
 });
+
+globalRegistry.add(CSLNameVariable, { id: "CSLNameVariable" });

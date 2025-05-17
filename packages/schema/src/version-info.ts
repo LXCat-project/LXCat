@@ -2,7 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { enum as zodEnum, number, object, string, TypeOf } from "zod";
+import {
+  enum as zodEnum,
+  globalRegistry,
+  number,
+  object,
+  output,
+  string,
+} from "zod";
 
 /**
  * Valid transitions:
@@ -12,7 +19,7 @@ import { enum as zodEnum, number, object, string, TypeOf } from "zod";
  */
 export const Status = zodEnum(["draft", "published", "archived", "retracted"])
   .describe("The status of the versioned document.");
-export type Status = TypeOf<typeof Status>;
+export type Status = output<typeof Status>;
 
 // TODO: Is there a need for more advanced versioning, e.g. semantic versioning
 //       for data items and sets?
@@ -28,4 +35,6 @@ export const VersionInfo = object({
     "Description of why the item was retracted.",
   ),
 });
-export type VersionInfo = TypeOf<typeof VersionInfo>;
+export type VersionInfo = output<typeof VersionInfo>;
+
+globalRegistry.add(VersionInfo, { id: "VersionInfo" });

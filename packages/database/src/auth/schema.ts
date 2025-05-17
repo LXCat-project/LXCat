@@ -2,10 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Keyed } from "@lxcat/schema";
 import { DocumentData } from "arangojs/documents.js";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
-import { Keyed } from "../schema/key.js";
 
 export const Session = z
   .object({
@@ -98,7 +97,7 @@ export type UserWithAccountSessionInDb = z.infer<
   typeof UserWithAccountSessionInDb
 >;
 
-export const UserWithAccountSessionInDbAsJsonSchema = zodToJsonSchema(
+export const UserWithAccountSessionInDbAsJsonSchema = z.toJSONSchema(
   UserWithAccountSessionInDb,
 );
 
@@ -107,7 +106,7 @@ export const Organization = z.object({
 });
 
 export type Organization = z.infer<typeof Organization>;
-export const OrganizationAsJsonSchema = zodToJsonSchema(Organization);
+export const OrganizationAsJsonSchema = z.toJSONSchema(Organization);
 
 export const KeyedOrganization = Keyed(Organization);
 export type KeyedOrganization = z.infer<typeof KeyedOrganization>;

@@ -2,16 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { registry, requestParamsFromSchema } from "@/docs/openapi";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
+import { openapiGenerator } from "@/openapi";
 import { Role } from "@lxcat/database/auth";
 import { z } from "zod";
 import { querySchema } from "./schemas";
 
 export async function register() {
-  extendZodWithOpenApi(z);
-
-  registry().registerPath({
+  openapiGenerator.registerRoute({
     method: "post",
     path: "/users/{user}/roles/{role}",
     tags: ["Users"],

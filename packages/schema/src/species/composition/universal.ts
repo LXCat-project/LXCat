@@ -2,7 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, lazy, number, tuple, TypeOf, ZodType } from "zod";
+import {
+  array,
+  globalRegistry,
+  lazy,
+  number,
+  tuple,
+  TypeOf,
+  ZodType,
+} from "zod";
 import { parseCharge, parseChargeLatex } from "../common.js";
 import { SummarizedComponent } from "../summary.js";
 import { Element } from "./element.js";
@@ -12,8 +20,10 @@ import { Element } from "./element.js";
 export type Composition = Array<[TypeOf<typeof Element> | Composition, number]>;
 
 export const Composition: ZodType<Composition> = array(
-  tuple([Element.or(lazy(() => Composition)), number().int().positive()]),
+  tuple([lazy(() => Element.or(Composition)), number().int().positive()]),
 );
+
+globalRegistry.add(Composition, { id: "Composition" });
 
 const parseCompositionImpl = (composition: Composition): string =>
   composition.map(([element, count]) => {
