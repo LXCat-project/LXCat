@@ -3,17 +3,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { PAGE_SIZE } from "@/cs/constants";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { db } from "@lxcat/database";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
-import { z } from "zod";
 import { okJsonResponse } from "../../../shared/api-responses";
 import { applyCORS } from "../middleware/cors";
 import { zodMiddleware } from "../middleware/zod";
 import { RouteBuilder } from "../route-builder";
 import { querySchema } from "./schemas";
-
-extendZodWithOpenApi(z);
 
 const router = RouteBuilder
   .init()

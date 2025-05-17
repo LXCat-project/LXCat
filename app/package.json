@@ -18,7 +18,6 @@
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^7.3.0",
     "@citation-js/core": "^0.7.18",
     "@citation-js/plugin-bibtex": "^0.7.18",
     "@citation-js/plugin-csl": "^0.7.18",

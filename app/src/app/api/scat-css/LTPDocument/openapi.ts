@@ -2,15 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { registry } from "@/docs/openapi";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { openapiGenerator } from "@/openapi";
 import { VersionedLTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
-import { z } from "zod";
 
 export async function register() {
-  extendZodWithOpenApi(z);
-
-  registry().registerPath({
+  openapiGenerator.registerRoute({
     method: "get",
     path: "/scat-css/LTPDocument",
     tags: ["Schema"],

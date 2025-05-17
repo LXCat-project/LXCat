@@ -2,27 +2,23 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Reversible } from "@lxcat/database/item/picker";
 import { OwnedProcess } from "@lxcat/database/schema";
 import { Reference, VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { Reaction, ReactionTypeTag } from "@lxcat/schema/process";
 import {
   AnySpecies,
-  Composition,
   SerializedSpecies,
   StateSummary,
 } from "@lxcat/schema/species";
 import { z } from "zod";
 import { queryJSONSchema } from "./util";
 
-extendZodWithOpenApi(z);
-
 export const speciesSchema = z.object({
   _id: z.string(),
   species: SerializedSpecies,
   hasChildren: z.boolean(),
-}).openapi("Species");
+});
 
 export const reactionTemplateSchema = z.object({
   consumes: z.array(z.object({
@@ -37,10 +33,10 @@ export const reactionTemplateSchema = z.object({
     vibrational: z.string().optional(),
     rotational: z.string().optional(),
   })),
-  reversible: z.nativeEnum(Reversible),
+  reversible: z.enum(Reversible),
   typeTags: z.array(ReactionTypeTag),
   set: z.array(z.string()),
-}).openapi("ReactionTemplate");
+});
 
 export const versionInfoSchema = z.object({
   status: z.enum(["draft", "published", "archived", "retracted"]),
@@ -70,24 +66,23 @@ export const crossSectionHeadingSchema = z.object({
     z.object({ detailed: AnySpecies, serialized: StateSummary }),
   ),
   reference: z.array(Reference),
-}).openapi("CrossSectionHeading");
-
-const baseStateSummarySchema = z.object({
-  latex: z.string(),
-  valid: z.boolean(),
 });
 
-type _StateSummary = z.infer<typeof baseStateSummarySchema> & {
-  children?: Record<string, _StateSummary>;
+export type StateSummarySchema = {
+  latex: string;
+  valid: boolean;
+  children?: Record<string, StateSummarySchema>;
 };
 
-export const stateSummarySchema: z.ZodType<_StateSummary> =
-  baseStateSummarySchema.extend({
-    children: z.lazy(() => z.record(z.string(), stateSummarySchema)).optional()
-      .openapi("StateSummary", { type: "object" }),
-  }).openapi("stateSummarySchema");
+export const StateSummarySchema: z.ZodType<StateSummarySchema> = z.lazy(() =>
+  z.object({
+    latex: z.string(),
+    valid: z.boolean(),
+    children: z.record(z.string(), StateSummarySchema).optional(),
+  })
+);
 
-export const stateTreeSchema = z.record(z.string(), stateSummarySchema);
+export const stateTreeSchema = z.record(z.string(), StateSummarySchema);
 
 export const organizationSummarySchema = z.object({
   name: z.string(),
@@ -98,16 +93,16 @@ export const reactionOptionsSchema = z.object({
   consumes: z.array(stateTreeSchema),
   produces: z.array(stateTreeSchema),
   typeTags: z.array(ReactionTypeTag),
-  reversible: z.array(z.nativeEnum(Reversible)),
+  reversible: z.array(z.enum(Reversible)),
   set: z.record(z.string(), organizationSummarySchema),
-}).openapi("ReactionOptions");
+});
 
 export const searchOptionsSchema = z.array(reactionOptionsSchema);
 
 export const crossSectionSetReferenceSchema = z.object({
   id: z.string(),
   name: z.string(),
-}).openapi("CrossSectionSetReference");
+});
 
 export const stateLeafSchema = z.object({
   id: z.string(),
@@ -117,20 +112,24 @@ export const stateLeafSchema = z.object({
 export const reactionQuerySchema = z.object({
   consumes: queryJSONSchema(z.array(stateLeafSchema)),
   produces: queryJSONSchema(z.array(stateLeafSchema)),
-  reversible: z.nativeEnum(Reversible).default(Reversible.Both),
+  reversible: z.enum(Reversible).default(Reversible.Both),
   typeTags: queryJSONSchema(z.array(ReactionTypeTag)),
   setIds: queryJSONSchema(z.array(z.string())),
 });
 
-export const openapiRegistry = z.registry();
-openapiRegistry.add(Composition, { id: "Composition" });
-openapiRegistry.add(AnySpecies, { id: "AnySpecies" });
-openapiRegistry.add(
+z.globalRegistry.add(speciesSchema, { id: "Species" });
+z.globalRegistry.add(reactionTemplateSchema, { id: "ReactionTemplate" });
+z.globalRegistry.add(crossSectionHeadingSchema, { id: "CrossSectionHeading" });
+z.globalRegistry.add(StateSummarySchema, { id: "StateSummarySchema" });
+z.globalRegistry.add(reactionOptionsSchema, { id: "ReactionOptions" });
+z.globalRegistry.add(crossSectionSetReferenceSchema, {
+  id: "CrossSectionSetReference",
+});
+z.globalRegistry.add(
   VersionedLTPDocumentWithReference,
   { id: "VersionedLTPDocumentWithReference" },
 );
-openapiRegistry.add(ReactionTypeTag, { id: "ReactionTypeTag" });
-openapiRegistry.add(OwnedProcess, { id: "OwnedProcess" });
-openapiRegistry.add(Reference, { id: "Reference" });
-openapiRegistry.add(SerializedSpecies, { id: "SerializedSpecies" });
-openapiRegistry.add(StateSummary, { id: "StateSummary" });
+z.globalRegistry.add(ReactionTypeTag, { id: "ReactionTypeTag" });
+z.globalRegistry.add(OwnedProcess, { id: "OwnedProcess" });
+z.globalRegistry.add(Reference, { id: "Reference" });
+z.globalRegistry.add(SerializedSpecies, { id: "SerializedSpecies" });
