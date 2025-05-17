@@ -2,15 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { registry, requestParamsFromSchema } from "../../../../../docs/openapi";
+import { requestParamsFromSchema } from "../../../../../docs/openapi";
 import { deleteSchema, postSchema } from "./schemas";
 
 export async function register() {
-  extendZodWithOpenApi(z);
-
-  registry().registerPath({
+  openapiGenerator.registerRoute({
     method: "post",
     path: "/author/scat-css/{id}",
     tags: ["Author"],
@@ -28,7 +26,7 @@ export async function register() {
     },
   });
 
-  registry().registerPath({
+  openapiGenerator.registerRoute({
     method: "delete",
     path: "/author/scat-css/{id}",
     tags: ["Author"],

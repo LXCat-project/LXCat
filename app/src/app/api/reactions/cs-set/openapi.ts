@@ -2,15 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { registry, requestParamsFromSchema } from "../../../../docs/openapi";
+import { requestParamsFromSchema } from "../../../../docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
-  extendZodWithOpenApi(z);
-
-  registry().registerPath({
+  openapiGenerator.registerRoute({
     method: "get",
     path: "/reactions/scat-cs",
     tags: ["Reactions"],
@@ -18,7 +16,7 @@ export async function register() {
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Cross section set objects",
+        description: "Cross section set headers.",
         content: {
           "application/json": {
             schema: z.array(z.object({

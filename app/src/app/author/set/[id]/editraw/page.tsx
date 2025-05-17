@@ -14,14 +14,12 @@ import { object, promise, string, TypeOf } from "zod";
 import { EditRawSetClient } from "./client-page";
 
 const ArangoKey = string().regex(/\d+/);
-const URLParams = object({
-  params: promise(object({ id: ArangoKey })),
-});
+const URLParams = object({ id: ArangoKey });
 
-type URLParams = TypeOf<typeof URLParams>;
-
-export default async function EditRawSetPage(props: URLParams) {
-  const { id } = await URLParams.parse(props).params;
+export default async function EditRawSetPage(
+  { params }: { params: Promise<unknown> },
+) {
+  const { id } = URLParams.parse(await params);
   const session = await getServerSession(options);
 
   if (!userIsAuthor(session)) {
