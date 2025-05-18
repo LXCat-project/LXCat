@@ -2,7 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, boolean, number, object, string, union } from "zod";
+import {
+  array,
+  boolean,
+  globalRegistry,
+  number,
+  object,
+  string,
+  union,
+} from "zod";
 
 export const CSLDateVariable = object({
   "date-parts": array(
@@ -21,3 +29,5 @@ export const CSLDateVariable = object({
   .describe(
     "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative.",
   );
+
+globalRegistry.add(CSLDateVariable, { id: "CSLDateVariable" });

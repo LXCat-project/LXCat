@@ -6,10 +6,10 @@ import {
   array,
   intersection,
   object,
+  output,
   record,
   string,
-  TypeOf,
-  ZodTypeAny,
+  ZodType,
 } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
@@ -21,18 +21,21 @@ import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
 
-const MixtureBody = <ReferenceType extends ZodTypeAny>(
+const MixtureBody = <ReferenceType extends ZodType>(
   Reference: ReferenceType,
 ) =>
   object({
-    sets: record(versioned(SetHeader(Contributor))),
-    references: record(Reference),
-    states: record(SerializedSpecies),
+    sets: record(string(), versioned(SetHeader(Contributor))),
+    references: record(string(), Reference),
+    states: record(string(), SerializedSpecies),
     processes: array(
       Process(
         string(),
         versioned(
-          ProcessInfo(ReferenceRef(string().min(1))).merge(SetReference),
+          object({
+            ...ProcessInfo(ReferenceRef(string().min(1))).shape,
+            ...SetReference.shape,
+          }),
         ),
       ),
     ),
@@ -61,10 +64,10 @@ const MixtureBody = <ReferenceType extends ZodTypeAny>(
     );
 
 export const LTPMixture = MixtureBody(Reference);
-export type LTPMixture = TypeOf<typeof LTPMixture>;
+export type LTPMixture = output<typeof LTPMixture>;
 
 export const LTPMixtureWithReference = intersection(
   SelfReference,
   MixtureBody(Reference.or(string().min(1))),
 );
-export type LTPMixtureWithReference = TypeOf<typeof LTPMixtureWithReference>;
+export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;

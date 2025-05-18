@@ -2,35 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  OpenApiGeneratorV31,
-  OpenAPIRegistry,
-  ZodRequestBody,
-} from "@asteasolutions/zod-to-openapi";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { OpenAPIObjectConfigV31 } from "@asteasolutions/zod-to-openapi/dist/v3.1/openapi-generator";
+import { BodyConfig, OpenAPIConfig, openapiGenerator } from "@/openapi";
 import { glob } from "glob";
 import { z } from "zod";
 
-extendZodWithOpenApi(z);
-
-let _registry: OpenAPIRegistry | null = null;
-export const registry = () => {
-  if (_registry === null) {
-    _registry = new OpenAPIRegistry();
-  }
-  return _registry;
-};
-
-// OpenAPIObject | undefined but OpenAPIObject is not exported.
+// NOTE: OpenAPIObject | undefined but OpenAPIObject is not exported.
 let cachedSpec: any | undefined;
 
-export function requestParamsFromSchema(schema: z.AnyZodObject): {
-  body?: ZodRequestBody;
-  params?: z.AnyZodObject;
-  query?: z.AnyZodObject;
-  cookies?: z.AnyZodObject;
-  headers?: z.AnyZodObject | z.ZodType<unknown>[];
+export function requestParamsFromSchema(schema: z.ZodObject): {
+  body?: BodyConfig;
+  params?: z.ZodObject;
+  query?: z.ZodObject;
+  cookies?: z.ZodObject;
+  headers?: z.ZodType[];
 } {
   let body = undefined;
   if (schema.shape.body) {
@@ -66,7 +50,7 @@ export async function generateOpenAPI() {
   if (cachedSpec !== undefined) {
     return cachedSpec;
   }
-  const files = await glob("./**/{*.,}openapi.ts", { cwd: "./src/app/api/" });
+  const files = await glob("./**/openapi.ts", { cwd: "./src/app/api/" });
 
   // Import all .openapi files which register the endpoints and schemas.
   let importTasks = files.map((f) => {
@@ -79,8 +63,7 @@ export async function generateOpenAPI() {
 
   const url = `${process.env.NEXT_PUBLIC_URL}/api/`;
 
-  const config: OpenAPIObjectConfigV31 = {
-    openapi: "3.1.0",
+  const config: OpenAPIConfig = {
     info: {
       // TODO: figure out what to do with API versioning.
       version: "1.0.0",
@@ -90,9 +73,7 @@ export async function generateOpenAPI() {
     servers: [{ url: url }],
   };
 
-  let obj = new OpenApiGeneratorV31(registry().definitions).generateDocument(
-    config,
-  );
+  let obj = openapiGenerator.generate(config);
 
   cachedSpec = obj;
 

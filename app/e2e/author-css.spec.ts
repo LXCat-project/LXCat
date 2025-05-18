@@ -122,14 +122,14 @@ test.describe("/author/set/add", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/author/set/add");
   });
-  test.describe("give empty name field", () => {
+  test.describe("given empty name field", () => {
     test("after submit should show warning", async ({ page }) => {
       // With form untouched
 
       await page.locator("button:has-text(\"Submit\")").click();
 
       const warning = page.getByText(
-        "String must contain at least 1 character(s)",
+        "Too small: expected string to have >1 characters",
       );
       await expect(warning).toHaveCount(3);
     });

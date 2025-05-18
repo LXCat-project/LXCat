@@ -3,6 +3,9 @@
   "properties": {
     "sets": {
       "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
       "additionalProperties": {
         "type": "object",
         "properties": {
@@ -24,7 +27,8 @@
               },
               "totalSets": {
                 "type": "integer",
-                "minimum": 1
+                "minimum": 1,
+                "maximum": 9007199254740991
               }
             },
             "required": [
@@ -32,29 +36,28 @@
               "description",
               "contact",
               "howToReference"
-            ],
-            "additionalProperties": false
+            ]
           },
           "name": {
             "type": "string",
             "minLength": 1
           },
           "publishedIn": {
-            "type": "string",
-            "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset."
+            "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset.",
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "description": "A description of this dataset."
+            "description": "A description of this dataset.",
+            "type": "string"
           },
           "complete": {
             "type": "boolean"
           },
           "_key": {
-            "$ref": "#/definitions/Key"
+            "$ref": "#/$defs/Key"
           },
           "versionInfo": {
-            "$ref": "#/definitions/VersionInfo"
+            "$ref": "#/$defs/VersionInfo"
           }
         },
         "required": [
@@ -64,20 +67,37 @@
           "complete",
           "_key",
           "versionInfo"
-        ],
-        "additionalProperties": false
+        ]
       }
     },
     "references": {
       "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
       "additionalProperties": {
-        "$ref": "#/definitions/CSLData"
+        "$ref": "#/$defs/CSLData"
       }
     },
     "states": {
       "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
       "additionalProperties": {
-        "$ref": "#/definitions/SerializedSpecies"
+        "type": "object",
+        "properties": {
+          "detailed": {
+            "$ref": "#/$defs/AnySpecies"
+          },
+          "serialized": {
+            "$ref": "#/$defs/StateSummary"
+          }
+        },
+        "required": [
+          "detailed",
+          "serialized"
+        ]
       }
     },
     "processes": {
@@ -95,7 +115,8 @@
                   "properties": {
                     "count": {
                       "type": "integer",
-                      "exclusiveMinimum": 0
+                      "exclusiveMinimum": 0,
+                      "exclusiveMaximum": 9007199254740991
                     },
                     "state": {
                       "type": "string"
@@ -104,8 +125,7 @@
                   "required": [
                     "count",
                     "state"
-                  ],
-                  "additionalProperties": false
+                  ]
                 }
               },
               "rhs": {
@@ -115,17 +135,17 @@
                   "properties": {
                     "count": {
                       "type": "integer",
-                      "exclusiveMinimum": 0
+                      "exclusiveMinimum": 0,
+                      "exclusiveMaximum": 9007199254740991
                     },
                     "state": {
-                      "$ref": "#/properties/processes/items/properties/reaction/properties/lhs/items/properties/state"
+                      "type": "string"
                     }
                   },
                   "required": [
                     "count",
                     "state"
-                  ],
-                  "additionalProperties": false
+                  ]
                 }
               },
               "reversible": {
@@ -134,7 +154,6 @@
               "typeTags": {
                 "type": "array",
                 "items": {
-                  "type": "string",
                   "enum": [
                     "Elastic",
                     "Effective",
@@ -156,8 +175,7 @@
               "rhs",
               "reversible",
               "typeTags"
-            ],
-            "additionalProperties": false
+            ]
           },
           "info": {
             "type": "array",
@@ -165,7 +183,6 @@
               "type": "object",
               "properties": {
                 "type": {
-                  "type": "string",
                   "const": "CrossSection"
                 },
                 "comments": {
@@ -187,21 +204,22 @@
                         "type": "object",
                         "properties": {
                           "id": {
-                            "$ref": "#/properties/processes/items/properties/info/items/properties/references/items/anyOf/0"
+                            "type": "string",
+                            "minLength": 1
                           },
                           "comments": {
+                            "minItems": 1,
                             "type": "array",
                             "items": {
-                              "$ref": "#/properties/processes/items/properties/info/items/properties/references/items/anyOf/0"
-                            },
-                            "minItems": 1
+                              "type": "string",
+                              "minLength": 1
+                            }
                           }
                         },
                         "required": [
                           "id",
                           "comments"
-                        ],
-                        "additionalProperties": false
+                        ]
                       }
                     ]
                   }
@@ -210,34 +228,31 @@
                   "type": "object",
                   "properties": {
                     "type": {
-                      "type": "string",
                       "const": "LUT"
                     },
                     "labels": {
                       "type": "array",
-                      "minItems": 2,
-                      "maxItems": 2,
-                      "items": [
+                      "prefixItems": [
                         {
                           "type": "string",
                           "minLength": 1
                         },
                         {
-                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/labels/items/0"
+                          "type": "string",
+                          "minLength": 1
                         }
                       ]
                     },
                     "units": {
                       "type": "array",
-                      "minItems": 2,
-                      "maxItems": 2,
-                      "items": [
+                      "prefixItems": [
                         {
                           "type": "string",
                           "minLength": 1
                         },
                         {
-                          "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/units/items/0"
+                          "type": "string",
+                          "minLength": 1
                         }
                       ]
                     },
@@ -245,14 +260,12 @@
                       "type": "array",
                       "items": {
                         "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2,
-                        "items": [
+                        "prefixItems": [
                           {
                             "type": "number"
                           },
                           {
-                            "$ref": "#/properties/processes/items/properties/info/items/properties/data/properties/values/items/items/0"
+                            "type": "number"
                           }
                         ]
                       }
@@ -263,8 +276,7 @@
                     "labels",
                     "units",
                     "values"
-                  ],
-                  "additionalProperties": false
+                  ]
                 },
                 "parameters": {
                   "type": "object",
@@ -278,7 +290,7 @@
                       "exclusiveMinimum": 0
                     }
                   },
-                  "additionalProperties": false
+                  "required": []
                 },
                 "threshold": {
                   "type": "number"
@@ -290,10 +302,10 @@
                   }
                 },
                 "_key": {
-                  "$ref": "#/definitions/Key"
+                  "$ref": "#/$defs/Key"
                 },
                 "versionInfo": {
-                  "$ref": "#/definitions/VersionInfo"
+                  "$ref": "#/$defs/VersionInfo"
                 }
               },
               "required": [
@@ -304,16 +316,14 @@
                 "isPartOf",
                 "_key",
                 "versionInfo"
-              ],
-              "additionalProperties": false
+              ]
             }
           }
         },
         "required": [
           "reaction",
           "info"
-        ],
-        "additionalProperties": false
+        ]
       }
     }
   },
@@ -323,42 +333,43 @@
     "states",
     "processes"
   ],
-  "additionalProperties": false,
-  "definitions": {
+  "$defs": {
     "Key": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "id": "Key"
     },
     "VersionInfo": {
       "type": "object",
       "properties": {
         "version": {
           "type": "integer",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 9007199254740991
         },
         "createdOn": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "pattern": "^((\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01])|(0[469]|11)-(0[1-9]|[12]\\d|30)|(02)-(0[1-9]|1\\d|2[0-8])))T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z)$"
         },
         "status": {
-          "type": "string",
+          "description": "The status of the versioned document.",
           "enum": [
             "draft",
             "published",
             "archived",
             "retracted"
-          ],
-          "description": "The status of the versioned document."
+          ]
         },
         "commitMessage": {
+          "description": "Description of what was changed since the previous version.",
           "type": "string",
-          "minLength": 1,
-          "description": "Description of what was changed since the previous version."
+          "minLength": 1
         },
         "retractMessage": {
+          "description": "Description of why the item was retracted.",
           "type": "string",
-          "minLength": 1,
-          "description": "Description of why the item was retracted."
+          "minLength": 1
         }
       },
       "required": [
@@ -366,13 +377,13 @@
         "createdOn",
         "status"
       ],
-      "additionalProperties": false
+      "id": "VersionInfo"
     },
     "CSLData": {
+      "id": "CSLData",
       "type": "object",
       "properties": {
         "type": {
-          "type": "string",
           "enum": [
             "article",
             "article-journal",
@@ -422,9 +433,13 @@
           ]
         },
         "id": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "citation-key": {
@@ -448,182 +463,176 @@
         "author": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "chair": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "collection-editor": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "compiler": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "composer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "container-author": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "contributor": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "curator": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "director": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "editor": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "editorial-director": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "executive-producer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "guest": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "host": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "interviewer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "illustrator": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "narrator": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "organizer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "original-author": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "performer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "producer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "recipient": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "reviewed-author": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "script-writer": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "series-creator": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "translator": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CSLNameVariable"
+            "$ref": "#/$defs/CSLNameVariable"
           }
         },
         "accessed": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "available-date": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "event-date": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "issued": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "original-date": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "submitted": {
-          "$ref": "#/definitions/CSLDateVariable",
-          "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+          "$ref": "#/$defs/CSLDateVariable"
         },
         "abstract": {
           "type": "string"
@@ -650,24 +659,36 @@
           "type": "string"
         },
         "chapter-number": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "citation-number": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "citation-label": {
           "type": "string"
         },
         "collection-number": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "collection-title": {
@@ -689,14 +710,18 @@
           "type": "string"
         },
         "edition": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "event": {
-          "type": "string",
-          "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]"
+          "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]",
+          "type": "string"
         },
         "event-title": {
           "type": "string"
@@ -705,9 +730,13 @@
           "type": "string"
         },
         "first-reference-note-number": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "genre": {
@@ -720,9 +749,13 @@
           "type": "string"
         },
         "issue": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "jurisdiction": {
@@ -732,9 +765,13 @@
           "type": "string"
         },
         "locator": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "medium": {
@@ -744,21 +781,33 @@
           "type": "string"
         },
         "number": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "number-of-pages": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "number-of-volumes": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "original-publisher": {
@@ -771,21 +820,33 @@
           "type": "string"
         },
         "page": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "page-first": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "part": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "part-title": {
@@ -798,9 +859,13 @@
           "type": "string"
         },
         "printing": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "publisher": {
@@ -831,9 +896,13 @@
           "type": "string"
         },
         "supplement": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "title": {
@@ -849,9 +918,13 @@
           "type": "string"
         },
         "volume": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "volume-title": {
@@ -864,17 +937,18 @@
           "type": "string"
         },
         "custom": {
+          "description": "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles.",
           "type": "object",
-          "additionalProperties": {},
-          "description": "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles."
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
         }
       },
       "required": [
         "type",
         "id"
-      ],
-      "additionalProperties": false,
-      "description": "Zod schema for CSL input data"
+      ]
     },
     "CSLNameVariable": {
       "type": "object",
@@ -895,27 +969,45 @@
           "type": "string"
         },
         "comma-suffix": {
-          "type": [
-            "string",
-            "number",
-            "boolean"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
           ]
         },
         "static-ordering": {
-          "type": [
-            "string",
-            "number",
-            "boolean"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
           ]
         },
         "literal": {
           "type": "string"
         },
         "parse-names": {
-          "type": [
-            "string",
-            "number",
-            "boolean"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
           ]
         },
         "ORCID": {
@@ -926,7 +1018,6 @@
           "type": "boolean"
         },
         "sequence": {
-          "type": "string",
           "enum": [
             "first",
             "additional"
@@ -944,43 +1035,58 @@
             },
             "required": [
               "name"
-            ],
-            "additionalProperties": false
+            ]
           }
         }
       },
-      "additionalProperties": false
+      "required": [],
+      "id": "CSLNameVariable"
     },
     "CSLDateVariable": {
+      "id": "CSLDateVariable",
       "type": "object",
       "properties": {
         "date-parts": {
+          "minItems": 1,
+          "maxItems": 2,
           "type": "array",
           "items": {
+            "minItems": 1,
+            "maxItems": 3,
             "type": "array",
             "items": {
-              "type": [
-                "string",
-                "number"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
               ]
-            },
-            "minItems": 1,
-            "maxItems": 3
-          },
-          "minItems": 1,
-          "maxItems": 2
+            }
+          }
         },
         "season": {
-          "type": [
-            "string",
-            "number"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "circa": {
-          "type": [
-            "string",
-            "number",
-            "boolean"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
           ]
         },
         "literal": {
@@ -990,11 +1096,2065 @@
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "The CSL input model supports two different date representations: an EDTF string (preferred), and a more structured alternative."
+      "required": []
+    },
+    "AnySpecies": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Electron"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "Atom"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "AtomUnspecified"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge",
+            "electronic"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "AtomLS"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "type": "object",
+                  "properties": {
+                    "config": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/ShellEntry"
+                      }
+                    },
+                    "term": {
+                      "type": "object",
+                      "properties": {
+                        "L": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "S": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "P": {
+                          "anyOf": [
+                            {
+                              "const": -1
+                            },
+                            {
+                              "const": 1
+                            }
+                          ]
+                        },
+                        "J": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        }
+                      },
+                      "required": [
+                        "L",
+                        "S",
+                        "P",
+                        "J"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "config",
+                    "term"
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/ShellEntry"
+                        }
+                      },
+                      "term": {
+                        "type": "object",
+                        "properties": {
+                          "L": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "S": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "P": {
+                            "anyOf": [
+                              {
+                                "const": -1
+                              },
+                              {
+                                "const": 1
+                              }
+                            ]
+                          },
+                          "J": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          }
+                        },
+                        "required": [
+                          "L",
+                          "S",
+                          "P",
+                          "J"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "term"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge",
+            "electronic"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "AtomLS1"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "type": "object",
+                  "properties": {
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "core": {
+                          "type": "object",
+                          "properties": {
+                            "config": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/$defs/ShellEntry"
+                              }
+                            },
+                            "term": {
+                              "type": "object",
+                              "properties": {
+                                "L": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "S": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "multipleOf": 0.5
+                                },
+                                "P": {
+                                  "anyOf": [
+                                    {
+                                      "const": -1
+                                    },
+                                    {
+                                      "const": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "config",
+                            "term"
+                          ]
+                        },
+                        "excited": {
+                          "type": "object",
+                          "properties": {
+                            "config": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/$defs/ShellEntry"
+                              }
+                            },
+                            "term": {
+                              "type": "object",
+                              "properties": {
+                                "L": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "S": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "multipleOf": 0.5
+                                },
+                                "P": {
+                                  "anyOf": [
+                                    {
+                                      "const": -1
+                                    },
+                                    {
+                                      "const": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "config",
+                            "term"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ]
+                    },
+                    "term": {
+                      "type": "object",
+                      "properties": {
+                        "L": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "K": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "S": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "P": {
+                          "anyOf": [
+                            {
+                              "const": -1
+                            },
+                            {
+                              "const": 1
+                            }
+                          ]
+                        },
+                        "J": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        }
+                      },
+                      "required": [
+                        "L",
+                        "K",
+                        "S",
+                        "P",
+                        "J"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "config",
+                    "term"
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "core": {
+                            "type": "object",
+                            "properties": {
+                              "config": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/ShellEntry"
+                                }
+                              },
+                              "term": {
+                                "type": "object",
+                                "properties": {
+                                  "L": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "S": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "multipleOf": 0.5
+                                  },
+                                  "P": {
+                                    "anyOf": [
+                                      {
+                                        "const": -1
+                                      },
+                                      {
+                                        "const": 1
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "L",
+                                  "S",
+                                  "P"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "config",
+                              "term"
+                            ]
+                          },
+                          "excited": {
+                            "type": "object",
+                            "properties": {
+                              "config": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/ShellEntry"
+                                }
+                              },
+                              "term": {
+                                "type": "object",
+                                "properties": {
+                                  "L": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "S": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "multipleOf": 0.5
+                                  },
+                                  "P": {
+                                    "anyOf": [
+                                      {
+                                        "const": -1
+                                      },
+                                      {
+                                        "const": 1
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "L",
+                                  "S",
+                                  "P"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "config",
+                              "term"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "core",
+                          "excited"
+                        ]
+                      },
+                      "term": {
+                        "type": "object",
+                        "properties": {
+                          "L": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "K": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "S": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "P": {
+                            "anyOf": [
+                              {
+                                "const": -1
+                              },
+                              {
+                                "const": 1
+                              }
+                            ]
+                          },
+                          "J": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          }
+                        },
+                        "required": [
+                          "L",
+                          "K",
+                          "S",
+                          "P",
+                          "J"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "term"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge",
+            "electronic"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "AtomJ1L2"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "type": "object",
+                  "properties": {
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "core": {
+                          "type": "object",
+                          "properties": {
+                            "config": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/$defs/ShellEntry"
+                              }
+                            },
+                            "term": {
+                              "type": "object",
+                              "properties": {
+                                "L": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "S": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "multipleOf": 0.5
+                                },
+                                "P": {
+                                  "anyOf": [
+                                    {
+                                      "const": -1
+                                    },
+                                    {
+                                      "const": 1
+                                    }
+                                  ]
+                                },
+                                "J": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "multipleOf": 0.5
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P",
+                                "J"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "config",
+                            "term"
+                          ]
+                        },
+                        "excited": {
+                          "type": "object",
+                          "properties": {
+                            "config": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/$defs/ShellEntry"
+                              }
+                            },
+                            "term": {
+                              "type": "object",
+                              "properties": {
+                                "L": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "S": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "multipleOf": 0.5
+                                },
+                                "P": {
+                                  "anyOf": [
+                                    {
+                                      "const": -1
+                                    },
+                                    {
+                                      "const": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "L",
+                                "S",
+                                "P"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "config",
+                            "term"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "core",
+                        "excited"
+                      ]
+                    },
+                    "term": {
+                      "type": "object",
+                      "properties": {
+                        "K": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "S": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "P": {
+                          "anyOf": [
+                            {
+                              "const": -1
+                            },
+                            {
+                              "const": 1
+                            }
+                          ]
+                        },
+                        "J": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        }
+                      },
+                      "required": [
+                        "K",
+                        "S",
+                        "P",
+                        "J"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "config",
+                    "term"
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "core": {
+                            "type": "object",
+                            "properties": {
+                              "config": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/ShellEntry"
+                                }
+                              },
+                              "term": {
+                                "type": "object",
+                                "properties": {
+                                  "L": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "S": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "multipleOf": 0.5
+                                  },
+                                  "P": {
+                                    "anyOf": [
+                                      {
+                                        "const": -1
+                                      },
+                                      {
+                                        "const": 1
+                                      }
+                                    ]
+                                  },
+                                  "J": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "multipleOf": 0.5
+                                  }
+                                },
+                                "required": [
+                                  "L",
+                                  "S",
+                                  "P",
+                                  "J"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "config",
+                              "term"
+                            ]
+                          },
+                          "excited": {
+                            "type": "object",
+                            "properties": {
+                              "config": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/ShellEntry"
+                                }
+                              },
+                              "term": {
+                                "type": "object",
+                                "properties": {
+                                  "L": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "S": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "multipleOf": 0.5
+                                  },
+                                  "P": {
+                                    "anyOf": [
+                                      {
+                                        "const": -1
+                                      },
+                                      {
+                                        "const": 1
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "L",
+                                  "S",
+                                  "P"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "config",
+                              "term"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "core",
+                          "excited"
+                        ]
+                      },
+                      "term": {
+                        "type": "object",
+                        "properties": {
+                          "K": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "S": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "P": {
+                            "anyOf": [
+                              {
+                                "const": -1
+                              },
+                              {
+                                "const": 1
+                              }
+                            ]
+                          },
+                          "J": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          }
+                        },
+                        "required": [
+                          "K",
+                          "S",
+                          "P",
+                          "J"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "term"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge",
+            "electronic"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "HomonuclearDiatom"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "energyId": {
+                          "type": "string"
+                        },
+                        "Lambda": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "S": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "reflection": {
+                          "enum": [
+                            "-",
+                            "+"
+                          ]
+                        },
+                        "parity": {
+                          "enum": [
+                            "g",
+                            "u"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "energyId",
+                        "Lambda",
+                        "S",
+                        "parity"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "vibrational": {
+                          "anyOf": [
+                            {
+                              "description": "Singular",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "v": {
+                                      "type": "integer",
+                                      "minimum": -9007199254740991,
+                                      "maximum": 9007199254740991
+                                    }
+                                  },
+                                  "required": [
+                                    "v"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rotational": {
+                                      "anyOf": [
+                                        {
+                                          "description": "Singular",
+                                          "type": "object",
+                                          "properties": {
+                                            "J": {
+                                              "type": "integer",
+                                              "minimum": -9007199254740991,
+                                              "maximum": 9007199254740991
+                                            }
+                                          },
+                                          "required": [
+                                            "J"
+                                          ]
+                                        },
+                                        {
+                                          "description": "Compound",
+                                          "minItems": 2,
+                                          "type": "array",
+                                          "items": {
+                                            "anyOf": [
+                                              {
+                                                "description": "Singular",
+                                                "type": "object",
+                                                "properties": {
+                                                  "J": {
+                                                    "type": "integer",
+                                                    "minimum": -9007199254740991,
+                                                    "maximum": 9007199254740991
+                                                  }
+                                                },
+                                                "required": [
+                                                  "J"
+                                                ]
+                                              },
+                                              {
+                                                "description": "Unspecified",
+                                                "type": "string"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "description": "Unspecified",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              ]
+                            },
+                            {
+                              "description": "Compound",
+                              "minItems": 2,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "description": "Singular",
+                                    "type": "object",
+                                    "properties": {
+                                      "v": {
+                                        "type": "integer",
+                                        "minimum": -9007199254740991,
+                                        "maximum": 9007199254740991
+                                      }
+                                    },
+                                    "required": [
+                                      "v"
+                                    ]
+                                  },
+                                  {
+                                    "description": "Unspecified",
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "description": "Unspecified",
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "energyId": {
+                        "type": "string"
+                      },
+                      "Lambda": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "S": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "reflection": {
+                        "enum": [
+                          "-",
+                          "+"
+                        ]
+                      },
+                      "parity": {
+                        "enum": [
+                          "g",
+                          "u"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "energyId",
+                      "Lambda",
+                      "S",
+                      "parity"
+                    ]
+                  }
+                },
+                {
+                  "description": "Unspecified",
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "HeteronuclearDiatom"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "energyId": {
+                          "type": "string"
+                        },
+                        "Lambda": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "S": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "reflection": {
+                          "enum": [
+                            "-",
+                            "+"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "energyId",
+                        "Lambda",
+                        "S"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "vibrational": {
+                          "anyOf": [
+                            {
+                              "description": "Singular",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "v": {
+                                      "type": "integer",
+                                      "minimum": -9007199254740991,
+                                      "maximum": 9007199254740991
+                                    }
+                                  },
+                                  "required": [
+                                    "v"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rotational": {
+                                      "anyOf": [
+                                        {
+                                          "description": "Singular",
+                                          "type": "object",
+                                          "properties": {
+                                            "J": {
+                                              "type": "integer",
+                                              "minimum": -9007199254740991,
+                                              "maximum": 9007199254740991
+                                            }
+                                          },
+                                          "required": [
+                                            "J"
+                                          ]
+                                        },
+                                        {
+                                          "description": "Compound",
+                                          "minItems": 2,
+                                          "type": "array",
+                                          "items": {
+                                            "anyOf": [
+                                              {
+                                                "description": "Singular",
+                                                "type": "object",
+                                                "properties": {
+                                                  "J": {
+                                                    "type": "integer",
+                                                    "minimum": -9007199254740991,
+                                                    "maximum": 9007199254740991
+                                                  }
+                                                },
+                                                "required": [
+                                                  "J"
+                                                ]
+                                              },
+                                              {
+                                                "description": "Unspecified",
+                                                "type": "string"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "description": "Unspecified",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              ]
+                            },
+                            {
+                              "description": "Compound",
+                              "minItems": 2,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "description": "Singular",
+                                    "type": "object",
+                                    "properties": {
+                                      "v": {
+                                        "type": "integer",
+                                        "minimum": -9007199254740991,
+                                        "maximum": 9007199254740991
+                                      }
+                                    },
+                                    "required": [
+                                      "v"
+                                    ]
+                                  },
+                                  {
+                                    "description": "Unspecified",
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "description": "Unspecified",
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "energyId": {
+                        "type": "string"
+                      },
+                      "Lambda": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "S": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "reflection": {
+                        "enum": [
+                          "-",
+                          "+"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "energyId",
+                      "Lambda",
+                      "S"
+                    ]
+                  }
+                },
+                {
+                  "description": "Unspecified",
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "LinearTriatomInversionCenter"
+            },
+            "composition": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 3
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "energyId": {
+                          "type": "string"
+                        },
+                        "Lambda": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "S": {
+                          "type": "number",
+                          "multipleOf": 0.5
+                        },
+                        "reflection": {
+                          "enum": [
+                            "-",
+                            "+"
+                          ]
+                        },
+                        "parity": {
+                          "enum": [
+                            "g",
+                            "u"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "energyId",
+                        "Lambda",
+                        "S",
+                        "parity"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "vibrational": {
+                          "anyOf": [
+                            {
+                              "description": "Singular",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "v": {
+                                      "type": "array",
+                                      "prefixItems": [
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        },
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        },
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "v"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rotational": {
+                                      "anyOf": [
+                                        {
+                                          "description": "Singular",
+                                          "type": "object",
+                                          "properties": {
+                                            "J": {
+                                              "type": "integer",
+                                              "minimum": -9007199254740991,
+                                              "maximum": 9007199254740991
+                                            }
+                                          },
+                                          "required": [
+                                            "J"
+                                          ]
+                                        },
+                                        {
+                                          "description": "Compound",
+                                          "minItems": 2,
+                                          "type": "array",
+                                          "items": {
+                                            "anyOf": [
+                                              {
+                                                "description": "Singular",
+                                                "type": "object",
+                                                "properties": {
+                                                  "J": {
+                                                    "type": "integer",
+                                                    "minimum": -9007199254740991,
+                                                    "maximum": 9007199254740991
+                                                  }
+                                                },
+                                                "required": [
+                                                  "J"
+                                                ]
+                                              },
+                                              {
+                                                "description": "Unspecified",
+                                                "type": "string"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "description": "Unspecified",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              ]
+                            },
+                            {
+                              "description": "Compound",
+                              "minItems": 2,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "description": "Singular",
+                                    "type": "object",
+                                    "properties": {
+                                      "v": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          },
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          },
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "v"
+                                    ]
+                                  },
+                                  {
+                                    "description": "Unspecified",
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "description": "Unspecified",
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "energyId": {
+                        "type": "string"
+                      },
+                      "Lambda": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "S": {
+                        "type": "number",
+                        "multipleOf": 0.5
+                      },
+                      "reflection": {
+                        "enum": [
+                          "-",
+                          "+"
+                        ]
+                      },
+                      "parity": {
+                        "enum": [
+                          "g",
+                          "u"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "energyId",
+                      "Lambda",
+                      "S",
+                      "parity"
+                    ]
+                  }
+                },
+                {
+                  "description": "Unspecified",
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "TriatomC2v"
+            },
+            "composition": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "$ref": "#/$defs/Element"
+                        },
+                        {
+                          "const": 3
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "energyId": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "energyId"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "vibrational": {
+                          "anyOf": [
+                            {
+                              "description": "Singular",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "v": {
+                                      "type": "array",
+                                      "prefixItems": [
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        },
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        },
+                                        {
+                                          "type": "integer",
+                                          "minimum": -9007199254740991,
+                                          "maximum": 9007199254740991
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "v"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "rotational": {
+                                      "anyOf": [
+                                        {
+                                          "description": "Singular",
+                                          "type": "object",
+                                          "properties": {
+                                            "J": {
+                                              "minItems": 3,
+                                              "maxItems": 3,
+                                              "type": "array",
+                                              "items": {
+                                                "type": "integer",
+                                                "minimum": -9007199254740991,
+                                                "maximum": 9007199254740991
+                                              }
+                                            }
+                                          },
+                                          "required": [
+                                            "J"
+                                          ]
+                                        },
+                                        {
+                                          "description": "Compound",
+                                          "minItems": 2,
+                                          "type": "array",
+                                          "items": {
+                                            "anyOf": [
+                                              {
+                                                "description": "Singular",
+                                                "type": "object",
+                                                "properties": {
+                                                  "J": {
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                    "type": "array",
+                                                    "items": {
+                                                      "type": "integer",
+                                                      "minimum": -9007199254740991,
+                                                      "maximum": 9007199254740991
+                                                    }
+                                                  }
+                                                },
+                                                "required": [
+                                                  "J"
+                                                ]
+                                              },
+                                              {
+                                                "description": "Unspecified",
+                                                "type": "string"
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "description": "Unspecified",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              ]
+                            },
+                            {
+                              "description": "Compound",
+                              "minItems": 2,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "description": "Singular",
+                                    "type": "object",
+                                    "properties": {
+                                      "v": {
+                                        "type": "array",
+                                        "prefixItems": [
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          },
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          },
+                                          {
+                                            "type": "integer",
+                                            "minimum": -9007199254740991,
+                                            "maximum": 9007199254740991
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "v"
+                                    ]
+                                  },
+                                  {
+                                    "description": "Unspecified",
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "description": "Unspecified",
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "energyId": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "energyId"
+                    ]
+                  }
+                },
+                {
+                  "description": "Unspecified",
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "Unspecified"
+            },
+            "composition": {
+              "$ref": "#/$defs/Composition"
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge"
+          ]
+        }
+      ],
+      "id": "AnySpecies"
+    },
+    "Electron": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Electron"
+        },
+        "composition": {
+          "const": "e"
+        },
+        "charge": {
+          "const": -1
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge"
+      ],
+      "id": "Electron"
     },
     "Element": {
-      "type": "string",
       "enum": [
         "H",
         "He",
@@ -1114,1424 +3274,262 @@
         "Lv",
         "Ts",
         "Og"
-      ]
+      ],
+      "id": "Element"
+    },
+    "ShellEntry": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "l": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "occupance": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "n",
+        "l",
+        "occupance"
+      ],
+      "id": "ShellEntry"
     },
     "Composition": {
       "type": "array",
       "items": {
         "type": "array",
-        "minItems": 2,
-        "maxItems": 2,
-        "items": [
+        "prefixItems": [
           {
             "anyOf": [
               {
-                "$ref": "#/definitions/Element"
+                "$ref": "#/$defs/Element"
               },
               {
-                "$ref": "#/definitions/Composition"
+                "$ref": "#/$defs/Composition"
               }
             ]
           },
           {
             "type": "integer",
-            "exclusiveMinimum": 0
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 9007199254740991
           }
         ]
-      }
-    },
-    "HomonuclearCompositionDescriptor": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
-      "items": [
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/Element"
-            },
-            {
-              "type": "number",
-              "const": 2
-            }
-          ]
-        }
-      ]
-    },
-    "HeteronuclearDiatomComposition": {
-      "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
-      "items": [
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/Element"
-            },
-            {
-              "type": "number",
-              "const": 1
-            }
-          ]
-        },
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/Element"
-            },
-            {
-              "type": "number",
-              "const": 1
-            }
-          ]
-        }
-      ]
-    },
-    "LTICComposition": {
-      "anyOf": [
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "$ref": "#/definitions/Element"
-                },
-                {
-                  "type": "number",
-                  "const": 1
-                }
-              ]
-            },
-            {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "$ref": "#/definitions/Element"
-                },
-                {
-                  "type": "number",
-                  "const": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "$ref": "#/definitions/Element"
-                },
-                {
-                  "type": "number",
-                  "const": 2
-                }
-              ]
-            },
-            {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "$ref": "#/definitions/Element"
-                },
-                {
-                  "type": "number",
-                  "const": 1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 1,
-          "items": [
-            {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "$ref": "#/definitions/Element"
-                },
-                {
-                  "type": "number",
-                  "const": 3
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "AtomComposition": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
-      "items": [
-        {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/Element"
-            },
-            {
-              "type": "number",
-              "const": 1
-            }
-          ]
-        }
-      ]
-    },
-    "AnySpecies": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Electron"
-        },
-        {
-          "$ref": "#/definitions/Atom"
-        },
-        {
-          "$ref": "#/definitions/AtomUnspecified"
-        },
-        {
-          "$ref": "#/definitions/AtomLS"
-        },
-        {
-          "$ref": "#/definitions/AtomLS1"
-        },
-        {
-          "$ref": "#/definitions/AtomJ1L2"
-        },
-        {
-          "$ref": "#/definitions/HomonuclearDiatom"
-        },
-        {
-          "$ref": "#/definitions/HeteronuclearDiatom"
-        },
-        {
-          "$ref": "#/definitions/LinearTriatomInversionCenter"
-        },
-        {
-          "$ref": "#/definitions/TriatomC2v"
-        },
-        {
-          "$ref": "#/definitions/Unspecified"
-        }
-      ]
-    },
-    "Electron": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "Electron"
-        },
-        "composition": {
-          "type": "string",
-          "const": "e"
-        },
-        "charge": {
-          "type": "number",
-          "const": -1
-        }
       },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
+      "id": "Composition"
     },
-    "Atom": {
+    "StateSummary": {
       "type": "object",
       "properties": {
-        "type": {
+        "summary": {
           "type": "string",
-          "const": "Atom"
+          "minLength": 1
+        },
+        "latex": {
+          "type": "string",
+          "minLength": 1
         },
         "composition": {
-          "$ref": "#/definitions/AtomComposition"
-        },
-        "charge": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
-    },
-    "AtomUnspecified": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "AtomUnspecified"
-        },
-        "composition": {
-          "$ref": "#/definitions/AtomComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "minItems": 2,
-              "description": "Compound"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge",
-        "electronic"
-      ],
-      "additionalProperties": false
-    },
-    "AtomLS": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "AtomLS"
-        },
-        "composition": {
-          "$ref": "#/definitions/AtomComposition"
-        },
-        "charge": {
-          "type": "integer"
+          "$ref": "#/$defs/SummarizedComponent"
         },
         "electronic": {
           "anyOf": [
             {
               "type": "object",
               "properties": {
-                "config": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "n": {
-                        "type": "integer",
-                        "minimum": 1
-                      },
-                      "l": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "occupance": {
-                        "type": "integer",
-                        "minimum": 0
-                      }
-                    },
-                    "required": [
-                      "n",
-                      "l",
-                      "occupance"
-                    ],
-                    "additionalProperties": false
-                  }
+                "summary": {
+                  "type": "string",
+                  "minLength": 1
                 },
-                "term": {
-                  "type": "object",
-                  "properties": {
-                    "L": {
-                      "type": "integer",
-                      "minimum": 0
-                    },
-                    "S": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
-                    },
-                    "P": {
-                      "type": "number",
-                      "enum": [
-                        -1,
-                        1
+                "latex": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "vibrational": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "summary": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "latex": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "rotational": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/SummarizedComponent"
+                            },
+                            {
+                              "minItems": 2,
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/$defs/SummarizedComponent"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "summary",
+                        "latex"
                       ]
                     },
-                    "J": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
+                    {
+                      "minItems": 2,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "summary": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "latex": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/SummarizedComponent"
+                              },
+                              {
+                                "minItems": 2,
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/SummarizedComponent"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "summary",
+                          "latex"
+                        ]
+                      }
                     }
-                  },
-                  "required": [
-                    "L",
-                    "S",
-                    "P",
-                    "J"
-                  ],
-                  "additionalProperties": false
+                  ]
                 }
               },
               "required": [
-                "config",
-                "term"
-              ],
-              "additionalProperties": false,
-              "description": "Singular"
+                "summary",
+                "latex"
+              ]
             },
             {
+              "minItems": 2,
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "config": {
-                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config"
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1
                   },
-                  "term": {
-                    "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term"
-                  }
-                },
-                "required": [
-                  "config",
-                  "term"
-                ],
-                "additionalProperties": false
-              },
-              "minItems": 2,
-              "description": "Compound"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge",
-        "electronic"
-      ],
-      "additionalProperties": false
-    },
-    "AtomLS1": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "AtomLS1"
-        },
-        "composition": {
-          "$ref": "#/definitions/AtomComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "config": {
-                  "type": "object",
-                  "properties": {
-                    "core": {
-                      "type": "object",
-                      "properties": {
-                        "config": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
+                  "latex": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "vibrational": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "summary": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "latex": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "rotational": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/SummarizedComponent"
+                              },
+                              {
+                                "minItems": 2,
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/$defs/SummarizedComponent"
+                                }
+                              }
+                            ]
                           }
                         },
-                        "term": {
+                        "required": [
+                          "summary",
+                          "latex"
+                        ]
+                      },
+                      {
+                        "minItems": 2,
+                        "type": "array",
+                        "items": {
                           "type": "object",
                           "properties": {
-                            "L": {
-                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/L"
+                            "summary": {
+                              "type": "string",
+                              "minLength": 1
                             },
-                            "S": {
-                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/S"
+                            "latex": {
+                              "type": "string",
+                              "minLength": 1
                             },
-                            "P": {
-                              "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/P"
+                            "rotational": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/SummarizedComponent"
+                                },
+                                {
+                                  "minItems": 2,
+                                  "type": "array",
+                                  "items": {
+                                    "$ref": "#/$defs/SummarizedComponent"
+                                  }
+                                }
+                              ]
                             }
                           },
                           "required": [
-                            "L",
-                            "S",
-                            "P"
-                          ],
-                          "additionalProperties": false
+                            "summary",
+                            "latex"
+                          ]
                         }
-                      },
-                      "required": [
-                        "config",
-                        "term"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "excited": {
-                      "type": "object",
-                      "properties": {
-                        "config": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
-                          }
-                        },
-                        "term": {
-                          "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config/properties/core/properties/term"
-                        }
-                      },
-                      "required": [
-                        "config",
-                        "term"
-                      ],
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": [
-                    "core",
-                    "excited"
-                  ],
-                  "additionalProperties": false
-                },
-                "term": {
-                  "type": "object",
-                  "properties": {
-                    "L": {
-                      "type": "integer",
-                      "minimum": 0
-                    },
-                    "K": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
-                    },
-                    "S": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
-                    },
-                    "P": {
-                      "type": "number",
-                      "enum": [
-                        -1,
-                        1
-                      ]
-                    },
-                    "J": {
-                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/J"
-                    }
-                  },
-                  "required": [
-                    "L",
-                    "K",
-                    "S",
-                    "P",
-                    "J"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "config",
-                "term"
-              ],
-              "additionalProperties": false,
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "config": {
-                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config"
-                  },
-                  "term": {
-                    "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/term"
+                      }
+                    ]
                   }
                 },
                 "required": [
-                  "config",
-                  "term"
-                ],
-                "additionalProperties": false
-              },
-              "minItems": 2,
-              "description": "Compound"
+                  "summary",
+                  "latex"
+                ]
+              }
             }
           ]
         }
       },
       "required": [
-        "type",
-        "composition",
-        "charge",
-        "electronic"
+        "summary",
+        "latex",
+        "composition"
       ],
-      "additionalProperties": false
-    },
-    "AtomJ1L2": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "AtomJ1L2"
-        },
-        "composition": {
-          "$ref": "#/definitions/AtomComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "config": {
-                  "type": "object",
-                  "properties": {
-                    "core": {
-                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/1/items"
-                    },
-                    "excited": {
-                      "type": "object",
-                      "properties": {
-                        "config": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/config/items"
-                          }
-                        },
-                        "term": {
-                          "$ref": "#/definitions/AtomLS1/properties/electronic/anyOf/0/properties/config/properties/core/properties/term"
-                        }
-                      },
-                      "required": [
-                        "config",
-                        "term"
-                      ],
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": [
-                    "core",
-                    "excited"
-                  ],
-                  "additionalProperties": false
-                },
-                "term": {
-                  "type": "object",
-                  "properties": {
-                    "K": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
-                    },
-                    "S": {
-                      "type": "number",
-                      "multipleOf": 0.5,
-                      "minimum": 0
-                    },
-                    "P": {
-                      "type": "number",
-                      "enum": [
-                        -1,
-                        1
-                      ]
-                    },
-                    "J": {
-                      "$ref": "#/definitions/AtomLS/properties/electronic/anyOf/0/properties/term/properties/J"
-                    }
-                  },
-                  "required": [
-                    "K",
-                    "S",
-                    "P",
-                    "J"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "config",
-                "term"
-              ],
-              "additionalProperties": false,
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "config": {
-                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/config"
-                  },
-                  "term": {
-                    "$ref": "#/definitions/AtomJ1L2/properties/electronic/anyOf/0/properties/term"
-                  }
-                },
-                "required": [
-                  "config",
-                  "term"
-                ],
-                "additionalProperties": false
-              },
-              "minItems": 2,
-              "description": "Compound"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge",
-        "electronic"
-      ],
-      "additionalProperties": false
-    },
-    "HomonuclearDiatom": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "HomonuclearDiatom"
-        },
-        "composition": {
-          "$ref": "#/definitions/HomonuclearCompositionDescriptor"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "energyId": {
-                      "type": "string"
-                    },
-                    "Lambda": {
-                      "type": "number",
-                      "multipleOf": 0.5
-                    },
-                    "S": {
-                      "type": "number",
-                      "multipleOf": 0.5
-                    },
-                    "reflection": {
-                      "type": "string",
-                      "enum": [
-                        "-",
-                        "+"
-                      ]
-                    },
-                    "parity": {
-                      "type": "string",
-                      "enum": [
-                        "g",
-                        "u"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "energyId",
-                    "Lambda",
-                    "S",
-                    "parity"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "vibrational": {
-                      "anyOf": [
-                        {
-                          "allOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "v": {
-                                  "type": "integer"
-                                }
-                              },
-                              "required": [
-                                "v"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "rotational": {
-                                  "anyOf": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "J": {
-                                          "type": "integer"
-                                        }
-                                      },
-                                      "required": [
-                                        "J"
-                                      ],
-                                      "additionalProperties": false,
-                                      "description": "Singular"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "items": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "J": {
-                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                              }
-                                            },
-                                            "required": [
-                                              "J"
-                                            ],
-                                            "additionalProperties": false,
-                                            "description": "Singular"
-                                          },
-                                          {
-                                            "type": "string",
-                                            "description": "Unspecified"
-                                          }
-                                        ]
-                                      },
-                                      "minItems": 2,
-                                      "description": "Compound"
-                                    },
-                                    {
-                                      "type": "string",
-                                      "description": "Unspecified"
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          ],
-                          "description": "Singular"
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "v": {
-                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
-                                  }
-                                },
-                                "required": [
-                                  "v"
-                                ],
-                                "additionalProperties": false,
-                                "description": "Singular"
-                              },
-                              {
-                                "type": "string",
-                                "description": "Unspecified"
-                              }
-                            ]
-                          },
-                          "minItems": 2,
-                          "description": "Compound"
-                        },
-                        {
-                          "type": "string",
-                          "description": "Unspecified"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
-              },
-              "minItems": 2,
-              "description": "Compound"
-            },
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Unspecified"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
-    },
-    "HeteronuclearDiatom": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "HeteronuclearDiatom"
-        },
-        "composition": {
-          "$ref": "#/definitions/HeteronuclearDiatomComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "energyId": {
-                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/energyId"
-                    },
-                    "Lambda": {
-                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/Lambda"
-                    },
-                    "S": {
-                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/S"
-                    },
-                    "reflection": {
-                      "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0/properties/reflection"
-                    }
-                  },
-                  "required": [
-                    "energyId",
-                    "Lambda",
-                    "S"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "vibrational": {
-                      "anyOf": [
-                        {
-                          "allOf": [
-                            {
-                              "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "rotational": {
-                                  "anyOf": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "J": {
-                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                        }
-                                      },
-                                      "required": [
-                                        "J"
-                                      ],
-                                      "additionalProperties": false,
-                                      "description": "Singular"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "items": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "J": {
-                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                              }
-                                            },
-                                            "required": [
-                                              "J"
-                                            ],
-                                            "additionalProperties": false,
-                                            "description": "Singular"
-                                          },
-                                          {
-                                            "type": "string",
-                                            "description": "Unspecified"
-                                          }
-                                        ]
-                                      },
-                                      "minItems": 2,
-                                      "description": "Compound"
-                                    },
-                                    {
-                                      "type": "string",
-                                      "description": "Unspecified"
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          ],
-                          "description": "Singular"
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "v": {
-                                    "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
-                                  }
-                                },
-                                "required": [
-                                  "v"
-                                ],
-                                "additionalProperties": false,
-                                "description": "Singular"
-                              },
-                              {
-                                "type": "string",
-                                "description": "Unspecified"
-                              }
-                            ]
-                          },
-                          "minItems": 2,
-                          "description": "Compound"
-                        },
-                        {
-                          "type": "string",
-                          "description": "Unspecified"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/HeteronuclearDiatom/properties/electronic/anyOf/0/allOf/0"
-              },
-              "minItems": 2,
-              "description": "Compound"
-            },
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Unspecified"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
-    },
-    "LinearTriatomInversionCenter": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "LinearTriatomInversionCenter"
-        },
-        "composition": {
-          "$ref": "#/definitions/LTICComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "vibrational": {
-                      "anyOf": [
-                        {
-                          "allOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "v": {
-                                  "type": "array",
-                                  "minItems": 3,
-                                  "maxItems": 3,
-                                  "items": [
-                                    {
-                                      "type": "integer"
-                                    },
-                                    {
-                                      "type": "integer"
-                                    },
-                                    {
-                                      "type": "integer"
-                                    }
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "v"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "rotational": {
-                                  "anyOf": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "J": {
-                                          "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                        }
-                                      },
-                                      "required": [
-                                        "J"
-                                      ],
-                                      "additionalProperties": false,
-                                      "description": "Singular"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "items": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "J": {
-                                                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                              }
-                                            },
-                                            "required": [
-                                              "J"
-                                            ],
-                                            "additionalProperties": false,
-                                            "description": "Singular"
-                                          },
-                                          {
-                                            "type": "string",
-                                            "description": "Unspecified"
-                                          }
-                                        ]
-                                      },
-                                      "minItems": 2,
-                                      "description": "Compound"
-                                    },
-                                    {
-                                      "type": "string",
-                                      "description": "Unspecified"
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          ],
-                          "description": "Singular"
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "v": {
-                                    "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
-                                  }
-                                },
-                                "required": [
-                                  "v"
-                                ],
-                                "additionalProperties": false,
-                                "description": "Singular"
-                              },
-                              {
-                                "type": "string",
-                                "description": "Unspecified"
-                              }
-                            ]
-                          },
-                          "minItems": 2,
-                          "description": "Compound"
-                        },
-                        {
-                          "type": "string",
-                          "description": "Unspecified"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/HomonuclearDiatom/properties/electronic/anyOf/0/allOf/0"
-              },
-              "minItems": 2,
-              "description": "Compound"
-            },
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Unspecified"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
-    },
-    "TriatomC2v": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "TriatomC2v"
-        },
-        "composition": {
-          "$ref": "#/definitions/LTICComposition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "energyId": {
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  "required": [
-                    "energyId"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "vibrational": {
-                      "anyOf": [
-                        {
-                          "allOf": [
-                            {
-                              "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "rotational": {
-                                  "anyOf": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "J": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                          },
-                                          "minItems": 3,
-                                          "maxItems": 3
-                                        }
-                                      },
-                                      "required": [
-                                        "J"
-                                      ],
-                                      "additionalProperties": false,
-                                      "description": "Singular"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "items": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "J": {
-                                                "$ref": "#/definitions/TriatomC2v/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/1/properties/rotational/anyOf/0/properties/J"
-                                              }
-                                            },
-                                            "required": [
-                                              "J"
-                                            ],
-                                            "additionalProperties": false,
-                                            "description": "Singular"
-                                          },
-                                          {
-                                            "type": "string",
-                                            "description": "Unspecified"
-                                          }
-                                        ]
-                                      },
-                                      "minItems": 2,
-                                      "description": "Compound"
-                                    },
-                                    {
-                                      "type": "string",
-                                      "description": "Unspecified"
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          ],
-                          "description": "Singular"
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "v": {
-                                    "$ref": "#/definitions/LinearTriatomInversionCenter/properties/electronic/anyOf/0/allOf/1/properties/vibrational/anyOf/0/allOf/0/properties/v"
-                                  }
-                                },
-                                "required": [
-                                  "v"
-                                ],
-                                "additionalProperties": false,
-                                "description": "Singular"
-                              },
-                              {
-                                "type": "string",
-                                "description": "Unspecified"
-                              }
-                            ]
-                          },
-                          "minItems": 2,
-                          "description": "Compound"
-                        },
-                        {
-                          "type": "string",
-                          "description": "Unspecified"
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
-              "description": "Singular"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TriatomC2v/properties/electronic/anyOf/0/allOf/0"
-              },
-              "minItems": 2,
-              "description": "Compound"
-            },
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Unspecified"
-            }
-          ]
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
-    },
-    "Unspecified": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "const": "Unspecified"
-        },
-        "composition": {
-          "$ref": "#/definitions/Composition"
-        },
-        "charge": {
-          "type": "integer"
-        },
-        "electronic": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "required": [
-        "type",
-        "composition",
-        "charge"
-      ],
-      "additionalProperties": false
+      "id": "StateSummary"
     },
     "SummarizedComponent": {
       "type": "object",
@@ -2549,112 +3547,7 @@
         "summary",
         "latex"
       ],
-      "additionalProperties": false
-    },
-    "StateSummary": {
-      "type": "object",
-      "properties": {
-        "summary": {
-          "$ref": "#/definitions/SummarizedComponent/properties/summary"
-        },
-        "latex": {
-          "$ref": "#/definitions/SummarizedComponent/properties/latex"
-        },
-        "composition": {
-          "$ref": "#/definitions/SummarizedComponent"
-        },
-        "electronic": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "summary": {
-                  "$ref": "#/definitions/SummarizedComponent/properties/summary"
-                },
-                "latex": {
-                  "$ref": "#/definitions/SummarizedComponent/properties/latex"
-                },
-                "vibrational": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "summary": {
-                          "$ref": "#/definitions/SummarizedComponent/properties/summary"
-                        },
-                        "latex": {
-                          "$ref": "#/definitions/SummarizedComponent/properties/latex"
-                        },
-                        "rotational": {
-                          "anyOf": [
-                            {
-                              "$ref": "#/definitions/SummarizedComponent"
-                            },
-                            {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/definitions/SummarizedComponent"
-                              },
-                              "minItems": 2
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "summary",
-                        "latex"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0/properties/vibrational/anyOf/0"
-                      },
-                      "minItems": 2
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "summary",
-                "latex"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/StateSummary/properties/electronic/anyOf/0"
-              },
-              "minItems": 2
-            }
-          ]
-        }
-      },
-      "required": [
-        "summary",
-        "latex",
-        "composition"
-      ],
-      "additionalProperties": false
-    },
-    "SerializedSpecies": {
-      "type": "object",
-      "properties": {
-        "detailed": {
-          "$ref": "#/definitions/AnySpecies"
-        },
-        "serialized": {
-          "$ref": "#/definitions/StateSummary"
-        }
-      },
-      "required": [
-        "detailed",
-        "serialized"
-      ],
-      "additionalProperties": false
+      "id": "SummarizedComponent"
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }

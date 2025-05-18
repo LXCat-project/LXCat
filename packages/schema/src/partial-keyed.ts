@@ -2,18 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  object,
-  UnknownKeysParam,
-  ZodObject,
-  ZodRawShape,
-  ZodTypeAny,
-} from "zod";
+import { object, ZodObject, ZodRawShape } from "zod";
 import { Key } from "./key.js";
 
-export const partialKeyed = <
+export const PartialKeyed = <
   Shape extends ZodRawShape,
-  UnknownKeys extends UnknownKeysParam,
-  Catchall extends ZodTypeAny,
->(Base: ZodObject<Shape, UnknownKeys, Catchall>) =>
-  Base.merge(object({ _key: Key.optional() }));
+  InExtra extends Record<string, unknown>,
+  OutExtra extends Record<string, unknown>,
+>(Base: ZodObject<Shape, InExtra, OutExtra>) =>
+  object({ _key: Key.optional(), ...Base.shape });

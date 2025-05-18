@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const querySchema = z.object({
   body: z.object({
-    stateProcess: z.nativeEnum(StateProcess).optional(),
+    stateProcess: z.enum(StateProcess).optional(),
     reactions: z.array(z.string()).optional(),
   }),
 });

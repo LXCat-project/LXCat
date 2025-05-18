@@ -13,12 +13,10 @@ import { z } from "zod";
 import { EditForm } from "./edit-form";
 
 const ArangoKey = z.string().regex(/\d+/);
-const URLParams = z.object({ params: z.promise(z.object({ id: ArangoKey })) });
+const URLParams = z.object({ id: ArangoKey });
 
-type URLParams = z.infer<typeof URLParams>;
-
-const EditSetPage = async (props: URLParams) => {
-  const { id } = await URLParams.parse(props).params;
+const EditSetPage = async ({ params }: { params: Promise<unknown> }) => {
+  const { id } = URLParams.parse(await params);
   const session = await getServerSession(options);
 
   if (!(userIsAuthor(session) && await userOwnsSet(session.user.email, id))) {
