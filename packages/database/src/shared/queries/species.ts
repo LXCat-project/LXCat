@@ -4,7 +4,7 @@
 
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export type SpeciesNode = {
@@ -34,7 +34,7 @@ export async function getTopLevelSpecies(this: LXCatDatabase) {
       }
   `;
 
-  const cursor: ArrayCursor<SpeciesNode> = await this.db.query(query);
+  const cursor: Cursor<SpeciesNode> = await this.db.query(query);
   return cursor.all();
 }
 
@@ -61,6 +61,6 @@ export async function getSpeciesChildren(this: LXCatDatabase, key: string) {
         }
   `;
 
-  const cursor: ArrayCursor<SpeciesNode> = await this.db.query(query);
+  const cursor: Cursor<SpeciesNode> = await this.db.query(query);
   return cursor.all();
 }

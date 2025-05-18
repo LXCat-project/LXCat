@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Keyed } from "@lxcat/schema";
-import { DocumentData } from "arangojs/documents.js";
+import { DocumentData } from "arangojs/documents";
 import { z } from "zod";
 
 export const Session = z
