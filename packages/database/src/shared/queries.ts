@@ -65,7 +65,7 @@ export async function insertEdge(
 
 export async function insertStateDict(
   this: LXCatDatabase,
-  states: Record<string, AnySpeciesSerializable>,
+  states: Record<string, AnySpecies>,
 ): Promise<Record<string, string>> {
   const id_dict: Record<string, string> = {};
 
