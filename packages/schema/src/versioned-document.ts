@@ -19,14 +19,18 @@ import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
 
-export const VersionedDocumentBody = <ReferenceType extends ZodType>(
+export const VersionedDocumentBody = <
+  SpeciesType extends ZodType,
+  ReferenceType extends ZodType,
+>(
+  Species: SpeciesType,
   Reference: ReferenceType,
 ) =>
   versioned(
     object({
       ...SetHeader(Contributor).shape,
       references: record(string(), Reference),
-      states: record(string(), SerializedSpecies),
+      states: record(string(), Species),
       processes: array(
         VersionedProcess(string(), ReferenceRef(string().min(1))),
       ),
@@ -74,12 +78,15 @@ export const VersionedDocumentBody = <ReferenceType extends ZodType>(
 
 // Contains _key and version information. Datasets downloaded from LXCat use
 // this schema.
-export const VersionedLTPDocument = VersionedDocumentBody(Reference);
+export const VersionedLTPDocument = VersionedDocumentBody(
+  SerializedSpecies,
+  Reference,
+);
 export type VersionedLTPDocument = output<typeof VersionedLTPDocument>;
 
 export const VersionedLTPDocumentWithReference = intersection(
   SelfReference,
-  VersionedDocumentBody(Reference.or(string().min(1))),
+  VersionedDocumentBody(SerializedSpecies, Reference.or(string().min(1))),
 );
 export type VersionedLTPDocumentWithReference = output<
   typeof VersionedLTPDocumentWithReference
