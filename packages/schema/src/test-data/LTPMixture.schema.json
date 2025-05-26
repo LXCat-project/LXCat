@@ -1194,6 +1194,141 @@
           "type": "object",
           "properties": {
             "type": {
+              "const": "AtomLSUncoupled"
+            },
+            "composition": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "const": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            "charge": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "electronic": {
+              "anyOf": [
+                {
+                  "description": "Singular",
+                  "type": "object",
+                  "properties": {
+                    "config": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/ShellEntry"
+                      }
+                    },
+                    "term": {
+                      "type": "object",
+                      "properties": {
+                        "L": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "S": {
+                          "type": "number",
+                          "minimum": 0,
+                          "multipleOf": 0.5
+                        },
+                        "P": {
+                          "anyOf": [
+                            {
+                              "const": -1
+                            },
+                            {
+                              "const": 1
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "L",
+                        "S",
+                        "P"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "config",
+                    "term"
+                  ]
+                },
+                {
+                  "description": "Compound",
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/ShellEntry"
+                        }
+                      },
+                      "term": {
+                        "type": "object",
+                        "properties": {
+                          "L": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "S": {
+                            "type": "number",
+                            "minimum": 0,
+                            "multipleOf": 0.5
+                          },
+                          "P": {
+                            "anyOf": [
+                              {
+                                "const": -1
+                              },
+                              {
+                                "const": 1
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "L",
+                          "S",
+                          "P"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "term"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "composition",
+            "charge",
+            "electronic"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
               "const": "AtomLS"
             },
             "composition": {

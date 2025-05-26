@@ -16,11 +16,7 @@ import {
   ShellEntry,
   TotalAngularSpecifier,
 } from "./common.js";
-import {
-  LSTermUncoupled,
-  serializeLatexLSTermImpl,
-  serializeLSTermImpl,
-} from "./ls.js";
+import { LSTerm, serializeLatexLSTerm, serializeLSTerm } from "./ls.js";
 
 export const LS1Term = object({
   L: number().int().nonnegative(),
@@ -32,8 +28,8 @@ export type LS1Term = TypeOf<typeof LS1Term>;
 
 export const LS1Descriptor = buildTerm(
   buildTwoTerm(
-    buildTerm(array(ShellEntry), LSTermUncoupled),
-    buildTerm(array(ShellEntry), LSTermUncoupled),
+    buildTerm(array(ShellEntry), LSTerm),
+    buildTerm(array(ShellEntry), LSTerm),
   ),
   LS1Term,
 );
@@ -53,11 +49,11 @@ export function serializeLS1(e: LS1Descriptor): string {
   return (
     serializeShellConfig(e.config.core.config)
     + "{"
-    + serializeLSTermImpl(e.config.core.term)
+    + serializeLSTerm(e.config.core.term)
     + "}"
     + serializeShellConfig(e.config.excited.config)
     + "{"
-    + serializeLSTermImpl(e.config.excited.term)
+    + serializeLSTerm(e.config.excited.term)
     + "}"
     + serializeLS1Term(e.term)
   );
@@ -73,11 +69,11 @@ export function serializeLatexLS1(e: LS1Descriptor): string {
   return (
     serializeShellConfig(e.config.core.config)
     + "("
-    + serializeLatexLSTermImpl(e.config.core.term)
+    + serializeLatexLSTerm(e.config.core.term)
     + ")"
     + serializeShellConfig(e.config.excited.config)
     + "("
-    + serializeLatexLSTermImpl(e.config.excited.term)
+    + serializeLatexLSTerm(e.config.excited.term)
     + ")"
     + serializeLatexLS1Term(e.term)
   );

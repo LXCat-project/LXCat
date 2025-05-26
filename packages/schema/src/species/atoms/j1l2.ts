@@ -15,14 +15,12 @@ import {
   ShellEntry,
   TotalAngularSpecifier,
 } from "./common.js";
+import { LSTerm, serializeLatexLSTerm, serializeLSTerm } from "./ls.js";
 import {
-  LSDescriptor,
-  LSTermUncoupled,
-  serializeLatexLSTerm,
-  serializeLatexLSTermImpl,
-  serializeLSTerm,
-  serializeLSTermImpl,
-} from "./ls.js";
+  LSJDescriptor,
+  serializeLatexLSJTerm,
+  serializeLSJTerm,
+} from "./lsj.js";
 
 export const J1L2Term = object({
   K: number().multipleOf(0.5).nonnegative(),
@@ -32,7 +30,7 @@ export const J1L2Term = object({
 export type J1L2Term = TypeOf<typeof J1L2Term>;
 
 const J1L2Descriptor = buildTerm(
-  buildTwoTerm(LSDescriptor, buildTerm(array(ShellEntry), LSTermUncoupled)),
+  buildTwoTerm(LSJDescriptor, buildTerm(array(ShellEntry), LSTerm)),
   J1L2Term,
 );
 type J1L2Descriptor = TypeOf<typeof J1L2Descriptor>;
@@ -48,11 +46,11 @@ const serializeJ1L2 = (e: J1L2Descriptor): string => {
   return (
     serializeShellConfig(e.config.core.config)
     + "{"
-    + serializeLSTerm(e.config.core.term)
+    + serializeLSJTerm(e.config.core.term)
     + "}"
     + serializeShellConfig(e.config.excited.config)
     + "{"
-    + serializeLSTermImpl(e.config.excited.term)
+    + serializeLSTerm(e.config.excited.term)
     + "}"
     + serializeJ1L2Term(e.term)
   );
@@ -69,11 +67,11 @@ const serializeLatexJ1L2 = (e: J1L2Descriptor): string => {
   return (
     serializeShellConfig(e.config.core.config)
     + "("
-    + serializeLatexLSTerm(e.config.core.term)
+    + serializeLatexLSJTerm(e.config.core.term)
     + ")"
     + serializeShellConfig(e.config.excited.config)
     + "("
-    + serializeLatexLSTermImpl(e.config.excited.term)
+    + serializeLatexLSTerm(e.config.excited.term)
     + ")"
     + serializeLatexJ1L2Term(e.term)
   );

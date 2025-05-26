@@ -40,6 +40,21 @@ describe("State serialization", () => {
     [
       "Helium LS ground",
       {
+        type: "AtomLSUncoupled",
+        composition: [["He", 1]],
+        charge: 0,
+        electronic: { config: [], term: { L: 0, S: 0, P: 1 } },
+      },
+      {
+        summary: "He{^1S}",
+        latex: "\\mathrm{He}\\left({}^{1}\\mathrm{S}\\right)",
+        composition: { summary: "He", latex: "\\mathrm{He}" },
+        electronic: { summary: "^1S", latex: "{}^{1}\\mathrm{S}" },
+      },
+    ],
+    [
+      "Helium LSJ ground",
+      {
         type: "AtomLS",
         composition: [["He", 1]],
         charge: 0,
