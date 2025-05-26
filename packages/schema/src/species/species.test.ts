@@ -543,6 +543,67 @@ describe("State serialization", () => {
         },
       },
     ],
+    [
+      "Excited N atom (two-term LS coupling)",
+      {
+        type: "AtomLSTwoTerm",
+        composition: [["N", 1]],
+        charge: 0,
+        electronic: {
+          config: {
+            core: {
+              config: [{ n: 2, l: 1, occupance: 2 }],
+              term: { S: 1, L: 1, P: 1 },
+            },
+            excited: {
+              config: [{ n: 3, l: 0, occupance: 1 }],
+            },
+          },
+          term: { S: 1.5, L: 1, P: 1 },
+        },
+      },
+      {
+        composition: { summary: "N", latex: "\\mathrm{N}" },
+        summary: "N{2p^{2}{^3P}3s ^4P}",
+        latex:
+          "\\mathrm{N}\\left(2p^{2}\\left({}^{3}\\mathrm{P}\\right)3s\\;{}^{4}\\mathrm{P}\\right)",
+        electronic: {
+          summary: "2p^{2}{^3P}3s ^4P",
+          latex: "2p^{2}\\left({}^{3}\\mathrm{P}\\right)3s\\;{}^{4}\\mathrm{P}",
+        },
+      },
+    ],
+    [
+      "Excited N atom (two-term LSJ coupling)",
+      {
+        type: "AtomLSJTwoTerm",
+        composition: [["N", 1]],
+        charge: 0,
+        electronic: {
+          config: {
+            core: {
+              config: [{ n: 2, l: 1, occupance: 2 }],
+              term: { S: 1, L: 1, P: 1 },
+            },
+            excited: {
+              config: [{ n: 3, l: 0, occupance: 1 }],
+            },
+          },
+          term: { S: 1.5, L: 1, P: 1, J: 0.5 },
+        },
+      },
+      {
+        composition: { summary: "N", latex: "\\mathrm{N}" },
+        summary: "N{2p^{2}{^3P}3s ^4P_1/2}",
+        latex:
+          "\\mathrm{N}\\left(2p^{2}\\left({}^{3}\\mathrm{P}\\right)3s\\;{}^{4}\\mathrm{P}_{1/2}\\right)",
+        electronic: {
+          summary: "2p^{2}{^3P}3s ^4P_1/2",
+          latex:
+            "2p^{2}\\left({}^{3}\\mathrm{P}\\right)3s\\;{}^{4}\\mathrm{P}_{1/2}",
+        },
+      },
+    ],
   ];
 
   it.each(testCases)("%s", (_, input, summary) => {
