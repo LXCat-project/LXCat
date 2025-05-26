@@ -19,7 +19,6 @@ import {
   serializeLatexLSTerm,
   serializeLSTerm,
 } from "./ls.js";
-import { serializeAtom } from "./serialize.js";
 
 const TwoTermLSDescriptor = buildTerm(
   buildTwoTerm(
