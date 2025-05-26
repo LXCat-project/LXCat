@@ -55,6 +55,7 @@ export const LSComponent = makeComponent(
 );
 export type LSComponent = TypeOf<typeof LSComponent>;
 
+// TODO: After migration, this type should be renamed to `AtomLS`.
 export const AtomLS = makeAtom(
   "AtomLSUncoupled",
   SpeciesBase(AtomComposition),

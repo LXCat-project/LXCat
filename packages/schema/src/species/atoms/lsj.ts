@@ -50,6 +50,7 @@ export const LSJComponent = makeComponent(
 );
 export type LSJComponent = TypeOf<typeof LSJComponent>;
 
+// TODO: After migration this type should be renamed to `AtomLSJ`.
 export const AtomLSJ = makeAtom(
   "AtomLS",
   SpeciesBase(AtomComposition),
