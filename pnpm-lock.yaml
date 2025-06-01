@@ -241,8 +241,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       oidc-provider:
-        specifier: ^9.1.1
-        version: 9.1.1
+        specifier: ^9.1.2
+        version: 9.1.2
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.50.1)
@@ -5168,8 +5168,8 @@ packages:
   jose@4.15.5:
     resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
 
-  jose@6.0.10:
-    resolution: {integrity: sha512-skIAxZqcMkOrSwjJvplIPYrlXGpxTPnro2/QWTDCxAdWQrSTV5/KqspMWmi5WAx5+ULswASJiZ0a+1B/Lxt9cw==}
+  jose@6.0.11:
+    resolution: {integrity: sha512-QxG7EaliDARm1O1S8BGakqncGT9s25bKL1WSf6/oa17Tkqwi8D2ZNglqCF+DsYF88/rV66Q/Q2mFAy697E1DUg==}
 
   js-levenshtein@1.1.6:
     resolution: {integrity: sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==}
@@ -6044,8 +6044,8 @@ packages:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
 
-  oidc-provider@9.1.1:
-    resolution: {integrity: sha512-kkH1yWjjEUKVe2pbWS7vvE3ibRae/yjCcRq1Q8PKu5eGOg4MWlmino7A1Hm1bDYm+bLAdHIVcMdb2i9nbeUTeA==}
+  oidc-provider@9.1.2:
+    resolution: {integrity: sha512-IEqKmr0cHLMRfwSUoUcZy0fhaWpNhSF2yHTqletqb/lz/XJFWRxnLOJhtSZuSnwSGTfWVY1FU8RoUy7IygUZZQ==}
 
   oidc-token-hash@5.1.0:
     resolution: {integrity: sha512-y0W+X7Ppo7oZX6eovsRkuzcSM40Bicg2JEJkDJ4irIt1wsYAP5MLSNv+QAogO8xivMffw/9OvV3um1pxXgt1uA==}
@@ -13391,7 +13391,7 @@ snapshots:
 
   jose@4.15.5: {}
 
-  jose@6.0.10: {}
+  jose@6.0.11: {}
 
   js-levenshtein@1.1.6: {}
 
@@ -14664,13 +14664,13 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  oidc-provider@9.1.1:
+  oidc-provider@9.1.2:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
-      debug: 4.4.0
+      debug: 4.4.1
       eta: 3.5.0
-      jose: 6.0.10
+      jose: 6.0.11
       jsesc: 3.1.0
       koa: 3.0.0
       nanoid: 5.1.5
