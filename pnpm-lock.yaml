@@ -305,8 +305,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@testcontainers/arangodb':
-        specifier: ^10.28.0
-        version: 10.28.0
+        specifier: ^11.0.0
+        version: 11.0.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -2298,8 +2298,8 @@ packages:
   '@tabler/icons@3.33.0':
     resolution: {integrity: sha512-NZeFfzcYe7xcBHR3zKoCSrw/cFWvfj6LjenPQ48yVMTGdX854HH9nH44ZfMH8rrDzHBllfjwl4CIX6Vh2tyN0Q==}
 
-  '@testcontainers/arangodb@10.28.0':
-    resolution: {integrity: sha512-0Xs4+iWcFQJaEkCOELLdZuFfAhvUWTSOBb0xOaB9b1xHlI4pepLoaS4tn45TpoaN2CwYYVc6rDcTOZloqqXsoA==}
+  '@testcontainers/arangodb@11.0.0':
+    resolution: {integrity: sha512-1L0gE8fFTH1lFKHe3g02BSRM9fLjkVriqgIILIWh7k5h6odtB3jtD7fiikscZ6Xc+rFOsRLEqUkawfBVG+PXIw==}
 
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
@@ -3847,6 +3847,10 @@ packages:
 
   docker-compose@0.24.8:
     resolution: {integrity: sha512-plizRs/Vf15H+GCVxq2EUvyPK7ei9b/cVesHvjnX4xaXjM9spHe2Ytq0BitndFgvTJ3E3NljPNUEl7BAN43iZw==}
+    engines: {node: '>= 6.0.0'}
+
+  docker-compose@1.2.0:
+    resolution: {integrity: sha512-wIU1eHk3Op7dFgELRdmOYlPYS4gP8HhH1ZmZa13QZF59y0fblzFDFmKPhyc05phCy2hze9OEvNZAsoljrs+72w==}
     engines: {node: '>= 6.0.0'}
 
   docker-modem@5.0.6:
@@ -7301,6 +7305,9 @@ packages:
   testcontainers@10.28.0:
     resolution: {integrity: sha512-1fKrRRCsgAQNkarjHCMKzBKXSJFmzNTiTbhb5E/j5hflRXChEtHvkefjaHlgkNUjfw92/Dq8LTgwQn6RDBFbMg==}
 
+  testcontainers@11.0.0:
+    resolution: {integrity: sha512-8zY2V+eovC6aylgMqMR3A7H+un2gqpqepbvBCnjo7QP2fpI0pJZhSus+A5TckHpF2CR2d1Zj/IQ5rNPW/HjS6g==}
+
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
 
@@ -7522,6 +7529,10 @@ packages:
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
+
+  undici@7.10.0:
+    resolution: {integrity: sha512-u5otvFBOBZvmdjWLVW+5DAc9Nkq8f24g0O9oY7qw2JVIF1VocIFoyz9JFkuVOS2j41AufeO0xnlweJ2RLT8nGw==}
+    engines: {node: '>=20.18.1'}
 
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
@@ -9880,9 +9891,9 @@ snapshots:
 
   '@tabler/icons@3.33.0': {}
 
-  '@testcontainers/arangodb@10.28.0':
+  '@testcontainers/arangodb@11.0.0':
     dependencies:
-      testcontainers: 10.28.0
+      testcontainers: 11.0.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -11632,6 +11643,10 @@ snapshots:
       dequal: 2.0.3
 
   docker-compose@0.24.8:
+    dependencies:
+      yaml: 2.8.0
+
+  docker-compose@1.2.0:
     dependencies:
       yaml: 2.8.0
 
@@ -16315,6 +16330,27 @@ snapshots:
       - bare-buffer
       - supports-color
 
+  testcontainers@11.0.0:
+    dependencies:
+      '@balena/dockerignore': 1.0.2
+      '@types/dockerode': 3.3.39
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      byline: 5.0.0
+      debug: 4.4.1
+      docker-compose: 1.2.0
+      dockerode: 4.0.6
+      get-port: 7.1.0
+      proper-lockfile: 4.1.2
+      properties-reader: 2.3.0
+      ssh-remote-port-forward: 1.0.4
+      tar-fs: 3.0.9
+      tmp: 0.2.3
+      undici: 7.10.0
+    transitivePeerDependencies:
+      - bare-buffer
+      - supports-color
+
   text-decoder@1.2.3:
     dependencies:
       b4a: 1.6.7
@@ -16529,6 +16565,8 @@ snapshots:
   undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
+
+  undici@7.10.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
