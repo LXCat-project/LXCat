@@ -48,8 +48,8 @@ importers:
         specifier: ^8.0.2
         version: 8.0.2(@mantine/hooks@8.0.2(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/form':
-        specifier: ^8.0.2
-        version: 8.0.2(react@19.1.0)
+        specifier: ^8.1.0
+        version: 8.1.0(react@19.1.0)
       '@mantine/hooks':
         specifier: ^8.0.2
         version: 8.0.2(react@19.1.0)
@@ -1925,8 +1925,8 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/form@8.0.2':
-    resolution: {integrity: sha512-vSp9BfrhC9o7RMRYMaND2UAflXO4i6c5F1qPkiM2FID6ye2RJxW8YHaGa3kA0VfBbhDw9sFBbl8p7ttE4RPzcw==}
+  '@mantine/form@8.1.0':
+    resolution: {integrity: sha512-bCLdeWRbuYfG7l5b7nSKYEdWEWLOl55g/dyifRjFEr9pOK9ZNCj7oCOtXp0Lk1QJGqopZoaKxb5mvajEwDFXoQ==}
     peerDependencies:
       react: ^18.x || ^19.x
 
@@ -2907,6 +2907,11 @@ packages:
 
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.15.0:
+    resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -9573,7 +9578,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mantine/form@8.0.2(react@19.1.0)':
+  '@mantine/form@8.1.0(react@19.1.0)':
     dependencies:
       fast-deep-equal: 3.1.3
       klona: 2.0.6
@@ -10705,6 +10710,8 @@ snapshots:
   acorn@7.4.1: {}
 
   acorn@8.14.1: {}
+
+  acorn@8.15.0: {}
 
   acorn@8.8.2: {}
 
@@ -16440,7 +16447,7 @@ snapshots:
   terser@5.18.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.14.1
+      acorn: 8.15.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
