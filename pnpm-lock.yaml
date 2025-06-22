@@ -223,8 +223,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
-        specifier: ^3.2.3
-        version: 3.2.3(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -317,8 +317,8 @@ importers:
         specifier: ^8.34.1
         version: 8.34.1(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint@9.29.0)(typescript@5.8.3)
       '@vitest/coverage-v8':
-        specifier: ^3.2.3
-        version: 3.2.3(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
       dprint:
         specifier: ^0.50.0
         version: 0.50.0
@@ -382,8 +382,8 @@ importers:
         specifier: ^8.34.1
         version: 8.34.1(@typescript-eslint/parser@8.34.0(eslint@9.29.0)(typescript@5.8.3))(eslint@9.29.0)(typescript@5.8.3)
       '@vitest/coverage-v8':
-        specifier: ^3.2.3
-        version: 3.2.3(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))
       dprint:
         specifier: ^0.50.0
         version: 0.50.0
@@ -2653,11 +2653,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@vitest/coverage-v8@3.2.3':
-    resolution: {integrity: sha512-D1QKzngg8PcDoCE8FHSZhREDuEy+zcKmMiMafYse41RZpBE5EDJyKOTdqK3RQfsV2S2nyKor5KCs8PyPRFqKPg==}
+  '@vitest/coverage-v8@3.2.4':
+    resolution: {integrity: sha512-EyF9SXU6kS5Ku/U82E259WSnvg6c8KTjppUncuNdm5QHpe17mwREHnjDzozC8x9MZ0xfBUFSaLkRv4TMA75ALQ==}
     peerDependencies:
-      '@vitest/browser': 3.2.3
-      vitest: 3.2.3
+      '@vitest/browser': 3.2.4
+      vitest: 3.2.4
     peerDependenciesMeta:
       '@vitest/browser':
         optional: true
@@ -10357,7 +10357,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.9.1':
     optional: true
 
-  '@vitest/coverage-v8@3.2.3(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))':
+  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/node@22.15.30)(sugarss@4.0.1)(terser@5.18.0)(tsx@4.20.3)(yaml@2.8.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
