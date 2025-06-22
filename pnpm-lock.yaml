@@ -90,8 +90,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1
       mantine-datatable:
-        specifier: ^8.1.0
-        version: 8.1.0(@mantine/core@8.1.0(@mantine/hooks@8.1.0(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.0(react@19.1.0))(clsx@2.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^8.1.1
+        version: 8.1.1(@mantine/core@8.1.0(@mantine/hooks@8.1.0(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.0(react@19.1.0))(clsx@2.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       mdast-util-from-markdown:
         specifier: ^2.0.2
         version: 2.0.2
@@ -5264,8 +5264,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  mantine-datatable@8.1.0:
-    resolution: {integrity: sha512-Ah2cUSBSCFdVW/70NzHgtGgQUc9cfO54WU3mpiwNZsoK4M+QTWwsmeVogJWmE7uiXQEse7tHu7/nzO2sNse6WA==}
+  mantine-datatable@8.1.1:
+    resolution: {integrity: sha512-ctoF6GVdxNwMz7T4VcJbSPXVd1nvhGOahUmYYeEba7yV21d3NwYhWoRIW92EtewBuhwSKYAd3a/krKe4rOIJ3A==}
     peerDependencies:
       '@mantine/core': '>=8.1'
       '@mantine/hooks': '>=8.1'
@@ -13473,7 +13473,7 @@ snapshots:
     dependencies:
       semver: 7.7.2
 
-  mantine-datatable@8.1.0(@mantine/core@8.1.0(@mantine/hooks@8.1.0(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.0(react@19.1.0))(clsx@2.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  mantine-datatable@8.1.1(@mantine/core@8.1.0(@mantine/hooks@8.1.0(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.0(react@19.1.0))(clsx@2.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@mantine/core': 8.1.0(@mantine/hooks@8.1.0(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/hooks': 8.1.0(react@19.1.0)
