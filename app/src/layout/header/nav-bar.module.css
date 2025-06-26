@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: rem(69px);
+  width: rem(94px);
   height: rem(45px);
   border-radius: var(--mantine-radius-md);
   background-color: var(--mantine-color-brand-filled);
@@ -39,13 +39,19 @@
 /*
  * The artwork has no margin of its own, so the padding comes from the box.
  * The sizes are whole pixels (the header content is 59px high, so a 45px box
- * and a 33px logo are centred on whole pixels), and the overflow is visible
+ * and a 33px logo are centred on whole pixels). The logo has an aspect ratio of
+ * 1400:575, so a height of 33px gives a width of 80px, and the overflow is visible
  * because the stroke extends past the viewBox where the artwork touches it.
  */
 .logoBox {
-  width: rem(55px);
+  width: rem(80px);
   height: rem(33px);
   overflow: visible;
+}
+
+/* The text is set in the same colour as the artwork. */
+.logoText {
+  fill: var(--mantine-color-white);
 }
 
 /* The stroke adds weight to the hairlines of the line art. */
