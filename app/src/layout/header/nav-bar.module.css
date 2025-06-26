@@ -3,85 +3,90 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  height: var(--lxcat-header-height);
-  background-color: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-}
-
-.inner {
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logoLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: rem(69px);
-  height: rem(45px);
-  border-radius: var(--mantine-radius-md);
-  background-color: var(--mantine-color-brand-filled);
-
-  @mixin hover {
-    background-color: var(--mantine-color-brand-filled-hover);
-  }
-}
-
 /*
  * The artwork has no margin of its own, so the padding comes from the box.
  * The sizes are whole pixels (the header content is 59px high, so a 45px box
- * and a 33px logo are centred on whole pixels), and the overflow is visible
+ * and a 33px logo are centred on whole pixels). The logo has an aspect ratio of
+ * 1400:575, so a height of 33px gives a width of 80px, and the overflow is visible
  * because the stroke extends past the viewBox where the artwork touches it.
  */
-.logoBox {
-  width: rem(55px);
-  height: rem(33px);
-  overflow: visible;
+/* The text is set in the same colour as the artwork. */
+/* The stroke adds weight to the hairlines of the line art. */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--lxcat-header-height);
+    background-color: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
-/* The stroke adds weight to the hairlines of the line art. */
+.inner {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logoLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: rem(94px);
+    height: rem(45px);
+    border-radius: var(--mantine-radius-md);
+    background-color: var(--mantine-color-brand-filled);
+
+    @mixin hover {
+        background-color: var(--mantine-color-brand-filled-hover);
+    }
+}
+
+.logoBox {
+    width: rem(80px);
+    height: rem(33px);
+    overflow: visible;
+}
+
+.logoText {
+    fill: var(--mantine-color-white);
+}
+
 .logoPath {
-  fill: var(--mantine-color-white);
-  stroke: var(--mantine-color-white);
-  stroke-width: 0.1;
-  stroke-linejoin: round;
+    fill: var(--mantine-color-white);
+    stroke: var(--mantine-color-white);
+    stroke-width: 0.1;
+    stroke-linejoin: round;
 }
 
 .link {
-  display: flex;
-  align-items: center;
-  gap: rem(6px);
-  line-height: 1;
-  padding: rem(8px) rem(12px);
-  border-radius: var(--mantine-radius-md);
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  font-size: var(--mantine-font-size-sm);
-  font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: rem(6px);
+    line-height: 1;
+    padding: rem(8px) rem(12px);
+    border-radius: var(--mantine-radius-md);
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+    font-size: var(--mantine-font-size-sm);
+    font-weight: 500;
 
-  @mixin hover {
-    text-decoration-line: none;
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-  }
+    @mixin hover {
+        text-decoration-line: none;
+        background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+    }
 
-  &[data-active] {
-    background-color: var(--mantine-color-brand-light);
-    color: var(--mantine-color-brand-light-color);
-  }
+    &[data-active] {
+        background-color: var(--mantine-color-brand-light);
+        color: var(--mantine-color-brand-light-color);
+    }
 }
 
 .chevron {
-  transition: transform 150ms ease;
+    transition: transform 150ms ease;
 
-  [data-expanded] > & {
-    transform: rotate(180deg);
-  }
+    [data-expanded] > & {
+        transform: rotate(180deg);
+    }
 }
