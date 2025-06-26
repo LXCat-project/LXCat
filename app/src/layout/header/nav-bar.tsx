@@ -7,6 +7,7 @@
 import classes from "./nav-bar.module.css";
 
 import { UserAnchor } from "@/auth/user-anchor";
+import { ChemCatLogo } from "@/shared/chemcat-logo";
 import {
   Burger,
   Container,
@@ -21,7 +22,6 @@ import { IconChevronDown } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
-import { LXCatLogo } from "../logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 import { MobileNav } from "./mobile-nav";
 import { isLinkActive, type NavLink, navLinks } from "./nav-links";
@@ -110,9 +110,14 @@ export function NavBar() {
       <Container size="xl" h="100%">
         <div className={classes.inner}>
           <Group gap="xl" wrap="nowrap">
-            <Link href="/" className={classes.logoLink} aria-label="LXCat home">
-              <LXCatLogo
+            <Link
+              href="/"
+              className={classes.logoLink}
+              aria-label="ChemCat home"
+            >
+              <ChemCatLogo
                 boxClassName={classes.logoBox}
+                textClassName={classes.logoText}
                 pathClassName={classes.logoPath}
               />
             </Link>

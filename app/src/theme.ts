@@ -10,18 +10,18 @@ import {
   type MantineColorsTuple,
 } from "@mantine/core";
 
-// Shade 7 is the LXCat navy (#254779) of the legacy website.
+// The ChemCat green.
 const brand: MantineColorsTuple = [
-  "#eef3fa",
-  "#dbe5f2",
-  "#b8cae3",
-  "#94aed3",
-  "#7195c6",
-  "#5a82b8",
-  "#3f6aa1",
-  "#254779",
-  "#1e3b66",
-  "#172e50",
+  "#eef9f1",
+  "#e1eee5",
+  "#c2daca",
+  "#a0c6ac",
+  "#84b493",
+  "#71aa83",
+  "#67a57a",
+  "#559068",
+  "#467a57",
+  "#3a6f4c",
 ];
 
 const fontFamily =
@@ -30,8 +30,8 @@ const fontFamily =
 export const theme = createTheme({
   colors: { brand },
   primaryColor: "brand",
-  // White text on the lighter dark-mode shade 4 has a contrast of only 3:1.
-  primaryShade: { light: 7, dark: 6 },
+  // White text on shade 7 has a contrast of only 3.8:1, on shade 8 it is 5:1.
+  primaryShade: { light: 8, dark: 8 },
   fontFamily,
   headings: { fontFamily },
   defaultRadius: "md",
