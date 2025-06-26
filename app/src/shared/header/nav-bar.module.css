@@ -50,8 +50,12 @@
 }
 
 .logoBox {
-    width: 70px;
-    height: 70px;
+    width: 250px;
+    height: 40px;
+}
+
+.logoText {
+    fill: var(--mantine-color-white);
 }
 
 .logoPath {
