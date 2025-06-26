@@ -17,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { Fragment } from "react";
-import { LXCatLogo } from "../logo";
+import { ChemCatLogo } from "../chemcat-logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 
 const links = [
@@ -149,8 +149,9 @@ export function NavBar() {
       <Container size="md">
         <div className={classes.inner}>
           <Link href="/">
-            <LXCatLogo
+            <ChemCatLogo
               boxClassName={classes.logoBox}
+              textClassName={classes.logoText}
               pathClassName={classes.logoPath}
             />
           </Link>
