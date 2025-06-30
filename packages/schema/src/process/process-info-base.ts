@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, literal, object, string, ZodTypeAny } from "zod";
+import { array, literal, object, string, ZodType } from "zod";
 
 export const ProcessInfoBase = <
   TypeTag extends string,
-  DataType extends ZodTypeAny,
-  ReferenceType extends ZodTypeAny,
+  DataType extends ZodType,
+  ReferenceType extends ZodType,
 >(
   type: TypeTag,
   dataType: DataType,
@@ -15,7 +15,7 @@ export const ProcessInfoBase = <
 ) =>
   object({
     type: literal(type),
-    comments: array(string().min(1)).optional(),
+    comments: array(string()).optional(),
     references: array(referenceType),
     data: dataType,
   });

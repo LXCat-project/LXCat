@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, number, object, TypeOf, ZodTypeAny } from "zod";
+import { globalRegistry, number, object, TypeOf, ZodType } from "zod";
 import { electronicOrbital } from "../common.js";
 
 /**
@@ -28,8 +28,8 @@ export const TotalAngularSpecifier = object({
  * @returns A zod object representing an atomic state configuration.
  */
 export const buildTerm = <
-  EConfig extends ZodTypeAny,
-  TermSymbol extends ZodTypeAny,
+  EConfig extends ZodType,
+  TermSymbol extends ZodType,
 >(electronConfig: EConfig, term: TermSymbol) =>
   object({ config: electronConfig, term });
 
@@ -43,8 +43,8 @@ export const buildTerm = <
  *          e.g. LS1 and J1L2 coupling).
  */
 export const buildTwoTerm = <
-  Core extends ZodTypeAny,
-  Excited extends ZodTypeAny,
+  Core extends ZodType,
+  Excited extends ZodType,
 >(core: Core, excited: Excited) => object({ core, excited });
 
 export const ShellEntry = object({
