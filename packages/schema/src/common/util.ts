@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, tuple, union, ZodTypeAny } from "zod";
+import { array, tuple, union, ZodType } from "zod";
 
-export const Pair = <InnerType extends ZodTypeAny>(InnerType: InnerType) =>
+export const Pair = <InnerType extends ZodType>(InnerType: InnerType) =>
   tuple([InnerType, InnerType]);
 
-export const OneOrMultiple = <InnerType extends ZodTypeAny>(
+export const OneOrMultiple = <InnerType extends ZodType>(
   InnerType: InnerType,
 ) => union([InnerType, array(InnerType).min(2)]);

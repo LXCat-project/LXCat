@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { number, object, TypeOf, ZodType, ZodTypeAny } from "zod";
+import { number, object, TypeOf, ZodType } from "zod";
 import { ProcessInfoBase } from "../process-info-base.js";
 import { CrossSectionData } from "./data-types.js";
 import { CrossSectionParameters } from "./parameters.js";
 
-export const CrossSectionInfo = <ReferenceType extends ZodTypeAny>(
+export const CrossSectionInfo = <ReferenceType extends ZodType>(
   ReferenceType: ReferenceType,
 ) =>
   ProcessInfoBase("CrossSection", CrossSectionData, ReferenceType).merge(
@@ -18,7 +18,7 @@ export const CrossSectionInfo = <ReferenceType extends ZodTypeAny>(
     }),
   );
 
-type CrossSectionInfoType<ReferenceType extends ZodTypeAny> = ReturnType<
+type CrossSectionInfoType<ReferenceType extends ZodType> = ReturnType<
   typeof CrossSectionInfo<ReferenceType>
 >;
 
