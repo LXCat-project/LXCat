@@ -30,6 +30,7 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
   return (
+    // @ts-ignore
     <Plot
       style={style}
       useResizeHandler

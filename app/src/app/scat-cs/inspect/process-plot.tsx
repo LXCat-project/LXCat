@@ -19,6 +19,7 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const ProcessPlot = ({ processes, colors }: ChartProps) => {
   return (
+    // @ts-ignore
     <Plot
       className={classes.plotBox}
       data={processes.map((process, index) => ({
