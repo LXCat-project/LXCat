@@ -17,7 +17,7 @@ export type CORSOptions = {
 };
 
 const DEFAULTS: CORSOptions = {
-  allowedOrigins: [/http:\/\/localhost:\d+/],
+  allowedOrigins: [/http:\/\/localhost:\d+/, /https:\/\/loki-suite.github.io/],
   allowedMethods: ["GET", "HEAD"],
   allowedHeaders: ["Authorization", "Content-Type"],
   preflightStatusCode: 204,
