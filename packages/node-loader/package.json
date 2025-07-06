@@ -21,7 +21,7 @@
     "loader-utils": "^3.3.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
+    "@babel/cli": "^7.28.0",
     "@babel/core": "^7.27.7",
     "@babel/preset-env": "^7.28.0",
     "cross-env": "^7.0.3",
