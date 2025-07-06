@@ -70,7 +70,7 @@
     "schema-dts": "^1.1.5",
     "server-only": "^0.0.1",
     "sharp": "^0.34.2",
-    "swr": "2.3.3",
+    "swr": "2.3.4",
     "true-myth": "^9.0.1",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.1",
