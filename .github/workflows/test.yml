@@ -93,7 +93,7 @@ jobs:
     - name: Install playwright browsers
       run: pnpm -C app exec playwright install chromium --with-deps
     - name: Run unit tests
-      run: pnpm -C app test -- run --coverage.enabled --coverage.all=false
+      run: pnpm -C app test run --coverage.enabled --coverage.all=false
     - name: Run end-to-end tests
       run: pnpm -C app test:e2e
     - name: Build end-to-end coverage report
@@ -129,7 +129,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/database
-      run: pnpm -C packages/database test -- run --coverage --pool=forks
+      run: pnpm -C packages/database test run --coverage
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
@@ -161,7 +161,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
     - name: Test @lxcat/schema
-      run: pnpm -C packages/schema test -- run --coverage
+      run: pnpm -C packages/schema test run --coverage
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
