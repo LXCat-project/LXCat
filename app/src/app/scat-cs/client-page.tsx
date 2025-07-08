@@ -20,18 +20,16 @@ import {
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import { Button, Fieldset, Group, Space, Text } from "@mantine/core";
+import { Button, Fieldset, Group, Stack } from "@mantine/core";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SWRConfig, unstable_serialize } from "swr";
 import { BAG_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
-import { Paging } from "../../cs/paging";
 import {
   emptyFilter,
   informationFromTemplates,
@@ -113,29 +111,23 @@ export const CSClient: NextPage<Props> = ({
   items: initialItems,
   options,
   selection: initialSelection,
-  paging: initialPaging,
   defaultReactionOptions,
 }) => {
   const [items, setItems] = useState(initialItems);
-  const [paging, setPaging] = useState(initialPaging);
   const [selection, setSelection] = useState(
     informationFromTemplates(initialSelection),
   );
   const [editableReaction, setEditableReaction] = useState(
     initialSelection.length - 1,
   );
-
-  const query = useSearchParams()!;
+  const [loading, setLoading] = useState(false);
 
   const nrItems = items.length;
 
   let canonicalUrl = "/scat-cs";
-  if (paging.offset > 0) {
-    canonicalUrl =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
-  }
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
+    setLoading(true);
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
         reactions: JSON.stringify(newSelection.map(({ options }) => options)),
@@ -144,18 +136,7 @@ export const CSClient: NextPage<Props> = ({
     );
     setItems(await res.json());
     setSelection(newSelection);
-    setPaging((prevPaging) => ({ ...prevPaging, offset: 0 }));
-  };
-
-  const onPageChange = async (newPaging: PagingOptions) => {
-    const res = await fetch(
-      `/api/scat-cs?${new URLSearchParams({
-        reactions: JSON.stringify(selection),
-        offset: newPaging.offset.toString(),
-      })}`,
-    );
-    setItems(await res.json());
-    setPaging(newPaging);
+    setLoading(false);
   };
 
   return (
@@ -163,85 +144,80 @@ export const CSClient: NextPage<Props> = ({
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
-      <h1>Scattering Cross Sections</h1>
-      <SWRConfig
-        value={{
-          provider: () =>
-            new CacheMap([
-              ...generateCachePairs(
-                defaultReactionTemplate(),
-                defaultReactionOptions,
-              ),
-              ...selection.flatMap((selected, index) =>
-                generateCachePairs(selected.options, options[index])
-              ),
-            ]),
-        }}
-      >
-        <Fieldset>
-          <Filter
-            selection={selection}
-            onChange={onChange}
-            editableReaction={editableReaction}
-            onEditableReactionChange={setEditableReaction}
-          />
-        </Fieldset>
-      </SWRConfig>
-      <Space h="sm" />
-      <Group justify="center">
-        <Button
-          color="red"
-          disabled={items.length == 0 && selection.length < 2}
-          onClick={() => {
-            onChange([emptyFilter()]);
-            setEditableReaction(0);
+      <Stack align="center">
+        <SWRConfig
+          value={{
+            provider: () =>
+              new CacheMap([
+                ...generateCachePairs(
+                  defaultReactionTemplate(),
+                  defaultReactionOptions,
+                ),
+                ...selection.flatMap((selected, index) =>
+                  generateCachePairs(selected.options, options[index])
+                ),
+              ]),
           }}
-          leftSection=<IconTrash />
         >
-          Clear selection
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            onChange([...selection, emptyFilter()]);
-            setEditableReaction(selection.length);
-          }}
-          leftSection=<IconAdjustmentsPlus />
-        >
-          Add Filter
-        </Button>
-        {nrItems > 0 && nrItems <= BAG_SIZE
-          ? (
-            <Link
-              href={`/scat-cs/inspect?ids=${items.map((d) => d.id).join(",")}`}
-              passHref
-              legacyBehavior
-            >
-              <Button
-                leftSection={<IconGraph />}
-                component="a"
-                style={{ textDecorationLine: "none" }}
-                variant="light"
+          <Fieldset
+            legend="Build your reaction template to search for cross sections"
+            style={{ marginTop: 10, width: "90%" }}
+          >
+            <Filter
+              selection={selection}
+              onChange={onChange}
+              editableReaction={editableReaction}
+              onEditableReactionChange={setEditableReaction}
+            />
+          </Fieldset>
+        </SWRConfig>
+        <Group justify="center">
+          <Button
+            color="red"
+            disabled={items.length == 0 && selection.length < 2}
+            onClick={() => {
+              onChange([emptyFilter()]);
+              setEditableReaction(0);
+            }}
+            leftSection=<IconTrash />
+          >
+            Clear selection
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              onChange([...selection, emptyFilter()]);
+              setEditableReaction(selection.length);
+            }}
+            leftSection=<IconAdjustmentsPlus />
+          >
+            Add Filter
+          </Button>
+          {nrItems > 0 && nrItems <= BAG_SIZE
+            ? (
+              <Link
+                href={`/scat-cs/inspect?ids=${
+                  items.map((d) => d.id).join(",")
+                }`}
+                passHref
+                legacyBehavior
               >
-                Plot selection
-              </Button>
-            </Link>
-          )
-          : <></>}
-      </Group>
-      <Space h="sm" />
-      {nrItems > 0 ? <CSTable items={items} /> : (
-        <Text>
-          The selection is empty. Use the selection tool above to start
-          searching for cross sections.
-        </Text>
-      )}
-      <Paging
-        paging={paging}
-        nrOnPage={nrItems}
-        query={{ reactions: query.get("reactions") }}
-        onChange={onPageChange}
-      />
+                <Button
+                  leftSection={<IconGraph />}
+                  component="a"
+                  style={{ textDecorationLine: "none" }}
+                  variant="light"
+                >
+                  Plot selection
+                </Button>
+              </Link>
+            )
+            : <></>}
+        </Group>
+        <Fieldset legend="Search results" w="90%" style={{ maxHeight: 600 }}>
+          <CSTable items={items} loading={loading} />
+        </Fieldset>
+      </Stack>
     </>
   );
 };
