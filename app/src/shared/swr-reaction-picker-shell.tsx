@@ -9,6 +9,7 @@ import {
   Group,
   MultiSelect,
   MultiSelectProps,
+  ScrollArea,
   Stack,
 } from "@mantine/core";
 import { CSSetFilter, CSSetFilterProps } from "./cs-set-filter";
@@ -63,7 +64,9 @@ export const SWRReactionPickerShell = ({
         />
       </Stack>
       <Fieldset legend="Set selection">
-        <CSSetFilter {...sets} />
+        <ScrollArea h={128} type="auto" offsetScrollbars>
+          <CSSetFilter {...sets} />
+        </ScrollArea>
       </Fieldset>
     </Group>
   );
