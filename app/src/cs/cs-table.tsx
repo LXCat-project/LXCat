@@ -16,9 +16,10 @@ import { ReactionSummary } from "./reaction-summary";
 
 interface Props {
   items: CrossSectionHeading[];
+  loading: boolean;
 }
 
-export const CSTable = ({ items }: Props) => {
+export const CSTable = ({ items, loading }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
   const router = useRouter();
 
@@ -44,6 +45,7 @@ export const CSTable = ({ items }: Props) => {
   return (
     <DataTable
       withTableBorder
+      fetching={loading}
       borderRadius="sm"
       highlightOnHover
       minHeight={150}

@@ -120,12 +120,14 @@ export const CSClient: NextPage<Props> = ({
   const [editableReaction, setEditableReaction] = useState(
     initialSelection.length - 1,
   );
+  const [loading, setLoading] = useState(false);
 
   const nrItems = items.length;
 
   let canonicalUrl = "/scat-cs";
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
+    setLoading(true);
     const res = await fetch(
       `/api/scat-cs?${new URLSearchParams({
         reactions: JSON.stringify(newSelection.map(({ options }) => options)),
@@ -134,6 +136,7 @@ export const CSClient: NextPage<Props> = ({
     );
     setItems(await res.json());
     setSelection(newSelection);
+    setLoading(false);
   };
 
   return (
@@ -212,7 +215,7 @@ export const CSClient: NextPage<Props> = ({
             : <></>}
         </Group>
         <Fieldset legend="Search results" w="90%" style={{ maxHeight: 600 }}>
-          <CSTable items={items} />
+          <CSTable items={items} loading={loading} />
         </Fieldset>
       </Stack>
     </>
