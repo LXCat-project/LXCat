@@ -32,12 +32,19 @@ const links = [
     link: "#1",
     links: [
       {
-        link: "/scat-cs",
         label: "Cross sections",
       },
       {
-        link: "/cs-set",
+        link: "/scat-cs",
+        label: "Reaction builder",
+      },
+      {
         label: "Cross section sets",
+        divider: true,
+      },
+      {
+        link: "/cs-set",
+        label: "Periodic table",
       },
     ],
   },
@@ -79,13 +86,22 @@ export function NavBar() {
   const [opened, { toggle }] = useDisclosure(false);
 
   const items = links.map((link) => {
-    const menuItems = link.links?.map((item) => (
-      <Link key={item.link} href={item.link} className={classes.item}>
-        <Menu.Item key={item.link}>
-          {item.label}
-        </Menu.Item>
-      </Link>
-    ));
+    const menuItems = link.links?.map((item) =>
+      item.link
+        ? (
+          <Link key={item.link} href={item.link} className={classes.item}>
+            <Menu.Item key={item.link}>
+              {item.label}
+            </Menu.Item>
+          </Link>
+        )
+        : (
+          <>
+            {item.divider ? <Menu.Divider /> : <></>}
+            <Menu.Label>{item.label}</Menu.Label>
+          </>
+        )
+    );
 
     if (menuItems) {
       return (
