@@ -44,8 +44,9 @@ export const CSTable = ({ items }: Props) => {
   return (
     <DataTable
       withTableBorder
-      borderRadius="md"
+      borderRadius="sm"
       highlightOnHover
+      minHeight={150}
       columns={[
         {
           accessor: "organization",
