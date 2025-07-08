@@ -25,13 +25,11 @@ import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SWRConfig, unstable_serialize } from "swr";
 import { BAG_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
-import { Paging } from "../../cs/paging";
 import {
   emptyFilter,
   informationFromTemplates,
@@ -113,11 +111,9 @@ export const CSClient: NextPage<Props> = ({
   items: initialItems,
   options,
   selection: initialSelection,
-  paging: initialPaging,
   defaultReactionOptions,
 }) => {
   const [items, setItems] = useState(initialItems);
-  const [paging, setPaging] = useState(initialPaging);
   const [selection, setSelection] = useState(
     informationFromTemplates(initialSelection),
   );
@@ -125,15 +121,9 @@ export const CSClient: NextPage<Props> = ({
     initialSelection.length - 1,
   );
 
-  const query = useSearchParams()!;
-
   const nrItems = items.length;
 
   let canonicalUrl = "/scat-cs";
-  if (paging.offset > 0) {
-    canonicalUrl =
-      `${process.env.NEXT_PUBLIC_URL}/scat-cs?offset=${paging.offset}`;
-  }
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
     const res = await fetch(
@@ -144,18 +134,6 @@ export const CSClient: NextPage<Props> = ({
     );
     setItems(await res.json());
     setSelection(newSelection);
-    setPaging((prevPaging) => ({ ...prevPaging, offset: 0 }));
-  };
-
-  const onPageChange = async (newPaging: PagingOptions) => {
-    const res = await fetch(
-      `/api/scat-cs?${new URLSearchParams({
-        reactions: JSON.stringify(selection),
-        offset: newPaging.offset.toString(),
-      })}`,
-    );
-    setItems(await res.json());
-    setPaging(newPaging);
   };
 
   return (
@@ -236,12 +214,6 @@ export const CSClient: NextPage<Props> = ({
           searching for cross sections.
         </Text>
       )}
-      <Paging
-        paging={paging}
-        nrOnPage={nrItems}
-        query={{ reactions: query.get("reactions") }}
-        onChange={onPageChange}
-      />
     </>
   );
 };
