@@ -68,7 +68,7 @@
     "zod": "4.0.0-beta.20250505T195954"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.0",
+    "@eslint/js": "^9.31.0",
     "@lxcat/tsconfig": "workspace:^",
     "@testcontainers/arangodb": "^11.1.0",
     "@types/deep-equal": "^1.0.4",
