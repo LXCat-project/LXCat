@@ -232,8 +232,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4(@types/node@22.15.30)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.2.0
+        version: 17.2.0
       dprint:
         specifier: ^0.50.1
         version: 0.50.1
@@ -298,8 +298,8 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.2.0
+        version: 17.2.0
       true-myth:
         specifier: ^9.0.1
         version: 9.0.1
@@ -3732,8 +3732,8 @@ packages:
   dompurify@3.2.6:
     resolution: {integrity: sha512-/2GogDQlohXPZe6D6NOgQvXLPSYBqIWMnZ8zzOhn09REE4eyAzb+Hed3jhoM9OkuaJ8P6ZGTTVWQKAi8ieIzfQ==}
 
-  dotenv@17.0.1:
-    resolution: {integrity: sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==}
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
   dprint@0.50.1:
@@ -7658,8 +7658,8 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  world-calendars@1.0.3:
-    resolution: {integrity: sha512-sAjLZkBnsbHkHWVhrsCU5Sa/EVuf9QqgvrN8zyJ2L/F9FR9Oc6CvVK0674+PGAtmmmYQMH98tCUSO4QLQv3/TQ==}
+  world-calendars@1.0.4:
+    resolution: {integrity: sha512-VGRnLJS+xJmGDPodgJRnGIDwGu0s+Cr9V2HB3EzlDZ5n0qb8h5SJtGUEkjrphZYAglEiXZ6kiXdmk0H/h/uu/w==}
 
   wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
@@ -11358,7 +11358,7 @@ snapshots:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
-  dotenv@17.0.1: {}
+  dotenv@17.2.0: {}
 
   dprint@0.50.1:
     optionalDependencies:
@@ -14424,7 +14424,7 @@ snapshots:
       to-px: 1.0.1
       topojson-client: 3.1.0
       webgl-context: 2.2.0
-      world-calendars: 1.0.3
+      world-calendars: 1.0.4
     transitivePeerDependencies:
       - mapbox-gl
       - supports-color
@@ -16546,7 +16546,7 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
-  world-calendars@1.0.3:
+  world-calendars@1.0.4:
     dependencies:
       object-assign: 4.1.1
 
