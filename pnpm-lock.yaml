@@ -39,8 +39,8 @@ importers:
         specifier: workspace:^
         version: link:../packages/schema
       '@mantine/carousel':
-        specifier: ^8.1.2
-        version: 8.1.2(@mantine/core@8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.2(react@19.1.0))(embla-carousel-react@8.6.0(react@19.1.0))(embla-carousel@8.6.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^8.1.3
+        version: 8.1.3(@mantine/core@8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.2(react@19.1.0))(embla-carousel-react@8.6.0(react@19.1.0))(embla-carousel@8.6.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/code-highlight':
         specifier: ^8.1.3
         version: 8.1.3(@mantine/core@8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.2(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1781,11 +1781,11 @@ packages:
     engines: {node: '>= 18'}
     deprecated: Please upgrade to v13.1.1+ per <https://github.com/koajs/router/pull/181>
 
-  '@mantine/carousel@8.1.2':
-    resolution: {integrity: sha512-HAA/WkBpCBfAP7K97bCpdNCDXbs9dKN59gkF2dLDScO+mN4R8KCGHA0eHAdFxw/1r3tQ5hb1N02ACjZ690+fHg==}
+  '@mantine/carousel@8.1.3':
+    resolution: {integrity: sha512-CvdFsBXVDubz2v2TJAOhtXbjTCkCTpXB5z67frxk/VqtlvBQF69Vo8Nj1Ah+j7lx9UpGrKL5nErmFYuKxXO2xw==}
     peerDependencies:
-      '@mantine/core': 8.1.2
-      '@mantine/hooks': 8.1.2
+      '@mantine/core': 8.1.3
+      '@mantine/hooks': 8.1.3
       embla-carousel: '>=8.0.0'
       embla-carousel-react: '>=8.0.0'
       react: ^18.x || ^19.x
@@ -9267,7 +9267,7 @@ snapshots:
       koa-compose: 4.1.0
       path-to-regexp: 6.3.0
 
-  '@mantine/carousel@8.1.2(@mantine/core@8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.2(react@19.1.0))(embla-carousel-react@8.6.0(react@19.1.0))(embla-carousel@8.6.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@mantine/carousel@8.1.3(@mantine/core@8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.2(react@19.1.0))(embla-carousel-react@8.6.0(react@19.1.0))(embla-carousel@8.6.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@mantine/core': 8.1.2(@mantine/hooks@8.1.2(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/hooks': 8.1.2(react@19.1.0)
