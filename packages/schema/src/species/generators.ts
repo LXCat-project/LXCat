@@ -14,6 +14,7 @@ import {
   ZodRawShape,
   ZodType,
 } from "zod";
+import { $ZodObjectConfig } from "zod/v4/core";
 import { type Component } from "./component.js";
 
 export const typeTag = <Tag extends string>(tag: Tag) =>
@@ -22,14 +23,13 @@ export const typeTag = <Tag extends string>(tag: Tag) =>
 export const makeMoleculeSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
-  InExtra extends Record<string, unknown>,
-  OutExtra extends Record<string, unknown>,
+  Config extends $ZodObjectConfig,
   ElectronicSchema extends ZodType,
   VibrationalSchema extends ZodType,
   RotationalSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, InExtra, OutExtra>,
+  composition: ZodObject<Shape, Config>,
   electronic: ElectronicSchema,
   vibrational: VibrationalSchema,
   rotational: RotationalSchema,
@@ -85,14 +85,13 @@ export const makeMoleculeSchema = <
 export const makeMolecule = <
   Tag extends string,
   Shape extends ZodRawShape,
-  InExtra extends Record<string, unknown>,
-  OutExtra extends Record<string, unknown>,
+  Config extends $ZodObjectConfig,
   ElectronicSchema extends ZodType,
   VibrationalSchema extends ZodType,
   RotationalSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, InExtra, OutExtra>,
+  composition: ZodObject<Shape, Config>,
   electronic: Component<ElectronicSchema>,
   vibrational: Component<VibrationalSchema>,
   rotational: Component<RotationalSchema>,
@@ -116,12 +115,11 @@ export const makeMolecule = <
 export const makeAtomSchema = <
   Tag extends string,
   Shape extends ZodRawShape,
-  InExtra extends Record<string, unknown>,
-  OutExtra extends Record<string, unknown>,
+  Config extends $ZodObjectConfig,
   ElectronicSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, InExtra, OutExtra>,
+  composition: ZodObject<Shape, Config>,
   electronic: ElectronicSchema,
 ) =>
   object({
@@ -136,12 +134,11 @@ export const makeAtomSchema = <
 export const makeAtom = <
   Tag extends string,
   Shape extends ZodRawShape,
-  InExtra extends Record<string, unknown>,
-  OutExtra extends Record<string, unknown>,
+  Config extends $ZodObjectConfig,
   ElectronicSchema extends ZodType,
 >(
   tag: Tag,
-  composition: ZodObject<Shape, InExtra, OutExtra>,
+  composition: ZodObject<Shape, Config>,
   electronic: Component<ElectronicSchema>,
 ) => ({
   plain: makeAtomSchema(tag, composition, electronic.in),
