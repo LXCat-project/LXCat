@@ -74,7 +74,7 @@
     "true-myth": "^9.2.0",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.1",
-    "zod": "4.0.0-beta.20250505T195954"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
