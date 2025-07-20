@@ -265,8 +265,8 @@ importers:
         specifier: ^0.0.27
         version: 0.0.27
       testcontainers:
-        specifier: ^11.2.1
-        version: 11.2.1
+        specifier: ^11.3.0
+        version: 11.3.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -335,8 +335,8 @@ importers:
         specifier: ^16.3.0
         version: 16.3.0
       testcontainers:
-        specifier: ^11.2.1
-        version: 11.2.1
+        specifier: ^11.3.0
+        version: 11.3.0
       tsx:
         specifier: ^4.20.3
         version: 4.20.3
@@ -2382,8 +2382,8 @@ packages:
   '@types/ms@0.7.31':
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
 
-  '@types/node@18.19.118':
-    resolution: {integrity: sha512-hIPK0hSrrcaoAu/gJMzN3QClXE4QdCdFvaenJ0JsjIbExP1JFFVH+RHcBt25c9n8bx5dkIfqKE+uw6BmBns7ug==}
+  '@types/node@18.19.120':
+    resolution: {integrity: sha512-WtCGHFXnVI8WHLxDAt5TbnCM4eSE+nI0QN2NJtwzcgMhht2eNz6V9evJrk+lwC8bCY8OWV5Ym8Jz7ZEyGnKnMA==}
 
   '@types/node@22.15.30':
     resolution: {integrity: sha512-6Q7lr06bEHdlfplU6YRbgG1SFBdlsfNC4/lX+SkhiTs0cpJkOElmWls8PxDFv4yY/xKb8Y6SO0OmSX4wgqTZbA==}
@@ -7142,8 +7142,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@11.2.1:
-    resolution: {integrity: sha512-KJALGi8ButKDZgzHr0PtJUVNBOSlSFncumZ34MCQTN4VEU9AK4tWTn9gCcAFzG4zBmzzC2aEbHMFUujqkbDvBg==}
+  testcontainers@11.3.0:
+    resolution: {integrity: sha512-bfSfWDZl5Ima/wRkDjoyuntLIp7wFv7jc+97/BL1zJyKszMFEDHsDcH1ryv8L4kYqVfl6V0efMzY4tluypa1nw==}
 
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
@@ -7362,8 +7362,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici@7.11.0:
-    resolution: {integrity: sha512-heTSIac3iLhsmZhUCjyS3JQEkZELateufzZuBaVM5RHXdSBMb1LPMQf5x+FH7qjsZYDP0ttAc3nnVpUB+wYbOg==}
+  undici@7.12.0:
+    resolution: {integrity: sha512-GrKEsc3ughskmGA9jevVlIOPMiiAHJ4OFUtaAH+NhfTUSiZ1wMPIQqQvAJUrJspFXJt3EBWgpAeoHEDVT1IBug==}
     engines: {node: '>=20.18.1'}
 
   unicode-canonical-property-names-ecmascript@2.0.1:
@@ -9651,7 +9651,7 @@ snapshots:
 
   '@testcontainers/arangodb@11.2.1':
     dependencies:
-      testcontainers: 11.2.1
+      testcontainers: 11.3.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -9930,7 +9930,7 @@ snapshots:
 
   '@types/ms@0.7.31': {}
 
-  '@types/node@18.19.118':
+  '@types/node@18.19.120':
     dependencies:
       undici-types: 5.26.5
 
@@ -9985,7 +9985,7 @@ snapshots:
 
   '@types/ssh2@1.15.5':
     dependencies:
-      '@types/node': 18.19.118
+      '@types/node': 18.19.120
 
   '@types/stylis@4.2.0': {}
 
@@ -16025,7 +16025,7 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.5
 
-  testcontainers@11.2.1:
+  testcontainers@11.3.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.42
@@ -16041,7 +16041,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.1.0
       tmp: 0.2.3
-      undici: 7.11.0
+      undici: 7.12.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -16255,7 +16255,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici@7.11.0: {}
+  undici@7.12.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
