@@ -47,7 +47,7 @@
     "mdast-util-from-markdown": "^2.0.2",
     "mermaid": "^11.9.0",
     "nanoid": "^5.1.5",
-    "next": "^15.3.5",
+    "next": "^15.4.2",
     "next-auth": "^4.24.11",
     "next-connect": "^1.0.0",
     "next-mdx-remote": "canary",
@@ -102,7 +102,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.2.4",
     "postcss-preset-mantine": "^1.18.0",
-    "swc-plugin-coverage-instrument": "^0.0.27",
+    "swc-plugin-coverage-instrument": "^0.0.28",
     "testcontainers": "^11.3.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
