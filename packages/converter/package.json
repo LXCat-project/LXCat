@@ -11,7 +11,7 @@
     "access": "public"
   },
   "napi": {
-    "name": "dist/index"
+    "binaryName": "dist/index"
   },
   "scripts": {
     "dev": "pnpm build",
