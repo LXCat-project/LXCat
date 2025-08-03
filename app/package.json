@@ -85,7 +85,7 @@
     "@types/deep-equal": "^1.0.4",
     "@types/json-schema": "^7.0.15",
     "@types/mdast": "^4.0.4",
-    "@types/node": "22.15.30",
+    "@types/node": "24.1.0",
     "@types/oidc-provider": "^9.1.2",
     "@types/plotly.js-basic-dist": "^1.54.4",
     "@types/react": "19.1.8",
