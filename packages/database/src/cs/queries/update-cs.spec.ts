@@ -160,7 +160,7 @@ describe("given draft cross section has been updated", () => {
 });
 
 describe("given a key of a non-existing cross section", () => {
-  it("should throw error", () => {
+  it("should throw error", async () =>
     expect(
       db.updateItem(
         "123456789",
@@ -170,8 +170,7 @@ describe("given a key of a non-existing cross section", () => {
         {},
         "Some organization",
       ),
-    ).rejects.toThrowError("Can not update cross section that does not exist");
-  });
+    ).rejects.toThrowError("Can not update cross section that does not exist"));
 });
 
 const invalidDeleteStatuses: Status[] = ["retracted", "archived"];
@@ -186,7 +185,7 @@ describe.each(invalidDeleteStatuses)(
       return () => truncateCrossSectionSetCollections(db.getDB());
     });
 
-    it("should throw an error", () => {
+    it("should throw an error", async () =>
       expect(
         db.updateItem(
           keycs1,
@@ -197,9 +196,8 @@ describe.each(invalidDeleteStatuses)(
           "Some organization",
         ),
       ).rejects.toThrowError(
-        /Can not update cross section due to invalid status/,
-      );
-    });
+        "Can not update cross section due to invalid status",
+      ));
   },
 );
 
