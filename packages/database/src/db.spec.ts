@@ -21,7 +21,7 @@ describe("given running ArangoDB container with empty lxcat database", () => {
   it("should be pingable", async () => {
     const result = await db.getDB().version();
     expect(result).toMatchObject({
-      license: "community",
+      license: "enterprise",
       server: "arango",
       version: expect.stringMatching(/\d+\.\d+\.\d+/),
     });

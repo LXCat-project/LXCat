@@ -1503,7 +1503,7 @@ describe("given updating published cross section set which already has draft", (
 });
 
 describe("given a key of a non-existing cross section set", () => {
-  it("should throw error", () => {
+  it("should throw error", async () =>
     expect(
       db.updateSet(
         "123456789",
@@ -1512,8 +1512,7 @@ describe("given a key of a non-existing cross section set", () => {
       ),
     ).rejects.toThrowError(
       "Can not update cross section set that does not exist",
-    );
-  });
+    ));
 });
 
 const invalidUpdateStatuses: Status[] = ["retracted", "archived"];
@@ -1526,7 +1525,7 @@ describe.each(invalidUpdateStatuses)(
       return async () => truncateCrossSectionSetCollections(db.getDB());
     });
 
-    it("should throw an error", () => {
+    it("should throw an error", async () =>
       expect(
         db.updateSet(
           keycss1,
@@ -1534,9 +1533,8 @@ describe.each(invalidUpdateStatuses)(
           "cannot update when already archived or retracted",
         ),
       ).rejects.toThrowError(
-        /Can not update cross section set due to invalid status/,
-      );
-    });
+        "Can not update cross section set due to invalid status",
+      ));
   },
 );
 

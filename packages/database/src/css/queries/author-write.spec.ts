@@ -410,7 +410,7 @@ describe("given filled ArangoDB container", () => {
       1,
       "Initial version",
     );
-    expect(
+    await expect(
       db.createSet(
         {
           complete: true,

@@ -45,11 +45,10 @@ describe.each(invalidDeleteStatuses)(
       return async () => truncateCrossSectionSetCollections(db.getDB());
     });
 
-    it("should throw an error", () => {
+    it("should throw an error", async () =>
       expect(db.deleteSet(keycss1, "Can I do it?")).rejects.toThrowError(
-        /Can not delete set due to invalid status/,
-      );
-    });
+        "Can not delete set due to invalid status",
+      ));
   },
 );
 

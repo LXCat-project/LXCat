@@ -18,14 +18,14 @@ export async function startDbContainer(
   password = "testpw",
   port: PortWithOptionalBinding = 8529,
 ) {
-  const dbImage = "arangodb/arangodb:3.12.0";
+  const dbImage = "arangodb:3.12.5.2";
   const container = await new ArangoDBContainer(dbImage, password)
     .withExposedPorts(port)
     .withWaitStrategy(Wait.forLogMessage("is ready for business. Have fun"))
     .start();
   const stream = await container.logs();
   stream
-    .on("data", console.log)
+    // .on("data", console.log)
     .on("err", console.error)
     .on("end", () => console.log("Stream closed"));
   const url = container.getHttpUrl();
