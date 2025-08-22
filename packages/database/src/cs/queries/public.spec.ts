@@ -54,6 +54,11 @@ describe("given 4 published cross sections in 2 sets", () => {
   describe("byIds()", () => {
     it("given correct ids should return 4 cross sections", async () => {
       const result = await db.getMixtureByIds(csids);
+
+      result.processes = result.processes.sort((a, b) =>
+        a.info[0]._key.localeCompare(b.info[0]._key)
+      );
+
       const expected: LTPMixture = {
         states: {
           "528": {
