@@ -25,7 +25,7 @@ export async function startDbContainer(
     .start();
   const stream = await container.logs();
   stream
-    .on("data", console.log)
+    // .on("data", console.log)
     .on("err", console.error)
     .on("end", () => console.log("Stream closed"));
   const url = container.getHttpUrl();
