@@ -81,7 +81,7 @@
     "@eslint/js": "^9.32.0",
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",
-    "@playwright/test": "1.50.1",
+    "@playwright/test": "1.54.1",
     "@types/deep-equal": "^1.0.4",
     "@types/json-schema": "^7.0.15",
     "@types/mdast": "^4.0.4",
