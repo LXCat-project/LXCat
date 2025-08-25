@@ -4,7 +4,7 @@
 
 // import { ReactionTypeTag } from "@lxcat/schema/dist/core/enumeration";
 import { type ReactionTypeTag } from "@lxcat/schema/process";
-import { aql, AqlLiteral } from "arangojs/aql.js";
+import { aql, AqlLiteral } from "arangojs/aql";
 import { ReactionFunction, Reversible } from "../types.js";
 
 export const getTypeTagFilterAQL =

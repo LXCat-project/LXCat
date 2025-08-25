@@ -4,8 +4,8 @@
 
 import { Contributor } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
-import { ArangoError } from "arangojs/error.js";
+import { Cursor } from "arangojs/cursors";
+import { ArangoError } from "arangojs/errors";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import { LXCatDatabase } from "../lxcat-database.js";
@@ -26,7 +26,7 @@ export async function toggleRole(
   userId: string,
   role: Role,
 ): Promise<Role[] | undefined> {
-  const cursor: ArrayCursor<Role[]> = await this.db.query(aql`
+  const cursor: Cursor<Role[]> = await this.db.query(aql`
         LET role = ${role}
         FOR u IN users
             FILTER u._key == ${userId}
@@ -65,7 +65,7 @@ export async function dropUser(this: LXCatDatabase, userId: string) {
 }
 
 export async function getUserByKey(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<UserInDb> = await this.db.query(aql`
+  const cursor: Cursor<UserInDb> = await this.db.query(aql`
     FOR u IN users
       FILTER u._key == ${key}
       RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
@@ -195,7 +195,7 @@ export async function dropSession(this: LXCatDatabase, sessionToken: string) {
 }
 
 export async function listUsers(this: LXCatDatabase) {
-  const cursor: ArrayCursor<UserFromDB> = await this.db.query(aql`
+  const cursor: Cursor<UserFromDB> = await this.db.query(aql`
     FOR u IN users
         LET organizations = (
             FOR m IN MemberOf
@@ -216,7 +216,7 @@ export type ContributorWithStats = Contributor & {
 };
 
 export async function listContributors(this: LXCatDatabase) {
-  const cursor: ArrayCursor<ContributorWithStats> = await this.db.query(aql`
+  const cursor: Cursor<ContributorWithStats> = await this.db.query(aql`
     FOR o IN Organization
       let nSets = COUNT(
         FOR set IN CrossSectionSet
@@ -231,7 +231,7 @@ export async function listContributors(this: LXCatDatabase) {
 }
 
 export async function listOrganizations(this: LXCatDatabase) {
-  const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
+  const cursor: Cursor<KeyedOrganization> = await this.db.query(aql`
     FOR o IN Organization
         RETURN { _key: o._key, name: o.name }
   `);
@@ -239,7 +239,7 @@ export async function listOrganizations(this: LXCatDatabase) {
 }
 
 export async function getAffiliations(this: LXCatDatabase, email: string) {
-  const cursor: ArrayCursor<KeyedOrganization> = await this.db.query(aql`
+  const cursor: Cursor<KeyedOrganization> = await this.db.query(aql`
     FOR u IN users
       FILTER u.email == ${email}
       FOR org IN OUTBOUND u MemberOf
@@ -292,7 +292,7 @@ export async function addOrganization(
   org: Contributor,
 ): Promise<Result<string, ArangoError>> {
   try {
-    const cursor: ArrayCursor<string> = await this.db.query(aql`
+    const cursor: Cursor<string> = await this.db.query(aql`
         INSERT ${org}
         IN Organization
         RETURN NEW._key

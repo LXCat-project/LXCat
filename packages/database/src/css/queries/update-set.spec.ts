@@ -9,7 +9,7 @@ import { aql } from "arangojs";
 import { Reference, Status, VersionedLTPDocument } from "@lxcat/schema";
 import { intoEditable, ReactionEntry } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
-import { ArangojsError } from "arangojs/lib/request.node.js";
+import { ArangojsError } from "arangojs/lib/request.node";
 import {
   insertSampleStateIds,
   sampleCrossSection,
