@@ -209,7 +209,7 @@ jobs:
     - name: Generate code coverage report
       run: |
         cd packages/converter
-        cargo llvm-cov report -r --codecov --output-path codecov.json
+        cargo llvm-cov report -r --coverage-target-only --target x86_64-unknown-linux-gnu --codecov --output-path codecov.json
         cd -
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
