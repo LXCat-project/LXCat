@@ -4,7 +4,6 @@
 
 import { Cite } from "@citation-js/core";
 import { db } from "@lxcat/database";
-import { z } from "zod";
 import {
   notFoundResponse,
   okJsonResponse,
@@ -19,7 +18,7 @@ import { RouteBuilder } from "../../../route-builder";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 
-import { querySchema } from "./schemas"
+import { querySchema } from "./schemas";
 const router = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
