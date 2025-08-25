@@ -11,13 +11,13 @@ import { MaybePromise } from "./util";
 export type RequestBody = string | object;
 
 type Params = {
-  path?: Record<string, string>;
+  path?: Record<string, string | Array<string>>;
   query?: Record<string, string>;
   body?: RequestBody;
 };
 
 export type NextContext = {
-  params: Promise<Record<string, string> | undefined>;
+  params: Promise<Record<string, string | Array<string>> | undefined>;
 };
 
 export type BaseContext = {
