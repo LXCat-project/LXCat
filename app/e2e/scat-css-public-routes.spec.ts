@@ -151,7 +151,7 @@ test.describe("given 2 dummy sets", () => {
 
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        page.locator("a[data-title=\"Download plot\"]").click(),
+        page.getByRole("button", { name: "Download plot" }).click(),
       ]);
 
       const svgPath = await download.path();
