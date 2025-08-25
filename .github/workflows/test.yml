@@ -46,7 +46,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 24
         cache: 'pnpm'
     - name: Install Rust
       uses: actions-rs/toolchain@v1
@@ -86,7 +86,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 24
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -124,7 +124,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 24
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -156,7 +156,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 24
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -188,7 +188,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 24
         cache: 'pnpm'
     - name: Install Rust
       uses: actions-rs/toolchain@v1
