@@ -11,11 +11,11 @@
     "access": "public"
   },
   "napi": {
-    "binaryName": "dist/index"
+    "binaryName": "index"
   },
   "scripts": {
     "dev": "pnpm build",
-    "build": "napi build --release --strip --dts dist/index.d.ts",
+    "build": "napi build --release --strip -o dist --dts index.d.ts",
     "build:debug": "napi build --dts dist/index.d.ts",
     "convert": "tsx util/convert.ts",
     "test": "tsx --test tests/valid.test.ts",
