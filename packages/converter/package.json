@@ -11,11 +11,11 @@
     "access": "public"
   },
   "napi": {
-    "name": "dist/index"
+    "binaryName": "index"
   },
   "scripts": {
     "dev": "pnpm build",
-    "build": "napi build --release --strip --dts dist/index.d.ts",
+    "build": "napi build --release --strip -o dist --dts index.d.ts",
     "build:debug": "napi build --dts dist/index.d.ts",
     "convert": "tsx util/convert.ts",
     "test": "tsx --test tests/valid.test.ts",
@@ -26,7 +26,7 @@
   "author": "Daan Boer",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@napi-rs/cli": "^2.18.4",
+    "@napi-rs/cli": "^3.1.5",
     "@types/node": "^22.15.30",
     "tsx": "^4.20.5"
   }
