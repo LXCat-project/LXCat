@@ -178,7 +178,7 @@ test.describe("/author/set/add", () => {
       .locator("button.mantine-UnstyledButton-root")
       .nth(2)
       .click();
-    await page.getByRole("menuitem").click();
+    await page.getByLabel("", { exact: true }).click();
 
     // Add product
     await page.getByRole("group", { name: "Products" }).getByRole("button")
@@ -188,7 +188,7 @@ test.describe("/author/set/add", () => {
       .locator("button.mantine-UnstyledButton-root")
       .nth(2)
       .click();
-    await page.getByRole("menuitem").click();
+    await page.getByLabel("", { exact: true }).click();
 
     // Add data entry
     await page.getByRole("button", { name: "Add info object" }).click();
