@@ -111,7 +111,8 @@ export const ProcessTable = (
       records={records}
       rowExpansion={{
         allowMultiple: true,
-        expandable: ({ record: { info } }) => info.comments !== undefined,
+        expandable: ({ record: { info: { comments } } }) =>
+          comments !== undefined && comments.length > 0,
         expanded: {
           recordIds: expanded,
           onRecordIdsChange: setExpanded,
@@ -173,7 +174,7 @@ export const ProcessTable = (
           textAlign: "center",
           width: 80,
           render: ({ info: { _key, comments } }) => {
-            if (comments) {
+            if (comments && comments.length > 0) {
               return expanded.includes(_key)
                 ? (
                   <Tooltip label="Hide comments">
