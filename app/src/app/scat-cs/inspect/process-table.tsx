@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
-import classes from "./inspect.module.css";
+import classes from "./process-table.module.css";
 
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
@@ -94,7 +94,7 @@ export const ProcessTable = (
       withColumnBorders
       borderRadius="md"
       idAccessor="info._key"
-      className={classes.processTable}
+      className={classes.table}
       records={records}
       columns={[{
         accessor: "reaction",
@@ -134,7 +134,7 @@ export const ProcessTable = (
       onSelectedRecordsChange={onChangeSelected}
       getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
         color: colorMap.get(_key),
-        className: classes.processCheckbox,
+        className: classes.checkbox,
       })}
     />
   );

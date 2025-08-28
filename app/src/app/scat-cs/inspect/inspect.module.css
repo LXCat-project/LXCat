@@ -9,20 +9,6 @@
     }
 }
 
-.processTable {
-    :global(.mantine-ScrollArea-viewport) {
-        max-height: 400px;
-    }
-}
-
 .smallMargin {
     margin: var(--mantine-spacing-sm);
-}
-
-.processCheckbox {
-    :global(.mantine-Checkbox-input) {
-        &:checked {
-            border-color: var(--mantine-color-gray-8);
-        }
-    }
 }
