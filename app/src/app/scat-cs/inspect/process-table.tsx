@@ -81,9 +81,7 @@ export const ProcessTable = (
 ) => {
   const [records, setRecords] = useState(processes);
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
-  const [expanded, setExpanded] = useState<Array<string>>(
-    records.length === 1 ? [records[0].info._key] : [],
-  );
+  const [expanded, setExpanded] = useState<Array<string>>([]);
 
   const availableTags = useMemo(
     () => [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
