@@ -100,7 +100,7 @@
     "oidc-provider": "^9.4.2",
     "playwright-test-coverage": "^1.2.12",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-preset-env": "^10.3.0",
+    "postcss-preset-env": "^10.3.1",
     "postcss-preset-mantine": "^1.18.0",
     "swc-plugin-coverage-instrument": "^0.0.28",
     "testcontainers": "^11.5.1",
