@@ -44,7 +44,7 @@ jobs:
         restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-
     - uses: pnpm/action-setup@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 24
         cache: 'pnpm'
@@ -84,7 +84,7 @@ jobs:
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 24
         cache: 'pnpm'
@@ -122,7 +122,7 @@ jobs:
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 24
         cache: 'pnpm'
@@ -154,7 +154,7 @@ jobs:
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 24
         cache: 'pnpm'
@@ -186,7 +186,7 @@ jobs:
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
     - uses: pnpm/action-setup@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 24
         cache: 'pnpm'
