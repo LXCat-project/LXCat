@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import z, { ZodObject, ZodOptional, ZodType } from "zod";
-import { speciesSchema } from "./app/api/schemas.openapi";
 import { mapObject } from "./shared/utils";
 
 export type ResponseConfig = {
