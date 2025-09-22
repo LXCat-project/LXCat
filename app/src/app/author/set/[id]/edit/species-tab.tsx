@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { EditedLTPDocument } from "@lxcat/schema";
+import { type EditedLTPDocument } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
   Accordion,
