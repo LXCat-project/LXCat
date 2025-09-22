@@ -161,7 +161,9 @@ export const EditForm = (
           </Tabs.Panel>
           <Tabs.Panel value="species">
             <SpeciesTab
-              species={form.values.set.states}
+              // NOTE: For some reason we need this cast (even though the types
+              //       should be exactly the same).
+              species={form.values.set.states as EditedLTPDocument["states"]}
               onChange={(species) => {
                 // NOTE: This is quite inefficient. However, it is far from the
                 //       bottleneck (rendering and state updates are the
