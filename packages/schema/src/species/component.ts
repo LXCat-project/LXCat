@@ -23,7 +23,13 @@ export const makeComponent = <ComponentSchema extends ZodType>(
   latex: (object: output<ComponentSchema>) => string,
 ): Component<ComponentSchema> =>
   schema.transform((object) => ({
-    ...object,
+    // NOTE: We are cheating the type system a little here. We need this because
+    //       the `Unspecified` types provide `string` components instead of
+    //       objects. TypeScript only allows to extend object types, but in
+    //       pure JavaScript extending a string object with a method is legal.
+    //       Therefore, this will work at runtime, but we need this any cast to
+    //       make it transpile.
+    ...object as any,
     summary: () => summary(object),
     latex: () => latex(object),
   }));
