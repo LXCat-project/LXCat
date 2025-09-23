@@ -5,6 +5,7 @@
 "use client";
 
 import { annotateMixture } from "@/shared/annotate-mixture";
+import { mapObject } from "@/shared/utils";
 import { LTPMixture } from "@lxcat/schema";
 import {
   Alert,
@@ -13,6 +14,7 @@ import {
   Grid,
   Group,
   Loader,
+  SegmentedControl,
   Stack,
 } from "@mantine/core";
 import {
@@ -66,6 +68,22 @@ const downloadFile = (
 
 const NUM_LINES_INIT = 5;
 
+const tabData = [
+  { value: "CrossSection", label: "Cross Sections" },
+  { value: "RateCoefficient", label: "Rate Coefficients" },
+];
+
+const plotData = {
+  "CrossSection": {
+    xlabel: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+    ylabel: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
+  },
+  "RateCoefficient": {
+    xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
+    ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^3/s}\\right)$",
+  },
+};
+
 export const PlotPageClient = (
   { processes, refs, setStats, setMismatch, data, permaLink, forceTermsOfUse }:
     {
@@ -80,17 +98,37 @@ export const PlotPageClient = (
 ) => {
   const router = useRouter();
 
-  const [selected, setSelected] = useState<Array<DenormalizedProcess>>(
-    processes.slice(0, NUM_LINES_INIT),
+  const infoTypes: Array<string> = [
+    ...new Set(processes.map((process) => process.info.type)),
+  ];
+
+  const [dataType, setDataType] = useState<string>(infoTypes[0]);
+
+  const processMap = Object.fromEntries(
+    infoTypes.map((kind) => [
+      kind,
+      processes.filter((process) => process.info.type == kind),
+    ]),
+  );
+
+  const [selected, setSelected] = useState<
+    Record<string, Array<DenormalizedProcess>>
+  >(
+    mapObject(
+      processMap,
+      ([type, processes]) => [type, processes.slice(0, NUM_LINES_INIT)],
+    ),
   );
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
   const colorMap = new Map(
-    processes.map((
-      { info: { _key: id } },
-      index,
-    ) => [id, colorScheme[index % colorScheme.length]]),
+    Object.values(processMap).flatMap((processes) =>
+      processes.map((
+        { info: { _key: id } },
+        index,
+      ) => [id, colorScheme[index % colorScheme.length]])
+    ),
   );
 
   const referenceMarkers = new Map(
@@ -126,19 +164,58 @@ export const PlotPageClient = (
         </Alert>
       )}
       <Grid
-        align="center"
         justify="center"
         className={classes.smallMargin}
       >
         <Grid.Col span="content">
           <Stack>
+            <SegmentedControl
+              className={infoTypes.length > 1 ? "" : classes.hidden}
+              value={dataType}
+              onChange={setDataType}
+              data={tabData.filter((entry) => infoTypes.includes(entry.value))}
+            />
             <Chart
-              processes={selected}
-              colors={selected.map(({ info: { _key: id } }) =>
+              processes={selected[dataType]}
+              colors={selected[dataType].map(({ info: { _key: id } }) =>
                 colorMap.get(id)!
               )}
+              xlabel={plotData[dataType].xlabel}
+              ylabel={plotData[dataType].ylabel}
             />
-            <Center>
+          </Stack>
+        </Grid.Col>
+        <Grid.Col span="auto">
+          <Stack>
+            <ProcessTable
+              processes={processMap[dataType]}
+              referenceMarkers={referenceMarkers}
+              colorMap={colorMap}
+              selected={selected[dataType]}
+              onChangeSelected={(processes) =>
+                setSelected({ ...selected, [dataType]: processes })}
+            />
+            <SetTable
+              sets={data.sets}
+              stats={setStats}
+              referenceMarkers={referenceMarkers}
+            />
+            <DataTable
+              withTableBorder
+              borderRadius="md"
+              className={classes.scrollableTable}
+              records={refs}
+              columns={[{
+                accessor: "marker",
+                title: "",
+                render: ({ id }) => referenceMarkers.get(id)!,
+              }, {
+                accessor: "ref",
+                title: "Reference",
+                render: (ref) => <Reference>{ref}</Reference>,
+              }]}
+            />
+            <Group justify="center">
               <Button.Group>
                 <ButtonMultiDownload
                   entries={[{
@@ -178,79 +255,44 @@ export const PlotPageClient = (
                     </Button>
                   )}
               </Button.Group>
-            </Center>
-          </Stack>
-        </Grid.Col>
-        <Grid.Col span="auto">
-          <Stack>
-            <SetTable
-              sets={data.sets}
-              stats={setStats}
-              referenceMarkers={referenceMarkers}
-            />
-            <ProcessTable
-              processes={processes}
-              referenceMarkers={referenceMarkers}
-              colorMap={colorMap}
-              selected={selected}
-              onChangeSelected={setSelected}
-            />
-            <Stack>
-              <DataTable
-                withTableBorder
-                borderRadius="md"
-                className={classes.scrollableTable}
-                records={refs}
-                columns={[{
-                  accessor: "marker",
-                  title: "",
-                  render: ({ id }) => referenceMarkers.get(id)!,
-                }, {
-                  accessor: "ref",
-                  title: "Reference",
-                  render: (ref) => <Reference>{ref}</Reference>,
-                }]}
+              <Button.Group>
+                <ButtonMultiDownload
+                  entries={[{
+                    text: "CSL-JSON",
+                    link: `/api/references/csl-json/for-selection/${idsPath}`,
+                    icon: <IconCodeDots stroke={1.5} />,
+                    fileName: "LXCat_references",
+                  }, {
+                    text: "Bibtex",
+                    link: `/api/references/bibtex/for-selection/${idsPath}`,
+                    icon: <IconFileText stroke={1.5} />,
+                    fileName: "LXCat_references.bib",
+                  }, {
+                    text: "RIS",
+                    link: `/api/references/ris/for-selection/${idsPath}`,
+                    icon: <IconFileText stroke={1.5} />,
+                    fileName: "LXCat_references.ris",
+                  }]}
+                >
+                  Download references
+                </ButtonMultiDownload>
+                <Button
+                  variant="light"
+                  size="md"
+                  disabled
+                  rightSection={
+                    <IconTableExport size={"1.05rem"} stroke={1.5} />
+                  }
+                >
+                  Export table
+                </Button>
+              </Button.Group>
+              <TermsOfUseCheck
+                references={refs}
+                permaLink={permaLink}
+                forceOpen={forceTermsOfUse}
               />
-              <Group justify="center">
-                <Button.Group>
-                  <ButtonMultiDownload
-                    entries={[{
-                      text: "CSL-JSON",
-                      link: `/api/references/csl-json/for-selection/${idsPath}`,
-                      icon: <IconCodeDots stroke={1.5} />,
-                      fileName: "LXCat_references",
-                    }, {
-                      text: "Bibtex",
-                      link: `/api/references/bibtex/for-selection/${idsPath}`,
-                      icon: <IconFileText stroke={1.5} />,
-                      fileName: "LXCat_references.bib",
-                    }, {
-                      text: "RIS",
-                      link: `/api/references/ris/for-selection/${idsPath}`,
-                      icon: <IconFileText stroke={1.5} />,
-                      fileName: "LXCat_references.ris",
-                    }]}
-                  >
-                    Download references
-                  </ButtonMultiDownload>
-                  <Button
-                    variant="light"
-                    size="md"
-                    disabled
-                    rightSection={
-                      <IconTableExport size={"1.05rem"} stroke={1.5} />
-                    }
-                  >
-                    Export table
-                  </Button>
-                </Button.Group>
-                <TermsOfUseCheck
-                  references={refs}
-                  permaLink={permaLink}
-                  forceOpen={forceTermsOfUse}
-                />
-              </Group>
-            </Stack>
+            </Group>
           </Stack>
         </Grid.Col>
       </Grid>
