@@ -2,16 +2,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, ZodType } from "zod";
+import { discriminatedUnion, output, ZodType } from "zod";
 import { versioned } from "../versioned.js";
-import { ProcessInfo } from "./process-info.js";
+import { CrossSectionInfo } from "./cross-section/cross-section.js";
 import { Process } from "./process.js";
+import { RateCoefficientInfo } from "./rate-coefficient/rate-coefficient.js";
 
 export const VersionedProcess = <
   StateType extends ZodType,
   ReferenceType extends ZodType,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, versioned(ProcessInfo(ReferenceType)));
+  Process(
+    StateType,
+    discriminatedUnion("type", [
+      versioned(CrossSectionInfo(ReferenceType)),
+      versioned(RateCoefficientInfo(ReferenceType)),
+    ]),
+  );
 
 type VersionedProcessType<
   StateType extends ZodType,
