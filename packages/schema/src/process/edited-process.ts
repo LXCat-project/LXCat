@@ -2,16 +2,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { output, ZodType } from "zod";
+import { discriminatedUnion, output, ZodType } from "zod";
 import { PartialKeyed } from "../partial-keyed.js";
-import { ProcessInfo } from "./process-info.js";
+import { CrossSectionInfo } from "./cross-section/cross-section.js";
 import { Process } from "./process.js";
+import { RateCoefficientInfo } from "./rate-coefficient/rate-coefficient.js";
 
 export const EditedProcess = <
   StateType extends ZodType,
   ReferenceType extends ZodType,
 >(StateType: StateType, ReferenceType: ReferenceType) =>
-  Process(StateType, PartialKeyed(ProcessInfo(ReferenceType)));
+  Process(
+    StateType,
+    discriminatedUnion(
+      "type",
+      [
+        PartialKeyed(CrossSectionInfo(ReferenceType)),
+        PartialKeyed(RateCoefficientInfo(ReferenceType)),
+      ],
+    ),
+  );
 
 type EditedProcessType<
   StateType extends ZodType,
