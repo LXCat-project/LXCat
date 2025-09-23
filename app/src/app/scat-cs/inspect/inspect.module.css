@@ -12,3 +12,7 @@
 .smallMargin {
     margin: var(--mantine-spacing-sm);
 }
+
+.hidden {
+    display: none
+}

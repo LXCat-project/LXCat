@@ -1,0 +1,149 @@
+{
+  "name": "Carbone-CO2",
+  "contributor": "Phelps",
+  "description": "Test",
+  "references": {},
+  "complete": true,
+  "states": {
+    "CO2": {
+      "type": "LinearTriatomInversionCenter",
+      "composition": [["C", 1], ["O", 2]],
+      "charge": 0
+    },
+    "CO": {
+      "type": "HeteronuclearDiatom",
+      "composition": [["C", 1], ["O", 1]],
+      "charge": 0
+    },
+    "O2": {
+      "type": "HomonuclearDiatom",
+      "composition": [["O", 2]],
+      "charge": 0
+    },
+    "O": {
+      "type": "Atom",
+      "composition": [["O", 1]],
+      "charge": 0
+    },
+    "C": {
+      "type": "Atom",
+      "composition": [["C", 1]],
+      "charge": 0
+    },
+    "Ar": {
+      "type": "Atom",
+      "composition": [["Ar", 1]],
+      "charge": 0
+    }
+  },
+  "processes": [
+    {
+      "reaction": {
+        "lhs": [{"state": "CO2", "count": 2}],
+        "rhs": [{"state": "CO", "count": 1}, {"state": "O", "count": 1}, {"state": "CO2", "count": 1}],
+        "typeTags": [],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 5.58,
+          "references": [],
+          "data": {
+            "type": "Constant",
+            "value": 4.38e-13,
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{"state": "CO", "count": 1}, {"state": "O", "count": 1}, {"state": "CO2", "count": 1}],
+        "rhs": [{"state": "CO2", "count": 2}],
+        "typeTags": [],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0.19,
+          "references": [],
+          "data": {
+            "type": "Constant",
+            "value": 6.54e-45,
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{"state": "CO", "count": 1}, {"state": "Ar", "count": 1}],
+        "rhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "Ar", "count": 1}],
+        "typeTags": [],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0.0,
+          "references": [],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 1.46,
+              "b": -3.52,
+              "c": -128700.0
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{"state": "CO2", "count": 1}, {"state": "C", "count": 1}],
+        "rhs": [{"state": "CO", "count": 2}],
+        "typeTags": [],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": [],
+          "data": {
+            "type": "Constant",
+            "value": 1e-21,
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "Ar", "count": 1}],
+        "rhs": [{"state": "CO", "count": 1}, {"state": "Ar", "count": 1}],
+        "typeTags": [],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0.0,
+          "references": [],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 9.1e-34,
+              "b": -3.08,
+              "c": 2114.0
+            },
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    }
+  ]
+}
