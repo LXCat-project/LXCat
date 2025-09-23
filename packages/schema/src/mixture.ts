@@ -4,6 +4,7 @@
 
 import {
   array,
+  discriminatedUnion,
   intersection,
   object,
   output,
@@ -13,8 +14,9 @@ import {
 } from "zod";
 import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
-import { ProcessInfo } from "./process/process-info.js";
+import { CrossSectionInfo } from "./process/index.js";
 import { Process } from "./process/process.js";
+import { RateCoefficientInfo } from "./process/rate-coefficient/rate-coefficient.js";
 import { SetReference } from "./process/set-reference.js";
 import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
@@ -31,12 +33,20 @@ const MixtureBody = <ReferenceType extends ZodType>(
     processes: array(
       Process(
         string(),
-        versioned(
-          object({
-            ...ProcessInfo(ReferenceRef(string().min(1))).shape,
-            ...SetReference.shape,
-          }),
-        ),
+        discriminatedUnion("type", [
+          versioned(
+            object({
+              ...CrossSectionInfo(ReferenceRef(string().min(1))).shape,
+              ...SetReference.shape,
+            }),
+          ),
+          versioned(
+            object({
+              ...RateCoefficientInfo(ReferenceRef(string().min(1))).shape,
+              ...SetReference.shape,
+            }),
+          ),
+        ]),
       ),
     ),
   })
