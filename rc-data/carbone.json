@@ -30,9 +30,9 @@
       "composition": [["C", 1]],
       "charge": 0
     },
-    "Ar": {
-      "type": "Atom",
-      "composition": [["Ar", 1]],
+    "M": {
+      "type": "AnyParticle",
+      "composition": "M",
       "charge": 0
     }
   },
@@ -79,8 +79,8 @@
     },
     {
       "reaction": {
-        "lhs": [{"state": "CO", "count": 1}, {"state": "Ar", "count": 1}],
-        "rhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "Ar", "count": 1}],
+        "lhs": [{"state": "CO", "count": 1}, {"state": "M", "count": 1}],
+        "rhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "M", "count": 1}],
         "typeTags": [],
         "reversible": false
       },
@@ -123,8 +123,8 @@
     },
     {
       "reaction": {
-        "lhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "Ar", "count": 1}],
-        "rhs": [{"state": "CO", "count": 1}, {"state": "Ar", "count": 1}],
+        "lhs": [{"state": "C", "count": 1}, {"state": "O", "count": 1}, {"state": "M", "count": 1}],
+        "rhs": [{"state": "CO", "count": 1}, {"state": "M", "count": 1}],
         "typeTags": [],
         "reversible": false
       },
