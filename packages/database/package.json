@@ -64,7 +64,7 @@
     "arangojs": "^8.8.1",
     "deep-equal": "^2.2.3",
     "dotenv": "^17.2.2",
-    "true-myth": "^9.1.0",
+    "true-myth": "^9.2.0",
     "zod": "4.0.0-beta.20250505T195954"
   },
   "devDependencies": {
