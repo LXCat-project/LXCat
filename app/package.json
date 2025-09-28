@@ -58,7 +58,7 @@
     "react-latex-next": "^3.0.0",
     "react-plotly.js": "^2.6.0",
     "react-schemaorg": "^2.0.0",
-    "redoc": "^2.5.0",
+    "redoc": "^2.5.1",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
