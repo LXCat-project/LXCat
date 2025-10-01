@@ -1,0 +1,573 @@
+{
+  "name": "DenHarder2016-CO2",
+  "contributor": "DIFFER",
+  "description": "Dataset for 0D modeling of thermolysis of CO2",
+  "publishedIn": "DenHarder2016",
+  "references": {
+    "DenHarder2016": {
+      "publisher": "Wiley",
+      "issue": "6",
+      "id": "DenHarder2016",
+      "content-domain": { "domain": [], "crossmark-restriction": false },
+      "published-print": { "date-parts": [[2017, 6]] },
+      "DOI": "10.1002\/ppap.201600120",
+      "type": "article-journal",
+      "created": { "date-parts": [[2016, 11, 18]], "date-time": "2016-11-18T07:06:49Z", "timestamp": 1479452809000 },
+      "source": "Crossref",
+      "title": "Homogeneous CO<sub>2<\/sub> conversion by microwave plasma: Wave propagation and diagnostics",
+      "prefix": "10.1002",
+      "volume": "14",
+      "author": [
+        {
+          "given": "Niek",
+          "family": "den Harder",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Dirk C. M.",
+          "family": "van den Bekerom",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Richard S.",
+          "family": "Al",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Martijn F.",
+          "family": "Graswinckel",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Jose M.",
+          "family": "Palomares",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Floran J. J.",
+          "family": "Peeters",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Srinath",
+          "family": "Ponduri",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Teofil",
+          "family": "Minea",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Waldo A.",
+          "family": "Bongers",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Mauritius C. M.",
+          "family": "van de Sanden",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            },
+            {
+              "name": "Department of Applied Physics, Plasma and Materials Processing Group Eindhoven University of Technology P.O. Box 513 5600 MB Eindhoven The Netherlands"
+            }
+          ]
+        },
+        {
+          "given": "Gerard J.",
+          "family": "van Rooij",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FOM Institute DIFFER Dutch Institute for Fundamental Energy Research P.O. Box 6336 5600 HH Eindhoven The Netherlands"
+            }
+          ]
+        }
+      ],
+      "member": "311",
+      "published-online": { "date-parts": [[2016, 11, 18]] },
+      "container-title": "Plasma Processes and Polymers",
+      "language": "en",
+      "deposited": { "date-parts": [[2023, 9, 11]], "date-time": "2023-09-11T19:48:39Z", "timestamp": 1694461719000 },
+      "score": 1,
+      "resource": { "primary": { "URL": "https:\/\/onlinelibrary.wiley.com\/doi\/10.1002\/ppap.201600120" } },
+      "subtitle": [],
+      "short-title": [],
+      "issued": { "date-parts": [[2016, 11, 18]] },
+      "references-count": 40,
+      "journal-issue": { "issue": "6", "published-print": { "date-parts": [[2017, 6]] } },
+      "alternative-id": ["10.1002\/ppap.201600120"],
+      "URL": "http:\/\/dx.doi.org\/10.1002\/ppap.201600120",
+      "relation": {},
+      "ISSN": "1612-8850",
+      "subject": [],
+      "container-title-short": "Plasma Processes &amp; Polymers",
+      "published": { "date-parts": [[2016, 11, 18]] },
+      "article-number": "1600120"
+    },
+    "Butylkin1979": {
+      "author": [
+        { "family": "Butylkin", "given": "Yu P" },
+        { "family": "Grinenko", "given": "AA" },
+        { "family": "Levitskii", "given": "AA" },
+        { "family": "Polak", "given": "LS" },
+        { "family": "Rytova", "given": "NM" },
+        { "family": "Slovetskii", "given": "DI" }
+      ],
+      "container-title": "High Energy Chemistry",
+      "id": "Butylkin1979",
+      "issue": "6",
+      "issued": { "date-parts": [[1979]] },
+      "page": "456-461",
+      "publisher": "MAIK NAUKA/INTERPERIODICA C/O PLENUM/CONSULTANTS BUREAU 233 SPRING ST, NEW …",
+      "title": "Mathematical-modeling of the kinetics of the thermal-decomposition of carbon-dioxide in an electric-arc discharge and quenching of the products",
+      "type": "article-journal",
+      "volume": "13"
+    }
+  },
+  "complete": true,
+  "states": {
+    "CO2": {
+      "type": "LinearTriatomInversionCenter",
+      "composition": [["C", 1], ["O", 2]],
+      "charge": 0
+    },
+    "CO": {
+      "type": "HeteronuclearDiatom",
+      "composition": [["C", 1], ["O", 1]],
+      "charge": 0
+    },
+    "O2": {
+      "type": "HomonuclearDiatom",
+      "composition": [["O", 2]],
+      "charge": 0
+    },
+    "O": {
+      "type": "Atom",
+      "composition": [["O", 1]],
+      "charge": 0
+    }
+  },
+  "processes": [
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO2", "count": 2 }],
+        "rhs": [{ "state": "CO", "count": 1 }, { "state": "O", "count": 1 }, { "state": "CO2", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 4.38e-13,
+              "b": 0,
+              "c": -64753
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO2", "count": 1 }, { "state": "CO", "count": 1 }],
+        "rhs": [{ "state": "CO", "count": 2 }, { "state": "O", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 4.38e-13,
+              "b": 0,
+              "c": -64753
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO2", "count": 1 }, { "state": "O2", "count": 1 }],
+        "rhs": [{ "state": "CO", "count": 1 }, { "state": "O", "count": 1 }, { "state": "O2", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 3.72e-16,
+              "b": 0,
+              "c": -60227
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO2", "count": 1 }, { "state": "O", "count": 1 }],
+        "rhs": [{ "state": "CO", "count": 1 }, { "state": "O2", "count": 1 }],
+        "typeTags": ["Exchange"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 7.77e-18,
+              "b": 0,
+              "c": -18219
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O2", "count": 2 }],
+        "rhs": [{ "state": "O", "count": 2 }, { "state": "O2", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 8.14e-15,
+              "b": 0,
+              "c": -59647
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O2", "count": 1 }, { "state": "O", "count": 1 }],
+        "rhs": [{ "state": "O", "count": 3 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 1.99e-14,
+              "b": 0,
+              "c": -57791
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O2", "count": 1 }, { "state": "CO", "count": 1 }],
+        "rhs": [{ "state": "O", "count": 2 }, { "state": "CO", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 2.41e-15,
+              "b": 0,
+              "c": -59415
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O2", "count": 1 }, { "state": "CO2", "count": 1 }],
+        "rhs": [{ "state": "O", "count": 2 }, { "state": "CO2", "count": 1 }],
+        "typeTags": ["Dissociation"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 2.57e-15,
+              "b": 0,
+              "c": -59647
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO", "count": 1 }, { "state": "O", "count": 1 }, { "state": "CO2", "count": 1 }],
+        "rhs": [{ "state": "CO2", "count": 2 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 6.54e-45,
+              "b": 0,
+              "c": -2205
+            },
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO", "count": 2 }, { "state": "O", "count": 1 }],
+        "rhs": [{ "state": "CO2", "count": 1 }, { "state": "CO", "count": 1 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 6.54e-45,
+              "b": 0,
+              "c": -2205
+            },
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO", "count": 1 }, { "state": "O", "count": 1 }, { "state": "O2", "count": 1 }],
+        "rhs": [{ "state": "CO2", "count": 1 }, { "state": "O2", "count": 1 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 6.51e-48,
+              "b": 0,
+              "c": 1857
+            },
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "CO", "count": 1 }, { "state": "O2", "count": 1 }],
+        "rhs": [{ "state": "CO2", "count": 1 }, { "state": "O", "count": 1 }],
+        "typeTags": ["Exchange"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 1.23e-18,
+              "b": 0,
+              "c": -15318
+            },
+            "unit": "m^3/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O", "count": 2 }, { "state": "O2", "count": 1 }],
+        "rhs": [{ "state": "O2", "count": 2 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "Constant",
+            "value": 6.81e-46,
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O", "count": 3 }],
+        "rhs": [{ "state": "O2", "count": 1 }, { "state": "O", "count": 1 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "ExtendedArrhenius",
+            "coefficients": {
+              "a": 2.19e-45,
+              "b": 0,
+              "c": 2321
+            },
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O", "count": 2 }, { "state": "CO", "count": 1 }],
+        "rhs": [{ "state": "O2", "count": 1 }, { "state": "CO", "count": 1 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "Constant",
+            "value": 2.76e-46,
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    },
+    {
+      "reaction": {
+        "lhs": [{ "state": "O", "count": 2 }, { "state": "CO2", "count": 1 }],
+        "rhs": [{ "state": "O2", "count": 1 }, { "state": "CO2", "count": 1 }],
+        "typeTags": ["Association"],
+        "reversible": false
+      },
+      "info": [
+        {
+          "type": "RateCoefficient",
+          "threshold": 0,
+          "references": ["Butylkin1979"],
+          "data": {
+            "type": "Constant",
+            "value": 2.76e-46,
+            "unit": "m^6/s"
+          }
+        }
+      ]
+    }
+  ]
+}
