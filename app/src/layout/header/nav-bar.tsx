@@ -33,14 +33,14 @@ const links = [
     link: "#1",
     links: [
       {
-        label: "Cross sections",
+        label: "Rate Coefficients",
       },
       {
         link: "/scat-cs",
         label: "Reaction builder",
       },
       {
-        label: "Cross section sets",
+        label: "Chemistry sets",
         divider: true,
       },
       {
