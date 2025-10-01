@@ -46,7 +46,7 @@ export const navLinks: Array<NavLink> = [
     activePrefixes: ["/scat-cs", "/scat-css", "/cs-set"],
     groups: [
       {
-        label: "Cross sections",
+        label: "Rate Coefficients",
         items: [
           {
             label: "Reaction builder",
@@ -57,7 +57,7 @@ export const navLinks: Array<NavLink> = [
         ],
       },
       {
-        label: "Cross section sets",
+        label: "Chemistry sets",
         items: [
           {
             label: "Periodic table",
