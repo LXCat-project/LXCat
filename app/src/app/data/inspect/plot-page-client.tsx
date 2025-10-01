@@ -207,15 +207,8 @@ export const PlotPageClient = (
   const idsString = processes.map(({ info: { _key: id } }) => id).join(",");
   const idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
 
-  // The compute button should only be available when every process is either
-  // not from a complete set, or from a complete set whose items are all in the
-  // selection.
-  const canCompute = data.processes.flatMap(({ info }) => info).every((info) =>
-    info.isPartOf.some((setKey) =>
-      !data.sets[setKey].complete
-      || setStats[setKey].selected === setStats[setKey].total
-    )
-  );
+  // Disable the compute button on ChemCat.
+  const canCompute = false;
 
   return (
     <>
