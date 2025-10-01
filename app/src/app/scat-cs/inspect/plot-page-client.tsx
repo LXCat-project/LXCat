@@ -73,14 +73,49 @@ const tabData = [
   { value: "RateCoefficient", label: "Rate Coefficients" },
 ];
 
-const plotData = {
+const plotData: Record<
+  string,
+  Record<string, { xlabel: string; ylabel: string }>
+> = {
   "CrossSection": {
-    xlabel: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
-    ylabel: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
+    "m^2": {
+      xlabel: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
+      ylabel: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
+    },
   },
   "RateCoefficient": {
-    xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
-    ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^3/s}\\right)$",
+    "m^3/s": {
+      xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
+      ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^3/s}\\right)$",
+    },
+    "m^6/s": {
+      xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
+      ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^6/s}\\right)$",
+    },
+  },
+};
+
+const getUnitOfData = (process: DenormalizedProcess) => {
+  switch (process.info.data.type) {
+    case "Constant":
+      return process.info.data.unit;
+    case "ExtendedArrhenius":
+      const numConsumed = process
+        .reaction.lhs
+        .map(({ count }) => count).reduce((a, b) => a + b, 0);
+      return `m^${3 * (numConsumed - 1)}/s`;
+    case "LUT":
+      return process.info.data.units[1];
+  }
+};
+
+const unitSegmentLabelMap: Record<string, Record<string, string>> = {
+  "CrossSection": {
+    "m^2": "m^2",
+  },
+  "RateCoefficient": {
+    "m^3/s": "Two-body",
+    "m^6/s": "Three-body",
   },
 };
 
@@ -102,32 +137,74 @@ export const PlotPageClient = (
     ...new Set(processes.map((process) => process.info.type)),
   ];
 
-  const [dataType, setDataType] = useState<string>(infoTypes[0]);
+  const unitTypes: Record<string, Array<string>> = Object.fromEntries(
+    infoTypes.map((
+      type,
+    ) => [type, [
+      ...new Set(
+        processes.filter((process) => process.info.type === type).map(
+          getUnitOfData,
+        ),
+      ),
+    ]]),
+  );
 
-  const processMap = Object.fromEntries(
+  const processMap: Record<
+    string,
+    Record<string, Array<DenormalizedProcess>>
+  > = Object.fromEntries(
     infoTypes.map((kind) => [
       kind,
-      processes.filter((process) => process.info.type == kind),
+      Object.fromEntries(
+        unitTypes[kind].map((
+          unitType,
+        ) => [
+          unitType,
+          processes.filter((process) =>
+            process.info.type === kind && getUnitOfData(process) === unitType
+          ),
+        ]),
+      ),
     ]),
   );
 
-  const [selected, setSelected] = useState<
-    Record<string, Array<DenormalizedProcess>>
-  >(
-    mapObject(
-      processMap,
-      ([type, processes]) => [type, processes.slice(0, NUM_LINES_INIT)],
-    ),
-  );
+  const [segmentControl, setSegmentControl] = useState({
+    dataType: infoTypes[0],
+    unitType: unitTypes[infoTypes[0]][0],
+  });
+
+  console.log(unitTypes);
+  console.log(plotData[segmentControl.dataType]);
+
+  // const [dataType, setDataType] = useState<string>(infoTypes[0]);
+  // const [unitType, setUnitType] = useState<string>(
+  //   Object.keys(processMap[infoTypes[0]])[0],
+  // );
+
+  const [newSelected, setNewSelected] = useState<
+    Record<string, Record<string, Array<DenormalizedProcess>>>
+  >(mapObject(
+    processMap,
+    (
+      [key, map],
+    ) => [
+      key,
+      mapObject(
+        map,
+        ([key, processes]) => [key, processes.slice(0, NUM_LINES_INIT)],
+      ),
+    ],
+  ));
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
   const colorMap = new Map(
-    Object.values(processMap).flatMap((processes) =>
-      processes.map((
-        { info: { _key: id } },
-        index,
-      ) => [id, colorScheme[index % colorScheme.length]])
+    Object.values(processMap).flatMap((map) => Object.values(map)).flatMap(
+      processes =>
+        processes.map((
+          { info: { _key: id } },
+          index,
+        ) => [id, colorScheme[index % colorScheme.length]]),
     ),
   );
 
@@ -171,29 +248,61 @@ export const PlotPageClient = (
           <Stack>
             <SegmentedControl
               className={infoTypes.length > 1 ? "" : classes.hidden}
-              value={dataType}
-              onChange={setDataType}
+              value={segmentControl.dataType}
+              onChange={(dataType) =>
+                setSegmentControl({
+                  dataType,
+                  unitType: unitTypes[dataType][0],
+                })}
               data={tabData.filter((entry) => infoTypes.includes(entry.value))}
             />
+            <SegmentedControl
+              className={unitTypes[segmentControl.dataType].length > 1
+                ? ""
+                : classes.hidden}
+              value={segmentControl.unitType}
+              onChange={(unitType) =>
+                setSegmentControl({ ...segmentControl, unitType })}
+              data={unitTypes[segmentControl.dataType].map((unit) => ({
+                value: unit,
+                label: unitSegmentLabelMap[segmentControl.dataType][unit],
+              }))}
+            />
             <Chart
-              processes={selected[dataType]}
-              colors={selected[dataType].map(({ info: { _key: id } }) =>
-                colorMap.get(id)!
-              )}
-              xlabel={plotData[dataType].xlabel}
-              ylabel={plotData[dataType].ylabel}
+              processes={newSelected[segmentControl.dataType][
+                segmentControl.unitType
+              ]}
+              colors={newSelected[segmentControl.dataType][
+                segmentControl.unitType
+              ].map((
+                { info: { _key: id } },
+              ) => colorMap.get(id)!)}
+              xlabel={plotData[segmentControl.dataType][segmentControl.unitType]
+                .xlabel}
+              ylabel={plotData[segmentControl.dataType][segmentControl.unitType]
+                .ylabel}
             />
           </Stack>
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack>
             <ProcessTable
-              processes={processMap[dataType]}
+              processes={processMap[segmentControl.dataType][
+                segmentControl.unitType
+              ]}
               referenceMarkers={referenceMarkers}
               colorMap={colorMap}
-              selected={selected[dataType]}
+              selected={newSelected[segmentControl.dataType][
+                segmentControl.unitType
+              ]}
               onChangeSelected={(processes) =>
-                setSelected({ ...selected, [dataType]: processes })}
+                setNewSelected({
+                  ...newSelected,
+                  [segmentControl.dataType]: {
+                    ...newSelected[segmentControl.dataType],
+                    [segmentControl.unitType]: processes,
+                  },
+                })}
             />
             <SetTable
               sets={data.sets}
