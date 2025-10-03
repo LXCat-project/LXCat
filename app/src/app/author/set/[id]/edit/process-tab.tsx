@@ -18,6 +18,7 @@ import {
   ScrollArea,
   Select,
   Stack,
+  Text,
 } from "@mantine/core";
 import {
   IconPlaylistAdd,
@@ -67,32 +68,56 @@ function reactionAsLatex(
   return `${lhs} ${arrow} ${rhs}`;
 }
 
-const dataTypeLabels = { "LUT": "Lookup table" };
+const dataTypeLabels = {
+  "LUT": "Lookup table",
+  "Constant": "Constant",
+  "ExtendedArrhenius": "Arrhenius",
+};
 const dataTypeSelectData = Object
   .entries(dataTypeLabels)
   .map(([value, label]) => ({ value, label }));
+
+const DataEditComponent = (
+  { data, onChange }: {
+    data: ProcessInfo["data"];
+    onChange: (data: ProcessInfo["data"]) => MaybePromise<void>;
+  },
+) => {
+  switch (data.type) {
+    case "LUT":
+      return <LookupTable data={data} onChange={onChange} />;
+    default:
+      return (
+        <Text>
+          Editing of data of type {data.type} is not yet supported in the GUI.
+        </Text>
+      );
+  }
+};
 
 const ProcessInfoData = (
   { data, onChange }: {
     data: ProcessInfo["data"];
     onChange: (data: ProcessInfo["data"]) => MaybePromise<void>;
   },
-) => (
-  <Stack gap="sm">
-    <Select
-      label="Type"
-      allowDeselect={false}
-      value={data.type}
-      data={dataTypeSelectData}
-    />
-    <LookupTable
-      data={data}
-      onChange={onChange}
-    />
-  </Stack>
-);
+) => {
+  return (
+    <Stack gap="sm">
+      <Select
+        label="Type"
+        allowDeselect={false}
+        value={data.type}
+        data={dataTypeSelectData}
+      />
+      <DataEditComponent data={data} onChange={onChange} />
+    </Stack>
+  );
+};
 
-const typeLabelMap = { "CrossSection": "Cross section" };
+const typeLabelMap = {
+  "CrossSection": "Cross section",
+  "RateCoefficient": "Rate coefficient",
+};
 const typeSelectData = Object
   .entries(typeLabelMap)
   .map(([value, label]) => ({ value, label }));
@@ -153,14 +178,24 @@ const ProcessInfoItem = (
               data={info.data}
               onChange={(data) => {
                 console.log(data);
-                return onChange({ ...info, data });
+                // We need to cast to ProcessInfo here, as data is a union over
+                // all different data types. Not all data types are compatible
+                // with all different info types, but we know that the data type
+                // that is provided here is always compatible with the provided
+                // info type.
+                return onChange({ ...info, data } as ProcessInfo);
               }}
             />
           </Fieldset>
-          <ParameterSection
-            parameters={info.parameters}
-            setParameters={(parameters) => onChange({ ...info, parameters })}
-          />
+          {info.type === "CrossSection"
+            ? (
+              <ParameterSection
+                parameters={info.parameters}
+                setParameters={(parameters) =>
+                  onChange({ ...info, parameters })}
+              />
+            )
+            : <></>}
         </Stack>
       </Accordion.Panel>
     </Accordion.Item>
