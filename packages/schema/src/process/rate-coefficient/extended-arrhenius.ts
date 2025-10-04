@@ -1,4 +1,4 @@
-import { literal, number, object, output } from "zod";
+import { literal, number, object, output, string } from "zod";
 
 // An expression of the form a * T_g ^ b * e ^ (c / T_g).
 export const ExtendedArrheniusData = object({
@@ -8,6 +8,7 @@ export const ExtendedArrheniusData = object({
     b: number(),
     c: number(),
   }),
+  unit: string().min(1),
 });
 export type ExtendedArrheniusData = output<typeof ExtendedArrheniusData>;
 
