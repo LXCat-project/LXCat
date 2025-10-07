@@ -173,15 +173,6 @@ export const PlotPageClient = (
     unitType: unitTypes[infoTypes[0]][0],
   });
 
-  console.log(infoTypes);
-  console.log(unitTypes);
-  console.log(plotData[segmentControl.dataType]);
-
-  // const [dataType, setDataType] = useState<string>(infoTypes[0]);
-  // const [unitType, setUnitType] = useState<string>(
-  //   Object.keys(processMap[infoTypes[0]])[0],
-  // );
-
   const [newSelected, setNewSelected] = useState<
     Record<string, Record<string, Array<DenormalizedProcess>>>
   >(mapObject(
