@@ -19,12 +19,12 @@ test.afterAll(async () => {
   await rootDb().truncateNonUserCollections();
 });
 
-test("/api/author/scat-css", async ({ request }) => {
+test("/api/author/set", async ({ request }) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  const resp = await request.get("/api/author/scat-css", { headers });
+  const resp = await request.get("/api/author/set", { headers });
   expect(resp.ok()).toBeTruthy();
   const data = await resp.json();
   expect(data.items).toEqual([]);

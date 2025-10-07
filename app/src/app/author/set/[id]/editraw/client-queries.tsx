@@ -10,7 +10,7 @@ export const uploadCS = async (
   docString: string,
   commitMessage: string,
 ): Promise<Result<string, Array<string>>> => {
-  const url = `/api/author/scat-css/${key}`;
+  const url = `/api/author/set/${key}`;
   const headers = new Headers({
     Accept: "application/json",
     "Content-Type": "application/json",
