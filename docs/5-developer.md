@@ -45,7 +45,7 @@ and the OpenAPI description are public.
 3. Send the token as `Authorization: Bearer <token>` header in every request:
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
+curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/set
 ```
 
 Keep the token secret, it gives access to the API in your name. A token is tied to your
@@ -73,26 +73,26 @@ them. Please make sure to cite the data you use.
 
 | Endpoint                                           | Role      | Description                                         |
 | -------------------------------------------------- | --------- | --------------------------------------------------- |
-| `GET /api/scat-css`                                | developer | List the published cross section sets               |
-| `GET /api/scat-css/{id}`                           | developer | A cross section set in JSON format                  |
-| `GET /api/scat-css/{id}/legacy`                    | developer | A cross section set in the legacy text format       |
+| `GET /api/set`                                     | developer | List the published cross section sets               |
+| `GET /api/set/{id}`                                | developer | A cross section set in JSON format                  |
+| `GET /api/set/{id}/legacy`                         | developer | A cross section set in the legacy text format       |
 | `GET /api/scat-cs/{id}`                            | developer | A single cross section                              |
 | `GET /api/scat-cs/inspect?ids=`                    | developer | A selection of cross sections in JSON format        |
 | `GET /api/scat-cs/inspect/legacy?ids=`             | developer | A selection of cross sections in legacy text format |
 | `GET /api/references/{format}/for-selection/{ids}` | developer | The references of a selection of cross sections     |
 | `GET /api/references/{format}/{ids}`               | developer | References by their identifiers                     |
-| `GET /api/scat-css/LTPDocument`, `LTPMixture`      | public    | JSON schemas of sets and selections                 |
-| `GET /api/scat-css/schema/upload-document`         | public    | JSON schema of a document that can be uploaded      |
-| `GET, POST /api/author/scat-css`                   | author    | List owned sets, upload a new set                   |
-| `POST, DELETE /api/author/scat-css/{id}`           | author    | Edit, delete a draft; retract needs publisher too   |
-| `POST /api/author/scat-css/{id}/publish`           | publisher | Publish an owned draft set                          |
+| `GET /api/set/LTPDocument`, `LTPMixture`           | public    | JSON schemas of sets and selections                 |
+| `GET /api/set/schema/upload-document`              | public    | JSON schema of a document that can be uploaded      |
+| `GET, POST /api/author/set`                        | author    | List owned sets, upload a new set                   |
+| `POST, DELETE /api/author/set/{id}`                | author    | Edit, delete a draft; retract needs publisher too   |
+| `POST /api/author/set/{id}/publish`                | publisher | Publish an owned draft set                          |
 
 ## Find cross section sets
 
 To list all published cross section sets use
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
+curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/set
 ```
 
 ```json
@@ -112,7 +112,7 @@ The sets can be filtered on the organization that contributed them with the `con
 search param:
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css?contributor=Some+org"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/set?contributor=Some+org"
 ```
 
 ## Fetch a cross section set
@@ -121,7 +121,7 @@ To fetch a single cross section set in JSON format use the `id` found in the lis
 sets:
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/set/<id of set>"
 ```
 
 The result is a document that follows the [schema](#json-schemas) found in its `$schema`
@@ -134,13 +134,13 @@ The style of the references can be changed with the `refstyle` search param. Val
 choices are `csl` (default), `apa` and `bibtex`.
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>?refstyle=bibtex"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/set/<id of set>?refstyle=bibtex"
 ```
 
 To fetch the set in the legacy text format, that is for example used by BOLSIG+, use
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>/legacy"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/set/<id of set>/legacy"
 ```
 
 ## Fetch cross sections
@@ -180,11 +180,11 @@ identifiers, this is only useful when you already know these.
 The documents that the API returns and accepts are described by JSON schemas. These
 endpoints do not need a token:
 
-- `/api/scat-css/LTPDocument`, a cross section set as returned by
-  `/api/scat-css/<id of set>`.
-- `/api/scat-css/LTPMixture`, a selection of cross sections as returned by
+- `/api/set/LTPDocument`, a cross section set as returned by
+  `/api/set/<id of set>`.
+- `/api/set/LTPMixture`, a selection of cross sections as returned by
   `/api/scat-cs/inspect`.
-- `/api/scat-css/schema/upload-document`, a document that can be uploaded as a new
+- `/api/set/schema/upload-document`, a document that can be uploaded as a new
   cross section set.
 
 ## Upload and manage cross section sets
@@ -202,7 +202,7 @@ jq -n --slurpfile doc set.json --arg message "Initial upload." \
   '{doc: $doc[0], message: $message}' \
   | curl -X POST -H "Authorization: Bearer $LXCAT_TOKEN" \
     -H "Content-Type: application/json" --data @- \
-    $LXCAT_URL/api/author/scat-css
+    $LXCAT_URL/api/author/set
 ```
 
 The response is the `id` of the new draft set, for example `{"id": "421901"}`. Problems
@@ -210,12 +210,12 @@ with the document result in a `400 Bad Request` with a description of the proble
 
 The other operations, with the id of an owned set:
 
-- `GET /api/author/scat-css` lists the sets you own, including drafts.
-- `POST /api/author/scat-css/<id of set>` with the same body as above stores the edited
+- `GET /api/author/set` lists the sets you own, including drafts.
+- `POST /api/author/set/<id of set>` with the same body as above stores the edited
   set as a draft. The response contains the id of the draft. The contributor of an
   existing set cannot be changed.
-- `POST /api/author/scat-css/<id of set>/publish` publishes a draft, this needs the
+- `POST /api/author/set/<id of set>/publish` publishes a draft, this needs the
   **publisher** role.
-- `DELETE /api/author/scat-css/<id of set>` with a body `{"message": "..."}` removes a
+- `DELETE /api/author/set/<id of set>` with a body `{"message": "..."}` removes a
   draft, or retracts a published set when you also have the **publisher** role. The
   message is always required.

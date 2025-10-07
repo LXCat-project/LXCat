@@ -16,7 +16,7 @@ test("a token from the developer page gives access to the API", async ({ page, r
   // Tokens without a name are listed as such.
   await expect(page.getByText("no name").first()).toBeVisible();
 
-  const res = await request.get("/api/scat-css", { headers: bearer(token) });
+  const res = await request.get("/api/set", { headers: bearer(token) });
   expect(res.status()).toBe(200);
 });
 
@@ -29,7 +29,7 @@ test("a token can be named, listed and revoked", async ({ page, request }) => {
   const row = page.getByRole("row", { name: /My e2e token/ });
   await expect(row).toBeVisible();
   const status = async () =>
-    (await request.get("/api/scat-css", { headers: bearer(token) })).status();
+    (await request.get("/api/set", { headers: bearer(token) })).status();
   expect(await status()).toBe(200);
 
   // Revoking has to be confirmed.
@@ -70,7 +70,7 @@ test("every generated token is shown", async ({ page, request }) => {
 
   expect(tokens[1]).not.toEqual(tokens[0]);
   for (const token of tokens) {
-    const res = await request.get("/api/scat-css", { headers: bearer(token) });
+    const res = await request.get("/api/set", { headers: bearer(token) });
     expect(res.status()).toBe(200);
   }
 });

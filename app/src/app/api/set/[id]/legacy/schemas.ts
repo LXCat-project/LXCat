@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { scatCssIdPathSchema } from "@/app/api/set/[id]/id-path-schema";
 import { z } from "zod";
-import { scatCssIdPathSchema } from "@/app/api/scat-css/[id]/id-path-schema";
 
 export const querySchema = z.object({
   path: scatCssIdPathSchema,

@@ -75,7 +75,7 @@ test.describe("cross section inspect page", () => {
     const path = await download.path();
     const content = await readFile(path!, { encoding: "utf8" });
     expect(content).toContain("Energy");
-    expect(JSON.parse(content).$schema).toMatch(/\/api\/scat-css\/LTPMixture$/);
+    expect(JSON.parse(content).$schema).toMatch(/\/api\/set\/LTPMixture$/);
   });
 
   test("should be able to download references in BibTeX format", async ({ page }) => {
