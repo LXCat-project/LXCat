@@ -22,7 +22,7 @@ export const PlotPage = async ({
   const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
     formatReference(id, ref)
   );
-  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/data/inspect?ids=${
     bag.processes.flatMap(({ info }) => info).map(({ _key }) => _key).join(",")
   }`;
   const processes = denormalizeProcesses(bag.processes, bag.states, bag.sets);

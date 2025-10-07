@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { FormattedReference } from "@/app/scat-cs/inspect/types";
+import { FormattedReference } from "@/app/data/inspect/types";
 import { type Reference } from "@lxcat/schema";
 import { Stack, Text } from "@mantine/core";
 import { ReferenceList } from "./reference-list";

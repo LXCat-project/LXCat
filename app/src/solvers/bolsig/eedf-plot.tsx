@@ -7,7 +7,7 @@
 import { Center, Loader } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { CSSProperties } from "react";
-import { colorScheme } from "../../app/scat-cs/inspect/colors";
+import { colorScheme } from "../../app/data/inspect/colors";
 
 import { BolsigOutput } from "./io";
 
