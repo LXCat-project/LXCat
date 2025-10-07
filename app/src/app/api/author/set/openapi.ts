@@ -5,21 +5,23 @@
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
 import { requestParamsFromSchema } from "@/docs/openapi";
-import { deleteSchema, postSchema } from "./schemas";
+import { crossSectionSetHeadingSchema } from "@/app/api/schemas.openapi";
+import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
-    method: "post",
-    path: "/author/scat-css/{id}",
+    method: "get",
+    path: "/author/set",
     tags: ["Author"],
-    description: "Edit owned cross section set.",
-    request: requestParamsFromSchema(postSchema),
+    description: "Get owned cross section sets.",
     responses: {
       200: {
-        description: "ID of added set.",
+        description: "Cross section set heading objects",
         content: {
           "application/json": {
-            schema: z.object({ id: z.string() }),
+            schema: z.array(
+              crossSectionSetHeadingSchema.and(z.object({ _key: z.string() })),
+            ),
           },
         },
       },
@@ -27,14 +29,14 @@ export async function register() {
   });
 
   openapiGenerator.registerRoute({
-    method: "delete",
-    path: "/author/scat-css/{id}",
+    method: "post",
+    path: "/author/set",
     tags: ["Author"],
-    description: "Delete owned cross section set.",
-    request: requestParamsFromSchema(deleteSchema),
+    description: "Post cross section set.",
+    request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "ID of deleted set.",
+        description: "Id of uploaded set.",
         content: {
           "application/json": {
             schema: z.object({ id: z.string() }),

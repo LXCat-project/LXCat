@@ -82,7 +82,7 @@ export const SetTable = (
           accessor: "link",
           render: ({ _key }) => (
             <Link
-              href={`/scat-css/${_key}`}
+              href={`/set/${_key}`}
               passHref
               legacyBehavior
             >

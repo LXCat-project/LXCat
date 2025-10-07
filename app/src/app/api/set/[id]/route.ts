@@ -34,10 +34,10 @@ const router = RouteBuilder
       }
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
-        $schema: `${process.env.NEXT_PUBLIC_URL}/api/scat-css/LTPDocument`,
-        url: `${process.env.NEXT_PUBLIC_URL}/scat-css/${params.path.id}`,
+        $schema: `${process.env.NEXT_PUBLIC_URL}/api/set/LTPDocument`,
+        url: `${process.env.NEXT_PUBLIC_URL}/set/${params.path.id}`,
         termsOfUse:
-          `${process.env.NEXT_PUBLIC_URL}/scat-css/${params.path.id}#termsOfUse`,
+          `${process.env.NEXT_PUBLIC_URL}/set/${params.path.id}#termsOfUse`,
         ...data,
       };
 

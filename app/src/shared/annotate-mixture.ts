@@ -11,7 +11,7 @@ export const annotateMixture = (data: LTPMixture): LTPMixtureWithReference => {
     .map((info) => info._key);
 
   return ({
-    $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,
+    $schema: `${process.env.NEXT_PUBLIC_URL}/set/LTPMixture`,
     url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${ids.join(",")}`,
     termsOfUse: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
       ids.join(",")
