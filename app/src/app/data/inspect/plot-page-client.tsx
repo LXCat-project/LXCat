@@ -4,6 +4,8 @@
 
 "use client";
 
+import { FormattedReference } from "@/citation/formatted-reference";
+import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { mapObject } from "@/shared/utils";
 import { LTPMixture } from "@lxcat/schema";
@@ -28,8 +30,6 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
-import { FormattedReference } from "@/citation/formatted-reference";
 import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./button-clipboard";
 import { ButtonMultiDownload } from "./button-multi-download";
@@ -172,6 +172,15 @@ export const PlotPageClient = (
     dataType: infoTypes[0],
     unitType: unitTypes[infoTypes[0]][0],
   });
+
+  console.log(infoTypes);
+  console.log(unitTypes);
+  console.log(plotData[segmentControl.dataType]);
+
+  // const [dataType, setDataType] = useState<string>(infoTypes[0]);
+  // const [unitType, setUnitType] = useState<string>(
+  //   Object.keys(processMap[infoTypes[0]])[0],
+  // );
 
   const [newSelected, setNewSelected] = useState<
     Record<string, Record<string, Array<DenormalizedProcess>>>
