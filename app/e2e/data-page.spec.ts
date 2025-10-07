@@ -12,7 +12,7 @@ test.use({ storageState: "adminStorageState.json" });
 const csTest = test.extend({
   page: async ({ page }, use) => {
     // goto a section page
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
       .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
