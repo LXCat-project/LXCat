@@ -68,9 +68,6 @@ export const ProcessPlot = (
         y = evaluateExtendedArrhenius(x, data);
     }
 
-    console.log(x);
-    console.log(y);
-
     return {
       x,
       y,
