@@ -6,7 +6,7 @@ import "server-only";
 
 import { Reference } from "@lxcat/schema";
 
-// TODO it would be nice to not load the citation packages on pages where it is not used (for example /scat-css)
+// TODO it would be nice to not load the citation packages on pages where it is not used (for example /set)
 // could use https://nextjs.org/docs/advanced-features/dynamic-import
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";

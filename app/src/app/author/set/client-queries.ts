@@ -19,7 +19,7 @@ export async function deleteSet(
   key: string,
   message: string,
 ): Promise<Result<any, string>> {
-  const url = `/api/author/scat-css/${key}`;
+  const url = `/api/author/set/${key}`;
   const body = JSON.stringify({ message: message });
   const init = { method: "DELETE", body, headers };
   const res = await fetch(url, init);
@@ -34,7 +34,7 @@ export async function deleteSet(
 export async function publishSet(
   selectedSetId: string,
 ): Promise<Result<any, string>> {
-  const url = `/api/author/scat-css/${selectedSetId}/publish`;
+  const url = `/api/author/set/${selectedSetId}/publish`;
   const init = { method: "POST", headers };
   const res = await fetch(url, init);
 
@@ -46,7 +46,7 @@ export async function publishSet(
 }
 
 export async function listSetsOfOwner(): Promise<Array<KeyedSet>> {
-  const url = "/api/author/scat-css";
+  const url = "/api/author/set";
   const init = { headers };
   const res = await fetch(url, init);
   const data = await res.json();

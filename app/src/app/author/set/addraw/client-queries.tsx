@@ -8,7 +8,7 @@ import { ZodError } from "zod";
 export const uploadCS = async (
   doc: any,
 ): Promise<Result<string, Array<string>>> => {
-  const url = `/api/author/scat-css`;
+  const url = `/api/author/set`;
   const headers = new Headers({
     Accept: "application/json",
     "Content-Type": "application/json",
