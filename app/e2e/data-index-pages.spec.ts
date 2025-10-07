@@ -10,7 +10,7 @@ test.use({ storageState: "adminStorageState.json" });
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     await selectConsumed(page, "\\mathrm{N_{2}}");
   });
 
@@ -26,10 +26,10 @@ test.describe("cross section index page with N2 selected", () => {
     // The link holds the ids of the two cross sections.
     await expect(inspectlink).toHaveAttribute(
       "href",
-      /\/scat-cs\/inspect\?ids=\d+,\d+$/,
+      /\/data\/inspect\?ids=\d+,\d+$/,
     );
     await inspectlink.click();
-    await expect(page).toHaveURL(/\/scat-cs\/inspect\?ids=/);
+    await expect(page).toHaveURL(/\/data\/inspect\?ids=/);
   });
 
   test("should list the sets with their cross sections, which load when a set is expanded", async ({ page }) => {
@@ -86,7 +86,7 @@ test.describe("cross section inspect page", () => {
       getSeededSet(request, "Some other organization"),
     ]);
     const ids = sets.flatMap(({ itemIds }) => itemIds);
-    await page.goto(`/scat-cs/inspect?ids=${ids.join(",")}`);
+    await page.goto(`/data/inspect?ids=${ids.join(",")}`);
     await page.locator("text=I agree with the terms of use").click();
   });
 
