@@ -44,7 +44,7 @@ const links = [
         divider: true,
       },
       {
-        link: "/cs-set",
+        link: "/periodic-table",
         label: "Periodic table",
       },
     ],
