@@ -15,7 +15,5 @@ export default async function CSPage(
 
   const { options, matches } = await search(template);
 
-  return (
-    <CSClient matches={matches} options={options} selection={template} />
-  );
+  return <CSClient matches={matches} options={options} selection={template} />;
 }

@@ -35,7 +35,7 @@ test("the cross sections of a set with many cross sections are paged", async ({ 
   await rootDb().upsertOrganization(ORGANIZATION);
   await rootDb().createSet(doc);
 
-  await page.goto("/scat-cs");
+  await page.goto("/data");
   await selectConsumed(page, "\\mathrm{N_{2}}");
 
   const row = page.getByRole("row", { name: /Large set/ });

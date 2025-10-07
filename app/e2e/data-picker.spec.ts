@@ -16,7 +16,7 @@ test.describe("reaction picker on the cross section index page", () => {
       }
     });
 
-    await page.goto("/scat-cs");
+    await page.goto("/data");
 
     const products = page.getByRole("group", { name: "Right-hand side" });
     const productItems = page.getByRole("menuitem");
@@ -40,7 +40,7 @@ test.describe("reaction picker on the cross section index page", () => {
     // The results and the URL follow the selection.
     await expect(page.locator("td:text(\"Some other name\")")).toBeVisible();
     await expect(page.locator("td:text(\"Some name\")")).toHaveCount(0);
-    await expect(page).toHaveURL(/\/scat-cs\?reactions=/);
+    await expect(page).toHaveURL(/\/data\?reactions=/);
     expect(actions).toHaveLength(1);
 
     // The options follow the selection, N2+ is no longer produced.
@@ -51,7 +51,7 @@ test.describe("reaction picker on the cross section index page", () => {
 
   test("an invalid selection in the URL gives the default selection", async ({ page }) => {
     for (const reactions of ["not json", "[{\"consumes\": 1}]"]) {
-      await page.goto(`/scat-cs?reactions=${encodeURIComponent(reactions)}`);
+      await page.goto(`/data?reactions=${encodeURIComponent(reactions)}`);
 
       await expect(page.getByRole("group", { name: "Left-hand side" }))
         .toBeVisible();
@@ -61,14 +61,14 @@ test.describe("reaction picker on the cross section index page", () => {
 
   test("a failed search is reported and does not change the selection", async ({ page }) => {
     await page.route(
-      "**/scat-cs**",
+      "**/data**",
       (route) =>
         route.request().headers()["next-action"]
           ? route.abort()
           : route.continue(),
     );
 
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     await page.locator("label:has-text(\"Some other organization\")").click();
 
     await expect(page.getByText("Could not search for cross sections"))
@@ -86,7 +86,7 @@ test.describe("reaction picker on the cross section index page", () => {
       }
     });
 
-    await page.goto("/scat-cs");
+    await page.goto("/data");
 
     // The new reaction has the same template as the first one.
     await page.getByRole("button", { name: "Add Filter" }).click();

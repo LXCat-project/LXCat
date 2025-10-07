@@ -76,7 +76,7 @@ export const CSClient: NextPage<Props> = ({
       ),
   );
 
-  const canonicalUrl = "/scat-cs";
+  const canonicalUrl = "/data";
 
   // Only the response to the latest change is applied, so a slow response to
   // an earlier change cannot overwrite a newer selection.
@@ -167,7 +167,7 @@ export const CSClient: NextPage<Props> = ({
                 ? (
                   <Button
                     component={Link}
-                    href={`/scat-cs/inspect?ids=${plotIds.join(",")}`}
+                    href={`/data/inspect?ids=${plotIds.join(",")}`}
                     leftSection={<IconGraph />}
                     variant="light"
                   >

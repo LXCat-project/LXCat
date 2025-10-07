@@ -16,7 +16,7 @@ test("a set that is expanded again while it loads is loaded once", async ({ page
     set: [setId],
   };
   await page.goto(
-    `/scat-cs?reactions=${encodeURIComponent(JSON.stringify([template]))}`,
+    `/data?reactions=${encodeURIComponent(JSON.stringify([template]))}`,
   );
 
   // The response of the cross sections is held back until the set was
@@ -24,7 +24,7 @@ test("a set that is expanded again while it loads is loaded once", async ({ page
   const actions: Array<string> = [];
   let release!: () => void;
   const released = new Promise<void>((resolve) => release = resolve);
-  await page.route("**/scat-cs**", async (route) => {
+  await page.route("**/data**", async (route) => {
     if (route.request().headers()["next-action"]) {
       actions.push(route.request().url());
       await released;

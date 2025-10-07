@@ -43,7 +43,7 @@ export type NavLink =
 export const navLinks: Array<NavLink> = [
   {
     label: "Data center",
-    activePrefixes: ["/scat-cs", "/set", "/cs-set"],
+    activePrefixes: ["/data", "/set", "/cs-set"],
     groups: [
       {
         label: "Rate Coefficients",
@@ -51,7 +51,7 @@ export const navLinks: Array<NavLink> = [
           {
             label: "Reaction builder",
             description: "Search cross sections by reaction",
-            href: "/scat-cs",
+            href: "/data",
             icon: IconFlask,
           },
         ],
