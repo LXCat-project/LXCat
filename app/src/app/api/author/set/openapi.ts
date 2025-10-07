@@ -15,7 +15,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/author/scat-css",
+    path: "/author/set",
     tags: ["Author"],
     security: bearerSecurity,
     description: "Get owned cross section sets.",
@@ -40,7 +40,7 @@ export async function register() {
 
   openapiGenerator.registerRoute({
     method: "post",
-    path: "/author/scat-css",
+    path: "/author/set",
     tags: ["Author"],
     security: bearerSecurity,
     description: "Post cross section set.",

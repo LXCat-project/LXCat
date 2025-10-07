@@ -11,7 +11,7 @@ import { deleteSchema, postSchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "post",
-    path: "/author/scat-css/{id}",
+    path: "/author/set/{id}",
     tags: ["Author"],
     security: bearerSecurity,
     description: "Edit owned cross section set.",
@@ -31,7 +31,7 @@ export async function register() {
 
   openapiGenerator.registerRoute({
     method: "delete",
-    path: "/author/scat-css/{id}",
+    path: "/author/set/{id}",
     tags: ["Author"],
     security: bearerSecurity,
     description:

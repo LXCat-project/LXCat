@@ -11,7 +11,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "post",
-    path: "/author/scat-css/{id}/publish",
+    path: "/author/set/{id}/publish",
     tags: ["Author", "Publish"],
     security: bearerSecurity,
     description: "Publish cross section set.",

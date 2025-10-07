@@ -18,13 +18,13 @@ export async function getSeededSet(
   contributor = "Some organization",
 ) {
   const list = await request.get(
-    `/api/scat-css?contributor=${encodeURIComponent(contributor)}`,
+    `/api/set?contributor=${encodeURIComponent(contributor)}`,
     { headers: bearer() },
   );
   expect(list.ok()).toBeTruthy();
   const [{ id: setId }] = await list.json() as Array<{ id: string }>;
 
-  const set = await request.get(`/api/scat-css/${setId}`, {
+  const set = await request.get(`/api/set/${setId}`, {
     headers: bearer(),
   });
   expect(set.ok()).toBeTruthy();

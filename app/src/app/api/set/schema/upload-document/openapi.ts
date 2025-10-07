@@ -3,23 +3,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { openapiGenerator } from "@/openapi";
-import { LTPMixtureJSONSchema } from "@lxcat/schema/json-schema";
+import { NewLTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/scat-css/LTPMixture",
+    path: "/set/schema/upload-document",
     tags: ["Schema"],
-    description:
-      "Get the JSON schema definition for a selection of low-temperature plasma data.",
+    description: "Get cross section set upload schema.",
     responses: {
       200: {
-        description:
-          "Returns the JSON schema definition of the LTPMixture type.",
+        description: "Cross section set upload schema.",
         content: {
           "application/schema+json": {
             schema: {
-              $ref: LTPMixtureJSONSchema.$schema?.replace(/^http:/, "https:"),
+              $ref: NewLTPDocumentJSONSchema.$schema?.replace(
+                /^http:/,
+                "https:",
+              ),
             },
           },
         },

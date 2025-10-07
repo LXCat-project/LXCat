@@ -18,19 +18,19 @@ test.afterAll(async () => {
   await rootDb().truncateNonUserCollections();
 });
 
-test("/api/author/scat-css", async ({ request }) => {
+test("/api/author/set", async ({ request }) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
     ...bearer(),
   };
-  const resp = await request.get("/api/author/scat-css", { headers });
+  const resp = await request.get("/api/author/set", { headers });
   expect(resp.ok()).toBeTruthy();
   const data = await resp.json();
   expect(data.items).toEqual([]);
 });
 
-test("/api/author/scat-css can create, edit, publish and retract a set", async ({ request }) => {
+test("/api/author/set can create, edit, publish and retract a set", async ({ request }) => {
   const org = "API test organization";
   const userKey = await joinOrganizations(ADMIN_EMAIL, org);
 
@@ -42,30 +42,30 @@ test("/api/author/scat-css can create, edit, publish and retract a set", async (
     const headers = bearer();
 
     // Only the author role may add sets, and only to one's own organization.
-    const forbidden = await request.post("/api/author/scat-css", {
+    const forbidden = await request.post("/api/author/set", {
       headers: bearer(apiTokens().noRoles),
       data: { doc, message: "Initial upload." },
     });
     expect(forbidden.status()).toBe(403);
-    const foreign = await request.post("/api/author/scat-css", {
+    const foreign = await request.post("/api/author/set", {
       headers,
       data: { doc: { ...doc, contributor: "Other" }, message: "Upload." },
     });
     expect(foreign.status()).toBe(403);
-    const invalid = await request.post("/api/author/scat-css", {
+    const invalid = await request.post("/api/author/set", {
       headers,
       data: { doc: { ...doc, name: undefined }, message: "Upload." },
     });
     expect(invalid.status()).toBe(400);
 
-    const created = await request.post("/api/author/scat-css", {
+    const created = await request.post("/api/author/set", {
       headers,
       data: { doc, message: "Initial upload." },
     });
     expect(created.status()).toBe(200);
     const { id } = await created.json();
 
-    const edited = await request.post(`/api/author/scat-css/${id}`, {
+    const edited = await request.post(`/api/author/set/${id}`, {
       headers,
       data: { doc: { ...doc, description: "Edited" }, message: "Edit." },
     });
@@ -73,12 +73,12 @@ test("/api/author/scat-css can create, edit, publish and retract a set", async (
     const { id: draftId } = await edited.json();
 
     const published = await request.post(
-      `/api/author/scat-css/${draftId}/publish`,
+      `/api/author/set/${draftId}/publish`,
       { headers },
     );
     expect(published.status()).toBe(200);
 
-    const listed = await request.get("/api/author/scat-css", { headers });
+    const listed = await request.get("/api/author/set", { headers });
     const { items } = await listed.json();
     expect(items).toEqual([
       expect.objectContaining({
@@ -90,19 +90,19 @@ test("/api/author/scat-css can create, edit, publish and retract a set", async (
 
     // A message is always required.
     const unexplained = await request.delete(
-      `/api/author/scat-css/${draftId}`,
+      `/api/author/set/${draftId}`,
       {
         headers,
         data: { message: "" },
       },
     );
     expect(unexplained.status()).toBe(400);
-    const retracted = await request.delete(`/api/author/scat-css/${draftId}`, {
+    const retracted = await request.delete(`/api/author/set/${draftId}`, {
       headers,
       data: { message: "Retract." },
     });
     expect(retracted.status()).toBe(200);
-    const after = await (await request.get("/api/author/scat-css", { headers }))
+    const after = await (await request.get("/api/author/set", { headers }))
       .json();
     expect(after.items[0].versionInfo.status).toBe("retracted");
   } finally {
