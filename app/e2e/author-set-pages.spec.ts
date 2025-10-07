@@ -23,7 +23,7 @@ test("only members of the organization of a set can open its editors", async ({ 
       await readFile(`${seedDir}/dummy.json`, { encoding: "utf8" }),
     );
     doc.contributor = organization;
-    const created = await request.post("/api/author/scat-css", {
+    const created = await request.post("/api/author/set", {
       headers: bearer(),
       data: { doc, message: "Initial upload." },
     });

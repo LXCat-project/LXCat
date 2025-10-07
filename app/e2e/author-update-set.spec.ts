@@ -28,7 +28,7 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
     doc.contributor = own;
     const headers = bearer();
 
-    const created = await request.post("/api/author/scat-css", {
+    const created = await request.post("/api/author/set", {
       headers,
       data: { doc, message: "Initial upload." },
     });
@@ -37,7 +37,7 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
 
     // Both an organization of the user and one they are not a member of.
     for (const contributor of [sibling, foreign]) {
-      const moved = await request.post(`/api/author/scat-css/${id}`, {
+      const moved = await request.post(`/api/author/set/${id}`, {
         headers,
         data: { doc: { ...doc, contributor }, message: "Move." },
       });
@@ -45,13 +45,13 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
     }
 
     const listed =
-      await (await request.get("/api/author/scat-css", { headers }))
+      await (await request.get("/api/author/set", { headers }))
         .json();
     expect(listed.items).toEqual([
       expect.objectContaining({ _key: id, organization: own }),
     ]);
 
-    const edited = await request.post(`/api/author/scat-css/${id}`, {
+    const edited = await request.post(`/api/author/set/${id}`, {
       headers,
       data: { doc: { ...doc, description: "Edited" }, message: "Edit." },
     });
