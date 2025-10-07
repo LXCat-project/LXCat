@@ -2,24 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
-    method: "get",
-    path: "/scat-css/{id}/legacy",
-    tags: ["Cross-section set"],
-    description: "Get cross section set by ID in legacy format.",
+    method: "post",
+    path: "/author/set/publish",
+    tags: ["Author", "Publish"],
+    description: "Publish cross section set.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Cross section set in legacy format",
+        description: "Id of uploaded set.",
         content: {
-          "text/plain": {
-            schema: z.string(),
+          "application/json": {
+            schema: z.object({ id: z.string() }),
           },
         },
       },
