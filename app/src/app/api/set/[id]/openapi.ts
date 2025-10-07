@@ -2,24 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
-import { z } from "zod";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
+import { requestParamsFromSchema } from "../../../../docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
-    method: "post",
-    path: "/author/scat-css/publish",
-    tags: ["Author", "Publish"],
-    description: "Publish cross section set.",
+    method: "get",
+    path: "/set/{id}",
+    tags: ["Cross-section set"],
+    description: "Get cross section set by ID.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Id of uploaded set.",
+        description: "Cross section set",
         content: {
           "application/json": {
-            schema: z.object({ id: z.string() }),
+            schema: VersionedLTPDocumentWithReference,
           },
         },
       },

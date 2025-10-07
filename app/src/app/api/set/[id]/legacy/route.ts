@@ -40,11 +40,11 @@ const router = RouteBuilder
       );
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
-        $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,
+        $schema: `${process.env.NEXT_PUBLIC_URL}/set/LTPMixture`,
         url:
-          `${process.env.NEXT_PUBLIC_URL}/scat-css/${ctx.parsedParams.path.id}`,
+          `${process.env.NEXT_PUBLIC_URL}/set/${ctx.parsedParams.path.id}`,
         termsOfUse:
-          `${process.env.NEXT_PUBLIC_URL}/scat-css/${ctx.parsedParams.path.id}#termsOfUse`,
+          `${process.env.NEXT_PUBLIC_URL}/set/${ctx.parsedParams.path.id}#termsOfUse`,
         ...data,
         references,
       };
