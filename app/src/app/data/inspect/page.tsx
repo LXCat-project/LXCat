@@ -31,7 +31,7 @@ const ScatteringCrossSectionSelectionPage = async (
   { searchParams }: URLParams,
 ) => {
   const { ids, termsOfUse } = SearchParams.parse(await searchParams);
-  const canonicalUrl = "/scat-cs";
+  const canonicalUrl = "/data";
 
   return (
     <>
