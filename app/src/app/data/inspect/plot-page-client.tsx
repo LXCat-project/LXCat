@@ -366,24 +366,29 @@ export const PlotPageClient = (
             <Group justify="center">
               <Button.Group>
                 <ButtonMultiDownload
-                  entries={[{
-                    text: "JSON",
-                    link: async () =>
-                      downloadFile(
-                        JSON.stringify(annotateMixture(data)),
-                        "lxcat-data.json",
-                      ),
-                    icon: <IconCodeDots stroke={1.5} />,
-                  }, {
-                    text: "Plaintext",
-                    link: () =>
-                      download(
-                        "Could not download the data",
-                        "lxcat-data.txt",
-                        () => toLegacyAction(data),
-                      ),
-                    icon: <IconFileText stroke={1.5} />,
-                  }]}
+                  entries={[
+                    {
+                      text: "JSON",
+                      link: async () =>
+                        downloadFile(
+                          JSON.stringify(annotateMixture(data)),
+                          "lxcat-data.json",
+                        ),
+                      icon: <IconCodeDots stroke={1.5} />,
+                    },
+                    ...(infoTypes.length === 1 && infoTypes[0] == "CrossSection"
+                      ? [{
+                        text: "Plaintext",
+                        link: () =>
+                          download(
+                            "Could not download the data",
+                            "lxcat-data.txt",
+                            () => toLegacyAction(data),
+                          ),
+                        icon: <IconFileText stroke={1.5} />,
+                      }]
+                      : []),
+                  ]}
                 >
                   Download data
                 </ButtonMultiDownload>
