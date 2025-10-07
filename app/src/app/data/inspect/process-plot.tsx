@@ -41,7 +41,7 @@ export const ProcessPlot = (
 
   if (range[0] == Number.MAX_VALUE) {
     range[0] = 273.;
-    range[1] = 100000.;
+    range[1] = 10000.;
   }
 
   const makeLine = (
