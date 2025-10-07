@@ -89,7 +89,7 @@ export const EditForm = (
       <form
         style={{ margin: 10 }}
         onSubmit={form.onSubmit(async (formData) => {
-          const url = `/api/author/scat-css/${formData.set._key ?? ""}`;
+          const url = `/api/author/set/${formData.set._key ?? ""}`;
           const body = JSON.stringify({
             doc: formData.set,
             message: formData.commitMessage,

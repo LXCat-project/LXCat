@@ -37,7 +37,7 @@ export const PageClient = (
             highlightOnHover
             withTableBorder
             borderRadius="sm"
-            onRowClick={({ record }) => router.push(`/scat-css/${record._key}`)}
+            onRowClick={({ record }) => router.push(`/set/${record._key}`)}
             columns={[
               { accessor: "organization", title: "Contributor" },
               { accessor: "name" },
