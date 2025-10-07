@@ -201,6 +201,7 @@ export const PlotPageClient = (
     unitType: unitTypes[infoTypes[0]][0],
   });
 
+  console.log(infoTypes);
   console.log(unitTypes);
   console.log(plotData[segmentControl.dataType]);
 

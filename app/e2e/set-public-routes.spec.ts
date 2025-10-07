@@ -14,7 +14,7 @@ test.use({ storageState: "adminStorageState.json" });
 test.describe("given 2 dummy sets", () => {
   test.describe("periodic table select page", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("/cs-set");
+      await page.goto("/periodic-table");
     });
 
     test("should list 2 sets when selecting nitrogen", async ({ page }) => {
