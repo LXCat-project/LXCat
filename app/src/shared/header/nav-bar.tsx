@@ -36,7 +36,7 @@ const links = [
         label: "Rate Coefficients",
       },
       {
-        link: "/scat-cs",
+        link: "/data",
         label: "Reaction builder",
       },
       {

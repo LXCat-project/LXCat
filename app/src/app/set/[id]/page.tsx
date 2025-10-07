@@ -9,7 +9,7 @@ import { LTPMixture } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
 import { reference2bibliography } from "../../../shared/cite";
-import { PlotPage } from "../../scat-cs/inspect/plot-page";
+import { PlotPage } from "../../data/inspect/plot-page";
 
 interface BagProps {
   bag: LTPMixture;

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CSSProperties } from "react";
-import { colorScheme } from "../../app/scat-cs/inspect/colors";
+import { colorScheme } from "../../app/data/inspect/colors";
 import { LinePlot } from "../../shared/line-plot";
 
 const plotConfig: Record<

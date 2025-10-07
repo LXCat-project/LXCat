@@ -31,9 +31,9 @@ const router = RouteBuilder
     }
 
     return okJsonResponse({
-      url: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}`,
+      url: `${process.env.NEXT_PUBLIC_URL}/data/inspect?ids=${id}`,
       termsOfUse:
-        `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${id}&termsOfUse=true`,
+        `${process.env.NEXT_PUBLIC_URL}/data/inspect?ids=${id}&termsOfUse=true`,
       ...data,
     });
   }).compile();
