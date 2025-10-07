@@ -21,7 +21,7 @@ export const Filter = (
       reactions: JSON.stringify(newSelection.map(({ options }) => options)),
     }).toString();
 
-    router.push(`scat-cs?${query}`);
+    router.push(`data?${query}`);
     onChange(newSelection);
   }
 

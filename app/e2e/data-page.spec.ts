@@ -12,7 +12,7 @@ const csTest = test.extend({
   page: async ({ page, request }, use) => {
     // Go straight to the page of a single cross section.
     const { itemIds } = await getSeededSet(request);
-    await page.goto(`/scat-cs/inspect?ids=${itemIds[0]}`);
+    await page.goto(`/data/inspect?ids=${itemIds[0]}`);
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();

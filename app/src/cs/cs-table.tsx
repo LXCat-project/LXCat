@@ -175,7 +175,7 @@ export const CSTable = ({ sets, loading, loadItems }: Props) => {
               paginationText={({ from, to, totalRecords }) =>
                 `${from}–${to} of ${totalRecords}`}
               onRowClick={({ record }) =>
-                router.push(`/scat-cs/inspect?ids=${record.id}`)}
+                router.push(`/data/inspect?ids=${record.id}`)}
             />
           </Stack>
         ),
