@@ -83,7 +83,7 @@ export const UserPanel = (
               {
                 // <NavLink
                 //   component="a"
-                //   href="/author/scat-cs"
+                //   href="/author/data"
                 //   leftSection=<IconEdit size="1.3rem" />
                 //   label="Manage cross sections"
                 // />

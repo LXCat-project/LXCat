@@ -2,25 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { openapiGenerator } from "@/openapi";
-import { OwnedProcess } from "@lxcat/database/schema";
-import { z } from "zod";
+import { searchOptionsSchema } from "@/app/api/schemas.openapi";
 import { requestParamsFromSchema } from "@/docs/openapi";
+import { openapiGenerator } from "@/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/author/scat-cs",
+    path: "/author/data/choices",
     tags: ["Author"],
-    description: "Get owned cross-section data.",
+    description: "Get search options for selection.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Cross section data objects",
+        description: "Search options.",
         content: {
           "application/json": {
-            schema: z.array(OwnedProcess),
+            schema: searchOptionsSchema,
           },
         },
       },

@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { FormattedReference } from "./formatted-reference";
 import { type Reference } from "@lxcat/schema";
 import { Stack, Text } from "@mantine/core";
+import { FormattedReference } from "./formatted-reference";
 import { ReferenceList } from "./reference-list";
 
 const LXCAT_REFERENCES: Array<Reference> = [

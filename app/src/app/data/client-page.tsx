@@ -124,12 +124,12 @@ export const CSClient: NextPage<Props> = ({
 
   const nrItems = items.length;
 
-  const canonicalUrl = "/scat-cs";
+  const canonicalUrl = "/data";
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
     setLoading(true);
     const res = await fetch(
-      `/api/scat-cs?${new URLSearchParams({
+      `/api/data?${new URLSearchParams({
         reactions: JSON.stringify(newSelection.map(({ options }) => options)),
         offset: "0",
       })}`,
@@ -196,9 +196,7 @@ export const CSClient: NextPage<Props> = ({
           {nrItems > 0 && nrItems <= BAG_SIZE
             ? (
               <Link
-                href={`/scat-cs/inspect?ids=${
-                  items.map((d) => d.id).join(",")
-                }`}
+                href={`/data/inspect?ids=${items.map((d) => d.id).join(",")}`}
                 passHref
                 legacyBehavior
               >
