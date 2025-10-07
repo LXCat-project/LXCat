@@ -3,23 +3,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { openapiGenerator } from "@/openapi";
-import { LTPMixtureWithReference } from "@lxcat/schema";
-import { requestParamsFromSchema } from "../../../../docs/openapi";
+import { z } from "zod";
+import { requestParamsFromSchema } from "../../../../../docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/scat-cs/inspect",
+    path: "/data/inspect/legacy",
     tags: ["Cross-section"],
-    description: "Get cross sections by IDs.",
+    description: "Get cross section data in legacy format.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "LTP mixture data",
+        description: "Cross section data in legacy format",
         content: {
-          "application/json": {
-            schema: LTPMixtureWithReference,
+          "text/plain": {
+            schema: z.string(),
           },
         },
       },

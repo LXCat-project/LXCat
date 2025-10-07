@@ -27,7 +27,7 @@ test.afterAll(async () => {
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
       .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
@@ -62,7 +62,7 @@ test.describe("cross section index page with N2 selected", () => {
 
 test.describe("cross section inspect page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     await page.locator("[aria-controls=\"particle-select\"]").first().click();
     await page
       .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
@@ -76,7 +76,7 @@ test.describe("cross section inspect page", () => {
 
     await page.locator("text=Download data").click();
 
-    // this exercises the /api/scat-cs/inspect endpoint
+    // this exercises the /api/data/inspect endpoint
     const [download] = await Promise.all([
       page.waitForEvent("download"),
       page.locator("text=JSON").click(),

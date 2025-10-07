@@ -119,7 +119,7 @@ export const CSTable = ({ items, loading }: Props) => {
               ]}
               records={record.cs}
               onRowClick={({ record }) =>
-                router.push(`/scat-cs/inspect?ids=${record.id}`)}
+                router.push(`/data/inspect?ids=${record.id}`)}
             />
           </Stack>
         ),

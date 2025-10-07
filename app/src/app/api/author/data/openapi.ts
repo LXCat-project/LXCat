@@ -11,7 +11,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/author/scat-cs",
+    path: "/author/data",
     tags: ["Author"],
     description: "Get owned cross-section data.",
     request: requestParamsFromSchema(querySchema),

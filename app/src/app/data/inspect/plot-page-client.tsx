@@ -358,7 +358,7 @@ export const PlotPageClient = (
                         <IconCalculator size="1.2rem" stroke={1.5} />
                       }
                       onClick={() =>
-                        router.push(`/scat-cs/compute?ids=${idsString}`)}
+                        router.push(`/data/compute?ids=${idsString}`)}
                     >
                       Compute
                     </Button>

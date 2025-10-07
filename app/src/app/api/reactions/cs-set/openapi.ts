@@ -10,7 +10,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/reactions/scat-cs",
+    path: "/reactions/data",
     tags: ["Reactions"],
     description: "Get cross section sets.",
     request: requestParamsFromSchema(querySchema),
