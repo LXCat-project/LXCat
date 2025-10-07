@@ -24,7 +24,7 @@ export async function getReferencesForSelection(
     id: `LXCatData`,
     type: "dataset",
     title: "Data downloaded from the LXCat platform.",
-    URL: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+    URL: `${process.env.NEXT_PUBLIC_URL}/data/inspect?ids=${
       uniqueIds.join(",")
     }`,
   };

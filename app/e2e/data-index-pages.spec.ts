@@ -10,7 +10,7 @@ test.use({ storageState: "adminStorageState.json" });
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
+    await page.goto("/data");
     const n2 = page.locator(
       "button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")",
     );
@@ -32,7 +32,7 @@ test.describe("cross section index page with N2 selected", () => {
     const inspectlink = page.locator("text=Plot selection");
     await expect(inspectlink).toBeVisible();
     await inspectlink.click();
-    await expect(page).toHaveURL(/\/scat-cs\/inspect\?ids=/);
+    await expect(page).toHaveURL(/\/data\/inspect\?ids=/);
   });
 
   test.describe("when filtered on set name", () => {
@@ -57,7 +57,7 @@ test.describe("cross section inspect page", () => {
       getSeededSet(request, "Some other organization"),
     ]);
     const ids = sets.flatMap(({ itemIds }) => itemIds);
-    await page.goto(`/scat-cs/inspect?ids=${ids.join(",")}`);
+    await page.goto(`/data/inspect?ids=${ids.join(",")}`);
     await page.locator("text=I agree with the terms of use").click();
   });
 

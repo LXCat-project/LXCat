@@ -125,7 +125,7 @@ export const CSClient: NextPage<Props> = ({
 
   const nrItems = items.length;
 
-  const canonicalUrl = "/scat-cs";
+  const canonicalUrl = "/data";
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
     setLoading(true);
@@ -191,9 +191,7 @@ export const CSClient: NextPage<Props> = ({
             {nrItems > 0 && nrItems <= BAG_SIZE
               ? (
                 <Link
-                  href={`/scat-cs/inspect?ids=${
-                    items.map((d) => d.id).join(",")
-                  }`}
+                  href={`/data/inspect?ids=${items.map((d) => d.id).join(",")}`}
                   passHref
                   legacyBehavior
                 >

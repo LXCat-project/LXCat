@@ -12,7 +12,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/scat-cs/{id}",
+    path: "/data/{id}",
     tags: ["Cross-section"],
     security: bearerSecurity,
     description: "Get cross section by ID.",

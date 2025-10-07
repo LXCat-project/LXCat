@@ -76,9 +76,9 @@ them. Please make sure to cite the data you use.
 | `GET /api/set`                                     | developer | List the published cross section sets               |
 | `GET /api/set/{id}`                                | developer | A cross section set in JSON format                  |
 | `GET /api/set/{id}/legacy`                         | developer | A cross section set in the legacy text format       |
-| `GET /api/scat-cs/{id}`                            | developer | A single cross section                              |
-| `GET /api/scat-cs/inspect?ids=`                    | developer | A selection of cross sections in JSON format        |
-| `GET /api/scat-cs/inspect/legacy?ids=`             | developer | A selection of cross sections in legacy text format |
+| `GET /api/data/{id}`                               | developer | A single cross section                              |
+| `GET /api/data/inspect?ids=`                       | developer | A selection of cross sections in JSON format        |
+| `GET /api/data/inspect/legacy?ids=`                | developer | A selection of cross sections in legacy text format |
 | `GET /api/references/{format}/for-selection/{ids}` | developer | The references of a selection of cross sections     |
 | `GET /api/references/{format}/{ids}`               | developer | References by their identifiers                     |
 | `GET /api/set/LTPDocument`, `LTPMixture`           | public    | JSON schemas of sets and selections                 |
@@ -148,18 +148,18 @@ curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/set/<id of set>/leg
 To fetch a single cross section use
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-cs/<id of cross section>"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/data/<id of cross section>"
 ```
 
 To fetch a selection of cross sections as one document use the `ids` search param with
 a comma separated list of at most 100 unique ids:
 
 ```bash
-curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-cs/inspect?ids=<id of cross section 1>,<id of cross section 2>"
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/data/inspect?ids=<id of cross section 1>,<id of cross section 2>"
 ```
 
 The result follows the schema of a mixture, see [JSON schemas](#json-schemas). Use
-`/api/scat-cs/inspect/legacy` instead to get the selection in the legacy text format.
+`/api/data/inspect/legacy` instead to get the selection in the legacy text format.
 
 ## Fetch references
 
@@ -183,7 +183,7 @@ endpoints do not need a token:
 - `/api/set/LTPDocument`, a cross section set as returned by
   `/api/set/<id of set>`.
 - `/api/set/LTPMixture`, a selection of cross sections as returned by
-  `/api/scat-cs/inspect`.
+  `/api/data/inspect`.
 - `/api/set/schema/upload-document`, a document that can be uploaded as a new
   cross section set.
 
