@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { formatReference } from "@/citation/formatted-reference";
 import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import type { Reaction } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
-import { formatReference } from "@/citation/formatted-reference";
 import { DenormalizedProcess } from "../denormalized-process";
 import { PlotPageClient } from "./plot-page-client";
 
@@ -20,7 +20,7 @@ export const PlotPage = async ({
   forceTermsOfUse?: boolean;
 }) => {
   const formattedRefs = await formatReference(bag.references);
-  const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
+  const permaLink = `${process.env.NEXT_PUBLIC_URL}/data/inspect?ids=${
     bag.processes.flatMap(({ info }) => info).map(({ _key }) => _key).join(",")
   }`;
   const processes = denormalizeProcesses(bag.processes, bag.states, bag.sets);

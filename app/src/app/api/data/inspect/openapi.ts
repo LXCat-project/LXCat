@@ -2,24 +2,24 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { searchOptionsSchema } from "@/app/api/schemas.openapi";
-import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
+import { LTPMixtureWithReference } from "@lxcat/schema";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/author/scat-cs/choices",
-    tags: ["Author"],
-    description: "Get search options for selection.",
+    path: "/data/inspect",
+    tags: ["Cross-section"],
+    description: "Get cross sections by IDs.",
     request: requestParamsFromSchema(querySchema),
     responses: {
       200: {
-        description: "Search options.",
+        description: "LTP mixture data",
         content: {
           "application/json": {
-            schema: searchOptionsSchema,
+            schema: LTPMixtureWithReference,
           },
         },
       },
