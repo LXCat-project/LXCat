@@ -11,7 +11,7 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
-    path: "/scat-css/{id}/legacy",
+    path: "/set/{id}/legacy",
     tags: ["Cross-section set"],
     security: bearerSecurity,
     description: "Get cross section set by ID in legacy format.",

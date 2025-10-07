@@ -30,7 +30,7 @@ export const AddRawSetClient = () => {
         {" "}
         <Anchor
           component={Link}
-          href="/api/scat-css/schema/upload-document"
+          href="/api/set/schema/upload-document"
           target="_blank"
         >
           here

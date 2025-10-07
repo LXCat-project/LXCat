@@ -23,7 +23,7 @@ test("only members of the organization of a set can open its editors", async ({ 
       await readFile(`${seedDir}/dummy.json`, { encoding: "utf8" }),
     );
     doc.contributor = organization;
-    const created = await request.post("/api/author/scat-css", {
+    const created = await request.post("/api/author/set", {
       headers: bearer(),
       data: { doc, message: "Initial upload." },
     });
@@ -68,7 +68,7 @@ test("a new set gets the only organization of the user as contributor", async ({
     await expect(page.getByText("Saved set with id")).toBeVisible();
 
     const listed =
-      await (await request.get("/api/author/scat-css", { headers: bearer() }))
+      await (await request.get("/api/author/set", { headers: bearer() }))
         .json();
     expect(listed.items).toEqual([
       expect.objectContaining({

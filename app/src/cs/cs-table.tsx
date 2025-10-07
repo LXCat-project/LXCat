@@ -142,7 +142,7 @@ export const CSTable = ({ sets, loading, loadItems }: Props) => {
                     : "-"}
                 </Text>
               </Group>
-              <Anchor component={Link} href={`/scat-css/${record.id}`}>
+              <Anchor component={Link} href={`/set/${record.id}`}>
                 Open the whole set
               </Anchor>
             </Stack>

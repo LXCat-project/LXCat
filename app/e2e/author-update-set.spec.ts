@@ -30,7 +30,7 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
     doc.contributor = own;
     const headers = bearer();
 
-    const created = await request.post("/api/author/scat-css", {
+    const created = await request.post("/api/author/set", {
       headers,
       data: { doc, message: "Initial upload." },
     });
@@ -39,7 +39,7 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
 
     // Both an organization of the user and one they are not a member of.
     for (const contributor of [sibling, foreign]) {
-      const moved = await request.post(`/api/author/scat-css/${id}`, {
+      const moved = await request.post(`/api/author/set/${id}`, {
         headers,
         data: { doc: { ...doc, contributor }, message: "Move." },
       });
@@ -47,13 +47,13 @@ test("the contributor of a set cannot be changed", async ({ request }) => {
     }
 
     const listed =
-      await (await request.get("/api/author/scat-css", { headers }))
+      await (await request.get("/api/author/set", { headers }))
         .json();
     expect(listed.items).toEqual([
       expect.objectContaining({ _key: id, organization: own }),
     ]);
 
-    const edited = await request.post(`/api/author/scat-css/${id}`, {
+    const edited = await request.post(`/api/author/set/${id}`, {
       headers,
       data: { doc: { ...doc, description: "Edited" }, message: "Edit." },
     });
@@ -75,14 +75,14 @@ test("the editor shows why a set could not be saved", async ({ page, request }) 
     const headers = bearer();
 
     for (const name of ["Taken name", "Free name"]) {
-      const created = await request.post("/api/author/scat-css", {
+      const created = await request.post("/api/author/set", {
         headers,
         data: { doc: { ...doc, name }, message: "Initial upload." },
       });
       expect(created.status()).toBe(200);
     }
     const listed =
-      await (await request.get("/api/author/scat-css", { headers })).json();
+      await (await request.get("/api/author/set", { headers })).json();
     const free = listed.items.find(({ name }: { name: string }) =>
       name === "Free name"
     );
@@ -119,14 +119,14 @@ test("the editor refuses a name that another published set already has", async (
     // version 2, which does not collide with the unique index of the database.
     const keys: Record<string, string> = {};
     for (const name of ["Published name", "Renamed name"]) {
-      const created = await request.post("/api/author/scat-css", {
+      const created = await request.post("/api/author/set", {
         headers,
         data: { doc: { ...doc, name }, message: "Initial upload." },
       });
       expect(created.status()).toBe(200);
       const { id } = await created.json();
       const published = await request.post(
-        `/api/author/scat-css/${id}/publish`,
+        `/api/author/set/${id}/publish`,
         { headers },
       );
       expect(published.status()).toBe(200);

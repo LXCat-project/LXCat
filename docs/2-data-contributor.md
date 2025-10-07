@@ -35,12 +35,12 @@ To submit a new scattering cross section set:
 1. Follow the `Scattering cross section set` link and then either
    - Click the `Add` button to fill the form
    - Or click `Add JSON document` to upload a file according to the
-     [JSON schema](/api/scat-css/schema/upload-document)
+     [JSON schema](/api/set/schema/upload-document)
 2. After the form is submitted or the upload is completed, the cross section set is in
    draft state and it is only viewable/editable by you and your organization colleagues.
 3. To make the cross section set available to everyone
    - Press the `publish` button on
-     [Author scattering cross section sets](/author/scat-css) page
+     [Author scattering cross section sets](/author/set) page
 
 ## Edit
 
@@ -57,7 +57,7 @@ To edit an existing cross section set:
      made.
 3. To make the cross section set available to everyone
    - Press the `publish` button on
-     [Author scattering cross section sets](/author/scat-css) page
+     [Author scattering cross section sets](/author/set) page
    - If the draft version had a published version then the draft becomes the new published
      version and the previously published version becomes archived.
 

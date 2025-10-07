@@ -31,13 +31,13 @@ test.describe("given 2 dummy sets", () => {
 
   test.describe("cross section set list api route", () => {
     test("given no search params, should list 2 sets", async ({ request }) => {
-      const res = await request.get("/api/scat-css", { headers: bearer() });
+      const res = await request.get("/api/set", { headers: bearer() });
       const items = await res.json();
       expect(items).toHaveLength(2);
     });
     test("given filter on a org, should list 1 sets", async ({ request }) => {
       const res = await request.get(
-        "/api/scat-css?contributor=Some+organization",
+        "/api/set?contributor=Some+organization",
         { headers: bearer() },
       );
       const items = await res.json();
@@ -49,16 +49,16 @@ test.describe("given 2 dummy sets", () => {
     let setId: string;
     test.beforeEach(async ({ request }) => {
       const res = await request.get(
-        "/api/scat-css?contributor=Some+organization",
+        "/api/set?contributor=Some+organization",
         { headers: bearer() },
       );
       const body: CrossSectionSetHeading[] = await res.json();
       setId = body[0].id;
     });
 
-    test.describe("/api/scat-css/[id]", () => {
+    test.describe("/api/set/[id]", () => {
       test("given no refstyle should return csl", async ({ request }) => {
-        const res = await request.get(`/api/scat-css/${setId}`, {
+        const res = await request.get(`/api/set/${setId}`, {
           headers: bearer(),
         });
         const set = VersionedLTPDocumentWithReference.parse(await res.json());
@@ -73,7 +73,7 @@ test.describe("given 2 dummy sets", () => {
 
       test("given bibtex refstyle should return bibtex string", async ({ request }) => {
         const res = await request.get(
-          `/api/scat-css/${setId}?refstyle=bibtex`,
+          `/api/set/${setId}?refstyle=bibtex`,
           { headers: bearer() },
         );
         const set = VersionedLTPDocumentWithReference.parse(await res.json());
@@ -92,7 +92,7 @@ test.describe("given 2 dummy sets", () => {
       });
 
       test("given apa refstyle should return apa string", async ({ request }) => {
-        const res = await request.get(`/api/scat-css/${setId}?refstyle=apa`, {
+        const res = await request.get(`/api/set/${setId}?refstyle=apa`, {
           headers: bearer(),
         });
         const set = VersionedLTPDocumentWithReference.parse(await res.json());
@@ -103,9 +103,9 @@ test.describe("given 2 dummy sets", () => {
       });
     });
 
-    test.describe("/api/scat-css/[id]/legacy", () => {
+    test.describe("/api/set/[id]/legacy", () => {
       test("should return text in bolsig+ format", async ({ request }) => {
-        const res = await request.get(`/api/scat-css/${setId}/legacy`, {
+        const res = await request.get(`/api/set/${setId}/legacy`, {
           headers: bearer(),
         });
 
@@ -121,7 +121,7 @@ test.describe("given 2 dummy sets", () => {
   test.describe("cross section set details page", () => {
     test.beforeEach(async ({ page, request }) => {
       const { setId } = await getSeededSet(request);
-      await page.goto(`/scat-css/${setId}`);
+      await page.goto(`/set/${setId}`);
       await page.locator("text=I agree with the terms of use").click();
     });
 
@@ -177,7 +177,7 @@ test.describe("given 2 dummy sets", () => {
           return;
         }
 
-        // TODO: Links should point to `/api/scat-css`.
+        // TODO: Links should point to `/api/set`.
         const path = await download.path();
         const content = JSON.parse(await readFile(path, { encoding: "utf8" }));
         urlWithHash = content.termsOfUse.replace("http://localhost:3000", "");

@@ -188,7 +188,7 @@ server.
 
 ### Via web browser
 
-1. Visit the `/scat-css` page.
+1. Visit the `/set` page.
    - The page should show a number of filters and a selection of set names.
    - This confirms that the reverse proxy, web application and database are working.
 2. Sign in and goto the `/profile` page.

@@ -20,15 +20,15 @@ test.beforeAll(async ({ playwright }) => {
   await request.dispose();
 
   protectedPaths = [
-    "/api/scat-css",
-    `/api/scat-css/${setId}`,
-    `/api/scat-css/${setId}/legacy`,
+    "/api/set",
+    `/api/set/${setId}`,
+    `/api/set/${setId}/legacy`,
     `/api/scat-cs/${itemIds[0]}`,
     `/api/scat-cs/inspect?ids=${itemIds[0]}`,
     `/api/scat-cs/inspect/legacy?ids=${itemIds[0]}`,
     `/api/references/csl-json/for-selection/${itemIds[0]}`,
     `/api/references/csl-json/${itemIds[0]}`,
-    "/api/author/scat-css",
+    "/api/author/set",
   ];
 });
 
@@ -139,9 +139,9 @@ test.describe("OpenAPI spec", () => {
       scheme: "bearer",
     });
     expect(Object.keys(spec.paths)).toContain(
-      "/author/scat-css/{id}/publish",
+      "/author/set/{id}/publish",
     );
-    expect(Object.keys(spec.paths)).not.toContain("/author/scat-css/publish");
+    expect(Object.keys(spec.paths)).not.toContain("/author/set/publish");
   });
 
   // Keeps the documentation in line with the middleware of the routes.
@@ -163,9 +163,9 @@ test.describe("public endpoints", () => {
   for (
     const path of [
       "/api/doc",
-      "/api/scat-css/LTPDocument",
-      "/api/scat-css/LTPMixture",
-      "/api/scat-css/schema/upload-document",
+      "/api/set/LTPDocument",
+      "/api/set/LTPMixture",
+      "/api/set/schema/upload-document",
     ]
   ) {
     test(`${path} does not need a token`, async ({ request }) => {
@@ -199,7 +199,7 @@ test.describe("removed endpoints", () => {
 
 test.describe("CORS", () => {
   test("answers a preflight request without allowing credentials", async ({ request }) => {
-    const res = await request.fetch("/api/scat-css", {
+    const res = await request.fetch("/api/set", {
       method: "OPTIONS",
       headers: {
         Origin: "http://localhost:3000",
@@ -227,13 +227,13 @@ test.describe("CORS", () => {
     ];
 
     for (const origin of allowed) {
-      const res = await request.get("/api/scat-css", {
+      const res = await request.get("/api/set", {
         headers: { Origin: origin },
       });
       expect(res.headers()["access-control-allow-origin"], origin).toBe(origin);
     }
     for (const origin of lookalikes) {
-      const res = await request.get("/api/scat-css", {
+      const res = await request.get("/api/set", {
         headers: { Origin: origin },
       });
       expect(res.headers()["access-control-allow-origin"], origin)
@@ -244,7 +244,7 @@ test.describe("CORS", () => {
   test("varies the response on the origin", async ({ request }) => {
     const responses = [
       // Preflight.
-      await request.fetch("/api/scat-css", {
+      await request.fetch("/api/set", {
         method: "OPTIONS",
         headers: {
           Origin: "http://localhost:3000",
@@ -252,13 +252,13 @@ test.describe("CORS", () => {
         },
       }),
       // An allowed, a foreign and no origin, all rejected without a token.
-      await request.get("/api/scat-css", {
+      await request.get("/api/set", {
         headers: { Origin: "http://localhost:3000" },
       }),
-      await request.get("/api/scat-css", {
+      await request.get("/api/set", {
         headers: { Origin: "https://example.com" },
       }),
-      await request.get("/api/scat-css"),
+      await request.get("/api/set"),
     ];
 
     for (const res of responses) {

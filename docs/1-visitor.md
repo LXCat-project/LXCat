@@ -19,7 +19,7 @@ This document is meant for visitors of the web site.
 
 ## Filtering cross section sets
 
-On the [cross section sets](/scat-css) page you can filter cross section sets based on
+On the [cross section sets](/set) page you can filter cross section sets based on
 
 - the species consumed in a reaction in the cross section set. The electron is excluded
   from this list,
