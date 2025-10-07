@@ -43,7 +43,7 @@ export type NavLink =
 export const navLinks: Array<NavLink> = [
   {
     label: "Data center",
-    activePrefixes: ["/data", "/set", "/cs-set"],
+    activePrefixes: ["/data", "/set", "/periodic-table"],
     groups: [
       {
         label: "Rate Coefficients",
@@ -62,7 +62,7 @@ export const navLinks: Array<NavLink> = [
           {
             label: "Periodic table",
             description: "Browse sets by element",
-            href: "/cs-set",
+            href: "/periodic-table",
             icon: IconTable,
           },
         ],
