@@ -20,6 +20,7 @@ const DEFAULTS: CORSOptions = {
   allowedOrigins: [
     /^http:\/\/localhost:\d+$/,
     /^https:\/\/loki-suite\.github\.io$/,
+    /^https:\/\/global\.chemcat\.net$/,
   ],
   allowedMethods: ["GET", "HEAD"],
   allowedHeaders: ["Authorization", "Content-Type"],
