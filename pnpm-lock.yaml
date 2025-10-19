@@ -63,8 +63,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@next/bundle-analyzer':
-        specifier: ^15.5.4
-        version: 15.5.4
+        specifier: ^15.5.6
+        version: 15.5.6
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.1.1)
@@ -2544,8 +2544,8 @@ packages:
     resolution: {integrity: sha512-enkZYyuCdo+9jneCPE/0fjIta4wWnvVN9hBo2HuiMpRF0q3lzv1J6b/cl7i0mxZUKhBrV3aCKDBQnCOhwKbPmQ==}
     engines: {node: '>= 10'}
 
-  '@next/bundle-analyzer@15.5.4':
-    resolution: {integrity: sha512-wMtpIjEHi+B/wC34ZbEcacGIPgQTwTFjjp0+F742s9TxC6QwT0MwB/O0QEgalMe8s3SH/K09DO0gmTvUSJrLRA==}
+  '@next/bundle-analyzer@15.5.6':
+    resolution: {integrity: sha512-IHeyk2s9/fVDAGDLNbBkCSG8XBabhuMajiaJggjsg4GyFIswh78DzLo5Nl5th8QTs3U/teYeczvfeV9w1Tx3qA==}
 
   '@next/env@15.5.4':
     resolution: {integrity: sha512-27SQhYp5QryzIT5uO8hq99C69eLQ7qkzkDPsk3N+GuS2XgOgoYEeOav7Pf8Tn4drECOVDsDg8oj+/DVy8qQL2A==}
@@ -8836,7 +8836,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.9
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/parser@7.26.1':
     dependencies:
@@ -10708,7 +10708,7 @@ snapshots:
       '@napi-rs/wasm-tools-win32-ia32-msvc': 1.0.1
       '@napi-rs/wasm-tools-win32-x64-msvc': 1.0.1
 
-  '@next/bundle-analyzer@15.5.4':
+  '@next/bundle-analyzer@15.5.6':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:

@@ -34,7 +34,7 @@
     "@mantine/modals": "^8.3.4",
     "@mantine/notifications": "^8.3.4",
     "@mdx-js/mdx": "^3.1.1",
-    "@next/bundle-analyzer": "^15.5.4",
+    "@next/bundle-analyzer": "^15.5.6",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
