@@ -29,6 +29,7 @@ export const makeComponent = <ComponentSchema extends ZodType>(
     //       pure JavaScript extending a string object with a method is legal.
     //       Therefore, this will work at runtime, but we need this any cast to
     //       make it transpile.
+    // eslint-disable-next-line
     ...object as any,
     summary: () => summary(object),
     latex: () => latex(object),
