@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { globalRegistry } from "zod";
 import { SpeciesBase } from "../composition/species-base.js";
 import { LTICComposition } from "../composition/triatom/ltic.js";
 import { makeMolecule } from "../generators.js";
@@ -16,3 +17,5 @@ export const TriatomC2v = makeMolecule(
   LinearTriatomVibrational,
   RotationalArray(3),
 );
+
+globalRegistry.add(TriatomC2v.plain, { id: "TriatomC2v" });

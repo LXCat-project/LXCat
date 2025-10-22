@@ -2,7 +2,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, input, literal, number, object, TypeOf, union } from "zod";
+import {
+  array,
+  globalRegistry,
+  input,
+  literal,
+  number,
+  object,
+  TypeOf,
+  union,
+} from "zod";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -91,3 +100,5 @@ export const AtomLS1 = makeAtom(
   LS1Component,
 );
 export type AtomLS1 = input<typeof AtomLS1.plain>;
+
+globalRegistry.add(AtomLS1.plain, { id: "AtomLS1" });

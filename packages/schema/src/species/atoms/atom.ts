@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { literal, number, object } from "zod";
+import { globalRegistry, literal, number, object } from "zod";
 import { AtomComposition } from "../composition/atom.js";
 
 export const Atom = object({
@@ -10,3 +10,5 @@ export const Atom = object({
   composition: AtomComposition,
   charge: number().int(),
 });
+
+globalRegistry.add(Atom, { id: "Atom" });

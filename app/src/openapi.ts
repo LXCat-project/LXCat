@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import z, { ZodObject, ZodOptional, ZodType } from "zod";
-import { speciesSchema } from "./app/api/schemas.openapi";
 import { mapObject } from "./shared/utils";
 
 export type ResponseConfig = {
@@ -51,19 +50,71 @@ export type OpenAPIConfig = {
   servers: { url: string }[];
 };
 
+const patchRef = ({ $ref }: { $ref: string }) =>
+  `#/components/schemas/${$ref.split("/").slice(-1)[0]}`;
+
+const patchSchemaRefs = (schema: any) => {
+  if (schema.$ref) {
+    schema.$ref = patchRef(schema);
+    return schema;
+  }
+
+  // Union and intesection types
+  if (schema.anyOf) {
+    schema.anyOf = schema.anyOf.map((schema: any) => patchSchemaRefs(schema));
+  }
+  if (schema.allOf) {
+    schema.allOf = schema.allOf.map((schema: any) => patchSchemaRefs(schema));
+  }
+
+  // Object types
+  if (schema.properties) {
+    schema.properties = mapObject(
+      schema.properties,
+      ([key, schema]) => [key, patchSchemaRefs(schema)],
+    );
+  }
+  if (
+    schema.additionalProperties
+  ) {
+    schema.additionalProperties = patchSchemaRefs(
+      schema.additionalProperties,
+    );
+  }
+
+  // Array types
+  if (schema.items) {
+    schema.items = patchSchemaRefs(schema.items);
+  }
+  if (schema.prefixItems) {
+    schema.prefixItems = schema.prefixItems.map((schema: any) =>
+      patchSchemaRefs(schema)
+    );
+  }
+
+  return schema;
+};
+
+const override = (ctx: any) => {
+  ctx.jsonSchema = patchSchemaRefs(ctx.jsonSchema);
+};
+
+const stripDefs = <Schema extends { $defs?: any }>(
+  schema: Schema,
+): Omit<Schema, "$defs"> => {
+  const copy = schema;
+  delete copy.$defs;
+
+  return copy;
+};
+
 const makeParameter = (
   type: "query" | "path",
   key: string,
   schema: ZodType,
   registry: z.core.$ZodRegistry<z.core.JSONSchemaMeta>,
 ) => ({
-  schema: z.toJSONSchema(schema, {
-    external: {
-      registry: registry,
-      uri: (id: string) => `#/components/schemas/${id}`,
-      defs: {},
-    },
-  }),
+  schema: stripDefs(z.toJSONSchema(schema, { metadata: registry, override })),
   required: !(schema instanceof ZodOptional),
   name: key,
   in: type,
@@ -94,13 +145,9 @@ export class OpenapiGenerator {
           config.content = mapObject(config.content, ([mime, { schema }]) => {
             if (schema instanceof ZodType) {
               return [mime, {
-                schema: z.toJSONSchema(schema, {
-                  external: {
-                    registry: registry,
-                    uri: (id: string) => `#/components/schemas/${id}`,
-                    defs: {},
-                  },
-                }),
+                schema: stripDefs(
+                  z.toJSONSchema(schema, { metadata: registry, override }),
+                ),
               }];
             }
 
@@ -136,13 +183,9 @@ export class OpenapiGenerator {
               ([mime, { schema }]) => {
                 if (schema instanceof ZodType) {
                   return [mime, {
-                    schema: z.toJSONSchema(schema, {
-                      external: {
-                        registry: registry,
-                        uri: (id: string) => `#/components/schemas/${id}`,
-                        defs: {},
-                      },
-                    }),
+                    schema: stripDefs(
+                      z.toJSONSchema(schema, { metadata: registry, override }),
+                    ),
                   }];
                 }
 
