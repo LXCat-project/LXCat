@@ -2,7 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, literal, number, object, TypeOf, union } from "zod";
+import {
+  array,
+  globalRegistry,
+  literal,
+  number,
+  object,
+  TypeOf,
+  union,
+} from "zod";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -89,3 +97,5 @@ export const AtomJ1L2 = makeAtom(
   J1L2Component,
 );
 export type AtomJ1L2 = TypeOf<typeof AtomJ1L2.plain>;
+
+globalRegistry.add(AtomJ1L2.plain, { id: "AtomJ1L2" });
