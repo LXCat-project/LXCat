@@ -247,8 +247,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       oidc-provider:
-        specifier: ^9.5.1
-        version: 9.5.1
+        specifier: ^9.5.2
+        version: 9.5.2
       playwright-test-coverage:
         specifier: ^1.2.12
         version: 1.2.12(@playwright/test@1.54.1)
@@ -4801,9 +4801,9 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  eta@3.5.0:
-    resolution: {integrity: sha512-e3x3FBvGzeCIHhF+zhK8FZA2vC5uFn6b4HJjegUbIWrDb4mJ7JjTGMJY9VGIbRVpmSwHopNiaJibhjIr+HfLug==}
-    engines: {node: '>=6.0.0'}
+  eta@4.0.1:
+    resolution: {integrity: sha512-0h0oBEsF6qAJU7eu9ztvJoTo8D2PAq/4FvXVIQA1fek3WOTe6KPsVJycekG1+g1N6mfpblkheoGwaUhMtnlH4A==}
+    engines: {node: '>=20'}
 
   event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -5679,8 +5679,8 @@ packages:
   koa-compose@4.1.0:
     resolution: {integrity: sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==}
 
-  koa@3.0.1:
-    resolution: {integrity: sha512-oDxVkRwPOHhGlxKIDiDB2h+/l05QPtefD7nSqRgDfZt8P+QVYFWjfeK8jANf5O2YXjk8egd7KntvXKYx82wOag==}
+  koa@3.0.3:
+    resolution: {integrity: sha512-MeuwbCoN1daWS32/Ni5qkzmrOtQO2qrnfdxDHjrm6s4b59yG4nexAJ0pTEFyzjLp0pBVO80CZp0vW8Ze30Ebow==}
     engines: {node: '>= 18'}
 
   kolorist@1.8.0:
@@ -6372,8 +6372,8 @@ packages:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
 
-  oidc-provider@9.5.1:
-    resolution: {integrity: sha512-19Wa4bfz3reoudxrY7sF5SeQKxe5b3dY8hWzQdnBGS87rH0BoYoDDUDRTYciJMN3oI6S02C9xM6vuaHtoZ48eA==}
+  oidc-provider@9.5.2:
+    resolution: {integrity: sha512-lTI6U7ESvf34xuu9XPUfJX6sbIXuOsV2MUPT9YoT7dzDtajufc50iWSY2t/4xB/TuFQ4t0Q++JU2Cu270d11pg==}
 
   oidc-token-hash@5.1.0:
     resolution: {integrity: sha512-y0W+X7Ppo7oZX6eovsRkuzcSM40Bicg2JEJkDJ4irIt1wsYAP5MLSNv+QAogO8xivMffw/9OvV3um1pxXgt1uA==}
@@ -6503,9 +6503,8 @@ packages:
     resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
     engines: {node: 20 || >=22}
 
-  path-to-regexp@8.2.0:
-    resolution: {integrity: sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==}
-    engines: {node: '>=16'}
+  path-to-regexp@8.3.0:
+    resolution: {integrity: sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==}
 
   path-type@5.0.0:
     resolution: {integrity: sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==}
@@ -6883,8 +6882,8 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  quick-lru@7.1.0:
-    resolution: {integrity: sha512-Pzd/4IFnTb8E+I1P5rbLQoqpUHcXKg48qTYKi4EANg+sTPwGFEMOcYGiiZz6xuQcOMZP7MPsrdAPx+16Q8qahg==}
+  quick-lru@7.3.0:
+    resolution: {integrity: sha512-k9lSsjl36EJdK7I06v7APZCbyGT2vMTsYSRX1Q2nbYmnkBqgUhRkAuzH08Ciotteu/PLJmIF2+tti7o3C/ts2g==}
     engines: {node: '>=18'}
 
   quickselect@2.0.0:
@@ -6896,9 +6895,9 @@ packages:
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
-  raw-body@3.0.0:
-    resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
-    engines: {node: '>= 0.8'}
+  raw-body@3.0.1:
+    resolution: {integrity: sha512-9G8cA+tuMS75+6G/TzW8OtLzmBDMo8p1JRxN5AZ+LAp8uxGA8V8GZm4GQ4/N5QNQEnLmg6SS7wyuSmbKepiKqA==}
+    engines: {node: '>= 0.10'}
 
   react-dom@19.2.0:
     resolution: {integrity: sha512-UlbRu4cAiGaIewkPyiRGJk0imDN2T3JjieT6spoL2UeSf5od4n5LB/mQ4ejmxhCFT1tYe8IvaFulzynWovsEFQ==}
@@ -9991,7 +9990,7 @@ snapshots:
       debug: 4.4.3
       http-errors: 2.0.0
       koa-compose: 4.1.0
-      path-to-regexp: 8.2.0
+      path-to-regexp: 8.3.0
     transitivePeerDependencies:
       - supports-color
 
@@ -13087,7 +13086,7 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eta@3.5.0: {}
+  eta@4.0.1: {}
 
   event-emitter@0.3.5:
     dependencies:
@@ -14081,7 +14080,7 @@ snapshots:
 
   koa-compose@4.1.0: {}
 
-  koa@3.0.1:
+  koa@3.0.3:
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
@@ -15116,18 +15115,18 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  oidc-provider@9.5.1:
+  oidc-provider@9.5.2:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 14.0.0
       debug: 4.4.3
-      eta: 3.5.0
+      eta: 4.0.1
       jose: 6.1.0
       jsesc: 3.1.0
-      koa: 3.0.1
+      koa: 3.0.3
       nanoid: 5.1.6
-      quick-lru: 7.1.0
-      raw-body: 3.0.0
+      quick-lru: 7.3.0
+      raw-body: 3.0.1
     transitivePeerDependencies:
       - supports-color
 
@@ -15264,7 +15263,7 @@ snapshots:
       lru-cache: 11.1.0
       minipass: 7.1.2
 
-  path-to-regexp@8.2.0: {}
+  path-to-regexp@8.3.0: {}
 
   path-type@5.0.0: {}
 
@@ -15746,7 +15745,7 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  quick-lru@7.1.0: {}
+  quick-lru@7.3.0: {}
 
   quickselect@2.0.0: {}
 
@@ -15758,11 +15757,11 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  raw-body@3.0.0:
+  raw-body@3.0.1:
     dependencies:
       bytes: 3.1.2
       http-errors: 2.0.0
-      iconv-lite: 0.6.3
+      iconv-lite: 0.7.0
       unpipe: 1.0.0
 
   react-dom@19.2.0(react@19.2.0):
