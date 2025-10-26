@@ -27,8 +27,8 @@ importers:
         specifier: ^0.7.18
         version: 0.7.18(@citation-js/core@0.7.18)
       '@citation-js/plugin-ris':
-        specifier: ^0.7.18
-        version: 0.7.18(@citation-js/core@0.7.18)
+        specifier: ^0.7.21
+        version: 0.7.21(@citation-js/core@0.7.18)
       '@lxcat/converter':
         specifier: workspace:^
         version: link:../packages/converter
@@ -987,8 +987,8 @@ packages:
     peerDependencies:
       '@citation-js/core': ^0.7.0
 
-  '@citation-js/plugin-ris@0.7.18':
-    resolution: {integrity: sha512-aHd8isGGxz6P63UjyTR4RfX1alqxu8PQLWeoUBcnTMAPmyn6qzJfdB+iZEFA8HyL4g3I33n431zL/0BV8XlJiw==}
+  '@citation-js/plugin-ris@0.7.21':
+    resolution: {integrity: sha512-swVpYTEYHgO8DRjCeWzaQLQa9B9BiO1bCH67sU+U/dbNw7S71wAHjK9MNI5CqRMndwKldOg6SswBQWzLtBsbeA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
@@ -8973,7 +8973,7 @@ snapshots:
       '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
 
-  '@citation-js/plugin-ris@0.7.18(@citation-js/core@0.7.18)':
+  '@citation-js/plugin-ris@0.7.21(@citation-js/core@0.7.18)':
     dependencies:
       '@citation-js/core': 0.7.18
       '@citation-js/date': 0.5.1
