@@ -21,8 +21,8 @@ importers:
         specifier: ^0.7.21
         version: 0.7.21(@citation-js/core@0.7.21)
       '@citation-js/plugin-csl':
-        specifier: ^0.7.18
-        version: 0.7.18(@citation-js/core@0.7.21)
+        specifier: ^0.7.21
+        version: 0.7.21(@citation-js/core@0.7.21)
       '@citation-js/plugin-doi':
         specifier: ^0.7.21
         version: 0.7.21(@citation-js/core@0.7.21)
@@ -988,8 +988,8 @@ packages:
     peerDependencies:
       '@citation-js/core': ^0.7.0
 
-  '@citation-js/plugin-csl@0.7.18':
-    resolution: {integrity: sha512-cJcOdEZurmtIxNj0d4cOERHpVQJB/mN3YPSDNqfI/xTFRN3bWDpFAsaqubPtMO2ZPpoDS+ZGIP1kggbwCfMmlA==}
+  '@citation-js/plugin-csl@0.7.21':
+    resolution: {integrity: sha512-23ySPYCWDiU1JqhvqTYLn6+C11LkeJxTfyPKKXCK2wan9iF9ODvY7JYNl/OJgtwvu485dKfDpqqptWv6i71Meg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@citation-js/core': ^0.7.0
@@ -9075,7 +9075,7 @@ snapshots:
       '@citation-js/name': 0.4.2
       moo: 0.5.2
 
-  '@citation-js/plugin-csl@0.7.18(@citation-js/core@0.7.21)':
+  '@citation-js/plugin-csl@0.7.21(@citation-js/core@0.7.21)':
     dependencies:
       '@citation-js/core': 0.7.21
       '@citation-js/date': 0.5.1
