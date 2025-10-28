@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { IconEye, IconEyeClosed, IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
@@ -79,24 +79,22 @@ export const ProcessTable = (
   { processes, referenceMarkers, colorMap, selected, onChangeSelected }:
     ProcessTableProps,
 ) => {
-  const [records, setRecords] = useState(processes);
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
   const [expanded, setExpanded] = useState<Array<string>>([]);
 
-  const availableTags = useMemo(
-    () => [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
-    [records],
-  );
-
-  useEffect(() => {
-    setRecords(processes.filter((process) => {
+  const [records, availableTags] = useMemo(() => {
+    const records = processes.filter((process) => {
       if (
         selectedTags.length
         && !process.reaction.typeTags.some((tag) => selectedTags.includes(tag))
       ) return false;
 
       return true;
-    }));
+    });
+    return [
+      records,
+      [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
+    ];
   }, [processes, selectedTags]);
 
   return (

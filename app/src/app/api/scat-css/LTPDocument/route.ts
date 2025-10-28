@@ -10,7 +10,7 @@ import { RouteBuilder } from "../../route-builder";
 const router = RouteBuilder
   .init()
   .get(async () => {
-    let res = okJsonResponse(VersionedLTPDocumentJSONSchema);
+    const res = okJsonResponse(VersionedLTPDocumentJSONSchema);
     res.headers.append("Content-Type", "application/schema+json");
     return res;
   })

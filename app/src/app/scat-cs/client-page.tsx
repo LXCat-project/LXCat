@@ -124,7 +124,7 @@ export const CSClient: NextPage<Props> = ({
 
   const nrItems = items.length;
 
-  let canonicalUrl = "/scat-cs";
+  const canonicalUrl = "/scat-cs";
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
     setLoading(true);

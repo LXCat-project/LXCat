@@ -152,7 +152,7 @@ export class RouteBuilder<Context> {
         }
 
         if (req.method === method) {
-          let resp = await callback(req, result.value[0], result.value[1]);
+          const resp = await callback(req, result.value[0], result.value[1]);
           for (const key in result.value[1]) {
             if (resp.headers.get(key) === null) {
               resp.headers.append(key, result.value[1][key]);

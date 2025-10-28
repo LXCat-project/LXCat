@@ -50,7 +50,7 @@ const router = RouteBuilder
       };
 
       const { convertDocument } = await import("@lxcat/converter");
-      let res = okResponse(convertDocument(dataWithRef));
+      const res = okResponse(convertDocument(dataWithRef));
       res.headers.append("Content-Type", "text/plain");
       res.headers.append(
         "Content-Disposition",

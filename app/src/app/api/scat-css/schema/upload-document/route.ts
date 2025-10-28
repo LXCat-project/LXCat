@@ -10,7 +10,7 @@ import { NewLTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
 const router = RouteBuilder
   .init()
   .get(async () => {
-    let res = okJsonResponse(NewLTPDocumentJSONSchema);
+    const res = okJsonResponse(NewLTPDocumentJSONSchema);
     res.headers.append("Content-Type", "application/schema+json");
     return res;
   })

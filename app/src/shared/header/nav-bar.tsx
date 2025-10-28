@@ -16,6 +16,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { Fragment } from "react";
 import { LXCatLogo } from "../logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 
@@ -96,10 +97,10 @@ export function NavBar() {
           </Link>
         )
         : (
-          <>
+          <Fragment key={item.label}>
             {item.divider ? <Menu.Divider /> : <></>}
             <Menu.Label>{item.label}</Menu.Label>
-          </>
+          </Fragment>
         )
     );
 

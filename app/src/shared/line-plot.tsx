@@ -30,7 +30,9 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
   return (
-    // @ts-ignore
+    // @ts-expect-error for some reason the component property types do not
+    // contain the `minor` key on `layout.xaxis`, and `layout.yaxis`, but they
+    // do have an effect.
     <Plot
       style={style}
       useResizeHandler
@@ -62,13 +64,12 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
           r: 10,
         },
         xaxis: {
-          title: xAxis.label,
+          title: { text: xAxis.label },
           type: xAxis.type,
           tickformat: ".0e",
           ticks: "inside",
           tickmode: "linear",
           tickwidth: 1,
-          // @ts-ignore
           minor: { ticks: "inside" },
           linewidth: 1,
           showline: true,
@@ -77,13 +78,12 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
         // width: 700,
         // height: 600,
         yaxis: {
-          title: yAxis.label,
+          title: { text: yAxis.label },
           type: yAxis.type,
           tickformat: ".0e",
           ticks: "inside",
           tickmode: "linear",
           tickwidth: 1,
-          // @ts-ignore
           minor: { ticks: "inside" },
           linewidth: 1,
           showline: true,

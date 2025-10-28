@@ -18,7 +18,7 @@ import remarkToc from "remark-toc";
 import { VFile } from "vfile";
 import { rehypeMermaid } from "./transformer";
 
-const DOC_ROOT = join(__dirname, "../../../../../../docs");
+const DOC_ROOT = "../docs"; // join(__dirname, "../../../docs");
 
 export async function listDocFiles(dir = DOC_ROOT) {
   const files = await readdir(dir, { withFileTypes: true });
@@ -104,7 +104,7 @@ const makeNestedEntries = (
   index: number,
   depth: number,
 ): [Array<DocSection>, number] => {
-  let children = [];
+  const children = [];
 
   while (true) {
     if (index >= entries.length) break;

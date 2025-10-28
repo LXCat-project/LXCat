@@ -53,7 +53,7 @@ export async function generateOpenAPI() {
   const files = await glob("./**/openapi.ts", { cwd: "./src/app/api/" });
 
   // Import all .openapi files which register the endpoints and schemas.
-  let importTasks = files.map((f) => {
+  const importTasks = files.map((f) => {
     // bundler needs partial path for dynamic imports,
     // so extract only most relative directory name and reconstruct later.
     return awaitImport(f.slice(0, -10));
@@ -73,7 +73,7 @@ export async function generateOpenAPI() {
     servers: [{ url: url }],
   };
 
-  let obj = openapiGenerator.generate(config);
+  const obj = openapiGenerator.generate(config);
 
   cachedSpec = obj;
 
