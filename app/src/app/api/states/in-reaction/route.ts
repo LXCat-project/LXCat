@@ -9,7 +9,7 @@ import { RouteBuilder } from "../../route-builder";
 import { stateArrayToTree } from "./../util";
 import { querySchema } from "./schemas";
 
-let router = RouteBuilder
+const router = RouteBuilder
   .init()
   .use(zodMiddleware(querySchema))
   .get(

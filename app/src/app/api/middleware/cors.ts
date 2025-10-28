@@ -38,10 +38,10 @@ export const applyCORS =
     ctx: Context,
     headers: Headers,
   ) => {
-    let method = req.method && req.method.toUpperCase
+    const method = req.method && req.method.toUpperCase
       && req.method.toUpperCase();
 
-    let cors_headers: [string, string][] = [];
+    const cors_headers: [string, string][] = [];
 
     const origin = req.headers.get("origin");
 
@@ -103,7 +103,7 @@ export const applyCORS =
         ),
       );
     } else {
-      for (let header of cors_headers) {
+      for (const header of cors_headers) {
         headers[header[0]] = header[1];
       }
       return ok([

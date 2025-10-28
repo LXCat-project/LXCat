@@ -104,7 +104,7 @@ const makeNestedEntries = (
   index: number,
   depth: number,
 ): [Array<DocSection>, number] => {
-  let children = [];
+  const children = [];
 
   while (true) {
     if (index >= entries.length) break;

@@ -64,14 +64,14 @@ const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   let latex = "";
 
   if (path.particle) {
-    let particle = tree[path.particle];
+    const particle = tree[path.particle];
     latex += particle.latex;
     if (
       particle.children
       && path.electronic
       && path.electronic !== OMIT_CHILDREN_KEY
     ) {
-      let electronic = particle.children[path.electronic];
+      const electronic = particle.children[path.electronic];
       latex += `\\left(${electronic.latex}`;
       if (
         electronic.children

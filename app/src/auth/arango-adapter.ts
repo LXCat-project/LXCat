@@ -22,7 +22,7 @@ export const ArangoAdapter = (db: LXCatDatabase): Adapter => {
     const emailVerified = profile.emailVerified
       ? new Date(profile.emailVerified)
       : null;
-    const { _key, ...user } = {
+    const { _key: _, ...user } = {
       id: profile._key,
       ...profile,
       emailVerified,

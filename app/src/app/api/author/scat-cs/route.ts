@@ -15,7 +15,7 @@ const router = RouteBuilder
   .use(hasAuthorRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
-    let params = ctx.parsedParams.query;
+    const params = ctx.parsedParams.query;
     const { offset, count } = params;
 
     const paging = {

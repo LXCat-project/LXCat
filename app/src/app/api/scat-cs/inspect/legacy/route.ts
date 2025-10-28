@@ -35,7 +35,7 @@ const router = RouteBuilder
 
     const { convertMixture } = await import("@lxcat/converter");
 
-    let res = okResponse(
+    const res = okResponse(
       convertMixture({ ...data, references }),
     );
 
