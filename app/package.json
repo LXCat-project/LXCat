@@ -10,7 +10,7 @@
     "start": "next start",
     "coverage:start": "nyc next start",
     "coverage:report": "nyc report --reporter=lcovonly",
-    "lint": "next lint",
+    "lint": "eslint .",
     "format": "dprint fmt",
     "type-check": "tsc --pretty --noEmit",
     "test": "vitest",
@@ -78,7 +78,6 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.38.0",
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",

@@ -2,16 +2,25 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-export default [...compat.extends("next/core-web-vitals")];
+const config = [
+  ...nextTypescript,
+  ...nextCoreWebVitals,
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+    ],
+  },
+  { files: ["e2e/**"], rules: { "react-hooks/rules-of-hooks": "off" } }
+]
+
+export default config;
