@@ -19,7 +19,9 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const ProcessPlot = ({ processes, colors }: ChartProps) => {
   return (
-    // @ts-ignore
+    // @ts-expect-error for some reason the component property types do not
+    // contain the `minor` key on `layout.xaxis`, and `layout.yaxis`, but they
+    // do have an effect.
     <Plot
       className={classes.plotBox}
       data={processes.map((process, index) => ({
@@ -55,7 +57,6 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
           tickmode: "linear",
           ticks: "inside",
           tickwidth: 1,
-          // @ts-ignore
           minor: { ticks: "inside" },
           linewidth: 1,
           showline: true,
@@ -73,7 +74,6 @@ export const ProcessPlot = ({ processes, colors }: ChartProps) => {
           ticks: "inside",
           tickmode: "linear",
           tickwidth: 1,
-          // @ts-ignore
           minor: { ticks: "inside" },
           linewidth: 1,
           showline: true,
