@@ -22,7 +22,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@eslint/js": "^9.38.0",
+    "@eslint/js": "^9.39.0",
     "@lxcat/tsconfig": "workspace:^",
     "@vitest/coverage-v8": "^4.0.4",
     "dprint": "^0.50.2",
