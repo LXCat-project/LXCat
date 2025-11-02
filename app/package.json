@@ -95,7 +95,7 @@
     "dotenv": "^17.2.3",
     "dprint": "^0.50.2",
     "eslint": "^9.38.0",
-    "eslint-config-next": "16.0.0",
+    "eslint-config-next": "16.0.1",
     "nyc": "^17.1.0",
     "oidc-provider": "^9.5.2",
     "playwright-test-coverage": "^1.2.12",
