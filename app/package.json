@@ -70,7 +70,7 @@
     "remark-toc": "^9.0.0",
     "schema-dts": "^1.1.5",
     "server-only": "^0.0.1",
-    "sharp": "^0.34.4",
+    "sharp": "^0.34.5",
     "swr": "2.3.6",
     "true-myth": "^9.2.0",
     "unist-util-visit": "^5.0.0",
