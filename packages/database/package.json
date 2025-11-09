@@ -72,7 +72,7 @@
     "@lxcat/tsconfig": "workspace:^",
     "@testcontainers/arangodb": "^11.7.2",
     "@types/deep-equal": "^1.0.4",
-    "@types/node": "^24.9.2",
+    "@types/node": "^24.10.0",
     "@vitest/coverage-v8": "^4.0.6",
     "dprint": "^0.50.2",
     "eslint": "9.39.0",
