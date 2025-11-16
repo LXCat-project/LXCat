@@ -265,8 +265,8 @@ importers:
         specifier: ^0.0.31
         version: 0.0.31
       testcontainers:
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -335,8 +335,8 @@ importers:
         specifier: ^16.5.0
         version: 16.5.0
       testcontainers:
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
@@ -3000,8 +3000,8 @@ packages:
   '@types/docker-modem@3.0.6':
     resolution: {integrity: sha512-yKpAGEuKRSS8wwx0joknWxsmLha78wNMe9R2S3UNsVOkZded8UqOrV8KoeDXoXsjndxwyF3eIhyClGbO1SEhEg==}
 
-  '@types/dockerode@3.3.45':
-    resolution: {integrity: sha512-iYpZF+xr5QLpIICejLdUF2r5gh8IXY1Gw3WLmt41dUbS3Vn/3hVgL+6lJBVbmrhYBWfbWPPstdr6+A0s95DTWA==}
+  '@types/dockerode@3.3.46':
+    resolution: {integrity: sha512-pvvaYMN3PKXMvWi7A1UNMgqXpWD4+AWfmTFK1kCxfSXW7dMigaeyufRM9tAJf+sy4CX6tKn76z/fR6ut2SZsrg==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -3671,8 +3671,8 @@ packages:
       bare-abort-controller:
         optional: true
 
-  bare-fs@4.5.0:
-    resolution: {integrity: sha512-GljgCjeupKZJNetTqxKaQArLK10vpmK28or0+RwWjEl5Rk+/xG3wkpmkv+WrcBm3q1BwHKlnhXzR8O37kcvkXQ==}
+  bare-fs@4.5.1:
+    resolution: {integrity: sha512-zGUCsm3yv/ePt2PHNbVxjjn0nNB1MkIaR4wOCxJ2ig5pCf5cCVAYJXVhQg/3OhhJV6DB1ts7Hv0oUaElc2TPQg==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -7640,8 +7640,8 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
-  testcontainers@11.8.0:
-    resolution: {integrity: sha512-kY2DfuUB1NSvmpG7wCpi/aTaIJaHcX53WSAlWHsj0La7E7fPnVFOpooheczE3fH9T+OgD5OB5IeBpFitIqqu6w==}
+  testcontainers@11.8.1:
+    resolution: {integrity: sha512-XeqoHbgVA8lx9ufrgYIKlYV4eubVCn3CL6Dh7sdHT793/hbDu/S7N786MqBxQZjzDG+YRKFSCNPTEwp8lREY9Q==}
 
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
@@ -10686,7 +10686,7 @@ snapshots:
 
   '@testcontainers/arangodb@11.8.0':
     dependencies:
-      testcontainers: 11.8.0
+      testcontainers: 11.8.1
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -10880,7 +10880,7 @@ snapshots:
       '@types/node': 24.10.0
       '@types/ssh2': 1.15.5
 
-  '@types/dockerode@3.3.45':
+  '@types/dockerode@3.3.46':
     dependencies:
       '@types/docker-modem': 3.0.6
       '@types/node': 24.10.0
@@ -11685,7 +11685,7 @@ snapshots:
 
   bare-events@2.8.2: {}
 
-  bare-fs@4.5.0:
+  bare-fs@4.5.1:
     dependencies:
       bare-events: 2.8.2
       bare-path: 3.0.0
@@ -16753,7 +16753,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.0
+      bare-fs: 4.5.1
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller
@@ -16799,10 +16799,10 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  testcontainers@11.8.0:
+  testcontainers@11.8.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@types/dockerode': 3.3.45
+      '@types/dockerode': 3.3.46
       archiver: 7.0.1
       async-lock: 1.4.1
       byline: 5.0.0
