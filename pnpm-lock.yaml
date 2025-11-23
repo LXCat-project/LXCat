@@ -229,8 +229,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@vitest/coverage-v8':
-        specifier: ^4.0.9
-        version: 4.0.9(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
+        specifier: ^4.0.13
+        version: 4.0.13(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -323,8 +323,8 @@ importers:
         specifier: ^24.10.1
         version: 24.10.1
       '@vitest/coverage-v8':
-        specifier: ^4.0.9
-        version: 4.0.9(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
+        specifier: ^4.0.13
+        version: 4.0.13(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
       dprint:
         specifier: ^0.50.2
         version: 0.50.2
@@ -388,8 +388,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@vitest/coverage-v8':
-        specifier: ^4.0.9
-        version: 4.0.9(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
+        specifier: ^4.0.13
+        version: 4.0.13(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
       dprint:
         specifier: ^0.50.2
         version: 0.50.2
@@ -3336,11 +3336,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@vitest/coverage-v8@4.0.9':
-    resolution: {integrity: sha512-70oyhP+Q0HlWBIeGSP74YBw5KSjYhNgSCQjvmuQFciMqnyF36WL2cIkcT7XD85G4JPmBQitEMUsx+XMFv2AzQA==}
+  '@vitest/coverage-v8@4.0.13':
+    resolution: {integrity: sha512-w77N6bmtJ3CFnL/YHiYotwW/JI3oDlR3K38WEIqegRfdMSScaYxwYKB/0jSNpOTZzUjQkG8HHEz4sdWQMWpQ5g==}
     peerDependencies:
-      '@vitest/browser': 4.0.9
-      vitest: 4.0.9
+      '@vitest/browser': 4.0.13
+      vitest: 4.0.13
     peerDependenciesMeta:
       '@vitest/browser':
         optional: true
@@ -3362,9 +3362,6 @@ packages:
   '@vitest/pretty-format@4.0.13':
     resolution: {integrity: sha512-ooqfze8URWbI2ozOeLDMh8YZxWDpGXoeY3VOgcDnsUxN0jPyPWSUvjPQWqDGCBks+opWlN1E4oP1UYl3C/2EQA==}
 
-  '@vitest/pretty-format@4.0.9':
-    resolution: {integrity: sha512-Hor0IBTwEi/uZqB7pvGepyElaM8J75pYjrrqbC8ZYMB9/4n5QA63KC15xhT+sqHpdGWfdnPo96E8lQUxs2YzSQ==}
-
   '@vitest/runner@4.0.13':
     resolution: {integrity: sha512-9IKlAru58wcVaWy7hz6qWPb2QzJTKt+IOVKjAx5vb5rzEFPTL6H4/R9BMvjZ2ppkxKgTrFONEJFtzvnyEpiT+A==}
 
@@ -3376,9 +3373,6 @@ packages:
 
   '@vitest/utils@4.0.13':
     resolution: {integrity: sha512-ydozWyQ4LZuu8rLp47xFUWis5VOKMdHjXCWhs1LuJsTNKww+pTHQNK4e0assIB9K80TxFyskENL6vCu3j34EYA==}
-
-  '@vitest/utils@4.0.9':
-    resolution: {integrity: sha512-cEol6ygTzY4rUPvNZM19sDf7zGa35IYTm9wfzkHoT/f5jX10IOY7QleWSOh5T0e3I3WVozwK5Asom79qW8DiuQ==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -11279,10 +11273,10 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vitest/coverage-v8@4.0.9(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))':
+  '@vitest/coverage-v8@4.0.13(vitest@4.0.13(@types/node@24.10.1)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
-      '@vitest/utils': 4.0.9
+      '@vitest/utils': 4.0.13
       ast-v8-to-istanbul: 0.3.8
       debug: 4.4.3
       istanbul-lib-coverage: 3.2.2
@@ -11317,10 +11311,6 @@ snapshots:
     dependencies:
       tinyrainbow: 3.0.3
 
-  '@vitest/pretty-format@4.0.9':
-    dependencies:
-      tinyrainbow: 3.0.3
-
   '@vitest/runner@4.0.13':
     dependencies:
       '@vitest/utils': 4.0.13
@@ -11337,11 +11327,6 @@ snapshots:
   '@vitest/utils@4.0.13':
     dependencies:
       '@vitest/pretty-format': 4.0.13
-      tinyrainbow: 3.0.3
-
-  '@vitest/utils@4.0.9':
-    dependencies:
-      '@vitest/pretty-format': 4.0.9
       tinyrainbow: 3.0.3
 
   '@webassemblyjs/ast@1.14.1':
