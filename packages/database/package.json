@@ -80,7 +80,7 @@
     "testcontainers": "^11.8.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4",
+    "typescript-eslint": "^8.47.0",
     "vitest": "^4.0.13"
   }
 }
