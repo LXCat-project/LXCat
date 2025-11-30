@@ -37,7 +37,7 @@
     "@next/bundle-analyzer": "^16.0.3",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",
-    "cookie": "^1.0.2",
+    "cookie": "^1.1.1",
     "deep-equal": "^2.2.3",
     "github-slugger": "^2.0.0",
     "glob": "^13.0.0",
