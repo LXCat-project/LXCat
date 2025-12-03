@@ -6,7 +6,6 @@ import {
   any,
   array,
   enum as zEnum,
-  globalRegistry,
   number,
   object,
   output,
@@ -14,6 +13,7 @@ import {
   string,
   union,
 } from "zod";
+import { registerType } from "../util.js";
 import { CSLDateVariable } from "./date-variable.js";
 import { CSLNameVariable } from "./name-variable.js";
 
@@ -180,4 +180,4 @@ export const CSLData = object({
   .describe("Zod schema for CSL input data");
 export type CSLData = output<typeof CSLData>;
 
-globalRegistry.add(CSLData, { id: "CSLData" });
+registerType(CSLData, { id: "CSLData" });

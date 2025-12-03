@@ -2,28 +2,21 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  array,
-  globalRegistry,
-  lazy,
-  number,
-  tuple,
-  TypeOf,
-  ZodType,
-} from "zod";
+import { array, lazy, number, output, tuple, ZodType } from "zod";
+import { registerType } from "../../common/util.js";
 import { parseCharge, parseChargeLatex } from "../common.js";
 import { SummarizedComponent } from "../summary.js";
 import { Element } from "./element.js";
 
 // Recursive types cannot be automatically inferred, see:
 // https://zod.dev/?id=recursive-types.
-export type Composition = Array<[TypeOf<typeof Element> | Composition, number]>;
+export type Composition = Array<[output<typeof Element> | Composition, number]>;
 
 export const Composition: ZodType<Composition> = array(
   tuple([lazy(() => Element.or(Composition)), number().int().positive()]),
 );
 
-globalRegistry.add(Composition, { id: "Composition" });
+registerType(Composition, { id: "Composition" });
 
 const parseCompositionImpl = (composition: Composition): string =>
   composition.map(([element, count]) => {

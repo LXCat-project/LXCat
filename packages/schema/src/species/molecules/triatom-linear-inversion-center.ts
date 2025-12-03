@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, TypeOf } from "zod";
+import { output } from "zod";
+import { registerType } from "../../common/util.js";
 import { SpeciesBase } from "../composition/species-base.js";
 import { LTICComposition } from "../composition/triatom/ltic.js";
 import { makeMolecule } from "../generators.js";
@@ -17,10 +18,10 @@ export const LinearTriatomInversionCenter = makeMolecule(
   LinearTriatomVibrational,
   Rotational,
 );
-export type LinearTriatomInversionCenter = TypeOf<
+export type LinearTriatomInversionCenter = output<
   typeof LinearTriatomInversionCenter.plain
 >;
 
-globalRegistry.add(LinearTriatomInversionCenter.plain, {
+registerType(LinearTriatomInversionCenter.plain, {
   id: "LinearTriatomInversionCenter",
 });

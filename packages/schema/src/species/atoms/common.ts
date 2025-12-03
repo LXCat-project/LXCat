@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, number, object, TypeOf, ZodType } from "zod";
+import { number, object, output, ZodType } from "zod";
+import { registerType } from "../../common/util.js";
 import { electronicOrbital } from "../common.js";
 
 /**
@@ -52,9 +53,9 @@ export const ShellEntry = object({
   l: number().int().nonnegative(),
   occupance: number().int().nonnegative(),
 });
-export type ShellEntry = TypeOf<typeof ShellEntry>;
+export type ShellEntry = output<typeof ShellEntry>;
 
-globalRegistry.add(ShellEntry, { id: "ShellEntry" });
+registerType(ShellEntry, { id: "ShellEntry" });
 
 /// Serializer functions
 

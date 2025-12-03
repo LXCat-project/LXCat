@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, string } from "zod";
+import { string } from "zod";
+import { registerType } from "../../common/util.js";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -20,4 +21,4 @@ export const AtomUnspecified = makeAtom(
   UnspecifiedComponent,
 );
 
-globalRegistry.add(AtomUnspecified.plain, { id: "AtomUnspecified" });
+registerType(AtomUnspecified.plain, { id: "AtomUnspecified" });

@@ -2,15 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  array,
-  globalRegistry,
-  literal,
-  number,
-  object,
-  TypeOf,
-  union,
-} from "zod";
+import { array, literal, number, object, output, union } from "zod";
+import { registerType } from "../../common/util.js";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -34,14 +27,15 @@ export const J1L2Term = object({
   K: number().multipleOf(0.5).nonnegative(),
   S: number().multipleOf(0.5).nonnegative(),
   P: union([literal(-1), literal(1)]),
-}).merge(TotalAngularSpecifier);
-export type J1L2Term = TypeOf<typeof J1L2Term>;
+  ...TotalAngularSpecifier.shape,
+});
+export type J1L2Term = output<typeof J1L2Term>;
 
 const J1L2Descriptor = buildTerm(
   buildTwoTerm(LSJDescriptor, buildTerm(array(ShellEntry), LSTerm)),
   J1L2Term,
 );
-type J1L2Descriptor = TypeOf<typeof J1L2Descriptor>;
+type J1L2Descriptor = output<typeof J1L2Descriptor>;
 
 // Summary serializer functions
 function serializeJ1L2Term(term: J1L2Term): string {
@@ -96,6 +90,6 @@ export const AtomJ1L2 = makeAtom(
   SpeciesBase(AtomComposition),
   J1L2Component,
 );
-export type AtomJ1L2 = TypeOf<typeof AtomJ1L2.plain>;
+export type AtomJ1L2 = output<typeof AtomJ1L2.plain>;
 
-globalRegistry.add(AtomJ1L2.plain, { id: "AtomJ1L2" });
+registerType(AtomJ1L2.plain, { id: "AtomJ1L2" });

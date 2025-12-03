@@ -6,12 +6,13 @@ import {
   array,
   boolean,
   enum as zEnum,
-  globalRegistry,
   number,
   object,
   string,
   union,
+  url,
 } from "zod";
+import { registerType } from "../util.js";
 
 export const CSLNameVariable = object({
   family: string().optional(),
@@ -24,10 +25,10 @@ export const CSLNameVariable = object({
     .optional(),
   literal: string().optional(),
   "parse-names": union([string(), number(), boolean()]).optional(),
-  ORCID: string().url().optional(),
+  ORCID: url().optional(),
   "authenticated-orcid": boolean().optional(),
   sequence: zEnum(["first", "additional"]).optional(),
   affiliation: array(object({ name: string().min(1) })).optional(),
 });
 
-globalRegistry.add(CSLNameVariable, { id: "CSLNameVariable" });
+registerType(CSLNameVariable, { id: "CSLNameVariable" });

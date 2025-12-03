@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, globalRegistry, object, output } from "zod";
+import { array, object, output } from "zod";
+import { registerType } from "../../common/util.js";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -51,4 +52,4 @@ export const AtomLSJTwoTerm = makeAtom(
   TwoTermLSJComponent,
 );
 
-globalRegistry.add(AtomLSJTwoTerm.plain, { id: "AtomLSJTwoTerm" });
+registerType(AtomLSJTwoTerm.plain, { id: "AtomLSJTwoTerm" });

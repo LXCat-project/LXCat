@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, literal, object } from "zod";
+import { literal, object } from "zod";
+import { registerType } from "../../common/util.js";
 
 export const Electron = object({
   type: literal("Electron"),
@@ -10,4 +11,4 @@ export const Electron = object({
   charge: literal(-1),
 });
 
-globalRegistry.add(Electron, { id: "Electron" });
+registerType(Electron, { id: "Electron" });
