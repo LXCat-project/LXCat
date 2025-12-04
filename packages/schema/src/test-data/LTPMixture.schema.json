@@ -1119,7 +1119,7 @@
       "additionalProperties": false
     },
     "AnySpecies": {
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/$defs/Electron"
         },
