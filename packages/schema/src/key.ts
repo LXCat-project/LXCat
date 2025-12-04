@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { globalRegistry, string } from "zod";
+import { string } from "zod";
+import { registerType } from "./common/util.js";
 
 export const Key = string().min(1);
 
-globalRegistry.add(Key, { id: "Key" });
+registerType(Key, { id: "Key" });

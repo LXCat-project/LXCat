@@ -2,16 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  array,
-  globalRegistry,
-  input,
-  literal,
-  number,
-  object,
-  TypeOf,
-  union,
-} from "zod";
+import { array, input, literal, number, object, output, union } from "zod";
+import { registerType } from "../../common/util.js";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -32,8 +24,9 @@ export const LS1Term = object({
   K: number().multipleOf(0.5).nonnegative(),
   S: number().multipleOf(0.5).nonnegative(),
   P: union([literal(-1), literal(1)]),
-}).merge(TotalAngularSpecifier);
-export type LS1Term = TypeOf<typeof LS1Term>;
+  ...TotalAngularSpecifier.shape,
+});
+export type LS1Term = output<typeof LS1Term>;
 
 export const LS1Descriptor = buildTerm(
   buildTwoTerm(
@@ -42,7 +35,7 @@ export const LS1Descriptor = buildTerm(
   ),
   LS1Term,
 );
-export type LS1Descriptor = TypeOf<typeof LS1Descriptor>;
+export type LS1Descriptor = output<typeof LS1Descriptor>;
 
 /// Serializer functions
 
@@ -101,4 +94,4 @@ export const AtomLS1 = makeAtom(
 );
 export type AtomLS1 = input<typeof AtomLS1.plain>;
 
-globalRegistry.add(AtomLS1.plain, { id: "AtomLS1" });
+registerType(AtomLS1.plain, { id: "AtomLS1" });

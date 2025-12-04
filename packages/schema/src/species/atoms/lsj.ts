@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { array, globalRegistry, object, TypeOf } from "zod";
+import { array, object, output } from "zod";
+import { registerType } from "../../common/util.js";
 import { makeComponent } from "../component.js";
 import { AtomComposition } from "../composition/atom.js";
 import { SpeciesBase } from "../composition/species-base.js";
@@ -20,10 +21,10 @@ export const LSJTerm = object({
   ...LSTerm.shape,
   ...TotalAngularSpecifier.shape,
 });
-export type LSJTerm = TypeOf<typeof LSJTerm>;
+export type LSJTerm = output<typeof LSJTerm>;
 
 export const LSJDescriptor = buildTerm(array(ShellEntry), LSJTerm);
-type LSJDescriptor = TypeOf<typeof LSJDescriptor>;
+type LSJDescriptor = output<typeof LSJDescriptor>;
 
 export const serializeLSJTerm = (term: LSJTerm): string => {
   return `${serializeLSTerm(term)}_${serializeHalfInteger(term.J)}`;
@@ -48,7 +49,7 @@ export const LSJComponent = makeComponent(
   serializeLSJ,
   serializeLatexLSJ,
 );
-export type LSJComponent = TypeOf<typeof LSJComponent>;
+export type LSJComponent = output<typeof LSJComponent>;
 
 // TODO: After migration this type should be renamed to `AtomLSJ`.
 export const AtomLSJ = makeAtom(
@@ -57,4 +58,4 @@ export const AtomLSJ = makeAtom(
   LSJComponent,
 );
 
-globalRegistry.add(AtomLSJ.plain, { id: "AtomLSJ" });
+registerType(AtomLSJ.plain, { id: "AtomLSJ" });

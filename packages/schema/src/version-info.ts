@@ -2,14 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  enum as zodEnum,
-  globalRegistry,
-  number,
-  object,
-  output,
-  string,
-} from "zod";
+import { enum as zodEnum, iso, number, object, output, string } from "zod";
+import { registerType } from "./common/util.js";
 
 /**
  * Valid transitions:
@@ -26,7 +20,7 @@ export type Status = output<typeof Status>;
 // Used to store version information about versioned documents.
 export const VersionInfo = object({
   version: number().int().positive(),
-  createdOn: string().datetime(),
+  createdOn: iso.datetime(),
   status: Status,
   commitMessage: string().min(1).optional().describe(
     "Description of what was changed since the previous version.",
@@ -37,4 +31,4 @@ export const VersionInfo = object({
 });
 export type VersionInfo = output<typeof VersionInfo>;
 
-globalRegistry.add(VersionInfo, { id: "VersionInfo" });
+registerType(VersionInfo, { id: "VersionInfo" });
