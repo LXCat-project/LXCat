@@ -93,8 +93,8 @@ importers:
         specifier: ^0.16.25
         version: 0.16.25
       mantine-datatable:
-        specifier: ^8.3.8
-        version: 8.3.8(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(clsx@2.1.1)(react-dom@19.2.1(react@19.2.0))(react@19.2.0)
+        specifier: ^8.3.9
+        version: 8.3.9(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(clsx@2.1.1)(react-dom@19.2.1(react@19.2.0))(react@19.2.0)
       mdast-util-from-markdown:
         specifier: ^2.0.2
         version: 2.0.2
@@ -5799,8 +5799,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  mantine-datatable@8.3.8:
-    resolution: {integrity: sha512-n6IHSCoZSojHSLLcRcxB0wiyMt+N2cIhp7gRSLsLdXv3xg4vq6wSW/n6cbd8SxN26T8JQlQ4Y2KNBgIuDdbHEg==}
+  mantine-datatable@8.3.9:
+    resolution: {integrity: sha512-hJqHHGbgrmnGikbrFLp+c+PbPJLsxjrapOsV3QtkXcwi4BPVL1f0LGGMFk9MLn/IqzpwqzBqU30w6j3ZlpwDdQ==}
     peerDependencies:
       '@mantine/core': '>=8.3'
       '@mantine/hooks': '>=8.3'
@@ -14182,7 +14182,7 @@ snapshots:
     dependencies:
       semver: 7.7.3
 
-  mantine-datatable@8.3.8(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(clsx@2.1.1)(react-dom@19.2.1(react@19.2.0))(react@19.2.0):
+  mantine-datatable@8.3.9(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(clsx@2.1.1)(react-dom@19.2.1(react@19.2.0))(react@19.2.0):
     dependencies:
       '@mantine/core': 8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.0))(react@19.2.0)
       '@mantine/hooks': 8.3.9(react@19.2.0)
