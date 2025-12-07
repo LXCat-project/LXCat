@@ -78,7 +78,7 @@
     "eslint": "9.39.1",
     "globals": "^16.5.0",
     "testcontainers": "^11.9.0",
-    "tsx": "^4.20.6",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.1",
     "vitest": "^4.0.15"
