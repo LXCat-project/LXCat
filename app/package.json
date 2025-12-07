@@ -54,7 +54,7 @@
     "next-mdx-remote": "canary",
     "node-fetch": "^3.3.2",
     "plotly.js-basic-dist": "^3.3.0",
-    "react": "19.2.0",
+    "react": "19.2.1",
     "react-dom": "19.2.1",
     "react-latex-next": "^3.0.0",
     "react-plotly.js": "^2.6.0",
