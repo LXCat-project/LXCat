@@ -8,8 +8,7 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-      day: sunday
+      interval: daily
     versioning-strategy: increase
     labels:
       - "dependencies: node"
@@ -18,8 +17,7 @@ updates:
   - package-ecosystem: cargo
     directory: /packages/converter
     schedule:
-      interval: weekly
-      day: sunday
+      interval: daily
     labels:
       - "dependencies: rust"
 
