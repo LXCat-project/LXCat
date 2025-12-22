@@ -262,8 +262,8 @@ importers:
         specifier: ^1.18.0
         version: 1.18.0(postcss@8.5.6)
       swc-plugin-coverage-instrument:
-        specifier: ^0.0.31
-        version: 0.0.31
+        specifier: ^0.0.32
+        version: 0.0.32
       testcontainers:
         specifier: ^11.10.0
         version: 11.10.0
@@ -7499,8 +7499,8 @@ packages:
     resolution: {integrity: sha512-upi/0ZGkYgEcLeGieoz8gT74oWHA0E7JivX7aN9mAf+Tc7BQoRBvnIGHoPDw+f9TXTW4s6kGYCZJtauP6OYp7g==}
     hasBin: true
 
-  swc-plugin-coverage-instrument@0.0.31:
-    resolution: {integrity: sha512-Q26/ZOqk102VJ+sN5X/mab4WEtzYNRTcnV3VccrANDKRImdgjjyTpo7tH1mTxS6zopHrmZ9S0jAUeyYlT7xO7A==}
+  swc-plugin-coverage-instrument@0.0.32:
+    resolution: {integrity: sha512-KsO1xNQdcVb331Rm98Op6uYf36/CYdF1kILQxOddmtCNlRLISpCUqHcnogu+QgELZvG48oie+w0fzS8uktjcEA==}
 
   swr@2.3.8:
     resolution: {integrity: sha512-gaCPRVoMq8WGDcWj9p4YWzCMPHzE0WNl6W8ADIx9c3JBEIdMkJGMzW+uzXvxHMltwcYACr9jP+32H8/hgwMR7w==}
@@ -12628,7 +12628,7 @@ snapshots:
       eslint: 9.39.2
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2)
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2)
       eslint-plugin-react: 7.37.5(eslint@9.39.2)
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2)
@@ -12661,7 +12661,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2)
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -12675,7 +12675,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2):
+  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.2))(eslint@9.39.2))(eslint@9.39.2):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -16485,7 +16485,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  swc-plugin-coverage-instrument@0.0.31: {}
+  swc-plugin-coverage-instrument@0.0.32: {}
 
   swr@2.3.8(react@19.2.3):
     dependencies:
