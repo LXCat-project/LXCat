@@ -19,9 +19,6 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const ProcessPlot = ({ processes, colors }: ChartProps) => {
   return (
-    // @ts-expect-error for some reason the component property types do not
-    // contain the `minor` key on `layout.xaxis`, and `layout.yaxis`, but they
-    // do have an effect.
     <Plot
       className={classes.plotBox}
       data={processes.map((process, index) => ({

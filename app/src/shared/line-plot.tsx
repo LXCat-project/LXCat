@@ -30,9 +30,6 @@ const Plot = createPlotlyComponent(Plotly);
 
 export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
   return (
-    // @ts-expect-error for some reason the component property types do not
-    // contain the `minor` key on `layout.xaxis`, and `layout.yaxis`, but they
-    // do have an effect.
     <Plot
       style={style}
       useResizeHandler
