@@ -38,7 +38,16 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["s.gravatar.com", "secure.gravatar.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "s.gravatar.com",
+      },
+      {
+        protocol: "https",
+        hostname: "secure.gravatar.com",
+      }
+    ],
   },
 };
 
