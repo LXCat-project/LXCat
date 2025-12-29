@@ -74,7 +74,7 @@
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^24.10.4",
     "@vitest/coverage-v8": "^4.0.16",
-    "dprint": "^0.50.2",
+    "dprint": "^0.51.1",
     "eslint": "9.39.2",
     "globals": "^16.5.0",
     "testcontainers": "^11.10.0",
