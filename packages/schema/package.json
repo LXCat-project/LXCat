@@ -5,7 +5,6 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "json:doc": "tsx src/cli/document-schema.ts",
     "json:mix": "tsx src/cli/mixture-schema.ts",
     "build": "tsc",
@@ -15,7 +14,7 @@
     "coverage": "vitest run --coverage",
     "dev": "tsc --watch",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
-    "prepublishOnly": "pnpm build",
+    "prepublishOnly": "bun build",
     "clean": "rm -rf dist"
   },
   "dependencies": {

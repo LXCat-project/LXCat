@@ -6,7 +6,6 @@
     "packages/*"
   ],
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "clean": "turbo run clean",
     "build": "turbo run build",
     "dev": "turbo run dev --no-cache --parallel --continue",
@@ -19,6 +18,6 @@
   "devDependencies": {
     "turbo": "^2.8.7"
   },
-  "packageManager": "pnpm@10.12.3",
+  "packageManager": "bun@1.3.5",
   "version": "0.1.0"
 }
