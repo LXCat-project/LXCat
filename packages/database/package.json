@@ -48,7 +48,7 @@
     "make-admin": "tsx src/cli/make-admin.ts",
     "drop-database": "tsx src/cli/drop-database.ts",
     "drop-non-user": "tsx src/cli/drop-non-user.ts",
-    "reload": "pnpm drop-database && pnpm run setup && pnpm seed seeds/test",
+    "reload": "bun run drop-database && bun run setup && bun run seed seeds/test",
     "load-orgs": "tsx src/cli/load-orgs.ts",
     "load-css": "tsx src/cli/load-css.ts",
     "format": "dprint fmt",
