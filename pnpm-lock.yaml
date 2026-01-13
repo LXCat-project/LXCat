@@ -360,8 +360,8 @@ importers:
         version: 5.99.9
     devDependencies:
       '@babel/cli':
-        specifier: ^7.28.3
-        version: 7.28.3(@babel/core@7.28.6)
+        specifier: ^7.28.6
+        version: 7.28.6(@babel/core@7.28.6)
       '@babel/core':
         specifier: ^7.28.6
         version: 7.28.6
@@ -419,8 +419,8 @@ packages:
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
 
-  '@babel/cli@7.28.3':
-    resolution: {integrity: sha512-n1RU5vuCX0CsaqaXm9I0KUCNKNQMy5epmzl/xdSSm70bSqhg9GWhgeosypyQLc0bK24+Xpk1WGzZlI9pJtkZdg==}
+  '@babel/cli@7.28.6':
+    resolution: {integrity: sha512-6EUNcuBbNkj08Oj4gAZ+BUU8yLCgKzgVX4gaTh09Ya2C8ICM4P+G30g4m3akRxSYAp3A/gnWchrNst7px4/nUQ==}
     engines: {node: '>=6.9.0'}
     hasBin: true
     peerDependencies:
@@ -8393,7 +8393,7 @@ snapshots:
       package-manager-detector: 1.6.0
       tinyexec: 1.0.2
 
-  '@babel/cli@7.28.3(@babel/core@7.28.6)':
+  '@babel/cli@7.28.6(@babel/core@7.28.6)':
     dependencies:
       '@babel/core': 7.28.6
       '@jridgewell/trace-mapping': 0.3.31
