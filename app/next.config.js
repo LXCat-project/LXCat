@@ -49,6 +49,7 @@ const nextConfig = {
       }
     ],
   },
+  output: "standalone"
 };
 
 // For local https disable cert checking
