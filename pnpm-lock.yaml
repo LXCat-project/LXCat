@@ -256,8 +256,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.5.6)
       postcss-preset-env:
-        specifier: ^11.1.0
-        version: 11.1.0(postcss@8.5.6)
+        specifier: ^11.1.1
+        version: 11.1.1(postcss@8.5.6)
       postcss-preset-mantine:
         specifier: ^1.18.0
         version: 1.18.0(postcss@8.5.6)
@@ -1050,8 +1050,8 @@ packages:
       '@csstools/css-parser-algorithms': ^4.0.0
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/postcss-alpha-function@2.0.0':
-    resolution: {integrity: sha512-MZUgpdBcg4vMk3/fal+PF9NagFhgjWlet7dbbNjhyfzsmM/FPO6iHF6M451YEJxkYGqdSJOl5wVZdvg0I2IZaw==}
+  '@csstools/postcss-alpha-function@2.0.1':
+    resolution: {integrity: sha512-kXppoqo6QI4xVjfuRMf/2XSxldYnWELHy5R6Vo/RI8iu2IpE2vY80ZjXFJ0N36yn7zT1ZPuHpiAszpfrIaa2hA==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       postcss: ^8.4
@@ -6752,8 +6752,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-preset-env@11.1.0:
-    resolution: {integrity: sha512-Xxa3RTPqyCt/rNWmRP/R6mnVa9flOqU+fYOr4OxWsCZ5qyxQUEmA7kJwT12JQwKJHM97c4b/t2sj4RHvF0JZ5w==}
+  postcss-preset-env@11.1.1:
+    resolution: {integrity: sha512-40TvWF5sqMxGdyiPfskRf4gLcCou3ymNTpSDYD/ZsOKQNzsG2lwhEjNWMGShKvA/p4veR+dRhTYfUfIQ/5gbfg==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       postcss: ^8.4
@@ -9101,7 +9101,7 @@ snapshots:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/postcss-alpha-function@2.0.0(postcss@8.5.6)':
+  '@csstools/postcss-alpha-function@2.0.1(postcss@8.5.6)':
     dependencies:
       '@csstools/css-color-parser': 4.0.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -15449,9 +15449,9 @@ snapshots:
       postcss: 8.5.6
       postcss-value-parser: 4.2.0
 
-  postcss-preset-env@11.1.0(postcss@8.5.6):
+  postcss-preset-env@11.1.1(postcss@8.5.6):
     dependencies:
-      '@csstools/postcss-alpha-function': 2.0.0(postcss@8.5.6)
+      '@csstools/postcss-alpha-function': 2.0.1(postcss@8.5.6)
       '@csstools/postcss-cascade-layers': 6.0.0(postcss@8.5.6)
       '@csstools/postcss-color-function': 5.0.0(postcss@8.5.6)
       '@csstools/postcss-color-function-display-p3-linear': 2.0.0(postcss@8.5.6)
