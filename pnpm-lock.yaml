@@ -57,8 +57,8 @@ importers:
         specifier: ^8.3.13
         version: 8.3.13(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mantine/notifications':
-        specifier: ^8.3.12
-        version: 8.3.12(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^8.3.13
+        version: 8.3.13(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mdx-js/mdx':
         specifier: ^3.1.1
         version: 3.1.1
@@ -925,6 +925,10 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.6':
+    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.28.6':
@@ -2183,16 +2187,16 @@ packages:
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/notifications@8.3.12':
-    resolution: {integrity: sha512-lqPPa11XdcndG8ywMao8yVkMA4jg/pBNbS85bR7OwHQa1yUftmfVlqJl9PZZCiWLX2AgKY3+xM5dHo4LidL+DA==}
+  '@mantine/notifications@8.3.13':
+    resolution: {integrity: sha512-VgQwA3C4NbjguobobFnqqQyKBWXOfzM8BES1LIX9EyzMwsvGAlShJHrF9/yLS0Jqf5DiZi4L8hxL3wcmmbnljA==}
     peerDependencies:
-      '@mantine/core': 8.3.12
-      '@mantine/hooks': 8.3.12
+      '@mantine/core': 8.3.13
+      '@mantine/hooks': 8.3.13
       react: ^18.x || ^19.x
       react-dom: ^18.x || ^19.x
 
-  '@mantine/store@8.3.12':
-    resolution: {integrity: sha512-EC4eIKpm5s7neMbBrWsP6jGKLqrzHf63Ao3penYr7fn25dFXdbXZYw+IG8GYzxOC4yG61b2zTS+bpy5+vwzXpw==}
+  '@mantine/store@8.3.13':
+    resolution: {integrity: sha512-pnHHwiffGfaqLFxuyJIuU1P6+3zOd7bfBRVFFzIEDyUbPJs7dmVUFt31bry5FokrBfCjNWyg2XfyAQqIwd2LLA==}
     peerDependencies:
       react: ^18.x || ^19.x
 
@@ -9045,6 +9049,8 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
+  '@babel/runtime@7.28.6': {}
+
   '@babel/template@7.28.6':
     dependencies:
       '@babel/code-frame': 7.28.6
@@ -10128,16 +10134,16 @@ snapshots:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
-  '@mantine/notifications@8.3.12(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@mantine/notifications@8.3.13(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@mantine/core': 8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mantine/hooks': 8.3.12(react@19.2.3)
-      '@mantine/store': 8.3.12(react@19.2.3)
+      '@mantine/store': 8.3.13(react@19.2.3)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-transition-group: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
 
-  '@mantine/store@8.3.12(react@19.2.3)':
+  '@mantine/store@8.3.13(react@19.2.3)':
     dependencies:
       react: 19.2.3
 
@@ -12582,7 +12588,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       csstype: 3.2.3
 
   dom-walk@0.1.2: {}
@@ -15905,7 +15911,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
