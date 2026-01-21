@@ -14,7 +14,7 @@
     "coverage": "vitest run --coverage",
     "dev": "tsc --watch",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
-    "prepublishOnly": "bun build",
+    "prepublishOnly": "bun run build",
     "clean": "rm -rf dist"
   },
   "dependencies": {
