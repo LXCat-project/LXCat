@@ -11,14 +11,14 @@ RUN corepack enable
 
 WORKDIR /code
 COPY . .
-RUN pnpm install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN pnpm build --no-cache
+RUN bun run build --no-cache
 
 # Production image, copy all the files and run next
 WORKDIR /code/app
@@ -38,4 +38,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["pnpm", "start"]
+CMD ["bun", "start"]
