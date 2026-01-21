@@ -14,7 +14,7 @@ format.
 ## Installation
 
 ```shell
-pnpm install @lxcat/converter
+bun install @lxcat/converter
 ```
 
 ## Contributing
@@ -26,7 +26,7 @@ pnpm install @lxcat/converter
 curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
 # Change to root of repo
 cd ../..
-pnpm install -w packages/converter
+bun --filter=@lxcat/converter install
 cd packages/converter
 ```
 
@@ -43,5 +43,5 @@ Finally, the test can be enabled by adding it to `tests/valid.test.ts`.
 Run tests with
 
 ```shell
-pnpm test
+bun run test
 ```
