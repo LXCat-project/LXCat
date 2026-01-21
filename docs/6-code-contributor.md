@@ -276,42 +276,19 @@ erDiagram
 The diagram can be edited on https://mermaid.live/ by copying the code block
 text.
 
-<!--
-## React component development
-
-The React components can be developed in isolation with
-[storybook](https://storybook.js.org/).
-
-By writing a story as `/app/src/<Component>.stories.tsx` according to
-[docs](https://storybook.js.org/docs/react/writing-stories/introduction).
-
-The storybook can be run with
-
-```shell
-cd app
-pnpm storybook
-```
-
-This will open a web browser where stories of components can be seen.
-
-The storybook is build on Gitlab CI and can be found in the `test-app` CI job and browsing
-the job artifacts to `/app/storybook-static/index.html`. This can be useful for other
-people to test your component without having to install anything.
--->
-
 ## Unit Tests
 
 Tests can be written as `src/**/*.{test,spec}.ts` files with
 [vitest](https://vitest.dev/) framework and run with
 
 ```shell
-pnpm test
+bun run test
 ```
 
 To run tests with code coverage use
 
 ```shell
-pnpm test -- run --coverage
+bun run test run --coverage
 xdg-open coverage/index.html
 ```
 
@@ -340,7 +317,7 @@ pip install reuse
 reuse lint
 ```
 
-To add headers to files run `pnpm annotate` or if that fails add header
+To add headers to files run `bun annotate` or if that fails add header
 manually.
 
 For binary files or text files without comment support a
@@ -354,7 +331,7 @@ Digital Object Identifier (DOI).
 
 To create a new DOI:
 
-1. Bump package versions in package.json files, rerun `pnpm install`, commit &
+1. Bump package versions in package.json files, rerun `bun install`, commit &
    push to main branch.
 2. Create a new
    [GitHub release](https://github.com/LXCat-project/LXCat/releases/new).

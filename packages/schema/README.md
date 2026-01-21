@@ -19,7 +19,7 @@ and then the quantum numbers of the members of the input reactions are checked.
 ## Installation
 
 ```shell
-pnpm install @lxcat/schema
+bun install @lxcat/schema
 ```
 
 ## Usage
@@ -63,7 +63,7 @@ if (validator.validate(doc)) {
 ### Install dependencies
 
 ```shell
-pnpm -C packages/schema install
+bun --filter=@lxcat/schema install
 ```
 
 ### Generate JSON schemas
@@ -71,7 +71,7 @@ pnpm -C packages/schema install
 The JSON schemas (`src/**/*.schema.json` files) can be generated with
 
 ```shell
-pnpm json
+bun json
 ```
 
 Whenever the types from which the schemas are derived are changed then this
@@ -86,7 +86,7 @@ See [code contributor doc](../docs/code-contributor#unit-tests).
 API documentation can be generated using [typedoc](https://typedoc.org/) with
 
 ```shell
-npx typedoc --entryPointStrategy expand src
+bunx typedoc --entryPointStrategy expand src
 ```
 
 A `docs/index.html` should have been written.
@@ -99,16 +99,15 @@ TODO put API documentation on GitLab pages
 
 To publish `@lxcat/schema` to npmjs.com perform the following steps:
 
-1. Set version in `packages/schema/package.json` with
-   `pnpm version <patch|minor|major> -w @lxcat/schema --update-workspaces=false`
-2. Commit and push changes to main branch
-3. Change to `packages/schema/` directory
-4. Make sure you are logged in on npm by checking with
-   `pnpm whoami --scope lxcat` and optionally login in with
-   `pnpm login --scope lxcat --publish`
-5. Make sure `pnpm dev` is not running
-6. Clean dist/ with `pnpm clean`
-7. Publish with `pnpm publish --otp <otp code>`
-8. Create git tag for version with
+1. Change directory to `packages/schema/package.json`.
+1. Set version in `packages/schema/package.json` with `bun pm version <patch|minor|major>`
+1. Commit and push changes to main branch
+1. Make sure you are logged in on npm by checking with
+   `bun whoami --scope lxcat` and optionally login in with
+   `bunx npm login --scope lxcat --publish`
+1. Make sure `bun dev` is not running
+1. Clean dist/ with `bun clean`
+1. Publish with `bun publish --otp <otp code>`
+1. Create git tag for version with
    `git tag @lxcat/schema@<value at packages/schema/package.json:version>` and
    `git push origin --tags`
