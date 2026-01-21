@@ -10,14 +10,14 @@ RUN corepack enable
 WORKDIR /code
 COPY . .
 
-RUN pnpm install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 ENV LXCAT_BUILD_ENV production
 
 # Build database and skip app workspace build
-RUN pnpm -C packages/schema build
-RUN pnpm -C packages/database build
+RUN bun --filter=@lxcat/schema run build
+RUN bun --filter=@lxcat/database run build
 
 WORKDIR /code/packages/database
 
-ENTRYPOINT ["pnpm", "run"]
+ENTRYPOINT ["bun", "run"]
