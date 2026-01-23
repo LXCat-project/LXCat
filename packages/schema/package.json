@@ -27,7 +27,7 @@
     "@vitest/coverage-v8": "^4.0.17",
     "dprint": "^0.51.1",
     "eslint": "9.39.2",
-    "globals": "^17.0.0",
+    "globals": "^17.1.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
