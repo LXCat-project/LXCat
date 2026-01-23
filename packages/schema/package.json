@@ -24,7 +24,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@lxcat/tsconfig": "workspace:^",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/coverage-v8": "^4.0.18",
     "dprint": "^0.51.1",
     "eslint": "9.39.2",
     "globals": "^17.1.0",
