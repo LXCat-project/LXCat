@@ -73,7 +73,7 @@
     "@testcontainers/arangodb": "^11.11.0",
     "@types/deep-equal": "^1.0.4",
     "@types/node": "^24.10.9",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/coverage-v8": "^4.0.18",
     "dprint": "^0.51.1",
     "eslint": "9.39.2",
     "globals": "^17.1.0",
