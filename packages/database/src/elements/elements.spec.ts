@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import {
   sampleSets4Search,
   truncateCrossSectionSetCollections,
@@ -15,14 +15,16 @@ let db: LXCatTestDatabase;
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "elements-test");
   await db.setupTestUser();
-  return async () => systemDb().dropDatabase("elements-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("elements-test"));
 
 describe("Element queries", () => {
   beforeAll(async () => {
     await sampleSets4Search(db);
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("getActiveElements", async () => {
     const activeElements = await db.getActiveElements();

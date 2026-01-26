@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import { aql } from "arangojs";
 
@@ -19,6 +19,7 @@ import { OwnedProcess } from "../../schema/process.js";
 import { systemDb } from "../../system-db.js";
 import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
+import { KeyedVersionInfo } from "./public.js";
 import {
   matches8601,
   matchesId,
@@ -37,9 +38,9 @@ beforeAll(async () => {
     "update-set-test",
   );
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("update-set-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("update-set-test"));
 
 describe("given published cross section set where data of 1 published cross section is altered", () => {
   let keycss1: string;
@@ -123,8 +124,9 @@ describe("given published cross section set where data of 1 published cross sect
       draft,
       "Altered data of A->B cross section",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should create a draft for the altered cross section set", () => {
     expect(keycss1).not.toEqual(keycss2);
@@ -295,7 +297,7 @@ describe("given published cross section set where data of 1 published cross sect
 
     it("should have history entries for archived and published cross section set", async () => {
       const history = await db.setHistory(keycss2);
-      const expected = [
+      const expected: Array<KeyedVersionInfo> = [
         {
           _key: keycss2,
           commitMessage: `Altered data of A->B cross section`,
@@ -475,8 +477,9 @@ describe("given draft cross section set where its cross section data is altered"
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should not create new draft", async () => {
     expect(keycss1).toEqual(keycss2);
@@ -613,8 +616,9 @@ describe("given draft cross section set where its cross section data is added la
       },
     ];
     keycss2 = await db.updateSet(keycss1, draft, "Added section A->B");
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should not create new draft", async () => {
     expect(keycss1).toEqual(keycss2);
@@ -751,8 +755,9 @@ describe("given draft cross section set where its non cross section data is alte
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should not create new draft", async () => {
     expect(keycss1).toEqual(keycss2);
@@ -901,8 +906,9 @@ describe("given draft cross section set where its cross section state is altered
       console.error((error as ArangojsError).stack); // ArangoError capture stack in own prop
       throw error;
     }
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list 1 section", async () => {
     const list = await db.searchOwnedItems(email);
@@ -1022,8 +1028,9 @@ describe("given draft cross section set where a reference is added to a cross se
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list 1 section", async () => {
     const list = await db.searchOwnedItems(email);
@@ -1151,8 +1158,9 @@ describe("given draft cross section set where a reference is replaced in a cross
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list 1 section", async () => {
     const list = await db.searchOwnedItems(email);
@@ -1341,8 +1349,9 @@ describe("given draft cross section set where a reference is extended in a cross
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list 1 section", async () => {
     const list = await db.searchOwnedItems(email);
@@ -1465,6 +1474,7 @@ describe("given draft cross section set where a reference is extended in a cross
 describe("given updating published cross section set which already has draft", () => {
   let keycss1: string;
   let keycss2: string;
+
   beforeAll(async () => {
     keycss1 = await db.createSet({
       complete: false,
@@ -1482,8 +1492,10 @@ describe("given updating published cross section set which already has draft", (
     const draft = intoEditable(css1);
     draft.description = "Some new description";
     keycss2 = await db.updateSet(keycss1, draft, "Altered description");
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
+
   it("should give error that published section already has an draft", async () => {
     // expect.toThrowError() assert did not work with async db queries so use try/catch
     expect.assertions(1);
@@ -1522,8 +1534,9 @@ describe.each(invalidUpdateStatuses)(
     let keycss1: string;
     beforeAll(async () => {
       keycss1 = await db.createSet(sampleCrossSectionSet(), status);
-      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should throw an error", async () =>
       expect(
@@ -1563,12 +1576,14 @@ describe("given draft cross section set where a cross section is added from anot
     keycs1 = idcs1.replace("CrossSection/", "");
     const cs1 = await db.getItemByOrgAndId("Some other organization", keycs1);
     if (cs1 === undefined) {
-      expect.fail("Unable to find cross section from another organization");
+      expect().fail("Unable to find cross section from another organization");
+      return;
     }
 
     const css1versioned = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (css1versioned === null) {
-      expect.fail(`Failed to find draft with key ${keycss1}`);
+      expect().fail(`Failed to find draft with key ${keycss1}`);
+      return;
     }
     const draft2 = intoEditable(css1versioned);
     draft2.processes.push({
@@ -1585,7 +1600,8 @@ describe("given draft cross section set where a cross section is added from anot
         .filter((e) => `State/${s.state}` === e[1])
         .map((e) => e[0])[0];
       if (draft2 === null) {
-        expect.fail("Unable to find draft");
+        expect().fail("Unable to find draft");
+        return;
       }
       draft2.states[s.state] = states[stateLabel];
     }
@@ -1601,11 +1617,13 @@ describe("given draft cross section set where a cross section is added from anot
 
     const css = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (css === null) {
-      expect.fail("Unable to retrieve updated draft");
+      expect().fail("Unable to retrieve updated draft");
+      return;
     }
     css1 = css;
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should not have reused existing cross section", () => {
     expect(css1.processes[0].info[0]._key).not.toEqual(keycs1);
@@ -1731,8 +1749,9 @@ describe("given draft cross section set where its charge in cross section is alt
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list one cross section", async () => {
     const list = await db.searchOwnedItems(email);
@@ -1923,8 +1942,9 @@ describe("given draft cross section set where its charge in cross section is alt
       draft,
       "Altered data of section A->B",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should list 1 section", async () => {
     const list = await db.searchOwnedItems(email);
