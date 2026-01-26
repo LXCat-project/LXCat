@@ -5,8 +5,7 @@
 import type { Reaction } from "@lxcat/schema/process";
 import { AnySpecies } from "@lxcat/schema/species";
 import { Database } from "arangojs";
-import { expect } from "vitest";
-import { z } from "zod";
+import { expect } from "bun:test";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 
@@ -42,7 +41,7 @@ export async function truncateCrossSectionSetCollections(db: Database) {
   );
 }
 
-export function sampleCrossSectionSet(): z.input<typeof NewLTPDocument> {
+export function sampleCrossSectionSet(): NewLTPDocument {
   return {
     complete: false,
     contributor: "Some organization",

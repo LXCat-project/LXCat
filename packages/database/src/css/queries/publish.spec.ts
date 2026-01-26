@@ -4,7 +4,7 @@
 
 import { intoEditable } from "@lxcat/schema/process";
 import { aql } from "arangojs";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
@@ -21,9 +21,9 @@ beforeAll(async () => {
     "publish-set-test",
   );
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("publish-set-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("publish-set-test"));
 
 describe("given 2 draft cross section sets which shares a draft cross section", () => {
   let keycss1: string;
@@ -34,13 +34,15 @@ describe("given 2 draft cross section sets which shares a draft cross section", 
 
     const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (css1 === null) {
-      expect.fail("Should have created first set");
+      expect().fail("Should have created first set");
+      return;
     }
     const draft = intoEditable(css1);
     draft.name = "Some other name";
     keycss2 = await db.createSet(draft, "draft");
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it.each([
     {
@@ -153,16 +155,17 @@ describe("given a published cross section set and a draft cross section with a d
 
     const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
     if (css1 === null) {
-      expect.fail("Should have created first set");
+      expect().fail("Should have created first set");
+      return;
     }
     const draft = intoEditable(css1);
     draft.name = "Some other name";
     draft.processes[0].info[0].threshold = 888;
     draft.processes.pop();
     keycss2 = await db.createSet(draft, "draft");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   describe("and publish the draft set", () => {
     it("should complain that already published set needs to point to draft cross section", async () => {
@@ -177,7 +180,8 @@ describe("given a published cross section set and a draft cross section with a d
           const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
           const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss2);
           if (css1 === null || css2 === null) {
-            expect.fail("Should have fetched sets");
+            expect().fail("Should have fetched sets");
+            return;
           }
           const expected = [
             `Draft cross section (CrossSection/${

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "bun:test";
 import { bibtex2csl } from "./bibtex2csl";
 
 describe("bibtex2csl()", () => {
@@ -53,6 +53,6 @@ describe("bibtex2csl()", () => {
         volume: "9",
       },
     };
-    expect(result).toEqual(expected);
+    expect(result as unknown).toEqual(expected);
   });
 });

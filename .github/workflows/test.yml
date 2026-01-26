@@ -128,7 +128,7 @@ jobs:
     - name: Install dependencies
       run: bun install
     - name: Test @lxcat/database
-      run: bun run --filter @lxcat/database test run --coverage
+      run: (cd packages/database && bun test --timeout 120000 --coverage --coverage-report=lcov)
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
