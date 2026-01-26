@@ -5,14 +5,12 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "json:doc": "tsx src/cli/document-schema.ts",
-    "json:mix": "tsx src/cli/mixture-schema.ts",
+    "json:doc": "bun src/cli/document-schema.ts",
+    "json:mix": "bun src/cli/mixture-schema.ts",
     "build": "tsc",
+    "dev": "tsc --watch",
     "lint": "eslint src",
     "format": "dprint fmt",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "dev": "tsc --watch",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src",
     "prepublishOnly": "bun run build",
     "clean": "rm -rf dist"
@@ -23,14 +21,12 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@lxcat/tsconfig": "workspace:^",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@types/bun": "^1.3.6",
     "dprint": "^0.51.1",
     "eslint": "9.39.2",
     "globals": "^17.3.0",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0",
-    "vitest": "^4.0.18"
+    "typescript-eslint": "^8.55.0"
   },
   "exports": {
     ".": {

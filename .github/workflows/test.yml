@@ -157,12 +157,12 @@ jobs:
     - name: Install dependencies
       run: bun install
     - name: Test @lxcat/schema
-      run: bun run --filter @lxcat/schema test run --coverage
+      run: (cd packages/schema && bun test --coverage --coverage-reporter=lcov)
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: packages/schema/coverage/coverage-final.json
+        files: packages/schema/coverage/lcov.info
         flags: schema
 
   test-converter:
