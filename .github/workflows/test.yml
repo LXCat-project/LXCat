@@ -95,7 +95,7 @@ jobs:
         bun run playwright install chromium --with-deps
         cd -
     - name: Run unit tests
-      run: bun run --filter @lxcat/app test run --coverage.enabled --coverage.all=false
+      run: (cd app && bun test --coverage --coverage-reporter=lcov)
     - name: Run end-to-end tests
       run: bun run --filter @lxcat/app test:e2e
     - name: Build end-to-end coverage report
