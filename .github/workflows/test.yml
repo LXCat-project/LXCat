@@ -133,7 +133,7 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: packages/database/coverage/coverage-final.json
+        files: packages/database/coverage/lcov.info
         flags: database
 
   test-schema:
