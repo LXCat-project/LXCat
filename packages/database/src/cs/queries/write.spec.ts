@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { VersionInfo } from "@lxcat/schema";
+import { type VersionInfo } from "@lxcat/schema";
 import { NewProcess } from "@lxcat/schema/process";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { deepClone } from "../../css/queries/deep-clone.js";
 import { matches8601, matchesId } from "../../css/queries/testutils.js";
-import { KeyedProcess } from "../../schema/process.js";
-import { KeyedVersionInfo } from "../../shared/types/version-info.js";
+import { type KeyedProcess } from "../../schema/process.js";
+import { type KeyedVersionInfo } from "../../shared/types/version-info.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import {
@@ -27,19 +27,21 @@ describe("given db with test user and organization", () => {
       "cs-write-test",
     );
     await db.setupTestUser();
-    return async () => systemDb().dropDatabase("cs-write-test");
   });
+
+  afterAll(async () => systemDb().dropDatabase("cs-write-test"));
 
   describe("given 4 states and zero references exist", () => {
     let state_ids: Record<string, string>;
     beforeAll(async () => {
       state_ids = await insertSampleStateIds(db);
-      return async () => {
-        const collections2Truncate = ["HasDirectSubstate", "State"];
-        await Promise.all(
-          collections2Truncate.map((c) => db.getDB().collection(c).truncate()),
-        );
-      };
+    });
+
+    afterAll(async () => {
+      const collections2Truncate = ["HasDirectSubstate", "State"];
+      await Promise.all(
+        collections2Truncate.map((c) => db.getDB().collection(c).truncate()),
+      );
     });
 
     describe("create draft from published cross section with changed data property", () => {
@@ -47,14 +49,16 @@ describe("given db with test user and organization", () => {
       let keycs2: string;
       let cs1: KeyedProcess<string, string>;
 
+      let __return: () => Promise<void>;
+
       beforeAll(async () => {
-        let __return;
         ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
         ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.info[0].data.values = [[1000, 1.2345e-20]];
         }));
-        return __return;
       });
+
+      afterAll(async () => __return());
 
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs2);
@@ -112,18 +116,23 @@ describe("given db with test user and organization", () => {
       let keycs1: string;
       let keycs2: string;
       let cs1: KeyedProcess<string, string>;
+      let cleanup: () => Promise<void>;
+
       beforeAll(async () => {
-        let __return;
-        ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
+        ({ __return: cleanup, keycs1 } = await createSampleCrossSection(
+          db,
+          state_ids,
+        ));
         ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.reaction.reversible = true;
         }));
-        return __return;
       });
+
+      afterAll(async () => cleanup());
 
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs2);
-        const expected = {
+        const expected: VersionInfo = {
           version: 2,
           status: "draft",
           createdOn: matches8601,
@@ -157,14 +166,19 @@ describe("given db with test user and organization", () => {
       let keycs1: string;
       let keycs2: string;
       let cs1: KeyedProcess<string, string>;
+      let cleanup: () => Promise<void>;
+
       beforeAll(async () => {
-        let __return;
-        ({ __return, keycs1 } = await createSampleCrossSection(db, state_ids));
+        ({ __return: cleanup, keycs1 } = await createSampleCrossSection(
+          db,
+          state_ids,
+        ));
         ({ cs1, keycs2 } = await createDraftFromPublished(db, keycs1, (cs) => {
           cs.reaction.lhs[0].state = state_ids.s3.replace("State/", "");
         }));
-        return __return;
       });
+
+      afterAll(async () => cleanup());
 
       it("should have one different state id and one same state id", async () => {
         const draftcs = await db.getItemByOwnerAndId(
@@ -215,12 +229,13 @@ describe("given db with test user and organization", () => {
           "draft",
         );
         keycs1 = idcs1.replace("CrossSection/", "");
-        return () => truncateCrossSectionCollections(db.getDB());
       });
+
+      afterAll(async () => truncateCrossSectionCollections(db.getDB()));
 
       it("should have draft status", async () => {
         const info = await db.getItemVersionInfo(keycs1);
-        const expected = {
+        const expected: VersionInfo = {
           version: 1,
           status: "draft",
           createdOn: matches8601,
