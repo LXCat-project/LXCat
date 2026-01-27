@@ -1,0 +1,50 @@
+name: Nix
+
+on: 
+  push: 
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+    - uses: actions/checkout@v6
+    - uses: nixbuild/nix-quick-install-action@v34
+      with:
+        nix_conf: |
+          keep-env-derivations = true
+          keep-outputs = true
+          download-buffer-size = 500000000
+    - name: Restore and save Nix store
+      uses: nix-community/cache-nix-action@v6
+      id: cache
+      with:
+        # restore and save a cache using this key
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('bun.lock', 'flake.lock') }}
+        # if there's no cache hit, restore a cache by this prefix
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+    - name: Build dependency cache
+      if: steps.cache.outputs.hit-primary-key != 'true'
+      run: nix build .#lxcat-deps
+    - name: Build the LXCat application
+      run: nix build .#lxcat
