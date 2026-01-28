@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { ReactionTypeTag } from "@lxcat/schema/process";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import {
   matches8601,
   matchesId,
@@ -28,9 +29,9 @@ let db: LXCatTestDatabase;
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "select-cs-test");
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("select-cs-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("select-cs-test"));
 
 const getItemIdsFromTemplate = async (selection: ReactionTemplate) =>
   db.getItemIdsByReactionTemplate(
@@ -53,13 +54,13 @@ describe("Selecting individual cross sections", () => {
       await sampleSets4Search(db);
 
       allOptions = (await db.getSearchOptions(defaultSearchTemplate()))[0];
-
-      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     describe("without selection", () => {
       it("should consume e, Ar, H2, and N2", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{H_{2}}", valid: true },
           { children: [], latex: "\\mathrm{N_{2}}", valid: true },
@@ -82,7 +83,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should produce e, Ar^+, H2, and N2", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{H_{2}}", valid: true },
           { children: [], latex: "\\mathrm{N_{2}}", valid: true },
@@ -105,7 +106,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Effective, Ionization, and Electronic reaction type tags", () => {
-        const expected = ["Effective", "Ionization", "Electronic"];
+        const expected: Array<ReactionTypeTag> = [
+          "Effective",
+          "Ionization",
+          "Electronic",
+        ];
         expect(allOptions.typeTags).toEqual(expected);
       });
 
@@ -136,7 +141,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("first select has all consumable states", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{H_{2}}", valid: true },
           { children: [], latex: "\\mathrm{N_{2}}", valid: true },
@@ -159,7 +164,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("second select can just consume e", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.consumes[1])).toEqual(
@@ -168,7 +173,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("can produce e and N2", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{N_{2}}", valid: true },
         ];
@@ -178,7 +183,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Effective reaction type tag", () => {
-        const expected = ["Effective"];
+        const expected: Array<ReactionTypeTag> = ["Effective"];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
 
@@ -213,7 +218,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("can consume e and Ar", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{Ar}", valid: true },
         ];
@@ -223,7 +228,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("first select has all producable states", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
           { children: [], latex: "\\mathrm{H_{2}}", valid: true },
           { children: [], latex: "\\mathrm{N_{2}}", valid: true },
@@ -240,7 +245,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("second select can just produce e", () => {
-        const expected: ReadonlyArray<NestedState> = [
+        const expected: Array<NestedState> = [
           { children: [], latex: "\\mathrm{e}^-", valid: true },
         ];
         expect(removeIdsFromTree(reactionOptions.produces[1])).toEqual(
@@ -249,7 +254,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Ionization reaction type tag", () => {
-        const expected = ["Ionization"];
+        const expected: Array<ReactionTypeTag> = ["Ionization"];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
 
@@ -279,7 +284,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should consume e and Ar", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
         ];
@@ -289,7 +294,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should produce e and Ar^+", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{Ar}^+", valid: true },
         ];
@@ -299,7 +304,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Effective and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization", "Electronic"];
+        const expected: Array<ReactionTypeTag> = [
+          "Effective",
+          "Ionization",
+          "Electronic",
+        ];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
 
@@ -331,7 +340,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should consume e and Ar", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{Ar}", valid: true },
         ];
@@ -341,7 +350,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should produce e and Ar^+", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{Ar}^+", valid: true },
         ];
@@ -351,7 +360,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Ionization reaction type tag", () => {
-        const expected = ["Ionization"];
+        const expected: Array<ReactionTypeTag> = ["Ionization"];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
 
@@ -388,7 +397,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should consume e, Ar, H2, and N2", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{H_{2}}", valid: true },
           { children: {}, latex: "\\mathrm{N_{2}}", valid: true },
@@ -400,7 +409,7 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should produce e, Ar^+, H2, N2", () => {
-        const expected: ReadonlyArray<StateSummary> = [
+        const expected: Array<StateSummary> = [
           { children: {}, latex: "\\mathrm{e}^-", valid: true },
           { children: {}, latex: "\\mathrm{H_{2}}", valid: true },
           { children: {}, latex: "\\mathrm{N_{2}}", valid: true },
@@ -412,7 +421,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have Effective, Electronic,  and Ionization reaction type tags", () => {
-        const expected = ["Effective", "Ionization", "Electronic"];
+        const expected: Array<ReactionTypeTag> = [
+          "Effective",
+          "Ionization",
+          "Electronic",
+        ];
         expect(reactionOptions.typeTags).toEqual(expected);
       });
 
@@ -443,9 +456,9 @@ describe("Selecting individual cross sections", () => {
       publishedOptions = (await db.getSearchOptions(defaultOptions))[0]!;
       csIds = await getItemIdsFromTemplate(defaultOptions[0]!);
       searchResults = await db.getItemHeadings(csIds, { offset: 0, count: 10 });
-
-      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should only return published sets", () => {
       const expected = ["H2 set"];
@@ -457,7 +470,7 @@ describe("Selecting individual cross sections", () => {
     });
 
     it("should only return consumable species from published sets", () => {
-      const expected: ReadonlyArray<NestedState> = [
+      const expected: Array<NestedState> = [
         { children: [], latex: "\\mathrm{e}^-", valid: true },
         { children: [], latex: "\\mathrm{H_{2}}", valid: true },
       ];
@@ -467,7 +480,7 @@ describe("Selecting individual cross sections", () => {
     });
 
     it("should only return producable species from published sets", () => {
-      const expected: ReadonlyArray<NestedState> = [
+      const expected: Array<NestedState> = [
         { children: [], latex: "\\mathrm{e}^-", valid: true },
         { children: [], latex: "\\mathrm{H_{2}}", valid: true },
       ];
@@ -477,7 +490,7 @@ describe("Selecting individual cross sections", () => {
     });
 
     it("should only return type tag options from published sets", () => {
-      const expected = ["Effective"];
+      const expected: Array<ReactionTypeTag> = ["Effective"];
       expect(publishedOptions.typeTags).toEqual(expected);
     });
 
@@ -580,7 +593,7 @@ describe("Selecting individual cross sections", () => {
               id: matchesId,
               name: "H2 set",
               organization: "Some published organization",
-              publishedIn: null,
+              // publishedIn: null,
               versionInfo: {
                 createdOn: expect.any(String),
                 status: "published",

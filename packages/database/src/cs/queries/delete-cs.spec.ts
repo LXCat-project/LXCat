@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import type { Status, VersionInfo } from "@lxcat/schema";
 import {
@@ -20,9 +20,9 @@ let db: LXCatTestDatabase;
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "delete-cs-test");
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("delete-cs-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("delete-cs-test"));
 
 describe("given published cross section has been retracted", () => {
   let keycs1: string;
@@ -32,9 +32,9 @@ describe("given published cross section has been retracted", () => {
     keycs1 = res.keycs1;
 
     await db.deleteItem(keycs1, "I do not want to talk about it");
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have retracted status", async () => {
     const info = await db.getItemVersionInfo(keycs1);
@@ -56,9 +56,9 @@ describe("given draft cross section has been deleted", () => {
     keycs1 = res.keycs1;
 
     await db.deleteItem(keycs1, "I do not want to talk about it");
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have been removed from db", async () => {
     const info = await db.getDB().collection("CrossSection").count();
@@ -75,8 +75,9 @@ describe.each(invalidDeleteStatuses)(
       const state_ids = await insertSampleStateIds(db);
       const res = await createSampleCrossSection(db, state_ids, status);
       keycs1 = res.keycs1;
-      return () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should throw an error", async () =>
       expect(db.deleteItem(keycs1, "Can I do it?")).rejects.toThrowError(
@@ -103,11 +104,13 @@ describe("deleting a draft cross section that is part of a draft cross section s
       css1 === null
       || css1.processes.flatMap(({ info }) => info)[0]._key === undefined
     ) {
-      expect.fail("should have created set");
+      expect().fail("should have created set");
+      return;
     }
     keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should throw an error that the cross section should be removed from set before it is removed", async () => {
     expect.assertions(1);
@@ -132,12 +135,13 @@ describe("deleting a published cross section that is part of a published cross s
       css1 === null
       || css1.processes.flatMap(({ info }) => info)[0]._key === undefined
     ) {
-      expect.fail("should have created set");
+      expect().fail("should have created set");
+      return;
     }
     keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should throw an error that it should be removed from set before removing section", async () => {
     expect.assertions(1);

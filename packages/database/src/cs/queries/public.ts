@@ -250,7 +250,7 @@ export async function getCSHeadings(
               FILTER ref._id == css.publishedIn
               RETURN UNSET(ref, ["_key", "_rev", "_id"])
           )
-          RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name, publishedIn: ref })
+          RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name }, ref ? { publishedIn: ref } : {})
 	    )
 	    ${limitAql}
 	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs, isPartOf: setNames }

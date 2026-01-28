@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { describe, expect, test } from "vitest";
-import { ZodIssueCode } from "zod";
+import { describe, expect, test } from "bun:test";
 import { EditedLTPDocument } from "./edited-document.js";
 import { NewLTPDocument } from "./new-document.js";
 import { VersionedLTPDocument } from "./versioned-document.js";
@@ -43,7 +42,7 @@ describe("LTPDocument", () => {
       expect.objectContaining({
         issues: [
           {
-            code: ZodIssueCode.custom,
+            code: "custom",
             message:
               "Referenced state key (FaultyKey) is missing in the states record.",
             path: [],
@@ -86,7 +85,7 @@ describe("LTPDocument", () => {
       expect.objectContaining({
         issues: [
           {
-            code: ZodIssueCode.custom,
+            code: "custom",
             message:
               "Referenced reference key (FaultyKey) is missing in the references record.",
             path: [],
@@ -180,10 +179,7 @@ describe("LTPDocument", () => {
     const result = VersionedLTPDocument.safeParse(doc);
 
     if (result.success) {
-      expect.fail(
-        true,
-        "Parsing should not succeed when version info is missing.",
-      );
+      expect().fail("Parsing should not succeed when version info is missing.");
     } else {
       expect(result.error.issues).toHaveLength(2);
       expect(result.error.issues[0].path).toEqual([

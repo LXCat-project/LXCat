@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { AnySpecies } from "@lxcat/schema/species";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { truncateCrossSectionSetCollections } from "../../css/queries/testutils.js";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
@@ -16,8 +16,9 @@ describe("given db with test user and organization", () => {
       systemDb(),
       "reaction-test",
     );
-    return async () => systemDb().dropDatabase("reaction-test");
   });
+
+  afterAll(async () => systemDb().dropDatabase("reaction-test"));
 
   describe("given 1 state exist", () => {
     let state_ids: Record<string, string>;
@@ -31,8 +32,9 @@ describe("given db with test user and organization", () => {
         },
       };
       state_ids = await db.insertStateDict(states);
-      return truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     describe("given reaction", () => {
       let reactionId: string;

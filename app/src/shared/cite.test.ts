@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Reference } from "@lxcat/schema";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "bun:test";
 import { getReferenceLabel, reference2bibliography } from "./cite";
 
 describe("reference2bibliography()", () => {
