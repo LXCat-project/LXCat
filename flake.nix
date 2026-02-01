@@ -180,19 +180,37 @@
                 ln -s $out/lib/libvips-cpp.so $out/lib/libvips-cpp.so.${version}
               '';
             };
-          lxcat-deps = bun2nix.fetchBunDeps {
-            bunNix = "${bun-nix}/bun.nix";
-            autoPatchElf = true;
-            nativeBuildInputs = with pkgs; [
-              # swc
-              musl
-
-              # sharp
-              gcc
-              libgcc
-              vips-patched
-            ];
-          };
+          lxcat-deps =
+            let
+              package-names = builtins.attrNames (pkgs.callPackage "${bun-nix}/bun.nix" { });
+              packages-to-patch = builtins.filter (
+                name: (builtins.match "^.*img/sharp-linux-x64.*$" name) != null
+              ) package-names;
+              overrides = builtins.listToAttrs (
+                builtins.map (name: {
+                  inherit name;
+                  value =
+                    pkg:
+                    pkg.stdenv.mkDerivation {
+                      inherit (pkg) name;
+                      src = pkg;
+                      autoPatchelf = true;
+                      nativeBuildInputs = with pkgs; [
+                        autoPatchelfHook
+                        stdenv.cc.cc.lib
+                        vips-patched
+                      ];
+                      installPhase = ''
+                        cp -r $src $out
+                      '';
+                    };
+                }) packages-to-patch
+              );
+            in
+            bun2nix.fetchBunDeps {
+              bunNix = "${bun-nix}/bun.nix";
+              inherit overrides;
+            };
           lxcat-tsconfig = bun2nix.mkDerivation {
             pname = "lxcat-tsconfig";
             version = "0.0.0";
