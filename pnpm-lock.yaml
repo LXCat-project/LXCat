@@ -174,8 +174,8 @@ importers:
         specifier: ^0.34.5
         version: 0.34.5
       swr:
-        specifier: 2.3.8
-        version: 2.3.8(react@19.2.4)
+        specifier: 2.4.0
+        version: 2.4.0(react@19.2.4)
       true-myth:
         specifier: ^9.3.1
         version: 9.3.1
@@ -7565,8 +7565,8 @@ packages:
   swc-plugin-coverage-instrument@0.0.32:
     resolution: {integrity: sha512-KsO1xNQdcVb331Rm98Op6uYf36/CYdF1kILQxOddmtCNlRLISpCUqHcnogu+QgELZvG48oie+w0fzS8uktjcEA==}
 
-  swr@2.3.8:
-    resolution: {integrity: sha512-gaCPRVoMq8WGDcWj9p4YWzCMPHzE0WNl6W8ADIx9c3JBEIdMkJGMzW+uzXvxHMltwcYACr9jP+32H8/hgwMR7w==}
+  swr@2.4.0:
+    resolution: {integrity: sha512-sUlC20T8EOt1pHmDiqueUWMmRRX03W7w5YxovWX7VR2KHEPCTMly85x05vpkP5i6Bu4h44ePSMD9Tc+G2MItFw==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -16613,7 +16613,7 @@ snapshots:
 
   swc-plugin-coverage-instrument@0.0.32: {}
 
-  swr@2.3.8(react@19.2.4):
+  swr@2.4.0(react@19.2.4):
     dependencies:
       dequal: 2.0.3
       react: 19.2.4
