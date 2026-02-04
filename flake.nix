@@ -258,6 +258,20 @@
               cp -r package.json ./packages/schema/dist $out
             '';
           };
+          lxcat-schema-coverage = lxcat-schema.overrideAttrs (
+            final: prev: {
+              name = "lxcat-schema-coverage";
+
+              buildPhase = ''
+                (cd packages/schema && bun test --coverage --coverage-reporter=lcov)
+              '';
+
+              installPhase = ''
+                mkdir -p $out
+                cp -r packages/schema/coverage $out/
+              '';
+            }
+          );
           lxcat-database = bun2nix.mkDerivation {
             pname = "lxcat-database";
             version = "0.0.0";
@@ -288,6 +302,72 @@
               cp -r package.json ./packages/database/dist $out
             '';
           };
+          lxcat-database-coverage-new = pkgs.stdenv.mkDerivation {
+            pname = "lxcat-database";
+            version = "0.0.0";
+
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.unions [
+                ./package.json
+                ./bun.lock
+                ./packages/schema/package.json
+                ./app/package.json
+                ./packages/converter/package.json
+                ./packages/database
+                ./packages/tsconfig
+                ./packages/node-loader/package.json
+              ];
+            };
+
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+
+            dontBuild = true;
+
+            installPhase = ''
+              mkdir $out
+
+              cp -r * $out
+              cp -r ${lxcat-schema}/dist $out/packages/schema/dist
+
+              makeWrapper ${pkgs.bun}/bin/bun "$out/bin/database-coverage" \
+                          --run "export ORIG_WD=\$PWD" \
+                          --run "export TEMP_DIR=\$(${pkgs.coreutils}/bin/mktemp -d)" \
+                          --run "export BUN_INSTALL_CACHE_DIR=${lxcat-deps}/share/bun-cache" \
+                          --run "mkdir \$TEMP_DIR/.tmp" \
+                          --run "export TMPDIR=\$TEMP_DIR/.tmp" \
+                          --run "cp -r $out/* \$TEMP_DIR" \
+                          --run "cd \$TEMP_DIR/packages/database" \
+                          --run "${pkgs.bun}/bin/bun install" \
+                          --add-flag test \
+                          --add-flags "--coverage --coverage-reporter=lcov --coverage-dir=\$ORIG_WD/coverage"
+            '';
+          };
+          lxcat-database-coverage = lxcat-database.overrideAttrs (
+            final: prev: {
+              name = "lxcat-database-coverage";
+
+              dontBuild = true;
+              dontFixup = true;
+
+              nativeBuildInputs = prev.nativeBuildInputs ++ [ pkgs.makeWrapper ];
+
+              installPhase = ''
+                mkdir $out
+
+                cp -r * $out
+                cp -r ${lxcat-schema}/dist $out/packages/schema/dist
+
+                makeWrapper ${pkgs.bun}/bin/bun "$out/bin/database-coverage" \
+                            --run "export ORIG_WD=\$PWD" \
+                            --run "export TEMP_DIR=\$(${pkgs.coreutils}/bin/mktemp -d)" \
+                            --run "cp -r $out/* \$TEMP_DIR" \
+                            --run "cd \$TEMP_DIR/packages/database" \
+                            --add-flag test \
+                            --add-flags "--coverage --coverage-reporter=lcov --coverage-dir=\$ORIG_WD/coverage"
+              '';
+            }
+          );
           lxcat-node-loader = bun2nix.mkDerivation {
             pname = "lxcat-node-loader";
             version = "0.0.0";
