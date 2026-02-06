@@ -56,8 +56,8 @@ collections run the following command:
 
 ```shell
 # First install all dependencies and build the JSON schemas
-pnpm install && pnpm -C ../schema build
-pnpm run setup
+bun install && bun --filter=@lxcat/schema run build
+bun setup
 ```
 
 ## Seeding with test data
@@ -66,7 +66,7 @@ The app requires some collections to be filled. This can be done by writing
 scripts inside a directory for example `seeds/test/` and running:
 
 ```shell
-pnpm seed seeds/test
+bun seed seeds/test
 ```
 
 This will create a number of dummy documents in the database.
@@ -109,7 +109,7 @@ the scripts in an alphanumerically sorted way.
 To run the scripts use
 
 ```sh
-pnpm seed <a directory with Typescript files (*.ts) that fill the database>
+bun seed <a directory with Typescript files (*.ts) that fill the database>
 ```
 
 ### Load directory of cross section set JSON documents
@@ -118,7 +118,7 @@ Instead of writing seed scripts you can also load a directory of cross section
 set JSON documents with
 
 ```shell
-pnpm load-css <a directory with cross section set JSON documents>
+bun load-css <a directory with cross section set JSON documents>
 ```
 
 > When runnning command with Docker, make sure the desired directory is readable
@@ -133,7 +133,7 @@ mitigate this, the admin role can also be assigned to a user that has already
 logged in once by running following command
 
 ```sh
-pnpm make-admin <email of user>
+bun make-admin <email of user>
 ```
 
 ## Start over
@@ -143,19 +143,19 @@ pnpm make-admin <email of user>
 To start over the whole database can be dropped with
 
 ```sh
-pnpm drop-database
+bun drop-database
 ```
 
 To start over and fill the database with the test seed use
 
 ```sh
-pnpm reload
+bun reload
 ```
 
 ## Make usable for app
 
 ```shell
-pnpm build
+bun run build
 ```
 
 ## Tests

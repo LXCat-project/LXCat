@@ -18,6 +18,10 @@ on:
       - ready_for_review
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: read
@@ -35,19 +39,16 @@ jobs:
     - uses: actions/cache@v5
       with:
         path: |
+          ~/.bun/install/cache
+          ${{ github.workspace }}/.turbo
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-        restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-
-    - uses: pnpm/action-setup@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        cache: 'pnpm'
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+        restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}
+    - uses: oven-sh/setup-bun@v2
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -61,11 +62,11 @@ jobs:
         cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: bun install
     - name: Build packages
-      run: pnpm build --env-mode=loose
+      run: bun run build --env-mode=loose
     - name: Lint
-      run: pnpm lint
+      run: bun run lint
 
   test-app:
     needs: build
@@ -76,28 +77,29 @@ jobs:
     - uses: actions/cache/restore@v5
       with:
         path: |
+          ~/.bun/install/cache
+          ${{ github.workspace }}/.turbo
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        cache: 'pnpm'
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+    - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: bun install
     - name: Install playwright browsers
-      run: pnpm -C app exec playwright install chromium --with-deps
+      # run: bun --filter=@lxcat/app exec "playwright install chromium --with-deps"
+      run: |
+        cd app
+        bun run playwright install chromium --with-deps
+        cd -
     - name: Run unit tests
-      run: pnpm -C app test run --coverage.enabled --coverage.all=false
+      run: (cd app && bun test --coverage --coverage-reporter=lcov)
     - name: Run end-to-end tests
-      run: pnpm -C app test:e2e
+      run: bun run --filter @lxcat/app test:e2e
     - name: Build end-to-end coverage report
-      run: pnpm -C app coverage:report
+      run: bun run --filter @lxcat/app coverage:report
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
@@ -114,27 +116,24 @@ jobs:
     - uses: actions/cache/restore@v5
       with:
         path: |
+          ~/.bun/install/cache
+          ${{ github.workspace }}/.turbo
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        cache: 'pnpm'
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+    - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: bun install
     - name: Test @lxcat/database
-      run: pnpm -C packages/database test run --coverage
+      run: (cd packages/database && bun test --timeout 120000 --coverage --coverage-report=lcov)
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: packages/database/coverage/coverage-final.json
+        files: packages/database/coverage/lcov.info
         flags: database
 
   test-schema:
@@ -146,27 +145,24 @@ jobs:
     - uses: actions/cache/restore@v5
       with:
         path: |
+          ~/.bun/install/cache
+          ${{ github.workspace }}/.turbo
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        cache: 'pnpm'
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+    - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: bun install
     - name: Test @lxcat/schema
-      run: pnpm -C packages/schema test run --coverage
+      run: (cd packages/schema && bun test --coverage --coverage-reporter=lcov)
     - name: Upload coverage report to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: packages/schema/coverage/coverage-final.json
+        files: packages/schema/coverage/lcov.info
         flags: schema
 
   test-converter:
@@ -178,25 +174,22 @@ jobs:
     - uses: actions/cache/restore@v5
       with:
         path: |
+          ~/.bun/install/cache
+          ${{ github.workspace }}/.turbo
           ${{ github.workspace }}/packages/schema/dist
           ${{ github.workspace }}/packages/database/dist
           ${{ github.workspace }}/packages/converter/dist
           ${{ github.workspace }}/packages/converter/target
           ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-    - uses: pnpm/action-setup@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        cache: 'pnpm'
+        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+    - uses: oven-sh/setup-bun@v2
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         components: llvm-tools-preview
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: bun install
     - name: Install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
     - name: Setup environment for coverage collection
@@ -205,7 +198,7 @@ jobs:
         cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Test @lxcat/converter
-      run: pnpm -C packages/converter test
+      run: bun run --filter @lxcat/converter test
     - name: Generate code coverage report
       run: |
         cd packages/converter

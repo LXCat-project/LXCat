@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { AnySpecies, AnySpeciesSerializable } from "./any-species.js";
 import { Element } from "./composition/element.js";
 import { Composition } from "./composition/universal.js";
