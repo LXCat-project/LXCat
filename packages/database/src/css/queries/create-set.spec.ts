@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import { Reference, VersionedLTPDocument } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
@@ -27,9 +27,9 @@ beforeAll(async () => {
     "create-set-test",
   );
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("create-set-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("create-set-test"));
 
 describe("giving draft set made with existing draft cross section", () => {
   let keycs1: string;
@@ -124,8 +124,9 @@ describe("giving draft set made with existing draft cross section", () => {
       },
       "draft",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have a single cross section", async () => {
     const data = await db.getDB().collection("CrossSection").count();
@@ -288,8 +289,9 @@ describe("giving draft set made with someone else's published cross section", ()
       },
       "draft",
     );
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have a 2 cross sections", async () => {
     const data = await db.getDB().collection("CrossSection").count();

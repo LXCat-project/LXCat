@@ -41,7 +41,7 @@ async function globalSetup(config: FullConfig) {
 
   console.log("Create collections");
   // Setup the `lxcat` database and user.
-  await runDbCommand("pnpm run setup");
+  await runDbCommand("bun setup");
 
   // It is up to tests to login and to populate and truncate the db.
 
@@ -53,7 +53,7 @@ async function globalSetup(config: FullConfig) {
   // Login with test oidc account.
   await signUp(adminPage, email);
   // Add admin roles.
-  await runDbCommand(`pnpm make-admin ${email}`);
+  await runDbCommand(`bun make-admin ${email}`);
   await adminPage.context().storageState({ path: "adminStorageState.json" });
   // TODO create user for each role and store the those users cookies.
   await browser.close();

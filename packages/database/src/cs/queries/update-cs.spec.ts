@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import { Status, VersionInfo } from "@lxcat/schema";
 import {
@@ -23,9 +23,9 @@ let db: LXCatTestDatabase;
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "update-cs-test");
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("update-cs-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("update-cs-test"));
 
 describe("given published cross section has been updated", () => {
   let keycs1: string;
@@ -39,7 +39,8 @@ describe("given published cross section has been updated", () => {
     const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
 
     if (draft === undefined) {
-      expect.fail("should have published section");
+      expect().fail("should have published section");
+      return;
     }
 
     draft.info[0].threshold = 999;
@@ -64,9 +65,9 @@ describe("given published cross section has been updated", () => {
       "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have draft version", async () => {
     const info = await db.getItemVersionInfo(keycs2);
@@ -105,7 +106,8 @@ describe("given draft cross section has been updated", () => {
     const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
 
     if (draft === undefined) {
-      expect.fail("should have published section");
+      expect().fail("should have published section");
+      return;
     }
 
     draft.info[0].threshold = 999;
@@ -129,13 +131,13 @@ describe("given draft cross section has been updated", () => {
       "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have draft version", async () => {
     const info = await db.getItemVersionInfo(keycs2);
-    const expected = {
+    const expected: VersionInfo = {
       version: 1,
       status: "draft",
       createdOn: matches8601,
@@ -182,8 +184,9 @@ describe.each(invalidDeleteStatuses)(
       const state_ids = await insertSampleStateIds(db);
       const res = await createSampleCrossSection(db, state_ids, status);
       keycs1 = res.keycs1;
-      return () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should throw an error", async () =>
       expect(
@@ -212,7 +215,8 @@ describe("given updating published section which already has draft", () => {
 
     const draft = await db.getItemByOwnerAndId(sampleEmail, keycs1);
     if (draft === undefined) {
-      expect.fail("should have published section");
+      expect().fail("should have published section");
+      return;
     }
 
     draft.info[0].threshold = 999;
@@ -237,9 +241,9 @@ describe("given updating published section which already has draft", () => {
       "Some organization",
     );
     keycs2 = idcs2.replace("CrossSection/", "");
-
-    return () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should give error that published section already has an draft", async () => {
     // expect.toThrowError() assert did not work with async db queries so use try/catch

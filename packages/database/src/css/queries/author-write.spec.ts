@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import { VersionedLTPDocument } from "@lxcat/schema";
 import { intoEditable } from "@lxcat/schema/process";
@@ -23,9 +23,9 @@ describe("given filled ArangoDB container", () => {
       "set-author-write-test",
     );
     await db.setupTestUser();
-
-    return async () => systemDb().dropDatabase("set-author-write-test");
   });
+
+  afterAll(async () => systemDb().dropDatabase("set-author-write-test"));
 
   describe("given initial set without references, states or processes", () => {
     let keycss1: string;

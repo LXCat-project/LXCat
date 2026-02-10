@@ -45,12 +45,12 @@
             "minLength": 1
           },
           "publishedIn": {
-            "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset.",
-            "type": "string"
+            "type": "string",
+            "description": "A key into the `references` dict. This is a reference to the paper that presents this dataset."
           },
           "description": {
-            "description": "A description of this dataset.",
-            "type": "string"
+            "type": "string",
+            "description": "A description of this dataset."
           },
           "complete": {
             "type": "boolean"
@@ -367,14 +367,14 @@
           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
         },
         "status": {
-          "description": "The status of the versioned document.",
           "type": "string",
           "enum": [
             "draft",
             "published",
             "archived",
             "retracted"
-          ]
+          ],
+          "description": "The status of the versioned document."
         },
         "commitMessage": {
           "description": "Description of what was changed since the previous version.",
@@ -396,7 +396,6 @@
       "id": "VersionInfo"
     },
     "CSLData": {
-      "id": "CSLData",
       "type": "object",
       "properties": {
         "type": {
@@ -737,8 +736,8 @@
           ]
         },
         "event": {
-          "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]",
-          "type": "string"
+          "type": "string",
+          "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]"
         },
         "event-title": {
           "type": "string"
@@ -954,19 +953,20 @@
           "type": "string"
         },
         "custom": {
-          "description": "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles.",
           "type": "object",
           "propertyNames": {
             "type": "string"
           },
-          "additionalProperties": {}
+          "additionalProperties": {},
+          "description": "Used to store additional information that does not have a designated CSL JSON field. The custom field is preferred over the note field for storing custom data, particularly for storing key-value pairs, as the note field is used for user annotations in annotated bibliography styles."
         }
       },
       "required": [
         "type",
         "id"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "id": "CSLData"
     },
     "CSLNameVariable": {
       "type": "object",
@@ -1063,7 +1063,6 @@
       "id": "CSLNameVariable"
     },
     "CSLDateVariable": {
-      "id": "CSLDateVariable",
       "type": "object",
       "properties": {
         "date-parts": {
@@ -1116,7 +1115,8 @@
           "type": "string"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "id": "CSLDateVariable"
     },
     "AnySpecies": {
       "oneOf": [
@@ -1383,18 +1383,18 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
                 "type": "string",
                 "minLength": 1
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -1440,7 +1440,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -1487,10 +1486,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -1541,7 +1540,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -1614,7 +1614,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -1667,10 +1666,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -1727,7 +1726,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -1773,7 +1773,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -1888,10 +1887,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -2010,7 +2009,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -2056,7 +2056,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -2177,10 +2176,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -2305,7 +2304,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -2351,7 +2351,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -2512,10 +2511,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -2680,7 +2679,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -2726,7 +2726,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "type": "object",
               "properties": {
                 "config": {
@@ -2887,10 +2886,10 @@
                 "config",
                 "term"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -3055,7 +3054,8 @@
                   "term"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             }
           ]
         }
@@ -3101,7 +3101,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "allOf": [
                 {
                   "type": "object",
@@ -3146,7 +3145,6 @@
                     "vibrational": {
                       "anyOf": [
                         {
-                          "description": "Singular",
                           "allOf": [
                             {
                               "type": "object",
@@ -3168,7 +3166,6 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "description": "Singular",
                                       "type": "object",
                                       "properties": {
                                         "J": {
@@ -3180,16 +3177,15 @@
                                       "required": [
                                         "J"
                                       ],
-                                      "additionalProperties": false
+                                      "additionalProperties": false,
+                                      "description": "Singular"
                                     },
                                     {
-                                      "description": "Compound",
                                       "minItems": 2,
                                       "type": "array",
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "description": "Singular",
                                             "type": "object",
                                             "properties": {
                                               "J": {
@@ -3201,34 +3197,35 @@
                                             "required": [
                                               "J"
                                             ],
-                                            "additionalProperties": false
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "description": "Unspecified",
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Unspecified"
                                           }
                                         ]
-                                      }
+                                      },
+                                      "description": "Compound"
                                     },
                                     {
-                                      "description": "Unspecified",
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "Unspecified"
                                     }
                                   ]
                                 }
                               },
                               "additionalProperties": false
                             }
-                          ]
+                          ],
+                          "description": "Singular"
                         },
                         {
-                          "description": "Compound",
                           "minItems": 2,
                           "type": "array",
                           "items": {
                             "anyOf": [
                               {
-                                "description": "Singular",
                                 "type": "object",
                                 "properties": {
                                   "v": {
@@ -3240,28 +3237,30 @@
                                 "required": [
                                   "v"
                                 ],
-                                "additionalProperties": false
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "description": "Unspecified",
-                                "type": "string"
+                                "type": "string",
+                                "description": "Unspecified"
                               }
                             ]
-                          }
+                          },
+                          "description": "Compound"
                         },
                         {
-                          "description": "Unspecified",
-                          "type": "string"
+                          "type": "string",
+                          "description": "Unspecified"
                         }
                       ]
                     }
                   },
                   "additionalProperties": false
                 }
-              ]
+              ],
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -3300,12 +3299,13 @@
                   "parity"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             },
             {
-              "description": "Unspecified",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -3362,7 +3362,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "allOf": [
                 {
                   "type": "object",
@@ -3399,7 +3398,6 @@
                     "vibrational": {
                       "anyOf": [
                         {
-                          "description": "Singular",
                           "allOf": [
                             {
                               "type": "object",
@@ -3421,7 +3419,6 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "description": "Singular",
                                       "type": "object",
                                       "properties": {
                                         "J": {
@@ -3433,16 +3430,15 @@
                                       "required": [
                                         "J"
                                       ],
-                                      "additionalProperties": false
+                                      "additionalProperties": false,
+                                      "description": "Singular"
                                     },
                                     {
-                                      "description": "Compound",
                                       "minItems": 2,
                                       "type": "array",
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "description": "Singular",
                                             "type": "object",
                                             "properties": {
                                               "J": {
@@ -3454,34 +3450,35 @@
                                             "required": [
                                               "J"
                                             ],
-                                            "additionalProperties": false
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "description": "Unspecified",
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Unspecified"
                                           }
                                         ]
-                                      }
+                                      },
+                                      "description": "Compound"
                                     },
                                     {
-                                      "description": "Unspecified",
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "Unspecified"
                                     }
                                   ]
                                 }
                               },
                               "additionalProperties": false
                             }
-                          ]
+                          ],
+                          "description": "Singular"
                         },
                         {
-                          "description": "Compound",
                           "minItems": 2,
                           "type": "array",
                           "items": {
                             "anyOf": [
                               {
-                                "description": "Singular",
                                 "type": "object",
                                 "properties": {
                                   "v": {
@@ -3493,28 +3490,30 @@
                                 "required": [
                                   "v"
                                 ],
-                                "additionalProperties": false
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "description": "Unspecified",
-                                "type": "string"
+                                "type": "string",
+                                "description": "Unspecified"
                               }
                             ]
-                          }
+                          },
+                          "description": "Compound"
                         },
                         {
-                          "description": "Unspecified",
-                          "type": "string"
+                          "type": "string",
+                          "description": "Unspecified"
                         }
                       ]
                     }
                   },
                   "additionalProperties": false
                 }
-              ]
+              ],
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -3545,12 +3544,13 @@
                   "S"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             },
             {
-              "description": "Unspecified",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -3657,7 +3657,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "allOf": [
                 {
                   "type": "object",
@@ -3702,7 +3701,6 @@
                     "vibrational": {
                       "anyOf": [
                         {
-                          "description": "Singular",
                           "allOf": [
                             {
                               "type": "object",
@@ -3739,7 +3737,6 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "description": "Singular",
                                       "type": "object",
                                       "properties": {
                                         "J": {
@@ -3751,16 +3748,15 @@
                                       "required": [
                                         "J"
                                       ],
-                                      "additionalProperties": false
+                                      "additionalProperties": false,
+                                      "description": "Singular"
                                     },
                                     {
-                                      "description": "Compound",
                                       "minItems": 2,
                                       "type": "array",
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "description": "Singular",
                                             "type": "object",
                                             "properties": {
                                               "J": {
@@ -3772,34 +3768,35 @@
                                             "required": [
                                               "J"
                                             ],
-                                            "additionalProperties": false
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "description": "Unspecified",
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Unspecified"
                                           }
                                         ]
-                                      }
+                                      },
+                                      "description": "Compound"
                                     },
                                     {
-                                      "description": "Unspecified",
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "Unspecified"
                                     }
                                   ]
                                 }
                               },
                               "additionalProperties": false
                             }
-                          ]
+                          ],
+                          "description": "Singular"
                         },
                         {
-                          "description": "Compound",
                           "minItems": 2,
                           "type": "array",
                           "items": {
                             "anyOf": [
                               {
-                                "description": "Singular",
                                 "type": "object",
                                 "properties": {
                                   "v": {
@@ -3826,28 +3823,30 @@
                                 "required": [
                                   "v"
                                 ],
-                                "additionalProperties": false
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "description": "Unspecified",
-                                "type": "string"
+                                "type": "string",
+                                "description": "Unspecified"
                               }
                             ]
-                          }
+                          },
+                          "description": "Compound"
                         },
                         {
-                          "description": "Unspecified",
-                          "type": "string"
+                          "type": "string",
+                          "description": "Unspecified"
                         }
                       ]
                     }
                   },
                   "additionalProperties": false
                 }
-              ]
+              ],
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -3886,12 +3885,13 @@
                   "parity"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             },
             {
-              "description": "Unspecified",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
@@ -3998,7 +3998,6 @@
         "electronic": {
           "anyOf": [
             {
-              "description": "Singular",
               "allOf": [
                 {
                   "type": "object",
@@ -4019,7 +4018,6 @@
                     "vibrational": {
                       "anyOf": [
                         {
-                          "description": "Singular",
                           "allOf": [
                             {
                               "type": "object",
@@ -4056,7 +4054,6 @@
                                 "rotational": {
                                   "anyOf": [
                                     {
-                                      "description": "Singular",
                                       "type": "object",
                                       "properties": {
                                         "J": {
@@ -4073,16 +4070,15 @@
                                       "required": [
                                         "J"
                                       ],
-                                      "additionalProperties": false
+                                      "additionalProperties": false,
+                                      "description": "Singular"
                                     },
                                     {
-                                      "description": "Compound",
                                       "minItems": 2,
                                       "type": "array",
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "description": "Singular",
                                             "type": "object",
                                             "properties": {
                                               "J": {
@@ -4099,34 +4095,35 @@
                                             "required": [
                                               "J"
                                             ],
-                                            "additionalProperties": false
+                                            "additionalProperties": false,
+                                            "description": "Singular"
                                           },
                                           {
-                                            "description": "Unspecified",
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Unspecified"
                                           }
                                         ]
-                                      }
+                                      },
+                                      "description": "Compound"
                                     },
                                     {
-                                      "description": "Unspecified",
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "Unspecified"
                                     }
                                   ]
                                 }
                               },
                               "additionalProperties": false
                             }
-                          ]
+                          ],
+                          "description": "Singular"
                         },
                         {
-                          "description": "Compound",
                           "minItems": 2,
                           "type": "array",
                           "items": {
                             "anyOf": [
                               {
-                                "description": "Singular",
                                 "type": "object",
                                 "properties": {
                                   "v": {
@@ -4153,28 +4150,30 @@
                                 "required": [
                                   "v"
                                 ],
-                                "additionalProperties": false
+                                "additionalProperties": false,
+                                "description": "Singular"
                               },
                               {
-                                "description": "Unspecified",
-                                "type": "string"
+                                "type": "string",
+                                "description": "Unspecified"
                               }
                             ]
-                          }
+                          },
+                          "description": "Compound"
                         },
                         {
-                          "description": "Unspecified",
-                          "type": "string"
+                          "type": "string",
+                          "description": "Unspecified"
                         }
                       ]
                     }
                   },
                   "additionalProperties": false
                 }
-              ]
+              ],
+              "description": "Singular"
             },
             {
-              "description": "Compound",
               "minItems": 2,
               "type": "array",
               "items": {
@@ -4189,12 +4188,13 @@
                   "energyId"
                 ],
                 "additionalProperties": false
-              }
+              },
+              "description": "Compound"
             },
             {
-              "description": "Unspecified",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "Unspecified"
             }
           ]
         }
