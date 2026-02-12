@@ -17,7 +17,7 @@
     "annotate": "turbo run annotate"
   },
   "devDependencies": {
-    "turbo": "^2.8.5"
+    "turbo": "^2.8.7"
   },
   "packageManager": "pnpm@10.12.3",
   "version": "0.1.0"
