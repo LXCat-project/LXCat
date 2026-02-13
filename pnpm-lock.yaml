@@ -232,8 +232,8 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(vitest@4.0.18(@types/node@24.10.13)(sugarss@5.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2))
       dotenv:
-        specifier: ^17.2.4
-        version: 17.2.4
+        specifier: ^17.3.1
+        version: 17.3.1
       dprint:
         specifier: ^0.51.1
         version: 0.51.1
@@ -298,8 +298,8 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       dotenv:
-        specifier: ^17.2.4
-        version: 17.2.4
+        specifier: ^17.3.1
+        version: 17.3.1
       true-myth:
         specifier: ^9.3.1
         version: 9.3.1
@@ -4526,8 +4526,8 @@ packages:
   dompurify@3.3.0:
     resolution: {integrity: sha512-r+f6MYR1gGN1eJv0TVQbhA7if/U7P87cdPl3HN5rikqaBSBxLiCb/b9O+2eG0cxz0ghyU+mU1QkbsOwERMYlWQ==}
 
-  dotenv@17.2.4:
-    resolution: {integrity: sha512-mudtfb4zRB4bVvdj0xRo+e6duH1csJRM8IukBqfTRvHotn9+LBXB8ynAidP9zHqoRC/fsllXgk4kCKlR21fIhw==}
+  dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
 
   dprint@0.51.1:
@@ -12596,7 +12596,7 @@ snapshots:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
-  dotenv@17.2.4: {}
+  dotenv@17.3.1: {}
 
   dprint@0.51.1:
     optionalDependencies:
