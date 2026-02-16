@@ -182,21 +182,18 @@ export class LXCatDatabase {
   public async setupUserPrivileges(system: Database, username: string) {
     const collections = await this.db.listCollections();
 
-    await system.setUserAccessLevel(username, {
-      database: this.db.name,
-      grant: "ro",
-    });
+    await system.setUserAccessLevel(username, { database: this.db.name }, "ro");
 
-    await Promise.all(collections.map((collection) =>
-      system.setUserAccessLevel(
+    for (const collection of collections) {
+      await system.setUserAccessLevel(
         username,
         {
           database: this.db.name,
           collection: collection.name,
-          grant: "rw",
         },
-      )
-    ));
+        "rw",
+      );
+    }
   }
 
   public async setupCollections() {
