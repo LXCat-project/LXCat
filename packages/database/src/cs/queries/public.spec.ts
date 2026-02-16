@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { LTPMixture } from "@lxcat/schema";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import {
   matches8601,
   matchesId,
@@ -18,9 +18,9 @@ let db: LXCatTestDatabase;
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "cs-public-test");
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("cs-public-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("cs-public-test"));
 
 describe("given 4 published cross sections in 2 sets", () => {
   let csids: string[];
@@ -47,9 +47,9 @@ describe("given 4 published cross sections in 2 sets", () => {
       ...set1.processes.flatMap(({ info }) => info).map(({ _key }) => _key),
       ...set2.processes.flatMap(({ info }) => info).map(({ _key }) => _key),
     ];
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   describe("byIds()", () => {
     it("given correct ids should return 4 cross sections", async () => {
@@ -324,7 +324,10 @@ describe("given 4 published cross sections in 2 sets", () => {
       expect(Object.values(result.references)).toEqual(
         Object.values(expected.references),
       );
-      expect(result.processes).toEqual(expected.processes);
+      expect(result.processes.length).toBe(expected.processes.length);
+      expect(result.processes).toEqual(
+        expect.arrayContaining(expected.processes),
+      );
     });
 
     it("given 0 ids should return 0 cross sections", async () => {

@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: LXCat team
+#
+# SPDX-License-Identifier: Apache-2.0
+
+[test]
+root = "src"
+coverageSkipTestFiles = true
+preload = ["./src/test/global-setup.ts"]

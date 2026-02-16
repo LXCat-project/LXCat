@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { type AnySpecies } from "@lxcat/schema/species";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { systemDb } from "../../system-db.js";
 import { LXCatTestDatabase } from "../../testutils.js";
 import { SpeciesNode } from "./species.js";
@@ -14,8 +14,9 @@ let db: LXCatTestDatabase;
 
 beforeAll(async () => {
   db = await LXCatTestDatabase.createTestInstance(systemDb(), "species-test");
-  return async () => systemDb().dropDatabase("species-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("species-test"));
 
 describe("Species functionality", () => {
   beforeAll(async () => {

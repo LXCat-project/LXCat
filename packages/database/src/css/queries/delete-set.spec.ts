@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import { Status, VersionedLTPDocument, VersionInfo } from "@lxcat/schema";
 import { intoEditable } from "@lxcat/schema/process";
@@ -25,9 +25,9 @@ beforeAll(async () => {
     "delete-set-test",
   );
   await db.setupTestUser();
-
-  return async () => systemDb().dropDatabase("delete-set-test");
 });
+
+afterAll(async () => systemDb().dropDatabase("delete-set-test"));
 
 describe("deleting non-existing cross section set", () => {
   it("should not throw an error", async () => {
@@ -42,8 +42,9 @@ describe.each(invalidDeleteStatuses)(
     let keycss1: string;
     beforeAll(async () => {
       keycss1 = await db.createSet(sampleCrossSectionSet(), status);
-      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should throw an error", async () =>
       expect(db.deleteSet(keycss1, "Can I do it?")).rejects.toThrowError(
@@ -57,14 +58,14 @@ describe("deleting a published cross section set", () => {
 
   beforeAll(async () => {
     key = await db.createSet(sampleCrossSectionSet(), "published");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
 
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
+
   it("should fail when no commit message is provided", async () =>
-    expect(async () => await db.deleteSet(key)).rejects.toThrowError());
+    expect(db.deleteSet(key)).rejects.toThrowError());
   it("should fail when an empty commit message is provided", async () =>
-    expect(async () => await db.deleteSet(key, "")).rejects.toThrowError());
+    expect(db.deleteSet(key, "")).rejects.toThrowError());
 });
 
 describe("deleting a draft cross section set", () => {
@@ -72,9 +73,9 @@ describe("deleting a draft cross section set", () => {
 
   beforeAll(async () => {
     key = await db.createSet(sampleCrossSectionSet(), "draft");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should succeed when no commit message is provided", async () =>
     expect(await db.deleteSet(key)).toBeUndefined());
@@ -89,9 +90,9 @@ describe("deleting a published cross section without shared cross sections", () 
     keycss1 = await db.createSet(sampleCrossSectionSet(), "published");
 
     await db.deleteSet(keycss1, "My retract message");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have set status to retracted and retract message filled", async () => {
     const info = await db.getSetVersionInfo(keycss1);
@@ -108,7 +109,8 @@ describe("deleting a published cross section without shared cross sections", () 
     const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
 
     if (css1 === null) {
-      expect.fail("set should be present");
+      expect().fail("set should be present");
+      return;
     }
 
     expect.assertions(2); // sample has 2 cross sections
@@ -201,7 +203,8 @@ describe("deleting a published cross section with one shared cross section", () 
     const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
 
     if (css2 === null) {
-      expect.fail("Should have created first set");
+      expect().fail("Should have created first set");
+      return;
     }
 
     const editedSet = intoEditable(css2);
@@ -212,9 +215,9 @@ describe("deleting a published cross section with one shared cross section", () 
     keycss2 = await db.createSet(editedSet, "published");
 
     await db.deleteSet(keycss1, "My retract message");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it("should have set status to retracted and retract message filled", async () => {
     const info = await db.getSetVersionInfo(keycss1);
@@ -233,7 +236,8 @@ describe("deleting a published cross section with one shared cross section", () 
     const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss2);
 
     if (css1 === null || css2 === null) {
-      expect.fail("set should be present");
+      expect().fail("set should be present");
+      return;
     }
 
     const csSet1Keys = css1.processes.flatMap(({ info }) => info).map((
@@ -246,7 +250,8 @@ describe("deleting a published cross section with one shared cross section", () 
     const nonSharedCSKey = csSet1Keys.find((key) => !csSet2Keys.includes(key));
 
     if (nonSharedCSKey === undefined) {
-      expect.fail("section should have id");
+      expect().fail("section should have id");
+      return;
     }
     // Compare version info of non shared cross section
     const info = await db.getItemVersionInfo(nonSharedCSKey);
@@ -265,12 +270,14 @@ describe("deleting a published cross section with one shared cross section", () 
     const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss2);
 
     if (css2 === null) {
-      expect.fail("set should be present");
+      expect().fail("set should be present");
+      return;
     }
 
     const sharedcskey = css2.processes.flatMap(({ info }) => info)[0]._key;
     if (sharedcskey === undefined) {
-      expect.fail("section should have id");
+      expect().fail("section should have id");
+      return;
     }
 
     // Compare version info of shared cross section
@@ -290,9 +297,9 @@ describe("deleting a draft cross section set with no shared cross sections", () 
     const keycss1 = await db.createSet(sampleCrossSectionSet(), "draft");
 
     await db.deleteSet(keycss1, "My delete message");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it.each([
     "CrossSectionSet",
@@ -338,9 +345,9 @@ describe(
 
       const setKey = await db.createSet(set, "draft");
       await db.deleteSet(setKey, "My delete message");
-
-      return async () => truncateCrossSectionSetCollections(db.getDB());
     });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it.each([
       "CrossSectionSet",
@@ -370,7 +377,8 @@ describe("deleting a draft cross section set with one shared cross section", () 
     const css2 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
 
     if (css2 === null) {
-      expect.fail("Should have created first set");
+      expect().fail("Should have created first set");
+      return;
     }
 
     const editedSet = intoEditable(css2);
@@ -381,9 +389,9 @@ describe("deleting a draft cross section set with one shared cross section", () 
     await db.createSet(editedSet, "draft");
 
     await db.deleteSet(keycss1, "My retract message");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it.each([
     {
@@ -424,21 +432,23 @@ describe("deleting a draft cross section with one published cross section", () =
     const css1 = await db.getSetByOwnerAndId(sampleEmail, keycss1);
 
     if (css1 === null) {
-      expect.fail("Should have created set");
+      expect().fail("Should have created set");
+      return;
     }
 
     const keycs1 = css1.processes.flatMap(({ info }) => info)[0]._key;
 
     if (keycs1 === undefined) {
-      expect.fail("Should have created section");
+      expect().fail("Should have created section");
+      return;
     }
 
     await db.publishItem(keycs1);
 
     await db.deleteSet(keycss1, "My retract message");
-
-    return async () => truncateCrossSectionSetCollections(db.getDB());
   });
+
+  afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
   it.each([
     {

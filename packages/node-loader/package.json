@@ -5,9 +5,9 @@
   "license": "AGPL-3.0-or-later",
   "main": "dist/cjs.js",
   "scripts": {
-    "start": "pnpm build -- -w",
+    "start": "bun build -- -w",
     "clean": "del-cli dist",
-    "prebuild": "pnpm clean",
+    "prebuild": "bun clean",
     "build": "cross-env NODE_ENV=production babel src -d dist --copy-files",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year src"
   },

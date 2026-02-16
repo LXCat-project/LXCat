@@ -27,7 +27,7 @@ export async function createSampleCrossSection(
   );
   const keycs1 = idcs1.replace("CrossSection/", "");
   return {
-    __return: () => truncateCrossSectionCollections(db.getDB()),
+    __return: async () => truncateCrossSectionCollections(db.getDB()),
     keycs1,
   };
 }

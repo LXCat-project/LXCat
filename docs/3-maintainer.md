@@ -213,7 +213,7 @@ which should show something like
 NAME                  COMMAND                  SERVICE             STATUS              PORTS
 lxcat-app-1        "docker-entrypoint.s…"   app                 running             127.0.0.1:3000->3000/tcp
 lxcat-database-1   "/entrypoint.sh aran…"   database            running             8529/tcp
-lxcat-setup-1      "pnpm"                   setup               exited (0)
+lxcat-setup-1      "bun"                   setup               exited (0)
 ```
 
 The `app` and `database` services should have `running` status. It is OK that the `setup`

@@ -13,7 +13,6 @@
     "lint": "eslint .",
     "format": "dprint fmt",
     "type-check": "tsc --pretty --noEmit",
-    "test": "vitest",
     "test:e2e": "playwright test --quiet",
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
   },
@@ -50,7 +49,6 @@
     "nanoid": "^5.1.6",
     "next": "^16.1.6",
     "next-auth": "^4.24.13",
-    "next-connect": "^1.0.0",
     "next-mdx-remote": "canary",
     "node-fetch": "^3.3.2",
     "plotly.js-basic-dist": "^3.3.1",
@@ -82,6 +80,7 @@
     "@lxcat/node-loader": "workspace:^",
     "@lxcat/tsconfig": "workspace:^",
     "@playwright/test": "1.54.1",
+    "@types/bun": "^1.3.6",
     "@types/deep-equal": "^1.0.4",
     "@types/json-schema": "^7.0.15",
     "@types/mdast": "^4.0.4",
@@ -91,7 +90,6 @@
     "@types/react": "19.2.14",
     "@types/react-plotly.js": "^2.6.4",
     "@types/unist": "^3.0.3",
-    "@vitest/coverage-v8": "^4.0.18",
     "dotenv": "^17.3.1",
     "dprint": "^0.51.1",
     "eslint": "^9.39.2",
@@ -102,9 +100,9 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^11.1.3",
     "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "swc-plugin-coverage-instrument": "^0.0.32",
     "testcontainers": "^11.11.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "typescript": "^5.9.3"
   }
 }
