@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
 export async function upsertOrganization(
@@ -23,7 +23,7 @@ export async function upsertOrganization(
 }
 
 export async function getOrganizationByName(this: LXCatDatabase, name: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
     FOR org IN Organization
       FILTER org.name == ${name}
       LIMIT 1

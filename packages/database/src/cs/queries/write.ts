@@ -6,7 +6,7 @@ import { Status, VersionInfo } from "@lxcat/schema";
 import { EditedProcess } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { Cursor } from "arangojs/cursors";
 import { now } from "../../date.js";
 import { LXCatDatabase } from "../../lxcat-database.js";
 
@@ -137,7 +137,7 @@ export async function updateCS(
 }
 
 export async function isDraftless(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
     FOR h IN CrossSectionHistory
       FILTER h._to == CONCAT('CrossSection/', ${key})
       RETURN PARSE_IDENTIFIER(h._from).key
@@ -315,7 +315,7 @@ export async function deleteCS(
 }
 
 export async function isPartOf(this: LXCatDatabase, key: string) {
-  const cursor: ArrayCursor<string> = await this.db.query(aql`
+  const cursor: Cursor<string> = await this.db.query(aql`
     FOR i IN IsPartOf
 			FILTER i._from == CONCAT('CrossSection/', ${key})
       RETURN PARSE_IDENTIFIER(i._to).key

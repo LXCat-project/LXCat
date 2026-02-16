@@ -7,7 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { Reference, VersionedLTPDocument } from "@lxcat/schema";
 import { AnySpecies } from "@lxcat/schema/species";
 import { aql } from "arangojs";
-import { ArrayCursor } from "arangojs/cursor.js";
+import { Cursor } from "arangojs/cursors";
 import { systemDb } from "../../system-db.js";
 import { testSpecies } from "../../test/species.js";
 import { LXCatTestDatabase } from "../../testutils.js";
@@ -320,7 +320,7 @@ describe("giving draft set made with someone else's published cross section", ()
   });
 
   it("should use same reaction id in both cross sections", async () => {
-    const cursor: ArrayCursor<string> = await db.getDB().query(aql`
+    const cursor: Cursor<string> = await db.getDB().query(aql`
       FOR cs IN CrossSection
         RETURN cs.reaction
     `);
