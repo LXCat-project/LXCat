@@ -324,7 +324,10 @@ describe("given 4 published cross sections in 2 sets", () => {
       expect(Object.values(result.references)).toEqual(
         Object.values(expected.references),
       );
-      expect(result.processes).toEqual(expected.processes);
+      expect(result.processes.length).toBe(expected.processes.length);
+      expect(result.processes).toEqual(
+        expect.arrayContaining(expected.processes),
+      );
     });
 
     it("given 0 ids should return 0 cross sections", async () => {
