@@ -198,7 +198,7 @@ jobs:
         cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Test @lxcat/converter
-      run: bun run --filter @lxcat/converter test
+      run: (cd packages/converter && bun test)
     - name: Generate code coverage report
       run: |
         cd packages/converter
