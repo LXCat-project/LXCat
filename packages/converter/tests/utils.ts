@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import assert from "assert";
+import { it as test } from "bun:test";
 import { readFileSync } from "fs";
-import { join } from "node:path";
-import { it as test } from "node:test";
-import { convertDocument } from "..";
+import { join } from "path";
+
+const { convertDocument } = require("..");
 
 export function it(name: string, basePath: string) {
   return test(name, () => {

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { describe } from "node:test";
+import { describe } from "bun:test";
 import { it } from "./utils";
 
 const BASE_PATH: string = "tests/valid";
