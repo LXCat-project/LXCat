@@ -6,7 +6,7 @@ name: lxcat
 
 services:
   database:
-    image: arangodb/arangodb:3.12.0
+    image: arangodb:3.12.7.2
     env_file: .env.production
     restart: unless-stopped
     ports:
