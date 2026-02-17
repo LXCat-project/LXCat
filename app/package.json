@@ -30,7 +30,7 @@
     "@mantine/core": "^8.3.15",
     "@mantine/form": "^8.3.15",
     "@mantine/hooks": "^8.3.15",
-    "@mantine/modals": "^8.3.14",
+    "@mantine/modals": "^8.3.15",
     "@mantine/notifications": "^8.3.15",
     "@mdx-js/mdx": "^3.1.1",
     "@next/bundle-analyzer": "^16.1.6",
