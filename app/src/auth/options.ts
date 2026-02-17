@@ -6,6 +6,7 @@ import { db } from "@lxcat/database";
 import { User } from "@lxcat/database/auth";
 import { NextAuthOptions } from "next-auth";
 import Auth0Provider from "next-auth/providers/auth0";
+import GithubProvider from "next-auth/providers/github";
 import GitlabProvider from "next-auth/providers/gitlab";
 import { Provider } from "next-auth/providers/index";
 import KeycloakProvider from "next-auth/providers/keycloak";
@@ -29,6 +30,14 @@ if (process.env.GITLAB_CLIENT_ID) {
     GitlabProvider({
       clientId: process.env.GITLAB_CLIENT_ID,
       clientSecret: process.env.GITLAB_CLIENT_SECRET || "",
+    }),
+  );
+}
+if (process.env.GITHUB_CLIENT_ID) {
+  providers.push(
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
     }),
   );
 }
