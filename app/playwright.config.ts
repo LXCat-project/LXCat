@@ -3,10 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
-import dns from "node:dns";
-
-// See: https://github.com/microsoft/playwright/issues/20784
-dns.setDefaultResultOrder("ipv4first");
 
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
