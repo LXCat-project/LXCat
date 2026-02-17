@@ -26,7 +26,7 @@
         "@mantine/form": "^8.3.14",
         "@mantine/hooks": "^8.3.14",
         "@mantine/modals": "^8.3.14",
-        "@mantine/notifications": "^8.3.14",
+        "@mantine/notifications": "^8.3.15",
         "@mdx-js/mdx": "^3.1.1",
         "@next/bundle-analyzer": "^16.1.6",
         "@tabler/icons-react": "^3.36.1",
@@ -757,9 +757,9 @@
 
     "@mantine/modals": ["@mantine/modals@8.3.14", "", { "peerDependencies": { "@mantine/core": "8.3.14", "@mantine/hooks": "8.3.14", "react": "19.2.4", "react-dom": "19.2.4" } }, "sha512-BBM53MBq0vKZ7MKmTbqdt6i5eZEoAbfllCHVlQ7J4Xlr1LehoxO3q0MuwPr5kkjSWAPw5okiviKoMYXIKBn53w=="],
 
-    "@mantine/notifications": ["@mantine/notifications@8.3.14", "", { "dependencies": { "@mantine/store": "8.3.14", "react-transition-group": "4.4.5" }, "peerDependencies": { "@mantine/core": "8.3.14", "@mantine/hooks": "8.3.14", "react": "19.2.4", "react-dom": "19.2.4" } }, "sha512-+ia97wrcU9Zfv+jXYvgr2GdISqKTHbQE9nnEIZvGUBPAqKr9b2JAsaXQS/RsAdoXUI+kKDEtH2fyVYS7zrSi/Q=="],
+    "@mantine/notifications": ["@mantine/notifications@8.3.15", "", { "dependencies": { "@mantine/store": "8.3.15", "react-transition-group": "4.4.5" }, "peerDependencies": { "@mantine/core": "8.3.15", "@mantine/hooks": "8.3.15", "react": "^18.x || ^19.x", "react-dom": "^18.x || ^19.x" } }, "sha512-CJGSv8oeLWyJIVPninU7Ud6vV6/UJKWZJwRGBNg2K0Ak0U0coFN3gW3H6G1Mh2zllNxb3K4fpMJNz4Iy0sCBFw=="],
 
-    "@mantine/store": ["@mantine/store@8.3.14", "", { "peerDependencies": { "react": "19.2.4" } }, "sha512-bgW+fYHDOp7Pk4+lcEm3ZF7dD/sIMKHyR985cOqSHAYJPRcVFb+zcEK/SWoFZqlyA4qh08CNrASOaod8N0XKfA=="],
+    "@mantine/store": ["@mantine/store@8.3.15", "", { "peerDependencies": { "react": "^18.x || ^19.x" } }, "sha512-wdx91a73dM2G02YPIZ9i5UXPWfvjdf3qPAwSGnSsBFQg5uM/5CcPAOOQwlYIkvX1edUA5BFOk/4IjpEXSYUDeQ=="],
 
     "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.5.2", "", { "dependencies": { "get-stream": "6.0.1", "minimist": "1.2.8" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA=="],
 
