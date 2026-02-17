@@ -4,11 +4,14 @@
 
 "use server";
 
-import { db } from "@lxcat/database";
 import { Element } from "@lxcat/schema/species";
 import { PeriodicSearchResult } from "../../../../packages/database/dist/elements/queries";
 
 export const getSetHeaderAction = async (
   elements: Array<Element>,
-): Promise<Array<PeriodicSearchResult>> =>
-  db().getSetHeaderByElements(elements);
+): Promise<Array<PeriodicSearchResult>> => {
+  // NOTE: Import `@lxcat/database` dynamically, as a static import resulted in
+  // a runtime `TypeError`.
+  const { db } = await import("@lxcat/database");
+  return db().getSetHeaderByElements(elements);
+};

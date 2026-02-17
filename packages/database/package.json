@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@lxcat/schema": "workspace:^",
-    "arangojs": "^8.8.1",
+    "arangojs": "^10.2.2",
     "deep-equal": "^2.2.3",
     "dotenv": "^17.3.1",
     "true-myth": "^9.3.1",
