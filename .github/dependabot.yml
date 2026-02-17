@@ -5,13 +5,13 @@
 version: 2
 
 updates:
-  - package-ecosystem: npm
+  - package-ecosystem: bun
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
     labels:
-      - "dependencies: node"
+      - "dependencies: bun"
     open-pull-requests-limit: 20
 
   - package-ecosystem: cargo
