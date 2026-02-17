@@ -4,11 +4,11 @@
 
 import { LXCatDatabase } from "./lxcat-database.js";
 
-const _db: LXCatDatabase | undefined = undefined;
+let _db: LXCatDatabase | undefined = undefined;
 
 export function db() {
   if (_db === undefined) {
-    return setDb(
+    _db = initDB(
       process.env.ARANGO_URL || "http://localhost:8529",
       process.env.ARANGO_PASSWORD,
       process.env.ARANGO_USERNAME || "lxcat",
@@ -19,7 +19,7 @@ export function db() {
   return _db;
 }
 
-const setDb = (
+const initDB = (
   url: string,
   password: string | undefined,
   username = "lxcat",
