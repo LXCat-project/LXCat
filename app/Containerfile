@@ -43,6 +43,10 @@ COPY --from=build /build/app/.next/standalone .
 COPY --from=build /build/app/.next/static ./app/.next/static
 COPY --from=build /build/app/public ./app/public
 
+# We have to patch absolute paths generated during the build stage, as they
+# traverse from the build stage root instead of the release stage root.
+RUN find ./app/.next -name "*.js" | xargs -I {} sed -i "s|/build|$(pwd)|g" {}
+
 EXPOSE 3000
 
 ENV PORT=3000
