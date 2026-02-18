@@ -16,4 +16,9 @@ packages/*/dist
 node_modules
 .env.*
 
+# Turborepo cache
 .turbo
+
+# Container related files
+**/.dockerignore
+**/Containerfile
