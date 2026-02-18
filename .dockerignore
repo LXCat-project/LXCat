@@ -22,3 +22,7 @@ node_modules
 # Container related files
 **/.dockerignore
 **/Containerfile
+
+# Default production directories
+db-data
+news
