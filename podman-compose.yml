@@ -6,7 +6,7 @@ name: lxcat
 
 services:
   database:
-    image: arangodb:3.12.7.2
+    image: docker.io/library/arangodb:3.12.7.2
     env_file: .env.production
     restart: unless-stopped
     ports:
