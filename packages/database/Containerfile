@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: LXCat team
+
+# SPDX-License-Identifier: AGPL-3.0-or-later
+ 
+FROM oven/bun:1-alpine as base
+
+FROM base as build
+
+WORKDIR /build
+COPY . .
+
+ENV NODE_ENV=production
+ENV LXCAT_BUILD_ENV=production
+
+RUN bun install --frozen-lockfile || :
+
+# Build database and skip app workspace build
+RUN bun --filter=@lxcat/schema run build
+
+WORKDIR /build/packages/database
+
+RUN bun build --compile --outfile=bin/drop-database src/cli/drop-database.ts
+RUN bun build --compile --outfile=bin/drop-non-user src/cli/drop-non-user.ts
+RUN bun build --compile --outfile=bin/setup src/cli/setup.ts
+RUN bun build --compile --outfile=bin/load-css src/cli/load-css.ts
+RUN bun build --compile --outfile=bin/load-orgs src/cli/load-orgs.ts
+RUN bun build --compile --outfile=bin/make-admin src/cli/make-admin.ts
+
+FROM base as release
+
+WORKDIR /bin
+
+COPY --from=build /build/packages/database/bin .

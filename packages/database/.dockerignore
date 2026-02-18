@@ -5,6 +5,10 @@
 # Dependencies
 node_modules
 
+# Docker
+Containerfile
+.dockerignore
+
 # Docker volume
 arangodb3
 

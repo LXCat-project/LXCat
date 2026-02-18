@@ -6,13 +6,13 @@ name: lxcat
 
 services:
   database:
-    image: arangodb:3.12.7.2
+    image: docker.io/library/arangodb:3.12.7.2
     env_file: .env.production
     restart: unless-stopped
     ports:
       - "127.0.0.1:8529:8529"
     volumes:
-      - db-data:/var/lib/arangodb3
+      - ./db-data:/var/lib/arangodb3
   app:
     image: ghcr.io/lxcat-project/app:latest
     env_file: .env.production
@@ -23,6 +23,8 @@ services:
     environment:
       ARANGO_URL: http://database:8529
     restart: unless-stopped
+    volumes:
+      - ./news:/news:ro
   admin-cli:
     image: ghcr.io/lxcat-project/admin-cli:latest
     command: []
@@ -33,5 +35,3 @@ services:
       - database
     environment:
       ARANGO_URL: http://database:8529
-volumes:
-  db-data:

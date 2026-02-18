@@ -22,3 +22,7 @@ node_modules
 
 # Misc
 .venv
+
+# Default production directories
+db-data
+news
