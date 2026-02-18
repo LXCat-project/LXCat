@@ -2,9 +2,9 @@
 
 # SPDX-License-Identifier: AGPL-3.0-or-later
  
-FROM oven/bun:1-alpine as base
+FROM oven/bun:1-alpine AS base
 
-FROM base as build
+FROM base AS build
 
 WORKDIR /build
 COPY . .
@@ -26,7 +26,7 @@ RUN bun build --compile --outfile=bin/load-css src/cli/load-css.ts
 RUN bun build --compile --outfile=bin/load-orgs src/cli/load-orgs.ts
 RUN bun build --compile --outfile=bin/make-admin src/cli/make-admin.ts
 
-FROM base as release
+FROM base AS release
 
 WORKDIR /bin
 
