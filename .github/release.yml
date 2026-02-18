@@ -20,11 +20,11 @@ changelog:
       exclude:
         labels:
           - "dependencies: github actions"
-          - "dependencies: node"
+          - "dependencies: bun"
           - "dependencies: rust"
     - title: Dependency updates
       labels:
         - "dependencies: github actions"
-        - "dependencies: node"
+        - "dependencies: bun"
         - "dependencies: rust"
      
