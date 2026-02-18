@@ -16,7 +16,7 @@
     "annotate": "turbo run annotate"
   },
   "devDependencies": {
-    "turbo": "^2.8.9"
+    "turbo": "^2.8.10"
   },
   "packageManager": "bun@1.3.5",
   "version": "0.1.0"
