@@ -51,7 +51,7 @@
         "react-dom": "19.2.4",
         "react-latex-next": "^3.0.0",
         "react-plotly.js": "^2.6.0",
-        "react-schemaorg": "^2.0.0",
+        "react-schemaorg": "^2.0.1",
         "redoc": "^2.5.2",
         "rehype-autolink-headings": "^7.1.0",
         "rehype-highlight": "^7.0.2",
@@ -2853,7 +2853,7 @@
 
     "react-remove-scroll-bar": ["react-remove-scroll-bar@2.3.8", "", { "dependencies": { "react-style-singleton": "2.2.3", "tslib": "2.8.1" }, "optionalDependencies": { "@types/react": "19.2.14" }, "peerDependencies": { "react": "19.2.4" } }, "sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q=="],
 
-    "react-schemaorg": ["react-schemaorg@2.0.0", "", { "peerDependencies": { "react": "19.2.4", "schema-dts": "1.1.5", "typescript": "5.9.3" } }, "sha512-UqciFKA203ewNjn0zC09uYKuJSvMD8L75L1s/cW4rc7cS64w8l7vaI3SYkuoI/nwCBkJRmOkSJedWDUZBlYZwg=="],
+    "react-schemaorg": ["react-schemaorg@2.0.1", "", { "peerDependencies": { "react": ">=16.3.0", "schema-dts": ">=0.7.4", "typescript": ">=3.1.6" } }, "sha512-3mS63dmMFYgKmmaBB2TWtQ9MHCzy/YJfDKxyCMUmJ2V3VzFMwVqCCagazsRA93BnOAkXfX0t29GTJx+2CoaL+Q=="],
 
     "react-style-singleton": ["react-style-singleton@2.2.3", "", { "dependencies": { "get-nonce": "1.0.1", "tslib": "2.8.1" }, "optionalDependencies": { "@types/react": "19.2.14" }, "peerDependencies": { "react": "19.2.4" } }, "sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ=="],
 
