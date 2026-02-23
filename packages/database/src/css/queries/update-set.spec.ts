@@ -9,7 +9,7 @@ import { aql } from "arangojs";
 import { Reference, Status, VersionedLTPDocument } from "@lxcat/schema";
 import { intoEditable, ReactionEntry } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
-import { ArangojsError } from "arangojs/lib/request.node";
+import { ArangoError } from "arangojs/errors";
 import {
   insertSampleStateIds,
   sampleCrossSection,
@@ -903,7 +903,7 @@ describe("given draft cross section set where its cross section state is altered
         "Altered section from A->B to A->C",
       );
     } catch (error) {
-      console.error((error as ArangojsError).stack); // ArangoError capture stack in own prop
+      console.error((error as ArangoError).stack); // ArangoError capture stack in own prop
       throw error;
     }
   });
