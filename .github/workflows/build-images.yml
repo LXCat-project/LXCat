@@ -34,7 +34,7 @@ jobs:
 
       - name: Build and push Docker image
         id: push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           tags: ghcr.io/lxcat-project/admin-cli:${{ github.ref_name }}, ghcr.io/lxcat-project/admin-cli:latest
@@ -64,7 +64,7 @@ jobs:
 
        - name: Build and push Docker image
          id: push
-         uses: docker/build-push-action@v6
+         uses: docker/build-push-action@v7
          with:
            context: .
            tags: ghcr.io/lxcat-project/app:${{ github.ref_name }}, ghcr.io/lxcat-project/app:latest
