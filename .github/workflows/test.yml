@@ -101,7 +101,7 @@ jobs:
     - name: Build end-to-end coverage report
       run: bun run --filter @lxcat/app coverage:report
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         directory: ./app/coverage
@@ -130,7 +130,7 @@ jobs:
     - name: Test @lxcat/database
       run: (cd packages/database && bun test --timeout 120000 --coverage --coverage-report=lcov)
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/database/coverage/lcov.info
@@ -159,7 +159,7 @@ jobs:
     - name: Test @lxcat/schema
       run: (cd packages/schema && bun test --coverage --coverage-reporter=lcov)
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/schema/coverage/lcov.info
@@ -205,7 +205,7 @@ jobs:
         cargo llvm-cov report -r --coverage-target-only --target x86_64-unknown-linux-gnu --codecov --output-path codecov.json
         cd -
     - name: Upload coverage report to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: packages/converter/codecov.json
