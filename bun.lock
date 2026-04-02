@@ -85,7 +85,7 @@
         "@types/react": "19.2.14",
         "@types/react-plotly.js": "^2.6.4",
         "@types/unist": "^3.0.3",
-        "dotenv": "^17.3.1",
+        "dotenv": "^17.4.0",
         "dprint": "^0.53.2",
         "eslint": "^9.39.4",
         "eslint-config-next": "16.2.2",
@@ -117,7 +117,7 @@
         "@lxcat/schema": "workspace:^",
         "arangojs": "^10.2.2",
         "deep-equal": "^2.2.3",
-        "dotenv": "^17.3.1",
+        "dotenv": "^17.4.0",
         "true-myth": "^9.3.1",
         "zod": "^4.3.6",
       },
@@ -1741,7 +1741,7 @@
 
     "dompurify": ["dompurify@3.3.2", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ=="],
 
-    "dotenv": ["dotenv@17.3.1", "", {}, "sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA=="],
+    "dotenv": ["dotenv@17.4.0", "", {}, "sha512-kCKF62fwtzwYm0IGBNjRUjtJgMfGapII+FslMHIjMR5KTnwEmBmWLDRSnc3XSNP8bNy34tekgQyDT0hr7pERRQ=="],
 
     "dprint": ["dprint@0.53.2", "", { "optionalDependencies": { "@dprint/darwin-arm64": "0.53.2", "@dprint/darwin-x64": "0.53.2", "@dprint/linux-arm64-glibc": "0.53.2", "@dprint/linux-arm64-musl": "0.53.2", "@dprint/linux-loong64-glibc": "0.53.2", "@dprint/linux-loong64-musl": "0.53.2", "@dprint/linux-riscv64-glibc": "0.53.2", "@dprint/linux-x64-glibc": "0.53.2", "@dprint/linux-x64-musl": "0.53.2", "@dprint/win32-arm64": "0.53.2", "@dprint/win32-x64": "0.53.2" }, "bin": { "dprint": "bin.cjs" } }, "sha512-3uF+X66vm3UmDG5tbBKUAyetc/FsBn+2fswfVzFlbrIlE2l0BgwRLEssYqW/o93lYn6A39i3lP2+wHA4B+usDg=="],
 
