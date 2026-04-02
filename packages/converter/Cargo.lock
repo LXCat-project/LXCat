@@ -36,22 +36,12 @@ dependencies = [
 
 [[package]]
 name = "ctor"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59c9b8bdf64ee849747c1b12eb861d21aa47fa161564f48332f1afe2373bf899"
-dependencies = [
- "ctor-proc-macro",
- "dtor 0.1.0",
-]
-
-[[package]]
-name = "ctor"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "352d39c2f7bef1d6ad73db6f5160efcaed66d94ef8c6c573a8410c00bf909a98"
 dependencies = [
  "ctor-proc-macro",
- "dtor 0.3.0",
+ "dtor",
 ]
 
 [[package]]
@@ -59,15 +49,6 @@ name = "ctor-proc-macro"
 version = "0.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52560adf09603e58c9a7ee1fe1dcb95a16927b17c127f0ac02d6e768a0e25bc1"
-
-[[package]]
-name = "dtor"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e58a0764cddb55ab28955347b45be00ade43d4d6f3ba4bf3dc354e4ec9432934"
-dependencies = [
- "dtor-proc-macro",
-]
 
 [[package]]
 name = "dtor"
@@ -197,12 +178,12 @@ checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
 
 [[package]]
 name = "napi"
-version = "3.8.3"
+version = "3.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6944d0bf100571cd6e1a98a316cdca262deb6fccf8d93f5ae1502ca3fc88bd3"
+checksum = "fb7848c221fb7bb789e02f01875287ebb1e078b92a6566a34de01ef8806e7c2b"
 dependencies = [
  "bitflags",
- "ctor 0.6.0",
+ "ctor",
  "futures",
  "napi-build",
  "napi-sys",
@@ -225,7 +206,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60867ff9a6f76e82350e0c3420cb0736f5866091b61d7d8a024baa54b0ec17dd"
 dependencies = [
  "convert_case",
- "ctor 0.8.0",
+ "ctor",
  "napi-derive-backend",
  "proc-macro2",
  "quote",
