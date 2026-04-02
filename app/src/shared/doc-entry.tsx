@@ -79,7 +79,7 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
         ? (
           <Collapse
             className={classes.collapse}
-            in={opened}
+            expanded={opened}
           >
             {section.children.map((child) => (
               <DocEntry
