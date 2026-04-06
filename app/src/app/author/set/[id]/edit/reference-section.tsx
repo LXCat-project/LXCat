@@ -55,7 +55,6 @@ const ReferenceButton = (
       withArrow
       arrowPosition="center"
       withinPortal={false}
-      positionDependencies={[selected]}
       onOptionSubmit={(refKey) => {
         onChange(
           selected.map(getRefKey).includes(refKey)
