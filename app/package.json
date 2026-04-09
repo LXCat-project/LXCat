@@ -91,7 +91,7 @@
     "@types/react-plotly.js": "^2.6.4",
     "@types/unist": "^3.0.3",
     "dotenv": "^17.4.1",
-    "dprint": "^0.53.2",
+    "dprint": "^0.54.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.2",
     "nyc": "^18.0.0",
