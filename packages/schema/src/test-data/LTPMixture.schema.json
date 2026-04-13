@@ -3079,17 +3079,76 @@
           "const": "HomonuclearDiatom"
         },
         "composition": {
-          "type": "array",
-          "prefixItems": [
+          "anyOf": [
             {
               "type": "array",
               "prefixItems": [
                 {
-                  "$ref": "#/$defs/Element"
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "$ref": "#/$defs/Element"
+                    },
+                    {
+                      "type": "number",
+                      "const": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "H"
+                        },
+                        {
+                          "type": "string",
+                          "const": "D"
+                        },
+                        {
+                          "type": "string",
+                          "const": "T"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "number",
+                      "const": 1
+                    }
+                  ]
                 },
                 {
-                  "type": "number",
-                  "const": 2
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "const": "H"
+                        },
+                        {
+                          "type": "string",
+                          "const": "D"
+                        },
+                        {
+                          "type": "string",
+                          "const": "T"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "number",
+                      "const": 1
+                    }
+                  ]
                 }
               ]
             }
