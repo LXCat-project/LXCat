@@ -115,7 +115,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@lxcat/schema": "workspace:^",
-        "arangojs": "^10.2.2",
+        "arangojs": "^10.3.0",
         "deep-equal": "^2.2.3",
         "dotenv": "^17.4.1",
         "true-myth": "^9.3.1",
@@ -1321,7 +1321,7 @@
 
     "append-transform": ["append-transform@2.0.0", "", { "dependencies": { "default-require-extensions": "^3.0.0" } }, "sha512-7yeyCEurROLQJFv5Xj4lEGTy0borxepjFv1g22oAdqFu//SrAlDl1O1Nxx15SH1RoliUml6p8dwJW9jvZughhg=="],
 
-    "arangojs": ["arangojs@10.2.2", "", { "dependencies": { "@types/node": "^20.11.26" }, "peerDependencies": { "undici": ">=5.21.0" }, "optionalPeers": ["undici"] }, "sha512-3Xllq5inTGjros0mBP9NFxrIW8Di0ldtFurLdrXy5z4NDVJPyJtnwUiiGrMPY21NuVu53wUDE23YN50jnX4epw=="],
+    "arangojs": ["arangojs@10.3.0", "", { "dependencies": { "@types/node": "^20.11.26" }, "peerDependencies": { "undici": ">=5.21.0" }, "optionalPeers": ["undici"] }, "sha512-/5eTej1Od+4bSVWsfdTxf9B0rOYlmuonVpcFjxqkMP5rXs/OZcWykp2jkYkPKCiYszUNsu7X/26ZKRIyuxqz8A=="],
 
     "archiver": ["archiver@7.0.1", "", { "dependencies": { "archiver-utils": "^5.0.2", "async": "^3.2.4", "buffer-crc32": "^1.0.0", "readable-stream": "^4.0.0", "readdir-glob": "^1.1.2", "tar-stream": "^3.0.0", "zip-stream": "^6.0.1" } }, "sha512-ZcbTaIqJOfCc03QwD468Unz/5Ir8ATtvAHsK+FdXbDIbGfihqh9mrvdcYunQzqn4HrvWWaFyaxJhGZagaJJpPQ=="],
 
