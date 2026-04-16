@@ -28,7 +28,7 @@
         "@mantine/modals": "^9.0.2",
         "@mantine/notifications": "^9.0.2",
         "@mdx-js/mdx": "^3.1.1",
-        "@next/bundle-analyzer": "^16.2.3",
+        "@next/bundle-analyzer": "^16.2.4",
         "@tabler/icons-react": "^3.41.1",
         "clsx": "^2.1.1",
         "cookie": "^1.1.1",
@@ -893,7 +893,7 @@
 
     "@napi-rs/wasm-tools-win32-x64-msvc": ["@napi-rs/wasm-tools-win32-x64-msvc@1.0.1", "", { "os": "win32", "cpu": "x64" }, "sha512-rEAf05nol3e3eei2sRButmgXP+6ATgm0/38MKhz9Isne82T4rPIMYsCIFj0kOisaGeVwoi2fnm7O9oWp5YVnYQ=="],
 
-    "@next/bundle-analyzer": ["@next/bundle-analyzer@16.2.3", "", { "dependencies": { "webpack-bundle-analyzer": "4.10.1" } }, "sha512-aDwW4f4SVqbQDWzSBHQJ1KI6H+lx8oX/vS3xGqzLajUu+KQb7uakK88AIMvRIf7TlIonce67g594rzpxvBuJIw=="],
+    "@next/bundle-analyzer": ["@next/bundle-analyzer@16.2.4", "", { "dependencies": { "webpack-bundle-analyzer": "4.10.1" } }, "sha512-EAA9xTDv0P1IiUcZaASJJPkNDjRvL7OMTha6XN8MBzALYGfn7I52Mn7vRiyjVfNrtUPi2qiacY+eFVXe3lKCXA=="],
 
     "@next/env": ["@next/env@16.2.3", "", {}, "sha512-ZWXyj4uNu4GCWQw9cjRxWlbD+33mcDszIo9iQxFnBX3Wmgq9ulaSJcl6VhuWx5pCWqqD+9W6Wfz7N0lM5lYPMA=="],
 
