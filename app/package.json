@@ -103,6 +103,6 @@
     "postcss-simple-vars": "^7.0.1",
     "swc-plugin-coverage-instrument": "^0.0.32",
     "testcontainers": "^11.14.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }
