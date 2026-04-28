@@ -90,7 +90,7 @@
         "eslint": "^9.39.4",
         "eslint-config-next": "16.2.4",
         "nyc": "^18.0.0",
-        "oidc-provider": "^9.8.2",
+        "oidc-provider": "^9.8.3",
         "playwright-test-coverage": "^1.2.12",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-preset-env": "^11.2.0",
@@ -2645,7 +2645,7 @@
 
     "obug": ["obug@2.1.1", "", {}, "sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ=="],
 
-    "oidc-provider": ["oidc-provider@9.8.2", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.4.0", "debug": "^4.4.3", "eta": "^4.5.1", "jose": "^6.2.2", "jsesc": "^3.1.0", "koa": "^3.2.0", "nanoid": "^5.1.7", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-Iu/VahRoAhgmzKdvqSX/4ZzrG11Zf6NHuhu1wLkoblBnMUIwud++D2lftK8jV/gLhRl3Fppa3RINYCf/675cjw=="],
+    "oidc-provider": ["oidc-provider@9.8.3", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.4.0", "debug": "^4.4.3", "eta": "^4.5.1", "jose": "^6.2.2", "jsesc": "^3.1.0", "koa": "^3.2.0", "nanoid": "^5.1.7", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-YkchaAyVAZbsn/l7IQhcEMdeDL3lwSo/PNUtnsXSqPqT7EG8DRko0EAWzHd/n9VfCtKVkxGjYOY4h4UwFcWnUA=="],
 
     "oidc-token-hash": ["oidc-token-hash@5.2.0", "", {}, "sha512-6gj2m8cJZ+iSW8bm0FXdGF0YhIQbKrfP4yWTNzxc31U6MOjfEmB1rHvlYvxI1B7t7BCi1F2vYTT6YhtQRG4hxw=="],
 
