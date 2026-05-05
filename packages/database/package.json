@@ -77,6 +77,6 @@
     "globals": "^17.6.0",
     "testcontainers": "^11.14.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.1"
+    "typescript-eslint": "^8.59.2"
   }
 }
