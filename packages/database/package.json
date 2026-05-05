@@ -74,7 +74,7 @@
     "@types/deep-equal": "^1.0.4",
     "dprint": "^0.54.0",
     "eslint": "9.39.4",
-    "globals": "^17.4.0",
+    "globals": "^17.6.0",
     "testcontainers": "^11.14.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.1"
