@@ -41,7 +41,7 @@
     "github-slugger": "^2.0.0",
     "glob": "^13.0.6",
     "highlight.js": "^11.11.1",
-    "immer": "^11.1.4",
+    "immer": "^11.1.7",
     "katex": "^0.16.44",
     "mantine-datatable": "^8.3.13",
     "mdast-util-from-markdown": "^2.0.3",
