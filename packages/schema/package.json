@@ -23,7 +23,7 @@
     "@lxcat/tsconfig": "workspace:^",
     "@types/bun": "^1.3.13",
     "dprint": "^0.54.0",
-    "eslint": "9.39.4",
+    "eslint": "10.3.0",
     "globals": "^17.6.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2"
