@@ -350,8 +350,7 @@
   "$defs": {
     "Key": {
       "type": "string",
-      "minLength": 1,
-      "id": "Key"
+      "minLength": 1
     },
     "VersionInfo": {
       "type": "object",
@@ -392,8 +391,7 @@
         "createdOn",
         "status"
       ],
-      "additionalProperties": false,
-      "id": "VersionInfo"
+      "additionalProperties": false
     },
     "CSLData": {
       "type": "object",
@@ -965,8 +963,7 @@
         "type",
         "id"
       ],
-      "additionalProperties": false,
-      "id": "CSLData"
+      "additionalProperties": false
     },
     "CSLNameVariable": {
       "type": "object",
@@ -1059,8 +1056,7 @@
           }
         }
       },
-      "additionalProperties": false,
-      "id": "CSLNameVariable"
+      "additionalProperties": false
     },
     "CSLDateVariable": {
       "type": "object",
@@ -1115,8 +1111,7 @@
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "id": "CSLDateVariable"
+      "additionalProperties": false
     },
     "AnySpecies": {
       "oneOf": [
@@ -1162,8 +1157,7 @@
         {
           "$ref": "#/$defs/Unspecified"
         }
-      ],
-      "id": "AnySpecies"
+      ]
     },
     "Electron": {
       "type": "object",
@@ -1186,8 +1180,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "Electron"
+      "additionalProperties": false
     },
     "Atom": {
       "type": "object",
@@ -1224,8 +1217,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "Atom"
+      "additionalProperties": false
     },
     "Element": {
       "type": "string",
@@ -1350,8 +1342,7 @@
         "Og",
         "D",
         "T"
-      ],
-      "id": "Element"
+      ]
     },
     "AtomUnspecified": {
       "type": "object",
@@ -1407,8 +1398,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomUnspecified"
+      "additionalProperties": false
     },
     "AtomLSUncoupled": {
       "type": "object",
@@ -1554,8 +1544,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomLSUncoupled"
+      "additionalProperties": false
     },
     "ShellEntry": {
       "type": "object",
@@ -1581,8 +1570,7 @@
         "l",
         "occupance"
       ],
-      "additionalProperties": false,
-      "id": "ShellEntry"
+      "additionalProperties": false
     },
     "AtomLSJ": {
       "type": "object",
@@ -1740,8 +1728,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomLSJ"
+      "additionalProperties": false
     },
     "AtomLSTwoTerm": {
       "type": "object",
@@ -2023,8 +2010,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomLSTwoTerm"
+      "additionalProperties": false
     },
     "AtomLSJTwoTerm": {
       "type": "object",
@@ -2318,8 +2304,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomLSJTwoTerm"
+      "additionalProperties": false
     },
     "AtomLS1": {
       "type": "object",
@@ -2693,8 +2678,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomLS1"
+      "additionalProperties": false
     },
     "AtomJ1L2": {
       "type": "object",
@@ -3068,8 +3052,7 @@
         "charge",
         "electronic"
       ],
-      "additionalProperties": false,
-      "id": "AtomJ1L2"
+      "additionalProperties": false
     },
     "HomonuclearDiatom": {
       "type": "object",
@@ -3376,8 +3359,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "HomonuclearDiatom"
+      "additionalProperties": false
     },
     "HeteronuclearDiatom": {
       "type": "object",
@@ -3621,8 +3603,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "HeteronuclearDiatom"
+      "additionalProperties": false
     },
     "LinearTriatomInversionCenter": {
       "type": "object",
@@ -3962,8 +3943,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "LinearTriatomInversionCenter"
+      "additionalProperties": false
     },
     "TriatomC2v": {
       "type": "object",
@@ -4265,8 +4245,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "TriatomC2v"
+      "additionalProperties": false
     },
     "Unspecified": {
       "type": "object",
@@ -4293,8 +4272,7 @@
         "composition",
         "charge"
       ],
-      "additionalProperties": false,
-      "id": "Unspecified"
+      "additionalProperties": false
     },
     "Composition": {
       "type": "array",
@@ -4317,8 +4295,7 @@
             "maximum": 9007199254740991
           }
         ]
-      },
-      "id": "Composition"
+      }
     },
     "StateSummary": {
       "type": "object",
@@ -4528,8 +4505,7 @@
         "latex",
         "composition"
       ],
-      "additionalProperties": false,
-      "id": "StateSummary"
+      "additionalProperties": false
     },
     "SummarizedComponent": {
       "type": "object",
@@ -4547,8 +4523,7 @@
         "summary",
         "latex"
       ],
-      "additionalProperties": false,
-      "id": "SummarizedComponent"
+      "additionalProperties": false
     }
   }
 }
