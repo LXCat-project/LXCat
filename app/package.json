@@ -73,7 +73,7 @@
     "true-myth": "^9.3.1",
     "unist-util-visit": "^5.1.0",
     "vfile": "^6.0.3",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
