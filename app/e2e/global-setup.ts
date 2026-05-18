@@ -129,11 +129,9 @@ export async function uploadAndPublishDummySet(
 
   // Make admin user a member of organization
   await page.goto("/admin/users");
-  await page.locator("div.mantine-MultiSelect-root").click(
-    {
-      position: { x: 1, y: 1 },
-    },
-  );
+  await page.locator("div.mantine-MultiSelect-input").click({
+    position: { x: 10, y: 10 },
+  });
   await page.locator(`text=${org}`).click();
   await page.waitForSelector(`div:has-text("${org}")`);
 

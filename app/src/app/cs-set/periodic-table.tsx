@@ -43,7 +43,7 @@ export const PeriodicTable = (
     <Grid
       id="periodic-table"
       columns={18}
-      gutter={0}
+      gap={0}
       style={{ width: 1080 }}
     >
       {elements.map((element, idx) => {
