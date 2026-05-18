@@ -54,6 +54,7 @@ build-storybook.log
 
 # test
 junit-*.xml
+test-results
 
 # vscode
 .vscode
