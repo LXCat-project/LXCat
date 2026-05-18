@@ -5,4 +5,4 @@
 import { beforeAll } from "bun:test";
 import { startDbContainer } from "../testutils.js";
 
-beforeAll(startDbContainer);
+beforeAll(startDbContainer, { timeout: 60000 });
