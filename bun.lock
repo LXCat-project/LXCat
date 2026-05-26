@@ -65,7 +65,7 @@
         "server-only": "^0.0.1",
         "sharp": "^0.34.5",
         "swr": "2.4.1",
-        "true-myth": "^9.3.1",
+        "true-myth": "^9.4.0",
         "unist-util-visit": "^5.1.0",
         "vfile": "^6.0.3",
         "zod": "^4.4.3",
@@ -118,7 +118,7 @@
         "arangojs": "^10.3.0",
         "deep-equal": "^2.2.3",
         "dotenv": "^17.4.1",
-        "true-myth": "^9.3.1",
+        "true-myth": "^9.4.0",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -3199,7 +3199,7 @@
 
     "trough": ["trough@2.2.0", "", {}, "sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw=="],
 
-    "true-myth": ["true-myth@9.3.1", "", {}, "sha512-a+u2L3y6XF3HLBJrSox8pRmod2o/3k28hpXX8OD56mLnffmXOwzQFBDBT0gy8ROIReLvdVvMPtQYtCsgFldfMw=="],
+    "true-myth": ["true-myth@9.4.0", "", {}, "sha512-NQP/xMI25jtwk7mDBgA0VS+xdVWUqDaxrTofvx1gfhc5PQwMyA1V39oERLvPrCbI3+6S29fIkivy2ZXdzNY3kQ=="],
 
     "ts-api-utils": ["ts-api-utils@2.5.0", "", { "peerDependencies": { "typescript": ">=4.8.4" } }, "sha512-OJ/ibxhPlqrMM0UiNHJ/0CKQkoKF243/AEmplt3qpRgkW8VG7IfOS41h7V8TjITqdByHzrjcS/2si+y4lIh8NA=="],
 
