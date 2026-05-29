@@ -90,7 +90,7 @@
         "eslint": "^9.39.4",
         "eslint-config-next": "16.2.6",
         "nyc": "^18.0.0",
-        "oidc-provider": "^9.8.3",
+        "oidc-provider": "^9.8.4",
         "playwright-test-coverage": "^1.2.12",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-preset-env": "^11.3.0",
@@ -2327,7 +2327,7 @@
 
     "klona": ["klona@2.0.6", "", {}, "sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA=="],
 
-    "koa": ["koa@3.2.0", "", { "dependencies": { "accepts": "^1.3.8", "content-disposition": "~1.0.1", "content-type": "^1.0.5", "cookies": "~0.9.1", "delegates": "^1.0.0", "destroy": "^1.2.0", "encodeurl": "^2.0.0", "escape-html": "^1.0.3", "fresh": "~0.5.2", "http-assert": "^1.5.0", "http-errors": "^2.0.0", "koa-compose": "^4.1.0", "mime-types": "^3.0.1", "on-finished": "^2.4.1", "parseurl": "^1.3.3", "statuses": "^2.0.1", "type-is": "^2.0.1", "vary": "^1.1.2" } }, "sha512-TrM4/tnNY7uJ1aW55sIIa+dqBvc4V14WRIAlGcWat9wV5pRS9Wr5Zk2ZTjQP1jtfIHDoHiSbPuV08P0fUZo2pg=="],
+    "koa": ["koa@3.2.1", "", { "dependencies": { "accepts": "^1.3.8", "content-disposition": "~1.0.1", "content-type": "^1.0.5", "cookies": "~0.9.1", "delegates": "^1.0.0", "destroy": "^1.2.0", "encodeurl": "^2.0.0", "escape-html": "^1.0.3", "fresh": "~0.5.2", "http-assert": "^1.5.0", "http-errors": "^2.0.0", "koa-compose": "^4.1.0", "mime-types": "^3.0.1", "on-finished": "^2.4.1", "parseurl": "^1.3.3", "statuses": "^2.0.1", "type-is": "^2.0.1", "vary": "^1.1.2" } }, "sha512-e7IpWJrnanNUroVK2taAgMxoEZvHLXdQiNjeExSu/DEIWm83jaKGBgb7tLmu2rMYpA027qFB3iLR/k3AVpFRnA=="],
 
     "koa-compose": ["koa-compose@4.1.0", "", {}, "sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw=="],
 
@@ -2627,7 +2627,7 @@
 
     "obug": ["obug@2.1.1", "", {}, "sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ=="],
 
-    "oidc-provider": ["oidc-provider@9.8.3", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.4.0", "debug": "^4.4.3", "eta": "^4.5.1", "jose": "^6.2.2", "jsesc": "^3.1.0", "koa": "^3.2.0", "nanoid": "^5.1.7", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-YkchaAyVAZbsn/l7IQhcEMdeDL3lwSo/PNUtnsXSqPqT7EG8DRko0EAWzHd/n9VfCtKVkxGjYOY4h4UwFcWnUA=="],
+    "oidc-provider": ["oidc-provider@9.8.4", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.5.0", "debug": "^4.4.3", "eta": "^4.6.0", "jose": "^6.2.3", "jsesc": "^3.1.0", "koa": "^3.2.1", "nanoid": "^5.1.11", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-i8qe+wvhUQ7BSj6DxssIFAdpREouuqK91j2jGdAN78NIxTB5rxvU4ZniXELhUHIM4mzABeSGlp5wE6WTa8CY1Q=="],
 
     "oidc-token-hash": ["oidc-token-hash@5.2.0", "", {}, "sha512-6gj2m8cJZ+iSW8bm0FXdGF0YhIQbKrfP4yWTNzxc31U6MOjfEmB1rHvlYvxI1B7t7BCi1F2vYTT6YhtQRG4hxw=="],
 
