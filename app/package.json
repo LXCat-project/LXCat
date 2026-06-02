@@ -28,7 +28,7 @@
     "@mantine/carousel": "^9.2.2",
     "@mantine/code-highlight": "^9.2.2",
     "@mantine/core": "^9.2.2",
-    "@mantine/form": "^9.2.2",
+    "@mantine/form": "^9.3.0",
     "@mantine/hooks": "^9.2.2",
     "@mantine/modals": "^9.2.2",
     "@mantine/notifications": "^9.2.2",
