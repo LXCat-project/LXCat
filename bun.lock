@@ -79,7 +79,7 @@
         "@types/deep-equal": "^1.0.4",
         "@types/json-schema": "^7.0.15",
         "@types/mdast": "^4.0.4",
-        "@types/node": "24.13.0",
+        "@types/node": "24.13.1",
         "@types/oidc-provider": "^9.5.0",
         "@types/plotly.js-basic-dist": "^1.54.4",
         "@types/react": "19.2.16",
@@ -106,7 +106,7 @@
       "version": "0.1.0",
       "devDependencies": {
         "@napi-rs/cli": "^3.7.0",
-        "@types/node": "^24.13.0",
+        "@types/node": "^24.13.1",
         "tsx": "^4.22.4",
       },
     },
@@ -1161,7 +1161,7 @@
 
     "@types/ms": ["@types/ms@2.1.0", "", {}, "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="],
 
-    "@types/node": ["@types/node@24.13.0", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-5vtOqGQr4NJKeEzV441FcOi2MeG9UTWq9LqVLGneDdu4vlX17H8kQ2PA2UmNwCUGPVDj4oBjNhS7ReVEIWJJrg=="],
+    "@types/node": ["@types/node@24.13.1", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-RSpUJGmvsJ1ZeBehQZFhIdpsz+bIpES0nIQXko4Ybq+N+kX6XvOq3Jo+iJ82FWLdblFq85AsMikd3m35jgezYg=="],
 
     "@types/oidc-provider": ["@types/oidc-provider@9.5.0", "", { "dependencies": { "@types/keygrip": "*", "@types/koa": "*", "@types/node": "*" } }, "sha512-eEzCRVTSqIHD9Bo/qRJ4XQWQ5Z/zBcG+Z2cGJluRsSuWx1RJihqRyPxhIEpMXTwPzHYRTQkVp7hwisQOwzzSAg=="],
 
