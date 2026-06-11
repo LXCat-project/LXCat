@@ -27,7 +27,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@napi-rs/cli": "^3.7.1",
-    "@types/node": "^24.13.1",
+    "@types/node": "^24.13.2",
     "tsx": "^4.22.4"
   }
 }
