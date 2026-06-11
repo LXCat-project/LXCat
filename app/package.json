@@ -68,7 +68,7 @@
     "remark-toc": "^9.0.0",
     "schema-dts": "^2.0.0",
     "server-only": "^0.0.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.0",
     "swr": "2.4.1",
     "true-myth": "^9.4.0",
     "unist-util-visit": "^5.1.0",
