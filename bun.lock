@@ -38,7 +38,7 @@
         "highlight.js": "^11.11.1",
         "immer": "^11.1.8",
         "katex": "^0.17.0",
-        "mantine-datatable": "^9.2.2",
+        "mantine-datatable": "^9.3.0",
         "mdast-util-from-markdown": "^2.0.3",
         "mermaid": "^11.15.0",
         "nanoid": "^5.1.11",
@@ -2377,7 +2377,7 @@
 
     "make-dir": ["make-dir@3.1.0", "", { "dependencies": { "semver": "^6.0.0" } }, "sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw=="],
 
-    "mantine-datatable": ["mantine-datatable@9.2.2", "", { "peerDependencies": { "@mantine/core": ">=9.0", "@mantine/hooks": ">=9.0", "clsx": ">=2", "react": ">=19", "react-dom": ">=19" } }, "sha512-pSWIAggUQC1I4lNUzwVoNm85CIkx8jst0syzRo8N9CrTHdc+Z2+8aFLfBniSHbF4nJyLE6nkeAcb8uvFdHbVfw=="],
+    "mantine-datatable": ["mantine-datatable@9.3.0", "", { "peerDependencies": { "@mantine/core": ">=9.0", "@mantine/hooks": ">=9.0", "clsx": ">=2", "react": ">=19", "react-dom": ">=19" } }, "sha512-YCLC5VCRPUHDoDUvWgVY81bx17MDk3Gz38icOINe/QO2ZKASGxNzf/wiqV3Dv1N/BRO601GyVMHRH6LzFWVC7g=="],
 
     "map-limit": ["map-limit@0.0.1", "", { "dependencies": { "once": "~1.3.0" } }, "sha512-pJpcfLPnIF/Sk3taPW21G/RQsEEirGaFpCW3oXRwH9dnFHPHNGjNyvh++rdmC2fNqEaTw2MhYJraoJWAHx8kEg=="],
 
