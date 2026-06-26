@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-const { interpolateName } = require("loader-utils");
-
-const schema = require("./options.json");
+import { interpolateName } from "loader-utils";
+import schema from "./options.json" with {type: "json"};
 
 export default function loader(content) {
   const { rootContext, _compiler, getOptions, emitFile } = this;
@@ -22,13 +21,11 @@ export default function loader(content) {
 
   return `
 try {
-  process.dlopen(module, require("path").join(${
-    JSON.stringify(
-      outputPath || _compiler.options.output.path,
-    )
-  }, /*__webpack_public_path__,*/ ${JSON.stringify(name)}${
-    typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""
-  }));
+  process.dlopen(module, require("path").join(${JSON.stringify(
+    outputPath || _compiler.options.output.path,
+  )
+    }, /*__webpack_public_path__,*/ ${JSON.stringify(name)}${typeof flags !== "undefined" ? `, ${JSON.stringify(options.flags)}` : ""
+    }));
 } catch (error) {
   throw new Error('nextjs-node-loader:\\n' + error);
 }
