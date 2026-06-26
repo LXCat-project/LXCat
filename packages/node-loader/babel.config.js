@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-const MIN_BABEL_VERSION = 7;
+const MIN_BABEL_VERSION = 8;
 
 module.exports = (api) => {
   api.assertVersion(MIN_BABEL_VERSION);
