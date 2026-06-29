@@ -90,7 +90,7 @@
         "eslint": "^9.39.4",
         "eslint-config-next": "16.2.9",
         "nyc": "^18.0.0",
-        "oidc-provider": "^9.8.5",
+        "oidc-provider": "^9.8.6",
         "playwright-test-coverage": "^1.2.12",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-preset-env": "^11.3.1",
@@ -2625,7 +2625,7 @@
 
     "obug": ["obug@2.1.2", "", {}, "sha512-AWGB9WFcRXOQs48Z/udjI5ZcZMHXwX8XPByNpOydgcGsDLIzjGizhoMWJyKAWze7AVW/2W1i+/gPX4YtKe5cyg=="],
 
-    "oidc-provider": ["oidc-provider@9.8.5", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.5.0", "debug": "^4.4.3", "eta": "^4.6.0", "jose": "^6.2.3", "jsesc": "^3.1.0", "koa": "^3.2.1", "nanoid": "^5.1.11", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-07Wqkea8jdfPI8GvbVwf9rMNNitLUzzDqPua7hWbqZreFNpfnlNVdqmllaripVmgDZS2tHHLYQYLW0Ay7yux9w=="],
+    "oidc-provider": ["oidc-provider@9.8.6", "", { "dependencies": { "@koa/cors": "^5.0.0", "@koa/router": "^15.5.0", "debug": "^4.4.3", "eta": "^4.6.0", "jose": "^6.2.3", "jsesc": "^3.1.0", "koa": "^3.2.1", "nanoid": "^5.1.11", "quick-lru": "^7.3.0", "raw-body": "^3.0.2" } }, "sha512-jodnMKbwfMbV5qUFnbCxtnrdRztJJubJbw/7HTokIJSiHm1JT7pU4G83sD/bPkvZnFDdv5POB/kJU5uGG3ek4g=="],
 
     "oidc-token-hash": ["oidc-token-hash@5.2.0", "", {}, "sha512-6gj2m8cJZ+iSW8bm0FXdGF0YhIQbKrfP4yWTNzxc31U6MOjfEmB1rHvlYvxI1B7t7BCi1F2vYTT6YhtQRG4hxw=="],
 
@@ -3680,8 +3680,6 @@
     "oas-resolver/yargs": ["yargs@17.7.2", "", { "dependencies": { "cliui": "^8.0.1", "escalade": "^3.1.1", "get-caller-file": "^2.0.5", "require-directory": "^2.1.1", "string-width": "^4.2.3", "y18n": "^5.0.5", "yargs-parser": "^21.1.1" } }, "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w=="],
 
     "oas-validator/yaml": ["yaml@1.10.3", "", {}, "sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA=="],
-
-    "oidc-provider/nanoid": ["nanoid@5.1.11", "", { "bin": { "nanoid": "bin/nanoid.js" } }, "sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg=="],
 
     "openid-client/jose": ["jose@4.15.9", "", {}, "sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA=="],
 
