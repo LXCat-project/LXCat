@@ -26,7 +26,7 @@
         "@mantine/form": "^9.3.2",
         "@mantine/hooks": "^9.4.1",
         "@mantine/modals": "^9.4.1",
-        "@mantine/notifications": "^9.3.2",
+        "@mantine/notifications": "^9.4.1",
         "@mdx-js/mdx": "^3.1.1",
         "@next/bundle-analyzer": "^16.2.9",
         "@tabler/icons-react": "^3.44.0",
@@ -763,9 +763,9 @@
 
     "@mantine/modals": ["@mantine/modals@9.4.1", "", { "peerDependencies": { "@mantine/core": "9.4.1", "@mantine/hooks": "9.4.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-z5G3Biz7/5Ybz5Z8u5Xyvo9UBmFhAX/YXMf6U96ejvtAB11xVnCo8m37R5DJyzeFEqB4D1tvUgWiVVPBb+yadw=="],
 
-    "@mantine/notifications": ["@mantine/notifications@9.3.2", "", { "dependencies": { "@mantine/store": "9.3.2", "react-transition-group": "4.4.5" }, "peerDependencies": { "@mantine/core": "9.3.2", "@mantine/hooks": "9.3.2", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-mnda8hE/DizPi5Bbiwd2M2jXxfSZSUeayvnLYMbFweGQKXM+QRmX1ootyDRVqWew8paltewTNp84cWLjj/6fKw=="],
+    "@mantine/notifications": ["@mantine/notifications@9.4.1", "", { "dependencies": { "@mantine/store": "9.4.1", "react-transition-group": "4.4.5" }, "peerDependencies": { "@mantine/core": "9.4.1", "@mantine/hooks": "9.4.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-Sm1g8E8RkFmesxpNz9zFvOjkTVxOa7dJJjMGoHNIXH+9/wO0s9kInny4mVnxTbLJJsD6nTqIQlk1v8tq2C4Ftw=="],
 
-    "@mantine/store": ["@mantine/store@9.3.2", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-uNmvjkwfUHZJ5bvzQroLFvubuUAHjBM0rh69RBRsUCG5FR5K4f8y4SX8+lch0wS6UJuuvodsSIK8H5jvZuFSgQ=="],
+    "@mantine/store": ["@mantine/store@9.4.1", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-/DCZq0aqqIdm03J0RJ7pbzoau2cwY8ndSOjskHOKHhTeWMnOBdCKXA3oMO5aIDldDqJ9T7Io4Boh4Pt461zNQw=="],
 
     "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.5.2", "", { "dependencies": { "get-stream": "^6.0.1", "minimist": "^1.2.6" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA=="],
 
