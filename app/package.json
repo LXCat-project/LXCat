@@ -47,7 +47,7 @@
     "mdast-util-from-markdown": "^2.0.3",
     "mermaid": "^11.16.0",
     "nanoid": "^5.1.16",
-    "next": "^16.2.9",
+    "next": "^16.2.10",
     "next-auth": "^4.24.14",
     "next-mdx-remote": "canary",
     "node-fetch": "^3.3.2",
