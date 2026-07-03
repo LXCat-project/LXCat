@@ -99,6 +99,8 @@ const getUnitOfData = (process: DenormalizedProcess) => {
   switch (process.info.data.type) {
     case "Constant":
       return process.info.data.unit;
+    case "Expression":
+      return process.info.data.type;
     case "ExtendedArrhenius":
       const numConsumed = process
         .reaction.lhs
