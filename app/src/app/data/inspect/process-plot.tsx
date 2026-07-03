@@ -51,8 +51,8 @@ export const ProcessPlot = (
   ) => {
     const data = process.info.data;
 
-    let x = [];
-    let y = [];
+    let x: Array<number> = [];
+    let y: Array<number> = [];
 
     switch (data.type) {
       case "Constant":
@@ -62,6 +62,10 @@ export const ProcessPlot = (
       case "LUT":
         x = data.values.map(([x, _]) => x);
         y = data.values.map(([_, y]) => y);
+        break;
+      case "Expression":
+        x = [];
+        y = [];
         break;
       case "ExtendedArrhenius":
         x = logspace(range[0], range[1], 100);
