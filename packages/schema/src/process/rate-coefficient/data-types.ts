@@ -4,10 +4,12 @@
 
 import { discriminatedUnion } from "zod";
 import { Constant, LUT } from "../../common/data-types.js";
+import { Expression } from "./expression.js";
 import { ExtendedArrheniusData } from "./extended-arrhenius.js";
 
 export const RateCoefficientData = discriminatedUnion("type", [
   Constant,
   LUT,
   ExtendedArrheniusData,
+  Expression,
 ]);
