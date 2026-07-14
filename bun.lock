@@ -16,7 +16,7 @@
         "@citation-js/plugin-bibtex": "^0.8.1",
         "@citation-js/plugin-csl": "^0.8.1",
         "@citation-js/plugin-doi": "^0.8.1",
-        "@citation-js/plugin-ris": "^0.8.1",
+        "@citation-js/plugin-ris": "^0.8.2",
         "@lxcat/converter": "workspace:^",
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
@@ -373,7 +373,7 @@
 
     "@citation-js/plugin-doi": ["@citation-js/plugin-doi@0.8.1", "", { "dependencies": { "@citation-js/date": "^0.5.0" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-1fxC9xF91wLojPTdzTc9Zv1MboI01pqEmu8HIKNzxQb1eN2ozMK9Ej7vz5PZmvfjljpTMrxpLah3B92+q9/chA=="],
 
-    "@citation-js/plugin-ris": ["@citation-js/plugin-ris@0.8.1", "", { "dependencies": { "@citation-js/date": "^0.5.0", "@citation-js/name": "^0.4.2" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-EoRjEjZaIgtXjCzGcgPxlmrq5Q/1/SLL+UoCthQbmJjKlgCovj7Herw06fAOwRe5lGy2QlC+BBtR8tC7JOzr1g=="],
+    "@citation-js/plugin-ris": ["@citation-js/plugin-ris@0.8.2", "", { "dependencies": { "@citation-js/date": "^0.5.0", "@citation-js/name": "^0.4.2" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-y10o2CAElniVN613/9KYeLGHyWy0ZUlSYKcNruWP6BmQlDjRhR3n/xDbiiWJrAXosw9Z0yF1Xicw/aRzxS1Ywg=="],
 
     "@csstools/cascade-layer-name-parser": ["@csstools/cascade-layer-name-parser@3.0.0", "", { "peerDependencies": { "@csstools/css-parser-algorithms": "^4.0.0", "@csstools/css-tokenizer": "^4.0.0" } }, "sha512-/3iksyevwRfSJx5yH0RkcrcYXwuhMQx3Juqf40t97PeEy2/Mz2TItZ/z/216qpe4GgOyFBP8MKIwVvytzHmfIQ=="],
 
