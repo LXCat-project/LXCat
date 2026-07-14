@@ -21,7 +21,7 @@
     "@citation-js/plugin-bibtex": "^0.8.1",
     "@citation-js/plugin-csl": "^0.8.2",
     "@citation-js/plugin-doi": "^0.8.1",
-    "@citation-js/plugin-ris": "^0.8.1",
+    "@citation-js/plugin-ris": "^0.8.2",
     "@lxcat/converter": "workspace:^",
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
