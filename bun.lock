@@ -14,7 +14,7 @@
       "dependencies": {
         "@citation-js/core": "^0.7.21",
         "@citation-js/plugin-bibtex": "^0.8.1",
-        "@citation-js/plugin-csl": "^0.8.1",
+        "@citation-js/plugin-csl": "^0.8.2",
         "@citation-js/plugin-doi": "^0.8.1",
         "@citation-js/plugin-ris": "^0.8.1",
         "@lxcat/converter": "workspace:^",
@@ -369,7 +369,7 @@
 
     "@citation-js/plugin-bibtex": ["@citation-js/plugin-bibtex@0.8.1", "", { "dependencies": { "@citation-js/date": "^0.5.0", "@citation-js/name": "^0.4.2", "moo": "^0.5.1" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-q1LVVxV5ft4GdqTmJUGM0S39qyV9smuzFq40/aCIjBJwLR7444eux7TNK1v43NeU/Zb6Uw6/C5aL+eFHlJYNvA=="],
 
-    "@citation-js/plugin-csl": ["@citation-js/plugin-csl@0.8.1", "", { "dependencies": { "@citation-js/date": "^0.5.0", "citeproc": "^2.4.6" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-sNsOurODHoNE3W1RcYokh2fG2jdZZ1QAIf8oUygqoLF/DR+wELucus3VW4wfNYWqtgSJMRCfel74oRwyYYuL5A=="],
+    "@citation-js/plugin-csl": ["@citation-js/plugin-csl@0.8.2", "", { "dependencies": { "@citation-js/date": "^0.5.0", "citeproc": "^2.4.6" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-MHdPrhsbsitWST4tP+bxk4vSSYoPfbxah01fZvxv23qm/FjyW6yJCEpkV/x3f2ofT+v4RN0OEBQboN/MTIyPyQ=="],
 
     "@citation-js/plugin-doi": ["@citation-js/plugin-doi@0.8.1", "", { "dependencies": { "@citation-js/date": "^0.5.0" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-1fxC9xF91wLojPTdzTc9Zv1MboI01pqEmu8HIKNzxQb1eN2ozMK9Ej7vz5PZmvfjljpTMrxpLah3B92+q9/chA=="],
 
