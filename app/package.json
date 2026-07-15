@@ -43,7 +43,7 @@
     "highlight.js": "^11.11.1",
     "immer": "^11.1.11",
     "katex": "^0.17.0",
-    "mantine-datatable": "^9.3.1",
+    "mantine-datatable": "^9.4.0",
     "mdast-util-from-markdown": "^2.0.3",
     "mermaid": "^11.16.0",
     "nanoid": "^5.1.16",
