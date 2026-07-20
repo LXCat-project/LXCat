@@ -42,7 +42,7 @@
     "glob": "^13.0.6",
     "highlight.js": "^11.11.1",
     "immer": "^11.1.15",
-    "katex": "^0.17.0",
+    "katex": "^0.18.1",
     "mantine-datatable": "^9.4.0",
     "mdast-util-from-markdown": "^2.0.3",
     "mermaid": "^11.16.0",
