@@ -18,12 +18,12 @@ import { RouteBuilder } from "../../../route-builder";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 
-import { querySchema } from "./schemas";
+import { referenceIdsQuerySchema } from "../schemas";
 const router = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
   .use(hasDeveloperOrDownloadRole())
-  .use(zodMiddleware(querySchema))
+  .use(zodMiddleware(referenceIdsQuerySchema))
   .get(async (_, ctx) => {
     const { format, ids } = ctx.parsedParams.path;
 
