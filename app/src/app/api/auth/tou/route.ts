@@ -33,11 +33,14 @@ const router = RouteBuilder
       maxAge: DEFAULT_MAX_AGE,
     });
     const expires = new Date(Date.now() + DEFAULT_MAX_AGE * 1000); // TODO utc or local timezone?
-    const value = cookie.serialize(DOWNLOAD_COOKIE_NAME, downloadToken, {
-      sameSite: "strict",
-      expires,
-      path: "/",
-    });
+    const value = cookie.stringifyCookie(
+      {
+        [DOWNLOAD_COOKIE_NAME]: downloadToken,
+        sameSite: "strict",
+        expires: expires.toUTCString(),
+        path: "/",
+      },
+    );
     headers["Set-Cookie"] = value;
     return okJsonResponse({ expires });
   })
