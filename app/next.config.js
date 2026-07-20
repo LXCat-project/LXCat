@@ -18,7 +18,8 @@ const nextConfig = {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
     swcPlugins: process.env.CI && [
       ["swc-plugin-coverage-instrument", {}],
-    ]
+    ],
+    useTypeScriptCli: true
   },
 
   transpilePackages: ["next-mdx-remote"],
