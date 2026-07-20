@@ -4,7 +4,7 @@
 
 import { CSSProperties } from "react";
 import { colorScheme } from "../../app/scat-cs/inspect/colors";
-import { LinePlot } from "../../shared/line-plot";
+import { LinePlot } from "../line-plot";
 
 const plotConfig: Record<
   ParameterKeys,
