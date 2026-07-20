@@ -11,7 +11,7 @@ import {
 } from "../../../../shared/api-responses";
 import "@citation-js/plugin-bibtex";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
-import { reference2bibliography } from "../../../../shared/cite";
+import { reference2bibliography } from "@/citation/cite";
 import { RouteBuilder } from "../../../api/route-builder";
 // import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { applyCORS } from "../../middleware/cors";

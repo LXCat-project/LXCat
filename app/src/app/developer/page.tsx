@@ -4,7 +4,7 @@
 
 "use client";
 
-import { TermsOfUseCheckForDeveloper } from "@/shared/terms-of-use-developer";
+import { TermsOfUseCheckForDeveloper } from "@/citation/terms-of-use-developer";
 import {
   Button,
   Center,

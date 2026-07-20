@@ -4,7 +4,7 @@
 
 "use client";
 
-import { reference2bibliography } from "@/shared/cite";
+import { reference2bibliography } from "@/citation/cite";
 import { zodResolver } from "@/shared/zod-resolver";
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { EditedLTPDocument, Reference } from "@lxcat/schema";

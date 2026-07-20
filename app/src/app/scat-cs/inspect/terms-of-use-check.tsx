@@ -6,11 +6,11 @@
 
 import { useState } from "react";
 
-import { HowToCite } from "@/shared/how-to-cite";
+import { HowToCite } from "@/citation/how-to-cite";
 import { Button, Center, Modal } from "@mantine/core";
 import { IconLicense } from "@tabler/icons-react";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
-import { TermsOfUse } from "../../../shared/terms-of-use";
+import { TermsOfUse } from "@/citation/terms-of-use";
 import { ButtonClipboard } from "./button-clipboard";
 import { FormattedReference } from "./types";
 

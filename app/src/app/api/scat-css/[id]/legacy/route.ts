@@ -10,7 +10,7 @@ import {
   notFoundResponse,
   okResponse,
 } from "../../../../../shared/api-responses";
-import { reference2bibliography } from "../../../../../shared/cite";
+import { reference2bibliography } from "@/citation/cite";
 import { mapObject } from "../../../../../shared/utils";
 import { RouteBuilder } from "../../../../api/route-builder";
 import {
