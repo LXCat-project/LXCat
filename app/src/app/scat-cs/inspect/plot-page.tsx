@@ -6,8 +6,8 @@ import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import type { Reaction } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
+import { formatReference } from "@/citation/formatted-reference";
 import { DenormalizedProcess } from "../denormalized-process";
-import { formatReference } from "./cite";
 import { PlotPageClient } from "./plot-page-client";
 
 export const PlotPage = async ({

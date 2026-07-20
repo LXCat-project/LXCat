@@ -11,8 +11,8 @@ import { Button, Center, Modal } from "@mantine/core";
 import { IconLicense } from "@tabler/icons-react";
 import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
 import { TermsOfUse } from "@/citation/terms-of-use";
+import { FormattedReference } from "@/citation/formatted-reference";
 import { ButtonClipboard } from "./button-clipboard";
-import { FormattedReference } from "./types";
 
 interface Props {
   references: FormattedReference[];

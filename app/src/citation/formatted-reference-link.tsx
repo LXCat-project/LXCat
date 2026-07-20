@@ -7,9 +7,9 @@
 import Link from "next/link";
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
-import { FormattedReference } from "./types";
+import { FormattedReference } from "./formatted-reference";
 
-export const Reference = ({
+export const FormattedReferenceLink = ({
   children: { ref, url },
 }: {
   children: FormattedReference;
