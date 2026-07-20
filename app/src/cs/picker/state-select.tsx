@@ -10,10 +10,10 @@ import {
 } from "@lxcat/database/shared";
 import { MantineStyleProp } from "@mantine/core";
 import clsx from "clsx";
-import { Latex } from "./latex";
+import { Latex } from "@/shared/latex";
 import { LatexSelect } from "./latex-select";
 import classes from "./state-select.module.css";
-import { mapObject } from "./utils";
+import { mapObject } from "@/shared/utils";
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
