@@ -3,9 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { z } from "zod";
+import { scatCssIdPathSchema } from "./id-path-schema";
 
 export const querySchema = z.object({
-  path: z.object({ id: z.string().describe("Cross section set ID") }),
+  path: scatCssIdPathSchema,
   query: z.object({
     refstyle: z.union([z.literal("csl"), z.literal("apa"), z.literal("bibtex")])
       .describe("Style in which to return references.")
