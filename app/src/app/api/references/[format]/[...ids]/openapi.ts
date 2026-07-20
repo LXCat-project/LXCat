@@ -6,7 +6,7 @@ import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { Reference } from "@lxcat/schema";
 import { z } from "zod";
-import { referenceIdsQuerySchema } from "../schemas";
+import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({

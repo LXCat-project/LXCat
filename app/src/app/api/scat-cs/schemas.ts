@@ -4,8 +4,8 @@
 
 import { PAGE_SIZE } from "@/cs/constants";
 import { z } from "zod";
-import { reactionTemplateSchema } from "../schemas.openapi";
-import { queryJSONSchema } from "../util";
+import { reactionTemplateSchema } from "@/app/api/schemas.openapi";
+import { queryJSONSchema } from "@/app/api/util";
 
 export const querySchema = z.object({
   query: z.object({

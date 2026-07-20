@@ -4,7 +4,7 @@
 
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { requestParamsFromSchema } from "../../../../../docs/openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { deleteSchema, postSchema } from "./schemas";
 
 export async function register() {

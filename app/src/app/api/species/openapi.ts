@@ -4,7 +4,7 @@
 
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { speciesSchema } from "../schemas.openapi";
+import { speciesSchema } from "@/app/api/schemas.openapi";
 
 export async function register() {
   openapiGenerator.registerRoute({

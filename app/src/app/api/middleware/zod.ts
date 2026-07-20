@@ -6,7 +6,7 @@ import { badRequestResponse } from "@/shared/api/api-responses";
 import { NextRequest } from "next/server";
 import { err, ok } from "true-myth/result";
 import { z } from "zod";
-import { BaseContext, Headers, Middleware } from "../route-builder";
+import { BaseContext, Headers, Middleware } from "@/app/api/route-builder";
 
 export const zodMiddleware = <
   Context extends BaseContext,

@@ -10,10 +10,10 @@ import {
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../middleware/auth";
-import { applyCORS } from "../../middleware/cors";
-import { zodMiddleware } from "../../middleware/zod";
-import { RouteBuilder } from "../../route-builder";
+} from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

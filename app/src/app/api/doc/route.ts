@@ -5,8 +5,8 @@
 // import { generateOpenAPI } from "@/docs/openapi";
 import { generateOpenAPI } from "@/docs/openapi";
 import { NextResponse } from "next/server";
-import { applyCORS } from "../middleware/cors";
-import { RouteBuilder } from "../route-builder";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { RouteBuilder } from "@/app/api/route-builder";
 
 const router = RouteBuilder
   .init()

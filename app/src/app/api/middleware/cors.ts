@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { err, ok } from "true-myth/result";
-import { Headers, Middleware } from "../route-builder";
+import { Headers, Middleware } from "@/app/api/route-builder";
 
 export type CORSOptions = {
   allowedOrigins: Array<RegExp>;

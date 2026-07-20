@@ -11,9 +11,9 @@ import { getServerSession } from "next-auth";
 import { decode } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 import { err, ok } from "true-myth/result";
-import { options } from "../../../auth/options";
-import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
-import { Headers, Middleware } from "../route-builder";
+import { options } from "@/auth/options";
+import { DOWNLOAD_COOKIE_NAME } from "@/shared/download";
+import { Headers, Middleware } from "@/app/api/route-builder";
 
 interface JwtPayload {
   email: string;

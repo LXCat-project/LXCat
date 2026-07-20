@@ -4,9 +4,9 @@
 
 import { db } from "@lxcat/database";
 import { okJsonResponse } from "@/shared/api/api-responses";
-import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
-import { zodMiddleware } from "../../middleware/zod";
-import { RouteBuilder } from "../../route-builder";
+import { hasAuthorRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

@@ -4,7 +4,7 @@
 
 import { IdsSchema } from "@/app/scat-cs/ids-schema";
 import { z } from "zod";
-import { queryArraySchema } from "../../util";
+import { queryArraySchema } from "@/app/api/util";
 
 export const querySchema = z.object({
   query: z.object({

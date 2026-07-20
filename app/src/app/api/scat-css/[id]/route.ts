@@ -12,10 +12,10 @@ import {
 import "@citation-js/plugin-bibtex";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { reference2bibliography } from "@/citation/cite";
-import { RouteBuilder } from "../../../api/route-builder";
-// import { hasDeveloperRole, hasSessionOrAPIToken } from "../../middleware/auth";
-import { applyCORS } from "../../middleware/cors";
-import { zodMiddleware } from "../../middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
+// import { hasDeveloperRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

@@ -4,8 +4,8 @@
 
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { requestParamsFromSchema } from "../../../../docs/openapi";
-import { crossSectionSetHeadingSchema } from "../../schemas.openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
+import { crossSectionSetHeadingSchema } from "@/app/api/schemas.openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {

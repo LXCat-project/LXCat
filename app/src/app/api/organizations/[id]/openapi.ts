@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { openapiGenerator } from "@/openapi";
-import { requestParamsFromSchema } from "../../../../docs/openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {

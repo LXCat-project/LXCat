@@ -12,13 +12,13 @@ import {
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../../middleware/auth";
-import { zodMiddleware } from "../../../middleware/zod";
-import { RouteBuilder } from "../../../route-builder";
+} from "@/app/api/middleware/auth";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-ris";
 
-import { referenceIdsQuerySchema } from "../schemas";
+import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
 const router = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
