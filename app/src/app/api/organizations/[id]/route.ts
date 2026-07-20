@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { badRequestResponse, okJsonResponse } from "@/shared/api-responses";
+import { badRequestResponse, okJsonResponse } from "@/shared/api/api-responses";
 import { db } from "@lxcat/database";
 import { hasAdminRole, hasSession } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";

@@ -6,7 +6,7 @@ import { db } from "@lxcat/database";
 import {
   forbiddenResponse,
   okJsonResponse,
-} from "../../../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import {
   hasPublisherRole,
   hasSessionOrAPIToken,

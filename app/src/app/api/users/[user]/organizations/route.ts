@@ -6,7 +6,7 @@ import { db } from "@lxcat/database";
 import {
   createdResponse,
   noContentResponse,
-} from "../../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import { hasAdminRole, hasSession } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";

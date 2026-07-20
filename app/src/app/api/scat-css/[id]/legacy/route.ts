@@ -9,7 +9,7 @@ import {
   badRequestResponse,
   notFoundResponse,
   okResponse,
-} from "../../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import { reference2bibliography } from "@/citation/cite";
 import { mapObject } from "../../../../../shared/utils";
 import { RouteBuilder } from "../../../../api/route-builder";

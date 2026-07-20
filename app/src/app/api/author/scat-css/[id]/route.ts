@@ -8,7 +8,7 @@ import {
   forbiddenResponse,
   notFoundResponse,
   okJsonResponse,
-} from "../../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../../middleware/auth";
 import { zodMiddleware } from "../../../middleware/zod";
 import { RouteBuilder } from "../../../route-builder";

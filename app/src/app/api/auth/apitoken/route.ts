@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { encode } from "next-auth/jwt";
-import { okJsonResponse } from "../../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import { hasDeveloperRole, hasSession } from "../../middleware/auth";
 import { RouteBuilder } from "../../route-builder";
 

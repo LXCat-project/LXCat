@@ -4,7 +4,7 @@
 
 import { options } from "@/auth/options";
 import { userIsAdmin } from "@/auth/page-guards";
-import { Unauthorized } from "@/shared/unauthorized";
+import { Unauthorized } from "@/shared/ui/unauthorized";
 import { db } from "@lxcat/database";
 import { getServerSession } from "next-auth/next";
 import { AdminOrganizationsClient } from "./client-page";

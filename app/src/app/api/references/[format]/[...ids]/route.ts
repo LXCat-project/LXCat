@@ -8,7 +8,7 @@ import {
   notFoundResponse,
   okJsonResponse,
   okResponse,
-} from "../../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,

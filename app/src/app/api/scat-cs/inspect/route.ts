@@ -4,7 +4,7 @@
 
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { db } from "@lxcat/database";
-import { okJsonResponse } from "../../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,

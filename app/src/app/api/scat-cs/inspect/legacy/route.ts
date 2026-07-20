@@ -4,7 +4,7 @@
 
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { db } from "@lxcat/database";
-import { okResponse } from "../../../../../shared/api-responses";
+import { okResponse } from "@/shared/api/api-responses";
 import { reference2bibliography } from "@/citation/cite";
 import { mapObject } from "../../../../../shared/utils";
 import {

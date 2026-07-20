@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { VersionedLTPDocumentJSONSchema } from "@lxcat/schema/json-schema";
-import { okJsonResponse } from "../../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import { RouteBuilder } from "../../route-builder";
 
 // Route to host JSON schema of LTPDocument.

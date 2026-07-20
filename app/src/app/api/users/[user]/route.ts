@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { noContentResponse } from "../../../../shared/api-responses";
+import { noContentResponse } from "@/shared/api/api-responses";
 import { hasAdminRole, hasSession } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";
 import { RouteBuilder } from "../../route-builder";

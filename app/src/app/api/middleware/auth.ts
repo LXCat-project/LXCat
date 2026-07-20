@@ -5,7 +5,7 @@
 import {
   forbiddenResponse,
   unauthorizedResponse,
-} from "@/shared/api-responses";
+} from "@/shared/api/api-responses";
 import { Role } from "@lxcat/database/auth";
 import { getServerSession } from "next-auth";
 import { decode } from "next-auth/jwt";

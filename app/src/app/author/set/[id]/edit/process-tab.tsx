@@ -5,7 +5,7 @@
 "use client";
 
 import { MaybePromise } from "@/app/api/util";
-import { ScientificInput } from "@/shared/scientific-input";
+import { ScientificInput } from "@/shared/forms/scientific-input";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";

@@ -4,8 +4,8 @@
 
 "use client";
 
-import { ErrorDialog } from "@/shared/error-dialog";
-import { zodResolver } from "@/shared/zod-resolver";
+import { ErrorDialog } from "@/shared/ui/error-dialog";
+import { zodResolver } from "@/shared/forms/zod-resolver";
 import { Bolsig, BolsigInputForm, BolsigPlot } from "@/solvers/bolsig";
 import {
   BolsigFormInput,

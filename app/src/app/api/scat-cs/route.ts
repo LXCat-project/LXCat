@@ -5,7 +5,7 @@
 import { PAGE_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
-import { okJsonResponse } from "../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import { applyCORS } from "../middleware/cors";
 import { zodMiddleware } from "../middleware/zod";
 import { RouteBuilder } from "../route-builder";

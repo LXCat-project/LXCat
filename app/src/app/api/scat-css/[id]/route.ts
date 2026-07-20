@@ -8,7 +8,7 @@ import {
   badRequestResponse,
   notFoundResponse,
   okJsonResponse,
-} from "../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import "@citation-js/plugin-bibtex";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { reference2bibliography } from "@/citation/cite";

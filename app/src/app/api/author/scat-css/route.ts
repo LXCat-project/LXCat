@@ -6,7 +6,7 @@ import {
   badRequestResponse,
   forbiddenResponse,
   okJsonResponse,
-} from "@/shared/api-responses";
+} from "@/shared/api/api-responses";
 import { db } from "@lxcat/database";
 import { hasAuthorRole, hasSessionOrAPIToken } from "../../middleware/auth";
 import { zodMiddleware } from "../../middleware/zod";

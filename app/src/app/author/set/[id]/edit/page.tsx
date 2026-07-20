@@ -4,8 +4,8 @@
 
 import { options } from "@/auth/options";
 import { userIsAuthor } from "@/auth/page-guards";
-import { NotFound } from "@/shared/not-found";
-import { Unauthorized } from "@/shared/unauthorized";
+import { NotFound } from "@/shared/ui/not-found";
+import { Unauthorized } from "@/shared/ui/unauthorized";
 import { db } from "@lxcat/database";
 import { intoEditable } from "@lxcat/schema/process";
 import { getServerSession } from "next-auth/next";

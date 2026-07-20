@@ -5,7 +5,7 @@
 import { Role } from "@lxcat/database/auth";
 import * as cookie from "cookie";
 import { encode } from "next-auth/jwt";
-import { okJsonResponse } from "../../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import {
   ANONYMOUS_EMAIL,
   DOWNLOAD_COOKIE_NAME,
