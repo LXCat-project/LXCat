@@ -11,9 +11,9 @@ import { IconTrash } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import Result, { err, ok } from "true-myth/result";
-import { getReferenceLabel } from "../../../../../shared/cite";
-import { doi2csl } from "../../../../../shared/doi2csl";
-import { Reference as ReferenceComponent } from "../../../../../shared/reference";
+import { getReferenceLabel } from "@/citation/cite";
+import { doi2csl } from "@/citation/doi2csl";
+import { Reference as ReferenceComponent } from "@/citation/reference";
 
 export const ReferenceTable = (
   { references, onChange }: {

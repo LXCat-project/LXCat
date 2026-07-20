@@ -8,9 +8,9 @@ import { NextResponse } from "next/server";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../api/middleware/auth";
-import { zodMiddleware } from "../../api/middleware/zod";
-import { RouteBuilder } from "../../api/route-builder";
+} from "@/app/api/middleware/auth";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

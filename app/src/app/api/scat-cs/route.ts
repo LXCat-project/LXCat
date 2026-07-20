@@ -5,10 +5,10 @@
 import { PAGE_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
-import { okJsonResponse } from "../../../shared/api-responses";
-import { applyCORS } from "../middleware/cors";
-import { zodMiddleware } from "../middleware/zod";
-import { RouteBuilder } from "../route-builder";
+import { okJsonResponse } from "@/shared/api/api-responses";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

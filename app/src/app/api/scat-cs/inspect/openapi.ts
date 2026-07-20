@@ -4,7 +4,7 @@
 
 import { openapiGenerator } from "@/openapi";
 import { LTPMixtureWithReference } from "@lxcat/schema";
-import { requestParamsFromSchema } from "../../../../docs/openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {

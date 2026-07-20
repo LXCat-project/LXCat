@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Reference } from "../shared/reference";
+import { Reference } from "@/citation/reference";
 import { ReactionSummary } from "./reaction-summary";
 
 interface Props {

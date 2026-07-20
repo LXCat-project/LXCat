@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Result } from "true-myth";
-import { AsyncWebSocket } from "../../shared/websocket";
+import { AsyncWebSocket } from "../websocket";
 import { BoltzmannSolver } from "../boltzmann";
 import { BolsigInput, BolsigOutput } from "./io";
 import { CountPacket, DataPacket } from "./networking";

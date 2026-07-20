@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { MaybePromise } from "@/app/api/util";
-import { ScientificInput } from "@/shared/scientific-input";
+import { ScientificInput } from "@/shared/forms/scientific-input";
 import { type CrossSectionParameters } from "@lxcat/schema/process";
 import { Fieldset, Stack } from "@mantine/core";
 

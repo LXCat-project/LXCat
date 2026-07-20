@@ -5,7 +5,7 @@
 import { openapiGenerator } from "@/openapi";
 import { OwnedProcess } from "@lxcat/database/schema";
 import { z } from "zod";
-import { requestParamsFromSchema } from "../../../../docs/openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {

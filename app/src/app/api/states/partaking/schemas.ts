@@ -5,8 +5,8 @@
 import { Reversible, StateProcess } from "@lxcat/database/item/picker";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
-import { stateLeafSchema } from "../../schemas.openapi";
-import { queryJSONSchema } from "../../util";
+import { stateLeafSchema } from "@/app/api/schemas.openapi";
+import { queryJSONSchema } from "@/app/api/util";
 
 export const querySchema = z.object({
   query: z.object({

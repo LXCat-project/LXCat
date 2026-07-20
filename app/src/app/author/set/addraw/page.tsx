@@ -4,7 +4,7 @@
 
 import { options } from "@/auth/options";
 import { userIsAuthor } from "@/auth/page-guards";
-import { Unauthorized } from "@/shared/unauthorized";
+import { Unauthorized } from "@/shared/ui/unauthorized";
 import { getServerSession } from "next-auth/next";
 import { AddRawSetClient } from "./client-page";
 

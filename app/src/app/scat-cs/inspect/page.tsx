@@ -8,7 +8,7 @@ import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
-import { reference2bibliography } from "../../../shared/cite";
+import { reference2bibliography } from "@/citation/cite";
 import { IdsSchema } from "../ids-schema";
 import { PlotPage } from "./plot-page";
 

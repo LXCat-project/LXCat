@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { okJsonResponse } from "../../../../shared/api-responses";
-import { zodMiddleware } from "../../middleware/zod";
-import { RouteBuilder } from "../../route-builder";
-import { stateArrayToTree } from "../util";
+import { okJsonResponse } from "@/shared/api/api-responses";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
+import { stateArrayToTree } from "@/app/api/states/util";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

@@ -14,7 +14,7 @@ import { JSX, useState } from "react";
 import { SWRReactionPickerShell } from "./swr-reaction-picker-shell";
 
 import useSWRImmutable from "swr/immutable";
-import { omit } from "./utils";
+import { omit } from "@/shared/utils";
 
 const fetchTypeTags = async (
   consumes: Array<StateLeaf>,

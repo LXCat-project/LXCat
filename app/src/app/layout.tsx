@@ -10,9 +10,9 @@ import "mantine-datatable/styles.css";
 import "@/styles/globals.css";
 import "highlight.js/styles/github.min.css";
 
-import { DemoAlert } from "@/shared/demo-alert";
-import ErrorBoundary from "@/shared/error-boundary";
-import { NavBar } from "@/shared/header/nav-bar";
+import { DemoAlert } from "@/layout/demo-alert";
+import ErrorBoundary from "@/layout/error-boundary";
+import { NavBar } from "@/layout/header/nav-bar";
 import { ColorSchemeScript } from "@mantine/core";
 import { Provider } from "./provider";
 

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { MaybePromise } from "@/app/api/util";
-import { LatexSelect } from "@/shared/latex-select";
+import { LatexSelect } from "@/cs/picker/latex-select";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import {

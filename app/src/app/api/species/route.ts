@@ -4,7 +4,7 @@
 
 import { db } from "@lxcat/database";
 import { NextResponse } from "next/server";
-import { RouteBuilder } from "../route-builder";
+import { RouteBuilder } from "@/app/api/route-builder";
 
 const router = RouteBuilder
   .init()

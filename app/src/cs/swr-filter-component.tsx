@@ -15,7 +15,7 @@ import { Latex } from "../shared/latex";
 import {
   StateSelectIds,
   SWRReactionPicker,
-} from "../shared/swr-reaction-picker";
+} from "./picker/swr-reaction-picker";
 
 const getLatexForReaction = (
   options: ReactionTemplate,

@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reference } from "@/app/scat-cs/inspect/reference";
-import { FormattedReference } from "@/app/scat-cs/inspect/types";
+import { FormattedReferenceLink as Reference } from "./formatted-reference-link";
+import { FormattedReference } from "./formatted-reference";
 import { DataTable } from "mantine-datatable";
 import classes from "./reference-list.module.css";
 

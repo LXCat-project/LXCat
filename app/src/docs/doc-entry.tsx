@@ -15,7 +15,7 @@ import { IconChevronRight } from "@tabler/icons-react";
 import { slug } from "github-slugger";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { DocSection } from "../docs/generator";
+import { DocSection } from "./generator";
 import classes from "./doc-entry.module.css";
 
 export interface DocEntryProps {

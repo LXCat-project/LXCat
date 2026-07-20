@@ -4,16 +4,16 @@
 
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { db } from "@lxcat/database";
-import { okResponse } from "../../../../../shared/api-responses";
-import { reference2bibliography } from "../../../../../shared/cite";
-import { mapObject } from "../../../../../shared/utils";
+import { okResponse } from "@/shared/api/api-responses";
+import { reference2bibliography } from "@/citation/cite";
+import { mapObject } from "@/shared/utils";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../../middleware/auth";
-import { applyCORS } from "../../../middleware/cors";
-import { zodMiddleware } from "../../../middleware/zod";
-import { RouteBuilder } from "../../../route-builder";
+} from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

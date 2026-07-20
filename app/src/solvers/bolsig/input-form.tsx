@@ -8,9 +8,9 @@ import Latex from "react-latex-next";
 import { BolsigFormInput } from "./io";
 import "katex/dist/katex.min.css";
 import { type SerializedSpecies } from "@lxcat/schema/species";
-import { IntegerInput } from "../../shared/integer-input";
-import { RangeInputForm } from "../../shared/range-input-form";
-import { ScientificInput } from "../../shared/scientific-input";
+import { IntegerInput } from "@/shared/forms/integer-input";
+import { RangeInputForm } from "@/shared/forms/range-input-form";
+import { ScientificInput } from "@/shared/forms/scientific-input";
 
 export interface BolsigInputFormProps {
   consumedStates: Array<SerializedSpecies>;

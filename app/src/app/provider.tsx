@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { CodeHighlightProvider } from "@/shared/code-highlight-provider";
+import { CodeHighlightProvider } from "@/layout/code-highlight-provider";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";

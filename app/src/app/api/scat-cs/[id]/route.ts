@@ -6,14 +6,14 @@ import { db } from "@lxcat/database";
 import {
   notFoundResponse,
   okJsonResponse,
-} from "../../../../shared/api-responses";
+} from "@/shared/api/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
-} from "../../middleware/auth";
-import { applyCORS } from "../../middleware/cors";
-import { zodMiddleware } from "../../middleware/zod";
-import { RouteBuilder } from "../../route-builder";
+} from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

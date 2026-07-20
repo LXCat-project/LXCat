@@ -6,7 +6,7 @@ import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { Reference } from "@lxcat/schema";
 import { z } from "zod";
-import { querySchema } from "./schemas";
+import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
@@ -14,7 +14,7 @@ export async function register() {
     path: "/references/{format}/for-selection/{ids}",
     tags: ["References"],
     description: "Get reference data for a selection.",
-    request: requestParamsFromSchema(querySchema),
+    request: requestParamsFromSchema(referenceIdsQuerySchema),
     responses: {
       200: {
         description: "Citation data in the requested format for the given IDs.",

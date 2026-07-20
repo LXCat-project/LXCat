@@ -9,16 +9,16 @@ import {
   badRequestResponse,
   notFoundResponse,
   okResponse,
-} from "../../../../../shared/api-responses";
-import { reference2bibliography } from "../../../../../shared/cite";
-import { mapObject } from "../../../../../shared/utils";
-import { RouteBuilder } from "../../../../api/route-builder";
+} from "@/shared/api/api-responses";
+import { reference2bibliography } from "@/citation/cite";
+import { mapObject } from "@/shared/utils";
+import { RouteBuilder } from "@/app/api/route-builder";
 import {
   hasDeveloperRole,
   hasSessionOrAPIToken,
-} from "../../../middleware/auth";
-import { applyCORS } from "../../../middleware/cors";
-import { zodMiddleware } from "../../../middleware/zod";
+} from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder

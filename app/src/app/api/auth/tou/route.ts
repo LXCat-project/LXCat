@@ -5,12 +5,12 @@
 import { Role } from "@lxcat/database/auth";
 import * as cookie from "cookie";
 import { encode } from "next-auth/jwt";
-import { okJsonResponse } from "../../../../shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import {
   ANONYMOUS_EMAIL,
   DOWNLOAD_COOKIE_NAME,
-} from "../../../../shared/download";
-import { RouteBuilder } from "../../route-builder";
+} from "@/shared/download";
+import { RouteBuilder } from "@/app/api/route-builder";
 
 // TODO determine good max age
 const DEFAULT_MAX_AGE = 24 * 60 * 60; // 1 day in seconds

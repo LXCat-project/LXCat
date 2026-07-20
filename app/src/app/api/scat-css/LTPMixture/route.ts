@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { okJsonResponse } from "@/shared/api-responses";
+import { okJsonResponse } from "@/shared/api/api-responses";
 import { LTPMixtureJSONSchema } from "@lxcat/schema/json-schema";
-import { RouteBuilder } from "../../route-builder";
+import { RouteBuilder } from "@/app/api/route-builder";
 
 // Route to host JSON schema of LTPMixture.
 const router = RouteBuilder

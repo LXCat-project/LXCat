@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Maybe } from "true-myth";
-import { ErrorDialog } from "./error-dialog";
+import { ErrorDialog } from "@/shared/ui/error-dialog";
 
 export interface ErrorBoundaryProps {
   children: React.ReactNode;

@@ -14,7 +14,7 @@ import {
 import { IconChevronDown, IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useState } from "react";
-import { Latex } from "./latex";
+import { Latex } from "@/shared/latex";
 import classes from "./latex-select.module.css";
 
 export type LatexSelectProps = {

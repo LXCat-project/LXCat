@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { MaybePromise } from "@/app/api/util";
-import { ScientificInput } from "@/shared/scientific-input";
+import { ScientificInput } from "@/shared/forms/scientific-input";
 import { LUT } from "@lxcat/schema/data-types";
 import {
   ActionIcon,

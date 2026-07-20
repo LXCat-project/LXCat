@@ -26,6 +26,8 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
+import { FormattedReference } from "@/citation/formatted-reference";
 import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./button-clipboard";
 import { ButtonMultiDownload } from "./button-multi-download";
@@ -33,10 +35,8 @@ import { colorScheme } from "./colors";
 import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
 import { ProcessTable } from "./process-table";
-import { Reference } from "./reference";
 import { SetStats, SetTable } from "./set-table";
 import { TermsOfUseCheck } from "./terms-of-use-check";
-import { FormattedReference } from "./types";
 
 const Chart = dynamic(
   async () => import("./process-plot").then((module) => module.ProcessPlot),

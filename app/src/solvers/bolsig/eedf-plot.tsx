@@ -12,7 +12,7 @@ import { colorScheme } from "../../app/scat-cs/inspect/colors";
 import { BolsigOutput } from "./io";
 
 const LinePlot = dynamic(
-  async () => import("../../shared/line-plot").then(({ LinePlot }) => LinePlot),
+  async () => import("../line-plot").then(({ LinePlot }) => LinePlot),
   {
     loading: () => (
       <div style={{ width: "100%", height: "100%" }}>
