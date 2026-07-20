@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf .next",
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "coverage:start": "nyc next start",
     "coverage:report": "nyc report --reporter=lcovonly",

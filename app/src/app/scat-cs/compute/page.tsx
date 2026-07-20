@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { annotateMixture } from "@/shared/annotate-mixture";
-import { convertMixture } from "@lxcat/converter";
+import { convertMixture } from "@/shared/native-converter";
 import { db } from "@lxcat/database";
 import { LTPMixtureWithReference } from "@lxcat/schema";
 import Script from "next/script";

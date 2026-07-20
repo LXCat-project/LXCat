@@ -7,7 +7,7 @@
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { reference2bibliography } from "@/citation/cite";
 import { mapObject } from "@/shared/utils";
-import { convertMixture } from "@lxcat/converter";
+import { convertMixture } from "@/shared/native-converter";
 import { LTPMixture } from "@lxcat/schema";
 
 export const toLegacyAction = async (mixture: LTPMixture) => {
