@@ -7,6 +7,7 @@
 import classes from "./nav-bar.module.css";
 
 import { UserAnchor } from "@/auth/user-anchor";
+import { ChemCatLogo } from "@/shared/chemcat-logo";
 import { Burger, Center, Container, Group, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -17,7 +18,6 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { Fragment } from "react";
-import { ChemCatLogo } from "../chemcat-logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 
 const links = [
