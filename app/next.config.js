@@ -4,6 +4,7 @@
 
 import NextBundleAnalyzer from "@next/bundle-analyzer";
 import dotenv from "dotenv";
+import path from "path";
 
 if (process.env.LXCAT_BUILD_ENV !== "production") {
   dotenv.config({ path: "../.env.development" });
@@ -17,7 +18,8 @@ const nextConfig = {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
     swcPlugins: process.env.CI && [
       ["swc-plugin-coverage-instrument", {}],
-    ]
+    ],
+    useTypeScriptCli: true
   },
 
   transpilePackages: ["next-mdx-remote"],
@@ -35,6 +37,7 @@ const nextConfig = {
     if (process.env.CI) {
       config.devtool = "source-map";
     }
+    config.resolve.alias["@"] = path.resolve(import.meta.dirname, "src");
     return config;
   },
   images: {

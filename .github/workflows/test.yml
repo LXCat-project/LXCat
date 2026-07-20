@@ -65,8 +65,9 @@ jobs:
       run: bun install
     - name: Build packages
       run: bun run build --env-mode=loose
-    - name: Lint
-      run: bun run lint
+    # TODO: re-enable lint when TypeScript 7.1 is released.
+    # - name: Lint
+    #   run: bun run lint
 
   test-app:
     needs: build
