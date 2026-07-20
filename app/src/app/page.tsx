@@ -36,7 +36,8 @@ const jsonLDWebsite: WithContext<WebSite> = {
 const readNews = async (): Promise<Array<NewsCardProps>> => {
   try {
     const data = await readFile(
-      env.NEWS_PATH ?? path.join(process.cwd(), "news.json"),
+      /*turbopackIgnore: true*/ env.NEWS_PATH
+        ?? path.join(process.cwd(), "news.json"),
       {
         encoding: "utf8",
       },
