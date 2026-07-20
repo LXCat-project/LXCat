@@ -128,7 +128,9 @@ test.describe("/author/set/add", () => {
 
       await page.locator("button:has-text(\"Submit\")").click();
 
-      const warning = page.getByText("Invalid input");
+      const warning = page.getByText(
+        "Too small: expected string to have >=1 characters",
+      );
       await expect(warning).toHaveCount(3);
     });
   });
