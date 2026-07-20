@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { linspace, logspace, quadraticspace } from "@/shared/range";
 import { z } from "zod";
-import { linspace, logspace, quadraticspace } from "../range";
 
 const BasicGridOptions = z.object({ size: z.number().int().min(1).max(1000) });
 
