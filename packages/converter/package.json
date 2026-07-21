@@ -2,7 +2,7 @@
   "name": "@lxcat/converter",
   "version": "0.1.0",
   "description": "Convert LXCat JSON documents to txt format",
-  "main": "dist/index.node",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "dev": "bun run build",
-    "build": "napi build --release --strip -o dist --dts index.d.ts",
-    "build:debug": "napi build --dts dist/index.d.ts",
+    "build": "napi build --release --strip --platform -o dist --dts index.d.ts --js index.js",
+    "build:debug": "napi build --platform -o dist --dts index.d.ts --js index.js",
     "convert": "tsx util/convert.ts",
     "test": "tsx --test tests/valid.test.ts",
     "annotate": "reuse annotate --license=Apache-2.0 --copyright='LXCat team' -r --skip-existing --exclude-year --skip-unrecognised src tests",

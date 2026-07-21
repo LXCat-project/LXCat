@@ -24,19 +24,20 @@ const nextConfig = {
 
   transpilePackages: ["next-mdx-remote"],
 
-  webpack: (config, { nextRuntime }) => {
-    if (nextRuntime === "nodejs") {
-      config.module.rules = [
-        ...config.module.rules,
-        {
-          test: /\.node$/,
-          loader: "@lxcat/node-loader",
-        },
-      ];
-    }
-    if (process.env.CI) {
-      config.devtool = "source-map";
-    }
+  // @lxcat/converter is a native napi-rs addon (a .node binary). It can't be
+  // bundled by either webpack or Turbopack, so it's opted out of Server
+  // Components bundling here and loaded via plain Node `require` at runtime.
+  serverExternalPackages: ["@lxcat/converter"],
+
+  // The `@/*` alias below is only needed for the webpack fallback build
+  // (`next build --webpack`); Turbopack picks up the same alias from
+  // tsconfig.json's `paths` automatically. This empty config acknowledges
+  // that the webpack customization below is intentional and not needed here.
+  turbopack: {},
+
+  productionBrowserSourceMaps: process.env.CI !== undefined,
+
+  webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(import.meta.dirname, "src");
     return config;
   },

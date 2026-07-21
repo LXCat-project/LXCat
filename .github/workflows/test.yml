@@ -64,7 +64,14 @@ jobs:
     - name: Install dependencies
       run: bun install
     - name: Build packages
-      run: bun run build --env-mode=loose
+      # TODO: Switch back to turborepo build once we do not have to rely on
+      # webpack for coverage reporting.
+      # run: bun run build --env-mode=loose
+      run: |
+        (cd packages/schema && bun run build)
+        (cd packages/database && bun run build)
+        (cd packages/converter && bun run build)
+        (cd app && bun run build --webpack)
     # TODO: re-enable lint when TypeScript 7.1 is released.
     # - name: Lint
     #   run: bun run lint

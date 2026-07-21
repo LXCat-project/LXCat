@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { annotateMixture } from "@/shared/annotate-mixture";
+import { convertMixture } from "@/shared/native-converter";
 import { db } from "@lxcat/database";
 import { okResponse } from "@/shared/api/api-responses";
 import { reference2bibliography } from "@/citation/cite";
@@ -32,8 +33,6 @@ const router = RouteBuilder
 
     const data = annotateMixture(mixture);
     data.references = references;
-
-    const { convertMixture } = await import("@lxcat/converter");
 
     const res = okResponse(
       convertMixture({ ...data, references }),

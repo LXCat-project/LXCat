@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { convertDocument } from "@/shared/native-converter";
 import { db } from "@lxcat/database";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
@@ -49,7 +50,6 @@ const router = RouteBuilder
         references,
       };
 
-      const { convertDocument } = await import("@lxcat/converter");
       const res = okResponse(convertDocument(dataWithRef));
       res.headers.append("Content-Type", "text/plain");
       res.headers.append(
