@@ -11,7 +11,7 @@ import {
 } from "@/shared/api/api-responses";
 import "@citation-js/plugin-bibtex";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
-import { reference2bibliography } from "@/citation/cite";
+import { formatReference } from "@/citation/cite";
 import { RouteBuilder } from "@/app/api/route-builder";
 // import { hasDeveloperRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
 import { applyCORS } from "@/app/api/middleware/cors";
@@ -50,12 +50,7 @@ const router = RouteBuilder
           }),
         );
       } else if (params.query.refstyle === "apa") {
-        dataWithRef.references = Object.fromEntries(
-          Object.entries(data.references).map(([key, value]) => {
-            const bib = reference2bibliography(value);
-            return [key, bib];
-          }),
-        );
+        dataWithRef.references = await formatReference(data.references, "apa");
       } else {
         return badRequestResponse({
           body:

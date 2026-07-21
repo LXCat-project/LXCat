@@ -19,8 +19,10 @@ export const PlotPage = async ({
   hasMixedCompleteSets: boolean;
   forceTermsOfUse?: boolean;
 }) => {
-  const formattedRefs = Object.entries(bag.references).map(([id, ref]) =>
-    formatReference(id, ref)
+  const formattedRefs = await Promise.all(
+    Object.entries(bag.references).map(([id, ref]) =>
+      formatReference(id, ref)
+    ),
   );
   const permaLink = `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
     bag.processes.flatMap(({ info }) => info).map(({ _key }) => _key).join(",")

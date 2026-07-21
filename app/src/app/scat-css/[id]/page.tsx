@@ -8,7 +8,7 @@ import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
-import { reference2bibliography } from "@/citation/cite";
+import { formatReference } from "@/citation/cite";
 import { PlotPage } from "../../scat-cs/inspect/plot-page";
 
 interface BagProps {
@@ -57,8 +57,9 @@ const fetchProps = async (rawId: string): Promise<BagProps> => {
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);
   const hasMixedCompleteSets = hasCompleteSet && hasNonCompleteSet;
 
-  const references = Object.values(bag.references).map((r) => ({
-    ref: reference2bibliography(r),
+  const refTexts = await formatReference(Object.values(bag.references));
+  const references = Object.values(bag.references).map((r, i) => ({
+    ref: refTexts[i],
     url: r.URL,
   }));
 

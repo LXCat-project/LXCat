@@ -6,8 +6,7 @@ import { annotateMixture } from "@/shared/annotate-mixture";
 import { convertMixture } from "@/shared/native-converter";
 import { db } from "@lxcat/database";
 import { okResponse } from "@/shared/api/api-responses";
-import { reference2bibliography } from "@/citation/cite";
-import { mapObject } from "@/shared/utils";
+import { formatReference } from "@/citation/cite";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
@@ -26,10 +25,7 @@ const router = RouteBuilder
   .get(async (_, ctx) => {
     const mixture = await db().getMixtureByIds(ctx.parsedParams.query.ids);
 
-    const references = mapObject(
-      mixture.references,
-      ([key, reference]) => [key, reference2bibliography(reference)],
-    );
+    const references = await formatReference(mixture.references);
 
     const data = annotateMixture(mixture);
     data.references = references;
