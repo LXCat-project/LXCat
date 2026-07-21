@@ -215,6 +215,7 @@ export class LXCatDatabase {
         auth: { username, password },
         // Better error with https://github.com/arangodb/arangojs#error-stack-traces-contain-no-useful-information
         precaptureStackTraces: process.env.NODE_ENV !== "production",
+        agentOptions: {},
       }),
     );
   }

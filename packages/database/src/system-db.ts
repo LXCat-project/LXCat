@@ -27,6 +27,7 @@ export const setSystemDb = (
       username: "root",
       password,
     },
+    agentOptions: {},
   });
   return _db;
 };
