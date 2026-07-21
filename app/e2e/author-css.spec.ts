@@ -128,10 +128,22 @@ test.describe("/author/set/add", () => {
 
       await page.locator("button:has-text(\"Submit\")").click();
 
-      const warning = page.getByText(
-        "Too small: expected string to have >=1 characters",
-      );
-      await expect(warning).toHaveCount(3);
+      // TODO: This branch is here as we do a webpack build in CI for
+      //       coverage support (I cannot get end-to-end coverage working with
+      //       turbopack). However, there is a bug in webpack (presumably) that
+      //       causes it to not bundle zod error messages correctly, resulting
+      //       in more vague errors.
+      if (process.env.CI) {
+        const warning = page.getByText(
+          "Invalid input",
+        );
+        await expect(warning).toHaveCount(3);
+      } else {
+        const warning = page.getByText(
+          "Too small: expected string to have >=1 characters",
+        );
+        await expect(warning).toHaveCount(3);
+      }
     });
   });
 

@@ -35,10 +35,9 @@ const nextConfig = {
   // that the webpack customization below is intentional and not needed here.
   turbopack: {},
 
+  productionBrowserSourceMaps: process.env.CI !== undefined,
+
   webpack: (config) => {
-    if (process.env.CI) {
-      config.devtool = "source-map";
-    }
     config.resolve.alias["@"] = path.resolve(import.meta.dirname, "src");
     return config;
   },
