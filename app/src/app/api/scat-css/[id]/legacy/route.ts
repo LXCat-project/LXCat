@@ -11,8 +11,7 @@ import {
   notFoundResponse,
   okResponse,
 } from "@/shared/api/api-responses";
-import { reference2bibliography } from "@/citation/cite";
-import { mapObject } from "@/shared/utils";
+import { formatReference } from "@/citation/cite";
 import { RouteBuilder } from "@/app/api/route-builder";
 import {
   hasDeveloperRole,
@@ -35,10 +34,7 @@ const router = RouteBuilder
       if (data === undefined) {
         return notFoundResponse();
       }
-      const references = mapObject(
-        data.references,
-        ([key, reference]) => [key, reference2bibliography(reference)],
-      );
+      const references = await formatReference(data.references);
 
       const dataWithRef: VersionedLTPDocumentWithReference = {
         $schema: `${process.env.NEXT_PUBLIC_URL}/scat-css/LTPMixture`,

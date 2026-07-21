@@ -4,18 +4,29 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import "katex/dist/katex.min.css";
 import { Reference as ReferenceRecord } from "@lxcat/schema";
 import Latex from "react-latex-next";
 
-import { reference2bibliography } from "./cite";
+import { formatReference } from "./cite";
 
 export const Reference = (r: ReferenceRecord) => {
-  const bibliography = useMemo(() => {
-    return reference2bibliography(r);
+  const [bibliography, setBibliography] = useState<string>("");
+
+  useEffect(() => {
+    let active = true;
+    formatReference(r).then((bib) => {
+      if (active) {
+        setBibliography(bib);
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [r]);
+
   return (
     <cite>
       {r.URL
@@ -24,7 +35,7 @@ export const Reference = (r: ReferenceRecord) => {
             <Latex>{bibliography}</Latex>
           </a>
         )
-        : <Latex>bibliography</Latex>}
+        : <Latex>{bibliography}</Latex>}
     </cite>
   );
 };

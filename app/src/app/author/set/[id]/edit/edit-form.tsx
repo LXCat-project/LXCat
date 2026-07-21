@@ -4,7 +4,7 @@
 
 "use client";
 
-import { reference2bibliography } from "@/citation/cite";
+import { formatReference } from "@/citation/cite";
 import { zodResolver } from "@/shared/forms/zod-resolver";
 import { KeyedOrganization } from "@lxcat/database/auth";
 import { EditedLTPDocument, Reference } from "@lxcat/schema";
@@ -23,7 +23,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { createFormContext } from "@mantine/form";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { JsonTab } from "./json-tab";
 import { ProcessTab } from "./process-tab";
@@ -76,13 +76,19 @@ export const EditForm = (
     [form.values.set.states],
   );
 
-  const referenceMap = useMemo(() =>
-    Object.fromEntries(
-      Object.entries(form.values.set.references).map(([
-        key,
-        value,
-      ]) => [key, reference2bibliography(value)]),
-    ), [form.values.set.references]);
+  const [referenceMap, setReferenceMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let active = true;
+    formatReference(form.values.set.references).then((res) => {
+      if (active) {
+        setReferenceMap(res);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [form.values.set.references]);
 
   return (
     <FormProvider form={form}>

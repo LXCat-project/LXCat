@@ -5,16 +5,12 @@
 "use server";
 
 import { annotateMixture } from "@/shared/annotate-mixture";
-import { reference2bibliography } from "@/citation/cite";
-import { mapObject } from "@/shared/utils";
+import { formatReference } from "@/citation/cite";
 import { convertMixture } from "@/shared/native-converter";
 import { LTPMixture } from "@lxcat/schema";
 
 export const toLegacyAction = async (mixture: LTPMixture) => {
-  const references = mapObject(
-    mixture.references,
-    ([key, reference]) => [key, reference2bibliography(reference)],
-  );
+  const references = await formatReference(mixture.references);
 
   const data = annotateMixture(mixture);
   data.references = references;

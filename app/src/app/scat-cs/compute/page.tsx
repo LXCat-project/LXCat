@@ -8,7 +8,7 @@ import { db } from "@lxcat/database";
 import { LTPMixtureWithReference } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
-import { reference2bibliography } from "@/citation/cite";
+import { formatReference } from "@/citation/cite";
 import { mapObject } from "../../../shared/utils";
 import { IdsSchema } from "../ids-schema";
 import { BolsigPage, BolsigPageProps } from "./bolsig-page";
@@ -58,10 +58,7 @@ const fetchProps = async (
 
   const mixture = await db().getMixtureByIds(ids);
 
-  const references = mapObject(
-    mixture.references,
-    ([key, reference]) => [key, reference2bibliography(reference)],
-  );
+  const references = await formatReference(mixture.references);
 
   const referenceLinks = Object.entries(mixture.references).map((
     [key, r],

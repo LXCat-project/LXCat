@@ -11,8 +11,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import Result, { err, ok } from "true-myth/result";
-import { getReferenceLabel } from "@/citation/cite";
-import { doi2csl } from "@/citation/doi2csl";
+import { getReferenceFromDOI, getReferenceLabel } from "@/citation/cite";
 import { Reference as ReferenceComponent } from "@/citation/reference";
 
 export const ReferenceTable = (
@@ -29,7 +28,7 @@ export const ReferenceTable = (
     doi: string,
   ): Promise<Result<Reference, string>> => {
     try {
-      const csl = await doi2csl(doi);
+      const csl = await getReferenceFromDOI(doi);
       return ok(csl);
     } catch (_) {
       return err("Invalid DOI");
@@ -59,8 +58,9 @@ export const ReferenceTable = (
             onClick={async () => {
               const result = await importFromDoi(doiValue);
               if (result.isOk) {
-                const label = getReferenceLabel(result.value);
-                if (references.map(getReferenceLabel).includes(label)) {
+                const label = await getReferenceLabel(result.value);
+                const existingLabels = await getReferenceLabel(references);
+                if (existingLabels.includes(label)) {
                   setDoiError(
                     `Cannot import duplicate reference with id ${label}.`,
                   );
