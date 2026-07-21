@@ -5,7 +5,7 @@
 import "server-only";
 
 import { Reference } from "@lxcat/schema";
-import { reference2bibliography } from "./cite";
+import { formatReference as formatReferenceText } from "./cite";
 
 export interface FormattedReference {
   id: string;
@@ -13,13 +13,13 @@ export interface FormattedReference {
   url?: string;
 }
 
-export const formatReference = (
+export const formatReference = async (
   id: string,
   r: Reference,
-): FormattedReference => (
+): Promise<FormattedReference> => (
   {
     id,
-    ref: reference2bibliography(r),
+    ref: await formatReferenceText(r),
     url: r.URL,
   }
 );
