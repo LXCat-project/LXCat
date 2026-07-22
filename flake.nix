@@ -44,10 +44,6 @@
         mkShell {
           name = "lxcat";
           buildInputs = [
-            # Node
-            nodejs-slim_24
-            nodejs_24.pkgs.pnpm
-
             # Bun
             bun
             bun2nix
@@ -62,8 +58,8 @@
             playwright
 
             # Typescript
-            nodePackages_latest.typescript
-            nodePackages_latest.typescript-language-server
+            typescript-go
+            typescript-language-server
 
             # Formatting
             dprint
