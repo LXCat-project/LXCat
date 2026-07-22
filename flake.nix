@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    vips-pin.url = "github:nixos/nixpkgs/nixos-25.11";
+    vips-pin.url = "github:nixos/nixpkgs/nixos-26.05";
 
     bun2nix-input = {
       url = "github:nix-community/bun2nix";
