@@ -380,6 +380,7 @@
 
             env = {
               LXCAT_BUILD_ENV = "production";
+              NODE_ENV = "production";
             };
 
             nativeBuildInputs = [ pkgs.makeWrapper ];
