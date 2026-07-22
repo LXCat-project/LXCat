@@ -16,7 +16,7 @@ const nextConfig = {
 
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
-    swcPlugins: process.env.CI && [
+    swcPlugins: process.env.NEXT_ENABLE_COVERAGE && [
       ["swc-plugin-coverage-instrument", {}],
     ],
     useTypeScriptCli: true
@@ -35,7 +35,7 @@ const nextConfig = {
   // that the webpack customization below is intentional and not needed here.
   turbopack: {},
 
-  productionBrowserSourceMaps: process.env.CI !== undefined,
+  productionBrowserSourceMaps: !!process.env.NEXT_ENABLE_COVERAGE,
 
   webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(import.meta.dirname, "src");

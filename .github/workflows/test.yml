@@ -66,12 +66,13 @@ jobs:
     - name: Build packages
       # TODO: Switch back to turborepo build once we do not have to rely on
       # webpack for coverage reporting.
-      # run: bun run build --env-mode=loose
-      run: |
-        (cd packages/schema && bun run build)
-        (cd packages/database && bun run build)
-        (cd packages/converter && bun run build)
-        (cd app && bun run build --webpack)
+      run: NEXT_ENABLE_COVERAGE=1 bun run build --env-mode=loose
+      # TODO: Otherwise do this
+      # run: |
+      #   (cd packages/schema && bun run build)
+      #   (cd packages/database && bun run build)
+      #   (cd packages/converter && bun run build)
+      #   (cd app && NEXT_ENABLE_COVERAGE=1 bun run build --turbopack)
     # TODO: re-enable lint when TypeScript 7.1 is released.
     # - name: Lint
     #   run: bun run lint

@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/**/*.tsx",
-    "src/**/*.ts"
+    "app/src/**/*.tsx",
+    "app/src/**/*.ts"
   ]
 }
