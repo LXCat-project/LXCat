@@ -154,7 +154,6 @@
                     ./packages/schema/package.json
                     ./packages/converter
                     ./packages/database/package.json
-                    ./packages/node-loader/package.json
                   ];
                 };
 
@@ -225,7 +224,6 @@
                 ./packages/schema/package.json
                 ./packages/converter/package.json
                 ./packages/database/package.json
-                ./packages/node-loader/package.json
               ];
             };
           };
@@ -243,7 +241,6 @@
                 ./packages/converter/package.json
                 ./packages/database/package.json
                 ./packages/tsconfig
-                ./packages/node-loader/package.json
               ];
             };
 
@@ -286,7 +283,6 @@
                 ./packages/converter/package.json
                 ./packages/database
                 ./packages/tsconfig
-                ./packages/node-loader/package.json
               ];
             };
 
@@ -316,7 +312,6 @@
                 ./packages/converter/package.json
                 ./packages/database
                 ./packages/tsconfig
-                ./packages/node-loader/package.json
               ];
             };
 
@@ -368,35 +363,6 @@
               '';
             }
           );
-          lxcat-node-loader = bun2nix.mkDerivation {
-            pname = "lxcat-node-loader";
-            version = "0.0.0";
-
-            src = fs.toSource {
-              root = ./.;
-              fileset = fs.unions [
-                ./package.json
-                ./bun.lock
-                ./packages/schema/package.json
-                ./app/package.json
-                ./packages/converter/package.json
-                ./packages/database/package.json
-                ./packages/tsconfig/package.json
-                ./packages/node-loader
-              ];
-            };
-
-            bunDeps = lxcat-deps;
-
-            buildPhase = ''
-              bun run --filter @lxcat/node-loader build
-            '';
-
-            installPhase = ''
-              mkdir $out
-              cp -r package.json ./packages/node-loader/dist $out
-            '';
-          };
           lxcat = bun2nix.mkDerivation {
             pname = "lxcat";
             version = "0.0.0";
@@ -411,7 +377,6 @@
                 ./packages/database/package.json
                 ./packages/converter/package.json
                 ./packages/tsconfig
-                ./packages/node-loader/package.json
                 ./docs
                 ./app
               ];
@@ -430,7 +395,6 @@
 
               cp -r ${lxcat-schema}/dist packages/schema/dist
               cp -r ${lxcat-database}/dist packages/database/dist
-              cp -r ${lxcat-node-loader}/dist packages/node-loader/dist
 
               # Symlink the prebuilt `nix` `converter` package.
               ln -s ${converter}/dist packages/converter/dist
