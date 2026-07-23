@@ -8,6 +8,7 @@ import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 import dynamic from "next/dynamic";
 import { JSX } from "react";
 import type { MermaidProps } from "../../../docs/mermaid";
+import styles from "./mdx-renderer.module.css";
 
 // FIXME: Why do we need this explicit cast?
 const Mermaid = dynamic(
@@ -20,5 +21,7 @@ const components = {
 };
 
 export const MDXRenderer = (props: MDXRemoteProps) => (
-  <MDXRemote {...props} components={components} />
+  <div className={styles.md}>
+    <MDXRemote {...props} components={components} />
+  </div>
 );

@@ -1,0 +1,28 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+.md {
+    :global(a) {
+        color: var(--mantine-color-brand-5);
+
+        &:hover {
+            color: var(--mantine-color-brand-6);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 2px;
+        }
+    }
+
+    :global(h1 a),
+    :global(h2 a),
+    :global(h3 a),
+    :global(h4 a),
+    :global(h5 a),
+    :global(h6 a) {
+        color: inherit;
+        text-decoration: none;
+    }
+}
