@@ -103,6 +103,7 @@
     td {
         padding: 0.5em 0.75em;
         border: 1px solid var(--mantine-color-gray-3);
+        color: var(--mantine-color-text);
     }
 
     th {
@@ -114,14 +115,24 @@
         background-color: var(--mantine-color-gray-0);
     }
 
-    :global([data-mantine-color-scheme="dark"]) table,
-    :global([data-mantine-color-scheme="dark"]) th,
-    :global([data-mantine-color-scheme="dark"]) td {
+    /* Tables dark mode */
+    :global([data-mantine-color-scheme="dark"]) table {
+        color: var(--mantine-color-dark-text);
+    }
+
+    :global([data-mantine-color-scheme="dark"]) table th,
+    :global([data-mantine-color-scheme="dark"]) table td,
+    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(even),
+    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(odd) {
         border-color: var(--mantine-color-dark-4);
     }
 
-    :global([data-mantine-color-scheme="dark"]) th,
-    :global([data-mantine-color-scheme="dark"]) tr:nth-child(even) {
+    :global([data-mantine-color-scheme="dark"]) table th {
+        background-color: var(--mantine-color-dark-0);
+    }
+
+    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(odd),
+    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(even) {
         background-color: var(--mantine-color-dark-1);
     }
 
@@ -136,15 +147,6 @@
 
     :global([data-mantine-color-scheme="dark"]) blockquote {
         background-color: var(--mantine-color-dark-0);
-    }
-
-    /* Lists */
-    ul,
-    ol {
-        margin: 0.5em 0 1em 1.5em;
-    }
-
-    li {
-        margin-bottom: 0.25em;
+        color: var(--mantine-color-dark-text);
     }
 }
