@@ -69,7 +69,11 @@
         border-radius: var(--mantine-radius-md);
         padding: var(--mantine-spacing-md);
         margin: 1em 0;
-        overflow-x: auto;
+    }
+
+    :global([data-mantine-color-scheme="dark"]) .md pre {
+        background-color: var(--mantine-color-dark-1);
+        border-color: var(--mantine-color-dark-4);
     }
 
     code {
@@ -81,6 +85,10 @@
         background-color: var(--mantine-color-gray-0);
         padding: 0.15em 0.4em;
         border-radius: var(--mantine-radius-sm);
+    }
+
+    :global([data-mantine-color-scheme="dark"]) :not(pre) > code {
+        background-color: var(--mantine-color-dark-1);
     }
 
     /* Tables */
@@ -106,6 +114,17 @@
         background-color: var(--mantine-color-gray-0);
     }
 
+    :global([data-mantine-color-scheme="dark"]) table,
+    :global([data-mantine-color-scheme="dark"]) th,
+    :global([data-mantine-color-scheme="dark"]) td {
+        border-color: var(--mantine-color-dark-4);
+    }
+
+    :global([data-mantine-color-scheme="dark"]) th,
+    :global([data-mantine-color-scheme="dark"]) tr:nth-child(even) {
+        background-color: var(--mantine-color-dark-1);
+    }
+
     /* Blockquotes */
     blockquote {
         margin: 1em 0;
@@ -113,6 +132,10 @@
         border-left: 3px solid var(--mantine-color-brand-5);
         background-color: var(--mantine-color-brand-0);
         border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
+    }
+
+    :global([data-mantine-color-scheme="dark"]) blockquote {
+        background-color: var(--mantine-color-dark-0);
     }
 
     /* Lists */
