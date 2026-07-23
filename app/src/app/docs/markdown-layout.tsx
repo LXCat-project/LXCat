@@ -23,7 +23,9 @@ export const MarkdownLayout = ({
     >
       <DocsSidebar docFiles={docFiles} />
       <AppShellMain className={classes.main}>
-        {children}
+        <div className={classes.contentCard}>
+          {children}
+        </div>
       </AppShellMain>
     </AppShell>
   );

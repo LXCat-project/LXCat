@@ -6,7 +6,19 @@
 
 .main {
   padding-top: 0px;
+  display: flex;
+  justify-content: center;
+
   :is(h1, h2, h3, h4, h5, h6) {
     scroll-margin-top: calc(60px + var(--app-shell-padding));
   }
+}
+
+.content-card {
+  width: 100%;
+  max-width: min(100%, 72rem);
+  background-color: var(--mantine-color-white);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-sm);
+  padding: var(--mantine-spacing-lg);
 }
