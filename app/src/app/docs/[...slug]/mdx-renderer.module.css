@@ -69,16 +69,13 @@
         border-radius: var(--mantine-radius-md);
         padding: var(--mantine-spacing-md);
         margin: 1em 0;
-    }
-
-    :global([data-mantine-color-scheme="dark"]) .md pre {
-        background-color: var(--mantine-color-dark-1);
-        border-color: var(--mantine-color-dark-4);
+        color: var(--mantine-color-text);
     }
 
     code {
         font-family: ui-monospace, SFMono, Consolas, Monaco, Courier, monospace;
         font-size: 0.9em;
+        color: var(--mantine-color-text);
     }
 
     :not(pre) > code {
@@ -87,23 +84,20 @@
         border-radius: var(--mantine-radius-sm);
     }
 
-    :global([data-mantine-color-scheme="dark"]) :not(pre) > code {
-        background-color: var(--mantine-color-dark-1);
-    }
-
     /* Tables */
     table {
         width: 100%;
         border-collapse: collapse;
         margin: 1em 0;
         font-size: 0.95em;
+        color: var(--mantine-color-text);
     }
 
     th,
     td {
         padding: 0.5em 0.75em;
         border: 1px solid var(--mantine-color-gray-3);
-        color: var(--mantine-color-text);
+        color: inherit;
     }
 
     th {
@@ -115,27 +109,6 @@
         background-color: var(--mantine-color-gray-0);
     }
 
-    /* Tables dark mode */
-    :global([data-mantine-color-scheme="dark"]) table {
-        color: var(--mantine-color-dark-text);
-    }
-
-    :global([data-mantine-color-scheme="dark"]) table th,
-    :global([data-mantine-color-scheme="dark"]) table td,
-    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(even),
-    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(odd) {
-        border-color: var(--mantine-color-dark-4);
-    }
-
-    :global([data-mantine-color-scheme="dark"]) table th {
-        background-color: var(--mantine-color-dark-0);
-    }
-
-    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(odd),
-    :global([data-mantine-color-scheme="dark"]) table tr:nth-child(even) {
-        background-color: var(--mantine-color-dark-1);
-    }
-
     /* Blockquotes */
     blockquote {
         margin: 1em 0;
@@ -143,10 +116,53 @@
         border-left: 3px solid var(--mantine-color-brand-5);
         background-color: var(--mantine-color-brand-0);
         border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
+        color: var(--mantine-color-text);
     }
 
-    :global([data-mantine-color-scheme="dark"]) blockquote {
-        background-color: var(--mantine-color-dark-0);
-        color: var(--mantine-color-dark-text);
+    /* Lists */
+    ul,
+    ol {
+        margin: 0.5em 0 1em 1.5em;
+    }
+
+    li {
+        margin-bottom: 0.25em;
+    }
+
+    /* Dark mode overrides using prefers-color-scheme */
+    @media (prefers-color-scheme: dark) {
+        pre {
+            background-color: var(--mantine-color-dark-1, #1e1e1e);
+            border-color: var(--mantine-color-dark-4, #333);
+            color: var(--mantine-color-dark-text, #e0e0e0);
+        }
+
+        :not(pre) > code {
+            background-color: var(--mantine-color-dark-1, #1e1e1e);
+            color: var(--mantine-color-dark-text, #e0e0e0);
+        }
+
+        table {
+            color: var(--mantine-color-dark-text, #e0e0e0);
+        }
+
+        th {
+            background-color: var(--mantine-color-dark-0, #1a1a1a);
+        }
+
+        tr:nth-child(even),
+        tr:nth-child(odd) {
+            background-color: var(--mantine-color-dark-1, #1e1e1e);
+        }
+
+        th,
+        td {
+            border-color: var(--mantine-color-dark-4, #333);
+        }
+
+        blockquote {
+            background-color: var(--mantine-color-dark-0, #1a1a1a);
+            color: var(--mantine-color-dark-text, #e0e0e0);
+        }
     }
 }
