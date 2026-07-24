@@ -311,10 +311,14 @@ function CollapsibleObject({
         <IconChevronRight
           size={14}
           data-chevron
-          style={{ flexShrink: 0, width: 14, transition: "transform 150ms" }}
+          style={{
+            flexShrink: 0, width: 14,
+            transition: "transform 150ms",
+            transform: expanded ? "rotate(90deg)" : "none",
+          }}
         />
         <Icon size={14} color={iconInfo.color} />
-        <Text span size="sm" fw={600}>
+        <Text span size="sm">
           {highlight(node.name || "(root)")}
         </Text>
         <Badge
