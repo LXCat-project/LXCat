@@ -285,17 +285,7 @@ function SchemaNode({
             </Badge>
           </Tooltip>
         )}
-        {/* Show enum values for enum types */}
-        {node.type === "enum" && node.itemType && (
-          <Box mt="xs">
-            <Tooltip label={`Enum values: ${node.itemType}`}>
-              <Badge size="xs" variant="light" color="teal">
-                {node.itemType.split(" | ").slice(0, 5).join(", ")}
-                {node.itemType.split(" | ").length > 5 && "+"}
-              </Badge>
-            </Tooltip>
-          </Box>
-        )}
+
       </Group>
       {node.description && (
         <Text size="xs" c="dimmed" pl={20}>
