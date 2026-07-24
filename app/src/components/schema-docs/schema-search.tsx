@@ -28,6 +28,7 @@ export function SchemaSearch({ onSearch }: SchemaSearchProps) {
   }, [value, onSearch]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClear = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
     setValue("");
     onSearch("");
   }; // eslint-disable-line react-hooks/exhaustive-deps
@@ -42,7 +43,7 @@ export function SchemaSearch({ onSearch }: SchemaSearchProps) {
           onClick={handleClear}
         />
       ) : null}
-      rightSectionPointerEvents="none"
+      rightSectionPointerEvents="auto"
       placeholder="Search schema properties..."
       value={value}
       onChange={(e) => setValue(e.target.value)}
