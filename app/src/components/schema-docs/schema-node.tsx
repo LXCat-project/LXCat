@@ -221,40 +221,18 @@ function SchemaNode({
   // --- Union / DiscriminatedUnion ---
   if (node.alternatives && node.alternatives.length > 0) {
     return (
-      <Box>
-        <Group gap="xs" wrap="nowrap">
-          <Icon size={14} color={iconInfo.color} />
-          <Text
-            component="button"
-            span
-            size="sm"
-            c={isSelected ? "blue" : "inherit"}
-            fw={isSelected ? 600 : undefined}
-            style={{ cursor: "pointer", border: "none", background: "none", padding: 0 }}
-            onClick={handleSelect}
-          >
-            {highlight(node.name)}
-          </Text>
-          <Badge size="xs" variant="light" color={iconInfo.color}>
-            {node.alternatives.length} options
-          </Badge>
-          {!node.required && (
-            <Badge size="xs" variant="light" color="gray">optional</Badge>
-          )}
-        </Group>
-        <Box pl={16} mt="xs">
-          {node.alternatives.map((alt, i) => (
-            <SchemaNode
-              key={`${i}_${nodeId(alt)}`}
-              node={alt}
-              depth={depth + 1}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={term}
-            />
-          ))}
-        </Box>
-      </Box>
+      <UnionNode
+        node={node}
+        alternatives={node.alternatives}
+        depth={depth}
+        onSelect={onSelect}
+        selectedId={selectedId}
+        searchTerm={searchTerm}
+        highlight={highlight}
+        Icon={Icon}
+        iconInfo={iconInfo}
+        isSelected={isSelected}
+      />
     );
   }
 
@@ -403,6 +381,99 @@ function CollapsibleObject({
               key={prop.name}
               property={prop}
               depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+// Collapsible union node that shows alternatives when expanded
+function UnionNode({
+  node,
+  alternatives,
+  depth,
+  onSelect,
+  selectedId,
+  searchTerm,
+  highlight,
+  Icon,
+  iconInfo,
+  isSelected,
+}: {
+  node: DocNode;
+  alternatives: DocNode[];
+  depth: number;
+  onSelect?: (node: DocNode, property?: DocProperty) => void;
+  selectedId?: string;
+  searchTerm?: string;
+  highlight: (text: string) => React.ReactNode;
+  Icon: typeof IconLayoutGrid;
+  iconInfo: { icon: typeof IconLayoutGrid; color: string };
+  isSelected: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleSelect = () => {
+    if (onSelect) onSelect(node);
+  };
+
+  return (
+    <Box>
+      {/* Header row: icon → chevron → text */}
+      <Group gap="xs" wrap="nowrap">
+        <Icon size={14} color={iconInfo.color} />
+        <IconChevronRight
+          size={14}
+          data-chevron
+          style={{
+            flexShrink: 0, width: 14,
+            transition: "transform 150ms",
+            transform: expanded ? "rotate(90deg)" : "none",
+            cursor: "pointer",
+          }}
+          onClick={() => setExpanded(!expanded)}
+        />
+        <Text
+          component="button"
+          span
+          size="sm"
+          fw={isSelected ? 600 : undefined}
+          c={isSelected ? "blue" : "inherit"}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
+          onClick={handleSelect}
+        >
+          {highlight(node.name || "(root)")}
+        </Text>
+        <Badge
+          size="xs"
+          variant="light"
+          color={iconInfo.color}
+          style={{ textTransform: "none" }}
+        >
+          {alternatives.length} options
+        </Badge>
+        {!node.required && (
+          <Badge size="xs" variant="light" color="gray">optional</Badge>
+        )}
+      </Group>
+      {/* Alternatives */}
+      {expanded && (
+        <Box pl={16} mt="xs">
+          {alternatives.map((alt, i) => (
+            <SchemaNode
+              key={`${i}_${nodeId(alt)}`}
+              node={alt}
+              depth={depth + 1}
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
