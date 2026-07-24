@@ -544,6 +544,7 @@ function AltNode({
     return (
       <Box>
         <Group gap="xs" wrap="nowrap">
+          <altIconInfo.icon size={14} color={altIconInfo.color} />
           <IconChevronRight
             size={14}
             style={{
@@ -581,6 +582,7 @@ function AltNode({
     return (
       <Box>
         <Group gap="xs" wrap="nowrap">
+          <altIconInfo.icon size={14} color={altIconInfo.color} />
           <IconChevronRight
             size={14}
             style={{
