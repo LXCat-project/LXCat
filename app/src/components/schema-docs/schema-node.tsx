@@ -226,7 +226,7 @@ function SchemaNode({
   // --- Leaf nodes ---
   return (
     <Box style={{ paddingLeft: depth * 16 + 12 }}>
-      <Group gap="xs">
+      <Group gap="xs" wrap="wrap">
         <Icon size={14} color={iconInfo.color} />
         <Text
           component="button"
@@ -254,6 +254,15 @@ function SchemaNode({
           <Tooltip label={`Literal value: ${node.value}`}>
             <Badge size="xs" variant="light" color="indigo">
               {JSON.stringify(node.value)}
+            </Badge>
+          </Tooltip>
+        )}
+        {/* Show enum values for enum types */}
+        {node.type === "enum" && node.itemType && (
+          <Tooltip label={`Enum values: ${node.itemType}`}>
+            <Badge size="xs" variant="light" color="teal">
+              {node.itemType.split(" | ").slice(0, 5).join(", ")}
+              {node.itemType.split(" | ").length > 5 && "+"}
             </Badge>
           </Tooltip>
         )}
