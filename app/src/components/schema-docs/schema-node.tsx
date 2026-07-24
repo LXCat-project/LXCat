@@ -139,7 +139,6 @@ function SchemaNode({
         onSelect={onSelect}
         selectedId={selectedId}
         searchTerm={term}
-        handleSelect={handleSelect}
         highlight={highlight}
         Icon={Icon}
         iconInfo={iconInfo}
@@ -258,7 +257,6 @@ function CollapsibleObject({
   onSelect,
   selectedId,
   searchTerm,
-  handleSelect,
   highlight,
   Icon,
   iconInfo,
@@ -270,12 +268,31 @@ function CollapsibleObject({
   onSelect?: (node: DocNode, property?: DocProperty) => void;
   selectedId?: string;
   searchTerm?: string;
-  handleSelect: () => void;
   highlight: (text: string) => React.ReactNode;
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
 }) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Auto-expand if search term matches any children
+  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const showChildren = autoExpand || expanded;
+
+  const handleRowClick = (e: React.MouseEvent) => {
+    // Toggle expand on chevron click, select on rest of header
+    if ((e.target as HTMLElement).closest('[data-chevron]')) {
+      setExpanded(!expanded);
+    } else {
+      // Toggle expand on header click
+      setExpanded(!expanded);
+    }
+  };
+
+  const handleSelect = () => {
+    if (onSelect) onSelect(node);
+  };
+
   return (
     <Box>
       {/* Header row */}
@@ -288,11 +305,13 @@ function CollapsibleObject({
           fontWeight: isSelected ? 600 : undefined,
           color: isSelected ? "var(--mantine-color-blue-filled)" : undefined,
         }}
-        onClick={handleSelect}
+        onClick={handleRowClick}
+        onDoubleClick={handleSelect}
       >
         <IconChevronRight
           size={14}
-          style={{ flexShrink: 0, width: 14 }}
+          data-chevron
+          style={{ flexShrink: 0, width: 14, transition: "transform 150ms" }}
         />
         <Icon size={14} color={iconInfo.color} />
         <Text span size="sm" fw={600}>
@@ -311,24 +330,26 @@ function CollapsibleObject({
         )}
       </Group>
       {/* Description */}
-      {node.description && (
+      {showChildren && node.description && (
         <Text size="xs" c="dimmed" pl={depth * 16 + 12} py={2}>
           {highlight(node.description)}
         </Text>
       )}
       {/* Children */}
-      <Box pl={depth * 16 + 32}>
-        {properties.map((prop) => (
-          <PropertyRow
-            key={prop.name}
-            property={prop}
-            depth={depth}
-            onSelect={onSelect}
-            selectedId={selectedId}
-            searchTerm={searchTerm}
-          />
-        ))}
-      </Box>
+      {showChildren && (
+        <Box pl={depth * 16 + 32}>
+          {properties.map((prop) => (
+            <PropertyRow
+              key={prop.name}
+              property={prop}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
