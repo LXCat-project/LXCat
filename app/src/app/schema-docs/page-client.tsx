@@ -55,7 +55,7 @@ export function DocsPageClient({ rootNode }: DocsPageClientProps) {
         </Center>
         <SchemaSearch onSearch={setSearchTerm} />
         <ScrollArea style={{ height: "calc(100vh - 140px)" }}>
-          <Accordion variant="contained" chevronPosition="left">
+          <Accordion variant="contained" chevronPosition="left" multiple>
             <SchemaNode
               node={rootNode}
               onSelect={handleSelect}
