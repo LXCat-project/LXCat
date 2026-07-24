@@ -186,7 +186,7 @@ function SchemaNode({
   // --- Union / DiscriminatedUnion ---
   if (node.alternatives && node.alternatives.length > 0) {
     return (
-      <Box style={{ paddingLeft: depth * 16 + 12 }}>
+      <Box>
         <Group gap="xs" wrap="nowrap">
           <Icon size={14} color={iconInfo.color} />
           <Text
@@ -207,7 +207,7 @@ function SchemaNode({
             <Badge size="xs" variant="light" color="gray">optional</Badge>
           )}
         </Group>
-        <Box pl={depth * 16 + 32} mt="xs">
+        <Box pl={16} mt="xs">
           {node.alternatives.map((alt, i) => (
             <SchemaNode
               key={`${i}_${nodeId(alt)}`}
@@ -225,7 +225,7 @@ function SchemaNode({
 
   // --- Leaf nodes ---
   return (
-    <Box style={{ paddingLeft: depth * 16 + 12 }}>
+    <Box>
       <Group gap="xs" wrap="wrap">
         <Icon size={14} color={iconInfo.color} />
         <Text
@@ -313,7 +313,7 @@ function CollapsibleObject({
   return (
     <Box>
       {/* Header row: icon → chevron → text */}
-      <Group gap="xs" wrap="nowrap" style={{ paddingLeft: depth * 16 + 12 }}>
+      <Group gap="xs" wrap="nowrap">
         <Icon size={14} color={iconInfo.color} />
         <IconChevronRight
           size={14}
@@ -356,13 +356,13 @@ function CollapsibleObject({
       </Group>
       {/* Description */}
       {showChildren && node.description && (
-        <Text size="xs" c="dimmed" pl={depth * 16 + 12} py={2}>
+        <Text size="xs" c="dimmed" pl={16} py={2}>
           {highlight(node.description)}
         </Text>
       )}
       {/* Children */}
       {showChildren && (
-        <Box pl={depth * 16 + 32}>
+        <Box pl={16}>
           {properties.map((prop) => (
             <PropertyRow
               key={prop.name}
@@ -406,7 +406,7 @@ function RecordNode({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Box style={{ paddingLeft: depth * 16 + 12 }}>
+    <Box>
       <Group gap="xs" wrap="nowrap">
         <Icon
           size={14}
@@ -488,7 +488,7 @@ function ArrayNode({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Box style={{ paddingLeft: depth * 16 + 12 }}>
+    <Box>
       <Group gap="xs" wrap="nowrap">
         <Icon
           size={14}
