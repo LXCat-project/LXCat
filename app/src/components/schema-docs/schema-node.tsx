@@ -156,23 +156,6 @@ function SchemaNode({
         />
       );
     }
-    // Unwrap anonymous unions/tuples - render alternatives directly
-    if (node.alternatives) {
-      return (
-        <Box>
-          {node.alternatives.map((alt, i) => (
-            <SchemaNode
-              key={`${i}_${nodeId(alt)}`}
-              node={alt}
-              depth={depth}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={searchTerm}
-            />
-          ))}
-        </Box>
-      );
-    }
   }
 
   // --- Object types with properties: manual collapsible ---
@@ -467,7 +450,7 @@ function UnionNode({
           }}
           onClick={handleSelect}
         >
-          {highlight(node.name || "(root)")}
+          {highlight(node.name)}
         </Text>
         <Badge
           size="xs"
@@ -485,18 +468,97 @@ function UnionNode({
       {expanded && (
         <Box pl={16}>
           {alternatives.map((alt, i) => (
-            <SchemaNode
+            <AltNode
               key={`${i}_${nodeId(alt)}`}
               node={alt}
               depth={depth + 1}
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              highlight={highlight}
+              Icon={Icon}
+              iconInfo={iconInfo}
             />
           ))}
         </Box>
       )}
     </Box>
+  );
+}
+
+// Render a union alternative without the name wrapper
+function AltNode({
+  node,
+  depth,
+  onSelect,
+  selectedId,
+  searchTerm,
+  highlight,
+  Icon,
+  iconInfo,
+}: {
+  node: DocNode;
+  depth: number;
+  onSelect?: (node: DocNode, property?: DocProperty) => void;
+  selectedId?: string;
+  searchTerm?: string;
+  highlight: (text: string) => React.ReactNode;
+  Icon: typeof IconLayoutGrid;
+  iconInfo: { icon: typeof IconLayoutGrid; color: string };
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Anonymous object alternative: show as collapsible section
+  if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
+    return (
+      <Box>
+        <Group gap="xs" wrap="nowrap">
+          <IconChevronRight
+            size={14}
+            style={{
+              flexShrink: 0, width: 14,
+              transition: "transform 150ms",
+              transform: expanded ? "rotate(90deg)" : "none",
+              cursor: "pointer",
+            }}
+            onClick={() => setExpanded(!expanded)}
+          />
+          <Badge
+            size="xs"
+            variant="light"
+            color={iconInfo.color}
+            style={{ textTransform: "none" }}
+          >
+            object
+          </Badge>
+        </Group>
+        {expanded && (
+          <Box pl={16}>
+            {node.properties.map((prop) => (
+              <SchemaNode
+                key={prop.name}
+                node={prop.node}
+                depth={depth}
+                onSelect={onSelect}
+                selectedId={selectedId}
+                searchTerm={searchTerm}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+    );
+  }
+
+  // Normal alternative: render with SchemaNode
+  return (
+    <SchemaNode
+      node={node}
+      depth={depth}
+      onSelect={onSelect}
+      selectedId={selectedId}
+      searchTerm={searchTerm}
+    />
   );
 }
 
