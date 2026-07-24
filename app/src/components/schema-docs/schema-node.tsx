@@ -550,6 +550,48 @@ function AltNode({
     );
   }
 
+  // Anonymous array/record alternative: show with its item type
+  if ((node.name === "" || node.name === "(root)") && node.itemNode) {
+    return (
+      <Box>
+        <Group gap="xs" wrap="nowrap">
+          <IconChevronRight
+            size={14}
+            style={{
+              flexShrink: 0, width: 14,
+              transition: "transform 150ms",
+              transform: expanded ? "rotate(90deg)" : "none",
+              cursor: "pointer",
+            }}
+            onClick={() => setExpanded(!expanded)}
+          />
+          <Badge
+            size="xs"
+            variant="light"
+            color={iconInfo.color}
+            style={{ textTransform: "none" }}
+          >
+            {node.type}
+          </Badge>
+          <Badge size="xs" variant="outline" color={iconInfo.color}>
+            {node.itemType}
+          </Badge>
+        </Group>
+        {expanded && (
+          <Box pl={16}>
+            <SchemaNode
+              node={node.itemNode}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          </Box>
+        )}
+      </Box>
+    );
+  }
+
   // Normal alternative: render with SchemaNode
   return (
     <SchemaNode
