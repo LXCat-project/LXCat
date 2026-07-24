@@ -35,6 +35,7 @@ interface SchemaNodeProps {
   onSelect?: (node: DocNode, property?: DocProperty) => void;
   selectedId?: string;
   searchTerm?: string;
+  expanded?: boolean;
 }
 
 // Type icon mapping
@@ -90,6 +91,7 @@ function SchemaNode({
   onSelect,
   selectedId,
   searchTerm,
+  expanded,
 }: SchemaNodeProps) {
   const iconInfo = typeIcons[node.type] || typeIcons.object;
   const Icon = iconInfo.icon;
@@ -195,6 +197,7 @@ function SchemaNode({
         Icon={Icon}
         iconInfo={iconInfo}
         isSelected={isSelected}
+        defaultExpanded={expanded}
       />
     );
   }
@@ -311,6 +314,7 @@ function CollapsibleObject({
   Icon,
   iconInfo,
   isSelected,
+  defaultExpanded,
 }: {
   node: DocNode;
   properties: DocProperty[];
@@ -322,8 +326,9 @@ function CollapsibleObject({
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
+  defaultExpanded?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
   // Auto-expand if search term matches any children
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
