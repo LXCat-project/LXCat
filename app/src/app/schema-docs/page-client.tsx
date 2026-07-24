@@ -7,6 +7,7 @@
 import { useState } from "react";
 
 import {
+  Accordion,
   AppShell,
   AppShellMain,
   AppShellNavbar,
@@ -54,11 +55,13 @@ export function DocsPageClient({ rootNode }: DocsPageClientProps) {
         </Center>
         <SchemaSearch onSearch={setSearchTerm} />
         <ScrollArea style={{ height: "calc(100vh - 140px)" }}>
-          <SchemaNode
-            node={rootNode}
-            onSelect={handleSelect}
-            searchTerm={searchTerm}
-          />
+          <Accordion variant="contained" chevronPosition="left">
+            <SchemaNode
+              node={rootNode}
+              onSelect={handleSelect}
+              searchTerm={searchTerm}
+            />
+          </Accordion>
         </ScrollArea>
       </AppShellNavbar>
       <AppShellMain>
