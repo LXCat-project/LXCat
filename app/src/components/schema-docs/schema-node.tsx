@@ -147,6 +147,24 @@ function SchemaNode({
     );
   }
 
+  // --- Array types with expandable item type ---
+  if (node.type === "array" && node.itemNode) {
+    return (
+      <ArrayNode
+        node={node}
+        itemNode={node.itemNode}
+        depth={depth}
+        onSelect={onSelect}
+        selectedId={selectedId}
+        searchTerm={term}
+        highlight={highlight}
+        Icon={Icon}
+        iconInfo={iconInfo}
+        isSelected={isSelected}
+      />
+    );
+  }
+
   // --- Record types with expandable value type ---
   if (node.type === "record" && node.itemNode) {
     return (
@@ -416,6 +434,93 @@ function RecordNode({
         {node.valueType && (
           <Badge size="xs" variant="outline" color={iconInfo.color}>
             {node.valueType}
+          </Badge>
+        )}
+      </Group>
+      {expanded && (
+        <Box pl={16} mt="xs">
+          <SchemaNode
+            node={itemNode}
+            depth={depth + 1}
+            onSelect={onSelect}
+            selectedId={selectedId}
+            searchTerm={searchTerm}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+// Render an array with expandable item type
+function ArrayNode({
+  node,
+  itemNode,
+  depth,
+  onSelect,
+  selectedId,
+  searchTerm,
+  highlight,
+  Icon,
+  iconInfo,
+  isSelected,
+}: {
+  node: DocNode;
+  itemNode: DocNode;
+  depth: number;
+  onSelect?: (node: DocNode, property?: DocProperty) => void;
+  selectedId?: string;
+  searchTerm?: string;
+  highlight: (text: string) => React.ReactNode;
+  Icon: typeof IconLayoutGrid;
+  iconInfo: { icon: typeof IconLayoutGrid; color: string };
+  isSelected: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <Box style={{ paddingLeft: depth * 16 + 12 }}>
+      <Group gap="xs" wrap="nowrap">
+        <Icon
+          size={14}
+          color={iconInfo.color}
+          style={{ cursor: "pointer" }}
+          onClick={() => setExpanded(!expanded)}
+        />
+        <IconChevronRight
+          size={12}
+          style={{
+            cursor: "pointer",
+            transform: expanded ? "rotate(90deg)" : "none",
+            transition: "transform 150ms",
+          }}
+          onClick={() => setExpanded(!expanded)}
+        />
+        <Text
+          component="button"
+          span
+          size="sm"
+          c={isSelected ? "blue" : "inherit"}
+          fw={isSelected ? 600 : undefined}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
+          onClick={() => onSelect?.(node)}
+        >
+          {highlight(node.name || "(anonymous)")}
+        </Text>
+        <Badge size="xs" variant="light" color={iconInfo.color}>
+          array
+        </Badge>
+        {!node.required && (
+          <Badge size="xs" variant="light" color="gray">optional</Badge>
+        )}
+        {node.itemType && (
+          <Badge size="xs" variant="outline" color={iconInfo.color}>
+            {node.itemType}
           </Badge>
         )}
       </Group>
