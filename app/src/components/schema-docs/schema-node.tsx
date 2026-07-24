@@ -155,6 +155,7 @@ function SchemaNode({
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth}
+                optionIndex={i}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -490,6 +491,7 @@ function UnionNode({
               key={`${i}_${nodeId(alt)}`}
               node={alt}
               depth={depth + 1}
+              optionIndex={i}
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
@@ -514,6 +516,7 @@ function AltNode({
   highlight,
   Icon,
   iconInfo,
+  optionIndex,
 }: {
   node: DocNode;
   depth: number;
@@ -523,10 +526,15 @@ function AltNode({
   highlight: (text: string) => React.ReactNode;
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
+  optionIndex: number;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
+
+  // Determine label for the alternative
+  const typeLabel = node.properties ? "object" : node.type;
+  const label = `${typeLabel} (Option ${optionIndex + 1})`;
 
   // Anonymous object alternative: show as collapsible section
   if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
@@ -543,14 +551,9 @@ function AltNode({
             }}
             onClick={() => setExpanded(!expanded)}
           />
-          <Badge
-            size="xs"
-            variant="light"
-            color={iconInfo.color}
-            style={{ textTransform: "none" }}
-          >
-            object
-          </Badge>
+          <Text size="xs" c="dimmed" fw={500}>
+            {label}
+          </Text>
         </Group>
         {showChildren && (
           <Box pl={16}>
@@ -585,17 +588,9 @@ function AltNode({
             }}
             onClick={() => setExpanded(!expanded)}
           />
-          <Badge
-            size="xs"
-            variant="light"
-            color={iconInfo.color}
-            style={{ textTransform: "none" }}
-          >
-            {node.type}
-          </Badge>
-          <Badge size="xs" variant="outline" color={iconInfo.color}>
-            {node.itemType}
-          </Badge>
+          <Text size="xs" c="dimmed" fw={500}>
+            {`${node.type} → ${node.itemType} (Option ${optionIndex + 1})`}
+          </Text>
         </Group>
         {showChildren && (
           <Box pl={16}>
@@ -702,6 +697,7 @@ function RecordNode({
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth + 1}
+                optionIndex={i}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -808,6 +804,7 @@ function ArrayNode({
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth + 1}
+                optionIndex={i}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
