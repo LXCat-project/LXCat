@@ -125,12 +125,29 @@ function SchemaNode({
     );
   };
 
-  // Unwrap anonymous nodes (empty name) that have a single child
+  // Unwrap anonymous nodes (empty name) by rendering children directly
   if (node.name === "" || node.name === "(root)") {
-    if (node.properties && node.properties.length === 1 && !node.description) {
+    // Object with properties: render each property as a SchemaNode at this depth
+    if (node.properties && node.properties.length > 0) {
+      return (
+        <Box>
+          {node.properties.map((prop) => (
+            <SchemaNode
+              key={prop.name}
+              node={prop.node}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      );
+    }
+    if (node.itemNode && (node.type === "array" || node.type === "record")) {
       return (
         <SchemaNode
-          node={node.properties[0].node}
+          node={node.itemNode}
           depth={depth}
           onSelect={onSelect}
           selectedId={selectedId}
@@ -138,24 +155,7 @@ function SchemaNode({
         />
       );
     }
-    if (node.itemNode && node.type === "array") {
-      return (
-        <ArrayNode
-          node={node}
-          itemNode={node.itemNode}
-          depth={depth}
-          onSelect={onSelect}
-          selectedId={selectedId}
-          searchTerm={searchTerm}
-          highlight={highlight}
-          Icon={Icon}
-          iconInfo={iconInfo}
-          isSelected={isSelected}
-        />
-      );
-    }
-    if (node.alternatives && node.type === "union") {
-      // Render union alternatives directly at this depth
+    if (node.alternatives && (node.type === "union" || node.type === "tuple")) {
       return (
         <Box>
           {node.alternatives.map((alt, i) => (
@@ -169,38 +169,6 @@ function SchemaNode({
             />
           ))}
         </Box>
-      );
-    }
-    if (node.alternatives && node.type === "tuple") {
-      return (
-        <Box>
-          {node.alternatives.map((alt, i) => (
-            <SchemaNode
-              key={`${i}_${nodeId(alt)}`}
-              node={alt}
-              depth={depth}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={searchTerm}
-            />
-          ))}
-        </Box>
-      );
-    }
-    if (node.itemNode && node.type === "record") {
-      return (
-        <RecordNode
-          node={node}
-          itemNode={node.itemNode}
-          depth={depth}
-          onSelect={onSelect}
-          selectedId={selectedId}
-          searchTerm={searchTerm}
-          highlight={highlight}
-          Icon={Icon}
-          iconInfo={iconInfo}
-          isSelected={isSelected}
-        />
       );
     }
   }
