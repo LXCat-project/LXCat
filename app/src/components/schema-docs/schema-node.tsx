@@ -126,6 +126,7 @@ function SchemaNode({
   };
 
   // Unwrap anonymous nodes (empty name) by rendering children directly
+  // but NOT unions/tuples - those need their alternatives visible
   if (node.name === "" || node.name === "(root)") {
     // Object with properties: render each property as a SchemaNode at this depth
     if (node.properties && node.properties.length > 0) {
@@ -155,22 +156,8 @@ function SchemaNode({
         />
       );
     }
-    if (node.alternatives && (node.type === "union" || node.type === "tuple")) {
-      return (
-        <Box>
-          {node.alternatives.map((alt, i) => (
-            <SchemaNode
-              key={`${i}_${nodeId(alt)}`}
-              node={alt}
-              depth={depth}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={searchTerm}
-            />
-          ))}
-        </Box>
-      );
-    }
+    // Don't unwrap unions/tuples - they should show their alternatives
+    // Let the normal union/tuple rendering handle them
   }
 
   // --- Object types with properties: manual collapsible ---
