@@ -156,6 +156,7 @@ function SchemaNode({
                 node={alt}
                 depth={depth}
                 optionIndex={i}
+                isTuple={false}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -233,7 +234,7 @@ function SchemaNode({
     );
   }
 
-  // --- Union / DiscriminatedUnion ---
+  // --- Union / DiscriminatedUnion / Tuple ---
   if (node.alternatives && node.alternatives.length > 0) {
     return (
       <UnionNode
@@ -247,6 +248,7 @@ function SchemaNode({
         Icon={Icon}
         iconInfo={iconInfo}
         isSelected={isSelected}
+        isTuple={node.type === "tuple"}
       />
     );
   }
@@ -411,6 +413,7 @@ function UnionNode({
   Icon,
   iconInfo,
   isSelected,
+  isTuple,
 }: {
   node: DocNode;
   alternatives: DocNode[];
@@ -422,6 +425,7 @@ function UnionNode({
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
+  isTuple?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
@@ -469,7 +473,7 @@ function UnionNode({
           color={iconInfo.color}
           style={{ textTransform: "none" }}
         >
-          {alternatives.length} options
+          {alternatives.length} {isTuple ? "elements" : "options"}
         </Badge>
         {!node.required && (
           <Badge size="xs" variant="light" color="gray">optional</Badge>
@@ -484,6 +488,7 @@ function UnionNode({
               node={alt}
               depth={depth + 1}
               optionIndex={i}
+              isTuple={isTuple}
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
@@ -509,6 +514,7 @@ function AltNode({
   Icon,
   iconInfo,
   optionIndex,
+  isTuple,
 }: {
   node: DocNode;
   depth: number;
@@ -519,6 +525,7 @@ function AltNode({
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   optionIndex: number;
+  isTuple?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
@@ -529,7 +536,11 @@ function AltNode({
 
   // Determine label for the alternative
   const typeLabel = node.properties ? "object" : node.type;
-  const label = `${typeLabel} (Option ${optionIndex + 1})`;
+  const indexLabel = isTuple ? String(optionIndex) : `Option ${optionIndex + 1}`;
+  const label = `${typeLabel} (${indexLabel})`;
+
+  // For tuples, use the element name (e.g., "[0]") as the primary label
+  const tupleLabel = isTuple && node.name ? node.name : undefined;
 
   // Anonymous object alternative: show as collapsible section
   if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
@@ -548,7 +559,7 @@ function AltNode({
             onClick={() => setExpanded(!expanded)}
           />
           <Text size="xs" c="dimmed" fw={500}>
-            {label}
+            {tupleLabel || label}
           </Text>
         </Group>
         {showChildren && (
@@ -586,7 +597,7 @@ function AltNode({
             onClick={() => setExpanded(!expanded)}
           />
           <Text size="xs" c="dimmed" fw={500}>
-            {`${node.type} → ${node.itemType} (Option ${optionIndex + 1})`}
+            {tupleLabel || `${node.type} → ${node.itemType} (${indexLabel})`}
           </Text>
         </Group>
         {showChildren && (
@@ -611,7 +622,7 @@ function AltNode({
         <Group gap="xs" wrap="nowrap">
           <altIconInfo.icon size={14} color={altIconInfo.color} />
           <Text size="xs" c="dimmed" fw={500}>
-            {`${node.type} (Option ${optionIndex + 1})`}
+            {tupleLabel || `${node.type} (${indexLabel})`}
           </Text>
         </Group>
       </Box>
@@ -709,6 +720,7 @@ function RecordNode({
                 node={alt}
                 depth={depth + 1}
                 optionIndex={i}
+                isTuple={false}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -816,6 +828,7 @@ function ArrayNode({
                 node={alt}
                 depth={depth + 1}
                 optionIndex={i}
+                isTuple={false}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
