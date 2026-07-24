@@ -468,7 +468,7 @@ function UnionNode({
       </Group>
       {/* Alternatives */}
       {expanded && (
-        <Box pl={16} mt="xs">
+        <Box pl={16}>
           {alternatives.map((alt, i) => (
             <SchemaNode
               key={`${i}_${nodeId(alt)}`}
@@ -553,7 +553,7 @@ function RecordNode({
         )}
       </Group>
       {expanded && (
-        <Box pl={16} mt="xs">
+        <Box pl={16}>
           <SchemaNode
             node={itemNode}
             depth={depth + 1}
@@ -640,7 +640,7 @@ function ArrayNode({
         )}
       </Group>
       {expanded && (
-        <Box pl={16} mt="xs">
+        <Box pl={16}>
           <SchemaNode
             node={itemNode}
             depth={depth + 1}
