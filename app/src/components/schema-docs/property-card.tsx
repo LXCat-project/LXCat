@@ -4,7 +4,7 @@
 
 "use client";
 
-import { Badge, Box, Card, Text, Title } from "@mantine/core";
+import { Badge, Box, Card, Group, Text, Title } from "@mantine/core";
 import { DocNode } from "@lxcat/schema";
 import { SchemaNode } from "./schema-node";
 
@@ -65,9 +65,13 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
           <Text size="xs" c="dimmed">
             Allowed values
           </Text>
-          <Text size="sm" fw={500}>
-            {node.itemType}
-          </Text>
+          <Group gap="xs" wrap="wrap" mt="xs">
+            {node.itemType.split(" | ").map((val, i) => (
+              <Badge key={i} size="md" variant="light" color="teal">
+                {val}
+              </Badge>
+            ))}
+          </Group>
         </Box>
       )}
 
@@ -80,6 +84,39 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
           <Text size="sm" fw={500}>
             {node.itemType}
           </Text>
+          {/* Show enum values if item type is enum */}
+          {node.itemType === "enum" && node.itemNode?.type === "enum" && node.itemNode?.itemType && (
+            <Group gap="xs" wrap="wrap" mt="xs">
+              {node.itemNode.itemType.split(" | ").map((val, i) => (
+                <Badge key={i} size="md" variant="light" color="teal">
+                  {val}
+                </Badge>
+              ))}
+            </Group>
+          )}
+          {/* Show object properties if item type is object */}
+          {node.itemNode?.type === "object" && node.itemNode?.properties && (
+            <Box mt="xs">
+              {node.itemNode.properties.map((prop) => (
+                <Box key={prop.name} mb="xs">
+                  <Text size="sm" fw={500}>
+                    {prop.name}{" "}
+                    {!prop.node.required && (
+                      <Badge size="xs" variant="light" color="gray">optional</Badge>
+                    )}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    → {prop.node.type}
+                  </Text>
+                  {prop.node.description && (
+                    <Text size="xs" c="dimmed">
+                      {prop.node.description}
+                    </Text>
+                  )}
+                </Box>
+              ))}
+            </Box>
+          )}
         </Box>
       )}
 
