@@ -79,6 +79,10 @@ const links = [
         link: "/api-doc",
         label: "API",
       },
+      {
+        link: "/schema-docs",
+        label: "Schema Reference",
+      },
     ],
   },
 ];
