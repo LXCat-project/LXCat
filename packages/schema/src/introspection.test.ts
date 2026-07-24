@@ -5,6 +5,7 @@
 import {
   array,
   boolean,
+  discriminatedUnion,
   enum as zodEnum,
   literal,
   number,
@@ -127,6 +128,19 @@ describe("zodToDocNode", () => {
     expectType(node, "record");
     expect(node.valueType).toBe("string");
     expect(node.itemNode).toBeDefined();
+  });
+
+  test("discriminated unions use discriminant values as option names", () => {
+    const Cat = object({ type: literal("Cat"), meow: string() });
+    const Dog = object({ type: literal("Dog"), bark: string() });
+    const Duck = object({ type: literal("Duck"), quack: string() });
+    const schema = discriminatedUnion("type", [Cat, Dog, Duck]);
+    const node = zodToDocNode(schema);
+    expectType(node, "discriminatedUnion");
+    expect(node.alternatives).toHaveLength(3);
+    expect(node.alternatives![0].name).toBe("Cat");
+    expect(node.alternatives![1].name).toBe("Dog");
+    expect(node.alternatives![2].name).toBe("Duck");
   });
 
   test("intersection merges properties", () => {

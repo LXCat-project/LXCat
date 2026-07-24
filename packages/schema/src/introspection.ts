@@ -200,26 +200,41 @@ export function zodToDocNode(
 
     case "union": {
       const options = (def.options as unknown) as ZodTypeAny[];
+
+      // Check if this is a discriminated union
+      const discriminator = (def.discriminator as unknown) as string | undefined;
+      if (discriminator) {
+        // Extract discriminant values from each option's discriminator field
+        const alternatives = options.map((opt, i) => {
+          // Try to get the literal discriminant value
+          const optDef = toDef(opt);
+          const shape = (optDef.shape as unknown) as Record<string, ZodTypeAny> | undefined;
+          const discField = shape?.[discriminator];
+          let optName = `Option ${i + 1}`;
+          if (discField) {
+            const discDef = toDef(discField);
+            if (discDef.type === "literal" && Array.isArray(discDef.values)) {
+              optName = discDef.values[0] as string;
+            }
+          }
+          return zodToDocNode(opt, optName, true);
+        });
+        return {
+          name,
+          type: "discriminatedUnion",
+          description: description || undefined,
+          required,
+          alternatives,
+        };
+      }
+
+      // Regular union
       const alternatives = options.map((opt) =>
         zodToDocNode(opt, "", true)
       );
       return {
         name,
         type: "union",
-        description: description || undefined,
-        required,
-        alternatives,
-      };
-    }
-
-    case "discriminatedUnion": {
-      const options = (def.options as unknown) as ZodTypeAny[];
-      const alternatives = options.map((opt) =>
-        zodToDocNode(opt, "", true)
-      );
-      return {
-        name,
-        type: "discriminatedUnion",
         description: description || undefined,
         required,
         alternatives,
