@@ -146,6 +146,23 @@ function SchemaNode({
       );
     }
     if (node.itemNode && (node.type === "array" || node.type === "record")) {
+      // If the itemNode is a union, render alternatives directly (skip union wrapper)
+      if (node.itemNode.alternatives) {
+        return (
+          <Box>
+            {node.itemNode.alternatives.map((alt, i) => (
+              <SchemaNode
+                key={`${i}_${nodeId(alt)}`}
+                node={alt}
+                depth={depth}
+                onSelect={onSelect}
+                selectedId={selectedId}
+                searchTerm={searchTerm}
+              />
+            ))}
+          </Box>
+        );
+      }
       return (
         <SchemaNode
           node={node.itemNode}
