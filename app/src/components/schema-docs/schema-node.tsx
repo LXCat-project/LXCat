@@ -607,6 +607,23 @@ function AltNode({
     );
   }
 
+  // Anonymous leaf alternative: render with type label
+  if (node.name === "" || node.name === "(root)" || !node.properties && !node.itemNode && !node.alternatives) {
+    return (
+      <Box>
+        <Group gap="xs" wrap="nowrap">
+          <Icon
+            size={14}
+            color={iconInfo.color}
+          />
+          <Text size="xs" c="dimmed" fw={500}>
+            {`${node.type} (Option ${optionIndex + 1})`}
+          </Text>
+        </Group>
+      </Box>
+    );
+  }
+
   // Normal alternative: render with SchemaNode
   return (
     <SchemaNode
