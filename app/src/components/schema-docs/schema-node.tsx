@@ -125,6 +125,86 @@ function SchemaNode({
     );
   };
 
+  // Unwrap anonymous nodes (empty name) that have a single child
+  if (node.name === "" || node.name === "(root)") {
+    if (node.properties && node.properties.length === 1 && !node.description) {
+      return (
+        <SchemaNode
+          node={node.properties[0].node}
+          depth={depth}
+          onSelect={onSelect}
+          selectedId={selectedId}
+          searchTerm={searchTerm}
+        />
+      );
+    }
+    if (node.itemNode && node.type === "array") {
+      return (
+        <ArrayNode
+          node={node}
+          itemNode={node.itemNode}
+          depth={depth}
+          onSelect={onSelect}
+          selectedId={selectedId}
+          searchTerm={searchTerm}
+          highlight={highlight}
+          Icon={Icon}
+          iconInfo={iconInfo}
+          isSelected={isSelected}
+        />
+      );
+    }
+    if (node.alternatives && node.type === "union") {
+      // Render union alternatives directly at this depth
+      return (
+        <Box>
+          {node.alternatives.map((alt, i) => (
+            <SchemaNode
+              key={`${i}_${nodeId(alt)}`}
+              node={alt}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      );
+    }
+    if (node.alternatives && node.type === "tuple") {
+      return (
+        <Box>
+          {node.alternatives.map((alt, i) => (
+            <SchemaNode
+              key={`${i}_${nodeId(alt)}`}
+              node={alt}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      );
+    }
+    if (node.itemNode && node.type === "record") {
+      return (
+        <RecordNode
+          node={node}
+          itemNode={node.itemNode}
+          depth={depth}
+          onSelect={onSelect}
+          selectedId={selectedId}
+          searchTerm={searchTerm}
+          highlight={highlight}
+          Icon={Icon}
+          iconInfo={iconInfo}
+          isSelected={isSelected}
+        />
+      );
+    }
+  }
+
   // --- Object types with properties: manual collapsible ---
   if (node.properties && node.properties.length > 0) {
     const filteredProps = term
