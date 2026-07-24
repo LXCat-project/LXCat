@@ -160,14 +160,10 @@ function SchemaNode({
 
   // --- Object types with properties: manual collapsible ---
   if (node.properties && node.properties.length > 0) {
-    const filteredProps = term
-      ? node.properties.filter((p) => matchesSearch(p.node, term))
-      : node.properties;
-
     return (
       <CollapsibleObject
         node={node}
-        properties={filteredProps}
+        properties={node.properties}
         depth={depth}
         onSelect={onSelect}
         selectedId={selectedId}
@@ -415,6 +411,8 @@ function UnionNode({
   isSelected: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const showChildren = autoExpand || expanded;
 
   const handleSelect = () => {
     if (onSelect) onSelect(node);
@@ -465,7 +463,7 @@ function UnionNode({
         )}
       </Group>
       {/* Alternatives */}
-      {expanded && (
+      {showChildren && (
         <Box pl={16}>
           {alternatives.map((alt, i) => (
             <AltNode
@@ -507,6 +505,8 @@ function AltNode({
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
 }) {
   const [expanded, setExpanded] = useState(false);
+  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const showChildren = autoExpand || expanded;
 
   // Anonymous object alternative: show as collapsible section
   if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
@@ -532,7 +532,7 @@ function AltNode({
             object
           </Badge>
         </Group>
-        {expanded && (
+        {showChildren && (
           <Box pl={16}>
             {node.properties.map((prop) => (
               <SchemaNode
@@ -577,7 +577,7 @@ function AltNode({
             {node.itemType}
           </Badge>
         </Group>
-        {expanded && (
+        {showChildren && (
           <Box pl={16}>
             <SchemaNode
               node={node.itemNode}
@@ -629,6 +629,8 @@ function RecordNode({
   isSelected: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const showChildren = autoExpand || expanded;
 
   return (
     <Box>
@@ -671,7 +673,7 @@ function RecordNode({
           </Badge>
         )}
       </Group>
-      {expanded && (
+      {showChildren && (
         <Box pl={16}>
           <SchemaNode
             node={itemNode}
@@ -711,6 +713,8 @@ function ArrayNode({
   isSelected: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const showChildren = autoExpand || expanded;
 
   return (
     <Box>
@@ -758,7 +762,7 @@ function ArrayNode({
           </Badge>
         )}
       </Group>
-      {expanded && (
+      {showChildren && (
         <Box pl={16}>
           <SchemaNode
             node={itemNode}
