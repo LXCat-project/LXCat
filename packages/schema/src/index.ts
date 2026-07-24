@@ -18,3 +18,11 @@ export {
   VersionedLTPDocumentWithReference,
 } from "./versioned-document.js";
 export { versioned } from "./versioned.js";
+export {
+  zodToDocNode,
+  getRootDocNode,
+  buildTypeMap,
+  type DocNode,
+  type DocProperty,
+  type DocTypeMap,
+} from "./introspection.js";
