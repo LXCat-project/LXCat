@@ -125,60 +125,26 @@ function SchemaNode({
     );
   };
 
-  // --- Object types with properties ---
+  // --- Object types with properties: manual collapsible ---
   if (node.properties && node.properties.length > 0) {
     const filteredProps = term
       ? node.properties.filter((p) => matchesSearch(p.node, term))
       : node.properties;
 
     return (
-      <Accordion.Item value={nodeId(node)}>
-        <Accordion.Control
-          onClick={handleSelect}
-          style={{
-            fontWeight: isSelected ? 600 : undefined,
-            color: isSelected ? "var(--mantine-color-blue-filled)" : undefined,
-            paddingLeft: depth * 16 + 12,
-          }}
-        >
-          <Group gap="xs">
-            <Icon size={14} color={iconInfo.color} />
-            <Text span size="sm" fw={600}>
-              {highlight(node.name || "(root)")}
-            </Text>
-            <Badge
-              size="xs"
-              variant="light"
-              color={iconInfo.color}
-              style={{ textTransform: "none" }}
-            >
-              {node.properties.length} props
-            </Badge>
-            {!node.required && (
-              <Badge size="xs" variant="light" color="gray">optional</Badge>
-            )}
-          </Group>
-        </Accordion.Control>
-        <Accordion.Panel>
-          {node.description && (
-            <Text size="xs" c="dimmed" mb="xs" pl={depth * 16 + 12}>
-              {highlight(node.description)}
-            </Text>
-          )}
-          <Box pl={depth * 16 + 24}>
-            {filteredProps.map((prop) => (
-              <PropertyRow
-                key={prop.name}
-                property={prop}
-                depth={depth + 1}
-                onSelect={onSelect}
-                selectedId={selectedId}
-                searchTerm={term}
-              />
-            ))}
-          </Box>
-        </Accordion.Panel>
-      </Accordion.Item>
+      <CollapsibleObject
+        node={node}
+        properties={filteredProps}
+        depth={depth}
+        onSelect={onSelect}
+        selectedId={selectedId}
+        searchTerm={term}
+        handleSelect={handleSelect}
+        highlight={highlight}
+        Icon={Icon}
+        iconInfo={iconInfo}
+        isSelected={isSelected}
+      />
     );
   }
 
@@ -284,6 +250,89 @@ function SchemaNode({
   );
 }
 
+// Collapsible object section (manual expand/collapse, no Accordion)
+function CollapsibleObject({
+  node,
+  properties,
+  depth,
+  onSelect,
+  selectedId,
+  searchTerm,
+  handleSelect,
+  highlight,
+  Icon,
+  iconInfo,
+  isSelected,
+}: {
+  node: DocNode;
+  properties: DocProperty[];
+  depth: number;
+  onSelect?: (node: DocNode, property?: DocProperty) => void;
+  selectedId?: string;
+  searchTerm?: string;
+  handleSelect: () => void;
+  highlight: (text: string) => React.ReactNode;
+  Icon: typeof IconLayoutGrid;
+  iconInfo: { icon: typeof IconLayoutGrid; color: string };
+  isSelected: boolean;
+}) {
+  return (
+    <Box>
+      {/* Header row */}
+      <Group
+        gap="xs"
+        wrap="nowrap"
+        style={{
+          cursor: "pointer",
+          paddingLeft: depth * 16 + 12,
+          fontWeight: isSelected ? 600 : undefined,
+          color: isSelected ? "var(--mantine-color-blue-filled)" : undefined,
+        }}
+        onClick={handleSelect}
+      >
+        <IconChevronRight
+          size={14}
+          style={{ flexShrink: 0, width: 14 }}
+        />
+        <Icon size={14} color={iconInfo.color} />
+        <Text span size="sm" fw={600}>
+          {highlight(node.name || "(root)")}
+        </Text>
+        <Badge
+          size="xs"
+          variant="light"
+          color={iconInfo.color}
+          style={{ textTransform: "none" }}
+        >
+          {properties.length} props
+        </Badge>
+        {!node.required && (
+          <Badge size="xs" variant="light" color="gray">optional</Badge>
+        )}
+      </Group>
+      {/* Description */}
+      {node.description && (
+        <Text size="xs" c="dimmed" pl={depth * 16 + 12} py={2}>
+          {highlight(node.description)}
+        </Text>
+      )}
+      {/* Children */}
+      <Box pl={depth * 16 + 32}>
+        {properties.map((prop) => (
+          <PropertyRow
+            key={prop.name}
+            property={prop}
+            depth={depth}
+            onSelect={onSelect}
+            selectedId={selectedId}
+            searchTerm={searchTerm}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
 // Render a record with expandable value type
 function RecordNode({
   node,
@@ -309,10 +358,6 @@ function RecordNode({
   isSelected: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
-
-  const filteredItems = searchTerm
-    ? nodeMatchesOrHasMatchingChild(itemNode, searchTerm)
-    : true;
 
   return (
     <Box style={{ paddingLeft: depth * 16 + 12 }}>
@@ -387,7 +432,7 @@ function PropertyRow({
   return (
     <SchemaNode
       node={property.node}
-      depth={depth}
+      depth={depth + 1}
       onSelect={(node) => onSelect?.(node, property)}
       selectedId={selectedId}
       searchTerm={searchTerm}
