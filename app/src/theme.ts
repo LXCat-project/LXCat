@@ -4,7 +4,7 @@
 
 "use client";
 
-import { createTheme, defaultVariantColorsResolver } from "@mantine/core";
+import { createTheme } from "@mantine/core";
 
 export const theme = createTheme({
   colors: {
@@ -22,17 +22,4 @@ export const theme = createTheme({
     ],
   },
   primaryColor: "brand",
-  variantColorResolver: (input) => {
-    const defaultColors = defaultVariantColorsResolver(input);
-
-    if (input.variant === "light") {
-      return {
-        ...defaultColors,
-        background: "var(--mantine-color-brand-0)",
-        hover: "var(--mantine-color-brand-1)",
-      };
-    }
-
-    return defaultColors;
-  },
 });
