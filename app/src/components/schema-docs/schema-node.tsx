@@ -146,7 +146,8 @@ function SchemaNode({
       );
     }
     if (node.itemNode && (node.type === "array" || node.type === "record")) {
-      // If the itemNode is a union, render alternatives directly (skip union wrapper)
+      // If the itemNode is a union or tuple, render alternatives directly (skip wrapper)
+      const isTuple = node.itemNode.type === "tuple";
       if (node.itemNode.alternatives) {
         return (
           <Box>
@@ -156,7 +157,7 @@ function SchemaNode({
                 node={alt}
                 depth={depth}
                 optionIndex={i}
-                isTuple={false}
+                isTuple={isTuple}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -714,7 +715,7 @@ function RecordNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          {/* If itemNode is a union, render alternatives directly with AltNode */}
+          {/* If itemNode is a union or tuple, render alternatives directly with AltNode */}
           {itemNode.alternatives ? (
             itemNode.alternatives.map((alt, i) => (
               <AltNode
@@ -722,7 +723,7 @@ function RecordNode({
                 node={alt}
                 depth={depth + 1}
                 optionIndex={i}
-                isTuple={false}
+                isTuple={itemNode.type === "tuple"}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
@@ -822,7 +823,7 @@ function ArrayNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          {/* If itemNode is a union, render alternatives directly with AltNode */}
+          {/* If itemNode is a union or tuple, render alternatives directly with AltNode */}
           {itemNode.alternatives ? (
             itemNode.alternatives.map((alt, i) => (
               <AltNode
@@ -830,7 +831,7 @@ function ArrayNode({
                 node={alt}
                 depth={depth + 1}
                 optionIndex={i}
-                isTuple={false}
+                isTuple={itemNode.type === "tuple"}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
