@@ -156,8 +156,23 @@ function SchemaNode({
         />
       );
     }
-    // Don't unwrap unions/tuples - they should show their alternatives
-    // Let the normal union/tuple rendering handle them
+    // Unwrap anonymous unions/tuples - render alternatives directly
+    if (node.alternatives) {
+      return (
+        <Box>
+          {node.alternatives.map((alt, i) => (
+            <SchemaNode
+              key={`${i}_${nodeId(alt)}`}
+              node={alt}
+              depth={depth}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </Box>
+      );
+    }
   }
 
   // --- Object types with properties: manual collapsible ---
