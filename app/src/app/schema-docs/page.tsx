@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { getRootDocNode } from "@lxcat/schema";
 import { DocsPageClient } from "./page-client";
 
-export default async function SchemaDocsPage() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/schema-docs`,
-    { cache: "force-cache" },
-  );
-  const rootNode = await response.json();
+export default function SchemaDocsPage() {
+  const rootNode = getRootDocNode();
   return <DocsPageClient rootNode={rootNode} />;
 }
+
+export const dynamic = "force-static";
