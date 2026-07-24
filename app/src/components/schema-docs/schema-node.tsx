@@ -692,13 +692,27 @@ function RecordNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          <SchemaNode
-            node={itemNode}
-            depth={depth + 1}
-            onSelect={onSelect}
-            selectedId={selectedId}
-            searchTerm={searchTerm}
-          />
+          {/* If itemNode is a union, render alternatives directly */}
+          {itemNode.alternatives ? (
+            itemNode.alternatives.map((alt, i) => (
+              <SchemaNode
+                key={`${i}_${nodeId(alt)}`}
+                node={alt}
+                depth={depth + 1}
+                onSelect={onSelect}
+                selectedId={selectedId}
+                searchTerm={searchTerm}
+              />
+            ))
+          ) : (
+            <SchemaNode
+              node={itemNode}
+              depth={depth + 1}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          )}
         </Box>
       )}
     </Box>
@@ -781,13 +795,27 @@ function ArrayNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          <SchemaNode
-            node={itemNode}
-            depth={depth + 1}
-            onSelect={onSelect}
-            selectedId={selectedId}
-            searchTerm={searchTerm}
-          />
+          {/* If itemNode is a union, render alternatives directly */}
+          {itemNode.alternatives ? (
+            itemNode.alternatives.map((alt, i) => (
+              <SchemaNode
+                key={`${i}_${nodeId(alt)}`}
+                node={alt}
+                depth={depth + 1}
+                onSelect={onSelect}
+                selectedId={selectedId}
+                searchTerm={searchTerm}
+              />
+            ))
+          ) : (
+            <SchemaNode
+              node={itemNode}
+              depth={depth + 1}
+              onSelect={onSelect}
+              selectedId={selectedId}
+              searchTerm={searchTerm}
+            />
+          )}
         </Box>
       )}
     </Box>
