@@ -250,7 +250,7 @@ function SchemaNode({
         >
           {highlight(node.name || "(anonymous)")}
         </Text>
-        <Badge size="xs" variant="outline" color={iconInfo.color}>
+        <Badge size="xs" variant="light" color={iconInfo.color}>
           {node.type}
         </Badge>
         {!node.required && (
@@ -263,7 +263,7 @@ function SchemaNode({
         )}
         {node.value !== undefined && (
           <Tooltip label={`Literal value: ${node.value}`}>
-            <Badge size="xs" variant="outline" color="indigo">
+            <Badge size="xs" variant="light" color="indigo">
               {JSON.stringify(node.value)}
             </Badge>
           </Tooltip>
@@ -355,7 +355,7 @@ function CollapsibleObject({
         </Text>
         <Badge
           size="xs"
-          variant="outline"
+          variant="light"
           color={iconInfo.color}
           style={{ textTransform: "none" }}
         >
@@ -454,7 +454,7 @@ function UnionNode({
         </Text>
         <Badge
           size="xs"
-          variant="outline"
+          variant="light"
           color={iconInfo.color}
           style={{ textTransform: "none" }}
         >
@@ -525,7 +525,7 @@ function AltNode({
           />
           <Badge
             size="xs"
-            variant="outline"
+            variant="light"
             color={iconInfo.color}
             style={{ textTransform: "none" }}
           >
@@ -567,7 +567,7 @@ function AltNode({
           />
           <Badge
             size="xs"
-            variant="outline"
+            variant="light"
             color={iconInfo.color}
             style={{ textTransform: "none" }}
           >
@@ -659,7 +659,7 @@ function RecordNode({
         >
           {highlight(node.name)}
         </Text>
-        <Badge size="xs" variant="outline" color={iconInfo.color}>
+        <Badge size="xs" variant="light" color={iconInfo.color}>
           record
         </Badge>
         {!node.required && (
@@ -746,7 +746,7 @@ function ArrayNode({
         >
           {highlight(node.name || "(anonymous)")}
         </Text>
-        <Badge size="xs" variant="outline" color={iconInfo.color}>
+        <Badge size="xs" variant="light" color={iconInfo.color}>
           array
         </Badge>
         {!node.required && (
