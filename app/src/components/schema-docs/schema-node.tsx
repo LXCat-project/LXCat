@@ -279,35 +279,15 @@ function CollapsibleObject({
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    // Toggle expand on chevron click, select on rest of header
-    if ((e.target as HTMLElement).closest('[data-chevron]')) {
-      setExpanded(!expanded);
-    } else {
-      // Toggle expand on header click
-      setExpanded(!expanded);
-    }
-  };
-
   const handleSelect = () => {
     if (onSelect) onSelect(node);
   };
 
   return (
     <Box>
-      {/* Header row */}
-      <Group
-        gap="xs"
-        wrap="nowrap"
-        style={{
-          cursor: "pointer",
-          paddingLeft: depth * 16 + 12,
-          fontWeight: isSelected ? 600 : undefined,
-          color: isSelected ? "var(--mantine-color-blue-filled)" : undefined,
-        }}
-        onClick={handleRowClick}
-        onDoubleClick={handleSelect}
-      >
+      {/* Header row: icon → chevron → text */}
+      <Group gap="xs" wrap="nowrap" style={{ paddingLeft: depth * 16 + 12 }}>
+        <Icon size={14} color={iconInfo.color} />
         <IconChevronRight
           size={14}
           data-chevron
@@ -315,10 +295,24 @@ function CollapsibleObject({
             flexShrink: 0, width: 14,
             transition: "transform 150ms",
             transform: expanded ? "rotate(90deg)" : "none",
+            cursor: "pointer",
           }}
+          onClick={() => setExpanded(!expanded)}
         />
-        <Icon size={14} color={iconInfo.color} />
-        <Text span size="sm">
+        <Text
+          component="button"
+          span
+          size="sm"
+          fw={isSelected ? 600 : undefined}
+          c={isSelected ? "blue" : "inherit"}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
+          onClick={handleSelect}
+        >
           {highlight(node.name || "(root)")}
         </Text>
         <Badge
