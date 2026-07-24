@@ -50,7 +50,7 @@ const typeIcons: Record<string, { icon: typeof IconLayoutGrid; color: string }> 
   literal: { icon: IconHash, color: "indigo" },
   tuple: { icon: IconList, color: "violet" },
   record: { icon: IconLayoutGrid, color: "pink" },
-  intersection: { icon: IconLayoutGrid, color: "grape" },
+  intersection: { icon: IconLayoutGrid, color: "blue" },
   lazy: { icon: IconLayoutGrid, color: "gray" },
 };
 
