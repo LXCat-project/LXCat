@@ -539,8 +539,10 @@ function AltNode({
   const indexLabel = isTuple ? String(optionIndex) : `Option ${optionIndex + 1}`;
   const label = `${typeLabel} (${indexLabel})`;
 
-  // For tuples, use the element name (e.g., "[0]") as the primary label
-  const tupleLabel = isTuple && node.name ? node.name : undefined;
+  // For tuples, use the element name with type (e.g., "[0]: string")
+  const tupleLabel = isTuple && node.name
+    ? `${node.name}: ${node.properties ? "object" : node.type}`
+    : undefined;
 
   // Anonymous object alternative: show as collapsible section
   if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
