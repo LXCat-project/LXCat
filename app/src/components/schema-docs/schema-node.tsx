@@ -273,7 +273,7 @@ function SchemaNode({
         {!node.required && (
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
-        {node.itemType && (
+        {node.itemType && node.type !== "literal" && (
           <Badge size="xs" variant="outline" color={iconInfo.color}>
             {node.itemType}
           </Badge>
