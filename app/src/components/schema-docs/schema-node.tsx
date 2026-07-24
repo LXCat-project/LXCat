@@ -151,13 +151,16 @@ function SchemaNode({
         return (
           <Box>
             {node.itemNode.alternatives.map((alt, i) => (
-              <SchemaNode
+              <AltNode
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
+                highlight={highlight}
+                Icon={Icon}
+                iconInfo={iconInfo}
               />
             ))}
           </Box>
@@ -692,16 +695,19 @@ function RecordNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          {/* If itemNode is a union, render alternatives directly */}
+          {/* If itemNode is a union, render alternatives directly with AltNode */}
           {itemNode.alternatives ? (
             itemNode.alternatives.map((alt, i) => (
-              <SchemaNode
+              <AltNode
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth + 1}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
+                highlight={highlight}
+                Icon={Icon}
+                iconInfo={iconInfo}
               />
             ))
           ) : (
@@ -795,16 +801,19 @@ function ArrayNode({
       </Group>
       {showChildren && (
         <Box pl={16}>
-          {/* If itemNode is a union, render alternatives directly */}
+          {/* If itemNode is a union, render alternatives directly with AltNode */}
           {itemNode.alternatives ? (
             itemNode.alternatives.map((alt, i) => (
-              <SchemaNode
+              <AltNode
                 key={`${i}_${nodeId(alt)}`}
                 node={alt}
                 depth={depth + 1}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
+                highlight={highlight}
+                Icon={Icon}
+                iconInfo={iconInfo}
               />
             ))
           ) : (
