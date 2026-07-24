@@ -273,7 +273,7 @@ function SchemaNode({
         {!node.required && (
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
-        {node.itemType && node.type !== "enum" && (
+        {node.itemType && (
           <Badge size="xs" variant="outline" color={iconInfo.color}>
             {node.itemType}
           </Badge>
@@ -287,12 +287,14 @@ function SchemaNode({
         )}
         {/* Show enum values for enum types */}
         {node.type === "enum" && node.itemType && (
-          <Tooltip label={`Enum values: ${node.itemType}`}>
-            <Badge size="xs" variant="light" color="teal">
-              {node.itemType.split(" | ").slice(0, 5).join(", ")}
-              {node.itemType.split(" | ").length > 5 && "+"}
-            </Badge>
-          </Tooltip>
+          <Box mt="xs">
+            <Tooltip label={`Enum values: ${node.itemType}`}>
+              <Badge size="xs" variant="light" color="teal">
+                {node.itemType.split(" | ").slice(0, 5).join(", ")}
+                {node.itemType.split(" | ").length > 5 && "+"}
+              </Badge>
+            </Tooltip>
+          </Box>
         )}
       </Group>
       {node.description && (
