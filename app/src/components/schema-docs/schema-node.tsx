@@ -532,6 +532,9 @@ function AltNode({
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
+  // Get the correct icon for this alternative based on its type
+  const altIconInfo = typeIcons[node.type] || typeIcons.object;
+
   // Determine label for the alternative
   const typeLabel = node.properties ? "object" : node.type;
   const label = `${typeLabel} (Option ${optionIndex + 1})`;
@@ -612,10 +615,7 @@ function AltNode({
     return (
       <Box>
         <Group gap="xs" wrap="nowrap">
-          <Icon
-            size={14}
-            color={iconInfo.color}
-          />
+          <altIconInfo.icon size={14} color={altIconInfo.color} />
           <Text size="xs" c="dimmed" fw={500}>
             {`${node.type} (Option ${optionIndex + 1})`}
           </Text>
