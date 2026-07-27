@@ -247,7 +247,7 @@ export function DocsPageClient(
               maxHeight: "calc(100vh - 320px)",
             }}
           >
-            <Box mb="sm">
+            <Box px="xs" py="sm">
               <SchemaSearch onSearch={setSearchTerm} />
             </Box>
             <SchemaNode
