@@ -26,3 +26,8 @@ node_modules
 # Default production directories
 db-data
 news
+
+# Plan files
+AGENTS.md
+SCHEMA_DOCS_PLAN.md
+schema-docs-multi-type-plan.md
