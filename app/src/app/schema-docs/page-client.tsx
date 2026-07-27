@@ -142,7 +142,9 @@ export function DocsPageClient(
               </InputBase>
             </Combobox.Target>
 
-            <Combobox.Dropdown>
+            <Combobox.Dropdown
+              style={{ maxHeight: 400, overflowY: "auto" }}
+            >
               <Combobox.Options>
                 {combinedOptions.map(group => (
                   <Combobox.Group key={group.group} label={group.group}>
