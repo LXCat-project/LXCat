@@ -26,6 +26,7 @@ import { useState } from "react";
 import {
   DocNode,
   DocProperty,
+  DocTypeMap,
 } from "@lxcat/schema";
 import { PropertyCard } from "./property-card";
 
@@ -36,6 +37,8 @@ interface SchemaNodeProps {
   selectedId?: string;
   searchTerm?: string;
   expanded?: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }
 
 // Type icon mapping
@@ -92,6 +95,8 @@ function SchemaNode({
   selectedId,
   searchTerm,
   expanded,
+  typeMap,
+  onNavigateToType,
 }: SchemaNodeProps) {
   const iconInfo = typeIcons[node.type] || typeIcons.object;
   const Icon = iconInfo.icon;
@@ -198,6 +203,8 @@ function SchemaNode({
         iconInfo={iconInfo}
         isSelected={isSelected}
         defaultExpanded={expanded}
+        typeMap={typeMap}
+        onNavigateToType={onNavigateToType}
       />
     );
   }
@@ -216,6 +223,8 @@ function SchemaNode({
         Icon={Icon}
         iconInfo={iconInfo}
         isSelected={isSelected}
+        typeMap={typeMap}
+        onNavigateToType={onNavigateToType}
       />
     );
   }
@@ -234,6 +243,8 @@ function SchemaNode({
         Icon={Icon}
         iconInfo={iconInfo}
         isSelected={isSelected}
+        typeMap={typeMap}
+        onNavigateToType={onNavigateToType}
       />
     );
   }
@@ -253,6 +264,8 @@ function SchemaNode({
         iconInfo={iconInfo}
         isSelected={isSelected}
         isTuple={node.type === "tuple"}
+        typeMap={typeMap}
+        onNavigateToType={onNavigateToType}
       />
     );
   }
@@ -315,6 +328,8 @@ function CollapsibleObject({
   iconInfo,
   isSelected,
   defaultExpanded,
+  typeMap,
+  onNavigateToType,
 }: {
   node: DocNode;
   properties: DocProperty[];
@@ -327,6 +342,8 @@ function CollapsibleObject({
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
   defaultExpanded?: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
@@ -420,6 +437,8 @@ function UnionNode({
   iconInfo,
   isSelected,
   isTuple,
+  typeMap,
+  onNavigateToType,
 }: {
   node: DocNode;
   alternatives: DocNode[];
@@ -432,6 +451,8 @@ function UnionNode({
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
   isTuple?: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
@@ -521,6 +542,8 @@ function AltNode({
   iconInfo,
   optionIndex,
   isTuple,
+  typeMap,
+  onNavigateToType,
 }: {
   node: DocNode;
   depth: number;
@@ -532,6 +555,8 @@ function AltNode({
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   optionIndex: number;
   isTuple?: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
@@ -705,6 +730,8 @@ function RecordNode({
   Icon,
   iconInfo,
   isSelected,
+  typeMap,
+  onNavigateToType,
 }: {
   node: DocNode;
   itemNode: DocNode;
@@ -716,6 +743,8 @@ function RecordNode({
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
@@ -808,6 +837,8 @@ function ArrayNode({
   Icon,
   iconInfo,
   isSelected,
+  typeMap,
+  onNavigateToType,
 }: {
   node: DocNode;
   itemNode: DocNode;
@@ -819,6 +850,8 @@ function ArrayNode({
   Icon: typeof IconLayoutGrid;
   iconInfo: { icon: typeof IconLayoutGrid; color: string };
   isSelected: boolean;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
