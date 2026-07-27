@@ -205,11 +205,10 @@ export function DocsPageClient(
       </Drawer>
 
       {/* Main content */}
-      <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 24px" }}>
+      <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "24px" }}>
         {/* Page description */}
         {dismissible && (
           <Alert
-            mt={24}
             mb="md"
             variant="light"
             color="blue"
