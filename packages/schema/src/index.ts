@@ -21,6 +21,7 @@ export { versioned } from "./versioned.js";
 export {
   zodToDocNode,
   getRootDocNode,
+  getRootSchemaById,
   buildTypeMap,
   resolveTypeNode,
   findReferencedTypes,

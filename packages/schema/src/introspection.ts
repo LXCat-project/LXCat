@@ -7,8 +7,11 @@ import {
   globalRegistry,
 } from "zod";
 import {
+  EditedLTPDocument,
+  NewLTPDocument,
   VersionedLTPDocumentWithReference,
-} from "./versioned-document.js";
+  LTPMixtureWithReference,
+} from "./index.js";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -378,17 +381,58 @@ export function findReferencedTypes(node: DocNode, typeMap: DocTypeMap = buildTy
 }
 
 // ---------------------------------------------------------------------------
+// Schema ID to ZodType mapping
+// ---------------------------------------------------------------------------
+
+const ROOT_SCHEMA_MAP: Record<string, ZodType> = {
+  "LTPMixtureWithReference": LTPMixtureWithReference as unknown as ZodType,
+  "NewLTPDocument": NewLTPDocument as unknown as ZodType,
+  "EditedLTPDocument": EditedLTPDocument as unknown as ZodType,
+  "VersionedLTPDocumentWithReference": VersionedLTPDocumentWithReference as unknown as ZodType,
+};
+
+/**
+ * Look up a root schema by its ID.
+ * Returns the schema if found, undefined otherwise.
+ */
+export function getRootSchemaById(id: string): ZodType | undefined {
+  return ROOT_SCHEMA_MAP[id];
+}
+
+// ---------------------------------------------------------------------------
 // Root type for the main document schema
 // ---------------------------------------------------------------------------
 
 /**
  * Build a DocNode tree from a root Zod schema.
- * Defaults to VersionedLTPDocumentWithReference if no schema is provided.
+ * If `schema` is a string, it is treated as a schema ID and looked up.
+ * Defaults to VersionedLTPDocumentWithReference if no schema or ID is provided.
  */
-export function getRootDocNode(schema?: ZodTypeAny, name?: string): DocNode {
-  const rootSchema = schema || VersionedLTPDocumentWithReference;
-  const rootName = name || "VersionedLTPDocumentWithReference";
-  return zodToDocNode(rootSchema as ZodTypeAny, rootName, true);
+export function getRootDocNode(schema?: ZodTypeAny | string, name?: string): DocNode {
+  let rootSchema: ZodTypeAny;
+  let rootName: string;
+
+  if (typeof schema === "string") {
+    // Schema is provided as an ID string - look it up
+    const resolved = ROOT_SCHEMA_MAP[schema];
+    if (resolved) {
+      rootSchema = resolved;
+      rootName = name ?? schema;
+    } else {
+      rootSchema = VersionedLTPDocumentWithReference;
+      rootName = name ?? "VersionedLTPDocumentWithReference";
+    }
+  } else if (schema) {
+    // Schema is a ZodType
+    rootSchema = schema;
+    rootName = name ?? "VersionedLTPDocumentWithReference";
+  } else {
+    // No schema provided - use default
+    rootSchema = VersionedLTPDocumentWithReference;
+    rootName = name ?? "VersionedLTPDocumentWithReference";
+  }
+
+  return zodToDocNode(rootSchema, rootName, true);
 }
 
 /**
