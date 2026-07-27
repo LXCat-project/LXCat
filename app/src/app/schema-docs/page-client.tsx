@@ -11,13 +11,15 @@ import {
   Badge,
   Box,
   Burger,
+  Combobox,
   Divider,
   Drawer,
   Group,
+  InputBase,
   ScrollArea,
-  Select,
   Text,
   Title,
+  useCombobox,
 } from "@mantine/core"
 import { IconInfoCircle, IconSchema, IconArrowLeft } from "@tabler/icons-react";
 import { DocNode, DocProperty, DocTypeMap } from "@lxcat/schema";
@@ -40,6 +42,10 @@ interface DocsPageClientProps {
 }
 
 export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchemas }: DocsPageClientProps) {
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
+  
   const [currentRootId, setCurrentRootId] = useState(initialTypeId);
   const [currentTypeId, setCurrentTypeId] = useState(initialTypeId);
   const [currentNode, setCurrentNode] = useState<DocNode>(initialNode);
@@ -90,6 +96,12 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchema
   const typeEntries = Object.entries(typeMap).sort((a, b) => a[0].localeCompare(b[0]));
   const currentTypeLabel = typeMap[currentTypeId]?.name || currentTypeId;
   const currentRootSchema = rootSchemas.find(s => s.id === currentRootId);
+  
+  // Build combined options for the combobox
+  const combinedOptions = [
+    { group: "Root schemas", options: rootSchemas.map(s => ({ value: s.id, label: s.label })) },
+    { group: "Common schemas", options: typeEntries.slice(0, 20).map(([id, node]) => ({ value: id, label: node.name || id })) },
+  ];
 
   return (
     <>
@@ -115,24 +127,49 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchema
               {typeEntries.length} types
             </Badge>
           </Group>
-          <Group gap="sm">
-            <Select
-              data={rootSchemas.map(s => ({ value: s.id, label: s.label }))}
-              value={currentRootId}
-              onChange={(value) => value && handleSwitchRoot(value)}
-              style={{ width: 240 }}
-              placeholder="Select schema..."
-              allowDeselect={false}
-            />
-            <Select
-              data={typeEntries.map(([id, node]) => ({ value: id, label: node.name || id }))}
-              value={currentTypeId}
-              onChange={(value) => value && handleNavigateToType(value)}
-              style={{ width: 280 }}
-              placeholder="Select type..."
-              allowDeselect={false}
-            />
-          </Group>
+          <Combobox
+            store={combobox}
+            onOptionSubmit={(val) => {
+              if (rootSchemas.some(s => s.id === val)) {
+                handleSwitchRoot(val);
+              } else {
+                handleNavigateToType(val);
+              }
+              combobox.closeDropdown();
+            }}
+          >
+            <Combobox.Target>
+              <InputBase
+                component="button"
+                type="button"
+                pointer
+                rightSection={<Combobox.Chevron />}
+                rightSectionPointerEvents="none"
+                onClick={() => combobox.toggleDropdown()}
+                style={{ width: 320 }}
+              >
+                {typeMap[currentTypeId]?.name || currentTypeId}
+              </InputBase>
+            </Combobox.Target>
+
+            <Combobox.Dropdown>
+              <Combobox.Options>
+                {combinedOptions.map(group => (
+                  <Combobox.Group key={group.group} label={group.group}>
+                    {group.options.map(option => (
+                      <Combobox.Option
+                        key={option.value}
+                        value={option.value}
+                        active={option.value === currentTypeId || option.value === currentRootId}
+                      >
+                        {option.label}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Group>
+                ))}
+              </Combobox.Options>
+            </Combobox.Dropdown>
+          </Combobox>
         </Group>
       </Box>
 
