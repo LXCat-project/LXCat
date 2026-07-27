@@ -238,7 +238,6 @@ export function DocsPageClient(
           </Alert>
         )}
 
-        <SchemaSearch onSearch={setSearchTerm} />
         <Box style={{ display: "flex", gap: 24, marginTop: 16 }}>
           {/* Left: Tree */}
           <Box
@@ -248,6 +247,7 @@ export function DocsPageClient(
               overflowY: "auto",
             }}
           >
+            <SchemaSearch onSearch={setSearchTerm} />
             <SchemaNode
               key={currentNode.name}
               node={currentNode}
