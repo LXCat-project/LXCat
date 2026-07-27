@@ -24,7 +24,7 @@ import {
   Title,
   useCombobox,
 } from "@mantine/core";
-import { IconInfoCircle, IconSchema } from "@tabler/icons-react";
+import { IconInfoCircle, IconSchema, IconX } from "@tabler/icons-react";
 
 // Root schemas that are displayed in a separate group in the combobox
 const ROOT_SCHEMA_IDS = [
@@ -52,6 +52,7 @@ export function DocsPageClient(
   const [selectedNode, setSelectedNode] = useState<DocNode | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
   const [drawerOpened, setDrawerOpened] = useState(false);
+  const [dismissible, setDismissible] = useState(true);
 
   const handleSelect = (node: DocNode, _property?: DocProperty) => {
     setSelectedNode(node);
@@ -71,8 +72,12 @@ export function DocsPageClient(
   );
 
   // Separate root schemas from common schemas for combobox grouping
-  const rootTypeEntries = typeEntries.filter(([id]) => ROOT_SCHEMA_IDS.includes(id));
-  const commonTypeEntries = typeEntries.filter(([id]) => !ROOT_SCHEMA_IDS.includes(id));
+  const rootTypeEntries = typeEntries.filter(([id]) =>
+    ROOT_SCHEMA_IDS.includes(id)
+  );
+  const commonTypeEntries = typeEntries.filter(([id]) =>
+    !ROOT_SCHEMA_IDS.includes(id)
+  );
 
   // Build combined options for the combobox
   const combinedOptions = [
@@ -202,29 +207,35 @@ export function DocsPageClient(
       {/* Main content */}
       <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 24px" }}>
         {/* Page description */}
-        <Alert
-          mt={24}
-          mb="md"
-          variant="light"
-          color="blue"
-          icon={<IconInfoCircle />}
-          title="About this page"
-        >
+        {dismissible && (
+          <Alert
+            mt={24}
+            mb="md"
+            variant="light"
+            color="blue"
+            icon={<IconInfoCircle />}
+            title="About this page"
+            onClose={() => setDismissible(false)}
+          >
           On this page you can explore the <code>LTPMixtureWithReference</code>
-          {" "}schema, which defines the structure of all data in LXCat. If you
-          want to implement support for LXCat data in your simulation tool,
-          this is the structure of the data that you can expect.
+          {" "}
+          schema, which defines the structure of all output data (website and
+          API) in LXCat. If you want to implement support for LXCat data in your
+          simulation tool, this is the structure of the data that you can
+          expect.
           <br />
           <br />
           Contributors that want to upload data via the API use two other root
           schemas: <code>NewLTPDocument</code> for providing new datasets, and
+          {" "}
           <code>EditedLTPDocument</code> for updating existing datasets.
           <br />
           <br />
           The type list also includes common schemas shared between root types.
           You can navigate to any schema in the combobox or sidebar to view its
           structure.
-        </Alert>
+          </Alert>
+        )}
 
         <SchemaSearch onSearch={setSearchTerm} />
         <Box style={{ display: "flex", gap: 24, marginTop: 16 }}>
