@@ -147,6 +147,8 @@ function SchemaNode({
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           ))}
         </Box>
@@ -171,6 +173,8 @@ function SchemaNode({
                 highlight={highlight}
                 Icon={Icon}
                 iconInfo={iconInfo}
+                typeMap={typeMap}
+                onNavigateToType={onNavigateToType}
               />
             ))}
           </Box>
@@ -183,6 +187,8 @@ function SchemaNode({
           onSelect={onSelect}
           selectedId={selectedId}
           searchTerm={searchTerm}
+          typeMap={typeMap}
+          onNavigateToType={onNavigateToType}
         />
       );
     }
@@ -448,6 +454,8 @@ function CollapsibleObject({
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           ))}
         </Box>
@@ -554,6 +562,8 @@ function UnionNode({
               highlight={highlight}
               Icon={Icon}
               iconInfo={iconInfo}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           ))}
         </Box>
@@ -637,6 +647,8 @@ function AltNode({
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
+                typeMap={typeMap}
+                onNavigateToType={onNavigateToType}
               />
             ))}
           </Box>
@@ -673,6 +685,8 @@ function AltNode({
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           </Box>
         )}
@@ -716,6 +730,8 @@ function AltNode({
                 highlight={highlight}
                 Icon={altIconInfo.icon}
                 iconInfo={altIconInfo}
+                typeMap={typeMap}
+                onNavigateToType={onNavigateToType}
               />
             ))}
           </Box>
@@ -746,6 +762,8 @@ function AltNode({
       onSelect={onSelect}
       selectedId={selectedId}
       searchTerm={searchTerm}
+      typeMap={typeMap}
+      onNavigateToType={onNavigateToType}
     />
   );
 }
@@ -840,6 +858,8 @@ function RecordNode({
                 highlight={highlight}
                 Icon={Icon}
                 iconInfo={iconInfo}
+                typeMap={typeMap}
+                onNavigateToType={onNavigateToType}
               />
             ))
           ) : (
@@ -849,6 +869,8 @@ function RecordNode({
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           )}
         </Box>
@@ -952,6 +974,8 @@ function ArrayNode({
                 highlight={highlight}
                 Icon={Icon}
                 iconInfo={iconInfo}
+                typeMap={typeMap}
+                onNavigateToType={onNavigateToType}
               />
             ))
           ) : (
@@ -961,6 +985,8 @@ function ArrayNode({
               onSelect={onSelect}
               selectedId={selectedId}
               searchTerm={searchTerm}
+              typeMap={typeMap}
+              onNavigateToType={onNavigateToType}
             />
           )}
         </Box>
@@ -976,12 +1002,16 @@ function PropertyRow({
   onSelect,
   selectedId,
   searchTerm,
+  typeMap,
+  onNavigateToType,
 }: {
   property: DocProperty;
   depth: number;
   onSelect?: (node: DocNode, property?: DocProperty) => void;
   selectedId?: string;
   searchTerm?: string;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }) {
   return (
     <SchemaNode
@@ -990,6 +1020,8 @@ function PropertyRow({
       onSelect={(node) => onSelect?.(node, property)}
       selectedId={selectedId}
       searchTerm={searchTerm}
+      typeMap={typeMap}
+      onNavigateToType={onNavigateToType}
     />
   );
 }
