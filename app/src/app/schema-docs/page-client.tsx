@@ -21,7 +21,7 @@ import {
   Title,
   useCombobox,
 } from "@mantine/core"
-import { IconInfoCircle, IconSchema, IconArrowLeft } from "@tabler/icons-react";
+import { IconInfoCircle, IconSchema } from "@tabler/icons-react";
 import { DocNode, DocProperty, DocTypeMap } from "@lxcat/schema";
 import { SchemaNode } from "@/components/schema-docs/schema-node";
 import { PropertyCard } from "@/components/schema-docs/property-card";
@@ -87,14 +87,7 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchema
     }
   };
 
-  const handleGoHome = () => {
-    setCurrentTypeId(currentRootId);
-    setCurrentNode(initialNode);
-    setSelectedNode(undefined);
-  };
-
   const typeEntries = Object.entries(typeMap).sort((a, b) => a[0].localeCompare(b[0]));
-  const currentTypeLabel = typeMap[currentTypeId]?.name || currentTypeId;
   const currentRootSchema = rootSchemas.find(s => s.id === currentRootId);
   
   // Build combined options for the combobox
@@ -207,32 +200,6 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchema
 
       {/* Main content */}
       <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 24px" }}>
-        {/* Breadcrumb / Current type info */}
-        <Group mb="md" py="sm" wrap="wrap">
-          <Box
-            onClick={handleGoHome}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <IconArrowLeft size={14} />
-            <Text size="sm" c="blue" fw={500}>
-              {initialNode.name}
-            </Text>
-          </Box>
-          {currentTypeId !== initialTypeId && (
-            <>
-              <Text size="xs" c="dimmed">/</Text>
-              <Badge size="sm" variant="light" color="blue">
-                {currentTypeLabel}
-              </Badge>
-            </>
-          )}
-        </Group>
-
         {/* Page description */}
         <Alert
           mb="md"
