@@ -381,12 +381,14 @@ export function findReferencedTypes(node: DocNode, typeMap: DocTypeMap = buildTy
 // Root type for the main document schema
 // ---------------------------------------------------------------------------
 
-export function getRootDocNode(): DocNode {
-  return zodToDocNode(
-    VersionedLTPDocumentWithReference as ZodTypeAny,
-    "VersionedLTPDocumentWithReference",
-    true,
-  );
+/**
+ * Build a DocNode tree from a root Zod schema.
+ * Defaults to VersionedLTPDocumentWithReference if no schema is provided.
+ */
+export function getRootDocNode(schema?: ZodTypeAny, name?: string): DocNode {
+  const rootSchema = schema || VersionedLTPDocumentWithReference;
+  const rootName = name || "VersionedLTPDocumentWithReference";
+  return zodToDocNode(rootSchema as ZodTypeAny, rootName, true);
 }
 
 /**
