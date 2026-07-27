@@ -26,8 +26,8 @@ export function DocsPageClient({ rootNode }: DocsPageClientProps) {
   const [selectedNode, setSelectedNode] = useState<DocNode | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSelect = (node: DocNode, property?: DocProperty) => {
-    setSelectedNode(property?.node || node);
+  const handleSelect = (node: DocNode, _property?: DocProperty) => {
+    setSelectedNode(node);
   };
 
   return (
