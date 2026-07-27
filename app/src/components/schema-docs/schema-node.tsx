@@ -299,13 +299,13 @@ function SchemaNode({
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
         {node.itemType && node.type !== "literal" && (
-          <Badge size="xs" variant="outline" color={iconInfo.color}>
+          <Badge size="xs" variant="outline" color={iconInfo.color} style={{ textTransform: "none" }}>
             {node.itemType}
           </Badge>
         )}
         {node.value !== undefined && (
           <Tooltip label={`Literal value: ${node.value}`}>
-            <Badge size="xs" variant="light" color="indigo">
+            <Badge size="xs" variant="light" color="indigo" style={{ textTransform: "none" }}>
               {JSON.stringify(node.value)}
             </Badge>
           </Tooltip>
@@ -952,7 +952,7 @@ function ArrayNode({
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
         {node.itemType && (
-          <Badge size="xs" variant="outline" color={iconInfo.color}>
+          <Badge size="xs" variant="outline" color={iconInfo.color} style={{ textTransform: "none" }}>
             {node.itemType}
           </Badge>
         )}
