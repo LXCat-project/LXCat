@@ -203,6 +203,7 @@ export function DocsPageClient(
       <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 24px" }}>
         {/* Page description */}
         <Alert
+          mt={24}
           mb="md"
           variant="light"
           color="blue"
@@ -210,13 +211,19 @@ export function DocsPageClient(
           title="About this page"
         >
           On this page you can explore the <code>LTPMixtureWithReference</code>
-          {" "}
-          schema. All the data that comes from LXCat (website and API) follows
-          this schema. Therefore, if you want to implement support for LXCat
-          data in your simulation tool, this is the structure of the data that
-          you can expect. Contributors that want to upload data to LXCat via the
-          API have to follow different schemas. These schemas will be added in a
-          future update.
+          {" "}schema, which defines the structure of all data in LXCat. If you
+          want to implement support for LXCat data in your simulation tool,
+          this is the structure of the data that you can expect.
+          <br />
+          <br />
+          Contributors that want to upload data via the API use two other root
+          schemas: <code>NewLTPDocument</code> for providing new datasets, and
+          <code>EditedLTPDocument</code> for updating existing datasets.
+          <br />
+          <br />
+          The type list also includes common schemas shared between root types.
+          You can navigate to any schema in the combobox or sidebar to view its
+          structure.
         </Alert>
 
         <SchemaSearch onSearch={setSearchTerm} />
