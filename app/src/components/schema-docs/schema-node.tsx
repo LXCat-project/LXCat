@@ -637,6 +637,50 @@ function AltNode({
     );
   }
 
+  // Alternative has its own alternatives (e.g., tuple alternative): render expandable
+  if (node.alternatives && node.alternatives.length > 0) {
+    const isNestedTuple = node.type === "tuple";
+    return (
+      <Box>
+        <Group gap="xs" wrap="nowrap">
+          <altIconInfo.icon size={14} color={altIconInfo.color} />
+          <IconChevronRight
+            size={14}
+            style={{
+              flexShrink: 0, width: 14,
+              transition: "transform 150ms",
+              transform: expanded ? "rotate(90deg)" : "none",
+              cursor: "pointer",
+            }}
+            onClick={() => setExpanded(!expanded)}
+          />
+          <Text size="xs" c="dimmed" fw={500}>
+            {tupleLabel || `${node.type} (${indexLabel})`}
+          </Text>
+        </Group>
+        {showChildren && (
+          <Box pl={16}>
+            {node.alternatives.map((alt, i) => (
+              <AltNode
+                key={`${i}_${nodeId(alt)}`}
+                node={alt}
+                depth={depth + 1}
+                optionIndex={i}
+                isTuple={isNestedTuple}
+                onSelect={onSelect}
+                selectedId={selectedId}
+                searchTerm={searchTerm}
+                highlight={highlight}
+                Icon={altIconInfo.icon}
+                iconInfo={altIconInfo}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+    );
+  }
+
   // Normal alternative: render with SchemaNode
   return (
     <SchemaNode
