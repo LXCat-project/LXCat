@@ -25,10 +25,14 @@ export function PropertyCard({ node, propertyName, typeMap, onNavigateToType }: 
 
   return (
     <Card
-      radius={{ top: 0, bottom: "md" }}
+      radius={0}
       shadow="sm"
       padding="lg"
-      style={{ height: "100%", overflow: "auto" }}
+      style={{
+        height: "100%",
+        overflow: "auto",
+        borderRadius: "0 0 var(--mantine-radius-md) var(--mantine-radius-md)",
+      }}
     >
       <Title order={3} mb="xs">
         {propertyName || node.name || "(root)"}
