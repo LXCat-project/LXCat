@@ -156,6 +156,18 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode }: DocsPage
           )}
         </Group>
 
+        {/* Page description */}
+        <Box mb="md" p="md" style={{ background: "var(--mantine-color-gray-0)", borderRadius: 8, border: "1px solid var(--mantine-color-gray-3)" }}>
+          <Text size="sm" c="dimmed" lh="1.6">
+            On this page you can explore the <code>LTPMixtureWithReference</code> schema. 
+            All the data that comes from LXCat (website and API) follows this schema. 
+            Therefore, if you want to implement support for LXCat data in your simulation tool, 
+            this is the structure of the data that you can expect. Contributors that want to 
+            upload data to LXCat via the API have to follow different schemas. These schemas 
+            will be added in a future update.
+          </Text>
+        </Box>
+
         <SchemaSearch onSearch={setSearchTerm} />
         <Box style={{ display: "flex", gap: 24, marginTop: 16 }}>
           {/* Left: Tree */}
