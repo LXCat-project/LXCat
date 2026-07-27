@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { getRootDocNode, buildTypeMap, resolveTypeNode, DocNode, DocTypeMap } from "@lxcat/schema";
+import { LTPMixtureWithReference } from "@lxcat/schema";
 import { DocsPageClient } from "./page-client";
 
 // Module-level cache: runs introspection once per server process
@@ -15,7 +16,8 @@ function getSchemaData() {
   }
   
   cachedTypeMap = buildTypeMap();
-  cachedRootNode = getRootDocNode();
+  // Use LTPMixtureWithReference as the root type for the schema viewer
+  cachedRootNode = getRootDocNode(LTPMixtureWithReference, "LTPMixtureWithReference");
   
   return { typeMap: cachedTypeMap, rootNode: cachedRootNode };
 }
@@ -23,7 +25,7 @@ function getSchemaData() {
 export default function SchemaDocsPage() {
   const { typeMap, rootNode } = getSchemaData();
   // Default to the root type
-  const initialNodeId = "VersionedLTPDocumentWithReference";
+  const initialNodeId = "LTPMixtureWithReference";
   const initialNode = resolveTypeNode(initialNodeId, typeMap) || rootNode;
 
   return (
