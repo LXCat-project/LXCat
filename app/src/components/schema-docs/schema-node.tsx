@@ -304,6 +304,22 @@ function SchemaNode({
             </Badge>
           </Tooltip>
         )}
+        {node.registeredId && onNavigateToType && (
+          <Tooltip label={`Go to ${node.registeredId} definition`}>
+            <Badge
+              size="xs"
+              variant="light"
+              color="indigo"
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToType(node.registeredId!);
+              }}
+            >
+              {node.registeredId}
+            </Badge>
+          </Tooltip>
+        )}
 
       </Group>
       {node.description && (
@@ -395,6 +411,22 @@ function CollapsibleObject({
         >
           {properties.length} props
         </Badge>
+        {node.registeredId && onNavigateToType && (
+          <Tooltip label={`Go to ${node.registeredId} definition`}>
+            <Badge
+              size="xs"
+              variant="light"
+              color="indigo"
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToType(node.registeredId!);
+              }}
+            >
+              {node.registeredId}
+            </Badge>
+          </Tooltip>
+        )}
         {!node.required && (
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
