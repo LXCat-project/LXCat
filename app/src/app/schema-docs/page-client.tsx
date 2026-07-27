@@ -16,6 +16,7 @@ import {
   Box,
   Burger,
   Combobox,
+  Divider,
   Drawer,
   Group,
   InputBase,
@@ -257,6 +258,8 @@ export function DocsPageClient(
               onNavigateToType={handleNavigateToType}
             />
           </Box>
+          {/* Divider */}
+          <Divider orientation="vertical" style={{ height: "calc(100vh - 240px)" }} />
           {/* Right: Detail Panel */}
           <Box
             style={{
