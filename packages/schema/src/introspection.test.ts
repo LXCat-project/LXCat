@@ -15,7 +15,7 @@ import {
   union,
 } from "zod";
 import { describe, expect, test } from "bun:test";
-import { zodToDocNode, getRootDocNode, DocNode, DocProperty } from "./introspection.js";
+import { zodToDocNode, getRootDocNode, buildTypeMap, resolveTypeNode, findReferencedTypes, getTypeDocNode, DocNode, DocProperty } from "./introspection.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -182,5 +182,132 @@ describe("getRootDocNode", () => {
     expect(statusProp).toBeDefined();
     expect(statusProp!.node.type).toBe("enum");
     expect(statusProp!.node.description).toBe("The status of the versioned document.");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: buildTypeMap
+// ---------------------------------------------------------------------------
+
+describe("buildTypeMap", () => {
+  test("returns a map with registered types", () => {
+    const typeMap = buildTypeMap();
+    const keys = Object.keys(typeMap);
+    expect(keys.length).toBeGreaterThan(0);
+    expect(typeMap).toHaveProperty("Atom");
+    expect(typeMap).toHaveProperty("ShellEntry");
+    expect(typeMap).toHaveProperty("Key");
+    expect(typeMap).toHaveProperty("VersionInfo");
+  });
+
+  test("each entry is a valid DocNode", () => {
+    const typeMap = buildTypeMap();
+    for (const [id, node] of Object.entries(typeMap)) {
+      expect(node.name).toBe(id);
+      expect(node.type).toBeDefined();
+      expect(typeof node.type).toBe("string");
+    }
+  });
+
+  test("Atom type has expected properties", () => {
+    const typeMap = buildTypeMap();
+    const atom = typeMap["Atom"];
+    expect(atom).toBeDefined();
+    expect(atom!.type).toBe("object");
+    expect(atom!.properties).toBeDefined();
+    expect(atom!.properties!.length).toBeGreaterThan(0);
+    const propNames = atom!.properties!.map((p) => p.name);
+    expect(propNames).toContain("type");
+    expect(propNames).toContain("composition");
+    expect(propNames).toContain("charge");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: resolveTypeNode
+// ---------------------------------------------------------------------------
+
+describe("resolveTypeNode", () => {
+  test("resolves a known type", () => {
+    const typeMap = buildTypeMap();
+    const node = resolveTypeNode("CSLData", typeMap);
+    expect(node).toBeDefined();
+    expect(node!.name).toBe("CSLData");
+  });
+
+  test("returns undefined for unknown type", () => {
+    const typeMap = buildTypeMap();
+    const node = resolveTypeNode("NonExistentType", typeMap);
+    expect(node).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: findReferencedTypes
+// ---------------------------------------------------------------------------
+
+describe("findReferencedTypes", () => {
+  test("finds types referenced in root node", () => {
+    const rootNode = getRootDocNode();
+    const referenced = findReferencedTypes(rootNode);
+    expect(referenced.size).toBeGreaterThan(10);
+  });
+
+  test("finds well-known referenced types", () => {
+    const rootNode = getRootDocNode();
+    const referenced = findReferencedTypes(rootNode);
+    expect(referenced.has("Atom")).toBe(true);
+    expect(referenced.has("ShellEntry")).toBe(true);
+    expect(referenced.has("Key")).toBe(true);
+    expect(referenced.has("VersionInfo")).toBe(true);
+    expect(referenced.has("CSLData")).toBe(true);
+  });
+
+  test("returns unique type IDs", () => {
+    const rootNode = getRootDocNode();
+    const referenced = findReferencedTypes(rootNode);
+    // A Set should have no duplicates
+    expect(referenced.size).toBe(new Set(referenced).size);
+  });
+
+  test("works with simple node that has no references", () => {
+    const schema = object({ name: string() });
+    const node = zodToDocNode(schema, "Simple");
+    const referenced = findReferencedTypes(node);
+    expect(referenced.size).toBe(0);
+  });
+
+  test("discovers references in nested structures", () => {
+    // Build a schema with a registered type reference
+    const rootNode = getRootDocNode();
+    const referenced = findReferencedTypes(rootNode);
+    // VersionInfo is nested inside the root
+    expect(referenced.has("VersionInfo")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: getTypeDocNode
+// ---------------------------------------------------------------------------
+
+describe("getTypeDocNode", () => {
+  test("returns node for a known type", () => {
+    const node = getTypeDocNode("Atom");
+    expect(node).toBeDefined();
+    expect(node!.name).toBe("Atom");
+    expect(node!.type).toBe("object");
+  });
+
+  test("returns undefined for unknown type", () => {
+    const node = getTypeDocNode("DoesNotExist");
+    expect(node).toBeUndefined();
+  });
+
+  test("returns consistent results", () => {
+    const node1 = getTypeDocNode("ShellEntry");
+    const node2 = getTypeDocNode("ShellEntry");
+    expect(node1!.name).toBe(node2!.name);
+    expect(node1!.type).toBe(node2!.type);
+    expect(node1!.properties?.length).toBe(node2!.properties?.length);
   });
 });
