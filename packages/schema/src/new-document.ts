@@ -7,6 +7,7 @@ import { Reference, ReferenceRef } from "./common/reference.js";
 import { NewProcess } from "./process/new-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
+import { registerType } from "./common/util.js";
 
 const NewDocumentBody = object({
   references: record(string(), Reference),
@@ -57,4 +58,5 @@ export const NewLTPDocument = object({
       }
     }));
 
+registerType(NewLTPDocument, { id: "NewLTPDocument" });
 export type NewLTPDocument = output<typeof NewLTPDocument>;
