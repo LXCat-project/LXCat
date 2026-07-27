@@ -53,7 +53,7 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
           <Text size="xs" c="dimmed">
             Value
           </Text>
-          <Badge size="md" variant="light" color="indigo">
+          <Badge size="md" variant="light" color="indigo" style={{ textTransform: "none" }}>
             {JSON.stringify(node.value)}
           </Badge>
         </Box>
@@ -67,7 +67,7 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
           </Text>
           <Group gap="xs" wrap="wrap" mt="xs">
             {node.itemType.split(" | ").map((val, i) => (
-              <Badge key={i} size="md" variant="light" color="teal">
+              <Badge key={i} size="md" variant="light" color="teal" style={{ textTransform: "none" }}>
                 {val}
               </Badge>
             ))}
@@ -88,7 +88,7 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
           {node.itemType === "enum" && node.itemNode?.type === "enum" && node.itemNode?.itemType && (
             <Group gap="xs" wrap="wrap" mt="xs">
               {node.itemNode.itemType.split(" | ").map((val, i) => (
-                <Badge key={i} size="md" variant="light" color="teal">
+                <Badge key={i} size="md" variant="light" color="teal" style={{ textTransform: "none" }}>
                   {val}
                 </Badge>
               ))}
@@ -134,6 +134,7 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
               color={getTypeColor(alt.type)}
               mr="xs"
               mb="xs"
+              style={{ textTransform: "none" }}
             >
               {alt.name || `Option ${i + 1}`}
             </Badge>
