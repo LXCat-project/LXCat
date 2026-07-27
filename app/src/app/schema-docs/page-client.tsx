@@ -215,6 +215,7 @@ export function DocsPageClient(
             color="blue"
             icon={<IconInfoCircle />}
             title="About this page"
+            withCloseButton
             onClose={() => setDismissible(false)}
           >
           On this page you can explore the <code>LTPMixtureWithReference</code>
