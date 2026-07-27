@@ -316,7 +316,7 @@ function SchemaNode({
               size="xs"
               variant="filled"
               color="indigo"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", textTransform: "none" }}
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigateToType(node.registeredId!);
@@ -423,7 +423,7 @@ function CollapsibleObject({
               size="xs"
               variant="filled"
               color="indigo"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", textTransform: "none" }}
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigateToType(node.registeredId!);
