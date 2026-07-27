@@ -308,7 +308,7 @@ function SchemaNode({
           <Tooltip label={`Go to ${node.registeredId} definition`}>
             <Badge
               size="xs"
-              variant="light"
+              variant="filled"
               color="indigo"
               style={{ cursor: "pointer" }}
               onClick={(e) => {
@@ -415,7 +415,7 @@ function CollapsibleObject({
           <Tooltip label={`Go to ${node.registeredId} definition`}>
             <Badge
               size="xs"
-              variant="light"
+              variant="filled"
               color="indigo"
               style={{ cursor: "pointer" }}
               onClick={(e) => {
