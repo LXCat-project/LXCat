@@ -18,6 +18,7 @@ import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
+import { registerType } from "./common/util.js";
 
 const VersionedDocumentBody = <ReferenceType extends ZodType>(
   Reference: ReferenceType,
@@ -81,6 +82,7 @@ export const VersionedLTPDocumentWithReference = intersection(
   SelfReference,
   VersionedDocumentBody(Reference.or(string().min(1))),
 );
+registerType(VersionedLTPDocumentWithReference, { id: "VersionedLTPDocumentWithReference" });
 export type VersionedLTPDocumentWithReference = output<
   typeof VersionedLTPDocumentWithReference
 >;

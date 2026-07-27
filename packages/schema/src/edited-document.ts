@@ -8,6 +8,7 @@ import { PartialKeyed } from "./partial-keyed.js";
 import { EditedProcess } from "./process/edited-process.js";
 import { SetHeader } from "./set-header.js";
 import { AnySpecies } from "./species/any-species.js";
+import { registerType } from "./common/util.js";
 
 const EditedDocumentBody = object({
   references: record(string(), Reference),
@@ -62,4 +63,5 @@ export const EditedLTPDocument = PartialKeyed(
         }
       }));
 
+registerType(EditedLTPDocument, { id: "EditedLTPDocument" });
 export type EditedLTPDocument = output<typeof EditedLTPDocument>;

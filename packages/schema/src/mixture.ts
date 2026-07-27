@@ -20,6 +20,7 @@ import { SelfReference } from "./self-reference.js";
 import { SetHeader } from "./set-header.js";
 import { SerializedSpecies } from "./species/serialized.js";
 import { versioned } from "./versioned.js";
+import { registerType } from "./common/util.js";
 
 const MixtureBody = <ReferenceType extends ZodType>(
   Reference: ReferenceType,
@@ -70,4 +71,5 @@ export const LTPMixtureWithReference = intersection(
   SelfReference,
   MixtureBody(Reference.or(string().min(1))),
 );
+registerType(LTPMixtureWithReference, { id: "LTPMixtureWithReference" });
 export type LTPMixtureWithReference = output<typeof LTPMixtureWithReference>;
