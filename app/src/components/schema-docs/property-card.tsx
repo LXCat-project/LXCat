@@ -25,7 +25,7 @@ export function PropertyCard({ node, propertyName, typeMap, onNavigateToType }: 
 
   return (
     <Card
-      radius="md"
+      radius="0 0 md md"
       shadow="sm"
       padding="lg"
       style={{ height: "100%", overflow: "auto" }}
