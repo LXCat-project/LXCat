@@ -4,18 +4,12 @@
 
 "use client";
 
-import {
-  Accordion,
-  Badge,
-  Box,
-  Group,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { DocNode, DocProperty, DocTypeMap } from "@lxcat/schema";
+import { Accordion, Badge, Box, Group, Text, Tooltip } from "@mantine/core";
 import {
   IconBrandTypescript,
-  IconCircleDot,
   IconChevronRight,
+  IconCircleDot,
   IconHash,
   IconLayoutGrid,
   IconList,
@@ -23,11 +17,6 @@ import {
   IconTextCaption,
 } from "@tabler/icons-react";
 import { useState } from "react";
-import {
-  DocNode,
-  DocProperty,
-  DocTypeMap,
-} from "@lxcat/schema";
 import { PropertyCard } from "./property-card";
 
 interface SchemaNodeProps {
@@ -42,7 +31,10 @@ interface SchemaNodeProps {
 }
 
 // Type icon mapping
-const typeIcons: Record<string, { icon: typeof IconLayoutGrid; color: string }> = {
+const typeIcons: Record<
+  string,
+  { icon: typeof IconLayoutGrid; color: string }
+> = {
   object: { icon: IconLayoutGrid, color: "blue" },
   string: { icon: IconTextCaption, color: "green" },
   number: { icon: IconNumber, color: "orange" },
@@ -63,22 +55,31 @@ function matchesSearch(node: DocNode, searchTerm: string): boolean {
   if (!searchTerm) return true;
   const term = searchTerm.toLowerCase();
   return (
-    node.name.toLowerCase().includes(term) ||
-    node.type.toLowerCase().includes(term) ||
-    (node.description?.toLowerCase().includes(term) ?? false)
+    node.name.toLowerCase().includes(term)
+    || node.type.toLowerCase().includes(term)
+    || (node.description?.toLowerCase().includes(term) ?? false)
   );
 }
 
 // Check if a node or any of its children match the search
-function nodeMatchesOrHasMatchingChild(node: DocNode, searchTerm: string): boolean {
+function nodeMatchesOrHasMatchingChild(
+  node: DocNode,
+  searchTerm: string,
+): boolean {
   if (!searchTerm) return true;
   if (matchesSearch(node, searchTerm)) return true;
   if (node.properties) {
-    return node.properties.some((p) => nodeMatchesOrHasMatchingChild(p.node, searchTerm));
+    return node.properties.some((p) =>
+      nodeMatchesOrHasMatchingChild(p.node, searchTerm)
+    );
   }
-  if (node.itemNode) return nodeMatchesOrHasMatchingChild(node.itemNode, searchTerm);
+  if (node.itemNode) {
+    return nodeMatchesOrHasMatchingChild(node.itemNode, searchTerm);
+  }
   if (node.alternatives) {
-    return node.alternatives.some((a) => nodeMatchesOrHasMatchingChild(a, searchTerm));
+    return node.alternatives.some((a) =>
+      nodeMatchesOrHasMatchingChild(a, searchTerm)
+    );
   }
   return false;
 }
@@ -112,23 +113,26 @@ function SchemaNode({
 
   const highlight = (text: string): React.ReactNode => {
     if (!term || !term.trim()) return text;
-    const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+    const regex = new RegExp(
+      `(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+      "gi",
+    );
     const parts = text.split(regex);
     return parts.map((part, i) =>
-      regex.test(part) ? (
-        <Box
-          key={i}
-          component="span"
-          bg="yellow"
-          opacity={0.4}
-          px={1}
-          style={{ borderRadius: 2 }}
-        >
-          {part}
-        </Box>
-      ) : (
-        <span key={i}>{part}</span>
-      ),
+      regex.test(part)
+        ? (
+          <Box
+            key={i}
+            component="span"
+            bg="yellow"
+            opacity={0.4}
+            px={1}
+            style={{ borderRadius: 2 }}
+          >
+            {part}
+          </Box>
+        )
+        : <span key={i}>{part}</span>
     );
   };
 
@@ -287,7 +291,12 @@ function SchemaNode({
           size="sm"
           c={isSelected ? "blue" : "inherit"}
           fw={isSelected ? 600 : undefined}
-          style={{ cursor: "pointer", border: "none", background: "none", padding: 0 }}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
           onClick={handleSelect}
         >
           {highlight(node.name || "(anonymous)")}
@@ -299,13 +308,23 @@ function SchemaNode({
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
         {node.itemType && node.type !== "literal" && (
-          <Badge size="xs" variant="outline" color={iconInfo.color} style={{ textTransform: "none" }}>
+          <Badge
+            size="xs"
+            variant="outline"
+            color={iconInfo.color}
+            style={{ textTransform: "none" }}
+          >
             {node.itemType}
           </Badge>
         )}
         {node.value !== undefined && (
           <Tooltip label={`Literal value: ${node.value}`}>
-            <Badge size="xs" variant="light" color="indigo" style={{ textTransform: "none" }}>
+            <Badge
+              size="xs"
+              variant="light"
+              color="indigo"
+              style={{ textTransform: "none" }}
+            >
               {JSON.stringify(node.value)}
             </Badge>
           </Tooltip>
@@ -326,7 +345,6 @@ function SchemaNode({
             </Badge>
           </Tooltip>
         )}
-
       </Group>
       {node.description && (
         <Text size="xs" c="dimmed" pl={20}>
@@ -370,7 +388,8 @@ function CollapsibleObject({
   const [expanded, setExpanded] = useState(defaultExpanded ?? false);
 
   // Auto-expand if search term matches any children
-  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const autoExpand = searchTerm && searchTerm.trim() !== ""
+    && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
   const handleSelect = () => {
@@ -386,7 +405,8 @@ function CollapsibleObject({
           size={14}
           data-chevron
           style={{
-            flexShrink: 0, width: 14,
+            flexShrink: 0,
+            width: 14,
             transition: "transform 150ms",
             transform: expanded ? "rotate(90deg)" : "none",
             cursor: "pointer",
@@ -495,7 +515,8 @@ function UnionNode({
   onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const autoExpand = searchTerm && searchTerm.trim() !== ""
+    && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
   const handleSelect = () => {
@@ -511,7 +532,8 @@ function UnionNode({
           size={14}
           data-chevron
           style={{
-            flexShrink: 0, width: 14,
+            flexShrink: 0,
+            width: 14,
             transition: "transform 150ms",
             transform: expanded ? "rotate(90deg)" : "none",
             cursor: "pointer",
@@ -601,7 +623,8 @@ function AltNode({
   onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const autoExpand = searchTerm && searchTerm.trim() !== ""
+    && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
   // Get the correct icon for this alternative based on its type
@@ -609,7 +632,9 @@ function AltNode({
 
   // Determine label for the alternative
   const typeLabel = node.properties ? "object" : node.type;
-  const indexLabel = isTuple ? String(optionIndex) : `Option ${optionIndex + 1}`;
+  const indexLabel = isTuple
+    ? String(optionIndex)
+    : `Option ${optionIndex + 1}`;
   const label = `${typeLabel} (${indexLabel})`;
 
   // For tuples, use the element name with type (e.g., "[0]: string")
@@ -618,7 +643,10 @@ function AltNode({
     : undefined;
 
   // Anonymous object alternative: show as collapsible section
-  if ((node.name === "" || node.name === "(root)") && node.properties && node.properties.length > 0) {
+  if (
+    (node.name === "" || node.name === "(root)") && node.properties
+    && node.properties.length > 0
+  ) {
     return (
       <Box>
         <Group gap="xs" wrap="nowrap">
@@ -626,7 +654,8 @@ function AltNode({
           <IconChevronRight
             size={14}
             style={{
-              flexShrink: 0, width: 14,
+              flexShrink: 0,
+              width: 14,
               transition: "transform 150ms",
               transform: expanded ? "rotate(90deg)" : "none",
               cursor: "pointer",
@@ -666,7 +695,8 @@ function AltNode({
           <IconChevronRight
             size={14}
             style={{
-              flexShrink: 0, width: 14,
+              flexShrink: 0,
+              width: 14,
               transition: "transform 150ms",
               transform: expanded ? "rotate(90deg)" : "none",
               cursor: "pointer",
@@ -704,7 +734,8 @@ function AltNode({
           <IconChevronRight
             size={14}
             style={{
-              flexShrink: 0, width: 14,
+              flexShrink: 0,
+              width: 14,
               transition: "transform 150ms",
               transform: expanded ? "rotate(90deg)" : "none",
               cursor: "pointer",
@@ -797,7 +828,8 @@ function RecordNode({
   onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const autoExpand = searchTerm && searchTerm.trim() !== ""
+    && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
   return (
@@ -824,7 +856,12 @@ function RecordNode({
           size="sm"
           c={isSelected ? "blue" : "inherit"}
           fw={isSelected ? 600 : undefined}
-          style={{ cursor: "pointer", border: "none", background: "none", padding: 0 }}
+          style={{
+            cursor: "pointer",
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
           onClick={() => onSelect?.(node)}
         >
           {highlight(node.name)}
@@ -844,35 +881,37 @@ function RecordNode({
       {showChildren && (
         <Box pl={16}>
           {/* If itemNode is a union or tuple, render alternatives directly with AltNode */}
-          {itemNode.alternatives ? (
-            itemNode.alternatives.map((alt, i) => (
-              <AltNode
-                key={`${i}_${nodeId(alt)}`}
-                node={alt}
+          {itemNode.alternatives
+            ? (
+              itemNode.alternatives.map((alt, i) => (
+                <AltNode
+                  key={`${i}_${nodeId(alt)}`}
+                  node={alt}
+                  depth={depth + 1}
+                  optionIndex={i}
+                  isTuple={itemNode.type === "tuple"}
+                  onSelect={onSelect}
+                  selectedId={selectedId}
+                  searchTerm={searchTerm}
+                  highlight={highlight}
+                  Icon={Icon}
+                  iconInfo={iconInfo}
+                  typeMap={typeMap}
+                  onNavigateToType={onNavigateToType}
+                />
+              ))
+            )
+            : (
+              <SchemaNode
+                node={itemNode}
                 depth={depth + 1}
-                optionIndex={i}
-                isTuple={itemNode.type === "tuple"}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
-                highlight={highlight}
-                Icon={Icon}
-                iconInfo={iconInfo}
                 typeMap={typeMap}
                 onNavigateToType={onNavigateToType}
               />
-            ))
-          ) : (
-            <SchemaNode
-              node={itemNode}
-              depth={depth + 1}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={searchTerm}
-              typeMap={typeMap}
-              onNavigateToType={onNavigateToType}
-            />
-          )}
+            )}
         </Box>
       )}
     </Box>
@@ -908,7 +947,8 @@ function ArrayNode({
   onNavigateToType?: (typeId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const autoExpand = searchTerm && searchTerm.trim() !== "" && nodeMatchesOrHasMatchingChild(node, searchTerm);
+  const autoExpand = searchTerm && searchTerm.trim() !== ""
+    && nodeMatchesOrHasMatchingChild(node, searchTerm);
   const showChildren = autoExpand || expanded;
 
   return (
@@ -952,7 +992,12 @@ function ArrayNode({
           <Badge size="xs" variant="light" color="gray">optional</Badge>
         )}
         {node.itemType && (
-          <Badge size="xs" variant="outline" color={iconInfo.color} style={{ textTransform: "none" }}>
+          <Badge
+            size="xs"
+            variant="outline"
+            color={iconInfo.color}
+            style={{ textTransform: "none" }}
+          >
             {node.itemType}
           </Badge>
         )}
@@ -960,35 +1005,37 @@ function ArrayNode({
       {showChildren && (
         <Box pl={16}>
           {/* If itemNode is a union or tuple, render alternatives directly with AltNode */}
-          {itemNode.alternatives ? (
-            itemNode.alternatives.map((alt, i) => (
-              <AltNode
-                key={`${i}_${nodeId(alt)}`}
-                node={alt}
+          {itemNode.alternatives
+            ? (
+              itemNode.alternatives.map((alt, i) => (
+                <AltNode
+                  key={`${i}_${nodeId(alt)}`}
+                  node={alt}
+                  depth={depth + 1}
+                  optionIndex={i}
+                  isTuple={itemNode.type === "tuple"}
+                  onSelect={onSelect}
+                  selectedId={selectedId}
+                  searchTerm={searchTerm}
+                  highlight={highlight}
+                  Icon={Icon}
+                  iconInfo={iconInfo}
+                  typeMap={typeMap}
+                  onNavigateToType={onNavigateToType}
+                />
+              ))
+            )
+            : (
+              <SchemaNode
+                node={itemNode}
                 depth={depth + 1}
-                optionIndex={i}
-                isTuple={itemNode.type === "tuple"}
                 onSelect={onSelect}
                 selectedId={selectedId}
                 searchTerm={searchTerm}
-                highlight={highlight}
-                Icon={Icon}
-                iconInfo={iconInfo}
                 typeMap={typeMap}
                 onNavigateToType={onNavigateToType}
               />
-            ))
-          ) : (
-            <SchemaNode
-              node={itemNode}
-              depth={depth + 1}
-              onSelect={onSelect}
-              selectedId={selectedId}
-              searchTerm={searchTerm}
-              typeMap={typeMap}
-              onNavigateToType={onNavigateToType}
-            />
-          )}
+            )}
         </Box>
       )}
     </Box>
