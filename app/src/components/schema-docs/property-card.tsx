@@ -4,17 +4,25 @@
 
 "use client";
 
-import { Badge, Box, Card, Group, Text, Title } from "@mantine/core";
-import { DocNode } from "@lxcat/schema";
+import { Badge, Box, Card, Group, Text, Title, Anchor } from "@mantine/core";
+import { DocNode, DocTypeMap } from "@lxcat/schema";
 import { SchemaNode } from "./schema-node";
 
 interface PropertyCardProps {
   node: DocNode;
   propertyName?: string;
+  typeMap?: DocTypeMap;
+  onNavigateToType?: (typeId: string) => void;
 }
 
 /** Renders a detailed card view for a selected schema node */
-export function PropertyCard({ node, propertyName }: PropertyCardProps) {
+export function PropertyCard({ node, propertyName, typeMap, onNavigateToType }: PropertyCardProps) {
+  const handleNavigate = () => {
+    if (node.registeredId && onNavigateToType) {
+      onNavigateToType(node.registeredId!);
+    }
+  };
+
   return (
     <Card
       radius="md"
@@ -24,6 +32,18 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
     >
       <Title order={3} mb="xs">
         {propertyName || node.name || "(root)"}
+        {node.registeredId && typeMap && onNavigateToType && (
+          <Badge
+            size="sm"
+            variant="filled"
+            color="indigo"
+            ml="md"
+            style={{ cursor: "pointer", textTransform: "none" }}
+            onClick={handleNavigate}
+          >
+            {node.registeredId}
+          </Badge>
+        )}
       </Title>
 
       <Box mb="md">
@@ -156,6 +176,17 @@ export function PropertyCard({ node, propertyName }: PropertyCardProps) {
                   <Badge size="xs" variant="light" color="gray">
                     optional
                   </Badge>
+                )}
+                {prop.node.registeredId && typeMap && onNavigateToType && (
+                  <Anchor
+                    size="xs"
+                    color="indigo"
+                    ml="xs"
+                    style={{ cursor: "pointer", textTransform: "none" }}
+                    onClick={() => onNavigateToType(prop.node.registeredId!)}
+                  >
+                    → {prop.node.registeredId}
+                  </Anchor>
                 )}
               </Text>
               <Text size="xs" c="dimmed">
