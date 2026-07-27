@@ -175,6 +175,8 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode }: DocsPage
               <PropertyCard
                 node={selectedNode}
                 propertyName={selectedNode.name}
+                typeMap={typeMap}
+                onNavigateToType={handleNavigateToType}
               />
             ) : (
               <Box style={{ padding: 24 }}>
