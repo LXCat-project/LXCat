@@ -623,20 +623,6 @@ function AltNode({
     );
   }
 
-  // Anonymous leaf alternative: render with type label
-  if (node.name === "" || node.name === "(root)" || !node.properties && !node.itemNode && !node.alternatives) {
-    return (
-      <Box>
-        <Group gap="xs" wrap="nowrap">
-          <altIconInfo.icon size={14} color={altIconInfo.color} />
-          <Text size="xs" c="dimmed" fw={500}>
-            {tupleLabel || `${node.type} (${indexLabel})`}
-          </Text>
-        </Group>
-      </Box>
-    );
-  }
-
   // Alternative has its own alternatives (e.g., tuple alternative): render expandable
   if (node.alternatives && node.alternatives.length > 0) {
     const isNestedTuple = node.type === "tuple";
@@ -677,6 +663,20 @@ function AltNode({
             ))}
           </Box>
         )}
+      </Box>
+    );
+  }
+
+  // Anonymous leaf alternative: render with type label (no nesting)
+  if (node.name === "" || node.name === "(root)") {
+    return (
+      <Box>
+        <Group gap="xs" wrap="nowrap">
+          <altIconInfo.icon size={14} color={altIconInfo.color} />
+          <Text size="xs" c="dimmed" fw={500}>
+            {tupleLabel || `${node.type} (${indexLabel})`}
+          </Text>
+        </Group>
       </Box>
     );
   }
