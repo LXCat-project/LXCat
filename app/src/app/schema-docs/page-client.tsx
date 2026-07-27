@@ -25,13 +25,22 @@ import { SchemaNode } from "@/components/schema-docs/schema-node";
 import { PropertyCard } from "@/components/schema-docs/property-card";
 import { SchemaSearch } from "@/components/schema-docs/schema-search";
 
+interface RootSchema {
+  id: string;
+  name: string;
+  label: string;
+  description: string;
+}
+
 interface DocsPageClientProps {
   typeMap: DocTypeMap;
   initialTypeId: string;
   initialNode: DocNode;
+  rootSchemas: RootSchema[];
 }
 
-export function DocsPageClient({ typeMap, initialTypeId, initialNode }: DocsPageClientProps) {
+export function DocsPageClient({ typeMap, initialTypeId, initialNode, rootSchemas }: DocsPageClientProps) {
+  const [currentRootId, setCurrentRootId] = useState(initialTypeId);
   const [currentTypeId, setCurrentTypeId] = useState(initialTypeId);
   const [currentNode, setCurrentNode] = useState<DocNode>(initialNode);
   const [selectedNode, setSelectedNode] = useState<DocNode | undefined>();
@@ -51,14 +60,36 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode }: DocsPage
     }
   };
 
+  const handleSwitchRoot = async (rootId: string) => {
+    if (rootId === currentRootId) return;
+    setCurrentRootId(rootId);
+    setCurrentTypeId(rootId);
+    setSelectedNode(undefined);
+    
+    // Fetch the tree for the new root schema
+    try {
+      const response = await fetch(`/api/schema-docs?root=${rootId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch schema: ${response.statusText}`);
+      }
+      const rootNode = await response.json();
+      setCurrentNode(rootNode);
+    } catch (error) {
+      console.error("Failed to load schema:", error);
+      // Revert to previous root on error
+      setCurrentRootId(initialTypeId);
+    }
+  };
+
   const handleGoHome = () => {
-    setCurrentTypeId(initialTypeId);
+    setCurrentTypeId(currentRootId);
     setCurrentNode(initialNode);
     setSelectedNode(undefined);
   };
 
   const typeEntries = Object.entries(typeMap).sort((a, b) => a[0].localeCompare(b[0]));
   const currentTypeLabel = typeMap[currentTypeId]?.name || currentTypeId;
+  const currentRootSchema = rootSchemas.find(s => s.id === currentRootId);
 
   return (
     <>
@@ -85,6 +116,14 @@ export function DocsPageClient({ typeMap, initialTypeId, initialNode }: DocsPage
             </Badge>
           </Group>
           <Group gap="sm">
+            <Select
+              data={rootSchemas.map(s => ({ value: s.id, label: s.label }))}
+              value={currentRootId}
+              onChange={(value) => value && handleSwitchRoot(value)}
+              style={{ width: 240 }}
+              placeholder="Select schema..."
+              allowDeselect={false}
+            />
             <Select
               data={typeEntries.map(([id, node]) => ({ value: id, label: node.name || id }))}
               value={currentTypeId}
