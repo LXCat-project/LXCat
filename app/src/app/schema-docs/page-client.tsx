@@ -206,7 +206,7 @@ export function DocsPageClient(
       </Drawer>
 
       {/* Main content */}
-      <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "24px" }}>
+      <Box style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 24px" }}>
         {/* Page description */}
         {dismissible && (
           <Alert
@@ -238,13 +238,13 @@ export function DocsPageClient(
           </Alert>
         )}
 
-        <Box style={{ display: "flex", gap: 24, marginTop: 16 }}>
+        <Box style={{ display: "flex", gap: 24, flex: 1 }}>
           {/* Left: Tree */}
           <Box
             style={{
-              flex: "0 0 55%",
-              maxHeight: "calc(100vh - 240px)",
+              flex: 1,
               overflowY: "auto",
+              maxHeight: "calc(100vh - 320px)",
             }}
           >
             <SchemaSearch onSearch={setSearchTerm} />
@@ -259,13 +259,13 @@ export function DocsPageClient(
             />
           </Box>
           {/* Divider */}
-          <Divider orientation="vertical" style={{ height: "calc(100vh - 240px)" }} />
+          <Divider orientation="vertical" />
           {/* Right: Detail Panel */}
           <Box
             style={{
-              flex: "1",
-              maxHeight: "calc(100vh - 240px)",
+              flex: 1,
               overflowY: "auto",
+              maxHeight: "calc(100vh - 320px)",
             }}
           >
             {selectedNode
