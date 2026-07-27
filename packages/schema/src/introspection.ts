@@ -89,8 +89,15 @@ export function zodToDocNode(
   const def = toDef(unwrapped);
 
   // Check if this type is registered in the global registry
-  const registeredMeta = (globalRegistry._idmap as Map<unknown, unknown>).get(unwrapped);
-  const registeredId = registeredMeta ? ((registeredMeta as { id: string }).id) : undefined;
+  // Map structure is { id: string } → ZodType, so we need to find the entry where value matches
+  const idMap = globalRegistry._idmap as Map<string, ZodTypeAny>;
+  let registeredId: string | undefined;
+  for (const [id, zodType] of idMap) {
+    if (zodType === unwrapped) {
+      registeredId = id;
+      break;
+    }
+  }
 
   switch (def.type) {
     case "string":
@@ -309,20 +316,65 @@ export function zodToDocNode(
 
 export function buildTypeMap(): DocTypeMap {
   const map: DocTypeMap = {};
-  const idMap = globalRegistry._idmap as unknown as Map<string, { id: string }>;
-  for (const [type, meta] of idMap) {
+  const idMap = globalRegistry._idmap as unknown as Map<string, ZodTypeAny>;
+  for (const [id, zodType] of idMap) {
     // Skip non-ZodType entries (e.g. functions, primitives)
-    const zodType = type as unknown;
     if (typeof zodType !== "object" || zodType === null || !("def" in zodType)) {
       continue;
     }
     try {
-      map[meta.id] = zodToDocNode(zodType as ZodTypeAny, meta.id, true);
+      map[id] = zodToDocNode(zodType, id, true);
     } catch {
       // Skip types that can't be introspected
     }
   }
   return map;
+}
+
+// ---------------------------------------------------------------------------
+// Resolve a type by its registered ID
+// ---------------------------------------------------------------------------
+
+/**
+ * Look up a type by its registered ID and return its DocNode.
+ * Returns undefined if the type is not found in the map.
+ */
+export function resolveTypeNode(typeId: string, typeMap: DocTypeMap): DocNode | undefined {
+  return typeMap[typeId];
+}
+
+// ---------------------------------------------------------------------------
+// Discover all types referenced by a root node
+// ---------------------------------------------------------------------------
+
+/**
+ * Recursively traverse a DocNode tree and collect all registered type IDs.
+ * Returns a Set of unique type IDs referenced anywhere in the tree.
+ */
+export function findReferencedTypes(node: DocNode, typeMap: DocTypeMap = buildTypeMap()): Set<string> {
+  const ids = new Set<string>();
+
+  function traverse(n: DocNode) {
+    if (n.registeredId) {
+      ids.add(n.registeredId);
+    }
+    if (n.properties) {
+      for (const p of n.properties) {
+        traverse(p.node);
+      }
+    }
+    if (n.itemNode) {
+      traverse(n.itemNode);
+    }
+    if (n.alternatives) {
+      for (const alt of n.alternatives) {
+        traverse(alt);
+      }
+    }
+  }
+
+  traverse(node);
+  return ids;
 }
 
 // ---------------------------------------------------------------------------
@@ -335,4 +387,13 @@ export function getRootDocNode(): DocNode {
     "VersionedLTPDocumentWithReference",
     true,
   );
+}
+
+/**
+ * Get the DocNode for a specific registered type.
+ * Convenience wrapper around resolveTypeNode with a fresh typeMap.
+ */
+export function getTypeDocNode(typeId: string): DocNode | undefined {
+  const typeMap = buildTypeMap();
+  return resolveTypeNode(typeId, typeMap);
 }
