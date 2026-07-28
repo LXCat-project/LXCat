@@ -104,7 +104,7 @@
       "name": "@lxcat/converter",
       "version": "0.1.0",
       "devDependencies": {
-        "@napi-rs/cli": "^3.7.4",
+        "@napi-rs/cli": "^3.8.0",
         "@types/bun": "^1.3.14",
         "tsx": "^4.23.1",
       },
@@ -627,7 +627,7 @@
 
     "@mermaid-js/parser": ["@mermaid-js/parser@1.2.0", "", { "dependencies": { "@chevrotain/types": "~11.1.2" } }, "sha512-oYPyv8A4As1yH5Bx+04iQEQxXuIQDe0GKCNSRgao6z8AM9jixXIfP0vsppRLvGf+nKIOb9/LdpWA4YuJiVvESA=="],
 
-    "@napi-rs/cli": ["@napi-rs/cli@3.7.4", "", { "dependencies": { "@inquirer/prompts": "^8.5.2", "@napi-rs/cross-toolchain": "^1.0.3", "@napi-rs/wasm-tools": "^1.0.1", "@octokit/rest": "^22.0.1", "clipanion": "^4.0.0-rc.4", "colorette": "^2.0.20", "emnapi": "^1.11.1", "es-toolkit": "^1.47.0", "js-yaml": "^4.2.0", "obug": "^2.1.2", "semver": "^7.8.2", "typanion": "^3.14.0" }, "peerDependencies": { "@emnapi/runtime": "^1.7.1" }, "optionalPeers": ["@emnapi/runtime"], "bin": { "napi": "dist/cli.js", "napi-raw": "cli.mjs" } }, "sha512-idELIUceJ9zPgx/shcMt1fSSsteFG68v56RIXi4qUm7OYuJOt7CoMj2KnHVmbOqXgUHWQU1lCULrtQdZDG4F5A=="],
+    "@napi-rs/cli": ["@napi-rs/cli@3.8.0", "", { "dependencies": { "@inquirer/prompts": "^8.5.2", "@napi-rs/cross-toolchain": "^1.0.3", "@napi-rs/wasm-tools": "^1.0.1", "@octokit/rest": "^22.0.1", "clipanion": "^4.0.0-rc.4", "colorette": "^2.0.20", "emnapi": "2.0.0-alpha.3", "es-toolkit": "^1.47.0", "js-yaml": "^4.2.0", "obug": "^2.1.2", "semver": "^7.8.2", "typanion": "^3.14.0", "typescript": "^6.0.3" }, "peerDependencies": { "@emnapi/runtime": "2.0.0-alpha.3" }, "optionalPeers": ["@emnapi/runtime"], "bin": { "napi": "dist/cli.js", "napi-raw": "cli.mjs" } }, "sha512-RagwLdCJ1LigZTe3fE5Bc+2a4sHDV+1IAxvyFlZf25qSQj8e2Sdc8xq2xyN2ydNokdfDN4DprGQkU1eBJJCl8w=="],
 
     "@napi-rs/cross-toolchain": ["@napi-rs/cross-toolchain@1.0.3", "", { "dependencies": { "@napi-rs/lzma": "^1.4.5", "@napi-rs/tar": "^1.1.0", "debug": "^4.4.1" }, "peerDependencies": { "@napi-rs/cross-toolchain-arm64-target-aarch64": "^1.0.3", "@napi-rs/cross-toolchain-arm64-target-armv7": "^1.0.3", "@napi-rs/cross-toolchain-arm64-target-ppc64le": "^1.0.3", "@napi-rs/cross-toolchain-arm64-target-s390x": "^1.0.3", "@napi-rs/cross-toolchain-arm64-target-x86_64": "^1.0.3", "@napi-rs/cross-toolchain-x64-target-aarch64": "^1.0.3", "@napi-rs/cross-toolchain-x64-target-armv7": "^1.0.3", "@napi-rs/cross-toolchain-x64-target-ppc64le": "^1.0.3", "@napi-rs/cross-toolchain-x64-target-s390x": "^1.0.3", "@napi-rs/cross-toolchain-x64-target-x86_64": "^1.0.3" }, "optionalPeers": ["@napi-rs/cross-toolchain-arm64-target-aarch64", "@napi-rs/cross-toolchain-arm64-target-armv7", "@napi-rs/cross-toolchain-arm64-target-ppc64le", "@napi-rs/cross-toolchain-arm64-target-s390x", "@napi-rs/cross-toolchain-arm64-target-x86_64", "@napi-rs/cross-toolchain-x64-target-aarch64", "@napi-rs/cross-toolchain-x64-target-armv7", "@napi-rs/cross-toolchain-x64-target-ppc64le", "@napi-rs/cross-toolchain-x64-target-s390x", "@napi-rs/cross-toolchain-x64-target-x86_64"] }, "sha512-ENPfLe4937bsKVTDA6zdABx4pq9w0tHqRrJHyaGxgaPq03a2Bd1unD5XSKjXJjebsABJ+MjAv1A2OvCgK9yehg=="],
 
@@ -1581,7 +1581,7 @@
 
     "embla-carousel-reactive-utils": ["embla-carousel-reactive-utils@8.6.0", "", { "peerDependencies": { "embla-carousel": "8.6.0" } }, "sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A=="],
 
-    "emnapi": ["emnapi@1.11.1", "", { "peerDependencies": { "node-addon-api": ">= 6.1.0" }, "optionalPeers": ["node-addon-api"] }, "sha512-kSRjhIcxjMFsBqk7ORvoc9aA5SBKDmecrtF5RMcmOTao0kD/zamaxsuTxMI8C1//wGUuvE7a+19pCE7AEhGVnA=="],
+    "emnapi": ["emnapi@2.0.0-alpha.3", "", { "peerDependencies": { "node-addon-api": ">= 6.1.0" }, "optionalPeers": ["node-addon-api"] }, "sha512-K9bc9Xx4OwSfhJpdSOpcfIKzn7/6emuubaIorf6I5e7WBAM79665rf6iHr9y50NL4qYMUP/AheTpD1Z4yU1EBw=="],
 
     "emoji-regex": ["emoji-regex@9.2.2", "", {}, "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg=="],
 
@@ -3156,6 +3156,8 @@
     "@maplibre/maplibre-gl-style-spec/@mapbox/unitbezier": ["@mapbox/unitbezier@0.0.1", "", {}, "sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw=="],
 
     "@maplibre/maplibre-gl-style-spec/tinyqueue": ["tinyqueue@3.0.0", "", {}, "sha512-gRa9gwYU3ECmQYv3lslts5hxuIa90veaEcxDYuu3QGOIAEM2mOZkVHp48ANJuu1CURtRdHKUBY5Lm1tHV+sD4g=="],
+
+    "@napi-rs/cli/typescript": ["typescript@6.0.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
 
     "@octokit/request/content-type": ["content-type@2.0.0", "", {}, "sha512-j/O/d7GcZCyNl7/hwZAb606rzqkyvaDctLmckbxLzHvFBzTJHuGEdodATcP3yIRoDrLHkIATJuvzbFlp/ki2cQ=="],
 
