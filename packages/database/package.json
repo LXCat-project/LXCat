@@ -75,7 +75,7 @@
     "dprint": "^0.55.2",
     "eslint": "9.39.5",
     "globals": "^17.9.0",
-    "testcontainers": "^12.0.3",
+    "testcontainers": "^12.1.0",
     "typescript": "^7.0.2",
     "typescript-eslint": "^8.66.0"
   }
