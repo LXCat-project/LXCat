@@ -44,6 +44,9 @@
         mkShell {
           name = "lxcat";
           buildInputs = [
+            # Node
+            nodejs-slim_26
+
             # Bun
             bun
             bun2nix
