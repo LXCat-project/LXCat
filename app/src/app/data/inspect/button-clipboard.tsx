@@ -26,12 +26,7 @@ export const ButtonClipboard = (
         rightSection={clipboard.copied
           ? <IconCheck size="1.2rem" stroke={1.5} />
           : <IconCopy size="1.2rem" stroke={1.5} />}
-        radius="sm"
         size="md"
-        styles={{
-          // root: { paddingRight: rem(14), height: rem(48) },
-          // rightIcon: { marginLeft: rem(22) },
-        }}
         onClick={() => clipboard.copy(link)}
       >
         {children}
