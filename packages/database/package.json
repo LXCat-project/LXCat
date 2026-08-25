@@ -72,7 +72,7 @@
     "@testcontainers/arangodb": "^12.1.0",
     "@types/bun": "^1.4.0",
     "@types/deep-equal": "^1.0.4",
-    "dprint": "^0.56.0",
+    "dprint": "^0.56.1",
     "eslint": "9.39.5",
     "globals": "^17.11.0",
     "testcontainers": "^12.1.0",
