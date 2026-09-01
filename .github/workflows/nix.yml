@@ -1,0 +1,47 @@
+name: Nix
+
+on: 
+  push: 
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+    - uses: actions/checkout@v6
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: cachix/cachix-action@v15
+      with:
+        name: lxcat
+    - name: Grab magic-nix-cache binary from cachix
+      run: nix copy --from https://lxcat.cachix.org /nix/store/i42dnncwk3pmi59y9q9q15di700d5067-magic-nix-cache.xz
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+      with:
+        use-flakehub: false
+        source-binary: /nix/store/i42dnncwk3pmi59y9q9q15di700d5067-magic-nix-cache.xz
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Build dependency cache
+      run: nix build .#lxcat-deps
+    - name: Build the LXCat application
+      run: nix build .#lxcat
