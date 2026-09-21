@@ -13,7 +13,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@citation-js/core": "^0.9.0",
-        "@citation-js/plugin-bibtex": "^0.8.2",
+        "@citation-js/plugin-bibtex": "^0.9.0",
         "@citation-js/plugin-csl": "^0.9.0",
         "@citation-js/plugin-doi": "^0.8.2",
         "@citation-js/plugin-ris": "^0.9.0",
@@ -215,7 +215,7 @@
 
     "@citation-js/name": ["@citation-js/name@0.4.2", "", {}, "sha512-brSPsjs2fOVzSnARLKu0qncn6suWjHVQtrqSUrnqyaRH95r/Ad4wPF5EsoWr+Dx8HzkCGb/ogmoAzfCsqlTwTQ=="],
 
-    "@citation-js/plugin-bibtex": ["@citation-js/plugin-bibtex@0.8.2", "", { "dependencies": { "@citation-js/date": "^0.5.0", "@citation-js/name": "^0.4.2", "moo": "^0.5.1" }, "peerDependencies": { "@citation-js/core": "^0.8.0" } }, "sha512-H9NXF5jTXxIvpc/87I9Lz79QZ02q5O+WKSSNetK5RiDkxeCo6USt44uOTeHkuFEkVWUpb9ol0T8GSwXdGl+/bw=="],
+    "@citation-js/plugin-bibtex": ["@citation-js/plugin-bibtex@0.9.0", "", { "dependencies": { "@citation-js/date": "^0.5.0", "@citation-js/name": "^0.4.2", "moo": "^0.5.1" }, "peerDependencies": { "@citation-js/core": "^0.9.0" } }, "sha512-9n8EVP/kq+v7VuoWVI+p8SRE3KikQYd2c78NSRq9btC4b3XzuBA3qFI3uF6xyxbNLPtY7+Y4BQDayta2yrl1zQ=="],
 
     "@citation-js/plugin-csl": ["@citation-js/plugin-csl@0.9.0", "", { "dependencies": { "@citation-js/date": "^0.5.0", "citeproc": "^2.4.6" }, "peerDependencies": { "@citation-js/core": "^0.9.0" } }, "sha512-P0uxGr/rE9LaT5mY0T+Xh6JqDc+rdA7U3HDR/tLkiJ1ITRszQVhV9wBaOLc7vwCD+vuwh+m0Bha13hlgZEB7Ng=="],
 
