@@ -21,7 +21,7 @@
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
         "@mantine/carousel": "^9.7.0",
-        "@mantine/code-highlight": "^9.7.0",
+        "@mantine/code-highlight": "^9.7.1",
         "@mantine/core": "^9.7.0",
         "@mantine/form": "^9.7.1",
         "@mantine/hooks": "^9.7.0",
@@ -601,7 +601,7 @@
 
     "@mantine/carousel": ["@mantine/carousel@9.7.0", "", { "peerDependencies": { "@mantine/core": "9.7.0", "@mantine/hooks": "9.7.0", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-L/6IPhltQrDj+TXJUzse73O5rMrHETVciIfDeMnpe3Kl65TrsfbI304wl7SjqnPumwIRHjimfJaY7EIMer6pZg=="],
 
-    "@mantine/code-highlight": ["@mantine/code-highlight@9.7.0", "", { "dependencies": { "clsx": "^2.1.1" }, "peerDependencies": { "@mantine/core": "9.7.0", "@mantine/hooks": "9.7.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-zVSe6MkNW2pkhXsZdja/klNWNfXJXG0Re5O7Bd9z/ubLkK3e0xa4daMH2AwOuyZSf3btSFqv1hY1dJPIGC2BMA=="],
+    "@mantine/code-highlight": ["@mantine/code-highlight@9.7.1", "", { "dependencies": { "clsx": "^2.1.1" }, "peerDependencies": { "@mantine/core": "9.7.1", "@mantine/hooks": "9.7.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-iKr+gUauwvW5yrdB6rSNAeKCZqwuzXpb5pwopgymCB9JJs/UI7mfR5vyRkR5NkDgZOUHJU4O1QqzzG3bkroWPA=="],
 
     "@mantine/core": ["@mantine/core@9.7.0", "", { "dependencies": { "@floating-ui/react": "^0.27.20", "clsx": "^2.1.1", "react-number-format": "^5.4.5", "react-remove-scroll": "^2.7.2", "type-fest": "^5.10.0" }, "peerDependencies": { "@mantine/hooks": "9.7.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-WhCvfXXpYMKV6py05wt0Vlxthtxe4YOzQiVhrrCvWKYDmvhKXgOTDzRdjkGHNji4r+7f7d3nz2XpwbzaZ47R/w=="],
 
