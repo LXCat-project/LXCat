@@ -38,7 +38,7 @@ export const NewLTPDocument = object({
     .forEach(({ state }) => checkState(state));
   ctx.value.processes
     .flatMap((process) => process.reaction.rhs)
-    .every(({ state }) => checkState(state));
+    .forEach(({ state }) => checkState(state));
 }, (ctx) =>
   ctx.value.processes
     .flatMap(({ info }) => info)
