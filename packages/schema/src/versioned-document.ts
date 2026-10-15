@@ -53,7 +53,7 @@ const VersionedDocumentBody = <ReferenceType extends ZodType>(
         .forEach(({ state }) => checkState(state));
       doc.processes
         .flatMap((process) => process.reaction.rhs)
-        .every(({ state }) => checkState(state));
+        .forEach(({ state }) => checkState(state));
     }, (ctx) =>
       ctx.value.processes
         .flatMap(({ info }) => info)
