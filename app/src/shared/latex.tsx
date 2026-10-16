@@ -156,10 +156,10 @@ export const Latex = ({ children, ...props }: LatexProps) => {
     return <></>;
   }
   return (
-    <Box {...props}>
-      <span
-        dangerouslySetInnerHTML={{ __html: renderLatexAsHTMLString(children) }}
-      />
-    </Box>
+    <Box
+      component="span"
+      {...props}
+      dangerouslySetInnerHTML={{ __html: renderLatexAsHTMLString(children) }}
+    />
   );
 };
