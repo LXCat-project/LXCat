@@ -45,7 +45,7 @@
     "katex": "0.19.0",
     "mantine-datatable": "^9.4.0",
     "mdast-util-from-markdown": "^2.1.0",
-    "mermaid": "^12.1.0",
+    "mermaid": "^12.2.0",
     "nanoid": "^6.0.2",
     "next": "^16.4.0",
     "next-auth": "^4.24.15",
