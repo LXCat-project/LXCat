@@ -6,6 +6,7 @@
 
 import { MaybePromise } from "@/app/api/util";
 import { ScientificInput } from "@/shared/forms/scientific-input";
+import { Latex } from "@/shared/latex";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
@@ -26,7 +27,6 @@ import {
 } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useMemo, useState } from "react";
-import Latex from "react-latex-next";
 import { CommentSection } from "./comment-section";
 import { LookupTable } from "./lookup-table";
 import { ParameterSection } from "./parameter-section";
@@ -209,7 +209,7 @@ const ProcessItem = (
     <Accordion.Item value={itemValue}>
       <Center>
         <Accordion.Control>
-          <Latex>{`$${latex}$`}</Latex>
+          <Latex>{latex}</Latex>
         </Accordion.Control>
         <ActionIcon
           style={{ marginRight: 10 }}

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { MaybePromise } from "@/app/api/util";
+import { LatexText } from "@/shared/latex";
 import { ReferenceRef } from "@lxcat/schema/reference";
 import {
   Button,
@@ -19,7 +20,6 @@ import { IconChevronRight, IconPlaylistAdd } from "@tabler/icons-react";
 import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import { useState } from "react";
-import Latex from "react-latex-next";
 import { CommentSection } from "./comment-section";
 import classes from "./reference-section.module.css";
 
@@ -43,7 +43,7 @@ const ReferenceButton = (
     <Combobox.Option value={key} key={key}>
       <Group wrap="nowrap">
         {selected.map(getRefKey).includes(key) && <CheckIcon size={12} />}
-        <Latex>{ref}</Latex>
+        <LatexText>{ref}</LatexText>
       </Group>
     </Combobox.Option>
   ));
@@ -115,7 +115,7 @@ export const ReferenceSection = (
                   [classes.expandIconRotated]: expandedRefs.includes(record.id),
                 })}
               />
-              <Latex>{record.reference}</Latex>
+              <LatexText>{record.reference}</LatexText>
             </Group>
           ),
         }]}
