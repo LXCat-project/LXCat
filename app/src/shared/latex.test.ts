@@ -4,10 +4,26 @@
 
 import { describe, expect, it } from "bun:test";
 import katex from "katex";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import {
   renderLatexAsHTMLString,
   renderLatexInTextAsHTMLString,
 } from "./latex";
+
+describe("KaTeX version consistency", () => {
+  // The KaTeX stylesheet only matches HTML rendered by the same KaTeX version.
+  // Every package that renders LaTeX must therefore resolve to the `katex`
+  // version used by the app (see the `overrides` field in the root
+  // `package.json`).
+  it.each(["rehype-katex"])(
+    "%s uses the same KaTeX version as the app",
+    (pkg) => {
+      const require = createRequire(fileURLToPath(import.meta.resolve(pkg)));
+      expect(require("katex/package.json").version).toBe(katex.version);
+    },
+  );
+});
 
 describe("renderLatexAsHTMLString", () => {
   it("renders with the app's KaTeX", () => {
