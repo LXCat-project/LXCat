@@ -2,15 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Card, Select, Stack, Title } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
-import Latex from "react-latex-next";
-import { BolsigFormInput } from "./io";
-import "katex/dist/katex.min.css";
-import { type SerializedSpecies } from "@lxcat/schema/species";
 import { IntegerInput } from "@/shared/forms/integer-input";
 import { RangeInputForm } from "@/shared/forms/range-input-form";
 import { ScientificInput } from "@/shared/forms/scientific-input";
+import { LatexText } from "@/shared/latex";
+import { type SerializedSpecies } from "@lxcat/schema/species";
+import { Card, Select, Stack, Title } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { BolsigFormInput } from "./io";
 
 export interface BolsigInputFormProps {
   consumedStates: Array<SerializedSpecies>;
@@ -26,21 +25,25 @@ export const BolsigInputForm = (
         <Title order={3}>General</Title>
         <Stack gap="xs">
           <RangeInputForm
-            label={<Latex>{"Reduced electric field $(\\mathrm{Td})$"}</Latex>}
+            label={
+              <LatexText>{"Reduced electric field $(\\mathrm{Td})$"}</LatexText>
+            }
             form={config}
             basePath="config.reducedField"
           />
           <ScientificInput
             {...config.getInputProps("config.ionizationDegree")}
-            label={<Latex>{"Ionization degree"}</Latex>}
+            label={<LatexText>{"Ionization degree"}</LatexText>}
           />
           <ScientificInput
             {...config.getInputProps("config.plasmaDensity")}
-            label={<Latex>{"Plasma density $(\\mathrm{m}^{-3})$"}</Latex>}
+            label={
+              <LatexText>{"Plasma density $(\\mathrm{m}^{-3})$"}</LatexText>
+            }
           />
           <ScientificInput
             {...config.getInputProps("config.gasTemperature")}
-            label={<Latex>{"Gas temperature $(\\mathrm{K})$"}</Latex>}
+            label={<LatexText>{"Gas temperature $(\\mathrm{K})$"}</LatexText>}
           />
         </Stack>
       </Card>
@@ -54,7 +57,7 @@ export const BolsigInputForm = (
                 `composition.${state.serialized.summary}`,
               )}
               value={consumedStates.length == 1 ? 1 : 0}
-              label={<Latex>{`$${state.serialized.latex}$`}</Latex>}
+              label={<LatexText>{`$${state.serialized.latex}$`}</LatexText>}
             />
           ))}
         </Stack>
@@ -79,7 +82,7 @@ export const BolsigInputForm = (
           {config.getInputProps("numerics.grid.type").value !== "automatic" && (
             <ScientificInput
               {...config.getInputProps("numerics.grid.maxEnergy")}
-              label={<Latex>{"Maximum energy $(\\mathrm{eV})$"}</Latex>}
+              label={<LatexText>{"Maximum energy $(\\mathrm{eV})$"}</LatexText>}
             />
           )}
         </Stack>

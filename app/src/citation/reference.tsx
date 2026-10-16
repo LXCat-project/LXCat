@@ -6,9 +6,8 @@
 
 import { useEffect, useState } from "react";
 
-import "katex/dist/katex.min.css";
+import { LatexText } from "@/shared/latex";
 import { Reference as ReferenceRecord } from "@lxcat/schema";
-import Latex from "react-latex-next";
 
 import { formatReference } from "./cite";
 
@@ -32,10 +31,10 @@ export const Reference = (r: ReferenceRecord) => {
       {r.URL
         ? (
           <a href={r.URL} target="_blank" rel="noreferrer">
-            <Latex>{bibliography}</Latex>
+            <LatexText>{bibliography}</LatexText>
           </a>
         )
-        : <Latex>{bibliography}</Latex>}
+        : <LatexText>{bibliography}</LatexText>}
     </cite>
   );
 };

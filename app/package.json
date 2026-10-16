@@ -54,7 +54,6 @@
     "plotly.js-basic-dist": "^4.1.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-latex-next": "^3.0.0",
     "react-plotly.js": "^4.1.0",
     "react-schemaorg": "^2.0.1",
     "redoc": "^2.5.4",
