@@ -6,7 +6,7 @@
 
 import { MaybePromise } from "@/app/api/util";
 import { ScientificInput } from "@/shared/forms/scientific-input";
-import { LatexText } from "@/shared/latex";
+import { Latex } from "@/shared/latex";
 import { EditedLTPDocument } from "@lxcat/schema";
 import { CrossSectionInfo, ReactionEntry } from "@lxcat/schema/process";
 import { ReferenceRef } from "@lxcat/schema/reference";
@@ -209,7 +209,7 @@ const ProcessItem = (
     <Accordion.Item value={itemValue}>
       <Center>
         <Accordion.Control>
-          <LatexText>{`$${latex}$`}</LatexText>
+          <Latex>{latex}</Latex>
         </Accordion.Control>
         <ActionIcon
           style={{ marginRight: 10 }}

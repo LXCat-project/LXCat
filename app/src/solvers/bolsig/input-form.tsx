@@ -5,7 +5,7 @@
 import { IntegerInput } from "@/shared/forms/integer-input";
 import { RangeInputForm } from "@/shared/forms/range-input-form";
 import { ScientificInput } from "@/shared/forms/scientific-input";
-import { LatexText } from "@/shared/latex";
+import { Latex, LatexText } from "@/shared/latex";
 import { type SerializedSpecies } from "@lxcat/schema/species";
 import { Card, Select, Stack, Title } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
@@ -33,7 +33,7 @@ export const BolsigInputForm = (
           />
           <ScientificInput
             {...config.getInputProps("config.ionizationDegree")}
-            label={<LatexText>{"Ionization degree"}</LatexText>}
+            label="Ionization degree"
           />
           <ScientificInput
             {...config.getInputProps("config.plasmaDensity")}
@@ -57,7 +57,7 @@ export const BolsigInputForm = (
                 `composition.${state.serialized.summary}`,
               )}
               value={consumedStates.length == 1 ? 1 : 0}
-              label={<LatexText>{`$${state.serialized.latex}$`}</LatexText>}
+              label={<Latex>{state.serialized.latex}</Latex>}
             />
           ))}
         </Stack>

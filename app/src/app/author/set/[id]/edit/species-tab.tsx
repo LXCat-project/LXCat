@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { LatexText } from "@/shared/latex";
+import { Latex } from "@/shared/latex";
 import { type EditedLTPDocument } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -59,7 +59,7 @@ export const SpeciesTab = (
                 <Accordion.Item key={key} value={key}>
                   <Center>
                     <Accordion.Control>
-                      <LatexText>{`$${controlNode}$`}</LatexText>
+                      <Latex>{controlNode}</Latex>
                     </Accordion.Control>
                     <ActionIcon
                       style={{ marginRight: 10 }}
