@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Latex } from "@/shared/latex";
 import { type EditedLTPDocument } from "@lxcat/schema";
 import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import {
@@ -17,7 +18,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import Latex from "react-latex-next";
 import { MaybePromise } from "../../../../api/util";
 import { SpeciesInput } from "./species-input";
 import { SpeciesNode, SpeciesPicker } from "./species-picker";
@@ -59,7 +59,7 @@ export const SpeciesTab = (
                 <Accordion.Item key={key} value={key}>
                   <Center>
                     <Accordion.Control>
-                      <Latex>{`$${controlNode}$`}</Latex>
+                      <Latex>{controlNode}</Latex>
                     </Accordion.Control>
                     <ActionIcon
                       style={{ marginRight: 10 }}

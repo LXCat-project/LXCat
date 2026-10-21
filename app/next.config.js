@@ -22,7 +22,7 @@ const nextConfig = {
     useTypeScriptCli: true
   },
 
-  transpilePackages: ["next-mdx-remote"],
+  transpilePackages: ["katex", "next-mdx-remote"],
 
   // @lxcat/converter is a native napi-rs addon (a .node binary). It can't be
   // bundled by either webpack or Turbopack, so it's opted out of Server

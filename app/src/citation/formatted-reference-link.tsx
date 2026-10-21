@@ -4,9 +4,8 @@
 
 "use client";
 
+import { LatexText } from "@/shared/latex";
 import Link from "next/link";
-import "katex/dist/katex.min.css";
-import Latex from "react-latex-next";
 import { FormattedReference } from "./formatted-reference";
 
 export const FormattedReferenceLink = ({
@@ -17,7 +16,7 @@ export const FormattedReferenceLink = ({
   url
     ? (
       <Link href={url} target="_blank">
-        <Latex>{ref}</Latex>
+        <LatexText>{ref}</LatexText>
       </Link>
     )
-    : <Latex>{ref}</Latex>;
+    : <LatexText>{ref}</LatexText>;
