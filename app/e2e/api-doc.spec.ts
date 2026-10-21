@@ -26,3 +26,21 @@ test("/api-doc deep link survives a reload", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Species/ }).first())
     .toBeVisible();
 });
+
+test("/api-doc follows the color scheme toggle of the nav bar", async ({ page }) => {
+  await page.goto("/api-doc");
+  const html = page.locator("html");
+  await expect(page.locator("h1")).toContainText("LXCat API");
+  await expect(html).toHaveClass(/\blight\b/);
+
+  await page.getByRole("button", { name: "Toggle color scheme" }).click();
+  await expect(html).toHaveClass(/\bdark\b/);
+  await expect(html).not.toHaveClass(/\blight\b/);
+
+  await page.reload();
+  await expect(page.locator("h1")).toContainText("LXCat API");
+  await expect(html).toHaveClass(/\bdark\b/);
+
+  // The nav bar is the only color scheme toggle on this page.
+  await expect(page.getByTestId("color-mode-switcher")).toBeHidden();
+});

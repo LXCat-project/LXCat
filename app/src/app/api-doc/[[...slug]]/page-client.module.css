@@ -1,0 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: LXCat team
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/* The color scheme toggle in the nav bar controls the color mode of Redoc. */
+.redoc :global([data-testid="color-mode-switcher"]) {
+  display: none;
+}
