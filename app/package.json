@@ -29,7 +29,7 @@
     "@mantine/code-highlight": "^9.7.3",
     "@mantine/core": "^9.7.3",
     "@mantine/form": "^9.7.3",
-    "@mantine/hooks": "^9.7.2",
+    "@mantine/hooks": "^9.7.3",
     "@mantine/modals": "^9.7.3",
     "@mantine/notifications": "^9.7.3",
     "@mdx-js/mdx": "^3.1.1",
