@@ -4,6 +4,7 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
+import { getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -43,13 +44,14 @@ test.describe("cross section index page with N2 selected", () => {
 });
 
 test.describe("cross section inspect page", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
-      .click();
-    await page.locator("text=Plot selection").click();
+  test.beforeEach(async ({ page, request }) => {
+    // Select the cross sections of both sets, as "Plot selection" does.
+    const sets = await Promise.all([
+      getSeededSet(request),
+      getSeededSet(request, "Some other organization"),
+    ]);
+    const ids = sets.flatMap(({ itemIds }) => itemIds);
+    await page.goto(`/scat-cs/inspect?ids=${ids.join(",")}`);
     await page.locator("text=I agree with the terms of use").click();
   });
 

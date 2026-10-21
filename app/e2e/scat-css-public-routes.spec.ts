@@ -6,6 +6,7 @@ import { CrossSectionSetHeading } from "@lxcat/database/set";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
+import { getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -104,12 +105,9 @@ test.describe("given 2 dummy sets", () => {
   });
 
   test.describe("cross section set details page", () => {
-    test.beforeEach(async ({ page }) => {
-      await page.goto("/cs-set");
-
-      await page.getByRole("button", { name: "N Nitrogen" }).click();
-
-      await page.getByRole("cell", { name: "Some organization" }).click();
+    test.beforeEach(async ({ page, request }) => {
+      const { setId } = await getSeededSet(request);
+      await page.goto(`/scat-css/${setId}`);
       await page.locator("text=I agree with the terms of use").click();
     });
 

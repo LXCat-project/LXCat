@@ -4,25 +4,15 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
+import { getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
 const csTest = test.extend({
-  page: async ({ page }, use) => {
-    // goto a section page
-    await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
-      .click();
-
-    const row = page.getByRole("row", {
-      name: "Some organization Some name 1 True",
-    });
-    await row.click();
-
-    const csRow = page.getByRole("cell", { name: "Electronic", exact: true });
-    await csRow.click();
+  page: async ({ page, request }, use) => {
+    // Go straight to the page of a single cross section.
+    const { itemIds } = await getSeededSet(request);
+    await page.goto(`/scat-cs/inspect?ids=${itemIds[0]}`);
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();
