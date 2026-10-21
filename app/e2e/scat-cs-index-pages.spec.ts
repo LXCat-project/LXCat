@@ -31,6 +31,8 @@ test.describe("cross section index page with N2 selected", () => {
   test("should have link to inspect page", async ({ page }) => {
     const inspectlink = page.locator("text=Plot selection");
     await expect(inspectlink).toBeVisible();
+    await inspectlink.click();
+    await expect(page).toHaveURL(/\/scat-cs\/inspect\?ids=/);
   });
 
   test.describe("when filtered on set name", () => {
