@@ -38,22 +38,14 @@ export async function getSeededSet(
  * Server rendered elements can be clicked before React has hydrated them, in
  * which case the click is silently lost. This happens mostly when several
  * workers compete for a small machine. `trigger` is not clicked again once
- * `target` is visible, so toggles are not undone. `settle` is how long to wait
- * for `target` after a click before clicking again, and `position` is where in
- * `trigger` to click.
+ * `target` is visible, so toggles are not undone. Only use this for triggers
+ * that are safe to click twice, not for ones that submit or create something.
  */
-export async function clickUntilVisible(
-  trigger: Locator,
-  target: Locator,
-  { settle = 2000, position }: {
-    settle?: number;
-    position?: { x: number; y: number };
-  } = {},
-) {
+export async function clickUntilVisible(trigger: Locator, target: Locator) {
   await expect(async () => {
     if (!(await target.isVisible())) {
-      await trigger.click({ position });
+      await trigger.click();
     }
-    await expect(target).toBeVisible({ timeout: settle });
+    await expect(target).toBeVisible({ timeout: 2000 });
   }).toPass({ timeout: 20_000 });
 }
