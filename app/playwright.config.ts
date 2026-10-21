@@ -18,7 +18,10 @@ const config: PlaywrightTestConfig = {
   globalSetup: "./e2e/global-setup",
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
-    command: "bun coverage:start --port 8001",
+    // `E2E_DEV` runs against `next dev`, which saves the build step locally.
+    command: process.env.E2E_DEV
+      ? "bun next dev --port 8001"
+      : "bun coverage:start --port 8001",
     port: 8001,
     // timeout: 2 * 60 * 1000, // Wait for 2 minutes to spinup app dev server
     reuseExistingServer: !process.env.CI,
