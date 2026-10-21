@@ -6,7 +6,7 @@ import { CrossSectionSetHeading } from "@lxcat/database/set";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { getSeededSet } from "./helpers";
+import { clickUntilVisible, getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -17,10 +17,12 @@ test.describe("given 2 dummy sets", () => {
     });
 
     test("should list 2 sets when selecting nitrogen", async ({ page }) => {
-      await page.getByRole("button", { name: "N Nitrogen" }).click();
-
       const set1 = page.getByRole("cell", { name: "Some organization" });
       const set2 = page.getByRole("cell", { name: "Some other organization" });
+      await clickUntilVisible(
+        page.getByRole("button", { name: "N Nitrogen" }),
+        set1,
+      );
       await expect(set1).toBeVisible();
       await expect(set2).toBeVisible();
     });

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { APIRequestContext } from "@playwright/test";
+import type { APIRequestContext, Locator } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 /**
@@ -30,4 +30,30 @@ export async function getSeededSet(
   const itemIds = doc.processes.flatMap(({ info }) => info.map((i) => i._key));
 
   return { setId, itemIds };
+}
+
+/**
+ * Click `trigger` until `target` is visible.
+ *
+ * Server rendered elements can be clicked before React has hydrated them, in
+ * which case the click is silently lost. This happens mostly when several
+ * workers compete for a small machine. `trigger` is not clicked again once
+ * `target` is visible, so toggles are not undone. `settle` is how long to wait
+ * for `target` after a click before clicking again, and `position` is where in
+ * `trigger` to click.
+ */
+export async function clickUntilVisible(
+  trigger: Locator,
+  target: Locator,
+  { settle = 2000, position }: {
+    settle?: number;
+    position?: { x: number; y: number };
+  } = {},
+) {
+  await expect(async () => {
+    if (!(await target.isVisible())) {
+      await trigger.click({ position });
+    }
+    await expect(target).toBeVisible({ timeout: settle });
+  }).toPass({ timeout: 20_000 });
 }

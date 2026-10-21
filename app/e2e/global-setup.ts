@@ -10,6 +10,7 @@ import { exec } from "child_process";
 import { rm } from "fs/promises";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
+import { clickUntilVisible } from "./helpers";
 import { testOidcServer } from "./test-oidc-server";
 
 async function globalSetup(config: FullConfig) {
@@ -177,10 +178,13 @@ export async function uploadAndPublishDummySet(
 
     // Make admin user a member of organization
     await page.goto("/admin/users");
-    await page.locator("div.mantine-MultiSelect-input").click({
-      position: { x: 10, y: 10 },
-    });
-    await page.locator(`text=${org}`).click();
+    const option = page.locator(`text=${org}`);
+    await clickUntilVisible(
+      page.locator("div.mantine-MultiSelect-input"),
+      option,
+      { position: { x: 10, y: 10 } },
+    );
+    await option.click();
     await page.waitForSelector(`div:has-text("${org}")`);
 
     // Add a set
@@ -194,10 +198,11 @@ export async function uploadAndPublishDummySet(
     await page.locator("textarea.mantine-JsonInput-input").fill(
       JSON.stringify(dummySet, null, 2),
     );
-    await page.locator("text=Upload cross section set").click();
-    await page.getByText("The ID of the newly created draft is").waitFor({
-      state: "visible",
-    });
+    await clickUntilVisible(
+      page.locator("text=Upload cross section set"),
+      page.getByText("The ID of the newly created draft is"),
+      { settle: 5000 },
+    );
 
     // Publish set
     await page.goto("/author/set");

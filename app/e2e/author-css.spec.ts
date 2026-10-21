@@ -5,6 +5,7 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
+import { clickUntilVisible } from "./helpers";
 import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
@@ -32,10 +33,9 @@ test.describe("/author/set", () => {
 
   const makeDraft = async (page: Page) => {
     await page.goto("/author/set");
-    await page.locator("svg.tabler-icon-edit").click();
-    await page.getByPlaceholder("Describe which changes have").fill(
-      "Edited description",
-    );
+    const description = page.getByPlaceholder("Describe which changes have");
+    await clickUntilVisible(page.locator("svg.tabler-icon-edit"), description);
+    await description.fill("Edited description");
     await page.getByRole("button", { name: "Submit" }).click();
     await page.getByText("Saved set with id").waitFor({ state: "visible" });
     await page.goto("/author/set");
@@ -59,8 +59,12 @@ test.describe("/author/set", () => {
   test("Publishing a draft should result in a new version", async ({ page }) => {
     await page.goto("/author/set");
 
-    await page.locator("svg.tabler-icon-file-check").click();
-    await page.getByRole("button", { name: "Publish" }).click();
+    const publish = page.getByRole("button", { name: "Publish" });
+    await clickUntilVisible(
+      page.locator("svg.tabler-icon-file-check"),
+      publish,
+    );
+    await publish.click();
 
     await page
       .getByText("Succesfully published the")
@@ -80,10 +84,13 @@ test.describe("/author/set", () => {
     async ({ page }) => {
       await makeDraft(page);
 
-      await page.locator("svg.tabler-icon-trash:visible").click();
-      await page.getByLabel("Are you sure you want to")
-        .getByRole("button", { name: "Delete" })
-        .click();
+      const del = page.getByLabel("Are you sure you want to")
+        .getByRole("button", { name: "Delete" });
+      await clickUntilVisible(
+        page.locator("svg.tabler-icon-trash:visible"),
+        del,
+      );
+      await del.click();
 
       await page
         .getByText("Succesfully deleted the")
@@ -103,10 +110,13 @@ test.describe("/author/set", () => {
     async ({ page }) => {
       await page.goto("/author/set");
 
-      await page.locator("svg.tabler-icon-trash:visible").click();
-      await page.getByLabel("Are you sure you want to")
-        .getByRole("button", { name: "Retract" })
-        .click();
+      const retract = page.getByLabel("Are you sure you want to")
+        .getByRole("button", { name: "Retract" });
+      await clickUntilVisible(
+        page.locator("svg.tabler-icon-trash:visible"),
+        retract,
+      );
+      await retract.click();
 
       await page
         .getByText("Succesfully retracted the")
@@ -130,9 +140,11 @@ test.describe("/author/set/add", () => {
     test("after submit should show warning", async ({ page }) => {
       // With form untouched
 
-      await page.locator("button:has-text(\"Submit\")").click();
-
       const warning = page.getByText("Invalid input");
+      await clickUntilVisible(
+        page.locator("button:has-text(\"Submit\")"),
+        warning.first(),
+      );
       await expect(warning).toHaveCount(3);
     });
   });
@@ -142,17 +154,20 @@ test.describe("/author/set/add", () => {
     await page.locator("[placeholder=\"New organization name\"]").fill(
       name,
     );
-    await page.locator("button:has-text(\"Add\")").click();
-    await page
-      .getByRole("cell", { name: "MyOrg" })
-      .waitFor({ state: "visible" });
+    await clickUntilVisible(
+      page.locator("button:has-text(\"Add\")"),
+      page.getByRole("cell", { name: "MyOrg" }),
+    );
 
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
-    await page
-      .locator("div.mantine-MultiSelect-input")
-      .click({ position: { x: 1, y: 1 } });
-    await page.locator(`text=${name}`).click();
+    const option = page.locator(`text=${name}`);
+    await clickUntilVisible(
+      page.locator("div.mantine-MultiSelect-input"),
+      option,
+      { position: { x: 1, y: 1 } },
+    );
+    await option.click();
   }
 
   async function fillAddSetForm(page: Page) {
@@ -161,8 +176,12 @@ test.describe("/author/set/add", () => {
     await page.getByLabel("Name *").fill("My name");
     await page.getByLabel("Contributor").selectOption("MyOrg");
     // States
-    await page.getByRole("tab", { name: "Species" }).click();
-    await page.getByRole("button", { name: "+" }).click();
+    const addSpecies = page.getByRole("button", { name: "+" });
+    await clickUntilVisible(
+      page.getByRole("tab", { name: "Species" }),
+      addSpecies,
+    );
+    await addSpecies.click();
     await page.locator("span.mantine-Accordion-label").first().click();
     await page.getByLabel("Species definition").fill(
       JSON.stringify({ type: "Atom", composition: [["Ar", 1]], charge: 0 }),

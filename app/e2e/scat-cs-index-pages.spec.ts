@@ -4,17 +4,21 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { getSeededSet } from "./helpers";
+import { clickUntilVisible, getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
-      .click();
+    const n2 = page.locator(
+      "button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")",
+    );
+    await clickUntilVisible(
+      page.locator("[aria-controls=\"particle-select\"]").first(),
+      n2,
+    );
+    await n2.click();
   });
 
   test("should have 2 items listed", async ({ page }) => {
