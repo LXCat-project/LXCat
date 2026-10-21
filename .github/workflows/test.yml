@@ -93,11 +93,15 @@ jobs:
         include-hidden-files: true
         if-no-files-found: error
         retention-days: 1
-    # `cargo llvm-cov report` needs the instrumented build.
+    # `cargo llvm-cov report` needs the instrumented build. Artifacts do not
+    # keep file modes, and it ignores object files that are not executable, so
+    # tar the build to keep them.
+    - name: Archive the converter build
+      run: tar --zstd -cf converter-target.tar.zst -C packages/converter target
     - uses: actions/upload-artifact@v7
       with:
-        name: converter-target
-        path: packages/converter/target
+        path: converter-target.tar.zst
+        archive: false
         if-no-files-found: error
         retention-days: 1
     # TODO: re-enable lint when TypeScript 7.1 is released.
@@ -236,8 +240,9 @@ jobs:
         name: build-output
     - uses: actions/download-artifact@v8
       with:
-        name: converter-target
-        path: packages/converter/target
+        name: converter-target.tar.zst
+    - name: Unpack the converter build
+      run: tar -xf converter-target.tar.zst -C packages/converter
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
