@@ -81,7 +81,15 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
+    env:
+      # The end-to-end tests use this database instead of starting their own.
+      E2E_EXTERNAL_DB: "1"
     steps:
+    # Start the database first, so it boots while the steps below run.
+    - name: Start ArangoDB for end-to-end tests
+      run: |
+        docker run -d --name e2e-arangodb -p 8003:8529 \
+          -e ARANGO_ROOT_PASSWORD=pw4tests arangodb:3.12.7.2
     - uses: actions/checkout@v7
     - uses: actions/cache/restore@v6
       with:
@@ -101,7 +109,7 @@ jobs:
       # run: bun --filter=@lxcat/app exec "playwright install chromium --with-deps"
       run: |
         cd app
-        bun run playwright install chromium --with-deps
+        bun run playwright install chromium --with-deps --only-shell
         cd -
     - name: Run unit tests
       run: (cd app && bun test --coverage --coverage-reporter=lcov)

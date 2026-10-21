@@ -25,13 +25,20 @@ async function globalSetup(config: FullConfig) {
     parseInt(oidcUrl.port),
   );
 
-  console.log("Starting database server");
-  // start db container
+  // CI starts ArangoDB in the background while dependencies install, so the
+  // container start-up overlaps with other work. Locally we start our own.
   const arangoUrl = new URL(env.ARANGO_URL);
-  const stopDbContainer = await startDbContainer(env.ARANGO_PASSWORD, {
-    container: 8529,
-    host: parseInt(arangoUrl.port),
-  });
+  let stopDbContainer = async () => {};
+  if (process.env.E2E_EXTERNAL_DB) {
+    console.log("Waiting for external database server");
+    await waitForDb(env.ARANGO_URL);
+  } else {
+    console.log("Starting database server");
+    stopDbContainer = await startDbContainer(env.ARANGO_PASSWORD, {
+      container: 8529,
+      host: parseInt(arangoUrl.port),
+    });
+  }
 
   // Make child processes use right env
   process.env.ARANGO_USERNAME = "lxcat";
@@ -93,6 +100,23 @@ async function runDbCommand(command: string) {
       },
     );
   });
+}
+
+async function waitForDb(url: string, timeoutMs = 60_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (true) {
+    try {
+      const res = await fetch(new URL("/_api/version", url));
+      // 401 also means that the server is up.
+      if (res.status < 500) return;
+    } catch {
+      // Not up yet.
+    }
+    if (Date.now() > deadline) {
+      throw new Error(`Database at ${url} did not become ready.`);
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
 }
 
 const seedDir = "../packages/database/src/test/seed/cross-sections";
