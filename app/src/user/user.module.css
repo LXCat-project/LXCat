@@ -12,12 +12,12 @@
 }
 
 .panelInner {
-    margin-top: 60px;
+    margin-top: var(--lxcat-header-height);
     height: 100%;
 }
 
 .panelOverlay {
-    margin-top: 60px;
+    margin-top: var(--lxcat-header-height);
     height: 100%;
     width: 100%;
 }

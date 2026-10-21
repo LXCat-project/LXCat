@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+:root {
+    --lxcat-header-height: 3.75rem;
+}
+
 html,
 body {
     padding: 0;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-    Helvetica Neue, sans-serif;
 }
 
 a {

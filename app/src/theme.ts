@@ -6,20 +6,29 @@
 
 import { createTheme, MantineColorsTuple } from "@mantine/core";
 
+// Shade 7 is the LXCat navy (#254779) of the legacy website.
 const brand: MantineColorsTuple = [
-  "#eaf5ff",
-  "#dae6f7",
-  "#b7cae5",
-  "#90acd4",
-  "#6e91c4",
-  "#5b82bc",
-  "#4f7ab9",
-  "#3f69a4",
-  "#345d94",
-  "#255084",
+  "#eef3fa",
+  "#dbe5f2",
+  "#b8cae3",
+  "#94aed3",
+  "#7195c6",
+  "#5a82b8",
+  "#3f6aa1",
+  "#254779",
+  "#1e3b66",
+  "#172e50",
 ];
+
+const fontFamily =
+  "var(--font-inter), -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, sans-serif";
 
 export const theme = createTheme({
   colors: { brand },
   primaryColor: "brand",
+  // White text on the lighter dark-mode shade 4 has a contrast of only 3:1.
+  primaryShade: { light: 7, dark: 6 },
+  fontFamily,
+  headings: { fontFamily },
+  defaultRadius: "md",
 });

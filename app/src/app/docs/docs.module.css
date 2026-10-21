@@ -7,6 +7,6 @@
 .main {
   padding-top: 0px;
   :is(h1, h2, h3, h4, h5, h6) {
-    scroll-margin-top: calc(60px + var(--app-shell-padding));
+    scroll-margin-top: calc(var(--lxcat-header-height) + var(--app-shell-padding));
   }
 }
