@@ -140,7 +140,8 @@ test.describe("/author/set/add", () => {
     test("after submit should show warning", async ({ page }) => {
       // With form untouched
 
-      const warning = page.getByText("Invalid input");
+      // The production build words this "Invalid input", `next dev` "Too small".
+      const warning = page.getByText(/Invalid input|Too small/);
       await clickUntilVisible(
         page.locator("button:has-text(\"Submit\")"),
         warning.first(),
@@ -230,7 +231,10 @@ test.describe("/author/set/add", () => {
 
     test("should have json document", async ({ page }) => {
       await page.getByRole("tab", { name: "JSON" }).click();
-      const json = await page.locator("pre").innerText();
+      const json = await page
+        .getByRole("tabpanel", { name: "JSON" })
+        .locator("pre")
+        .innerText();
       const expected = {
         name: "My name",
         description: "",
