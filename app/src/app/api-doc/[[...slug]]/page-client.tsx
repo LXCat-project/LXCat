@@ -15,7 +15,7 @@ export function DocsPageClient({ spec }: { spec: any }) {
     <section className="container" style={{ marginTop: 10 }}>
       <RedocStandalone
         basePath="/api-doc"
-        options={{ scrollYOffset: 60 }}
+        options={{ scrollYOffset: 60, disableTelemetry: true }}
         spec={spec}
       />
     </section>
