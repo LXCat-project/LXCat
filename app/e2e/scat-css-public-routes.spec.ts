@@ -6,25 +6,10 @@ import { CrossSectionSetHeading } from "@lxcat/database/set";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.describe("given 2 dummy sets", () => {
-  test.beforeAll(async ({ browser }) => {
-    await uploadAndPublishDummySet(browser);
-    await uploadAndPublishDummySet(
-      browser,
-      "dummy2.json",
-      "Some other organization",
-    );
-  });
-
-  test.afterAll(async () => {
-    await rootDb().truncateNonUserCollections();
-  });
-
   test.describe("periodic table select page", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/cs-set");

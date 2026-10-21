@@ -4,8 +4,6 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -34,20 +32,6 @@ const csTest = test.extend({
 });
 
 csTest.describe("Cross section page", () => {
-  csTest.beforeAll(async ({ browser }) => {
-    // await rootDb().setupCollections();
-    // await rootDb().setupUserPrivileges(
-    //   systemDb(),
-    //   process.env.ARANGO_USERNAME!,
-    // );
-
-    await uploadAndPublishDummySet(browser);
-  });
-
-  csTest.afterAll(async () => {
-    await rootDb().truncateNonUserCollections();
-  });
-
   csTest("should have plot", async ({ page }) => {
     const canvas = page.locator(".plot-container.plotly");
     await expect(canvas).toBeVisible();

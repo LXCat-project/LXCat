@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
 import { Page } from "@playwright/test";
 import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
@@ -10,10 +9,8 @@ import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
-// test.beforeAll(async () => {
-//   await rootDb().setupCollections();
-//   await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
-// });
+// The tests below modify data and depend on each other, so run them in order.
+test.describe.configure({ mode: "serial" });
 
 test.afterAll(async () => {
   await rootDb().truncateNonUserCollections();
@@ -46,7 +43,6 @@ test.describe("/author/set", () => {
 
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
-    return db().dropNonUserCollections;
   });
 
   test("A simple edit should result in a draft", async ({ page }) => {

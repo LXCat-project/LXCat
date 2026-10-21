@@ -4,26 +4,8 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
-
-test.beforeAll(async ({ browser }) => {
-  // await rootDb().setupCollections();
-  // await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
-
-  await uploadAndPublishDummySet(browser);
-  await uploadAndPublishDummySet(
-    browser,
-    "dummy2.json",
-    "Some other organization",
-  );
-});
-
-test.afterAll(async () => {
-  await rootDb().truncateNonUserCollections();
-});
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
