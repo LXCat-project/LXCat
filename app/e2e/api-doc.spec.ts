@@ -22,9 +22,9 @@ test("/api-doc deep link survives a reload", async ({ page }) => {
   await expect(page).toHaveURL(/\/api-doc\/.+/);
 
   await page.reload();
-  await expect(page.getByText("No page at this address")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /Species/ }).first())
     .toBeVisible();
+  await expect(page.getByText("No page at this address")).toHaveCount(0);
 });
 
 test("/api-doc follows the color scheme toggle of the nav bar", async ({ page }) => {
