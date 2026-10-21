@@ -34,9 +34,9 @@ export function DocsPageClient({ spec }: { spec: any }) {
   }, [colorScheme]);
 
   // Redoc routes every tag and operation to its own path below `basePath`,
-  // hence the optional catch-all route segment. `scrollYOffset` matches the
-  // height of the sticky nav bar, so that Redoc's sticky sidebar is not hidden
-  // behind it.
+  // hence the optional catch-all route segment. `scrollYOffset` is the height
+  // of the sticky nav bar, so that Redoc's sticky sidebar is not hidden behind
+  // it.
   return (
     <section
       className={cx("container", classes.redoc)}
@@ -44,7 +44,11 @@ export function DocsPageClient({ spec }: { spec: any }) {
     >
       <RedocStandalone
         basePath="/api-doc"
-        options={{ scrollYOffset: 60, disableTelemetry: true }}
+        options={{
+          scrollYOffset: () =>
+            document.querySelector("header")?.offsetHeight ?? 0,
+          disableTelemetry: true,
+        }}
         spec={spec}
       />
     </section>
