@@ -10,34 +10,26 @@ import { useEffect } from "react";
 import { RedocStandalone } from "redoc";
 import classes from "./page-client.module.css";
 
-const REDOC_COLOR_MODES = ["light", "dark"];
-
 export function DocsPageClient({ spec }: { spec: any }) {
   const colorScheme = useComputedColorScheme("light");
 
-  // Redoc keeps its own color mode and styles itself through a `light` or
-  // `dark` class on <html>. Make the color scheme toggle of the nav bar the
-  // single source of truth by mirroring Mantine's color scheme onto that class,
+  // Redoc styles itself through a `light` or `dark` class on <html>, set from a
+  // color mode of its own that it re-applies on any change of its internal
+  // state. Keep that class in line with the color scheme toggle of the nav bar,
   // and hide the toggle of Redoc itself (see the CSS module).
   useEffect(() => {
     const root = document.documentElement;
+    // toggle() with `force` only mutates on a change, so the observer settles.
     const apply = () => {
-      if (!root.classList.contains(colorScheme)) {
-        root.classList.remove(...REDOC_COLOR_MODES);
-        root.classList.add(colorScheme);
-      }
+      root.classList.toggle("light", colorScheme === "light");
+      root.classList.toggle("dark", colorScheme === "dark");
     };
     apply();
-    try {
-      // The mode that Redoc starts with on the next page load.
-      localStorage.setItem("redoc.colorMode", colorScheme);
-    } catch {}
-    // Redoc re-applies its own stored mode at times, e.g. on a layout switch.
     const observer = new MutationObserver(apply);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(root, { attributeFilter: ["class"] });
     return () => {
       observer.disconnect();
-      root.classList.remove(...REDOC_COLOR_MODES);
+      root.classList.remove("light", "dark");
     };
   }, [colorScheme]);
 
