@@ -4,24 +4,17 @@
 
 import { LXCatDatabase } from "@lxcat/database";
 
-const _db: LXCatDatabase | undefined = undefined;
+let _db: LXCatDatabase | undefined = undefined;
 
 export function rootDb() {
   if (_db === undefined) {
-    return setRootDb(
+    _db = LXCatDatabase.init(
       process.env.ARANGO_URL!,
-      process.env.ARANGO_ROOT_PASSWORD,
-      "root",
       process.env.ARANGO_DB,
+      "root",
+      process.env.ARANGO_ROOT_PASSWORD,
     );
   }
 
   return _db;
 }
-
-const setRootDb = (
-  url: string,
-  password: string | undefined,
-  username = "root",
-  databaseName = "lxcat",
-) => LXCatDatabase.init(url, databaseName, username, password);
