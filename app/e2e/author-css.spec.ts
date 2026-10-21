@@ -54,8 +54,10 @@ test.describe("/author/set", () => {
 
     const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-    expect(table.locator("td").nth(1)).toHaveText("draft");
-    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion + 1));
+    await expect(table.locator("td").nth(1)).toHaveText("draft");
+    await expect(table.locator("td").nth(3)).toHaveText(
+      String(publishedVersion + 1),
+    );
   });
 
   test("Publishing a draft should result in a new version", async ({ page }) => {
@@ -71,8 +73,10 @@ test.describe("/author/set", () => {
     publishedVersion += 1;
 
     const table = page.locator("table:has(thead div:text(\"Version\"))");
-    expect(table.locator("td").nth(1)).toHaveText("published");
-    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+    await expect(table.locator("td").nth(1)).toHaveText("published");
+    await expect(table.locator("td").nth(3)).toHaveText(
+      String(publishedVersion),
+    );
   });
 
   test(
@@ -91,8 +95,10 @@ test.describe("/author/set", () => {
 
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-      expect(table.locator("td").nth(1)).toHaveText("published");
-      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+      await expect(table.locator("td").nth(1)).toHaveText("published");
+      await expect(table.locator("td").nth(3)).toHaveText(
+        String(publishedVersion),
+      );
     },
   );
 
@@ -112,8 +118,10 @@ test.describe("/author/set", () => {
 
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-      expect(table.locator("td").nth(1)).toHaveText("retracted");
-      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+      await expect(table.locator("td").nth(1)).toHaveText("retracted");
+      await expect(table.locator("td").nth(3)).toHaveText(
+        String(publishedVersion),
+      );
     },
   );
 });
