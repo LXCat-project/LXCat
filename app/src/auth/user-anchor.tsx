@@ -4,12 +4,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Button } from "@mantine/core";
+import { Avatar, Button, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signIn, useSession } from "next-auth/react";
-import Image from "next/image";
 import { UserPanel } from "../user/user-panel";
-import classes from "./auth.module.css";
 
 export function UserAnchor() {
   const { data: session } = useSession();
@@ -17,31 +15,34 @@ export function UserAnchor() {
 
   if (session) {
     const user = session.user;
+    const name = user.name ?? user.email;
 
     return (
       <>
-        <Image
-          className={classes.portrait}
-          src={user.image!}
-          title={`Logged in ${user.name}`}
-          alt="Picture of logged in user"
-          style={{
-            borderRadius: "var(--mantine-radius-sm)",
-          }}
-          width={40}
-          height={40}
+        <UnstyledButton
           onClick={open}
-        />
+          title={`Logged in ${name}`}
+          aria-label={`Open user panel of ${name}`}
+          style={{ borderRadius: "var(--mantine-radius-xl)" }}
+        >
+          <Avatar
+            src={user.image}
+            name={name}
+            alt="Picture of logged in user"
+            radius="xl"
+            size={44}
+            bd="none"
+            color="brand"
+          />
+        </UnstyledButton>
         <UserPanel session={session} open={opened} onClose={close} />
       </>
     );
   }
 
   return (
-    <>
-      <Button variant="default" size="compact-md" onClick={() => signIn()}>
-        Sign in
-      </Button>
-    </>
+    <Button size="sm" onClick={() => signIn()}>
+      Sign in
+    </Button>
   );
 }
