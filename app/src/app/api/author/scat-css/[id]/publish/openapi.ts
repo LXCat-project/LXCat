@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { authResponses, bearerSecurity } from "@/app/api/schemas.openapi";
 import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
@@ -10,8 +11,9 @@ import { querySchema } from "./schemas";
 export async function register() {
   openapiGenerator.registerRoute({
     method: "post",
-    path: "/author/scat-css/publish",
+    path: "/author/scat-css/{id}/publish",
     tags: ["Author", "Publish"],
+    security: bearerSecurity,
     description: "Publish cross section set.",
     request: requestParamsFromSchema(querySchema),
     responses: {
@@ -23,6 +25,7 @@ export async function register() {
           },
         },
       },
+      ...authResponses("publisher"),
     },
   });
 }

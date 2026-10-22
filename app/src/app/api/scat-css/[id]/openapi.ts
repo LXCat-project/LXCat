@@ -2,9 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { authResponses, bearerSecurity } from "@/app/api/schemas.openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
-import { requestParamsFromSchema } from "@/docs/openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
@@ -12,6 +13,7 @@ export async function register() {
     method: "get",
     path: "/scat-css/{id}",
     tags: ["Cross-section set"],
+    security: bearerSecurity,
     description: "Get cross section set by ID.",
     request: requestParamsFromSchema(querySchema),
     responses: {
@@ -23,6 +25,7 @@ export async function register() {
           },
         },
       },
+      ...authResponses("developer"),
     },
   });
 }

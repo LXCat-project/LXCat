@@ -96,6 +96,40 @@ test.describe("authentication", () => {
   });
 });
 
+test.describe("OpenAPI spec", () => {
+  type Spec = {
+    components: { securitySchemes: Record<string, unknown> };
+    paths: Record<string, Record<string, { security?: Array<object> }>>;
+  };
+
+  test("declares the bearer scheme and the corrected paths", async ({ request }) => {
+    const spec: Spec = await (await request.get("/api/doc")).json();
+
+    expect(spec.components.securitySchemes.bearerAuth).toMatchObject({
+      type: "http",
+      scheme: "bearer",
+    });
+    expect(Object.keys(spec.paths)).toContain(
+      "/author/scat-css/{id}/publish",
+    );
+    expect(Object.keys(spec.paths)).not.toContain("/author/scat-css/publish");
+  });
+
+  // Keeps the documentation in line with the middleware of the routes.
+  test("documents a security requirement exactly for the operations that need a token", async ({ request }) => {
+    const spec: Spec = await (await request.get("/api/doc")).json();
+
+    for (const [path, operations] of Object.entries(spec.paths)) {
+      for (const [method, operation] of Object.entries(operations)) {
+        const url = `/api${path.replace(/\{[^}]+\}/g, "x")}`;
+        const res = await request.fetch(url, { method: method.toUpperCase() });
+        const documented = (operation.security?.length ?? 0) > 0;
+        expect(res.status() === 401, `${method} ${path}`).toBe(documented);
+      }
+    }
+  });
+});
+
 test.describe("public endpoints", () => {
   for (
     const path of [

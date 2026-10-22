@@ -23,11 +23,25 @@ export type BodyConfig = {
     };
   };
 };
+/** Name of the security scheme for API tokens. */
+export const BEARER_AUTH = "bearerAuth";
+
+export type SecurityScheme = {
+  type: "http";
+  scheme: string;
+  bearerFormat?: string;
+  description?: string;
+};
 export type RouteConfig = {
   method: "get" | "post" | "delete";
   path: string;
   tags: string[];
   description: string;
+  /**
+   * Security requirements of the operation. Each entry refers to a scheme in
+   * `OpenAPIConfig.securitySchemes`. Omit for public operations.
+   */
+  security?: Array<Record<string, string[]>>;
   request?: {
     body?: {
       content: {
@@ -48,6 +62,7 @@ export type OpenAPIConfig = {
   };
   tags?: string[];
   servers: { url: string }[];
+  securitySchemes?: Record<string, SecurityScheme>;
 };
 
 const patchRef = ({ $ref }: { $ref: string }) =>
@@ -130,7 +145,7 @@ export class OpenapiGenerator {
   }
 
   generate(
-    config: OpenAPIConfig,
+    { securitySchemes, ...config }: OpenAPIConfig,
     registry: z.core.$ZodRegistry<z.core.JSONSchemaMeta> = z.globalRegistry,
   ) {
     const schemas = z.toJSONSchema(registry, {
@@ -206,6 +221,9 @@ export class OpenapiGenerator {
         responses,
       };
 
+      if (route.security) {
+        path.security = route.security;
+      }
       if (requestBody) {
         path.requestBody = requestBody;
       }
@@ -216,7 +234,12 @@ export class OpenapiGenerator {
       paths[route.path][route.method] = path;
     }
 
-    return { openapi: "3.1.0", ...config, components: schemas, paths };
+    return {
+      openapi: "3.1.0",
+      ...config,
+      components: { ...schemas, securitySchemes },
+      paths,
+    };
   }
 }
 
