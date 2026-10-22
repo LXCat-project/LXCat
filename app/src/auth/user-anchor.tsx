@@ -15,7 +15,7 @@ export function UserAnchor() {
 
   if (session) {
     const user = session.user;
-    const name = user.name ?? user.email;
+    const name = user.name || user.email;
 
     return (
       <>

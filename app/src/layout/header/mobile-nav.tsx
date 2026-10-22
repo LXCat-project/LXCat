@@ -14,6 +14,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import classes from "./nav-bar.module.css";
 import { isLinkActive, navLinks } from "./nav-links";
 
@@ -27,12 +28,17 @@ export const MobileNav = ({
   const pathname = usePathname();
   const theme = useMantineTheme();
   // The drawer is only for narrow viewports. Closing it when the viewport
-  // widens keeps its scroll lock and focus trap from outliving its burger.
+  // widens keeps its scroll lock and focus trap from outliving its burger, and
+  // keeps it from reopening when the viewport narrows again.
   const wide = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
+
+  useEffect(() => {
+    if (wide) onClose();
+  }, [wide, onClose]);
 
   return (
     <Drawer
-      opened={opened && !wide}
+      opened={opened}
       onClose={onClose}
       position="right"
       size="min(20rem, 100%)"
