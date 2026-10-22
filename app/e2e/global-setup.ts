@@ -153,7 +153,7 @@ async function waitForDb(url: string, timeoutMs = 60_000) {
   }
 }
 
-const seedDir = "../packages/database/src/test/seed/cross-sections";
+export const seedDir = "../packages/database/src/test/seed/cross-sections";
 
 /** Insert the dummy sets as published sets directly through the database layer. */
 async function seedPublicData() {

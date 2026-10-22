@@ -197,11 +197,12 @@ https://learning-notes.mistermicheels.com/javascript/typescript/runtime-type-che
 - Web framework = [NextJS](https://nextjs.org/)
 - UI framework = [React](https://reactjs.org/)
 - UI style framework = [Mantine](https://mantine.dev/)
-- API framework = API pages in NextJS
+- API framework = API pages in NextJS, for external programs. The website itself
+  uses server actions.
 - App authentication = OpenID identity providers +
   [next-auth](https://next-auth.js.org)
-- API authentication = (OpenID identity providers + next-auth) or JWT based API
-  token
+- API authentication = JWT based API token, sent as `Authorization: Bearer`. The
+  token identifies the user, the roles are looked up in the database
 - Authorization = roles assigned to users
 - OpenID identity provider = [Orcid](https://orcid.org/) or
   [Keycloak](https://www.keycloak.org/)

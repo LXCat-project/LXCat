@@ -35,7 +35,7 @@ To submit a new scattering cross section set:
 1. Follow the `Scattering cross section set` link and then either
    - Click the `Add` button to fill the form
    - Or click `Add JSON document` to upload a file according to the
-     [JSON schema](/api/scat-css/CrossSectionSetRaw.schema.json)
+     [JSON schema](/api/scat-css/schema/upload-document)
 2. After the form is submitted or the upload is completed, the cross section set is in
    draft state and it is only viewable/editable by you and your organization colleagues.
 3. To make the cross section set available to everyone

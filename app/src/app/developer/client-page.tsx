@@ -6,6 +6,7 @@
 
 import { TermsOfUseCheckForDeveloper } from "@/citation/terms-of-use-developer";
 import {
+  Anchor,
   Button,
   Center,
   Code,
@@ -33,9 +34,12 @@ export const DeveloperClientPage = () => {
       <Title order={2}>Generate API token</Title>
       <Space h="5pt" />
       <Text>
-        The API endpoints of the LXCat web service require authentication. Use
+        The API endpoints of the LXCat web service that retrieve or modify data
+        require an API token. Use{" "}
         <Code>Authorization: Bearer &lt;token&gt;</Code>{" "}
-        as header in the HTTP request.
+        as header in the HTTP request. See the{" "}
+        <Anchor href="/docs/5-developer">developer documentation</Anchor>{" "}
+        and the <Anchor href="/api-doc">API reference</Anchor>.
       </Text>
       <Space h="md" />
       <TermsOfUseCheckForDeveloper />
