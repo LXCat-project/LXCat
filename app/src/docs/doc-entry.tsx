@@ -13,43 +13,38 @@ import {
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { slug } from "github-slugger";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
-import { DocSection } from "./generator";
 import classes from "./doc-entry.module.css";
+import { DocSection } from "./generator";
 
 export interface DocEntryProps {
   fileName: string;
   section: DocSection;
   depth?: number;
+  /** Called after a link without sub-sections was followed. */
+  onNavigate?: () => void;
 }
 
-// FIXME: The Next router does not correctly treat URLs containing a hash: it does navigate to the page, but does not scroll to the desired element. Adding the `component="a"` is a workaround that should be removed once this is resolved.
-// An alternative option is to make the top level an accordion.
-export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
+export function DocEntry(
+  { fileName, section, depth = 0, onNavigate }: DocEntryProps,
+) {
   const [opened, setOpened] = useState(false);
   const direction = useDirection();
-
-  const router = useRouter();
-  const pathName = usePathname();
 
   const sectionSlug = slug(section.title);
 
   return (
     <>
       <UnstyledButton
-        component="a"
-        href={!section.children || opened ? `#${sectionSlug}` : "#"}
-        onClick={(event) => {
-          if (
-            (!section.children || !opened)
-            && pathName
-            && !pathName.includes(`/docs/${fileName}`)
-          ) {
-            router.push(`/docs/${fileName}#${sectionSlug}`);
-          }
+        component={Link}
+        href={`/docs/${fileName}#${sectionSlug}`}
+        onClick={(event: React.MouseEvent) => {
           if (section.children && opened) {
+            // Collapse without navigating.
             event.preventDefault();
+          } else if (!section.children) {
+            onNavigate?.();
           }
           setOpened((opened) => !opened);
         }}
@@ -87,6 +82,7 @@ export function DocEntry({ fileName, section, depth = 0 }: DocEntryProps) {
                 fileName={fileName}
                 section={child}
                 depth={depth + 1}
+                onNavigate={onNavigate}
               />
             ))}
           </Collapse>

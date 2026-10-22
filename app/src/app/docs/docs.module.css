@@ -4,9 +4,28 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-xl);
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--lxcat-header-height);
+  flex: 0 0 rem(280px);
+  height: calc(100dvh - var(--lxcat-header-height));
+  padding-block: var(--mantine-spacing-md);
+  overflow-y: auto;
+  border-right: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
 .main {
-  padding-top: 0px;
+  flex: 1;
+  min-width: 0;
+  padding-block: var(--mantine-spacing-md);
+
   :is(h1, h2, h3, h4, h5, h6) {
-    scroll-margin-top: calc(var(--lxcat-header-height) + var(--app-shell-padding));
+    scroll-margin-top: calc(var(--lxcat-header-height) + var(--mantine-spacing-md));
   }
 }
