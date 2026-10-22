@@ -20,7 +20,7 @@ import {
   StateTree,
 } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
-import { Button, Fieldset, Group, Stack } from "@mantine/core";
+import { Button, Container, Fieldset, Group, Stack } from "@mantine/core";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -144,80 +144,79 @@ export const CSClient: NextPage<Props> = ({
       <Head>
         <link rel="canonical" href={canonicalUrl} />
       </Head>
-      <Stack align="center">
-        <SWRConfig
-          value={{
-            provider: () =>
-              new CacheMap([
-                ...generateCachePairs(
-                  defaultReactionTemplate(),
-                  defaultReactionOptions,
-                ),
-                ...selection.flatMap((selected, index) =>
-                  generateCachePairs(selected.options, options[index])
-                ),
-              ]),
-          }}
-        >
-          <Fieldset
-            legend="Build your reaction template to search for cross sections"
-            style={{ marginTop: 10, width: "90%" }}
-          >
-            <Filter
-              selection={selection}
-              onChange={onChange}
-              editableReaction={editableReaction}
-              onEditableReactionChange={setEditableReaction}
-            />
-          </Fieldset>
-        </SWRConfig>
-        <Group justify="center">
-          <Button
-            color="red"
-            disabled={items.length == 0 && selection.length < 2}
-            onClick={() => {
-              onChange([emptyFilter()]);
-              setEditableReaction(0);
+      <Container size="xl" py="md">
+        <Stack>
+          <SWRConfig
+            value={{
+              provider: () =>
+                new CacheMap([
+                  ...generateCachePairs(
+                    defaultReactionTemplate(),
+                    defaultReactionOptions,
+                  ),
+                  ...selection.flatMap((selected, index) =>
+                    generateCachePairs(selected.options, options[index])
+                  ),
+                ]),
             }}
-            leftSection=<IconTrash />
           >
-            Clear selection
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              onChange([...selection, emptyFilter()]);
-              setEditableReaction(selection.length);
-            }}
-            leftSection=<IconAdjustmentsPlus />
-          >
-            Add Filter
-          </Button>
-          {nrItems > 0 && nrItems <= BAG_SIZE
-            ? (
-              <Link
-                href={`/scat-cs/inspect?ids=${
-                  items.map((d) => d.id).join(",")
-                }`}
-                passHref
-                legacyBehavior
-              >
-                <Button
-                  leftSection={<IconGraph />}
-                  component="a"
-                  style={{ textDecorationLine: "none" }}
-                  variant="light"
+            <Fieldset legend="Build your reaction template to search for cross sections">
+              <Filter
+                selection={selection}
+                onChange={onChange}
+                editableReaction={editableReaction}
+                onEditableReactionChange={setEditableReaction}
+              />
+            </Fieldset>
+          </SWRConfig>
+          <Group justify="center">
+            <Button
+              color="red"
+              disabled={items.length == 0 && selection.length < 2}
+              onClick={() => {
+                onChange([emptyFilter()]);
+                setEditableReaction(0);
+              }}
+              leftSection=<IconTrash />
+            >
+              Clear selection
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                onChange([...selection, emptyFilter()]);
+                setEditableReaction(selection.length);
+              }}
+              leftSection=<IconAdjustmentsPlus />
+            >
+              Add Filter
+            </Button>
+            {nrItems > 0 && nrItems <= BAG_SIZE
+              ? (
+                <Link
+                  href={`/scat-cs/inspect?ids=${
+                    items.map((d) => d.id).join(",")
+                  }`}
+                  passHref
+                  legacyBehavior
                 >
-                  Plot selection
-                </Button>
-              </Link>
-            )
-            : <></>}
-        </Group>
-        <Fieldset legend="Search results" w="90%" style={{ maxHeight: 600 }}>
-          <CSTable items={items} loading={loading} />
-        </Fieldset>
-      </Stack>
+                  <Button
+                    leftSection={<IconGraph />}
+                    component="a"
+                    style={{ textDecorationLine: "none" }}
+                    variant="light"
+                  >
+                    Plot selection
+                  </Button>
+                </Link>
+              )
+              : <></>}
+          </Group>
+          <Fieldset legend="Search results" style={{ maxHeight: 600 }}>
+            <CSTable items={items} loading={loading} />
+          </Fieldset>
+        </Stack>
+      </Container>
     </>
   );
 };
