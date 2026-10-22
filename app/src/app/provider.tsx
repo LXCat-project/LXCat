@@ -6,13 +6,16 @@ import { CodeHighlightProvider } from "@/layout/code-highlight-provider";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-import { theme } from "../theme";
+import { cssVariablesResolver, theme } from "../theme";
 import { SessionProvider } from "./auth-provider";
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider>
-      <MantineProvider theme={theme}>
+      <MantineProvider
+        theme={theme}
+        cssVariablesResolver={cssVariablesResolver}
+      >
         <Notifications />
         <CodeHighlightProvider>
           <ModalsProvider>

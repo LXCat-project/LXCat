@@ -17,7 +17,14 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
     swcPlugins: process.env.NEXT_ENABLE_COVERAGE && [
-      ["swc-plugin-coverage-instrument", {}],
+      [
+        "swc-plugin-coverage-instrument",
+        {
+          // Instrumentation wraps the `next/font` loader call in a sequence
+          // expression, which `next/font` rejects.
+          unstableExclude: ["**/app/layout.tsx"],
+        },
+      ],
     ],
     useTypeScriptCli: true
   },
