@@ -12,6 +12,7 @@ import "highlight.js/styles/github.min.css";
 
 import { DemoAlert } from "@/layout/demo-alert";
 import ErrorBoundary from "@/layout/error-boundary";
+import { Footer } from "@/layout/footer";
 import { NavBar } from "@/layout/header/nav-bar";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { Inter } from "next/font/google";
@@ -35,12 +36,21 @@ const MyApp = ({ children }: RootLayoutProps) => {
       </head>
       <body>
         <Provider>
-          <div style={{ boxSizing: "border-box" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100dvh",
+            }}
+          >
             <NavBar />
             <DemoAlert />
-            <ErrorBoundary>
-              {children}
-            </ErrorBoundary>
+            <main style={{ flex: 1 }}>
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
+            </main>
+            <Footer />
           </div>
         </Provider>
       </body>
