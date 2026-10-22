@@ -12,11 +12,16 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
-  workers: 1, // We only run one database so tests that need db need to be run sequentially
+  // There is one database. Specs that modify data live in the `author`
+  // project, which runs alone after the read-only specs, see `projects`.
+  workers: process.env.CI ? 3 : "50%",
   globalSetup: "./e2e/global-setup",
   // globalTimeout: 5 * 60 * 1000, // Wait for 5 minutes to spinup oidc server and database
   webServer: {
-    command: "bun coverage:start --port 8001",
+    // `E2E_DEV` runs against `next dev`, which saves the build step locally.
+    command: process.env.E2E_DEV
+      ? "bun next dev --port 8001"
+      : "bun coverage:start --port 8001",
     port: 8001,
     // timeout: 2 * 60 * 1000, // Wait for 2 minutes to spinup app dev server
     reuseExistingServer: !process.env.CI,
@@ -44,7 +49,17 @@ const config: PlaywrightTestConfig = {
   testDir: "./e2e",
   projects: [
     {
-      name: "chromium",
+      name: "read-only",
+      testIgnore: /author-.*\.spec\.ts/,
+      fullyParallel: true,
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      // Modifies shared data, so run it after, and without, other tests.
+      name: "author",
+      testMatch: /author-.*\.spec\.ts/,
+      dependencies: ["read-only"],
+      workers: 1,
       use: { ...devices["Desktop Chrome"] },
     },
   ],

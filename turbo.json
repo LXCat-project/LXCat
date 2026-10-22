@@ -12,7 +12,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "target/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "target/**"]
     },
     "start": {
       "dependsOn": ["build"]

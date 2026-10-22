@@ -6,35 +6,23 @@ import { CrossSectionSetHeading } from "@lxcat/database/set";
 import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
+import { clickUntilVisible, getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
 
 test.describe("given 2 dummy sets", () => {
-  test.beforeAll(async ({ browser }) => {
-    await uploadAndPublishDummySet(browser);
-    await uploadAndPublishDummySet(
-      browser,
-      "dummy2.json",
-      "Some other organization",
-    );
-  });
-
-  test.afterAll(async () => {
-    await rootDb().truncateNonUserCollections();
-  });
-
   test.describe("periodic table select page", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/cs-set");
     });
 
     test("should list 2 sets when selecting nitrogen", async ({ page }) => {
-      await page.getByRole("button", { name: "N Nitrogen" }).click();
-
       const set1 = page.getByRole("cell", { name: "Some organization" });
       const set2 = page.getByRole("cell", { name: "Some other organization" });
+      await clickUntilVisible(
+        page.getByRole("button", { name: "N Nitrogen" }),
+        set1,
+      );
       await expect(set1).toBeVisible();
       await expect(set2).toBeVisible();
     });
@@ -119,12 +107,9 @@ test.describe("given 2 dummy sets", () => {
   });
 
   test.describe("cross section set details page", () => {
-    test.beforeEach(async ({ page }) => {
-      await page.goto("/cs-set");
-
-      await page.getByRole("button", { name: "N Nitrogen" }).click();
-
-      await page.getByRole("cell", { name: "Some organization" }).click();
+    test.beforeEach(async ({ page, request }) => {
+      const { setId } = await getSeededSet(request);
+      await page.goto(`/scat-css/${setId}`);
       await page.locator("text=I agree with the terms of use").click();
     });
 

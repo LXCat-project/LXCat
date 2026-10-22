@@ -36,18 +36,24 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v7
+    # Restore the build cache before anything else: its key hashes the sources,
+    # which would otherwise include the restored `node_modules`.
     - uses: actions/cache@v6
       with:
         path: |
-          ~/.bun/install/cache
           ${{ github.workspace }}/.turbo
-          ${{ github.workspace }}/packages/schema/dist
-          ${{ github.workspace }}/packages/database/dist
-          ${{ github.workspace }}/packages/converter/dist
+          ${{ github.workspace }}/app/.next/cache
           ${{ github.workspace }}/packages/converter/target
-          ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
-        restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}
+        key: ${{ runner.os }}-build-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+        restore-keys: ${{ runner.os }}-build-${{ hashFiles('bun.lock', '**/Cargo.lock') }}
+    - uses: actions/cache@v6
+      id: deps
+      with:
+        path: |
+          ${{ github.workspace }}/node_modules
+          ${{ github.workspace }}/app/node_modules
+          ${{ github.workspace }}/packages/*/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('bun.lock', 'package.json') }}
     - uses: oven-sh/setup-bun@v2
     - name: Install Rust
       uses: actions-rs/toolchain@v1
@@ -62,7 +68,8 @@ jobs:
         cargo llvm-cov show-env | tr -d \' >> $GITHUB_ENV
         cd -
     - name: Install dependencies
-      run: bun install
+      if: steps.deps.outputs.cache-hit != 'true'
+      run: bun install --frozen-lockfile
     - name: Build packages
       # TODO: Switch back to turborepo build once we do not have to rely on
       # webpack for coverage reporting.
@@ -73,6 +80,30 @@ jobs:
       #   (cd packages/database && bun run build)
       #   (cd packages/converter && bun run build)
       #   (cd app && NEXT_ENABLE_COVERAGE=1 bun run build --turbopack)
+    # The test jobs download these instead of building.
+    - uses: actions/upload-artifact@v7
+      with:
+        name: build-output
+        path: |
+          packages/schema/dist
+          packages/database/dist
+          packages/converter/dist
+          app/.next
+          !app/.next/cache/**
+        include-hidden-files: true
+        if-no-files-found: error
+        retention-days: 1
+    # `cargo llvm-cov report` needs the instrumented build. Artifacts do not
+    # keep file modes, and it ignores object files that are not executable, so
+    # tar the build to keep them.
+    - name: Archive the converter build
+      run: tar --zstd -cf converter-target.tar.zst -C packages/converter target
+    - uses: actions/upload-artifact@v7
+      with:
+        path: converter-target.tar.zst
+        archive: false
+        if-no-files-found: error
+        retention-days: 1
     # TODO: re-enable lint when TypeScript 7.1 is released.
     # - name: Lint
     #   run: bun run lint
@@ -81,28 +112,44 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     if: ${{ !github.event.pull_request.draft }}
+    env:
+      # The end-to-end tests use this database instead of starting their own.
+      E2E_EXTERNAL_DB: "1"
     steps:
+    # Start the database first, so it boots while the steps below run.
+    - name: Start ArangoDB for end-to-end tests
+      run: |
+        docker run -d --name e2e-arangodb -p 8003:8529 \
+          -e ARANGO_ROOT_PASSWORD=pw4tests arangodb:3.12.7.2
     - uses: actions/checkout@v7
     - uses: actions/cache/restore@v6
+      id: deps
       with:
         path: |
-          ~/.bun/install/cache
-          ${{ github.workspace }}/.turbo
-          ${{ github.workspace }}/packages/schema/dist
-          ${{ github.workspace }}/packages/database/dist
-          ${{ github.workspace }}/packages/converter/dist
-          ${{ github.workspace }}/packages/converter/target
-          ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+          ${{ github.workspace }}/node_modules
+          ${{ github.workspace }}/app/node_modules
+          ${{ github.workspace }}/packages/*/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('bun.lock', 'package.json') }}
     - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: bun install
+      if: steps.deps.outputs.cache-hit != 'true'
+      run: bun install --frozen-lockfile
+    - uses: actions/download-artifact@v8
+      with:
+        name: build-output
+    - name: Get Playwright version
+      id: playwright-version
+      run: echo "version=$(cd app && bun run playwright --version | awk '{print $NF}')" >> "$GITHUB_OUTPUT"
+    - uses: actions/cache@v6
+      id: playwright
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+    # No `--with-deps`: the runner image has the libraries, and apt would only
+    # add fonts that the tests do not need.
     - name: Install playwright browsers
-      # run: bun --filter=@lxcat/app exec "playwright install chromium --with-deps"
-      run: |
-        cd app
-        bun run playwright install chromium --with-deps
-        cd -
+      if: steps.playwright.outputs.cache-hit != 'true'
+      run: (cd app && bun run playwright install chromium --only-shell)
     - name: Run unit tests
       run: (cd app && bun test --coverage --coverage-reporter=lcov)
     - name: Run end-to-end tests
@@ -123,19 +170,20 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: actions/cache/restore@v6
+      id: deps
       with:
         path: |
-          ~/.bun/install/cache
-          ${{ github.workspace }}/.turbo
-          ${{ github.workspace }}/packages/schema/dist
-          ${{ github.workspace }}/packages/database/dist
-          ${{ github.workspace }}/packages/converter/dist
-          ${{ github.workspace }}/packages/converter/target
-          ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+          ${{ github.workspace }}/node_modules
+          ${{ github.workspace }}/app/node_modules
+          ${{ github.workspace }}/packages/*/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('bun.lock', 'package.json') }}
     - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: bun install
+      if: steps.deps.outputs.cache-hit != 'true'
+      run: bun install --frozen-lockfile
+    - uses: actions/download-artifact@v8
+      with:
+        name: build-output
     - name: Test @lxcat/database
       run: (cd packages/database && bun test --timeout 120000 --coverage --coverage-reporter=lcov)
     - name: Upload coverage report to Codecov
@@ -152,19 +200,17 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: actions/cache/restore@v6
+      id: deps
       with:
         path: |
-          ~/.bun/install/cache
-          ${{ github.workspace }}/.turbo
-          ${{ github.workspace }}/packages/schema/dist
-          ${{ github.workspace }}/packages/database/dist
-          ${{ github.workspace }}/packages/converter/dist
-          ${{ github.workspace }}/packages/converter/target
-          ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+          ${{ github.workspace }}/node_modules
+          ${{ github.workspace }}/app/node_modules
+          ${{ github.workspace }}/packages/*/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('bun.lock', 'package.json') }}
     - uses: oven-sh/setup-bun@v2
     - name: Install dependencies
-      run: bun install
+      if: steps.deps.outputs.cache-hit != 'true'
+      run: bun install --frozen-lockfile
     - name: Test @lxcat/schema
       run: (cd packages/schema && bun test --coverage --coverage-reporter=lcov)
     - name: Upload coverage report to Codecov
@@ -181,24 +227,30 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: actions/cache/restore@v6
+      id: deps
       with:
         path: |
-          ~/.bun/install/cache
-          ${{ github.workspace }}/.turbo
-          ${{ github.workspace }}/packages/schema/dist
-          ${{ github.workspace }}/packages/database/dist
-          ${{ github.workspace }}/packages/converter/dist
-          ${{ github.workspace }}/packages/converter/target
-          ${{ github.workspace }}/app/.next/
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock', '**/Cargo.lock') }}-${{ hashFiles('**/*.[jrt]s', '**/*.[jt]sx') }}
+          ${{ github.workspace }}/node_modules
+          ${{ github.workspace }}/app/node_modules
+          ${{ github.workspace }}/packages/*/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('bun.lock', 'package.json') }}
     - uses: oven-sh/setup-bun@v2
+    - uses: actions/download-artifact@v8
+      with:
+        name: build-output
+    - uses: actions/download-artifact@v8
+      with:
+        name: converter-target.tar.zst
+    - name: Unpack the converter build
+      run: tar -xf converter-target.tar.zst -C packages/converter
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         components: llvm-tools-preview
     - name: Install dependencies
-      run: bun install
+      if: steps.deps.outputs.cache-hit != 'true'
+      run: bun install --frozen-lockfile
     - name: Install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
     - name: Setup environment for coverage collection

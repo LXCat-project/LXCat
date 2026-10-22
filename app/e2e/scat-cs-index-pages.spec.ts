@@ -4,34 +4,21 @@
 
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
+import { clickUntilVisible, getSeededSet } from "./helpers";
 
 test.use({ storageState: "adminStorageState.json" });
-
-test.beforeAll(async ({ browser }) => {
-  // await rootDb().setupCollections();
-  // await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
-
-  await uploadAndPublishDummySet(browser);
-  await uploadAndPublishDummySet(
-    browser,
-    "dummy2.json",
-    "Some other organization",
-  );
-});
-
-test.afterAll(async () => {
-  await rootDb().truncateNonUserCollections();
-});
 
 test.describe("cross section index page with N2 selected", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
-      .click();
+    const n2 = page.locator(
+      "button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")",
+    );
+    await clickUntilVisible(
+      page.locator("[aria-controls=\"particle-select\"]").first(),
+      n2,
+    );
+    await n2.click();
   });
 
   test("should have 2 items listed", async ({ page }) => {
@@ -44,6 +31,8 @@ test.describe("cross section index page with N2 selected", () => {
   test("should have link to inspect page", async ({ page }) => {
     const inspectlink = page.locator("text=Plot selection");
     await expect(inspectlink).toBeVisible();
+    await inspectlink.click();
+    await expect(page).toHaveURL(/\/scat-cs\/inspect\?ids=/);
   });
 
   test.describe("when filtered on set name", () => {
@@ -61,13 +50,14 @@ test.describe("cross section index page with N2 selected", () => {
 });
 
 test.describe("cross section inspect page", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/scat-cs");
-    await page.locator("[aria-controls=\"particle-select\"]").first().click();
-    await page
-      .locator("button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")")
-      .click();
-    await page.locator("text=Plot selection").click();
+  test.beforeEach(async ({ page, request }) => {
+    // Select the cross sections of both sets, as "Plot selection" does.
+    const sets = await Promise.all([
+      getSeededSet(request),
+      getSeededSet(request, "Some other organization"),
+    ]);
+    const ids = sets.flatMap(({ itemIds }) => itemIds);
+    await page.goto(`/scat-cs/inspect?ids=${ids.join(",")}`);
     await page.locator("text=I agree with the terms of use").click();
   });
 

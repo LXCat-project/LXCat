@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { db } from "@lxcat/database";
 import { Page } from "@playwright/test";
 import { expect, test } from "playwright-test-coverage";
 import { uploadAndPublishDummySet } from "./global-setup";
@@ -10,10 +9,8 @@ import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
-// test.beforeAll(async () => {
-//   await rootDb().setupCollections();
-//   await rootDb().setupUserPrivileges(systemDb(), process.env.ARANGO_USERNAME!);
-// });
+// The tests below modify data and depend on each other, so run them in order.
+test.describe.configure({ mode: "serial" });
 
 test.afterAll(async () => {
   await rootDb().truncateNonUserCollections();
@@ -46,7 +43,6 @@ test.describe("/author/set", () => {
 
   test.beforeAll(async ({ browser }) => {
     await uploadAndPublishDummySet(browser);
-    return db().dropNonUserCollections;
   });
 
   test("A simple edit should result in a draft", async ({ page }) => {
@@ -54,8 +50,10 @@ test.describe("/author/set", () => {
 
     const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-    expect(table.locator("td").nth(1)).toHaveText("draft");
-    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion + 1));
+    await expect(table.locator("td").nth(1)).toHaveText("draft");
+    await expect(table.locator("td").nth(3)).toHaveText(
+      String(publishedVersion + 1),
+    );
   });
 
   test("Publishing a draft should result in a new version", async ({ page }) => {
@@ -71,8 +69,10 @@ test.describe("/author/set", () => {
     publishedVersion += 1;
 
     const table = page.locator("table:has(thead div:text(\"Version\"))");
-    expect(table.locator("td").nth(1)).toHaveText("published");
-    expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+    await expect(table.locator("td").nth(1)).toHaveText("published");
+    await expect(table.locator("td").nth(3)).toHaveText(
+      String(publishedVersion),
+    );
   });
 
   test(
@@ -91,8 +91,10 @@ test.describe("/author/set", () => {
 
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-      expect(table.locator("td").nth(1)).toHaveText("published");
-      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+      await expect(table.locator("td").nth(1)).toHaveText("published");
+      await expect(table.locator("td").nth(3)).toHaveText(
+        String(publishedVersion),
+      );
     },
   );
 
@@ -112,8 +114,10 @@ test.describe("/author/set", () => {
 
       const table = page.locator("table:has(thead div:text(\"Version\"))");
 
-      expect(table.locator("td").nth(1)).toHaveText("retracted");
-      expect(table.locator("td").nth(3)).toHaveText(String(publishedVersion));
+      await expect(table.locator("td").nth(1)).toHaveText("retracted");
+      await expect(table.locator("td").nth(3)).toHaveText(
+        String(publishedVersion),
+      );
     },
   );
 });
@@ -128,7 +132,8 @@ test.describe("/author/set/add", () => {
 
       await page.locator("button:has-text(\"Submit\")").click();
 
-      const warning = page.getByText("Invalid input");
+      // The production build words this "Invalid input", `next dev` "Too small".
+      const warning = page.getByText(/Invalid input|Too small/);
       await expect(warning).toHaveCount(3);
     });
   });
@@ -207,7 +212,10 @@ test.describe("/author/set/add", () => {
 
     test("should have json document", async ({ page }) => {
       await page.getByRole("tab", { name: "JSON" }).click();
-      const json = await page.locator("pre").innerText();
+      const json = await page
+        .getByRole("tabpanel", { name: "JSON" })
+        .locator("pre")
+        .innerText();
       const expected = {
         name: "My name",
         description: "",

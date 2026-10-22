@@ -14,6 +14,7 @@
     "format": "dprint fmt",
     "type-check": "tsc --pretty --noEmit",
     "test:e2e": "playwright test --quiet",
+    "test:e2e:dev": "E2E_DEV=1 playwright test --quiet",
     "annotate": "reuse annotate --license=AGPL-3.0-or-later --copyright='LXCat team' -r --skip-existing --exclude-year src e2e"
   },
   "dependencies": {
