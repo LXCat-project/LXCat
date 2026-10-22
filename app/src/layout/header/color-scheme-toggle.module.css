@@ -5,13 +5,12 @@
  */
 
 .icon {
-  width: rem(22px);
-  height: rem(22px);
+  width: rem(20px);
+  height: rem(20px);
 }
 
+/* The moon is shown in light mode, the sun in dark mode. */
 .dark {
-  stroke: var(--mantine-color-blue-6);
-
   @mixin dark {
     display: none;
   }
@@ -22,8 +21,6 @@
 }
 
 .light {
-  stroke: var(--mantine-color-yellow-4);
-
   @mixin light {
     display: none;
   }
