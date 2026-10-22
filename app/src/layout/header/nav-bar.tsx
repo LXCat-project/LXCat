@@ -7,165 +7,135 @@
 import classes from "./nav-bar.module.css";
 
 import { UserAnchor } from "@/auth/user-anchor";
-import { Burger, Center, Container, Group, Menu } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import {
-  IconChevronDown,
-  IconDatabase,
-  IconFileText,
-  IconUsers,
-} from "@tabler/icons-react";
+  Burger,
+  Container,
+  Group,
+  Menu,
+  Text,
+  ThemeIcon,
+  UnstyledButton,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconChevronDown } from "@tabler/icons-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 import { LXCatLogo } from "../logo";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
+import { MobileNav } from "./mobile-nav";
+import { isLinkActive, type NavLink, navLinks } from "./nav-links";
 
-const links = [
-  {
-    icon: (
-      <IconDatabase
-        size="1.2rem"
-        strokeWidth={2}
-        className={classes.linkIcon}
-      />
-    ),
-    label: "Data center",
-    link: "#1",
-    links: [
-      {
-        label: "Cross sections",
-      },
-      {
-        link: "/scat-cs",
-        label: "Reaction builder",
-      },
-      {
-        label: "Cross section sets",
-        divider: true,
-      },
-      {
-        link: "/cs-set",
-        label: "Periodic table",
-      },
-    ],
+const NavMenu = (
+  { link, active }: {
+    link: Extract<NavLink, { groups: unknown }>;
+    active: boolean;
   },
-  {
-    icon: (
-      <IconUsers
-        size="1.2rem"
-        strokeWidth={2}
-        className={classes.linkIcon}
-      />
-    ),
-    link: "/team",
-    label: "Team",
-  },
-  {
-    icon: (
-      <IconFileText
-        size="1.2rem"
-        strokeWidth={2}
-        className={classes.linkIcon}
-      />
-    ),
-    link: "/docs/0-index",
-    label: "Documentation",
-    links: [
-      {
-        link: "/docs/0-index",
-        label: "General",
-      },
-      {
-        link: "/api-doc",
-        label: "API",
-      },
-    ],
-  },
-];
+) => (
+  <Menu
+    trigger="click-hover"
+    openDelay={80}
+    closeDelay={120}
+    position="bottom-start"
+    offset={6}
+    shadow="md"
+    width={280}
+  >
+    <Menu.Target>
+      <UnstyledButton
+        className={classes.link}
+        data-active={active || undefined}
+      >
+        <span>{link.label}</span>
+        <IconChevronDown
+          size="0.9rem"
+          stroke={1.5}
+          className={classes.chevron}
+        />
+      </UnstyledButton>
+    </Menu.Target>
+    <Menu.Dropdown>
+      {link.groups.map((group, index) => (
+        <Fragment key={group.label ?? index}>
+          {index > 0 && <Menu.Divider />}
+          {group.label && <Menu.Label>{group.label}</Menu.Label>}
+          {group.items.map((item) => (
+            <Menu.Item
+              key={item.href}
+              component={Link}
+              href={item.href}
+              className={classes.item}
+              leftSection={
+                <ThemeIcon variant="light" size={32}>
+                  <item.icon size="1.1rem" stroke={1.5} />
+                </ThemeIcon>
+              }
+            >
+              <Text size="sm" fw={500}>{item.label}</Text>
+              <Text size="xs" c="dimmed">{item.description}</Text>
+            </Menu.Item>
+          ))}
+        </Fragment>
+      ))}
+    </Menu.Dropdown>
+  </Menu>
+);
 
 export function NavBar() {
-  const [opened, { toggle }] = useDisclosure(false);
+  const pathname = usePathname();
+  const [opened, { toggle, close }] = useDisclosure(false);
 
-  const items = links.map((link) => {
-    const menuItems = link.links?.map((item) =>
-      item.link
-        ? (
-          <Link key={item.link} href={item.link} className={classes.item}>
-            <Menu.Item key={item.link}>
-              {item.label}
-            </Menu.Item>
-          </Link>
-        )
-        : (
-          <Fragment key={item.label}>
-            {item.divider ? <Menu.Divider /> : <></>}
-            <Menu.Label>{item.label}</Menu.Label>
-          </Fragment>
-        )
-    );
+  const items = navLinks.map((link) => {
+    const active = isLinkActive(link, pathname);
 
-    if (menuItems) {
-      return (
-        <Menu
-          key={link.label}
-          trigger="hover"
-          transitionProps={{ exitDuration: 0 }}
-          withinPortal
-        >
-          <Menu.Target>
-            <a
-              href={link.link}
-              className={classes.link}
-              onClick={(event) => event.preventDefault()}
-            >
-              <Center>
-                {link.icon}
-                <span className={classes.linkLabel}>{link.label}</span>
-                <IconChevronDown size="0.9rem" stroke={1.5} />
-              </Center>
-            </a>
-          </Menu.Target>
-          <Menu.Dropdown>{menuItems}</Menu.Dropdown>
-        </Menu>
-      );
+    if ("groups" in link) {
+      return <NavMenu key={link.label} link={link} active={active} />;
     }
 
     return (
-      <a
+      <Link
         key={link.label}
-        href={link.link}
+        href={link.href}
         className={classes.link}
+        data-active={active || undefined}
+        aria-current={active ? "page" : undefined}
       >
-        <Center>
-          {link.icon}
-          <span className={classes.linkLabel}>{link.label}</span>
-        </Center>
-      </a>
+        {link.label}
+      </Link>
     );
   });
 
   return (
     <header className={classes.header}>
-      <Container size="md">
+      <Container size="xl" h="100%">
         <div className={classes.inner}>
-          <Link href="/">
-            <LXCatLogo
-              boxClassName={classes.logoBox}
-              pathClassName={classes.logoPath}
-            />
-          </Link>
-
-          <Group gap={5} visibleFrom="sm">
-            {items}
+          <Group gap="xl" wrap="nowrap">
+            <Link href="/" className={classes.logoLink} aria-label="LXCat home">
+              <LXCatLogo
+                boxClassName={classes.logoBox}
+                pathClassName={classes.logoPath}
+              />
+            </Link>
+            <Group gap={4} visibleFrom="sm" component="nav" aria-label="Main">
+              {items}
+            </Group>
           </Group>
-          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
 
-          <Group gap="sm">
+          <Group gap="xs" wrap="nowrap">
             <ColorSchemeToggle />
             <UserAnchor />
+            <Burger
+              opened={opened}
+              aria-expanded={opened}
+              onClick={toggle}
+              size="sm"
+              hiddenFrom="sm"
+              aria-label="Toggle navigation"
+            />
           </Group>
         </div>
       </Container>
+      <MobileNav opened={opened} onClose={close} />
     </header>
   );
 }
