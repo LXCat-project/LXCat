@@ -2,23 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Cite } from "@citation-js/core";
-import { db } from "@lxcat/database";
-import {
-  notFoundResponse,
-  okJsonResponse,
-  okResponse,
-} from "@/shared/api/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
-import { RouteBuilder } from "@/app/api/route-builder";
-import "@citation-js/plugin-bibtex";
-import "@citation-js/plugin-ris";
-import { Reference } from "@lxcat/schema";
 import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
+import { RouteBuilder } from "@/app/api/route-builder";
+import {
+  formatReferences,
+  getReferencesForSelection,
+} from "@/citation/export-references";
+import { okJsonResponse, okResponse } from "@/shared/api/api-responses";
 
 const router = RouteBuilder
   .init()
@@ -27,42 +22,11 @@ const router = RouteBuilder
   .use(zodMiddleware(referenceIdsQuerySchema))
   .get(async (_, ctx) => {
     const { format, ids } = ctx.parsedParams.path;
+    const references = await getReferencesForSelection(ids);
 
-    const unique_ids = [...new Set(ids)];
-
-    const bibliography = await db().getReferencesForSelection(unique_ids);
-
-    const selectionReference: Reference = {
-      id: `LXCatData`,
-      type: "dataset",
-      title: "Data downloaded from the LXCat platform.",
-      URL: `${process.env.NEXT_PUBLIC_URL}/scat-cs/inspect?ids=${
-        unique_ids.join(",")
-      }`,
-    };
-
-    const references = [
-      selectionReference,
-      ...Object.values(bibliography.references),
-    ];
-
-    if (references.length > 0) {
-      switch (format) {
-        case "bibtex":
-        case "ris":
-          const cite = new Cite(references);
-          const resp = cite.format(format);
-          if (typeof resp === "string") {
-            return okResponse(resp);
-          } else okJsonResponse(resp);
-        case "csl-json":
-          return okJsonResponse(references);
-      }
-    } else {
-      return notFoundResponse({
-        body: `Could not find any of the requested references: ${ids}.`,
-      });
-    }
+    return format === "csl-json"
+      ? okJsonResponse(references)
+      : okResponse(formatReferences(format, references));
   })
   .compile();
 

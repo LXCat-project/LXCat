@@ -66,7 +66,7 @@ test.describe("cross section inspect page", () => {
 
     await page.locator("text=Download data").click();
 
-    // this exercises the /api/scat-cs/inspect endpoint
+    // the JSON is assembled in the browser from the page data
     const [download] = await Promise.all([
       page.waitForEvent("download"),
       page.locator("text=JSON").click(),
@@ -75,6 +75,22 @@ test.describe("cross section inspect page", () => {
     const path = await download.path();
     const content = await readFile(path!, { encoding: "utf8" });
     expect(content).toContain("Energy");
+  });
+
+  test("should be able to download references in BibTeX format", async ({ page }) => {
+    await page.locator("text=Download references").click();
+
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("text=Bibtex").click(),
+    ]);
+
+    expect(download.suggestedFilename()).toBe("LXCat_references.bib");
+    const content = await readFile((await download.path())!, {
+      encoding: "utf8",
+    });
+    // Starts with the reference to the selection itself.
+    expect(content).toContain("Data downloaded from the {LXCat} platform.");
   });
 
   test("should have plot", async ({ page }) => {

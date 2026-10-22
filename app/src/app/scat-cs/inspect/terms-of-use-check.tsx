@@ -6,13 +6,14 @@
 
 import { useState } from "react";
 
+import { FormattedReference } from "@/citation/formatted-reference";
 import { HowToCite } from "@/citation/how-to-cite";
+import { TermsOfUse } from "@/citation/terms-of-use";
 import { Button, Center, Modal } from "@mantine/core";
 import { IconLicense } from "@tabler/icons-react";
-import { DOWNLOAD_COOKIE_NAME } from "../../../shared/download";
-import { TermsOfUse } from "@/citation/terms-of-use";
-import { FormattedReference } from "@/citation/formatted-reference";
+import { TERMS_OF_USE_COOKIE_NAME } from "../../../shared/download";
 import { ButtonClipboard } from "./button-clipboard";
+import { acceptTermsOfUseAction } from "./terms-of-use-action";
 
 interface Props {
   references: FormattedReference[];
@@ -23,19 +24,16 @@ interface Props {
 export const TermsOfUseCheck = (
   { references, permaLink, forceOpen }: Props,
 ) => {
-  const hasDownloadToken = typeof document !== "undefined"
-    ? document.cookie.includes(DOWNLOAD_COOKIE_NAME)
+  const hasAcceptedTerms = typeof document !== "undefined"
+    ? document.cookie.includes(TERMS_OF_USE_COOKIE_NAME)
     : false;
-  const [agreement, setAgreement] = useState(!forceOpen && hasDownloadToken);
+  const [agreement, setAgreement] = useState(!forceOpen && hasAcceptedTerms);
 
   async function acceptTermsOfUse() {
-    const url = "/api/auth/tou";
-    const res = await fetch(url, {
-      method: "POST",
-    });
-    if (res.ok) {
+    try {
+      await acceptTermsOfUseAction();
       setAgreement(true);
-    } else {
+    } catch {
       // Give error feedback to user
     }
     if (forceOpen) {

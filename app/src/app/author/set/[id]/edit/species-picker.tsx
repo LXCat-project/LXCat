@@ -13,6 +13,10 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Latex } from "../../../../../shared/latex";
 import classes from "./edit-form.module.css";
+import {
+  getSpeciesChildrenAction,
+  getTopLevelSpeciesAction,
+} from "./species-actions";
 
 export type SpeciesNode = {
   _key: string;
@@ -105,15 +109,12 @@ type ChildSpeciesPickerProps = {
   leftPadding?: number;
 };
 
-const speciesFetcher = async (url: string): Promise<Array<SpeciesNode>> =>
-  fetch(url).then(res => res.json());
-
 const ChildSpeciesPicker = (
   { _key, selected, setSelected, leftPadding }: ChildSpeciesPickerProps,
 ) => {
   const { data, error, isLoading } = useSWR(
-    `/api/species/children?id=${_key}`,
-    speciesFetcher,
+    ["species-children", _key],
+    ([, id]) => getSpeciesChildrenAction(id),
   );
 
   if (error) return <Text>{`Invalid state key: ${_key}.`}</Text>;
@@ -148,7 +149,10 @@ export type SpeciesPickerProps = {
 export const SpeciesPicker = (
   { selected, setSelected }: SpeciesPickerProps,
 ) => {
-  const { data, error, isLoading } = useSWR("/api/species", speciesFetcher);
+  const { data, error, isLoading } = useSWR(
+    "top-level-species",
+    getTopLevelSpeciesAction,
+  );
 
   if (error) return <Text>Could not fetch top-level states.</Text>;
 

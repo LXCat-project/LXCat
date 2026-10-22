@@ -37,6 +37,7 @@ import {
 } from "../../cs/swr-filter-component";
 import { CacheMap } from "../../shared/swr-cache-map";
 import { omit } from "../../shared/utils";
+import { searchItemsAction } from "./actions";
 
 interface Example {
   label: string;
@@ -128,13 +129,9 @@ export const CSClient: NextPage<Props> = ({
 
   const onChange = async (newSelection: Array<ReactionInformation>) => {
     setLoading(true);
-    const res = await fetch(
-      `/api/scat-cs?${new URLSearchParams({
-        reactions: JSON.stringify(newSelection.map(({ options }) => options)),
-        offset: "0",
-      })}`,
+    setItems(
+      await searchItemsAction(newSelection.map(({ options }) => options)),
     );
-    setItems(await res.json());
     setSelection(newSelection);
     setLoading(false);
   };

@@ -2,15 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  badRequestResponse,
-  forbiddenResponse,
-  okJsonResponse,
-} from "@/shared/api/api-responses";
-import { db } from "@lxcat/database";
 import { hasAuthorRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
+import { createSet, listOwnedSets } from "@/author/set-operations";
+import { okJsonResponse } from "@/shared/api/api-responses";
+import { operationResponse } from "../operation-response";
 import { querySchema } from "./schemas";
 
 const postRouter = RouteBuilder
@@ -19,44 +16,17 @@ const postRouter = RouteBuilder
   .use(hasAuthorRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
-    const affiliations = await db()
-      .getAffiliations(ctx.user.email)
-      .then((affiliations) => affiliations.map(({ name }) => name));
-
     const { doc, message } = ctx.parsedParams.body;
-    if (affiliations.includes(doc.contributor)) {
-      try {
-        const id = await db().createSet(doc, "draft", 1, message);
-        return okJsonResponse({ id });
-      } catch (error: any) {
-        if (error.errorNum === 1210) {
-          return badRequestResponse({
-            json: [
-              `A dataset with name ${doc.name} already exists for ${doc.contributor}.`,
-            ],
-          });
-        } else {
-          return badRequestResponse({ json: [error.message] });
-        }
-      }
-    } else {
-      return forbiddenResponse({
-        json: [
-          `You are not a member of the ${doc.contributor} organization.`,
-        ],
-      });
-    }
+    return operationResponse(await createSet(ctx.user, doc, message));
   })
   .compile();
 
 const getRouter = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
-  .get(async (_, ctx) => {
-    const user = ctx.user;
-    const items = await db().listOwnedSets(user.email);
-    return okJsonResponse({ items });
-  })
+  .get(async (_, ctx) =>
+    okJsonResponse({ items: await listOwnedSets(ctx.user) })
+  )
   .compile();
 
 export { getRouter as GET, postRouter as POST };

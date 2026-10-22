@@ -5,10 +5,10 @@
 import { PAGE_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
 import { defaultSearchTemplate } from "@lxcat/database/item/picker";
-import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
 import deepEqual from "deep-equal";
 import { getTemplateFromQuery } from "../../cs/template-from-query";
 import { CSClient } from "./client-page";
+import { searchItems } from "./search-items";
 
 export default async function CSPage(
   { searchParams }: {
@@ -32,45 +32,7 @@ export default async function CSPage(
     ? [await defaultOptions, []]
     : await Promise.all([
       db().getSearchOptions(template),
-      Promise.all(
-        template.map(
-          async ({
-            consumes: consumesPaths,
-            produces: producesPaths,
-            typeTags,
-            reversible,
-            set,
-          }) => {
-            const consumes = consumesPaths
-              .map(getStateLeaf)
-              .filter((leaf): leaf is StateLeaf => leaf !== undefined);
-            const produces = producesPaths
-              .map(getStateLeaf)
-              .filter((leaf): leaf is StateLeaf => leaf !== undefined);
-
-            if (
-              !(
-                consumes.length === 0
-                && produces.length === 0
-                && typeTags.length === 0
-                && set.length === 0
-              )
-            ) {
-              return db().getItemIdsByReactionTemplate(
-                consumes,
-                produces,
-                typeTags,
-                reversible,
-                set,
-              );
-            } else {
-              return [];
-            }
-          },
-        ),
-      ).then((csIdsNested) =>
-        db().getItemHeadings([...new Set(csIdsNested.flat())], paging)
-      ),
+      searchItems(template, paging),
     ]);
 
   return (
