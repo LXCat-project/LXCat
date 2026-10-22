@@ -16,6 +16,7 @@ news.json
 /.nyc_output
 /coverage
 adminStorageState.json
+apiTokens.json
 
 # next.js
 /.next/

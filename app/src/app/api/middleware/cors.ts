@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Headers, Middleware } from "@/app/api/route-builder";
 import { NextRequest, NextResponse } from "next/server";
 import { err, ok } from "true-myth/result";
-import { Headers, Middleware } from "@/app/api/route-builder";
 
 export type CORSOptions = {
   allowedOrigins: Array<RegExp>;
@@ -21,7 +21,8 @@ const DEFAULTS: CORSOptions = {
   allowedMethods: ["GET", "HEAD"],
   allowedHeaders: ["Authorization", "Content-Type"],
   preflightStatusCode: 204,
-  allowCredentials: true,
+  // Authentication uses the `Authorization` header, never cookies.
+  allowCredentials: false,
 };
 
 /**

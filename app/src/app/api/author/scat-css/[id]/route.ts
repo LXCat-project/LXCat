@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { hasAuthorRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
+import { hasAPIToken, hasAuthorRole } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
 import { deleteSet, updateSet } from "@/author/set-operations";
@@ -11,7 +11,7 @@ import { deleteSchema, postSchema } from "./schemas";
 
 const postRouter = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
   .use(hasAuthorRole())
   .use(zodMiddleware(postSchema))
   .post(async (_, ctx) => {
@@ -24,7 +24,7 @@ const postRouter = RouteBuilder
 
 const deleteRouter = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
   .use(hasAuthorRole())
   .use(zodMiddleware(deleteSchema))
   .delete(async (_, ctx) => {

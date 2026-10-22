@@ -14,7 +14,6 @@ export async function generateTokenAction() {
   const token = {
     // TODO use _key from db instead of user supplied info like email
     email: user.email,
-    roles: user.roles,
   };
   const secret = process.env.NEXTAUTH_SECRET!;
   const apiToken = await encode({ token, secret, maxAge: DEFAULT_MAX_AGE });

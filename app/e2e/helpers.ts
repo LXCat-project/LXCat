@@ -4,6 +4,7 @@
 
 import type { APIRequestContext, Locator } from "@playwright/test";
 import { expect } from "@playwright/test";
+import { bearer } from "./api-tokens";
 
 /**
  * Ids of a published set and of its cross sections, as seeded by global setup.
@@ -18,11 +19,14 @@ export async function getSeededSet(
 ) {
   const list = await request.get(
     `/api/scat-css?contributor=${encodeURIComponent(contributor)}`,
+    { headers: bearer() },
   );
   expect(list.ok()).toBeTruthy();
   const [{ id: setId }] = await list.json() as Array<{ id: string }>;
 
-  const set = await request.get(`/api/scat-css/${setId}`);
+  const set = await request.get(`/api/scat-css/${setId}`, {
+    headers: bearer(),
+  });
   expect(set.ok()).toBeTruthy();
   const doc = await set.json() as {
     processes: Array<{ info: Array<{ _key: string }> }>;

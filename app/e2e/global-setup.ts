@@ -7,10 +7,13 @@ import { startDbContainer } from "@lxcat/database/test";
 import { NewLTPDocument } from "@lxcat/schema";
 import { Browser, chromium, errors, FullConfig, Page } from "@playwright/test";
 import { exec } from "child_process";
-import { rm } from "fs/promises";
-import { readFile } from "fs/promises";
+import { readFile, rm, writeFile } from "fs/promises";
+import { encode } from "next-auth/jwt";
 import { resolve } from "path";
+import { API_TOKENS_FILE, ApiTokens } from "./api-tokens";
 import { testOidcServer } from "./test-oidc-server";
+
+export const ADMIN_EMAIL = "admin@ng.lxcat.net";
 
 async function globalSetup(config: FullConfig) {
   const env = config?.webServer?.env || {};
@@ -59,7 +62,7 @@ async function globalSetup(config: FullConfig) {
   console.log("Create admin user and store its cookie");
   const browser = await chromium.launch();
   const baseURL = env.NEXT_PUBLIC_URL;
-  const email = "admin@ng.lxcat.net";
+  const email = ADMIN_EMAIL;
   const adminPage = await browser.newPage({ baseURL });
   // Login with test oidc account.
   await signUp(adminPage, email);
@@ -69,16 +72,47 @@ async function globalSetup(config: FullConfig) {
   // TODO create user for each role and store the those users cookies.
   await browser.close();
 
+  console.log("Create API tokens");
+  await createApiTokens(env.NEXTAUTH_SECRET, email);
+
   console.log("Completed global setup");
 
   return async () => {
     await rm("adminStorageState.json");
+    await rm(API_TOKENS_FILE);
     await stopDbContainer();
     oidc.close();
   };
 }
 
 export default globalSetup;
+
+const DAY = 24 * 60 * 60;
+
+/**
+ * Create API tokens, like the ones users get on the developer page. Tokens
+ * only identify a user, the roles are looked up in the database.
+ */
+async function createApiTokens(secret: string, adminEmail: string) {
+  const noRolesEmail = "no-roles@ng.lxcat.net";
+  await db().addUser({
+    email: noRolesEmail,
+    roles: [],
+    accounts: [],
+    sessions: [],
+  });
+
+  const tokenFor = (email: string, maxAge = DAY) =>
+    encode({ token: { email }, secret, maxAge });
+
+  const tokens: ApiTokens = {
+    developer: await tokenFor(adminEmail),
+    noRoles: await tokenFor(noRolesEmail),
+    unknownUser: await tokenFor("nobody@ng.lxcat.net"),
+    expired: await tokenFor(adminEmail, -DAY),
+  };
+  await writeFile(API_TOKENS_FILE, JSON.stringify(tokens));
+}
 
 async function runDbCommand(command: string) {
   const dir = new URL(".", import.meta.url).pathname;
@@ -177,10 +211,10 @@ export async function uploadAndPublishDummySet(
 
     // Make admin user a member of organization
     await page.goto("/admin/users");
-    await page.locator("div.mantine-MultiSelect-input").click({
-      position: { x: 10, y: 10 },
-    });
-    await page.locator(`text=${org}`).click();
+    await page.locator("tr", { hasText: ADMIN_EMAIL }).locator(
+      "div.mantine-MultiSelect-input",
+    ).click({ position: { x: 10, y: 10 } });
+    await page.getByRole("option", { name: org }).click();
     await page.waitForSelector(`div:has-text("${org}")`);
 
     // Add a set

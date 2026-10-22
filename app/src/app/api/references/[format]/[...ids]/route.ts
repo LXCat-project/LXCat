@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  hasDeveloperOrDownloadRole,
-  hasSessionOrAPIToken,
-} from "@/app/api/middleware/auth";
+import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
 import { RouteBuilder } from "@/app/api/route-builder";
@@ -19,8 +17,9 @@ import { db } from "@lxcat/database";
 
 const router = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
-  .use(hasDeveloperOrDownloadRole())
+  .use(applyCORS())
+  .use(hasAPIToken())
+  .use(hasDeveloperRole())
   .use(zodMiddleware(referenceIdsQuerySchema))
   .get(async (_, ctx) => {
     const { format, ids } = ctx.parsedParams.path;
@@ -38,4 +37,4 @@ const router = RouteBuilder
   })
   .compile();
 
-export { router as GET };
+export { router as GET, router as OPTIONS };
