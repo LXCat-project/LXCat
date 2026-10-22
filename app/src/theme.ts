@@ -4,7 +4,11 @@
 
 "use client";
 
-import { createTheme, MantineColorsTuple } from "@mantine/core";
+import {
+  createTheme,
+  type CSSVariablesResolver,
+  type MantineColorsTuple,
+} from "@mantine/core";
 
 // Shade 7 is the LXCat navy (#254779) of the legacy website.
 const brand: MantineColorsTuple = [
@@ -31,4 +35,27 @@ export const theme = createTheme({
   fontFamily,
   headings: { fontFamily },
   defaultRadius: "md",
+});
+
+/**
+ * Dark mode adjustments:
+ * - Mantine darkens shade 9 of a colour to get its `light` variant (light
+ *   buttons, subtle hover, selected table rows, ...). For our navy brand
+ *   colour that is nearly black on the dark body background, so use a
+ *   translucent tint of a lighter shade instead. Other colours keep Mantine's
+ *   defaults.
+ * - The body text is white (like the light mode text is black) instead of
+ *   Mantine's grey, which looks washed out. Dimmed text stays grey.
+ */
+const tint = (percentage: number) =>
+  `color-mix(in srgb, var(--mantine-color-brand-4) ${percentage}%, transparent)`;
+
+export const cssVariablesResolver: CSSVariablesResolver = () => ({
+  variables: {},
+  light: {},
+  dark: {
+    "--mantine-color-text": "var(--mantine-color-white)",
+    "--mantine-color-brand-light": tint(30),
+    "--mantine-color-brand-light-hover": tint(40),
+  },
 });
