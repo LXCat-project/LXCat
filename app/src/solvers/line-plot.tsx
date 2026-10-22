@@ -4,6 +4,7 @@
 
 "use client";
 
+import { usePlotTheme } from "@/plot/use-plot-theme";
 import Plotly from "plotly.js-basic-dist";
 import { CSSProperties } from "react";
 import createPlotlyComponent from "react-plotly.js/factory";
@@ -29,6 +30,8 @@ interface LineConfig {
 const Plot = createPlotlyComponent(Plotly);
 
 export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
+  const { layout, axis, markerOutline } = usePlotTheme();
+
   return (
     <Plot
       style={style}
@@ -38,8 +41,12 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
           x: line.x,
           y: line.y,
           mode: "lines+markers",
-          line: { shape: "linear", width: 3 },
-          marker: { color: line.color, size: 8 },
+          line: { shape: "linear", width: 2.5 },
+          marker: {
+            color: line.color,
+            size: 6,
+            line: { color: markerOutline, width: 0.5 },
+          },
           name: "",
         }
       ))}
@@ -53,6 +60,7 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
         displaylogo: false,
       }}
       layout={{
+        ...layout,
         autosize: true,
         margin: {
           // l: 60,
@@ -61,6 +69,7 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
           r: 10,
         },
         xaxis: {
+          ...axis,
           title: { text: xAxis.label },
           type: xAxis.type,
           tickformat: ".0e",
@@ -75,6 +84,7 @@ export const LinePlot = ({ style, lines, xAxis, yAxis }: LinePlotProps) => {
         // width: 700,
         // height: 600,
         yaxis: {
+          ...axis,
           title: { text: yAxis.label },
           type: yAxis.type,
           tickformat: ".0e",
