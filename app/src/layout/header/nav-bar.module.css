@@ -39,7 +39,7 @@
 /*
  * The artwork has no margin of its own, so the padding comes from the box.
  * The sizes are whole pixels (the header content is 59px high, so a 45px box
- * and a 27px logo are centred on whole pixels), and the overflow is visible
+ * and a 33px logo are centred on whole pixels), and the overflow is visible
  * because the stroke extends past the viewBox where the artwork touches it.
  */
 .logoBox {
