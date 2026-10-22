@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { AppShell, AppShellMain } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { DocFile } from "../../docs/generator";
-import { DocsSidebar } from "./sidebar";
+import { DocsMobileNav, DocsSidebar } from "./sidebar";
 
 import classes from "./docs.module.css";
 
@@ -16,15 +16,14 @@ export const MarkdownLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: "sm" }}
-      padding="md"
-    >
-      <DocsSidebar docFiles={docFiles} />
-      <AppShellMain className={classes.main}>
-        {children}
-      </AppShellMain>
-    </AppShell>
+    <Container size="xl">
+      <div className={classes.layout}>
+        <DocsSidebar docFiles={docFiles} />
+        <div className={classes.main}>
+          <DocsMobileNav docFiles={docFiles} />
+          {children}
+        </div>
+      </div>
+    </Container>
   );
 };
