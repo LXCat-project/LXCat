@@ -16,7 +16,16 @@ test("/docs/0-index", async ({ page }) => {
   const h1 = page.locator("h1");
   await expect(h1).toContainText("LXCat documentation");
 });
-// TODO test docs/* pages work
+
+test("/docs/5-developer", async ({ page }) => {
+  test.slow();
+  await page.goto("/docs/0-index");
+  await page.getByRole("link", { name: "Developers" }).click();
+  await expect(page).toHaveURL(/\/docs\/5-developer/);
+  await expect(page.locator("h1")).toContainText("Developer docs");
+  await expect(page.getByText("Authorization: Bearer").first()).toBeVisible();
+});
+// TODO test the other docs/* pages work
 
 test("/team", async ({ page }) => {
   await page.goto("/team");

@@ -310,15 +310,20 @@ The result is written to `.next/analyze/client.html`.
 
 ## API Development
 
-All API routes are built with zod schemas that can be used to verify query, path
-or body parameters by using the `zodMiddleware` function in your `RouteBuilder`
-chain. Each endpoint also has a corresponding `openapi.ts` file which is used to
-generate an OpenAPI endpoint description.
+The REST API is meant for external programs, the website itself uses server
+actions. All API routes are built with zod schemas that can be used to verify
+query, path or body parameters by using the `zodMiddleware` function in your
+`RouteBuilder` chain. Routes that retrieve or modify data are protected with
+`hasAPIToken()`, which only accepts an API token in the `Authorization: Bearer`
+header and takes the roles of the user from the database, followed by a role
+check like `hasDeveloperRole()`. Each endpoint also has a corresponding
+`openapi.ts` file which is used to generate an OpenAPI endpoint description.
 
 When the `/api/doc` endpoint is first queried, all `register` methods in every
-`openapi.ts` file under `src/app/api/` will get called. This function should use
-the global OpenAPI `registry()` to register the defined behaviour of the
-endpoint using the `zod-to-openapi` function `registerPath()`.
+`openapi.ts` file under `src/app/api/` will get called. This function should
+describe the endpoint with `openapiGenerator.registerRoute()`. Protected
+endpoints should set `security: bearerSecurity` and add `...authResponses(role)`
+to their responses, both from `app/api/schemas.openapi.ts`.
 
 When using existing schemas in input or output schemas, add the schema to the
 `register()` function in `app/api/schemas.openapi.ts`, manually adding the

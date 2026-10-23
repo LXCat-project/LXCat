@@ -3,9 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Page } from "@playwright/test";
+import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
-import { bearer } from "./api-tokens";
-import { ADMIN_EMAIL, uploadAndPublishDummySet } from "./global-setup";
+import { apiTokens, bearer } from "./api-tokens";
+import { ADMIN_EMAIL, seedDir, uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
@@ -27,6 +28,92 @@ test("/api/author/scat-css", async ({ request }) => {
   expect(resp.ok()).toBeTruthy();
   const data = await resp.json();
   expect(data.items).toEqual([]);
+});
+
+test("/api/author/scat-css can create, edit, publish and retract a set", async ({ request }) => {
+  const org = "API test organization";
+  const db = rootDb();
+  await db.upsertOrganization(org);
+  const userKey = (await db.getUserByEmail(ADMIN_EMAIL))!._key!;
+  const orgKey =
+    (await db.listOrganizations()).find(({ name }) => name === org)!
+      ._key;
+  await db.setAffiliations(userKey, [orgKey]);
+
+  try {
+    const doc = JSON.parse(
+      await readFile(`${seedDir}/dummy.json`, { encoding: "utf8" }),
+    );
+    doc.contributor = org;
+    const headers = bearer();
+
+    // Only the author role may add sets, and only to one's own organization.
+    const forbidden = await request.post("/api/author/scat-css", {
+      headers: bearer(apiTokens().noRoles),
+      data: { doc, message: "Initial upload." },
+    });
+    expect(forbidden.status()).toBe(403);
+    const foreign = await request.post("/api/author/scat-css", {
+      headers,
+      data: { doc: { ...doc, contributor: "Other" }, message: "Upload." },
+    });
+    expect(foreign.status()).toBe(403);
+    const invalid = await request.post("/api/author/scat-css", {
+      headers,
+      data: { doc: { ...doc, name: undefined }, message: "Upload." },
+    });
+    expect(invalid.status()).toBe(400);
+
+    const created = await request.post("/api/author/scat-css", {
+      headers,
+      data: { doc, message: "Initial upload." },
+    });
+    expect(created.status()).toBe(200);
+    const { id } = await created.json();
+
+    const edited = await request.post(`/api/author/scat-css/${id}`, {
+      headers,
+      data: { doc: { ...doc, description: "Edited" }, message: "Edit." },
+    });
+    expect(edited.status()).toBe(200);
+    const { id: draftId } = await edited.json();
+
+    const published = await request.post(
+      `/api/author/scat-css/${draftId}/publish`,
+      { headers },
+    );
+    expect(published.status()).toBe(200);
+
+    const listed = await request.get("/api/author/scat-css", { headers });
+    const { items } = await listed.json();
+    expect(items).toEqual([
+      expect.objectContaining({
+        _key: draftId,
+        name: doc.name,
+        versionInfo: expect.objectContaining({ status: "published" }),
+      }),
+    ]);
+
+    // A message is always required.
+    const unexplained = await request.delete(
+      `/api/author/scat-css/${draftId}`,
+      {
+        headers,
+        data: { message: "" },
+      },
+    );
+    expect(unexplained.status()).toBe(400);
+    const retracted = await request.delete(`/api/author/scat-css/${draftId}`, {
+      headers,
+      data: { message: "Retract." },
+    });
+    expect(retracted.status()).toBe(200);
+    const after = await (await request.get("/api/author/scat-css", { headers }))
+      .json();
+    expect(after.items[0].versionInfo.status).toBe("retracted");
+  } finally {
+    await db.stripAffiliations(userKey);
+  }
 });
 
 test.describe("/author/set", () => {

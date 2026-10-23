@@ -25,8 +25,8 @@ Available roles:
   membership and role assignment.
 - **author**, Can add a new data set and can edit an existing dataset if the user and
   dataset are member of the same organization.
-- **developer**, Can use API endpoints as described in the [developer](developer)
-  documentation.
+- **developer**, Can generate an API token and use the API endpoints as described in
+  the [developer](5-developer) documentation.
 
 ## How to let a new user edit an existing data set?
 

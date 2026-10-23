@@ -6,244 +6,211 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Developer docs
 
-To consume LXCat data by another program, the LXCat web service provides several API
-endpoints.
+To consume LXCat data by another program, the LXCat web service provides a REST API.
+The API is meant for programs, the website itself does not use it. The complete
+description of all endpoints, including the response formats, is available as an
+[OpenAPI](https://www.openapis.org) document at `/api/doc`, rendered at
+[/api-doc](/api-doc).
 
 - [Developer docs](#developer-docs)
   - [Authorize and authenticate](#authorize-and-authenticate)
-  - [Fetch particle states](#fetch-particle-states)
-  - [Fetch cross section sets](#fetch-cross-section-sets)
-    - [Filtering](#filtering)
-    - [Paging](#paging)
-  - [Fetch cross section set](#fetch-cross-section-set)
+  - [Overview of the endpoints](#overview-of-the-endpoints)
+  - [Find cross section sets](#find-cross-section-sets)
+  - [Fetch a cross section set](#fetch-a-cross-section-set)
   - [Fetch cross sections](#fetch-cross-sections)
-    - [Paging](#paging-1)
-  - [Fetch a cross section](#fetch-a-cross-section)
-  - [Fetch multiple cross sections](#fetch-multiple-cross-sections)
+  - [Fetch references](#fetch-references)
+  - [JSON schemas](#json-schemas)
+  - [Upload and manage cross section sets](#upload-and-manage-cross-section-sets)
+
+The examples use `curl` and the `LXCAT_URL` and `LXCAT_TOKEN` environment variables:
+
+```bash
+export LXCAT_URL=https://nl.lxcat.net # The address of the LXCat instance you use.
+export LXCAT_TOKEN=<token>            # See the next section.
+```
 
 ## Authorize and authenticate
 
-The API endpoints of the LXcat web service require authorization and authentication.
+All endpoints that retrieve or modify data require an API token. The schema endpoints
+and the OpenAPI description are public.
 
-You can get authorized by mailing
-[info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
-Send the mail from the same email you used to login to LXCat.
-
-Authentication is done using a [JWT](https://jwt.io) token. The token can be generated and
-copied from the [/developer](/developer) page.
-
-Use `Authorization: Bearer <token>` as header in all of the HTTP requests. For example, using `curl`:
-
-```bash
-curl -H "Authorization: Bearer <token>" https://example.url.net
-```
-
-<!-- TODO: Needs a review. Endpoints have been added and removed. -->
-
-## Fetch particle states
-
-To retrieve states of particle `Ar` use:
+1. Get authorized by mailing
+   [info@lxcat.net](mailto:info@lxcat.net?subject=LXCat%20developer%20request&body=Hi%20LXCat%20administrator%2C%0AI%20would%20like%20permission%20to%20use%20the%20API.).
+   Send the mail from the same email you used to login to LXCat. An administrator will
+   give you the **developer** role.
+2. Log in, go to the [/developer](/developer) page, agree with the terms of use and
+   generate a token. The token is valid for a year, after which you generate a new one.
+3. Send the token as `Authorization: Bearer <token>` header in every request:
 
 ```bash
-export FILTER=$(echo '{"particle": {"Ar": { "charge": {}}}}' | base64)
-curl https://nl.lxcat.net/api/states?filter=$FILTER
+curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
 ```
 
-The filter value is JSON object which
-[base64 encoded](https://developer.mozilla.org/en-US/docs/Glossary/Base64), because it is
-nested and contains URL un-friendly characters.
+Keep the token secret, it gives access to the API in your name. A token only identifies
+you, your roles are looked up in the database on every request. When your roles change,
+or your account is removed, existing tokens are affected immediately. Logging in to the
+website does not give access to the API, only a token does.
 
-This will return something like
+A request is answered with:
 
-```json
-{
-  "433590": {
-    "charge": 0,
-    "id": "Ar",
-    "particle": "Ar"
-  },
-  "433593": {
-    "charge": 0,
-    "electronic": [
-      {
-        "scheme": "LS",
-        "config": [],
-        "term": {
-          "L": 0,
-          "S": 0,
-          "P": 1,
-          "J": 0
-        },
-        "summary": "^1S_0"
-      }
-    ],
-    "id": "Ar{^1S_0}",
-    "particle": "Ar",
-    "type": "AtomLS"
-  }
-}
-```
+- `401 Unauthorized` when the `Authorization` header is missing, contains an invalid or
+  expired token, or when the user of the token no longer exists.
+- `403 Forbidden` when the user does not have the role that the endpoint needs.
 
-The filter search param must be a subset of what you get back from
+The data endpoints can be called from a web page on a few origins, for example
+`https://loki-suite.github.io`. The author endpoints are meant for programs and do not
+allow this. Other programs are not restricted.
+
+The data is subject to the terms of use, which are shown on the [/developer](/developer)
+page. The documents with cross section data contain a `termsOfUse` field with a link to
+them. Please make sure to cite the data you use.
+
+## Overview of the endpoints
+
+| Endpoint                                           | Role      | Description                                         |
+| -------------------------------------------------- | --------- | --------------------------------------------------- |
+| `GET /api/scat-css`                                | developer | List the published cross section sets               |
+| `GET /api/scat-css/{id}`                           | developer | A cross section set in JSON format                  |
+| `GET /api/scat-css/{id}/legacy`                    | developer | A cross section set in the legacy text format       |
+| `GET /api/scat-cs/{id}`                            | developer | A single cross section                              |
+| `GET /api/scat-cs/inspect?ids=`                    | developer | A selection of cross sections in JSON format        |
+| `GET /api/scat-cs/inspect/legacy?ids=`             | developer | A selection of cross sections in legacy text format |
+| `GET /api/references/{format}/for-selection/{ids}` | developer | The references of a selection of cross sections     |
+| `GET /api/references/{format}/{ids}`               | developer | References by their identifiers                     |
+| `GET /api/scat-css/LTPDocument`, `LTPMixture`      | public    | JSON schemas of sets and selections                 |
+| `GET /api/scat-css/schema/upload-document`         | public    | JSON schema of a document that can be uploaded      |
+| `GET, POST /api/author/scat-css`                   | author    | List owned sets, upload a new set                   |
+| `POST, DELETE /api/author/scat-css/{id}`           | author    | Edit, delete a draft; retract needs publisher too   |
+| `POST /api/author/scat-css/{id}/publish`           | publisher | Publish an owned draft set                          |
+
+## Find cross section sets
+
+To list all published cross section sets use
 
 ```bash
-curl https://nl.lxcat.net/api/states/choices
+curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
 ```
-
-## Fetch cross section sets
-
-To fetch first page of cross section sets use
-
-```bash
-curl https://nl.lxcat.net/api/scat-css
-```
-
-```json
-{
-  "items: [
-    {
-      "id": "421901",
-      "name": "Some name"
-    },
-    {
-      "id": "421942",
-      "name": "Some other name"
-    }
-  ]
-}
-```
-
-### Filtering
-
-The sets can be filtered on 3 facets: species, contributor, tag.
-
-The cross section sets can be filtered on which species of particle occur in any of their
-cross sections by using the `species` search param. The `species` search param value uses
-the same format as the [state filter](#fetch-particle-states).
-
-The `contributor` search param will filter on contributing organization. To retrieve all
-sets either contributed by `Some org` or `Other org` use:
-
-```bash
-curl https://nl.lxcat.net/api/scat-css?contributor=Some+org&contributor=Other+org
-```
-
-Cross section sets can be filtered on reaction type tag by using the `tag` search param.
-For example to only get sets which have a cross section with a rotational reaction use
-
-```bash
-curl https://nl.lxcat.net/api/scat-css?tag=Rotational
-```
-
-Another way to get the filter you want is to go to
-[https://nl.lxcat.net//scat-css](https://nl.lxcat.net/scat-css), apply some filters and
-copy all the search params (stuff after `?` in the adress bar) to
-`https://nl.lxcat.net/api/scat-css?<search params from web page>`.
-
-### Paging
-
-The `offset` and `count` search param can be used for paging.
-
-For example to list sets 1,2,3 use
-
-```bash
-curl https://nl.lxcat.net/api/scat-css?offset=1&count=3
-```
-
-## Fetch cross section set
-
-To fetch a single cross section set use the id property found in
-[fetch cross section sets](#fetch-cross-section-sets) query.
-
-To fetch in JSON format use
-
-```bash
-curl https://nl.lxcat.net/api/scat-css/<id of set>
-```
-
-The style of the reference can be changed using `refstyle` search param. Valid choices are
-`csl` (default), `apa` and `bibtex`.
-
-For example
-
-```bash
-curl https://nl.lxcat.net/api/scat-css/<id of set>?refstyle=apa
-```
-
-To fetch in Bolsig+ format use
-
-```bash
-curl https://nl.lxcat.net/api/scat-css/<id of set>/legacy
-```
-
-This API endpoint requires authentication.
-
-## Fetch cross sections
-
-Cross section headers can be fetched at `https://nl.lxcat.net/api/scat-cs` URL, this will
-return nothing as it requires search parameters.
-
-The search parameters can be found on the
-[Cross sections search page](https://nl.lxcat.net/scat-cs). Copy all the search params
-(stuff after `?` in the adress bar) to
-`https://nl.lxcat.net/api/scat-cs?<search params from web page>`. For example select
-`Ionization` as a reaction type tag then the search params are
-`reactions=%5B%7B"consumes"%3A%5B%7B%7D%5D%2C"produces"%3A%5B%7B%7D%5D%2C"typeTags"%3A%5B"Ionization"%5D%2C"reversible"%3A"both"%2C"set"%3A%5B%5D%7D%5D`.
-To do an API call
-
-```bash
-curl  'https://nl.lxcat.net/api/scat-cs?reactions=%5B%7B"consumes"%3A%5B%7B%7D%5D%2C"produces"%3A%5B%7B%7D%5D%2C"typeTags"%3A%5B"Ionization"%5D%2C"reversible"%3A"both"%2C"set"%3A%5B%5D%7D%5D'
-```
-
-THis will return something like:
 
 ```json
 [
   {
-    "id": "132336",
-    "reaction": {
-      "reversible": false,
-      "type_tags": [
-        "Ionization"
-      ],
-      "rhs": [{...}],
-      "lhs": [{...}],
-    },
-    "reference: [{...}],
-    "isPartOf": [
-      "N2"
-    ]
+    "id": "421901",
+    "name": "Some name"
   },
-  ...
+  {
+    "id": "421942",
+    "name": "Some other name"
+  }
 ]
 ```
 
-The `id` can be used to fetch the data of the cross section.
-
-### Paging
-
-The `offset` and `count` search param can be used for paging.
-
-For example to list sections 1,2,3 use
+The sets can be filtered on the organization that contributed them with the `contributor`
+search param:
 
 ```bash
-curl https://nl.lxcat.net/api/scat-cs?offset=1&count=3&<other search params>
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css?contributor=Some+org"
 ```
 
-## Fetch a cross section
+## Fetch a cross section set
 
-To fetch in JSON format use
+To fetch a single cross section set in JSON format use the `id` found in the list of
+sets:
 
 ```bash
-curl https://nl.lxcat.net/api/scat-cs/<id of section>
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>"
 ```
 
-This API endpoint requires authentication.
+The result is a document that follows the [schema](#json-schemas) found in its `$schema`
+field. The cross sections of the set are listed in `processes`, and the `_key` of each
+cross section (`processes[].info[]._key`) can be used to
+[fetch cross sections](#fetch-cross-sections) and
+[references](#fetch-references).
 
-## Fetch multiple cross sections
-
-To fetch in JSON format use
+The style of the references can be changed with the `refstyle` search param. Valid
+choices are `csl` (default), `apa` and `bibtex`.
 
 ```bash
-curl https://nl.lxcat.net/api/scat-cs/bag?ids=<id of section1>,<id of section2>
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>?refstyle=bibtex"
 ```
+
+To fetch the set in the legacy text format, that is for example used by BOLSIG+, use
+
+```bash
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>/legacy"
+```
+
+## Fetch cross sections
+
+To fetch a single cross section use
+
+```bash
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-cs/<id of cross section>"
+```
+
+To fetch a selection of cross sections as one document use the `ids` search param with
+a comma separated list of at most 100 unique ids:
+
+```bash
+curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-cs/inspect?ids=<id of cross section 1>,<id of cross section 2>"
+```
+
+The result follows the schema of a mixture, see [JSON schemas](#json-schemas). Use
+`/api/scat-cs/inspect/legacy` instead to get the selection in the legacy text format.
+
+## Fetch references
+
+The references of a selection of cross sections can be fetched as `csl-json`, `bibtex` or
+`ris`. The ids are those of the cross sections, separated by a slash. The result starts
+with a reference to the selection itself.
+
+```bash
+curl -H "Authorization: Bearer $LXCAT_TOKEN" \
+  "$LXCAT_URL/api/references/bibtex/for-selection/<id of cross section 1>/<id of cross section 2>"
+```
+
+`/api/references/<format>/<id of reference>/...` returns references by their own
+identifiers, this is only useful when you already know these.
+
+## JSON schemas
+
+The documents that the API returns and accepts are described by JSON schemas. These
+endpoints do not need a token:
+
+- `/api/scat-css/LTPDocument`, a cross section set as returned by
+  `/api/scat-css/<id of set>`.
+- `/api/scat-css/LTPMixture`, a selection of cross sections as returned by
+  `/api/scat-cs/inspect`.
+- `/api/scat-css/schema/upload-document`, a document that can be uploaded as a new
+  cross section set.
+
+## Upload and manage cross section sets
+
+Members of an organization with the **author** role can also manage the cross section
+sets of their organization through the API. This uses the same flow of operations as
+the [website](2-data-contributor), so a set is added as a draft first. To generate a
+token you need the developer role, as described [above](#authorize-and-authenticate).
+
+To upload a new set, send a document that follows the upload schema together with a
+message. The contributor of the document should be an organization you are a member of.
+
+```bash
+jq -n --slurpfile doc set.json --arg message "Initial upload." \
+  '{doc: $doc[0], message: $message}' \
+  | curl -X POST -H "Authorization: Bearer $LXCAT_TOKEN" \
+    -H "Content-Type: application/json" --data @- \
+    $LXCAT_URL/api/author/scat-css
+```
+
+The response is the `id` of the new draft set, for example `{"id": "421901"}`. Problems
+with the document result in a `400 Bad Request` with a description of the problems.
+
+The other operations, with the id of an owned set:
+
+- `GET /api/author/scat-css` lists the sets you own, including drafts.
+- `POST /api/author/scat-css/<id of set>` with the same body as above stores the edited
+  set as a draft. The response contains the id of the draft.
+- `POST /api/author/scat-css/<id of set>/publish` publishes a draft, this needs the
+  **publisher** role.
+- `DELETE /api/author/scat-css/<id of set>` with a body `{"message": "..."}` removes a
+  draft, or retracts a published set when you also have the **publisher** role. The
+  message is always required.
