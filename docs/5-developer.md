@@ -40,6 +40,8 @@ and the OpenAPI description are public.
    give you the **developer** role.
 2. Log in, go to the [/developer](/developer) page, agree with the terms of use and
    generate a token. The token is valid for a year, after which you generate a new one.
+   You can give a token a name, and the page lists your tokens, where you can revoke the
+   ones you no longer use or that leaked.
 3. Send the token as `Authorization: Bearer <token>` header in every request:
 
 ```bash

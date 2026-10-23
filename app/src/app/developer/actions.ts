@@ -7,17 +7,38 @@
 import { requireDeveloper, UnauthorizedError } from "@/auth/action-guards";
 import { signApiToken } from "@/auth/api-token";
 import { db } from "@lxcat/database";
+import { tokenIdSchema, tokenNameSchema } from "./schemas";
 
-export async function generateTokenAction() {
-  const { user } = await requireDeveloper();
-  const userKey = (await db().getUserByEmail(user.email))?._key;
+/** The key of the signed in user, tokens are only ever handled for this user. */
+async function userKey(email: string) {
+  const key = (await db().getUserByEmail(email))?._key;
 
-  if (userKey === undefined) {
+  if (key === undefined) {
     throw new UnauthorizedError();
   }
 
-  const { token, apiToken } = await signApiToken(userKey);
-  await db().addApiToken(userKey, apiToken);
+  return key;
+}
 
-  return { token, expires: apiToken.expires };
+export async function generateTokenAction(name: unknown) {
+  const { user } = await requireDeveloper();
+  const tokenName = tokenNameSchema.parse(name);
+  const key = await userKey(user.email);
+  const { token, apiToken } = await signApiToken(key);
+  await db().addApiToken(key, { ...apiToken, name: tokenName });
+
+  return { token, jti: apiToken.jti, expires: apiToken.expires };
+}
+
+export async function listTokensAction() {
+  const { user } = await requireDeveloper();
+  return db().listApiTokens(await userKey(user.email));
+}
+
+export async function revokeTokenAction(jti: unknown) {
+  const { user } = await requireDeveloper();
+  return db().dropApiToken(
+    await userKey(user.email),
+    tokenIdSchema.parse(jti),
+  );
 }

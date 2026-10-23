@@ -6,6 +6,7 @@ import { options } from "@/auth/options";
 import { userIsDeveloper } from "@/auth/page-guards";
 import { Unauthorized } from "@/shared/ui/unauthorized";
 import { getServerSession } from "next-auth/next";
+import { listTokensAction } from "./actions";
 import { DeveloperClientPage } from "./client-page";
 
 const DeveloperPage = async () => {
@@ -15,7 +16,7 @@ const DeveloperPage = async () => {
     return <Unauthorized />;
   }
 
-  return <DeveloperClientPage />;
+  return <DeveloperClientPage initialTokens={await listTokensAction()} />;
 };
 
 export default DeveloperPage;

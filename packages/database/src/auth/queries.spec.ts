@@ -193,6 +193,92 @@ describe("given filled ArangoDB container", () => {
       }
     });
 
+    describe("listApiTokens() and dropApiToken()", () => {
+      const farFuture = "2100-01-01T00:00:00.000Z";
+      let listedKey: string;
+
+      beforeAll(async () => {
+        listedKey = (await db.addUser({
+          email: "listed@example.com",
+          roles: [],
+          accounts: [],
+          sessions: [],
+        }))!;
+        await db.addApiToken(listedKey, {
+          ...token("old", farFuture),
+          name: "Old",
+        });
+        await db.addApiToken(listedKey, {
+          ...token("new", farFuture),
+          name: "New",
+          createdOn: "2026-02-01T00:00:00.000Z",
+        });
+        await db.addApiToken(listedKey, {
+          ...token("expired", "2026-03-01T00:00:00.000Z"),
+          createdOn: "2026-02-02T00:00:00.000Z",
+        });
+      });
+
+      afterAll(async () => {
+        await db.dropUser(listedKey);
+      });
+
+      it("should list the tokens that did not expire, newest first", async () => {
+        const tokens = await db.listApiTokens(listedKey);
+        expect(tokens.map(({ jti }) => jti)).toEqual(["new", "old"]);
+        expect(tokens.map(({ name }) => name)).toEqual(["New", "Old"]);
+      });
+
+      it("should list tokens created at the same time in order of creation", async () => {
+        const sameTimeKey = (await db.addUser({
+          email: "same-time@example.com",
+          roles: [],
+          accounts: [],
+          sessions: [],
+        }))!;
+        await db.addApiToken(sameTimeKey, token("first", farFuture));
+        await db.addApiToken(sameTimeKey, token("second", farFuture));
+        await db.addApiToken(sameTimeKey, token("third", farFuture));
+
+        const tokens = await db.listApiTokens(sameTimeKey);
+
+        expect(tokens.map(({ jti }) => jti)).toEqual([
+          "third",
+          "second",
+          "first",
+        ]);
+        await db.dropUser(sameTimeKey);
+      });
+
+      it("should list no tokens of an unknown user", async () => {
+        expect(await db.listApiTokens("0")).toEqual([]);
+      });
+
+      it("should list no tokens of a user without tokens", async () => {
+        expect(await db.listApiTokens(testKeys.testUserKey)).toEqual([]);
+      });
+
+      it("should not drop an unknown token", async () => {
+        expect(await db.dropApiToken(listedKey, "unknown")).toBe(false);
+        expect(await db.listApiTokens(listedKey)).toHaveLength(2);
+      });
+
+      it("should not drop the token of another user", async () => {
+        expect(await db.dropApiToken(testKeys.testUserKey, "new")).toBe(false);
+        expect(await db.getUserByApiToken(listedKey, "new")).toBeDefined();
+      });
+
+      it("should drop only the token that is revoked", async () => {
+        expect(await db.dropApiToken(listedKey, "new")).toBe(true);
+
+        expect(await db.getUserByApiToken(listedKey, "new")).toBeUndefined();
+        expect(await db.getUserByApiToken(listedKey, "old")).toBeDefined();
+        expect((await db.listApiTokens(listedKey)).map(({ jti }) => jti))
+          .toEqual(["old"]);
+        expect(await db.dropApiToken(listedKey, "new")).toBe(false);
+      });
+    });
+
     it("should lose the tokens with the user", async () => {
       const otherKey = (await db.addUser({
         email: "gone@example.com",
