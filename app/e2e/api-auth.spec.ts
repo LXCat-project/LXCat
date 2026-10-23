@@ -186,4 +186,54 @@ test.describe("CORS", () => {
     expect(headers["access-control-allow-headers"]).toContain("Authorization");
     expect(headers["access-control-allow-credentials"]).toBeUndefined();
   });
+
+  test("only allows exactly the allowed origins", async ({ request }) => {
+    const allowed = ["https://loki-suite.github.io", "http://localhost:3000"];
+    const lookalikes = [
+      "https://loki-suite.github.io.example.com",
+      "https://xloki-suite.github.io",
+      "https://loki-suiteXgithub.io",
+      "http://localhost:3000.example.com",
+      "http://xlocalhost:3000",
+    ];
+
+    for (const origin of allowed) {
+      const res = await request.get("/api/scat-css", {
+        headers: { Origin: origin },
+      });
+      expect(res.headers()["access-control-allow-origin"], origin).toBe(origin);
+    }
+    for (const origin of lookalikes) {
+      const res = await request.get("/api/scat-css", {
+        headers: { Origin: origin },
+      });
+      expect(res.headers()["access-control-allow-origin"], origin)
+        .toBeUndefined();
+    }
+  });
+
+  test("varies the response on the origin", async ({ request }) => {
+    const responses = [
+      // Preflight.
+      await request.fetch("/api/scat-css", {
+        method: "OPTIONS",
+        headers: {
+          Origin: "http://localhost:3000",
+          "Access-Control-Request-Method": "GET",
+        },
+      }),
+      // An allowed, a foreign and no origin, all rejected without a token.
+      await request.get("/api/scat-css", {
+        headers: { Origin: "http://localhost:3000" },
+      }),
+      await request.get("/api/scat-css", {
+        headers: { Origin: "https://example.com" },
+      }),
+      await request.get("/api/scat-css"),
+    ];
+
+    for (const res of responses) {
+      expect(res.headers()["vary"]).toContain("Origin");
+    }
+  });
 });
