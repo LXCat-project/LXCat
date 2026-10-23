@@ -2,17 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
+import { authResponses, bearerSecurity } from "@/app/api/schemas.openapi";
 import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { Reference } from "@lxcat/schema";
 import { z } from "zod";
-import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
 
 export async function register() {
   openapiGenerator.registerRoute({
     method: "get",
     path: "/references/{format}/for-selection/{ids}",
     tags: ["References"],
+    security: bearerSecurity,
     description: "Get reference data for a selection.",
     request: requestParamsFromSchema(referenceIdsQuerySchema),
     responses: {
@@ -29,6 +31,7 @@ export async function register() {
           },
         },
       },
+      ...authResponses("developer"),
     },
   });
 }

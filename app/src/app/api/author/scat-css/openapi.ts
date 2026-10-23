@@ -2,10 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {
+  authResponses,
+  bearerSecurity,
+  crossSectionSetHeadingSchema,
+} from "@/app/api/schemas.openapi";
+import { requestParamsFromSchema } from "@/docs/openapi";
 import { openapiGenerator } from "@/openapi";
 import { z } from "zod";
-import { requestParamsFromSchema } from "@/docs/openapi";
-import { crossSectionSetHeadingSchema } from "@/app/api/schemas.openapi";
 import { querySchema } from "./schemas";
 
 export async function register() {
@@ -13,18 +17,24 @@ export async function register() {
     method: "get",
     path: "/author/scat-css",
     tags: ["Author"],
+    security: bearerSecurity,
     description: "Get owned cross section sets.",
     responses: {
       200: {
         description: "Cross section set heading objects",
         content: {
           "application/json": {
-            schema: z.array(
-              crossSectionSetHeadingSchema.and(z.object({ _key: z.string() })),
-            ),
+            schema: z.object({
+              items: z.array(
+                crossSectionSetHeadingSchema.and(
+                  z.object({ _key: z.string() }),
+                ),
+              ),
+            }),
           },
         },
       },
+      ...authResponses("author"),
     },
   });
 
@@ -32,6 +42,7 @@ export async function register() {
     method: "post",
     path: "/author/scat-css",
     tags: ["Author"],
+    security: bearerSecurity,
     description: "Post cross section set.",
     request: requestParamsFromSchema(querySchema),
     responses: {
@@ -43,6 +54,7 @@ export async function register() {
           },
         },
       },
+      ...authResponses("author"),
     },
   });
 }

@@ -2,7 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { BodyConfig, OpenAPIConfig, openapiGenerator } from "@/openapi";
+import {
+  BEARER_AUTH,
+  BodyConfig,
+  OpenAPIConfig,
+  openapiGenerator,
+} from "@/openapi";
 import { glob } from "glob";
 import { z } from "zod";
 
@@ -77,9 +82,19 @@ async function buildOpenAPI() {
       // TODO: figure out what to do with API versioning.
       version: "1.0.0",
       title: "LXCat API",
-      description: "API for working with LXCat data.",
+      description:
+        "API for working with LXCat data.\n\nThe operations that retrieve or modify data require an API token, which is sent as `Authorization: Bearer <token>`. Users with the developer role can generate a token on the [developer page](/developer).",
     },
     servers: [{ url: url }],
+    securitySchemes: {
+      [BEARER_AUTH]: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        description:
+          "API token, generated on the developer page. The roles of the user, which are looked up on every request, determine which operations are allowed.",
+      },
+    },
   };
 
   return openapiGenerator.generate(config);
