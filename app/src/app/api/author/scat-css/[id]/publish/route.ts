@@ -2,10 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {
-  hasPublisherRole,
-  hasSessionOrAPIToken,
-} from "@/app/api/middleware/auth";
+import { hasAPIToken, hasPublisherRole } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
 import { publishSet } from "@/author/set-operations";
@@ -14,7 +11,7 @@ import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
   .use(hasPublisherRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) =>

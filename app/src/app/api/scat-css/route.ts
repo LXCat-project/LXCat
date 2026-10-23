@@ -2,21 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
 import { db } from "@lxcat/database";
 import { SortOptions } from "@lxcat/database/set";
 import { NextResponse } from "next/server";
-import {
-  hasDeveloperOrDownloadRole,
-  hasSessionOrAPIToken,
-} from "@/app/api/middleware/auth";
-import { zodMiddleware } from "@/app/api/middleware/zod";
-import { RouteBuilder } from "@/app/api/route-builder";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
-  .use(hasDeveloperOrDownloadRole())
+  .use(applyCORS())
+  .use(hasAPIToken())
+  .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
     // TODO add pagination and sorting.
@@ -26,4 +25,4 @@ const router = RouteBuilder
   })
   .compile();
 
-export { router as GET };
+export { router as GET, router as OPTIONS };

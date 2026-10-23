@@ -2,27 +2,27 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Cite } from "@citation-js/core";
-import { db } from "@lxcat/database";
 import {
   badRequestResponse,
   notFoundResponse,
   okJsonResponse,
 } from "@/shared/api/api-responses";
+import { Cite } from "@citation-js/core";
+import { db } from "@lxcat/database";
 import "@citation-js/plugin-bibtex";
-import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
-import { formatReference } from "@/citation/cite";
-import { RouteBuilder } from "@/app/api/route-builder";
-// import { hasDeveloperRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
+import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
 import { applyCORS } from "@/app/api/middleware/cors";
 import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
+import { formatReference } from "@/citation/cite";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
   .use(applyCORS())
-  // .use(hasSessionOrAPIToken())
-  // .use(hasDeveloperRole())
+  .use(hasAPIToken())
+  .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx, __) => {
     const params = ctx.parsedParams;

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { hasAuthorRole, hasSessionOrAPIToken } from "@/app/api/middleware/auth";
+import { hasAPIToken, hasAuthorRole } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
 import { createSet, listOwnedSets } from "@/author/set-operations";
@@ -12,7 +12,7 @@ import { querySchema } from "./schemas";
 
 const postRouter = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
   .use(hasAuthorRole())
   .use(zodMiddleware(querySchema))
   .post(async (_, ctx) => {
@@ -23,7 +23,8 @@ const postRouter = RouteBuilder
 
 const getRouter = RouteBuilder
   .init()
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
+  .use(hasAuthorRole())
   .get(async (_, ctx) =>
     okJsonResponse({ items: await listOwnedSets(ctx.user) })
   )

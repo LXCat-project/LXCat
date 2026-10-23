@@ -6,8 +6,16 @@ import { BodyConfig, OpenAPIConfig, openapiGenerator } from "@/openapi";
 import { glob } from "glob";
 import { z } from "zod";
 
-// NOTE: OpenAPIObject | undefined but OpenAPIObject is not exported.
-let cachedSpec: any | undefined;
+// NOTE: Promise<OpenAPIObject> | undefined but OpenAPIObject is not exported.
+// The promise is cached instead of the spec, such that concurrent first calls
+// do not all register the endpoints, which makes the schema ids collide. It is
+// stored on `globalThis` because the `/api-doc` page and the `/api/doc` route
+// are bundled separately, so each would get its own copy of a module variable
+// while sharing the global zod registry. A failed build stays cached, because
+// the registrations cannot be repeated.
+const cache = globalThis as typeof globalThis & {
+  lxcatOpenAPISpec?: Promise<any>;
+};
 
 export function requestParamsFromSchema(schema: z.ZodObject): {
   body?: BodyConfig;
@@ -46,10 +54,11 @@ async function awaitImport(dir: string) {
   await mod.register();
 }
 
-export async function generateOpenAPI() {
-  if (cachedSpec !== undefined) {
-    return cachedSpec;
-  }
+export function generateOpenAPI(): Promise<any> {
+  return (cache.lxcatOpenAPISpec ??= buildOpenAPI());
+}
+
+async function buildOpenAPI() {
   const files = await glob("./**/openapi.ts", { cwd: "./src/app/api/" });
 
   // Import all .openapi files which register the endpoints and schemas.
@@ -73,9 +82,5 @@ export async function generateOpenAPI() {
     servers: [{ url: url }],
   };
 
-  const obj = openapiGenerator.generate(config);
-
-  cachedSpec = obj;
-
-  return obj;
+  return openapiGenerator.generate(config);
 }

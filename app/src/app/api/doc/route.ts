@@ -2,11 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// import { generateOpenAPI } from "@/docs/openapi";
-import { generateOpenAPI } from "@/docs/openapi";
-import { NextResponse } from "next/server";
 import { applyCORS } from "@/app/api/middleware/cors";
 import { RouteBuilder } from "@/app/api/route-builder";
+import { generateOpenAPI } from "@/docs/openapi";
+import { NextResponse } from "next/server";
 
 const router = RouteBuilder
   .init()
@@ -14,4 +13,4 @@ const router = RouteBuilder
   .get(async () => NextResponse.json(await generateOpenAPI()))
   .compile();
 
-export { router as GET };
+export { router as GET, router as OPTIONS };

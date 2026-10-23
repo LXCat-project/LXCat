@@ -4,7 +4,8 @@
 
 import { Page } from "@playwright/test";
 import { expect, test } from "playwright-test-coverage";
-import { uploadAndPublishDummySet } from "./global-setup";
+import { bearer } from "./api-tokens";
+import { ADMIN_EMAIL, uploadAndPublishDummySet } from "./global-setup";
 import { rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
@@ -20,6 +21,7 @@ test("/api/author/scat-css", async ({ request }) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
+    ...bearer(),
   };
   const resp = await request.get("/api/author/scat-css", { headers });
   expect(resp.ok()).toBeTruthy();
@@ -151,9 +153,10 @@ test.describe("/author/set/add", () => {
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
     await page
+      .locator("tr", { hasText: ADMIN_EMAIL })
       .locator("div.mantine-MultiSelect-input")
       .click({ position: { x: 1, y: 1 } });
-    await page.locator(`text=${name}`).click();
+    await page.getByRole("option", { name }).click();
   }
 
   async function fillAddSetForm(page: Page) {

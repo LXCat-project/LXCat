@@ -2,29 +2,26 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { convertDocument } from "@/shared/native-converter";
-import { db } from "@lxcat/database";
-import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
-import { AnySpeciesSerializable } from "@lxcat/schema/species";
+import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
+import { applyCORS } from "@/app/api/middleware/cors";
+import { zodMiddleware } from "@/app/api/middleware/zod";
+import { RouteBuilder } from "@/app/api/route-builder";
+import { formatReference } from "@/citation/cite";
 import {
   badRequestResponse,
   notFoundResponse,
   okResponse,
 } from "@/shared/api/api-responses";
-import { formatReference } from "@/citation/cite";
-import { RouteBuilder } from "@/app/api/route-builder";
-import {
-  hasDeveloperRole,
-  hasSessionOrAPIToken,
-} from "@/app/api/middleware/auth";
-import { applyCORS } from "@/app/api/middleware/cors";
-import { zodMiddleware } from "@/app/api/middleware/zod";
+import { convertDocument } from "@/shared/native-converter";
+import { db } from "@lxcat/database";
+import { VersionedLTPDocumentWithReference } from "@lxcat/schema";
+import { AnySpeciesSerializable } from "@lxcat/schema/species";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
   .use(applyCORS())
-  .use(hasSessionOrAPIToken())
+  .use(hasAPIToken())
   .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {

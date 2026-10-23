@@ -2,25 +2,22 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { annotateMixture } from "@/shared/annotate-mixture";
-import { convertMixture } from "@/shared/native-converter";
-import { db } from "@lxcat/database";
-import { okResponse } from "@/shared/api/api-responses";
-import { formatReference } from "@/citation/cite";
-import {
-  hasDeveloperOrDownloadRole,
-  hasSessionOrAPIToken,
-} from "@/app/api/middleware/auth";
+import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
 import { applyCORS } from "@/app/api/middleware/cors";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
+import { formatReference } from "@/citation/cite";
+import { annotateMixture } from "@/shared/annotate-mixture";
+import { okResponse } from "@/shared/api/api-responses";
+import { convertMixture } from "@/shared/native-converter";
+import { db } from "@lxcat/database";
 import { querySchema } from "./schemas";
 
 const router = RouteBuilder
   .init()
   .use(applyCORS())
-  .use(hasSessionOrAPIToken())
-  .use(hasDeveloperOrDownloadRole())
+  .use(hasAPIToken())
+  .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx) => {
     const mixture = await db().getMixtureByIds(ctx.parsedParams.query.ids);
