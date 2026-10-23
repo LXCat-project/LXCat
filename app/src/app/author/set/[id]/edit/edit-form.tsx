@@ -25,6 +25,7 @@ import {
 import { createFormContext } from "@mantine/form";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import { createSetAction, updateSetAction } from "../../actions";
 import { JsonTab } from "./json-tab";
 import { ProcessTab } from "./process-tab";
 import { ReferenceTable } from "./reference-table";
@@ -95,29 +96,22 @@ export const EditForm = (
       <form
         style={{ margin: 10 }}
         onSubmit={form.onSubmit(async (formData) => {
-          const url = `/api/author/scat-css/${formData.set._key ?? ""}`;
-          const body = JSON.stringify({
-            doc: formData.set,
-            message: formData.commitMessage,
-          });
-          const headers = new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          });
-          const init = { method: "POST", body, headers };
-          const res = await fetch(url, init);
-          const data: unknown = await res.json();
+          const result = formData.set._key
+            ? await updateSetAction(
+              formData.set._key,
+              formData.set,
+              formData.commitMessage,
+            )
+            : await createSetAction(formData.set, formData.commitMessage);
 
-          if (
-            typeof data === "object" && data && "id" in data
-            && typeof data.id === "string"
-          ) {
-            form.setFieldValue("set._key", data.id);
-            setSubmitMessage(`Saved set with id ${data.id}.`);
-            window.history.pushState(null, "", `/author/set/${data.id}/edit`);
+          if (result.ok) {
+            const { id } = result.value;
+            form.setFieldValue("set._key", id);
+            setSubmitMessage(`Saved set with id ${id}.`);
+            window.history.pushState(null, "", `/author/set/${id}/edit`);
           }
           // TODO: Handle user feedback.
-          console.log(data);
+          console.log(result);
         })}
       >
         <Tabs

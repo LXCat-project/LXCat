@@ -4,6 +4,8 @@
 
 "use client";
 
+import { FormattedReference } from "@/citation/formatted-reference";
+import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { LTPMixture } from "@lxcat/schema";
 import {
@@ -26,8 +28,6 @@ import { DataTable } from "mantine-datatable";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
-import { FormattedReference } from "@/citation/formatted-reference";
 import { DenormalizedProcess } from "../denormalized-process";
 import { ButtonClipboard } from "./button-clipboard";
 import { ButtonMultiDownload } from "./button-multi-download";
@@ -35,6 +35,7 @@ import { colorScheme } from "./colors";
 import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
 import { ProcessTable } from "./process-table";
+import { getReferencesForSelectionAction } from "./references-action";
 import { SetStats, SetTable } from "./set-table";
 import { TermsOfUseCheck } from "./terms-of-use-check";
 
@@ -49,6 +50,12 @@ const Chart = dynamic(
     ssr: false,
   },
 );
+
+const referenceFileNames = {
+  "csl-json": "LXCat_references.json",
+  bibtex: "LXCat_references.bib",
+  ris: "LXCat_references.ris",
+} as const;
 
 const downloadFile = (
   jsonString: string,
@@ -98,7 +105,15 @@ export const PlotPageClient = (
   );
 
   const idsString = processes.map(({ info: { _key: id } }) => id).join(",");
-  const idsPath = processes.map(({ info: { _key: id } }) => id).join("/");
+
+  const downloadReferences = async (format: keyof typeof referenceFileNames) =>
+    downloadFile(
+      await getReferencesForSelectionAction(
+        format,
+        processes.map(({ info: { _key: id } }) => id),
+      ),
+      referenceFileNames[format],
+    );
 
   // The compute button should only be available when every process is either
   // not from a complete set, or from a complete set whose items are all in the
@@ -216,19 +231,16 @@ export const PlotPageClient = (
                   <ButtonMultiDownload
                     entries={[{
                       text: "CSL-JSON",
-                      link: `/api/references/csl-json/for-selection/${idsPath}`,
+                      link: () => downloadReferences("csl-json"),
                       icon: <IconCodeDots stroke={1.5} />,
-                      fileName: "LXCat_references",
                     }, {
                       text: "Bibtex",
-                      link: `/api/references/bibtex/for-selection/${idsPath}`,
+                      link: () => downloadReferences("bibtex"),
                       icon: <IconFileText stroke={1.5} />,
-                      fileName: "LXCat_references.bib",
                     }, {
                       text: "RIS",
-                      link: `/api/references/ris/for-selection/${idsPath}`,
+                      link: () => downloadReferences("ris"),
                       icon: <IconFileText stroke={1.5} />,
-                      fileName: "LXCat_references.ris",
                     }]}
                   >
                     Download references

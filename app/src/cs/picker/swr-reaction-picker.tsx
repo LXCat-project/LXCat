@@ -8,62 +8,18 @@ import {
   Reversible,
   StateProcess,
 } from "@lxcat/database/item/picker";
-import { getStateLeafs, StateLeaf, StatePath } from "@lxcat/database/shared";
+import { getStateLeafs, StatePath } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { JSX, useState } from "react";
+import {
+  getCSSetsAction,
+  getReversibleAction,
+  getTypeTagsAction,
+} from "./actions";
 import { SWRReactionPickerShell } from "./swr-reaction-picker-shell";
 
-import useSWRImmutable from "swr/immutable";
 import { omit } from "@/shared/utils";
-
-const fetchTypeTags = async (
-  consumes: Array<StateLeaf>,
-  produces: Array<StateLeaf>,
-  reversible: Reversible,
-  setIds: Set<string>,
-): Promise<Array<ReactionTypeTag>> =>
-  (
-    await fetch(
-      `/api/reactions/type-tags?${new URLSearchParams({
-        consumes: JSON.stringify(consumes),
-        produces: JSON.stringify(produces),
-        reversible,
-        setIds: JSON.stringify([...setIds]),
-      })}`,
-    )
-  ).json();
-const fetchReversible = async (
-  consumes: Array<StateLeaf>,
-  produces: Array<StateLeaf>,
-  typeTags: Array<ReactionTypeTag>,
-  setIds: Set<string>,
-): Promise<Array<Reversible>> =>
-  (
-    await fetch(
-      `/api/reactions/reversible?${new URLSearchParams({
-        consumes: JSON.stringify(consumes),
-        produces: JSON.stringify(produces),
-        typeTags: JSON.stringify(typeTags),
-        setIds: JSON.stringify([...setIds]),
-      })}`,
-    )
-  ).json();
-const fetchCSSets = async (
-  consumes: Array<StateLeaf>,
-  produces: Array<StateLeaf>,
-  typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible,
-): Promise<CSSetTree> =>
-  (
-    await fetch(
-      `/api/reactions/cs-set?${new URLSearchParams({
-        consumes: JSON.stringify(consumes),
-        produces: JSON.stringify(produces),
-        typeTags: JSON.stringify(typeTags),
-        reversible,
-      })}`,
-    )
-  ).json();
+import useSWRImmutable from "swr/immutable";
 
 export interface StateSelectIds {
   consumes: Array<string>;
@@ -99,39 +55,39 @@ const typeTagFetcher = async ({
   produces,
   reversible,
   set,
-}: Omit<ReactionTemplate, "typeTags">) =>
-  fetchTypeTags(
-    getStateLeafs(consumes),
-    getStateLeafs(produces),
+}: Omit<ReactionTemplate, "typeTags">): Promise<Array<ReactionTypeTag>> =>
+  getTypeTagsAction({
+    consumes: getStateLeafs(consumes),
+    produces: getStateLeafs(produces),
     reversible,
-    new Set(set),
-  );
+    setIds: set,
+  });
 
 const reversibleFetcher = async ({
   consumes,
   produces,
   typeTags,
   set,
-}: Omit<ReactionTemplate, "reversible">) =>
-  fetchReversible(
-    getStateLeafs(consumes),
-    getStateLeafs(produces),
+}: Omit<ReactionTemplate, "reversible">): Promise<Array<Reversible>> =>
+  getReversibleAction({
+    consumes: getStateLeafs(consumes),
+    produces: getStateLeafs(produces),
     typeTags,
-    new Set(set),
-  );
+    setIds: set,
+  });
 
 const csSetsFetcher = async ({
   consumes,
   produces,
   reversible,
   typeTags,
-}: Omit<ReactionTemplate, "set">) =>
-  fetchCSSets(
-    getStateLeafs(consumes),
-    getStateLeafs(produces),
+}: Omit<ReactionTemplate, "set">): Promise<CSSetTree> =>
+  getCSSetsAction({
+    consumes: getStateLeafs(consumes),
+    produces: getStateLeafs(produces),
     typeTags,
     reversible,
-  );
+  });
 
 export const SWRReactionPicker = ({
   ids,

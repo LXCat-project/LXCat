@@ -26,7 +26,11 @@ const nextConfig = {
         },
       ],
     ],
-    useTypeScriptCli: true
+    useTypeScriptCli: true,
+
+    // The author actions send whole cross section sets, which easily exceed
+    // the default of 1 MB. The API route they replaced had no limit.
+    serverActions: { bodySizeLimit: "50mb" },
   },
 
   transpilePackages: ["katex", "next-mdx-remote"],

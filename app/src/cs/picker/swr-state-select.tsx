@@ -12,6 +12,7 @@ import {
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { MantineStyleProp } from "@mantine/core";
 import useSWRImmutable from "swr/immutable";
+import { getPartakingStatesAction } from "./actions";
 import { StateSelect } from "./state-select";
 
 export interface SWRReactionOptions {
@@ -22,43 +23,21 @@ export interface SWRReactionOptions {
   csSets: Set<string>;
 }
 
-const fetchStateTreeForSelection = async (
-  stateProcess: StateProcess,
-  consumes: Array<StateLeaf>,
-  produces: Array<StateLeaf>,
-  typeTags: Array<ReactionTypeTag>,
-  reversible: Reversible,
-  setIds: Set<string>,
-): Promise<StateTree> =>
-  (
-    await fetch(
-      `/api/states/partaking?${new URLSearchParams({
-        stateProcess: stateProcess,
-        consumes: JSON.stringify(consumes),
-        produces: JSON.stringify(produces),
-        typeTags: JSON.stringify(typeTags),
-        reversible,
-        setIds: JSON.stringify([...setIds]),
-      })}`,
-    )
-  ).json();
-async function stateFetcher({
+const stateFetcher = ({
   process,
   consumes,
   produces,
   typeTags,
   reversible,
   csSets,
-}: SWRReactionOptions & { process: StateProcess }) {
-  return fetchStateTreeForSelection(
-    process,
+}: SWRReactionOptions & { process: StateProcess }): Promise<StateTree> =>
+  getPartakingStatesAction(process, {
     consumes,
     produces,
     typeTags,
     reversible,
-    csSets,
-  );
-}
+    setIds: [...csSets],
+  });
 
 const getLatexFromTree = (tree: StateTree, path: StatePath) => {
   let latex = "";

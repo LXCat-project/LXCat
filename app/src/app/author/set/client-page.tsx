@@ -18,7 +18,8 @@ import {
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useState } from "react";
-import { deleteSet, listSetsOfOwner, publishSet } from "./client-queries";
+import { listOwnedSetsAction } from "./actions";
+import { deleteSet, publishSet } from "./client-queries";
 
 import classes from "./link-button.module.css";
 
@@ -32,7 +33,7 @@ export const ClientPage = ({ initialItems, user }: Props) => {
 
   async function reloadItems() {
     // TODO instead of reloading the whole list only alter the item that was changed.
-    const newItems = await listSetsOfOwner();
+    const newItems = await listOwnedSetsAction();
     setItems(newItems);
   }
 

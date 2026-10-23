@@ -2,23 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Cite } from "@citation-js/core";
-import { db } from "@lxcat/database";
-import {
-  notFoundResponse,
-  okJsonResponse,
-  okResponse,
-} from "@/shared/api/api-responses";
 import {
   hasDeveloperOrDownloadRole,
   hasSessionOrAPIToken,
 } from "@/app/api/middleware/auth";
 import { zodMiddleware } from "@/app/api/middleware/zod";
-import { RouteBuilder } from "@/app/api/route-builder";
-import "@citation-js/plugin-bibtex";
-import "@citation-js/plugin-ris";
-
 import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
+import { RouteBuilder } from "@/app/api/route-builder";
+import { formatReferences } from "@/citation/export-references";
+import {
+  notFoundResponse,
+  okJsonResponse,
+  okResponse,
+} from "@/shared/api/api-responses";
+import { db } from "@lxcat/database";
+
 const router = RouteBuilder
   .init()
   .use(hasSessionOrAPIToken())
@@ -26,28 +24,18 @@ const router = RouteBuilder
   .use(zodMiddleware(referenceIdsQuerySchema))
   .get(async (_, ctx) => {
     const { format, ids } = ctx.parsedParams.path;
+    const references = await db().getReferences([...new Set(ids)]);
 
-    const unique_ids = [...new Set(ids)];
-
-    const references = await db().getReferences(unique_ids);
-
-    if (references.length > 0) {
-      switch (format) {
-        case "bibtex":
-        case "ris":
-          const cite = new Cite(references);
-          const resp = cite.format(format);
-          if (typeof resp === "string") {
-            return okResponse(resp);
-          } else okJsonResponse(resp);
-        case "csl-json":
-          return okJsonResponse(references);
-      }
-    } else {
+    if (references.length === 0) {
       return notFoundResponse({
         body: `Could not find any of the requested references: ${ids}.`,
       });
     }
-  }).compile();
+
+    return format === "csl-json"
+      ? okJsonResponse(references)
+      : okResponse(formatReferences(format, references));
+  })
+  .compile();
 
 export { router as GET };

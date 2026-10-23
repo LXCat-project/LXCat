@@ -18,11 +18,11 @@ test("/api-doc deep link survives a reload", async ({ page }) => {
   await expect(page.locator("h1")).toContainText("LXCat API");
 
   // Redoc routes every tag and operation to its own path below /api-doc.
-  await page.getByRole("link", { name: "Species", exact: true }).click();
+  await page.getByRole("link", { name: "References", exact: true }).click();
   await expect(page).toHaveURL(/\/api-doc\/.+/);
 
   await page.reload();
-  await expect(page.getByRole("heading", { name: /Species/ }).first())
+  await expect(page.getByRole("heading", { name: /References/ }).first())
     .toBeVisible();
   await expect(page.getByText("No page at this address")).toHaveCount(0);
 });

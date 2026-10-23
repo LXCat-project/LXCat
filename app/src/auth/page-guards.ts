@@ -9,3 +9,13 @@ export const userIsAuthor = (session: Session | null): session is Session =>
 
 export const userIsAdmin = (session: Session | null): session is Session =>
   session !== null && session.user.roles?.includes("admin");
+
+export const userIsDeveloper = (
+  session: Session | null,
+): session is Session =>
+  session !== null && session.user.roles?.includes("developer");
+
+export const userIsPublisher = (
+  session: Session | null,
+): session is Session =>
+  session !== null && session.user.roles?.includes("publisher");
