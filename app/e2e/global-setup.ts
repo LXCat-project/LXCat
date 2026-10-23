@@ -10,6 +10,7 @@ import { exec } from "child_process";
 import { readFile, rm, writeFile } from "fs/promises";
 import { encode } from "next-auth/jwt";
 import { resolve } from "path";
+import { signApiToken } from "../src/auth/api-token";
 import { API_TOKENS_FILE, ApiTokens } from "./api-tokens";
 import { testOidcServer } from "./test-oidc-server";
 
@@ -91,25 +92,40 @@ const DAY = 24 * 60 * 60;
 
 /**
  * Create API tokens, like the ones users get on the developer page. Tokens
- * only identify a user, the roles are looked up in the database.
+ * identify a user by key, are stored for the user, and the roles are looked up
+ * in the database.
  */
 async function createApiTokens(secret: string, adminEmail: string) {
-  const noRolesEmail = "no-roles@ng.lxcat.net";
-  await db().addUser({
-    email: noRolesEmail,
+  const noRolesKey = await db().addUser({
+    email: "no-roles@ng.lxcat.net",
     roles: [],
     accounts: [],
     sessions: [],
   });
+  const authorOnlyKey = await db().addUser({
+    email: "author-only@ng.lxcat.net",
+    roles: ["author"],
+    accounts: [],
+    sessions: [],
+  });
+  const adminKey = (await db().getUserByEmail(adminEmail))!._key!;
 
-  const tokenFor = (email: string, maxAge = DAY) =>
-    encode({ token: { email }, secret, maxAge });
+  const tokenFor = async (userKey: string, store = true) => {
+    const { token, apiToken } = await signApiToken(userKey, DAY, secret);
+    if (store) {
+      await db().addApiToken(userKey, apiToken);
+    }
+    return token;
+  };
 
   const tokens: ApiTokens = {
-    developer: await tokenFor(adminEmail),
-    noRoles: await tokenFor(noRolesEmail),
-    unknownUser: await tokenFor("nobody@ng.lxcat.net"),
-    expired: await tokenFor(adminEmail, -DAY),
+    developer: await tokenFor(adminKey),
+    noRoles: await tokenFor(noRolesKey!),
+    authorOnly: await tokenFor(authorOnlyKey!),
+    unknownUser: await tokenFor("nobody"),
+    unregistered: await tokenFor(adminKey, false),
+    legacy: await encode({ token: { email: adminEmail }, secret, maxAge: DAY }),
+    expired: await encode({ token: { sub: adminKey }, secret, maxAge: -DAY }),
   };
   await writeFile(API_TOKENS_FILE, JSON.stringify(tokens));
 }

@@ -11,6 +11,7 @@ import { err, ok } from "true-myth/result";
 import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
+  ApiToken,
   KeyedOrganization,
   Session,
   SessionDiff,
@@ -20,6 +21,15 @@ import type {
   UserWithAccountSessionInDb,
 } from "./schema.js";
 import { Role } from "./schema.js";
+
+// Fields of a user document that are never returned by the queries.
+const PRIVATE_USER_FIELDS = [
+  "_id",
+  "_rev",
+  "accounts",
+  "sessions",
+  "apiTokens",
+];
 
 export async function toggleRole(
   this: LXCatDatabase,
@@ -68,7 +78,7 @@ export async function getUserByKey(this: LXCatDatabase, key: string) {
   const cursor: Cursor<UserInDb> = await this.db.query(aql`
     FOR u IN users
       FILTER u._key == ${key}
-      RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+      RETURN UNSET(u, ${PRIVATE_USER_FIELDS})
   `);
   return cursor.next();
 }
@@ -77,7 +87,44 @@ export async function getUserByEmail(this: LXCatDatabase, email: string) {
   const cursor = await this.db.query<UserInDb>(aql`
     FOR u IN users
       FILTER u.email == ${email}
-      RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+      RETURN UNSET(u, ${PRIVATE_USER_FIELDS})
+  `);
+  return cursor.next();
+}
+
+/**
+ * Store an API token of the user. Expired tokens of the user are dropped.
+ */
+export async function addApiToken(
+  this: LXCatDatabase,
+  userKey: string,
+  token: ApiToken,
+) {
+  await this.db.query(aql`
+    FOR u IN users
+      FILTER u._key == ${userKey}
+      UPDATE u WITH {
+        apiTokens: PUSH(
+          (FOR t IN (u.apiTokens || []) FILTER t.expires > ${token.createdOn} RETURN t),
+          ${token}
+        )
+      } IN users
+  `);
+}
+
+/**
+ * The user that owns the API token with the given id, if it is stored.
+ */
+export async function getUserByApiToken(
+  this: LXCatDatabase,
+  userKey: string,
+  jti: string,
+) {
+  const cursor = await this.db.query<UserInDb>(aql`
+    FOR u IN users
+      FILTER u._key == ${userKey}
+      FILTER ${jti} IN (u.apiTokens || [])[*].jti
+      RETURN UNSET(u, ${PRIVATE_USER_FIELDS})
   `);
   return cursor.next();
 }
@@ -93,7 +140,7 @@ export async function getUserByAccount(
           FILTER
             a.provider == ${provider}
             AND a.providerAccountId == ${providerAccountId}
-          RETURN UNSET(u, ["_id", "_rev", "accounts", "sessions"])
+          RETURN UNSET(u, ${PRIVATE_USER_FIELDS})
     `);
   return cursor.next();
 }
@@ -104,7 +151,7 @@ export async function updateUser(this: LXCatDatabase, userDiff: UserDiff) {
       FILTER u._key == ${userDiff._key}
       UPDATE u WITH ${userDiff} IN users
       LET updated = NEW
-      RETURN UNSET(updated, ["_id", "_rev", "accounts", "sessions"])
+      RETURN UNSET(updated, ${PRIVATE_USER_FIELDS})
   `);
   return cursor.next();
 }
@@ -161,7 +208,7 @@ export async function getSessionAndUser(
       FOR u IN users
         FOR s IN u.sessions
           FILTER s.sessionToken == ${sessionToken}
-      RETURN {session: s, user: UNSET(u, ["_id", "_rev", "accounts", "sessions"])}
+      RETURN {session: s, user: UNSET(u, ${PRIVATE_USER_FIELDS})}
     `);
   return cursor.next();
 }
@@ -204,7 +251,7 @@ export async function listUsers(this: LXCatDatabase) {
                     FILTER o._id == m._to
                     RETURN o.name
         )
-    RETURN MERGE(UNSET(u, ["_id", "_rev", "accounts", "sessions"]), {organizations})
+    RETURN MERGE(UNSET(u, ${PRIVATE_USER_FIELDS}), {organizations})
   `);
   return await cursor.all();
 }

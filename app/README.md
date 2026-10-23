@@ -210,7 +210,7 @@ NEXT_PUBLIC_URL=<URL where users visit server, like http://localhost:3000>
 
 # Where openid identity provider should redirect back to.
 NEXTAUTH_URL=<URL where users visit server, like http://localhost:3000>
-# Secret used to sign JWT api tokens.
+# Secret used to sign JWT api tokens. Changing it invalidates all tokens.
 NEXTAUTH_SECRET=<Random string>
 
 # Optional: URL of the ArangoDB api; usually left as default: http://localhost:8529.
@@ -315,8 +315,9 @@ actions. All API routes are built with zod schemas that can be used to verify
 query, path or body parameters by using the `zodMiddleware` function in your
 `RouteBuilder` chain. Routes that retrieve or modify data are protected with
 `hasAPIToken()`, which only accepts an API token in the `Authorization: Bearer`
-header and takes the roles of the user from the database, followed by a role
-check like `hasDeveloperRole()`. Each endpoint also has a corresponding
+header, checks that the token is stored for its user (so it can be revoked), requires
+the developer role and takes the roles of the user from the database, followed by a
+role check like `hasAuthorRole()`. Each endpoint also has a corresponding
 `openapi.ts` file which is used to generate an OpenAPI endpoint description.
 
 When the `/api/doc` endpoint is first queried, all `register` methods in every

@@ -202,7 +202,8 @@ https://learning-notes.mistermicheels.com/javascript/typescript/runtime-type-che
 - App authentication = OpenID identity providers +
   [next-auth](https://next-auth.js.org)
 - API authentication = JWT based API token, sent as `Authorization: Bearer`. The
-  token identifies the user, the roles are looked up in the database
+  token is tied to the user key and stored for the user, the roles are looked up in the
+  database
 - Authorization = roles assigned to users
 - OpenID identity provider = [Orcid](https://orcid.org/) or
   [Keycloak](https://www.keycloak.org/)

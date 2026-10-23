@@ -46,15 +46,17 @@ and the OpenAPI description are public.
 curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
 ```
 
-Keep the token secret, it gives access to the API in your name. A token only identifies
-you, your roles are looked up in the database on every request. When your roles change,
-or your account is removed, existing tokens are affected immediately. Logging in to the
-website does not give access to the API, only a token does.
+Keep the token secret, it gives access to the API in your name. A token is tied to your
+account, and your roles are looked up in the database on every request. When your roles
+change, or your account is removed, existing tokens are affected immediately. Logging in
+to the website does not give access to the API, only a token does. A token only works
+while you have the developer role. Tokens from before the tokens were tied to the
+account no longer work, generate a new one.
 
 A request is answered with:
 
 - `401 Unauthorized` when the `Authorization` header is missing, contains an invalid or
-  expired token, or when the user of the token no longer exists.
+  expired token, or when the token or its user no longer exists.
 - `403 Forbidden` when the user does not have the role that the endpoint needs.
 
 The data endpoints can be called from a web page on a few origins, for example

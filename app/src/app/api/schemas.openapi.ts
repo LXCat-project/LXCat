@@ -42,7 +42,9 @@ export const authResponses = (
       "The `Authorization` header does not contain a valid API token, or the user of the token no longer exists.",
   },
   403: {
-    description: `The user of the token does not have the ${role} role.`,
+    description: role === "developer"
+      ? "The user of the token does not have the developer role."
+      : `The user of the token does not have the developer role, or the ${role} role that the operation needs.`,
   },
 });
 

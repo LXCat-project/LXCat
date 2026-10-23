@@ -12,8 +12,14 @@ export type ApiTokens = {
   developer: string;
   /** Belongs to an existing user without any roles. */
   noRoles: string;
-  /** Valid, but no user has this email. */
+  /** Belongs to an existing user with the author role, but not the developer role. */
+  authorOnly: string;
+  /** Valid, but no user has this key. */
   unknownUser: string;
+  /** Valid and for the admin user, but not stored for the user. */
+  unregistered: string;
+  /** From before tokens were stored, it only contains the email. */
+  legacy: string;
   /** Belongs to the admin user, but is expired. */
   expired: string;
 };
