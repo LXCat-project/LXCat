@@ -17,7 +17,10 @@ export type CORSOptions = {
 };
 
 const DEFAULTS: CORSOptions = {
-  allowedOrigins: [/http:\/\/localhost:\d+/, /https:\/\/loki-suite.github.io/],
+  allowedOrigins: [
+    /^http:\/\/localhost:\d+$/,
+    /^https:\/\/loki-suite\.github\.io$/,
+  ],
   allowedMethods: ["GET", "HEAD"],
   allowedHeaders: ["Authorization", "Content-Type"],
   preflightStatusCode: 204,
@@ -42,7 +45,9 @@ export const applyCORS =
     const method = req.method && req.method.toUpperCase
       && req.method.toUpperCase();
 
-    const cors_headers: [string, string][] = [];
+    // The response depends on the origin of the request, so caches have to
+    // keep the responses for different origins apart.
+    const cors_headers: [string, string][] = [["Vary", "Origin"]];
 
     const origin = req.headers.get("origin");
 
