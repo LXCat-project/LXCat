@@ -47,14 +47,14 @@ curl -H "Authorization: Bearer $LXCAT_TOKEN" $LXCAT_URL/api/scat-css
 ```
 
 Keep the token secret, it gives access to the API in your name. A token only identifies
-you, your roles are looked up in the database on every request. When your roles
-change, or your account is removed, this applies to existing tokens immediately.
-Logging in to the website does not give access to the API, only a token does.
+you, your roles are looked up in the database on every request. When your roles change,
+or your account is removed, existing tokens are affected immediately. Logging in to the
+website does not give access to the API, only a token does.
 
 A request is answered with:
 
-- `401 Unauthorized` when the `Authorization` header is missing, or contains an invalid
-  or expired token, or when the user of the token no longer exists.
+- `401 Unauthorized` when the `Authorization` header is missing, contains an invalid or
+  expired token, or when the user of the token no longer exists.
 - `403 Forbidden` when the user does not have the role that the endpoint needs.
 
 The data endpoints can be called from a web page on a few origins, for example
@@ -133,7 +133,7 @@ choices are `csl` (default), `apa` and `bibtex`.
 curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>?refstyle=bibtex"
 ```
 
-To fetch the set in the legacy text format, that is for example used by Bolsig+, use
+To fetch the set in the legacy text format, that is for example used by BOLSIG+, use
 
 ```bash
 curl -H "Authorization: Bearer $LXCAT_TOKEN" "$LXCAT_URL/api/scat-css/<id of set>/legacy"
@@ -180,15 +180,15 @@ endpoints do not need a token:
   `/api/scat-css/<id of set>`.
 - `/api/scat-css/LTPMixture`, a selection of cross sections as returned by
   `/api/scat-cs/inspect`.
-- `/api/scat-css/schema/upload-document`, a document that can be uploaded as new cross
-  section set.
+- `/api/scat-css/schema/upload-document`, a document that can be uploaded as a new
+  cross section set.
 
 ## Upload and manage cross section sets
 
 Members of an organization with the **author** role can also manage the cross section
-sets of their organization through the API. This uses the same operations as the
-[website](2-data-contributor), so a set is added as a draft first. To generate a token
-you need the developer role, as described [above](#authorize-and-authenticate).
+sets of their organization through the API. This uses the same flow of operations as
+the [website](2-data-contributor), so a set is added as a draft first. To generate a
+token you need the developer role, as described [above](#authorize-and-authenticate).
 
 To upload a new set, send a document that follows the upload schema together with a
 message. The contributor of the document should be an organization you are a member of.
