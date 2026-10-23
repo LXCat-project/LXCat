@@ -72,6 +72,13 @@ export async function updateSet(
     });
   }
 
+  if (doc.contributor !== await db().getSetAffiliation(id)) {
+    return err({
+      status: 400,
+      json: ["The contributor of an existing set cannot be changed."],
+    });
+  }
+
   try {
     return ok({ id: await db().updateSet(id, doc, message) });
   } catch (error: any) {
