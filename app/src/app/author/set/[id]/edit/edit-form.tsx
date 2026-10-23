@@ -155,6 +155,7 @@ export const EditForm = (
               <NativeSelect
                 label="Contributor"
                 data={organizations.map(({ name }) => name)}
+                disabled={!!form.values.set._key}
                 {...getInputProps("set.contributor")}
               />
             </Stack>

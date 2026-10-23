@@ -18,3 +18,24 @@ export function rootDb() {
 
   return _db;
 }
+
+/**
+ * Create the organizations when they do not exist, and make them the only
+ * organizations the user is a member of. Returns the key of the user, to undo
+ * this with `stripAffiliations`.
+ */
+export async function joinOrganizations(
+  email: string,
+  ...organizations: Array<string>
+) {
+  const db = rootDb();
+  for (const organization of organizations) {
+    await db.upsertOrganization(organization);
+  }
+  const userKey = (await db.getUserByEmail(email))!._key!;
+  const organizationKeys = (await db.listOrganizations())
+    .filter(({ name }) => organizations.includes(name))
+    .map(({ _key }) => _key);
+  await db.setAffiliations(userKey, organizationKeys);
+  return userKey;
+}

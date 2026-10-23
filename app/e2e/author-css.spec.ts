@@ -7,7 +7,7 @@ import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
 import { apiTokens, bearer } from "./api-tokens";
 import { ADMIN_EMAIL, seedDir, uploadAndPublishDummySet } from "./global-setup";
-import { rootDb } from "./root-db";
+import { joinOrganizations, rootDb } from "./root-db";
 
 test.use({ storageState: "adminStorageState.json" });
 
@@ -32,13 +32,7 @@ test("/api/author/scat-css", async ({ request }) => {
 
 test("/api/author/scat-css can create, edit, publish and retract a set", async ({ request }) => {
   const org = "API test organization";
-  const db = rootDb();
-  await db.upsertOrganization(org);
-  const userKey = (await db.getUserByEmail(ADMIN_EMAIL))!._key!;
-  const orgKey =
-    (await db.listOrganizations()).find(({ name }) => name === org)!
-      ._key;
-  await db.setAffiliations(userKey, [orgKey]);
+  const userKey = await joinOrganizations(ADMIN_EMAIL, org);
 
   try {
     const doc = JSON.parse(
@@ -112,7 +106,7 @@ test("/api/author/scat-css can create, edit, publish and retract a set", async (
       .json();
     expect(after.items[0].versionInfo.status).toBe("retracted");
   } finally {
-    await db.stripAffiliations(userKey);
+    await rootDb().stripAffiliations(userKey);
   }
 });
 

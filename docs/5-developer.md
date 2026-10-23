@@ -208,7 +208,8 @@ The other operations, with the id of an owned set:
 
 - `GET /api/author/scat-css` lists the sets you own, including drafts.
 - `POST /api/author/scat-css/<id of set>` with the same body as above stores the edited
-  set as a draft. The response contains the id of the draft.
+  set as a draft. The response contains the id of the draft. The contributor of an
+  existing set cannot be changed.
 - `POST /api/author/scat-css/<id of set>/publish` publishes a draft, this needs the
   **publisher** role.
 - `DELETE /api/author/scat-css/<id of set>` with a body `{"message": "..."}` removes a
