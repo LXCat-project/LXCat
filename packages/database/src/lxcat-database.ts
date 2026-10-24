@@ -11,6 +11,7 @@ import {
   addOrganization,
   addSession,
   addUser,
+  dropApiToken,
   dropOrganization,
   dropSession,
   dropUser,
@@ -21,6 +22,7 @@ import {
   getUserByEmail,
   getUserByKey,
   linkAccount,
+  listApiTokens,
   listContributors,
   listOrganizations,
   listUsers,
@@ -292,6 +294,8 @@ export class LXCatDatabase {
   public dropSession = dropSession;
 
   public addApiToken = addApiToken;
+  public listApiTokens = listApiTokens;
+  public dropApiToken = dropApiToken;
 
   public listContributors = listContributors;
 

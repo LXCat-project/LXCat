@@ -8,6 +8,7 @@ import { Cursor } from "arangojs/cursors";
 import { ArangoError } from "arangojs/errors";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
+import { now } from "../date.js";
 import { LXCatDatabase } from "../lxcat-database.js";
 import type {
   Account,
@@ -110,6 +111,44 @@ export async function addApiToken(
         )
       } IN users
   `);
+}
+
+/**
+ * The API tokens of the user that have not expired, the newest first. The
+ * tokens are stored in the order in which they were created, so this does not
+ * depend on the resolution of the time of creation.
+ */
+export async function listApiTokens(this: LXCatDatabase, userKey: string) {
+  const cursor = await this.db.query<Array<ApiToken>>(aql`
+    FOR u IN users
+      FILTER u._key == ${userKey}
+      RETURN REVERSE(
+        FOR t IN (u.apiTokens || []) FILTER t.expires > ${now()} RETURN t
+      )
+  `);
+  return (await cursor.next()) ?? [];
+}
+
+/**
+ * Revoke the API token with the given id of the user.
+ *
+ * @returns Whether the user had this token.
+ */
+export async function dropApiToken(
+  this: LXCatDatabase,
+  userKey: string,
+  jti: string,
+) {
+  const cursor = await this.db.query<boolean>(aql`
+    FOR u IN users
+      FILTER u._key == ${userKey}
+      LET tokens = (u.apiTokens || [])
+      LET remaining = (FOR t IN tokens FILTER t.jti != ${jti} RETURN t)
+      FILTER LENGTH(remaining) < LENGTH(tokens)
+      UPDATE u WITH { apiTokens: remaining } IN users
+      RETURN true
+  `);
+  return (await cursor.next()) ?? false;
 }
 
 /**

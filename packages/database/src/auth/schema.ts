@@ -52,6 +52,7 @@ export type Account = z.infer<typeof Account>;
  */
 export const ApiToken = z.object({
   jti: z.string(),
+  name: z.string().optional(),
   createdOn: z.string(),
   expires: z.string(),
 });
