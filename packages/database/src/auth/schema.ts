@@ -46,6 +46,17 @@ export const Account = z.object({
 });
 export type Account = z.infer<typeof Account>;
 
+/**
+ * An API token of a user. The token itself is a signed JWT that is not stored,
+ * only the part that is needed to check and revoke it.
+ */
+export const ApiToken = z.object({
+  jti: z.string(),
+  createdOn: z.string(),
+  expires: z.string(),
+});
+export type ApiToken = z.infer<typeof ApiToken>;
+
 export const Role = z.enum([
   "admin",
   "editor", // TODO remove or implement
@@ -91,6 +102,7 @@ export const UserWithAccountSessionInDb = User.extend({
   roles: z.array(Role).optional().default([]), // Same as User.roles, but defaults to []
   accounts: z.array(Account).optional().default([]),
   sessions: z.array(Session).optional().default([]),
+  apiTokens: z.array(ApiToken).optional(),
 });
 
 export type UserWithAccountSessionInDb = z.infer<

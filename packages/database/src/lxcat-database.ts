@@ -7,6 +7,7 @@ import { CreateDatabaseOptions } from "arangojs/databases";
 import { Result } from "true-myth";
 import { err, ok } from "true-myth/result";
 import {
+  addApiToken,
   addOrganization,
   addSession,
   addUser,
@@ -16,6 +17,7 @@ import {
   getAffiliations,
   getSessionAndUser,
   getUserByAccount,
+  getUserByApiToken,
   getUserByEmail,
   getUserByKey,
   linkAccount,
@@ -275,6 +277,7 @@ export class LXCatDatabase {
   public getUserByKey = getUserByKey;
   public getUserByEmail = getUserByEmail;
   public getUserByAccount = getUserByAccount;
+  public getUserByApiToken = getUserByApiToken;
 
   public addUser = addUser;
   public updateUser = updateUser;
@@ -287,6 +290,8 @@ export class LXCatDatabase {
   public getSessionAndUser = getSessionAndUser;
   public updateSession = updateSession;
   public dropSession = dropSession;
+
+  public addApiToken = addApiToken;
 
   public listContributors = listContributors;
 

@@ -114,4 +114,98 @@ describe("given filled ArangoDB container", () => {
       expect(orgs).toContainEqual({ name: "some new org", _key: orgKey! });
     });
   });
+
+  describe("API tokens", () => {
+    const token = (jti: string, expires: string) => ({
+      jti,
+      createdOn: "2026-01-01T00:00:00.000Z",
+      expires,
+    });
+    const nextYear = "2027-01-01T00:00:00.000Z";
+    let userKey: string;
+
+    beforeAll(async () => {
+      userKey = (await db.addUser({
+        email: "tokens@example.com",
+        roles: [],
+        accounts: [],
+        sessions: [],
+      }))!;
+      await db.addApiToken(userKey, token("first", nextYear));
+    });
+
+    afterAll(async () => {
+      await db.dropUser(userKey);
+    });
+
+    it("should find the user of a stored token", async () => {
+      const user = await db.getUserByApiToken(userKey, "first");
+      expect(user?._key).toEqual(userKey);
+      expect(user?.email).toEqual("tokens@example.com");
+    });
+
+    it("should not find an unknown token", async () => {
+      expect(await db.getUserByApiToken(userKey, "unknown")).toBeUndefined();
+    });
+
+    it("should not find the token under the key of another user", async () => {
+      expect(await db.getUserByApiToken(testKeys.testUserKey, "first"))
+        .toBeUndefined();
+    });
+
+    it("should find every stored token of a user", async () => {
+      await db.addApiToken(userKey, token("second", nextYear));
+
+      expect(await db.getUserByApiToken(userKey, "first")).toBeDefined();
+      expect(await db.getUserByApiToken(userKey, "second")).toBeDefined();
+    });
+
+    it("should drop expired tokens when adding a token", async () => {
+      await db.addApiToken(
+        userKey,
+        token("expired", "2026-01-02T00:00:00.000Z"),
+      );
+      expect(await db.getUserByApiToken(userKey, "expired")).toBeDefined();
+
+      // Created after the expiry of the previous token.
+      await db.addApiToken(userKey, {
+        ...token("third", nextYear),
+        createdOn: "2026-06-01T00:00:00.000Z",
+      });
+
+      expect(await db.getUserByApiToken(userKey, "expired")).toBeUndefined();
+      expect(await db.getUserByApiToken(userKey, "third")).toBeDefined();
+      expect(await db.getUserByApiToken(userKey, "first")).toBeDefined();
+    });
+
+    it("should not return the tokens in user queries", async () => {
+      const users = [
+        await db.getUserByKey(userKey),
+        await db.getUserByEmail("tokens@example.com"),
+        await db.getUserByApiToken(userKey, "first"),
+        ...(await db.listUsers()).filter(({ _key }) => _key === userKey),
+      ];
+
+      expect(users).toHaveLength(4);
+      for (const user of users) {
+        expect(user).toBeDefined();
+        expect(user).not.toHaveProperty("apiTokens");
+      }
+    });
+
+    it("should lose the tokens with the user", async () => {
+      const otherKey = (await db.addUser({
+        email: "gone@example.com",
+        roles: [],
+        accounts: [],
+        sessions: [],
+      }))!;
+      await db.addApiToken(otherKey, token("gone", nextYear));
+      expect(await db.getUserByApiToken(otherKey, "gone")).toBeDefined();
+
+      await db.dropUser(otherKey);
+
+      expect(await db.getUserByApiToken(otherKey, "gone")).toBeUndefined();
+    });
+  });
 });

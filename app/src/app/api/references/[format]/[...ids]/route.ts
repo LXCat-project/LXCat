@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
+import { hasAPIToken } from "@/app/api/middleware/auth";
 import { applyCORS } from "@/app/api/middleware/cors";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { referenceIdsQuerySchema } from "@/app/api/references/[format]/schemas";
@@ -19,7 +19,6 @@ const router = RouteBuilder
   .init()
   .use(applyCORS())
   .use(hasAPIToken())
-  .use(hasDeveloperRole())
   .use(zodMiddleware(referenceIdsQuerySchema))
   .get(async (_, ctx) => {
     const { format, ids } = ctx.parsedParams.path;

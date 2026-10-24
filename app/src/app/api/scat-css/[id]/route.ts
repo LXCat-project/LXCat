@@ -10,7 +10,7 @@ import {
 import { Cite } from "@citation-js/core";
 import { db } from "@lxcat/database";
 import "@citation-js/plugin-bibtex";
-import { hasAPIToken, hasDeveloperRole } from "@/app/api/middleware/auth";
+import { hasAPIToken } from "@/app/api/middleware/auth";
 import { applyCORS } from "@/app/api/middleware/cors";
 import { zodMiddleware } from "@/app/api/middleware/zod";
 import { RouteBuilder } from "@/app/api/route-builder";
@@ -22,7 +22,6 @@ const router = RouteBuilder
   .init()
   .use(applyCORS())
   .use(hasAPIToken())
-  .use(hasDeveloperRole())
   .use(zodMiddleware(querySchema))
   .get(async (_, ctx, __) => {
     const params = ctx.parsedParams;

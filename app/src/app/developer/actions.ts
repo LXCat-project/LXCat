@@ -4,19 +4,20 @@
 
 "use server";
 
-import { requireDeveloper } from "@/auth/action-guards";
-import { encode } from "next-auth/jwt";
-
-const DEFAULT_MAX_AGE = 365 * 24 * 60 * 60; // year in seconds
+import { requireDeveloper, UnauthorizedError } from "@/auth/action-guards";
+import { signApiToken } from "@/auth/api-token";
+import { db } from "@lxcat/database";
 
 export async function generateTokenAction() {
   const { user } = await requireDeveloper();
-  const token = {
-    // TODO use _key from db instead of user supplied info like email
-    email: user.email,
-  };
-  const secret = process.env.NEXTAUTH_SECRET!;
-  const apiToken = await encode({ token, secret, maxAge: DEFAULT_MAX_AGE });
-  const expires = new Date(Date.now() + DEFAULT_MAX_AGE * 1000).toISOString();
-  return { token: apiToken, expires };
+  const userKey = (await db().getUserByEmail(user.email))?._key;
+
+  if (userKey === undefined) {
+    throw new UnauthorizedError();
+  }
+
+  const { token, apiToken } = await signApiToken(userKey);
+  await db().addApiToken(userKey, apiToken);
+
+  return { token, expires: apiToken.expires };
 }

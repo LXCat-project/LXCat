@@ -65,6 +65,24 @@ test.describe("authentication", () => {
     }
   });
 
+  test("rejects a token that is not stored for the user", async ({ request }) => {
+    for (const path of protectedPaths) {
+      const res = await request.get(path, {
+        headers: bearer(apiTokens().unregistered),
+      });
+      expect(res.status(), path).toBe(401);
+    }
+  });
+
+  test("rejects a token from before tokens were stored", async ({ request }) => {
+    for (const path of protectedPaths) {
+      const res = await request.get(path, {
+        headers: bearer(apiTokens().legacy),
+      });
+      expect(res.status(), path).toBe(401);
+    }
+  });
+
   test("rejects a token of an unknown user", async ({ request }) => {
     for (const path of protectedPaths) {
       const res = await request.get(path, {
@@ -78,6 +96,17 @@ test.describe("authentication", () => {
     for (const path of protectedPaths) {
       const res = await request.get(path, {
         headers: bearer(apiTokens().noRoles),
+      });
+      expect(res.status(), path).toBe(403);
+    }
+  });
+
+  test("rejects a token of a user without the developer role", async ({ request }) => {
+    // A token only works while its user has the developer role, also for the
+    // author routes that only check for the author role.
+    for (const path of protectedPaths) {
+      const res = await request.get(path, {
+        headers: bearer(apiTokens().authorOnly),
       });
       expect(res.status(), path).toBe(403);
     }

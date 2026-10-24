@@ -4,6 +4,7 @@
 
 export {
   Account,
+  ApiToken,
   KeyedOrganization,
   Organization,
   Role,
