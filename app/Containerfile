@@ -43,6 +43,13 @@ COPY --from=build /build/app/.next/standalone .
 COPY --from=build /build/app/.next/static ./app/.next/static
 COPY --from=build /build/app/public ./app/public
 
+# @lxcat/converter is a native addon that is imported at runtime and hidden from
+# the output tracing (see app/src/shared/native-converter.ts), so the standalone
+# output does not contain it. Only the package manifest and `dist` are needed,
+# the latter holds the loader and the binary that was built for this platform.
+COPY --from=build /build/packages/converter/package.json ./node_modules/@lxcat/converter/package.json
+COPY --from=build /build/packages/converter/dist ./node_modules/@lxcat/converter/dist
+
 # We have to patch absolute paths generated during the build stage, as they
 # traverse from the build stage root instead of the release stage root.
 RUN find ./app/.next -name "*.js" | xargs -I {} sed -i "s|/build|$(pwd)|g" {}
