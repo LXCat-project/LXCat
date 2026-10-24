@@ -4,6 +4,7 @@
 
 import { options } from "@/auth/options";
 import { userIsAuthor } from "@/auth/page-guards";
+import { Forbidden } from "@/shared/ui/forbidden";
 import { NotFound } from "@/shared/ui/not-found";
 import { Unauthorized } from "@/shared/ui/unauthorized";
 import { db } from "@lxcat/database";
@@ -19,8 +20,12 @@ const EditSetPage = async ({ params }: { params: Promise<unknown> }) => {
   const { id } = URLParams.parse(await params);
   const session = await getServerSession(options);
 
-  if (!(userIsAuthor(session) && await userOwnsSet(session.user.email, id))) {
+  if (!userIsAuthor(session)) {
     return <Unauthorized />;
+  }
+
+  if (!await db().isOwnerOfSet(id, session.user.email)) {
+    return <Forbidden />;
   }
 
   const set = await db().getSetById(id, true);
@@ -33,17 +38,6 @@ const EditSetPage = async ({ params }: { params: Promise<unknown> }) => {
       organizations={await db().getAffiliations(session.user.email)}
     />
   );
-};
-
-const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
-  const userAffiliations = await db().getAffiliations(email);
-  const setAffiliation = await db().getSetAffiliation(setId);
-
-  if (setAffiliation === undefined) {
-    return false;
-  }
-
-  return userAffiliations.map(({ name }) => name).includes(setAffiliation);
 };
 
 export default EditSetPage;

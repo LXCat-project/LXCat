@@ -339,8 +339,8 @@ export async function setAffiliations(
   userKey: string,
   orgKeys: string[],
 ) {
-  // For now user can only be member of single org
-  // create edge if user was memberless or update edge _to when already member
+  // Make the user a member of exactly the given organizations: add the missing
+  // memberships first, and then drop the memberships to all other organizations.
   const userId = "users/" + userKey;
   await this.db.query(aql`
     FOR o IN Organization
