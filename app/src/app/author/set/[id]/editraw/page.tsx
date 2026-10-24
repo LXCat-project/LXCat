@@ -26,7 +26,7 @@ export default async function EditRawSetPage(
     return <Unauthorized />;
   }
 
-  if (!await userOwnsSet(session.user.email, id)) {
+  if (!await db().isOwnerOfSet(id, session.user.email)) {
     return <Forbidden />;
   }
 
@@ -44,14 +44,3 @@ export default async function EditRawSetPage(
     />
   );
 }
-
-const userOwnsSet = async (email: string, setId: string): Promise<boolean> => {
-  const userAffiliations = await db().getAffiliations(email);
-  const setAffiliation = await db().getSetAffiliation(setId);
-
-  if (setAffiliation === undefined) {
-    return false;
-  }
-
-  return userAffiliations.map(({ name }) => name).includes(setAffiliation);
-};
