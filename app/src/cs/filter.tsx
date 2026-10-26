@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useRouter } from "next/navigation";
 import {
   FilterComponentProps,
   ReactionInformation,
@@ -12,8 +11,6 @@ import {
 export const Filter = (
   { selection, onChange, ...rest }: FilterComponentProps,
 ) => {
-  const router = useRouter();
-
   function onFilterChange(
     newSelection: Array<ReactionInformation>,
   ) {
@@ -21,7 +18,10 @@ export const Filter = (
       reactions: JSON.stringify(newSelection.map(({ options }) => options)),
     }).toString();
 
-    router.push(`scat-cs?${query}`);
+    // The page keeps the selection in its own state, so only the URL has to
+    // follow. Navigating with the router would make the server render the
+    // page again, and the client ignores the result.
+    window.history.replaceState(null, "", `/scat-cs?${query}`);
     onChange(newSelection);
   }
 
