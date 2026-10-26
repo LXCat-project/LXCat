@@ -17,3 +17,6 @@ export interface CrossSectionHeading {
   reference: Reference[];
   threshold: number;
 }
+
+/** The heading of a set that contains a cross section. */
+export type CrossSectionSetHeading = CrossSectionHeading["isPartOf"][number];

@@ -254,3 +254,56 @@ export function itemIds(index: ReactionIndex, selection: Selection) {
       .map(({ id }) => id)
   );
 }
+
+const itemKey = (id: string) => id.slice(id.indexOf("/") + 1);
+
+/**
+ * Orders the ids of cross sections (`CrossSection/<key>`) by their key, which
+ * is the order in which they were loaded.
+ */
+export function compareItemIds(a: string, b: string) {
+  const [x, y] = [itemKey(a), itemKey(b)];
+  const difference = Number(x) - Number(y);
+
+  return Number.isNaN(difference) || difference === 0
+    ? (x < y ? -1 : x > y ? 1 : 0)
+    : difference;
+}
+
+/**
+ * The ids of the cross sections that match any of the selections, for each set
+ * that has any, in the order of the sets in the index.
+ *
+ * The ids of a set are unique, and ordered as `compareItemIds` does. A cross
+ * section that is in several sets is listed in each of them. If a selection
+ * has selected sets, it only matches cross sections in those sets.
+ */
+export function itemsBySet(
+  index: ReactionIndex,
+  selections: Array<Selection>,
+) {
+  const items = new Map<string, Set<string>>();
+
+  for (const selection of selections) {
+    const wanted = new Set(selection.setIds);
+
+    for (const reaction of new Matcher(index, selection).match()) {
+      for (const { id, sets } of reaction.items) {
+        for (const set of sets) {
+          if (wanted.size > 0 && !wanted.has(set)) continue;
+
+          const ids = items.get(set) ?? new Set<string>();
+          ids.add(id);
+          items.set(set, ids);
+        }
+      }
+    }
+  }
+
+  return index.sets.flatMap(({ id: setId }) => {
+    const ids = items.get(setId);
+    return ids === undefined
+      ? []
+      : [{ setId, itemIds: [...ids].sort(compareItemIds) }];
+  });
+}

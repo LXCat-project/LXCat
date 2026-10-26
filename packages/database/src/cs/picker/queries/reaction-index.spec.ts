@@ -148,4 +148,56 @@ describe("reaction index", () => {
       expect(states(options.consumes[0])).not.toContain("State/missing");
     });
   });
+
+  describe("given a draft cross section in a published set, and a link that is there twice", () => {
+    let draftId: string;
+    let linkedItem: string;
+
+    beforeAll(async () => {
+      await sampleSets4Search(db);
+
+      const [link] = await db.getDB().query(
+        aql`FOR link IN IsPartOf LIMIT 1 RETURN link`,
+      )
+        .then((cursor) => cursor.all());
+      linkedItem = link._from;
+      await db.getDB().collection("IsPartOf").save({
+        _from: link._from,
+        _to: link._to,
+      });
+
+      const [reaction] = await db.getDB().query(
+        aql`RETURN DOCUMENT(${link._from}).reaction`,
+      ).then((cursor) => cursor.all());
+      const draft = await db.getDB().collection("CrossSection").save({
+        reaction,
+        versionInfo: { status: "draft" },
+      });
+      draftId = draft._id;
+      await db.getDB().collection("IsPartOf").save({
+        _from: draftId,
+        _to: link._to,
+      });
+    });
+
+    afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
+
+    it("should only have the published cross sections", async () => {
+      const ids = (await db.getReactionIndex()).reactions.flatMap(
+        ({ items }) => items.map(({ id }) => id),
+      );
+
+      expect(ids).toContain(linkedItem);
+      expect(ids).not.toContain(draftId);
+    });
+
+    it("should have a set once for a cross section", async () => {
+      const { reactions } = await db.getReactionIndex();
+
+      const item = reactions.flatMap(({ items }) => items)
+        .find(({ id }) => id === linkedItem)!;
+      expect(new Set(item.sets).size).toBe(item.sets.length);
+      expect(item.sets).toHaveLength(1);
+    });
+  });
 });

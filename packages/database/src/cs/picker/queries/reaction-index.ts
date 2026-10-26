@@ -36,10 +36,11 @@ async function buildReactionIndex(
         LET items = (
           FOR cs IN CrossSection
             FILTER cs.reaction == reaction._id
+            FILTER cs.versionInfo.status == "published"
             LET sets = (
               FOR css IN OUTBOUND cs IsPartOf
                 FILTER css.versionInfo.status == "published"
-                RETURN css._id
+                RETURN DISTINCT css._id
             )
             FILTER LENGTH(sets) > 0
             RETURN { id: cs._id, sets }

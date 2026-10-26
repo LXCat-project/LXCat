@@ -4,12 +4,12 @@
 
 import { LTPMixture } from "@lxcat/schema";
 import { aql } from "arangojs";
+import { literal } from "arangojs/aql";
 import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { OwnedProcess } from "../../schema/process.js";
-import { PagingOptions } from "../../shared/types/search.js";
 import { KeyedVersionInfo } from "../../shared/types/version-info.js";
-import { CrossSectionHeading } from "../public.js";
+import { CrossSectionHeading, CrossSectionSetHeading } from "../public.js";
 
 export async function byId(this: LXCatDatabase, id: string) {
   const cursor: Cursor<unknown> = await this.db.query(aql`
@@ -195,16 +195,58 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
   };
 }
 
+// The organization and the publication of a set `css`, for its heading.
+const setHeadingLookups = aql`
+  LET org = FIRST(
+    FOR org IN Organization
+      FILTER org._id == css.organization
+      RETURN org
+  )
+  LET ref = FIRST(
+    FOR ref IN Reference
+      FILTER ref._id == css.publishedIn
+      RETURN UNSET(ref, ["_key", "_rev", "_id"])
+  )
+`;
+const setHeading = literal(
+  `MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name }, ref ? { publishedIn: ref } : {})`,
+);
+
+/**
+ * The headings of the published sets with the given ids
+ * (`CrossSectionSet/<key>`), sorted by organization and name. Sets without an
+ * organization are left out. The `id` of a heading is the key of the set, as for
+ * the sets in the headings of cross sections.
+ */
+export async function getSetHeadings(
+  this: LXCatDatabase,
+  setIds: Array<string>,
+) {
+  const cursor: Cursor<CrossSectionSetHeading> = await this.db.query(aql`
+    FOR css IN CrossSectionSet
+      FILTER css._id IN ${setIds}
+      FILTER css.versionInfo.status == "published"
+      ${setHeadingLookups}
+      FILTER org != null
+      SORT org.name, css.name, css._key
+      RETURN ${setHeading}
+  `);
+  return await cursor.all();
+}
+
+/**
+ * The headings of the published cross sections with the given ids
+ * (`CrossSection/<key>`), in the order of the ids. Ids of cross sections that do
+ * not exist or are not published are left out.
+ */
 export async function getCSHeadings(
   this: LXCatDatabase,
   csIds: Array<string>,
-  paging: PagingOptions,
 ) {
-  const limitAql = aql`LIMIT ${paging.offset}, ${paging.count}`;
-
   const q = aql`
-	  FOR cs IN CrossSection
-      FILTER cs._id IN ${csIds}
+	  FOR id IN ${csIds}
+      LET cs = DOCUMENT(id)
+      FILTER cs != null
       FILTER cs.versionInfo.status == 'published'
 
 	    LET refs = (
@@ -240,19 +282,9 @@ export async function getCSHeadings(
 	    LET setNames = (
         FOR css IN OUTBOUND cs IsPartOf
           FILTER css.versionInfo.status == "published"
-          LET org = FIRST(
-            FOR org IN Organization
-              FILTER org._id == css.organization
-              RETURN org
-          )
-          LET ref = FIRST(
-            FOR ref IN Reference
-              FILTER ref._id == css.publishedIn
-              RETURN UNSET(ref, ["_key", "_rev", "_id"])
-          )
-          RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name }, ref ? { publishedIn: ref } : {})
+          ${setHeadingLookups}
+          RETURN ${setHeading}
 	    )
-	    ${limitAql}
 	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs, isPartOf: setNames }
 	`;
   const cursor: Cursor<CrossSectionHeading> = await this.db.query(q);
