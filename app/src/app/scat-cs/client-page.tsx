@@ -6,27 +6,18 @@
 
 import { CrossSectionHeading } from "@lxcat/database/item";
 import {
-  CSSetTree,
-  defaultReactionTemplate,
   ReactionOptions,
   ReactionTemplate,
-  Reversible,
   SearchOptions,
-  StateProcess,
 } from "@lxcat/database/item/picker";
-import {
-  getStateLeafs,
-  PagingOptions,
-  StateTree,
-} from "@lxcat/database/shared";
-import { ReactionTypeTag } from "@lxcat/schema/process";
+import { PagingOptions } from "@lxcat/database/shared";
 import { Button, Container, Fieldset, Group, Stack } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
-import { SWRConfig, unstable_serialize } from "swr";
+import { useRef, useState } from "react";
 import { BAG_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
@@ -34,87 +25,28 @@ import {
   emptyFilter,
   informationFromTemplates,
   ReactionInformation,
-} from "../../cs/swr-filter-component";
-import { CacheMap } from "../../shared/swr-cache-map";
-import { omit } from "../../shared/utils";
-import { searchItemsAction } from "./actions";
-
-interface Example {
-  label: string;
-  selection: Array<ReactionTemplate>;
-  options: SearchOptions;
-}
+} from "../../cs/filter-component";
+import { searchAction } from "./actions";
 
 interface Props {
   items: CrossSectionHeading[];
   options: SearchOptions;
   selection: Array<ReactionTemplate>;
   paging: PagingOptions;
-  defaultReactionOptions: ReactionOptions;
-  examples: Example[];
 }
 
-const generateCachePairs = (
-  selection: ReactionTemplate,
-  options: ReactionOptions,
-) => [
-  [unstable_serialize(omit(selection, "typeTags")), options.typeTags] as [
-    string,
-    Array<ReactionTypeTag>,
-  ],
-  [unstable_serialize(omit(selection, "reversible")), options.reversible] as [
-    string,
-    Array<Reversible>,
-  ],
-  [unstable_serialize(omit(selection, "set")), options.set] as [
-    string,
-    CSSetTree,
-  ],
-  ...options.consumes.map(
-    (tree, index) =>
-      [
-        unstable_serialize({
-          consumes: getStateLeafs(
-            selection.consumes.filter(
-              (_, selectionIndex) => selectionIndex !== index,
-            ),
-          ),
-          produces: getStateLeafs(selection.produces),
-          reversible: selection.reversible,
-          typeTags: selection.typeTags,
-          csSets: selection.set,
-          process: StateProcess.Consumed,
-        }),
-        tree,
-      ] as [string, StateTree],
-  ),
-  ...options.produces.map(
-    (tree, index) =>
-      [
-        unstable_serialize({
-          consumes: getStateLeafs(selection.consumes),
-          produces: getStateLeafs(
-            selection.produces.filter(
-              (_, selectionIndex) => selectionIndex !== index,
-            ),
-          ),
-          reversible: selection.reversible,
-          typeTags: selection.typeTags,
-          csSets: selection.set,
-          process: StateProcess.Produced,
-        }),
-        tree,
-      ] as [string, StateTree],
-  ),
-];
+/** The options of a template only depend on the template itself. */
+const templateKey = (
+  { consumes, produces, typeTags, reversible, set }: ReactionTemplate,
+) => JSON.stringify([consumes, produces, typeTags, reversible, set]);
 
 export const CSClient: NextPage<Props> = ({
   items: initialItems,
-  options,
+  options: initialOptions,
   selection: initialSelection,
-  defaultReactionOptions,
 }) => {
   const [items, setItems] = useState(initialItems);
+  const [options, setOptions] = useState(initialOptions);
   const [selection, setSelection] = useState(
     informationFromTemplates(initialSelection),
   );
@@ -123,17 +55,66 @@ export const CSClient: NextPage<Props> = ({
   );
   const [loading, setLoading] = useState(false);
 
+  // The options that were computed so far, so that only the options of
+  // templates that were not seen before have to be requested. They are valid
+  // as long as the published data does not change, as for the page itself.
+  const [optionsCache] = useState(
+    () =>
+      new Map<string, ReactionOptions>(
+        initialSelection.map((
+          template,
+          index,
+        ) => [templateKey(template), initialOptions[index]]),
+      ),
+  );
+
   const nrItems = items.length;
 
   const canonicalUrl = "/scat-cs";
 
+  // Only the response to the latest change is applied, so a slow response to
+  // an earlier change cannot overwrite a newer selection.
+  const latestRequest = useRef(0);
+
   const onChange = async (newSelection: Array<ReactionInformation>) => {
-    setLoading(true);
-    setItems(
-      await searchItemsAction(newSelection.map(({ options }) => options)),
+    const request = ++latestRequest.current;
+    const templates = newSelection.map(({ options }) => options);
+    const keys = templates.map(templateKey);
+    const missing = keys.flatMap((key, index) =>
+      optionsCache.has(key) ? [] : [index]
     );
-    setSelection(newSelection);
-    setLoading(false);
+
+    setLoading(true);
+    try {
+      const result = await searchAction(templates, missing);
+      missing.forEach((index) => {
+        const computed = result.options[index];
+        if (computed === null) {
+          throw new Error("The server did not return the requested options.");
+        }
+        optionsCache.set(keys[index], computed);
+      });
+
+      if (request === latestRequest.current) {
+        // The selection is applied together with its options, so the picker
+        // never offers choices that belong to another selection.
+        setSelection(newSelection);
+        setOptions(keys.map((key) => optionsCache.get(key)!));
+        setItems(result.items);
+      }
+    } catch {
+      if (request === latestRequest.current) {
+        notifications.show({
+          color: "red",
+          title: "Could not search for cross sections",
+          message: "Your selection was not applied. Try again.",
+        });
+      }
+    } finally {
+      if (request === latestRequest.current) {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -143,29 +124,15 @@ export const CSClient: NextPage<Props> = ({
       </Head>
       <Container size="xl" py="md">
         <Stack>
-          <SWRConfig
-            value={{
-              provider: () =>
-                new CacheMap([
-                  ...generateCachePairs(
-                    defaultReactionTemplate(),
-                    defaultReactionOptions,
-                  ),
-                  ...selection.flatMap((selected, index) =>
-                    generateCachePairs(selected.options, options[index])
-                  ),
-                ]),
-            }}
-          >
-            <Fieldset legend="Build your reaction template to search for cross sections">
-              <Filter
-                selection={selection}
-                onChange={onChange}
-                editableReaction={editableReaction}
-                onEditableReactionChange={setEditableReaction}
-              />
-            </Fieldset>
-          </SWRConfig>
+          <Fieldset legend="Build your reaction template to search for cross sections">
+            <Filter
+              selection={selection}
+              options={options}
+              onChange={onChange}
+              editableReaction={editableReaction}
+              onEditableReactionChange={setEditableReaction}
+            />
+          </Fieldset>
           <Group justify="center">
             <Button
               color="red"

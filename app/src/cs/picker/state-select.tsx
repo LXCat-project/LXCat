@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { Latex } from "@/shared/latex";
+import { mapObject } from "@/shared/utils";
 import {
   OMIT_CHILDREN_KEY,
   StatePath,
@@ -10,10 +12,46 @@ import {
 } from "@lxcat/database/shared";
 import { MantineStyleProp } from "@mantine/core";
 import clsx from "clsx";
-import { Latex } from "@/shared/latex";
 import { LatexSelect } from "./latex-select";
 import classes from "./state-select.module.css";
-import { mapObject } from "@/shared/utils";
+
+export const getLatexFromTree = (tree: StateTree, path: StatePath) => {
+  let latex = "";
+
+  if (path.particle) {
+    const particle = tree[path.particle];
+    latex += particle.latex;
+    if (
+      particle.children
+      && path.electronic
+      && path.electronic !== OMIT_CHILDREN_KEY
+    ) {
+      const electronic = particle.children[path.electronic];
+      latex += `\\left(${electronic.latex}`;
+      if (
+        electronic.children
+        && path.vibrational
+        && path.vibrational !== OMIT_CHILDREN_KEY
+      ) {
+        const vibrational = electronic.children[path.vibrational];
+        latex += `\\left(v=${vibrational.latex}`;
+        if (
+          vibrational.children
+          && path.rotational
+          && path.rotational !== OMIT_CHILDREN_KEY
+        ) {
+          latex += `\\left(J=${
+            vibrational.children[path.rotational].latex
+          }\\right)`;
+        }
+        latex += "\\right)";
+      }
+      latex += "\\right)";
+    }
+  }
+
+  return latex;
+};
 
 function omitChildren([id, summary]: [string, StateSummary]): [string, string] {
   return [id, summary.latex];
