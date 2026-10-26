@@ -75,4 +75,34 @@ test.describe("reaction picker on the cross section index page", () => {
       .toBeVisible();
     await expect(page.locator("td:text(\"Some other name\")")).toHaveCount(0);
   });
+
+  test("only the options of a changed reaction are requested", async ({ page }) => {
+    // The second argument of the action holds the indices of the reactions
+    // that the page does not have the options of.
+    const requested: Array<Array<number>> = [];
+    page.on("request", (request) => {
+      if (request.headers()["next-action"]) {
+        requested.push(JSON.parse(request.postData()!)[1]);
+      }
+    });
+
+    await page.goto("/scat-cs");
+
+    // The new reaction has the same template as the first one.
+    await page.getByRole("button", { name: "Add Filter" }).click();
+    await expect.poll(() => requested.length).toBe(1);
+
+    // A change is applied when the response arrives, so wait for the results
+    // before making the next one.
+    const results = page.locator("td:text(\"Some other name\")");
+    const set = page.locator("label:has-text(\"Some other organization\")");
+    await set.click();
+    await expect(results).toBeVisible();
+
+    // Undoing the change gives a template the page has seen before.
+    await set.click();
+    await expect(results).toHaveCount(0);
+
+    expect(requested).toEqual([[], [1], []]);
+  });
 });

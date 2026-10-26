@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { db } from "@lxcat/database";
-import { ReactionTemplate } from "@lxcat/database/item/picker";
+import { ReactionOptions, ReactionTemplate } from "@lxcat/database/item/picker";
 import { getStateLeaf, StateLeaf } from "@lxcat/database/shared";
 
 /**
@@ -67,6 +67,29 @@ export async function search(
     db().getSearchOptions(template),
     searchItems(template, paging),
   ]);
+
+  return { options, items };
+}
+
+/**
+ * Like `search`, but only computes the options of the templates at `indices`.
+ *
+ * The options of a template do not depend on the other templates, so a client
+ * that has the options of the templates that did not change does not need
+ * them again. The options of the other templates are `null`.
+ */
+export async function searchChanged(
+  template: Array<ReactionTemplate>,
+  paging: { offset: number; count: number },
+  indices: Array<number>,
+) {
+  const [computed, items] = await Promise.all([
+    db().getSearchOptions(indices.map((index) => template[index])),
+    searchItems(template, paging),
+  ]);
+
+  const options = template.map((): ReactionOptions | null => null);
+  indices.forEach((index, i) => options[index] = computed[i]);
 
   return { options, items };
 }
