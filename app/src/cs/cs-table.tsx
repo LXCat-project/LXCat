@@ -4,43 +4,70 @@
 
 import classes from "./cs-table.module.css";
 
+import { Reference } from "@/citation/reference";
 import { CrossSectionHeading } from "@lxcat/database/item";
-import { Group, Stack, Text } from "@mantine/core";
+import { Anchor, Group, Stack, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconChevronRight } from "@tabler/icons-react";
 import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Reference } from "@/citation/reference";
+import { PAGE_SIZE } from "./constants";
+import { MatchingSet } from "./matching-set";
 import { ReactionSummary } from "./reaction-summary";
 
 interface Props {
-  items: CrossSectionHeading[];
+  sets: Array<MatchingSet>;
   loading: boolean;
+  /** Load a page, counted from 1, of the cross sections of a set. */
+  loadItems: (
+    setKey: string,
+    page: number,
+  ) => Promise<Array<CrossSectionHeading>>;
 }
 
-export const CSTable = ({ items, loading }: Props) => {
+/**
+ * The sets that match a search, which show their cross sections when they are
+ * expanded, a page at a time.
+ *
+ * The table forgets what it loaded when it is created again, which is what the
+ * search page does when the selection changes.
+ */
+export const CSTable = ({ sets, loading, loadItems }: Props) => {
   const [expandedSets, setExpandedSets] = useState<Array<string>>([]);
+  const [pages, setPages] = useState<Record<string, number>>({});
+  // The cross sections that were loaded, by set and page.
+  const [items, setItems] = useState<
+    Record<string, Array<CrossSectionHeading>>
+  >(
+    {},
+  );
+  const [fetching, setFetching] = useState<Array<string>>([]);
   const router = useRouter();
 
-  const sets = [
-    ...new Map(
-      items.flatMap(({ isPartOf }) => isPartOf.map((set) => [set.name, set])),
-    ).values(),
-  ];
+  const load = async (setKey: string, page: number) => {
+    setPages((pages) => ({ ...pages, [setKey]: page }));
+    if (`${setKey}/${page}` in items) return;
 
-  const records = sets.map((set) => ({
-    ...set,
-    cs: items.filter(({ isPartOf }) =>
-      isPartOf.map(({ name }) => name).includes(set.name)
-    ).map((
-      { isPartOf, ...item },
-    ) => ({
-      ...item,
-      typeTags: item.reaction.typeTags,
-      reaction: <ReactionSummary {...item.reaction} />,
-    })),
-  }));
+    setFetching((fetching) => [...fetching, setKey]);
+    try {
+      const loaded = await loadItems(setKey, page);
+      setItems((items) => ({ ...items, [`${setKey}/${page}`]: loaded }));
+    } catch {
+      notifications.show({
+        color: "red",
+        title: "Could not load the cross sections",
+        message: "Collapse the set and expand it again to try again.",
+      });
+    } finally {
+      setFetching((fetching) => {
+        const index = fetching.indexOf(setKey);
+        return fetching.filter((_, i) => i !== index);
+      });
+    }
+  };
 
   return (
     <DataTable
@@ -66,6 +93,7 @@ export const CSTable = ({ items, loading }: Props) => {
           ),
         },
         { accessor: "name", title: "Set" },
+        { accessor: "nrItems", title: "Cross sections" },
         {
           accessor: "version",
           title: "Version",
@@ -76,12 +104,21 @@ export const CSTable = ({ items, loading }: Props) => {
           render: ({ complete }) => complete ? "True" : "False",
         },
       ]}
-      records={records}
+      records={sets}
       rowExpansion={{
         allowMultiple: true,
         expanded: {
           recordIds: expandedSets,
-          onRecordIdsChange: setExpandedSets,
+          onRecordIdsChange: (recordIds: Array<unknown>) => {
+            // The ids of the records are the keys of the sets.
+            const ids = recordIds.filter((id): id is string =>
+              typeof id === "string"
+            );
+            setExpandedSets(ids);
+            ids.filter((id) => !expandedSets.includes(id)).forEach((id) =>
+              load(id, pages[id] ?? 1)
+            );
+          },
         },
         content: ({ record }) => (
           <Stack
@@ -101,6 +138,9 @@ export const CSTable = ({ items, loading }: Props) => {
                     : "-"}
                 </Text>
               </Group>
+              <Anchor component={Link} href={`/scat-css/${record.id}`}>
+                Open the whole set
+              </Anchor>
             </Stack>
             <DataTable
               withColumnBorders
@@ -117,7 +157,21 @@ export const CSTable = ({ items, loading }: Props) => {
                   render: (record) => record.typeTags.join(", "),
                 },
               ]}
-              records={record.cs}
+              records={(items[`${record.id}/${pages[record.id] ?? 1}`] ?? [])
+                .map(({ isPartOf: _, ...item }) => ({
+                  ...item,
+                  typeTags: item.reaction.typeTags,
+                  reaction: <ReactionSummary {...item.reaction} />,
+                }))}
+              fetching={fetching.includes(record.id)}
+              minHeight={100}
+              totalRecords={record.nrItems}
+              recordsPerPage={PAGE_SIZE}
+              page={pages[record.id] ?? 1}
+              onPageChange={(page) => load(record.id, page)}
+              paginationSize="sm"
+              paginationText={({ from, to, totalRecords }) =>
+                `${from}–${to} of ${totalRecords}`}
               onRowClick={({ record }) =>
                 router.push(`/scat-cs/inspect?ids=${record.id}`)}
             />

@@ -12,4 +12,5 @@ export const BAG_SIZE = 100;
  */
 export const PLOT_SIZE = 1500;
 
-export const PAGE_SIZE = 100;
+/** The number of cross sections that the search page shows per page of a set. */
+export const PAGE_SIZE = 20;

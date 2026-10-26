@@ -4,21 +4,27 @@
 
 "use client";
 
-import { CrossSectionHeading } from "@lxcat/database/item";
 import {
   ReactionOptions,
   ReactionTemplate,
   SearchOptions,
 } from "@lxcat/database/item/picker";
-import { PagingOptions } from "@lxcat/database/shared";
-import { Button, Container, Fieldset, Group, Stack } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Fieldset,
+  Group,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconAdjustmentsPlus, IconGraph, IconTrash } from "@tabler/icons-react";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { BAG_SIZE } from "../../cs/constants";
+import { PLOT_SIZE } from "../../cs/constants";
 import { CSTable } from "../../cs/cs-table";
 import { Filter } from "../../cs/filter";
 import {
@@ -26,13 +32,16 @@ import {
   informationFromTemplates,
   ReactionInformation,
 } from "../../cs/filter-component";
-import { searchAction } from "./actions";
+import { MatchingSet } from "../../cs/matching-set";
+import { searchAction, searchSetItemsAction } from "./actions";
 
 interface Props {
-  items: CrossSectionHeading[];
+  sets: Array<MatchingSet>;
+  total: number;
+  /** The ids of all matching cross sections, unless there are too many. */
+  plotIds: Array<string> | null;
   options: SearchOptions;
   selection: Array<ReactionTemplate>;
-  paging: PagingOptions;
 }
 
 /** The options of a template only depend on the template itself. */
@@ -41,11 +50,17 @@ const templateKey = (
 ) => JSON.stringify([consumes, produces, typeTags, reversible, set]);
 
 export const CSClient: NextPage<Props> = ({
-  items: initialItems,
+  sets: initialSets,
+  total: initialTotal,
+  plotIds: initialPlotIds,
   options: initialOptions,
   selection: initialSelection,
 }) => {
-  const [items, setItems] = useState(initialItems);
+  const [sets, setSets] = useState(initialSets);
+  const [total, setTotal] = useState(initialTotal);
+  const [plotIds, setPlotIds] = useState(initialPlotIds);
+  // Changes with every applied search, so that the table starts afresh.
+  const [searchId, setSearchId] = useState(0);
   const [options, setOptions] = useState(initialOptions);
   const [selection, setSelection] = useState(
     informationFromTemplates(initialSelection),
@@ -68,9 +83,9 @@ export const CSClient: NextPage<Props> = ({
       ),
   );
 
-  const nrItems = items.length;
-
   const canonicalUrl = "/scat-cs";
+
+  const templates = selection.map(({ options }) => options);
 
   // Only the response to the latest change is applied, so a slow response to
   // an earlier change cannot overwrite a newer selection.
@@ -100,7 +115,10 @@ export const CSClient: NextPage<Props> = ({
         // never offers choices that belong to another selection.
         setSelection(newSelection);
         setOptions(keys.map((key) => optionsCache.get(key)!));
-        setItems(result.items);
+        setSets(result.sets);
+        setTotal(result.total);
+        setPlotIds(result.plotIds);
+        setSearchId((id) => id + 1);
       }
     } catch {
       if (request === latestRequest.current) {
@@ -136,7 +154,7 @@ export const CSClient: NextPage<Props> = ({
           <Group justify="center">
             <Button
               color="red"
-              disabled={items.length == 0 && selection.length < 2}
+              disabled={total === 0 && selection.length < 2}
               onClick={() => {
                 onChange([emptyFilter()]);
                 setEditableReaction(0);
@@ -155,29 +173,52 @@ export const CSClient: NextPage<Props> = ({
             >
               Add Filter
             </Button>
-            {nrItems > 0 && nrItems <= BAG_SIZE
-              ? (
-                <Link
-                  href={`/scat-cs/inspect?ids=${
-                    items.map((d) => d.id).join(",")
-                  }`}
-                  passHref
-                  legacyBehavior
-                >
+            {total > 0 && (
+              plotIds !== null
+                ? (
                   <Button
+                    component={Link}
+                    href={`/scat-cs/inspect?ids=${plotIds.join(",")}`}
                     leftSection={<IconGraph />}
-                    component="a"
                     style={{ textDecorationLine: "none" }}
                     variant="light"
                   >
                     Plot selection
                   </Button>
-                </Link>
-              )
-              : <></>}
+                )
+                : (
+                  <Tooltip
+                    label={`${total} cross sections match, and at most ${PLOT_SIZE} can be plotted. Narrow down your selection.`}
+                  >
+                    <div>
+                      <Button
+                        disabled
+                        leftSection={<IconGraph />}
+                        variant="light"
+                      >
+                        Plot selection
+                      </Button>
+                    </div>
+                  </Tooltip>
+                )
+            )}
           </Group>
-          <Fieldset legend="Search results" style={{ maxHeight: 600 }}>
-            <CSTable items={items} loading={loading} />
+          <Fieldset legend="Search results">
+            <Stack gap="xs">
+              {total > 0 && (
+                <Text size="sm" c="dimmed">
+                  {total} cross sections in {sets.length}{" "}
+                  {sets.length === 1 ? "set" : "sets"}
+                </Text>
+              )}
+              <CSTable
+                key={searchId}
+                sets={sets}
+                loading={loading}
+                loadItems={(setKey, page) =>
+                  searchSetItemsAction(templates, setKey, page)}
+              />
+            </Stack>
           </Fieldset>
         </Stack>
       </Container>
