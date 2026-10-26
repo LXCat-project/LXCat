@@ -50,5 +50,23 @@ export async function searchItems(
     ),
   );
 
-  return db().getItemHeadings([...new Set(csIdsNested.flat())], paging);
+  const csIds = [...new Set(csIdsNested.flat())];
+
+  return csIds.length > 0 ? db().getItemHeadings(csIds, paging) : [];
+}
+
+/**
+ * Find the cross sections matching the reaction templates, together with what
+ * can be selected for each template.
+ */
+export async function search(
+  template: Array<ReactionTemplate>,
+  paging: { offset: number; count: number },
+) {
+  const [options, items] = await Promise.all([
+    db().getSearchOptions(template),
+    searchItems(template, paging),
+  ]);
+
+  return { options, items };
 }

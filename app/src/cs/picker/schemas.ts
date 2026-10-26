@@ -2,38 +2,33 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Reversible, StateProcess } from "@lxcat/database/item/picker";
+import { Reversible } from "@lxcat/database/item/picker";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { z } from "zod";
 
-export const stateLeafSchema = z.object({
-  id: z.string(),
-  includeChildren: z.boolean(),
-});
+// Every entry of a template costs the database work, and templates come from
+// the URL and from public server actions, so they are limited generously.
+const MAX_STATES_PER_SIDE = 10;
+const MAX_REACTIONS = 20;
+const MAX_SETS = 1000;
 
-export const stateProcessSchema = z.enum(StateProcess);
-
-export const reactionSelectionSchema = z.object({
-  consumes: z.array(stateLeafSchema),
-  produces: z.array(stateLeafSchema),
-  typeTags: z.array(ReactionTypeTag),
-  reversible: z.enum(Reversible),
-  setIds: z.array(z.string()),
-});
-
-export type ReactionSelection = z.infer<typeof reactionSelectionSchema>;
+const id = z.string().max(100);
 
 const statePathSchema = z.object({
-  particle: z.string().optional(),
-  electronic: z.string().optional(),
-  vibrational: z.string().optional(),
-  rotational: z.string().optional(),
+  particle: id.optional(),
+  electronic: id.optional(),
+  vibrational: id.optional(),
+  rotational: id.optional(),
 });
 
 export const reactionTemplateSchema = z.object({
-  consumes: z.array(statePathSchema),
-  produces: z.array(statePathSchema),
+  consumes: z.array(statePathSchema).max(MAX_STATES_PER_SIDE),
+  produces: z.array(statePathSchema).max(MAX_STATES_PER_SIDE),
   reversible: z.enum(Reversible),
-  typeTags: z.array(ReactionTypeTag),
-  set: z.array(z.string()),
+  typeTags: z.array(ReactionTypeTag).max(ReactionTypeTag.options.length),
+  set: z.array(id).max(MAX_SETS),
 });
+
+export const reactionTemplatesSchema = z.array(reactionTemplateSchema).max(
+  MAX_REACTIONS,
+);

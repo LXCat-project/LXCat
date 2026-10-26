@@ -6,16 +6,14 @@ import {
   defaultReactionTemplate,
   ReactionTemplate,
   Reversible,
+  SearchOptions,
 } from "@lxcat/database/item/picker";
 import { Button, Group, Stack } from "@mantine/core";
 import { IconCopy, IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { produce } from "immer";
 import { nanoid } from "nanoid";
 import { Latex } from "../shared/latex";
-import {
-  StateSelectIds,
-  SWRReactionPicker,
-} from "./picker/swr-reaction-picker";
+import { ReactionPicker, StateSelectIds } from "./picker/reaction-picker";
 
 const getLatexForReaction = (
   options: ReactionTemplate,
@@ -77,13 +75,16 @@ export type ReactionInformation = {
 
 export type FilterComponentProps = {
   selection: Array<ReactionInformation>;
+  /** The selectable options of every reaction in `selection`. */
+  options: SearchOptions;
   onChange: (selection: Array<ReactionInformation>) => void;
   editableReaction: number;
   onEditableReactionChange: (index: number) => void;
 };
 
-export const SWRFilterComponent = ({
+export const FilterComponent = ({
   selection,
+  options,
   onChange,
   editableReaction,
   onEditableReactionChange,
@@ -100,9 +101,10 @@ export const SWRFilterComponent = ({
     <Stack>
       {selection.map((r, i) => (
         <Group key={r.id} justify="center">
-          <SWRReactionPicker
+          <ReactionPicker
             ids={r.ids}
             selection={r.options}
+            options={options[i]}
             latex={getLatexForReaction(r.options, r.latex)}
             onTagsChange={(selectedTags) =>
               updateSelection(produce((selection) => {

@@ -14,11 +14,11 @@ import {
 } from "@mantine/core";
 import { CSSetFilter, CSSetFilterProps } from "./cs-set-filter";
 import { LatexSelect, LatexSelectProps } from "./latex-select";
-import { SWRStateList, SWRStateListProps } from "./swr-state-list";
+import { StateList, StateListProps } from "./state-list";
 
-interface SWRReactionPickerShellProps {
-  consumes: SWRStateListProps;
-  produces: SWRStateListProps;
+interface ReactionPickerShellProps {
+  consumes: StateListProps;
+  produces: StateListProps;
   reversible: Omit<LatexSelectProps, "data"> & {
     choices: Array<Reversible>;
   };
@@ -32,19 +32,19 @@ const choiceMap: Record<Reversible, string> = {
   [Reversible.True]: "\\leftrightarrow",
 };
 
-export const SWRReactionPickerShell = ({
+export const ReactionPickerShell = ({
   consumes,
   produces,
   reversible: { choices, ...reversible },
   typeTags,
   sets,
-}: SWRReactionPickerShellProps) => {
+}: ReactionPickerShellProps) => {
   return (
     <Group gap="xs">
       <Stack gap="xs">
         <Group gap="xs">
           <Fieldset legend="Left-hand side">
-            <SWRStateList {...consumes} />
+            <StateList {...consumes} />
           </Fieldset>
           <LatexSelect
             {...reversible}
@@ -55,7 +55,7 @@ export const SWRReactionPickerShell = ({
             )}
           />
           <Fieldset legend="Right-hand side">
-            <SWRStateList {...produces} />
+            <StateList {...produces} />
           </Fieldset>
         </Group>
         <MultiSelect

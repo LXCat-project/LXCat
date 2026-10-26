@@ -4,10 +4,10 @@
 
 import { useRouter } from "next/navigation";
 import {
+  FilterComponent,
   FilterComponentProps,
   ReactionInformation,
-  SWRFilterComponent,
-} from "./swr-filter-component";
+} from "./filter-component";
 
 export const Filter = (
   { selection, onChange, ...rest }: FilterComponentProps,
@@ -26,7 +26,7 @@ export const Filter = (
   }
 
   return (
-    <SWRFilterComponent
+    <FilterComponent
       selection={selection}
       onChange={onFilterChange}
       {...rest}

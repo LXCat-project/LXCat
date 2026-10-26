@@ -2,18 +2,17 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { StateProcess } from "@lxcat/database/item/picker";
-import { StatePath } from "@lxcat/database/shared";
+import { StatePath, StateTree } from "@lxcat/database/shared";
 import { Button, Stack } from "@mantine/core";
-import { SWRReactionOptions, SWRStateSelect } from "./swr-state-select";
+import { getLatexFromTree, StateSelect } from "./state-select";
 
-export interface SWRStateListProps {
+export interface StateListProps {
   entries: Array<{
     id: string;
-    selection: SWRReactionOptions;
+    /** The states that can be selected in this entry. */
+    tree: StateTree;
     selected: StatePath;
   }>;
-  process: StateProcess;
   onAppend: () => void | Promise<void>;
   onRemove: (index: number) => void | Promise<void>;
   onUpdate: (
@@ -23,13 +22,12 @@ export interface SWRStateListProps {
   ) => void | Promise<void>;
 }
 
-export const SWRStateList = ({
+export const StateList = ({
   entries,
-  process,
   onAppend,
   onRemove,
   onUpdate,
-}: SWRStateListProps) => {
+}: StateListProps) => {
   return (
     <Stack align="stretch" gap="xs">
       {entries.map((entry, index) => {
@@ -41,12 +39,15 @@ export const SWRStateList = ({
             <Button variant="light" onClick={() => onRemove(index)}>
               -
             </Button>
-            <SWRStateSelect
-              selection={entry.selection}
-              process={process}
+            <StateSelect
+              data={entry.tree}
               selected={entry.selected}
-              onChange={async (selected, latex) =>
-                onUpdate(index, selected, latex)}
+              onChange={(selected) =>
+                onUpdate(
+                  index,
+                  selected,
+                  getLatexFromTree(entry.tree, selected),
+                )}
               style={{
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,

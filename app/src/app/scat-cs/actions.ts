@@ -5,13 +5,13 @@
 "use server";
 
 import { PAGE_SIZE } from "@/cs/constants";
-import { reactionTemplateSchema } from "@/cs/picker/schemas";
+import { reactionTemplatesSchema } from "@/cs/picker/schemas";
 import { z } from "zod";
-import { searchItems } from "./search-items";
+import { search } from "./search-items";
 
-export async function searchItemsAction(reactions: unknown, offset = 0) {
-  return searchItems(
-    z.array(reactionTemplateSchema).parse(reactions),
+export async function searchAction(reactions: unknown, offset = 0) {
+  return search(
+    reactionTemplatesSchema.parse(reactions),
     { offset: z.number().int().nonnegative().parse(offset), count: PAGE_SIZE },
   );
 }

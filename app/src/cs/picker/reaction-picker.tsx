@@ -3,32 +3,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-  CSSetTree,
+  ReactionOptions,
   ReactionTemplate,
   Reversible,
-  StateProcess,
 } from "@lxcat/database/item/picker";
-import { getStateLeafs, StatePath } from "@lxcat/database/shared";
+import { StatePath } from "@lxcat/database/shared";
 import { ReactionTypeTag } from "@lxcat/schema/process";
 import { JSX, useState } from "react";
-import {
-  getCSSetsAction,
-  getReversibleAction,
-  getTypeTagsAction,
-} from "./actions";
-import { SWRReactionPickerShell } from "./swr-reaction-picker-shell";
-
-import { omit } from "@/shared/utils";
-import useSWRImmutable from "swr/immutable";
+import { ReactionPickerShell } from "./reaction-picker-shell";
 
 export interface StateSelectIds {
   consumes: Array<string>;
   produces: Array<string>;
 }
 
-export type SWRReactionPickerProps = {
+/** `options` are what the server computed to be selectable for `selection`. */
+export type ReactionPickerProps = {
   ids: StateSelectIds;
   selection: ReactionTemplate;
+  options: ReactionOptions;
   editable: boolean;
   latex: JSX.Element;
   onConsumesChange(
@@ -50,48 +43,10 @@ export type SWRReactionPickerProps = {
   onCSSetsChange(newSelected: Set<string>): void | Promise<void>;
 };
 
-const typeTagFetcher = async ({
-  consumes,
-  produces,
-  reversible,
-  set,
-}: Omit<ReactionTemplate, "typeTags">): Promise<Array<ReactionTypeTag>> =>
-  getTypeTagsAction({
-    consumes: getStateLeafs(consumes),
-    produces: getStateLeafs(produces),
-    reversible,
-    setIds: set,
-  });
-
-const reversibleFetcher = async ({
-  consumes,
-  produces,
-  typeTags,
-  set,
-}: Omit<ReactionTemplate, "reversible">): Promise<Array<Reversible>> =>
-  getReversibleAction({
-    consumes: getStateLeafs(consumes),
-    produces: getStateLeafs(produces),
-    typeTags,
-    setIds: set,
-  });
-
-const csSetsFetcher = async ({
-  consumes,
-  produces,
-  reversible,
-  typeTags,
-}: Omit<ReactionTemplate, "set">): Promise<CSSetTree> =>
-  getCSSetsAction({
-    consumes: getStateLeafs(consumes),
-    produces: getStateLeafs(produces),
-    typeTags,
-    reversible,
-  });
-
-export const SWRReactionPicker = ({
+export const ReactionPicker = ({
   ids,
   selection,
+  options,
   editable,
   latex,
   onConsumesChange,
@@ -103,60 +58,17 @@ export const SWRReactionPicker = ({
   onTagsChange,
   onCSSetsChange,
   onReversibleChange,
-}: SWRReactionPickerProps) => {
+}: ReactionPickerProps) => {
   const [unfoldedOrgs, setUnfoldedOrgs] = useState<Set<string>>(new Set());
-  const { data: typeTags, error: tagError } = useSWRImmutable(
-    omit(selection, "typeTags"),
-    typeTagFetcher,
-    { keepPreviousData: true },
-  );
-  const { data: reversible, error: reversibleError } = useSWRImmutable(
-    omit(selection, "reversible"),
-    reversibleFetcher,
-    { keepPreviousData: true },
-  );
-  const { data: csSets, error: csSetsError } = useSWRImmutable(
-    omit(selection, "set"),
-    csSetsFetcher,
-    { keepPreviousData: true },
-  );
-
-  // NOTE: Technically this should never equate to true, as `keepPreviousData`
-  // is true and the initial state is prefetched and added to the cache.
-  if (!(typeTags && reversible && csSets)) {
-    return (
-      <div>
-        {JSON.stringify(
-          {
-            reversible: reversibleError,
-            typeTags: tagError,
-            csSets: csSetsError,
-          },
-          null,
-          2,
-        )}
-      </div>
-    );
-  }
-
   return editable
     ? (
-      <SWRReactionPickerShell
+      <ReactionPickerShell
         consumes={{
           entries: ids.consumes.map((id, index) => ({
             id,
             selected: selection.consumes[index],
-            selection: {
-              consumes: getStateLeafs(
-                selection.consumes.filter((_, j) => j !== index),
-              ),
-              produces: getStateLeafs(selection.produces),
-              typeTags: selection.typeTags,
-              reversible: selection.reversible,
-              csSets: new Set(selection.set),
-            },
+            tree: options.consumes[index],
           })),
-          process: StateProcess.Consumed,
           onAppend: onConsumesAppend,
           onRemove: onConsumesRemove,
           onUpdate: onConsumesChange,
@@ -165,40 +77,31 @@ export const SWRReactionPicker = ({
           entries: ids.produces.map((id, index) => ({
             id,
             selected: selection.produces[index],
-            selection: {
-              consumes: getStateLeafs(selection.consumes),
-              produces: getStateLeafs(
-                selection.produces.filter((_, j) => j !== index),
-              ),
-              typeTags: selection.typeTags,
-              reversible: selection.reversible,
-              csSets: new Set(selection.set),
-            },
+            tree: options.produces[index],
           })),
-          process: StateProcess.Produced,
           onAppend: onProducesAppend,
           onRemove: onProducesRemove,
           onUpdate: onProducesChange,
         }}
         reversible={{
           onChange: (value) => onReversibleChange(value as Reversible),
-          choices: reversible,
+          choices: options.reversible,
           value: selection.reversible,
         }}
         typeTags={{
-          data: typeTags,
+          data: options.typeTags,
           value: selection.typeTags,
           onChange: (newTags: Array<string>) =>
             onTagsChange(newTags as Array<ReactionTypeTag>),
         }}
         sets={{
-          data: csSets,
+          data: options.set,
           selection: new Set(selection.set),
           unfolded: unfoldedOrgs,
           onSetChecked(setId, checked) {
             const newSelectedCSSets = new Set(
               selection.set.filter((set) =>
-                Object.values(csSets).some((summ) => set in summ.sets)
+                Object.values(options.set).some((summ) => set in summ.sets)
               ),
             );
 
@@ -211,11 +114,11 @@ export const SWRReactionPicker = ({
           onOrganizationChecked(id, checked) {
             const newSelectedCSSets = new Set(
               selection.set.filter((set) =>
-                Object.values(csSets).some((summ) => set in summ.sets)
+                Object.values(options.set).some((summ) => set in summ.sets)
               ),
             );
 
-            Object.keys(csSets[id].sets).forEach((setId) => {
+            Object.keys(options.set[id].sets).forEach((setId) => {
               checked
                 ? newSelectedCSSets.add(setId)
                 : newSelectedCSSets.delete(setId);
