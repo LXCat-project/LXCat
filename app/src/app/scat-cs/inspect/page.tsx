@@ -4,12 +4,12 @@
 
 // import { GetServerSideProps, NextPage } from "next";
 
+import { formatReference } from "@/citation/cite";
 import { db } from "@lxcat/database";
 import { LTPMixture } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
-import { formatReference } from "@/citation/cite";
-import { IdsSchema } from "../ids-schema";
+import { PlotIdsSchema } from "../ids-schema";
 import { PlotPage } from "./plot-page";
 
 interface BagProps {
@@ -66,7 +66,7 @@ const fetchProps = async (
     rawIds = rawIds.split(",");
   }
 
-  const ids = IdsSchema.parse(rawIds);
+  const ids = PlotIdsSchema.parse(rawIds);
   const bag = await db().getMixtureByIds(ids);
   const hasCompleteSet = Object.values(bag.sets).some((s) => s.complete);
   const hasNonCompleteSet = Object.values(bag.sets).some((s) => !s.complete);

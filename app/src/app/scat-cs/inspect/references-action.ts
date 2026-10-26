@@ -9,7 +9,7 @@ import {
   formatReferences,
   getReferencesForSelection,
 } from "@/citation/export-references";
-import { BAG_SIZE } from "@/cs/constants";
+import { PLOT_SIZE } from "@/cs/constants";
 import { z } from "zod";
 
 export async function getReferencesForSelectionAction(
@@ -19,7 +19,7 @@ export async function getReferencesForSelectionAction(
   return formatReferences(
     referenceFormatSchema.parse(format),
     await getReferencesForSelection(
-      z.array(z.string().min(1)).min(1).max(BAG_SIZE).parse(ids),
+      z.array(z.string().min(1)).min(1).max(PLOT_SIZE).parse(ids),
     ),
   );
 }

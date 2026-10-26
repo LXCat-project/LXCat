@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { formatReference } from "@/citation/cite";
 import { annotateMixture } from "@/shared/annotate-mixture";
 import { convertMixture } from "@/shared/native-converter";
 import { db } from "@lxcat/database";
 import { LTPMixtureWithReference } from "@lxcat/schema";
 import Script from "next/script";
 import { z } from "zod";
-import { formatReference } from "@/citation/cite";
 import { mapObject } from "../../../shared/utils";
-import { IdsSchema } from "../ids-schema";
+import { PlotIdsSchema } from "../ids-schema";
 import { BolsigPage, BolsigPageProps } from "./bolsig-page";
 
 interface URLParams {
@@ -54,7 +54,7 @@ const fetchProps = async (
   }
 
   // TODO: We should probably use a context to share data between pages.
-  const ids = IdsSchema.parse(rawIds);
+  const ids = PlotIdsSchema.parse(rawIds);
 
   const mixture = await db().getMixtureByIds(ids);
 
