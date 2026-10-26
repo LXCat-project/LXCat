@@ -35,13 +35,8 @@ import {
   updateUser,
 } from "./auth/queries.js";
 import {
-  getAvailableTypeTags,
   getCSIdByReactionTemplate,
-  getCSSets,
-  getPartakingStateSelection,
-  getReversible,
   getSearchOptions,
-  getStateSelection,
 } from "./cs/picker/queries/public.js";
 import { getReactionIndex } from "./cs/picker/queries/reaction-index.js";
 import {
@@ -382,10 +377,5 @@ export class LXCatDatabase {
   // cs/picker
   public getReactionIndex = getReactionIndex;
   public getSearchOptions = getSearchOptions;
-  public getPartakingStateSelection = getPartakingStateSelection;
-  public getStateSelection = getStateSelection;
-  public getAvailableTypeTags = getAvailableTypeTags;
-  public getReversible = getReversible;
-  public getAvailableSets = getCSSets;
   public getItemIdsByReactionTemplate = getCSIdByReactionTemplate;
 }
