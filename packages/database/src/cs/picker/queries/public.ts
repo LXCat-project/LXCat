@@ -9,6 +9,7 @@ import { AqlLiteral } from "arangojs/aql";
 import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../../lxcat-database.js";
 import { getStateLeaf, StateLeaf } from "../../../shared/get-state-leaf.js";
+import { itemIds, reactionOptions } from "../facets.js";
 import {
   CSSetTree,
   NestedStateArray,
@@ -17,7 +18,6 @@ import {
   SearchOptions,
   StateProcess,
 } from "../types.js";
-import { stateArrayToTree } from "../utils.js";
 import {
   getCSSetFilterAQL,
   getReversibleFilterAQL,
@@ -30,7 +30,7 @@ import {
   getReactionsAQL,
   getStateSelectionAQL,
 } from "./generators.js";
-import { returnCSId, returnReversible, returnTypeTags } from "./return.js";
+import { returnReversible, returnTypeTags } from "./return.js";
 
 export async function getPartakingStateSelection(
   this: LXCatDatabase,
@@ -88,14 +88,13 @@ export async function getCSIdByReactionTemplate(
   reversible: Reversible,
   setIds: Array<string>,
 ) {
-  const cursor: Cursor<string> = await this.db.query(
-    getReactionsAQL(consumes, produces, returnCSId(setIds), [
-      getReversibleFilterAQL(reversible),
-      getTypeTagFilterAQL(typeTags),
-      getCSSetFilterAQL(setIds),
-    ]),
-  );
-  return await cursor.all();
+  return itemIds(await this.getReactionIndex(), {
+    consumes,
+    produces,
+    typeTags,
+    reversible,
+    setIds,
+  });
 }
 
 export async function getAvailableTypeTags(
@@ -212,87 +211,15 @@ export async function getSearchOptions(
   this: LXCatDatabase,
   templates: Array<ReactionTemplate>,
 ): Promise<SearchOptions> {
-  if (templates === undefined) {
-    return [];
-  }
-  return Promise.all(
-    templates.map(
-      async ({
-        consumes: consumesPaths,
-        produces: producesPaths,
-        reversible,
-        typeTags,
-        set,
-      }) => {
-        const consumes = consumesPaths
-          .map(getStateLeaf)
-          .filter((d): d is StateLeaf => d !== undefined);
-        const produces = producesPaths
-          .map(getStateLeaf)
-          .filter((d): d is StateLeaf => d !== undefined);
+  const index = await this.getReactionIndex();
 
-        const [
-          consumesTrees,
-          producesTrees,
-          typeTagChoices,
-          reversibleChoices,
-          setChoices,
-        ] = await Promise.all([
-          Promise.all(
-            consumesPaths.map(async (_, consumesIndex) => {
-              const array: NestedStateArray[] = await this
-                .getPartakingStateSelection(
-                  StateProcess.Consumed,
-                  consumesPaths
-                    .filter(
-                      (path, currentIndex) =>
-                        consumesIndex !== currentIndex
-                        && path.particle !== undefined,
-                    )
-                    .map(getStateLeaf) as Array<StateLeaf>,
-                  produces,
-                  typeTags,
-                  reversible,
-                  set,
-                );
-              return stateArrayToTree(array) ?? {};
-            }),
-          ),
-          Promise.all(
-            producesPaths.map(async (_, producesIndex) => {
-              const array: NestedStateArray[] = await this
-                .getPartakingStateSelection(
-                  StateProcess.Produced,
-                  consumes,
-                  producesPaths
-                    .filter(
-                      (path, currentIndex) =>
-                        producesIndex !== currentIndex
-                        && path.particle !== undefined,
-                    )
-                    .map(getStateLeaf) as Array<StateLeaf>,
-                  typeTags,
-                  reversible,
-                  set,
-                );
-              return stateArrayToTree(array) ?? {};
-            }),
-          ),
-          this.getAvailableTypeTags(consumes, produces, reversible, set).then(
-            (typeTags) => typeTags ?? [],
-          ),
-          this.getReversible(consumes, produces, typeTags, set),
-          this.getAvailableSets(consumes, produces, typeTags, reversible),
-        ]);
-
-        return {
-          consumes: consumesTrees,
-          produces: producesTrees,
-          typeTags: typeTagChoices,
-          reversible: reversibleChoices,
-          set: setChoices,
-        };
-      },
-    ),
+  return templates.map(({ consumes, produces, reversible, typeTags, set }) =>
+    reactionOptions(index, {
+      consumes: consumes.map(getStateLeaf),
+      produces: produces.map(getStateLeaf),
+      typeTags,
+      reversible,
+      setIds: set,
+    })
   );
 }
