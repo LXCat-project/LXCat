@@ -36,6 +36,8 @@ import {
 } from "./auth/queries.js";
 import {
   getCSIdByReactionTemplate,
+  getCSIdsBySet,
+  getCSMatchingIdsInSet,
   getSearchOptions,
 } from "./cs/picker/queries/public.js";
 import { getReactionIndex } from "./cs/picker/queries/reaction-index.js";
@@ -45,7 +47,13 @@ import {
   getVersionInfo as getItemVersionInfo,
   searchOwned,
 } from "./cs/queries/author-read.js";
-import { byId, byIds, csHistory, getCSHeadings } from "./cs/queries/public.js";
+import {
+  byId,
+  byIds,
+  csHistory,
+  getCSHeadings,
+  getSetHeadings,
+} from "./cs/queries/public.js";
 import {
   createCS,
   createDraftCS,
@@ -339,6 +347,7 @@ export class LXCatDatabase {
   // cs/public
   public itemHistory = csHistory;
   public getItemHeadings = getCSHeadings;
+  public getSetHeadings = getSetHeadings;
   public getItemById = byId;
 
   // write
@@ -378,4 +387,6 @@ export class LXCatDatabase {
   public getReactionIndex = getReactionIndex;
   public getSearchOptions = getSearchOptions;
   public getItemIdsByReactionTemplate = getCSIdByReactionTemplate;
+  public getItemIdsBySet = getCSIdsBySet;
+  public getMatchingItemIdsInSet = getCSMatchingIdsInSet;
 }
