@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { type ReactionTypeTag } from "@lxcat/schema/process";
-import { AqlLiteral, AqlQuery } from "arangojs/aql";
 import { StatePath } from "../../shared/get-state-leaf.js";
 import { StateTree } from "../../shared/types/state.js";
 
@@ -14,20 +13,6 @@ export interface ReactionTemplate {
   typeTags: ReactionTypeTag[];
   set: string[];
 }
-
-export interface NestedStateArray {
-  id: string;
-  latex: string;
-  valid: boolean;
-  children?: Array<NestedStateArray>;
-}
-
-export enum StateProcess {
-  Consumed = "Consumes",
-  Produced = "Produces",
-}
-
-export type ReactionFunction = (reaction: AqlLiteral) => AqlQuery;
 
 // TODO: sets can possibly be an array of objects.
 interface OrganizationSummary {
