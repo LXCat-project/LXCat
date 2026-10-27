@@ -43,6 +43,7 @@ import {
   getSearchOptions,
   getStateSelection,
 } from "./cs/picker/queries/public.js";
+import { getReactionIndex } from "./cs/picker/queries/reaction-index.js";
 import {
   byOrgAndId,
   byOwnerAndId as itemByOwnerAndId,
@@ -379,6 +380,7 @@ export class LXCatDatabase {
   public getNumItemsInSet = getNumItemsInSet;
 
   // cs/picker
+  public getReactionIndex = getReactionIndex;
   public getSearchOptions = getSearchOptions;
   public getPartakingStateSelection = getPartakingStateSelection;
   public getStateSelection = getStateSelection;

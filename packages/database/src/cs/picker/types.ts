@@ -51,3 +51,57 @@ export enum Reversible {
   False = "false",
   Both = "both",
 }
+
+export interface IndexedItem {
+  /** Id of the cross section. */
+  id: string;
+  /** Ids of the published sets that contain the cross section. */
+  sets: Array<string>;
+}
+
+export interface IndexedReaction {
+  /** Ids of the consumed states. */
+  consumes: Array<string>;
+  /** Ids of the produced states. */
+  produces: Array<string>;
+  typeTags: Array<ReactionTypeTag>;
+  reversible: boolean;
+  /** The cross sections of this reaction that are in a published set. */
+  items: Array<IndexedItem>;
+}
+
+export interface IndexedState {
+  /** The LaTeX of the state at its own level of the state tree. */
+  latex: string;
+  /** The child states that are in the index, in the order of the database. */
+  children: Array<string>;
+}
+
+export interface IndexedSet {
+  id: string;
+  name: string;
+  organizationId: string;
+  organizationName: string;
+}
+
+/**
+ * What the reaction picker needs to know about the published data.
+ *
+ * Every list has the order in which the database returns its documents,
+ * because that is the order in which the picker shows them.
+ */
+export interface ReactionIndex {
+  /** The reactions that have a cross section in a published set. */
+  reactions: Array<IndexedReaction>;
+  /** The states in the state tree, that is, up to rotational level. */
+  states: Map<string, IndexedState>;
+  /** The particles, which are the top level of the state tree. */
+  roots: Array<string>;
+  /** The parent state of every child state. */
+  parents: Map<string, string>;
+  /** The published sets, in the order of the database. */
+  sets: Array<IndexedSet>;
+}
+
+/** The deepest level of the state tree: particle, electronic, vibrational, rotational. */
+export const MAX_STATE_DEPTH = 3;
