@@ -33,6 +33,7 @@ export const SetTable = (
     <DataTable
       withTableBorder
       borderRadius="md"
+      className={classes.table}
       idAccessor="_key"
       highlightOnHover
       records={setArray}

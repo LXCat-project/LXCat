@@ -13,6 +13,8 @@ import { useState } from "react";
 import { PeriodicSearchResult } from "../../../../packages/database/dist/elements/queries";
 import { PeriodicTable } from "./periodic-table";
 
+import classes from "./set-table.module.css";
+
 export const PageClient = (
   { activeElements }: { activeElements: Set<Element> },
 ) => {
@@ -33,7 +35,8 @@ export const PageClient = (
           <DataTable
             idAccessor="_key"
             minHeight={150}
-            maxHeight={280}
+            className={classes.table}
+            scrollAreaProps={{ type: "auto" }}
             highlightOnHover
             withTableBorder
             borderRadius="sm"

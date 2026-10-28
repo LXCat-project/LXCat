@@ -72,6 +72,7 @@ export const CSTable = ({ sets, loading, loadItems }: Props) => {
   return (
     <DataTable
       withTableBorder
+      className={classes.table}
       fetching={loading}
       borderRadius="sm"
       highlightOnHover
