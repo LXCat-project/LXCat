@@ -46,6 +46,7 @@
     "setup": "bun src/cli/setup.ts",
     "seed": "bun src/cli/seed.ts",
     "make-admin": "bun src/cli/make-admin.ts",
+    "list-set-urls": "bun src/cli/list-set-urls.ts",
     "drop-database": "bun src/cli/drop-database.ts",
     "drop-non-user": "bun src/cli/drop-non-user.ts",
     "reload": "bun drop-database && bun setup && bun seed seeds/test",

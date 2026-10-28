@@ -136,6 +136,18 @@ logged in once by running following command
 bun make-admin <email of user>
 ```
 
+## List the inspect pages of an organization's sets
+
+To print the name and inspect page URL (tab separated) of every published cross
+section set of an organization, run
+
+```sh
+bun list-set-urls [--align] <base URL of the website> <organization name>
+```
+
+With `--align` (or `-a`) the tab is replaced by spaces, so that the URLs line up
+in a terminal.
+
 ## Start over
 
 > Dangerous! These commands will wipe everything in the database
