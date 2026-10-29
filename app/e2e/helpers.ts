@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type { APIRequestContext, Locator } from "@playwright/test";
+import type { APIRequestContext, Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { bearer } from "./api-tokens";
 
@@ -49,4 +49,19 @@ export async function clickUntilVisible(trigger: Locator, target: Locator) {
     }
     await expect(target).toBeVisible({ timeout: 2000 });
   }).toPass({ timeout: 20_000 });
+}
+
+/**
+ * Select the particle with the given LaTeX as a consumed species of the first
+ * reaction on the cross section search.
+ */
+export async function selectConsumed(page: Page, latex: string) {
+  const particle = page.locator(
+    `button[role="menuitem"]:has-text("${latex}")`,
+  );
+  await clickUntilVisible(
+    page.locator("[aria-controls=\"particle-select\"]").first(),
+    particle,
+  );
+  await particle.click();
 }

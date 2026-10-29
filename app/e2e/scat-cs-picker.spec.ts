@@ -105,49 +105,4 @@ test.describe("reaction picker on the cross section index page", () => {
 
     expect(requested).toEqual([[], [1], []]);
   });
-
-  test("the sets are listed with their cross sections, which load when a set is expanded", async ({ page }) => {
-    const actions: Array<string> = [];
-    page.on("request", (request) => {
-      if (request.headers()["next-action"]) {
-        actions.push(request.url());
-      }
-    });
-
-    await page.goto("/scat-cs");
-    const n2 = page.locator(
-      "button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")",
-    );
-    await clickUntilVisible(
-      page.locator("[aria-controls=\"particle-select\"]").first(),
-      n2,
-    );
-    await n2.click();
-
-    // Every set that matches is listed, with its number of cross sections.
-    await expect(page.getByText("2 cross sections in 2 sets")).toBeVisible();
-
-    // The plot link holds the ids of these two cross sections.
-    await expect(page.getByRole("link", { name: "Plot selection" }))
-      .toHaveAttribute("href", /\/scat-cs\/inspect\?ids=\d+,\d+$/);
-    const row = page.getByRole("row", { name: /Some other organization/ });
-    await expect(row).toContainText("Some other name");
-    // The cells are the database, set, number of cross sections and version.
-    await expect(row.getByRole("cell").nth(2)).toHaveText("1");
-    expect(actions).toHaveLength(1);
-
-    // The cross sections of a set are only loaded when it is expanded.
-    await expect(page.getByText("Threshold (eV)")).toHaveCount(0);
-    await row.click();
-    await expect(page.getByText("Threshold (eV)")).toBeVisible();
-    await expect(page.getByText("1–1 of 1")).toBeVisible();
-    expect(actions).toHaveLength(2);
-
-    // Expanding it again does not load anything.
-    await row.click();
-    await row.click();
-    await expect(page.getByText("Threshold (eV)")).toBeVisible();
-    await page.waitForLoadState("networkidle");
-    expect(actions).toHaveLength(2);
-  });
 });
