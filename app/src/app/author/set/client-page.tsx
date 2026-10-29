@@ -21,8 +21,6 @@ import { useState } from "react";
 import { listOwnedSetsAction } from "./actions";
 import { deleteSet, publishSet } from "./client-queries";
 
-import classes from "./link-button.module.css";
-
 interface Props {
   initialItems: KeyedSet[];
   user: User;
@@ -288,14 +286,12 @@ export const ClientPage = ({ initialItems, user }: Props) => {
         />
         <Button.Group>
           <Button
-            className={classes.linkButton}
             component={Link}
             href="/author/set/add"
           >
             Add
           </Button>
           <Button
-            className={classes.linkButton}
             variant="light"
             component={Link}
             href="/author/set/addraw"
