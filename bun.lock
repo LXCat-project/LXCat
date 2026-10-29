@@ -24,7 +24,7 @@
         "@mantine/code-highlight": "^9.7.3",
         "@mantine/core": "^9.7.3",
         "@mantine/form": "^9.7.3",
-        "@mantine/hooks": "^9.7.3",
+        "@mantine/hooks": "^9.7.4",
         "@mantine/modals": "^9.7.3",
         "@mantine/notifications": "^9.7.3",
         "@mdx-js/mdx": "^3.1.1",
@@ -612,7 +612,7 @@
 
     "@mantine/form": ["@mantine/form@9.7.3", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "fast-deep-equal": "^3.1.3", "klona": "^2.0.6" }, "peerDependencies": { "react": "^19.2.0" } }, "sha512-Y5FrEi3Tsh6kwZLEQV86MUs0HgrSIaoXPzwcRjsjRXdz067eeI55JVuPaXezTfHi00arTqIjgJbhBIJRHl4V+w=="],
 
-    "@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
+    "@mantine/hooks": ["@mantine/hooks@9.7.4", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-j6Xf9Sc1fhhGEKXg6BZA2geyP/Czqvo6Rsi0IduOCWgwl/MAAJbKRjRc7xe2+9vePLdfqLZqRIAOY5rta88uNA=="],
 
     "@mantine/modals": ["@mantine/modals@9.7.3", "", { "peerDependencies": { "@mantine/core": "9.7.3", "@mantine/hooks": "9.7.3", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-0VIKpWAhObk5WSvsYvSJMc89VL5yCU2SwxY4c6OoffqjG/5RlDYT+epIobAdrj2i5y95BDAjyA+ZIYf97QYtWw=="],
 
@@ -3081,6 +3081,16 @@
     "@istanbuljs/load-nyc-config/find-up": ["find-up@4.1.0", "", { "dependencies": { "locate-path": "^5.0.0", "path-exists": "^4.0.0" } }, "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="],
 
     "@istanbuljs/load-nyc-config/js-yaml": ["js-yaml@3.14.2", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg=="],
+
+    "@mantine/carousel/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
+
+    "@mantine/code-highlight/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
+
+    "@mantine/core/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
+
+    "@mantine/modals/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
+
+    "@mantine/notifications/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
 
     "@maplibre/maplibre-gl-style-spec/@mapbox/unitbezier": ["@mapbox/unitbezier@0.0.1", "", {}, "sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw=="],
 
