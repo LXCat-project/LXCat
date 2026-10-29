@@ -4,7 +4,6 @@
 
 import { LTPMixture } from "@lxcat/schema";
 import { aql } from "arangojs";
-import { literal } from "arangojs/aql";
 import { Cursor } from "arangojs/cursors";
 import { LXCatDatabase } from "../../lxcat-database.js";
 import { OwnedProcess } from "../../schema/process.js";
@@ -195,23 +194,6 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
   };
 }
 
-// The organization and the publication of a set `css`, for its heading.
-const setHeadingLookups = aql`
-  LET org = FIRST(
-    FOR org IN Organization
-      FILTER org._id == css.organization
-      RETURN org
-  )
-  LET ref = FIRST(
-    FOR ref IN Reference
-      FILTER ref._id == css.publishedIn
-      RETURN UNSET(ref, ["_key", "_rev", "_id"])
-  )
-`;
-const setHeading = literal(
-  `MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name }, ref ? { publishedIn: ref } : {})`,
-);
-
 /**
  * The headings of the published sets with the given ids
  * (`CrossSectionSet/<key>`), sorted by organization and name. Sets without an
@@ -226,10 +208,19 @@ export async function getSetHeadings(
     FOR css IN CrossSectionSet
       FILTER css._id IN ${setIds}
       FILTER css.versionInfo.status == "published"
-      ${setHeadingLookups}
+      LET org = FIRST(
+        FOR org IN Organization
+          FILTER org._id == css.organization
+          RETURN org
+      )
       FILTER org != null
+      LET ref = FIRST(
+        FOR ref IN Reference
+          FILTER ref._id == css.publishedIn
+          RETURN UNSET(ref, ["_key", "_rev", "_id"])
+      )
       SORT org.name, css.name, css._key
-      RETURN ${setHeading}
+      RETURN MERGE(UNSET(css, ["_key", "_rev", "_id"]), { id: css._key, organization: org.name }, ref ? { publishedIn: ref } : {})
   `);
   return await cursor.all();
 }
@@ -279,13 +270,7 @@ export async function getCSHeadings(
             {"lhs":consumes, "rhs": produces}
           )
       )
-	    LET setNames = (
-        FOR css IN OUTBOUND cs IsPartOf
-          FILTER css.versionInfo.status == "published"
-          ${setHeadingLookups}
-          RETURN ${setHeading}
-	    )
-	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs, isPartOf: setNames }
+	    RETURN { id: cs._key, reaction: reaction, threshold: cs.info.threshold, reference: refs }
 	`;
   const cursor: Cursor<CrossSectionHeading> = await this.db.query(q);
   return await cursor.all();

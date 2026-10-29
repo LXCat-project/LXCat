@@ -133,16 +133,14 @@ describe("set headings", () => {
     expect(headings.map(({ id }) => id)).toEqual(sorted.map(({ id }) => id));
   });
 
-  it("should have the shape of the sets in the cross section headings", async () => {
-    const [{ setId, itemIds }] = await db.getItemIdsBySet([
+  it("should have the key of the set as id", async () => {
+    const [{ setId }] = await db.getItemIdsBySet([
       await consuming("\\mathrm{Ar}"),
     ]);
     const [heading] = await db.getSetHeadings([setId]);
-    const [item] = await db.getItemHeadings(itemIds.slice(0, 1));
 
     expect(heading.id).toBe(setId.replace("CrossSectionSet/", ""));
     expect(typeof heading.organization).toBe("string");
-    expect(item.isPartOf).toEqual([heading]);
   });
 });
 
