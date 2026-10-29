@@ -20,7 +20,7 @@
         "@lxcat/converter": "workspace:^",
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
-        "@mantine/carousel": "^9.7.3",
+        "@mantine/carousel": "^9.7.4",
         "@mantine/code-highlight": "^9.7.4",
         "@mantine/core": "^9.7.4",
         "@mantine/form": "^9.7.4",
@@ -604,7 +604,7 @@
 
     "@lxcat/tsconfig": ["@lxcat/tsconfig@workspace:packages/tsconfig"],
 
-    "@mantine/carousel": ["@mantine/carousel@9.7.3", "", { "peerDependencies": { "@mantine/core": "9.7.3", "@mantine/hooks": "9.7.3", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-EtcWgyPUhssTEY1PDv4XBGk3piVZ9y57SZT5v/Mq2NTUjXa0vOZ7Pf1VXE9KY5MyunGWX5LtmyEyaJ3vCmlp1g=="],
+    "@mantine/carousel": ["@mantine/carousel@9.7.4", "", { "peerDependencies": { "@mantine/core": "9.7.4", "@mantine/hooks": "9.7.4", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-UAEaIl5sQvqRB30nzPXgNFsCu8m+4I5wCZKemUBEtPxFECF03HEvekBWO8yMUFp6jyjJSEguqr/y5tJm2wgpUw=="],
 
     "@mantine/code-highlight": ["@mantine/code-highlight@9.7.4", "", { "dependencies": { "clsx": "^2.1.1" }, "peerDependencies": { "@mantine/core": "9.7.4", "@mantine/hooks": "9.7.4", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-YGmJI4IwR54z5MXTaRiw/BKpF2FJno2bRnYkelbrSB+ZFerqy2625AyOFv5Ey8LbT0ggr4aft7R/+SqWvcvE2w=="],
 
@@ -3081,12 +3081,6 @@
     "@istanbuljs/load-nyc-config/find-up": ["find-up@4.1.0", "", { "dependencies": { "locate-path": "^5.0.0", "path-exists": "^4.0.0" } }, "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="],
 
     "@istanbuljs/load-nyc-config/js-yaml": ["js-yaml@3.14.2", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg=="],
-
-    "@mantine/carousel/@mantine/core": ["@mantine/core@9.7.3", "", { "dependencies": { "@floating-ui/react": "^0.27.20", "clsx": "^2.1.1", "react-number-format": "^5.4.5", "react-remove-scroll": "^2.7.2", "type-fest": "^5.10.0" }, "peerDependencies": { "@mantine/hooks": "9.7.3", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-wYJ9Bd82a7HqwJ+hubFqUIocBGMuw6txzdPnnleHvv1h0NlnkESevK/WHTRh4FtOw33B5N2ADT34s3x1/8d8jg=="],
-
-    "@mantine/carousel/@mantine/hooks": ["@mantine/hooks@9.7.3", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-GMHoMS1qul1dBLIHd/N9ef2Pr8UKYYHfuM+g2ej3gYqU0kH4sTiR9FNHksoTQi0PzATRoaNlUYjjMe9rbDRw5A=="],
-
-    "@mantine/modals/@mantine/core": ["@mantine/core@9.7.3", "", { "dependencies": { "@floating-ui/react": "^0.27.20", "clsx": "^2.1.1", "react-number-format": "^5.4.5", "react-remove-scroll": "^2.7.2", "type-fest": "^5.10.0" }, "peerDependencies": { "@mantine/hooks": "9.7.3", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-wYJ9Bd82a7HqwJ+hubFqUIocBGMuw6txzdPnnleHvv1h0NlnkESevK/WHTRh4FtOw33B5N2ADT34s3x1/8d8jg=="],
 
     "@maplibre/maplibre-gl-style-spec/@mapbox/unitbezier": ["@mapbox/unitbezier@0.0.1", "", {}, "sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw=="],
 
