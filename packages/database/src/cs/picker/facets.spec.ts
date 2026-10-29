@@ -5,7 +5,13 @@
 import { describe, expect, it } from "bun:test";
 import { StateLeaf } from "../../shared/get-state-leaf.js";
 import { StateTree } from "../../shared/types/state.js";
-import { itemIds, reactionOptions, Selection } from "./facets.js";
+import {
+  compareItemIds,
+  itemIds,
+  itemsBySet,
+  reactionOptions,
+  Selection,
+} from "./facets.js";
 import { IndexedState, ReactionIndex, Reversible } from "./types.js";
 
 const states: Record<string, IndexedState> = {
@@ -322,5 +328,99 @@ describe("reaction options with a type tag, reversibility, or set", () => {
 
   it("should select nothing for a set without cross sections", () => {
     expect(itemIds(index, selection({ setIds: ["Set/C"] }))).toEqual([]);
+  });
+});
+
+describe("items by set", () => {
+  it("should list the cross sections of every set that has any", () => {
+    // Set C has no cross sections, and CS/2 is in two sets.
+    expect(itemsBySet(index, [selection()])).toEqual([
+      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
+      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+    ]);
+  });
+
+  it("should only list the cross sections that match the selection", () => {
+    expect(itemsBySet(index, [selection({ consumes: [leaf("N2")] })]))
+      .toEqual([
+        { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
+        { setId: "Set/B", itemIds: ["CS/2"] },
+      ]);
+    expect(itemsBySet(index, [selection({ typeTags: ["Ionization"] })]))
+      .toEqual([{ setId: "Set/B", itemIds: ["CS/3"] }]);
+    expect(itemsBySet(index, [selection({ consumes: [leaf("N2", false)] })]))
+      .toEqual([]);
+  });
+
+  it("should only list the selected sets", () => {
+    expect(itemsBySet(index, [selection({ setIds: ["Set/B"] })])).toEqual([
+      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+    ]);
+    expect(
+      itemsBySet(index, [
+        selection({ consumes: [leaf("N2")], setIds: ["Set/A", "Set/B"] }),
+      ]),
+    ).toEqual([
+      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
+      { setId: "Set/B", itemIds: ["CS/2"] },
+    ]);
+  });
+
+  it("should merge the selections without duplicates", () => {
+    const n2 = selection({ consumes: [leaf("N2")] });
+    const ar = selection({ consumes: [leaf("Ar")] });
+
+    expect(itemsBySet(index, [n2, ar, n2])).toEqual([
+      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
+      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+    ]);
+    expect(itemsBySet(index, [])).toEqual([]);
+  });
+
+  it("should list the same cross sections as itemIds, in every set", () => {
+    const selected = selection({ consumes: [leaf("N2")] });
+    const listed = new Set(
+      itemsBySet(index, [selected]).flatMap(({ itemIds }) => itemIds),
+    );
+    expect([...listed].sort()).toEqual(itemIds(index, selected).sort());
+  });
+
+  it("should list a cross section once per set", () => {
+    const twice: ReactionIndex = {
+      ...index,
+      reactions: [{
+        ...index.reactions[0],
+        items: [{ id: "CS/1", sets: ["Set/A", "Set/A"] }],
+      }],
+    };
+
+    expect(itemsBySet(twice, [selection()])).toEqual([
+      { setId: "Set/A", itemIds: ["CS/1"] },
+    ]);
+  });
+
+  it("should order the cross sections of a set by key", () => {
+    const keys = ["CS/10", "CS/9", "CS/100", "CS/2", "CS/1"];
+    const many: ReactionIndex = {
+      ...index,
+      reactions: keys.map((id) => ({
+        ...index.reactions[0],
+        items: [{ id, sets: ["Set/A"] }],
+      })),
+    };
+
+    expect(itemsBySet(many, [selection()])).toEqual([
+      {
+        setId: "Set/A",
+        itemIds: ["CS/1", "CS/2", "CS/9", "CS/10", "CS/100"],
+      },
+    ]);
+    // Keys that are not numbers come after the numbers, ordered as text.
+    expect(["CS/y", "CS/10", "CS/x", "CS/9"].sort(compareItemIds)).toEqual([
+      "CS/9",
+      "CS/10",
+      "CS/x",
+      "CS/y",
+    ]);
   });
 });

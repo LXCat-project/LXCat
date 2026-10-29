@@ -390,10 +390,7 @@ describe("Selecting individual cross sections", () => {
           Reversible.Both,
           [],
         );
-        searchResults = await db.getItemHeadings(ids, {
-          count: 100,
-          offset: 0,
-        });
+        searchResults = await db.getItemHeadings(ids);
       });
 
       it("should consume e, Ar, H2, and N2", () => {
@@ -455,7 +452,7 @@ describe("Selecting individual cross sections", () => {
 
       publishedOptions = (await db.getSearchOptions(defaultOptions))[0]!;
       csIds = await getItemIdsFromTemplate(defaultOptions[0]!);
-      searchResults = await db.getItemHeadings(csIds, { offset: 0, count: 10 });
+      searchResults = await db.getItemHeadings(csIds);
     });
 
     afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));

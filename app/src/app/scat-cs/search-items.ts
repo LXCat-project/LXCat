@@ -50,9 +50,14 @@ export async function searchItems(
     ),
   );
 
-  const csIds = [...new Set(csIdsNested.flat())];
+  // The headings are in the order of the ids, which is the order of their keys.
+  const csIds = [...new Set(csIdsNested.flat())].sort((a, b) =>
+    Number(a.split("/")[1]) - Number(b.split("/")[1])
+  );
 
-  return csIds.length > 0 ? db().getItemHeadings(csIds, paging) : [];
+  return db().getItemHeadings(
+    csIds.slice(paging.offset, paging.offset + paging.count),
+  );
 }
 
 /**

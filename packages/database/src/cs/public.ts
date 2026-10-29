@@ -7,12 +7,14 @@ import { type Reaction } from "@lxcat/schema/process";
 import { SerializedSpecies } from "@lxcat/schema/species";
 import { CrossSectionSet } from "../css/collections.js";
 
+export type CrossSectionSetHeading = Omit<CrossSectionSet, "publishedIn"> & {
+  id: string;
+  publishedIn?: Reference;
+};
+
 export interface CrossSectionHeading {
   id: string;
-  isPartOf: (Omit<CrossSectionSet, "publishedIn"> & {
-    id: string;
-    publishedIn?: Reference;
-  })[];
+  isPartOf: Array<CrossSectionSetHeading>;
   reaction: Reaction<SerializedSpecies>;
   reference: Reference[];
   threshold: number;
