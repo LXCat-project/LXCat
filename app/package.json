@@ -26,7 +26,7 @@
     "@lxcat/converter": "workspace:^",
     "@lxcat/database": "workspace:^",
     "@lxcat/schema": "workspace:^",
-    "@mantine/carousel": "^9.7.3",
+    "@mantine/carousel": "^9.7.4",
     "@mantine/code-highlight": "^9.7.4",
     "@mantine/core": "^9.7.4",
     "@mantine/form": "^9.7.4",
