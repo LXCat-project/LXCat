@@ -4,9 +4,9 @@
 
 import classes from "./cs-table.module.css";
 
-import type { MatchingSet } from "@/app/scat-cs/search-items";
 import { Reference } from "@/citation/reference";
 import { CrossSectionHeading } from "@lxcat/database/item";
+import { MatchingSet } from "@lxcat/database/item/picker";
 import { Anchor, Group, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconChevronRight } from "@tabler/icons-react";

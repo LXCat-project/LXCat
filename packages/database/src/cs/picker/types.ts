@@ -5,6 +5,7 @@
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { StatePath } from "../../shared/get-state-leaf.js";
 import { StateTree } from "../../shared/types/state.js";
+import { CrossSectionSetHeading } from "../public.js";
 
 export interface ReactionTemplate {
   consumes: StatePath[];
@@ -20,6 +21,12 @@ interface OrganizationSummary {
   sets: Record<string, string>;
 }
 export type CSSetTree = Record<string, OrganizationSummary>;
+
+/** A set that has cross sections that match a search. */
+export type MatchingSet = CrossSectionSetHeading & {
+  /** The number of cross sections in the set that match. */
+  nrItems: number;
+};
 
 export type ReactionOptions = {
   consumes: StateTree[];
@@ -38,16 +45,16 @@ export enum Reversible {
 }
 
 export interface IndexedItem {
-  /** Id of the cross section. */
-  id: string;
-  /** Ids of the published sets that contain the cross section. */
+  /** Key of the cross section. */
+  key: string;
+  /** Keys of the published sets that contain the cross section. */
   sets: Array<string>;
 }
 
 export interface IndexedReaction {
-  /** Ids of the consumed states. */
+  /** Keys of the consumed states. */
   consumes: Array<string>;
-  /** Ids of the produced states. */
+  /** Keys of the produced states. */
   produces: Array<string>;
   typeTags: Array<ReactionTypeTag>;
   reversible: boolean;
@@ -63,9 +70,9 @@ export interface IndexedState {
 }
 
 export interface IndexedSet {
-  id: string;
+  key: string;
   name: string;
-  organizationId: string;
+  organizationKey: string;
   organizationName: string;
 }
 
@@ -73,7 +80,9 @@ export interface IndexedSet {
  * What the reaction picker needs to know about the published data.
  *
  * Every list has the order in which the database returns its documents,
- * because that is the order in which the picker shows them.
+ * because that is the order in which the picker shows them. The options are
+ * records, which list keys that are integers, as the keys of ArangoDB are for
+ * now, in ascending order, so the order of an option is not that of its list.
  */
 export interface ReactionIndex {
   /** The reactions that have a cross section in a published set. */

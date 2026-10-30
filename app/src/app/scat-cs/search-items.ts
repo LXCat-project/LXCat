@@ -4,17 +4,7 @@
 
 import { PAGE_SIZE, PLOT_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
-import { CrossSectionSetHeading } from "@lxcat/database/item";
 import { ReactionOptions, ReactionTemplate } from "@lxcat/database/item/picker";
-
-const SET_PREFIX = "CrossSectionSet/";
-const ITEM_PREFIX = "CrossSection/";
-
-/** A set that has cross sections that match a search. */
-export type MatchingSet = CrossSectionSetHeading & {
-  /** The number of cross sections in the set that match. */
-  nrItems: number;
-};
 
 /** The sets that match a search, and how many cross sections match in total. */
 export type Matches = Awaited<ReturnType<typeof findMatches>>;
@@ -25,30 +15,14 @@ export type Matches = Awaited<ReturnType<typeof findMatches>>;
  * nothing are ignored.
  */
 async function findMatches(template: Array<ReactionTemplate>) {
-  const bySet = await db().getItemIdsBySet(template);
-  const headings = await db().getSetHeadings(bySet.map(({ setId }) => setId));
-
-  const counts = new Map(
-    bySet.map(({ setId, itemIds }) => [
-      setId.slice(SET_PREFIX.length),
-      itemIds.length,
-    ]),
-  );
-  const sets: Array<MatchingSet> = headings.map((heading) => ({
-    ...heading,
-    nrItems: counts.get(heading.id)!,
-  }));
-
-  const ids = [...new Set(bySet.flatMap(({ itemIds }) => itemIds))];
+  const { sets, itemKeys } = await db().getMatchingSets(template);
 
   return {
     sets,
-    total: ids.length,
+    total: itemKeys.length,
     // The keys of the cross sections, for a link to plot them, unless there
     // are too many to plot.
-    plotIds: ids.length <= PLOT_SIZE
-      ? ids.map((id) => id.slice(ITEM_PREFIX.length))
-      : null,
+    plotIds: itemKeys.length <= PLOT_SIZE ? itemKeys : null,
   };
 }
 
@@ -96,12 +70,8 @@ export async function searchSetItems(
   setKey: string,
   page: number,
 ) {
-  const ids = await db().getMatchingItemIdsInSet(
-    template,
-    `${SET_PREFIX}${setKey}`,
-  );
-
-  return db().getItemHeadings(
-    ids.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-  );
+  return db().getMatchingItemHeadingsInSet(template, setKey, {
+    offset: (page - 1) * PAGE_SIZE,
+    count: PAGE_SIZE,
+  });
 }

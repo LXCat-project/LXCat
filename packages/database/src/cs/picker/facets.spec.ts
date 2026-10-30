@@ -6,8 +6,8 @@ import { describe, expect, it } from "bun:test";
 import { StateLeaf } from "../../shared/get-state-leaf.js";
 import { StateTree } from "../../shared/types/state.js";
 import {
-  compareItemIds,
-  itemIds,
+  compareItemKeys,
+  itemKeys,
   itemsBySet,
   reactionOptions,
   Selection,
@@ -33,21 +33,21 @@ const index: ReactionIndex = {
       produces: ["e", "N2X"],
       typeTags: ["Vibrational"],
       reversible: false,
-      items: [{ id: "CS/1", sets: ["Set/A"] }],
+      items: [{ key: "1", sets: ["A"] }],
     },
     {
       consumes: ["e", "N2A"],
       produces: ["e", "N2"],
       typeTags: ["Electronic"],
       reversible: false,
-      items: [{ id: "CS/2", sets: ["Set/A", "Set/B"] }],
+      items: [{ key: "2", sets: ["A", "B"] }],
     },
     {
       consumes: ["e", "Ar"],
       produces: ["Ar+", "e"],
       typeTags: ["Ionization"],
       reversible: true,
-      items: [{ id: "CS/3", sets: ["Set/B"] }],
+      items: [{ key: "3", sets: ["B"] }],
     },
   ],
   states: new Map(Object.entries(states)),
@@ -55,21 +55,21 @@ const index: ReactionIndex = {
   parents: new Map([["N2X", "N2"], ["N2A", "N2"], ["N2Xv1", "N2X"]]),
   sets: [
     {
-      id: "Set/A",
+      key: "A",
       name: "A",
-      organizationId: "Org/1",
+      organizationKey: "1",
       organizationName: "One",
     },
     {
-      id: "Set/C",
+      key: "C",
       name: "C",
-      organizationId: "Org/1",
+      organizationKey: "1",
       organizationName: "One",
     },
     {
-      id: "Set/B",
+      key: "B",
       name: "B",
-      organizationId: "Org/2",
+      organizationKey: "2",
       organizationName: "Two",
     },
   ],
@@ -80,12 +80,12 @@ const selection = (overrides: Partial<Selection> = {}): Selection => ({
   produces: [undefined],
   typeTags: [],
   reversible: Reversible.Both,
-  setIds: [],
+  setKeys: [],
   ...overrides,
 });
 
-const leaf = (id: string, includeChildren = true): StateLeaf => ({
-  id,
+const leaf = (key: string, includeChildren = true): StateLeaf => ({
+  key,
   includeChildren,
 });
 
@@ -173,25 +173,25 @@ describe("reaction options with a selected state", () => {
       selection({ consumes: [leaf("N2")] }),
     );
     expect(options.typeTags).toEqual(["Vibrational", "Electronic"]);
-    expect(itemIds(index, selection({ consumes: [leaf("N2")] }))).toEqual([
-      "CS/1",
-      "CS/2",
+    expect(itemKeys(index, selection({ consumes: [leaf("N2")] }))).toEqual([
+      "1",
+      "2",
     ]);
   });
 
   it("should only select the state itself without children", () => {
     const exact = selection({ consumes: [leaf("N2", false)] });
-    expect(itemIds(index, exact)).toEqual([]);
+    expect(itemKeys(index, exact)).toEqual([]);
 
     const options = reactionOptions(index, exact);
     expect(options.typeTags).toEqual([]);
     expect(options.reversible).toEqual([]);
     expect(options.set).toEqual({});
 
-    expect(itemIds(index, selection({ consumes: [leaf("N2X", false)] })))
+    expect(itemKeys(index, selection({ consumes: [leaf("N2X", false)] })))
       .toEqual([]);
-    expect(itemIds(index, selection({ consumes: [leaf("N2Xv1", false)] })))
-      .toEqual(["CS/1"]);
+    expect(itemKeys(index, selection({ consumes: [leaf("N2Xv1", false)] })))
+      .toEqual(["1"]);
   });
 
   it("should leave out the selection of an entry from its own options", () => {
@@ -228,10 +228,10 @@ describe("reaction options with a selected state", () => {
       consumes: [leaf("e"), leaf("Ar")],
       produces: [leaf("Ar+"), leaf("e")],
     });
-    expect(itemIds(index, both)).toEqual(["CS/3"]);
+    expect(itemKeys(index, both)).toEqual(["3"]);
 
     const none = selection({ consumes: [leaf("N2"), leaf("Ar")] });
-    expect(itemIds(index, none)).toEqual([]);
+    expect(itemKeys(index, none)).toEqual([]);
     expect(reactionOptions(index, none).typeTags).toEqual([]);
   });
 
@@ -295,39 +295,39 @@ describe("reaction options with a type tag, reversibility, or set", () => {
       selection({ reversible: Reversible.True }),
     );
     expect(options.typeTags).toEqual(["Ionization"]);
-    expect(itemIds(index, selection({ reversible: Reversible.False })))
-      .toEqual(["CS/1", "CS/2"]);
+    expect(itemKeys(index, selection({ reversible: Reversible.False })))
+      .toEqual(["1", "2"]);
   });
 
   it("should select by any of the type tags", () => {
     expect(
-      itemIds(index, selection({ typeTags: ["Vibrational", "Ionization"] })),
-    ).toEqual(["CS/1", "CS/3"]);
+      itemKeys(index, selection({ typeTags: ["Vibrational", "Ionization"] })),
+    ).toEqual(["1", "3"]);
   });
 
   it("should select the cross sections of the selected sets", () => {
-    expect(itemIds(index, selection({ setIds: ["Set/B"] }))).toEqual([
-      "CS/2",
-      "CS/3",
+    expect(itemKeys(index, selection({ setKeys: ["B"] }))).toEqual([
+      "2",
+      "3",
     ]);
-    expect(itemIds(index, selection({ setIds: ["Set/A", "Set/B"] })))
-      .toEqual(["CS/1", "CS/2", "CS/3"]);
+    expect(itemKeys(index, selection({ setKeys: ["A", "B"] })))
+      .toEqual(["1", "2", "3"]);
     expect(
-      itemIds(
+      itemKeys(
         index,
-        selection({ consumes: [leaf("N2")], setIds: ["Set/B"] }),
+        selection({ consumes: [leaf("N2")], setKeys: ["B"] }),
       ),
-    ).toEqual(["CS/2"]);
+    ).toEqual(["2"]);
   });
 
   it("should narrow the options to the selected sets, but not the sets", () => {
-    const options = reactionOptions(index, selection({ setIds: ["Set/B"] }));
+    const options = reactionOptions(index, selection({ setKeys: ["B"] }));
     expect(options.typeTags).toEqual(["Electronic", "Ionization"]);
     expect(sets(options)).toEqual([["One", ["A"]], ["Two", ["B"]]]);
   });
 
   it("should select nothing for a set without cross sections", () => {
-    expect(itemIds(index, selection({ setIds: ["Set/C"] }))).toEqual([]);
+    expect(itemKeys(index, selection({ setKeys: ["C"] }))).toEqual([]);
   });
 });
 
@@ -335,34 +335,34 @@ describe("items by set", () => {
   it("should list the cross sections of every set that has any", () => {
     // Set C has no cross sections, and CS/2 is in two sets.
     expect(itemsBySet(index, [selection()])).toEqual([
-      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
-      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+      { setKey: "A", itemKeys: ["1", "2"] },
+      { setKey: "B", itemKeys: ["2", "3"] },
     ]);
   });
 
   it("should only list the cross sections that match the selection", () => {
     expect(itemsBySet(index, [selection({ consumes: [leaf("N2")] })]))
       .toEqual([
-        { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
-        { setId: "Set/B", itemIds: ["CS/2"] },
+        { setKey: "A", itemKeys: ["1", "2"] },
+        { setKey: "B", itemKeys: ["2"] },
       ]);
     expect(itemsBySet(index, [selection({ typeTags: ["Ionization"] })]))
-      .toEqual([{ setId: "Set/B", itemIds: ["CS/3"] }]);
+      .toEqual([{ setKey: "B", itemKeys: ["3"] }]);
     expect(itemsBySet(index, [selection({ consumes: [leaf("N2", false)] })]))
       .toEqual([]);
   });
 
   it("should only list the selected sets", () => {
-    expect(itemsBySet(index, [selection({ setIds: ["Set/B"] })])).toEqual([
-      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+    expect(itemsBySet(index, [selection({ setKeys: ["B"] })])).toEqual([
+      { setKey: "B", itemKeys: ["2", "3"] },
     ]);
     expect(
       itemsBySet(index, [
-        selection({ consumes: [leaf("N2")], setIds: ["Set/A", "Set/B"] }),
+        selection({ consumes: [leaf("N2")], setKeys: ["A", "B"] }),
       ]),
     ).toEqual([
-      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
-      { setId: "Set/B", itemIds: ["CS/2"] },
+      { setKey: "A", itemKeys: ["1", "2"] },
+      { setKey: "B", itemKeys: ["2"] },
     ]);
   });
 
@@ -371,18 +371,18 @@ describe("items by set", () => {
     const ar = selection({ consumes: [leaf("Ar")] });
 
     expect(itemsBySet(index, [n2, ar, n2])).toEqual([
-      { setId: "Set/A", itemIds: ["CS/1", "CS/2"] },
-      { setId: "Set/B", itemIds: ["CS/2", "CS/3"] },
+      { setKey: "A", itemKeys: ["1", "2"] },
+      { setKey: "B", itemKeys: ["2", "3"] },
     ]);
     expect(itemsBySet(index, [])).toEqual([]);
   });
 
-  it("should list the same cross sections as itemIds, in every set", () => {
+  it("should list the same cross sections as itemKeys, in every set", () => {
     const selected = selection({ consumes: [leaf("N2")] });
     const listed = new Set(
-      itemsBySet(index, [selected]).flatMap(({ itemIds }) => itemIds),
+      itemsBySet(index, [selected]).flatMap(({ itemKeys }) => itemKeys),
     );
-    expect([...listed].sort()).toEqual(itemIds(index, selected).sort());
+    expect([...listed].sort()).toEqual(itemKeys(index, selected).sort());
   });
 
   it("should list a cross section once per set", () => {
@@ -390,37 +390,37 @@ describe("items by set", () => {
       ...index,
       reactions: [{
         ...index.reactions[0],
-        items: [{ id: "CS/1", sets: ["Set/A", "Set/A"] }],
+        items: [{ key: "1", sets: ["A", "A"] }],
       }],
     };
 
     expect(itemsBySet(twice, [selection()])).toEqual([
-      { setId: "Set/A", itemIds: ["CS/1"] },
+      { setKey: "A", itemKeys: ["1"] },
     ]);
   });
 
   it("should order the cross sections of a set by key", () => {
-    const keys = ["CS/10", "CS/9", "CS/100", "CS/2", "CS/1"];
+    const keys = ["10", "9", "100", "2", "1"];
     const many: ReactionIndex = {
       ...index,
-      reactions: keys.map((id) => ({
+      reactions: keys.map((key) => ({
         ...index.reactions[0],
-        items: [{ id, sets: ["Set/A"] }],
+        items: [{ key, sets: ["A"] }],
       })),
     };
 
     expect(itemsBySet(many, [selection()])).toEqual([
       {
-        setId: "Set/A",
-        itemIds: ["CS/1", "CS/2", "CS/9", "CS/10", "CS/100"],
+        setKey: "A",
+        itemKeys: ["1", "2", "9", "10", "100"],
       },
     ]);
     // Keys that are not numbers come after the numbers, ordered as text.
-    expect(["CS/y", "CS/10", "CS/x", "CS/9"].sort(compareItemIds)).toEqual([
-      "CS/9",
-      "CS/10",
-      "CS/x",
-      "CS/y",
+    expect(["y", "10", "x", "9"].sort(compareItemKeys)).toEqual([
+      "9",
+      "10",
+      "x",
+      "y",
     ]);
   });
 });

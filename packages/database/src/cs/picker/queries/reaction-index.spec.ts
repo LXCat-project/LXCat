@@ -38,6 +38,23 @@ describe("reaction index", () => {
 
     afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
+    it("should hold keys, not ids", async () => {
+      const { reactions, states, roots, sets } = await db.getReactionIndex();
+      const keys = [
+        ...reactions.flatMap((reaction) => [
+          ...reaction.consumes,
+          ...reaction.produces,
+          ...reaction.items.flatMap(({ key, sets }) => [key, ...sets]),
+        ]),
+        ...states.keys(),
+        ...roots,
+        ...sets.flatMap(({ key, organizationKey }) => [key, organizationKey]),
+      ];
+
+      expect(keys.length).toBeGreaterThan(0);
+      expect(keys.filter((key) => key.includes("/"))).toEqual([]);
+    });
+
     it("should list the reactions and the sets that have cross sections", async () => {
       const index = await db.getReactionIndex();
       expect(index.reactions.length).toBeGreaterThan(0);
@@ -141,17 +158,17 @@ describe("reaction index", () => {
 
       expect(options.consumes[0]).not.toEqual({});
       const states = (tree: typeof options.consumes[0]): Array<string> =>
-        Object.entries(tree).flatMap(([id, { children }]) => [
-          id,
+        Object.entries(tree).flatMap(([key, { children }]) => [
+          key,
           ...(children ? states(children) : []),
         ]);
-      expect(states(options.consumes[0])).not.toContain("State/missing");
+      expect(states(options.consumes[0])).not.toContain("missing");
     });
   });
 
   describe("given a draft cross section in a published set, and a link that is there twice", () => {
-    let draftId: string;
-    let linkedItem: string;
+    let draftKey: string;
+    let linkedKey: string;
 
     beforeAll(async () => {
       await sampleSets4Search(db);
@@ -160,7 +177,7 @@ describe("reaction index", () => {
         aql`FOR link IN IsPartOf LIMIT 1 RETURN link`,
       )
         .then((cursor) => cursor.all());
-      linkedItem = link._from;
+      [, linkedKey] = link._from.split("/");
       await db.getDB().collection("IsPartOf").save({
         _from: link._from,
         _to: link._to,
@@ -173,9 +190,9 @@ describe("reaction index", () => {
         reaction,
         versionInfo: { status: "draft" },
       });
-      draftId = draft._id;
+      draftKey = draft._key;
       await db.getDB().collection("IsPartOf").save({
-        _from: draftId,
+        _from: draft._id,
         _to: link._to,
       });
     });
@@ -183,19 +200,19 @@ describe("reaction index", () => {
     afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
 
     it("should only have the published cross sections", async () => {
-      const ids = (await db.getReactionIndex()).reactions.flatMap(
-        ({ items }) => items.map(({ id }) => id),
+      const keys = (await db.getReactionIndex()).reactions.flatMap(
+        ({ items }) => items.map(({ key }) => key),
       );
 
-      expect(ids).toContain(linkedItem);
-      expect(ids).not.toContain(draftId);
+      expect(keys).toContain(linkedKey);
+      expect(keys).not.toContain(draftKey);
     });
 
     it("should have a set once for a cross section", async () => {
       const { reactions } = await db.getReactionIndex();
 
       const item = reactions.flatMap(({ items }) => items)
-        .find(({ id }) => id === linkedItem)!;
+        .find(({ key }) => key === linkedKey)!;
       expect(new Set(item.sets).size).toBe(item.sets.length);
       expect(item.sets).toHaveLength(1);
     });

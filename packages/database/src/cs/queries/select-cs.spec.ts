@@ -33,8 +33,8 @@ beforeAll(async () => {
 
 afterAll(async () => systemDb().dropDatabase("select-cs-test"));
 
-const getItemIdsFromTemplate = async (selection: ReactionTemplate) =>
-  db.getItemIdsByReactionTemplate(
+const getItemKeysFromTemplate = async (selection: ReactionTemplate) =>
+  db.getItemKeysByReactionTemplate(
     selection.consumes
       .map(getStateLeaf)
       .filter((leaf): leaf is StateLeaf => leaf !== undefined),
@@ -115,11 +115,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have 4 set names", () => {
-        const expected = ["H2 set", "Ar set", "He set", "N2 set"];
+        const expected = ["Ar set", "H2 set", "He set", "N2 set"];
         expect(
           Object.values(allOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          ),
+          ).sort(),
         ).toEqual(expected);
       });
     });
@@ -137,7 +137,7 @@ describe("Selecting individual cross sections", () => {
         selection[0].consumes = [{ particle }, {}];
 
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
-        searchResults = await getItemIdsFromTemplate(selection[0]!);
+        searchResults = await getItemKeysFromTemplate(selection[0]!);
       });
 
       it("first select has all consumable states", () => {
@@ -214,7 +214,7 @@ describe("Selecting individual cross sections", () => {
         selection[0].produces = [{ particle }, {}];
 
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
-        searchResults = await getItemIdsFromTemplate(selection[0]!);
+        searchResults = await getItemKeysFromTemplate(selection[0]!);
       });
 
       it("can consume e and Ar", () => {
@@ -280,7 +280,7 @@ describe("Selecting individual cross sections", () => {
         const selection: Array<ReactionTemplate> = defaultSearchTemplate();
         selection[0].typeTags = ["Ionization"];
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
-        searchResults = await getItemIdsFromTemplate(selection[0]!);
+        searchResults = await getItemKeysFromTemplate(selection[0]!);
       });
 
       it("should consume e and Ar", () => {
@@ -365,11 +365,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have 4 set names", () => {
-        const expected = ["H2 set", "Ar set", "He set", "N2 set"];
+        const expected = ["Ar set", "H2 set", "He set", "N2 set"];
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          ),
+          ).sort(),
         ).toEqual(expected);
       });
     });
@@ -383,14 +383,14 @@ describe("Selecting individual cross sections", () => {
         selection[0].typeTags = ["Effective", "Ionization"];
         reactionOptions = (await db.getSearchOptions(selection))[0]!;
 
-        const ids = await db.getItemIdsByReactionTemplate(
+        const keys = await db.getItemKeysByReactionTemplate(
           [],
           [],
           ["Effective", "Ionization"],
           Reversible.Both,
           [],
         );
-        searchResults = await db.getItemHeadings(ids);
+        searchResults = await db.getItemHeadings(keys);
       });
 
       it("should consume e, Ar, H2, and N2", () => {
@@ -427,11 +427,11 @@ describe("Selecting individual cross sections", () => {
       });
 
       it("should have 3 set names", () => {
-        const expected = ["H2 set", "Ar set", "N2 set"];
+        const expected = ["Ar set", "H2 set", "N2 set"];
         expect(
           Object.values(reactionOptions.set).flatMap((org) =>
             Object.values(org.sets)
-          ),
+          ).sort(),
         ).toEqual(expected);
       });
 
@@ -442,7 +442,7 @@ describe("Selecting individual cross sections", () => {
   });
   describe("given versioned cross section sets", () => {
     let publishedOptions: ReactionOptions;
-    let csIds: Array<string>;
+    let csKeys: Array<string>;
     let searchResults: Array<CrossSectionHeading>;
 
     beforeAll(async () => {
@@ -451,8 +451,8 @@ describe("Selecting individual cross sections", () => {
       const defaultOptions = defaultSearchTemplate();
 
       publishedOptions = (await db.getSearchOptions(defaultOptions))[0]!;
-      csIds = await getItemIdsFromTemplate(defaultOptions[0]!);
-      searchResults = await db.getItemHeadings(csIds);
+      csKeys = await getItemKeysFromTemplate(defaultOptions[0]!);
+      searchResults = await db.getItemHeadings(csKeys);
     });
 
     afterAll(async () => truncateCrossSectionSetCollections(db.getDB()));
@@ -497,7 +497,7 @@ describe("Selecting individual cross sections", () => {
     });
 
     it("should only return cross sections from published sets", async () => {
-      expect(csIds).toHaveLength(1);
+      expect(csKeys).toHaveLength(1);
       expect(searchResults).toEqual([
         {
           id: matchesId,
@@ -586,7 +586,7 @@ describe("Selecting individual cross sections", () => {
         },
       ]);
 
-      const cs = await db.getItemById(csIds[0].split("/")[1]);
+      const cs = await db.getItemById(csKeys[0]);
       expect(cs).toEqual({
         reaction: {
           rhs: [

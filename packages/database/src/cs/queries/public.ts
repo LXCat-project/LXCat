@@ -195,18 +195,17 @@ export async function byIds(this: LXCatDatabase, ids: string[]) {
 }
 
 /**
- * The headings of the published sets with the given ids
- * (`CrossSectionSet/<key>`), sorted by organization and name. Sets without an
- * organization are left out. The `id` of a heading is the key of the set, as for
- * the sets in the headings of cross sections.
+ * The headings of the published sets with the given keys, sorted by
+ * organization and name. Sets without an organization are left out. The `id` of
+ * a heading is the key of the set.
  */
 export async function getSetHeadings(
   this: LXCatDatabase,
-  setIds: Array<string>,
+  setKeys: Array<string>,
 ) {
   const cursor: Cursor<CrossSectionSetHeading> = await this.db.query(aql`
     FOR css IN CrossSectionSet
-      FILTER css._id IN ${setIds}
+      FILTER css._key IN ${setKeys}
       FILTER css.versionInfo.status == "published"
       LET org = FIRST(
         FOR org IN Organization
@@ -226,17 +225,17 @@ export async function getSetHeadings(
 }
 
 /**
- * The headings of the published cross sections with the given ids
- * (`CrossSection/<key>`), in the order of the ids. Ids of cross sections that do
- * not exist or are not published are left out.
+ * The headings of the published cross sections with the given keys, in the
+ * order of the keys. Keys of cross sections that do not exist or are not
+ * published are left out.
  */
 export async function getCSHeadings(
   this: LXCatDatabase,
-  csIds: Array<string>,
+  csKeys: Array<string>,
 ) {
   const q = aql`
-	  FOR id IN ${csIds}
-      LET cs = DOCUMENT(id)
+	  FOR key IN ${csKeys}
+      LET cs = DOCUMENT("CrossSection", key)
       FILTER cs != null
       FILTER cs.versionInfo.status == 'published'
 

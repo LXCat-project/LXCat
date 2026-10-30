@@ -36,92 +36,163 @@ const consuming = async (latex: string): Promise<ReactionTemplate> => {
   return { ...defaultSearchTemplate()[0], consumes: [{ particle }] };
 };
 
-const setNames = async (setIds: Array<string>) =>
-  (await db.getSetHeadings(setIds)).map(({ name }) => name);
+const setNames = async (setKeys: Array<string>) =>
+  (await db.getSetHeadings(setKeys)).map(({ name }) => name);
 
 describe("cross sections by set", () => {
   it("should ignore templates that select nothing", async () => {
-    expect(await db.getItemIdsBySet(defaultSearchTemplate())).toEqual([]);
+    expect(await db.getItemKeysBySet(defaultSearchTemplate())).toEqual([]);
   });
 
   it("should list the cross sections of the sets of a template", async () => {
-    const n2 = await db.getItemIdsBySet([await consuming("\\mathrm{N_{2}}")]);
+    const n2 = await db.getItemKeysBySet([await consuming("\\mathrm{N_{2}}")]);
 
     expect(n2).toHaveLength(1);
-    expect(n2[0].itemIds).toHaveLength(1);
-    expect(await setNames([n2[0].setId])).toEqual(["N2 set"]);
+    expect(n2[0].itemKeys).toHaveLength(1);
+    expect(await setNames([n2[0].setKey])).toEqual(["N2 set"]);
   });
 
   it("should merge the templates without duplicates", async () => {
     const n2 = await consuming("\\mathrm{N_{2}}");
     const ar = await consuming("\\mathrm{Ar}");
 
-    const sets = await db.getItemIdsBySet([n2, ar, n2]);
+    const sets = await db.getItemKeysBySet([n2, ar, n2]);
     expect(sets).toHaveLength(2);
-    expect(sets.every(({ itemIds }) => itemIds.length === 1)).toBe(true);
-    expect(await setNames(sets.map(({ setId }) => setId))).toEqual([
+    expect(sets.every(({ itemKeys }) => itemKeys.length === 1)).toBe(true);
+    expect(await setNames(sets.map(({ setKey }) => setKey))).toEqual([
       "Ar set",
       "N2 set",
     ]);
   });
 
   it("should only list the sets that are selected", async () => {
-    const [{ setId }] = await db.getItemIdsBySet([
+    const [{ setKey }] = await db.getItemKeysBySet([
       await consuming("\\mathrm{Ar}"),
     ]);
 
-    const template = { ...defaultSearchTemplate()[0], set: [setId] };
-    const sets = await db.getItemIdsBySet([template]);
-    expect(sets.map((set) => set.setId)).toEqual([setId]);
+    const template = { ...defaultSearchTemplate()[0], set: [setKey] };
+    const sets = await db.getItemKeysBySet([template]);
+    expect(sets.map((set) => set.setKey)).toEqual([setKey]);
   });
 });
 
 describe("cross sections in a set", () => {
   it("should list the cross sections of that set that match", async () => {
     const ar = await consuming("\\mathrm{Ar}");
-    const [{ setId, itemIds }] = await db.getItemIdsBySet([ar]);
+    const [{ setKey, itemKeys }] = await db.getItemKeysBySet([ar]);
 
-    expect(await db.getMatchingItemIdsInSet([ar], setId)).toEqual(itemIds);
+    expect(await db.getMatchingItemKeysInSet([ar], setKey)).toEqual(itemKeys);
   });
 
   it("should be empty for a set that has no match, and for nothing", async () => {
-    const [{ setId: arSet }] = await db.getItemIdsBySet([
+    const [{ setKey: arSet }] = await db.getItemKeysBySet([
       await consuming("\\mathrm{Ar}"),
     ]);
     const n2 = await consuming("\\mathrm{N_{2}}");
 
-    expect(await db.getMatchingItemIdsInSet([n2], arSet)).toEqual([]);
-    expect(await db.getMatchingItemIdsInSet(defaultSearchTemplate(), arSet))
+    expect(await db.getMatchingItemKeysInSet([n2], arSet)).toEqual([]);
+    expect(await db.getMatchingItemKeysInSet(defaultSearchTemplate(), arSet))
       .toEqual(
         [],
       );
-    expect(await db.getMatchingItemIdsInSet([], arSet)).toEqual([]);
+    expect(await db.getMatchingItemKeysInSet([], arSet)).toEqual([]);
   });
 
   it("should respect the sets that a template selects", async () => {
     const ar = await consuming("\\mathrm{Ar}");
     const n2 = await consuming("\\mathrm{N_{2}}");
-    const [{ setId: arSet }] = await db.getItemIdsBySet([ar]);
-    const [{ setId: n2Set }] = await db.getItemIdsBySet([n2]);
+    const [{ setKey: arSet }] = await db.getItemKeysBySet([ar]);
+    const [{ setKey: n2Set }] = await db.getItemKeysBySet([n2]);
 
     // Selecting only the N2 set, the Ar set has nothing that matches.
     const selecting = { ...ar, set: [n2Set] };
-    expect(await db.getMatchingItemIdsInSet([selecting], arSet)).toEqual([]);
-    expect(await db.getMatchingItemIdsInSet([{ ...ar, set: [arSet] }], arSet))
+    expect(await db.getMatchingItemKeysInSet([selecting], arSet)).toEqual([]);
+    expect(await db.getMatchingItemKeysInSet([{ ...ar, set: [arSet] }], arSet))
       .toHaveLength(1);
+  });
+});
+
+describe("matching sets", () => {
+  const allTypes = {
+    ...defaultSearchTemplate()[0],
+    typeTags: ["Effective", "Ionization"] as ReactionTemplate["typeTags"],
+  };
+
+  it("should be empty for templates that select nothing", async () => {
+    expect(await db.getMatchingSets(defaultSearchTemplate())).toEqual({
+      sets: [],
+      itemKeys: [],
+    });
+  });
+
+  it("should be the headings of the sets, with the number of matches", async () => {
+    const bySet = await db.getItemKeysBySet([allTypes]);
+    const headings = await db.getSetHeadings(bySet.map(({ setKey }) => setKey));
+    const { sets } = await db.getMatchingSets([allTypes]);
+
+    expect(sets.length).toBeGreaterThan(1);
+    expect(sets.map(({ nrItems, ...heading }) => heading)).toEqual(headings);
+    const counts = new Map(
+      bySet.map(({ setKey, itemKeys }) => [setKey, itemKeys.length]),
+    );
+    expect(sets.map(({ nrItems }) => nrItems)).toEqual(
+      headings.map(({ id }) => counts.get(id)),
+    );
+  });
+
+  it("should have the keys of the cross sections without duplicates", async () => {
+    const [ar, n2] = [
+      await consuming("\\mathrm{Ar}"),
+      await consuming("\\mathrm{N_{2}}"),
+    ];
+    const keys = (await db.getItemKeysBySet([ar, n2, ar])).flatMap((
+      { itemKeys },
+    ) => itemKeys);
+    const { itemKeys } = await db.getMatchingSets([ar, n2, ar]);
+
+    expect(itemKeys).toHaveLength(2);
+    expect(itemKeys).toEqual(keys);
+  });
+});
+
+describe("headings of the cross sections in a set", () => {
+  it("should be the page of the matching cross sections", async () => {
+    const ar = await consuming("\\mathrm{Ar}");
+    const [{ setKey, itemKeys }] = await db.getItemKeysBySet([ar]);
+    const headings = (offset: number, count: number) =>
+      db.getMatchingItemHeadingsInSet([ar], setKey, { offset, count });
+
+    expect(itemKeys).toHaveLength(1);
+    expect((await headings(0, 20)).map(({ id }) => id)).toEqual(itemKeys);
+    expect(await headings(1, 20)).toEqual([]);
+    expect(await headings(0, 0)).toEqual([]);
+  });
+
+  it("should be empty for a set that has no match", async () => {
+    const [{ setKey }] = await db.getItemKeysBySet([
+      await consuming("\\mathrm{Ar}"),
+    ]);
+
+    expect(
+      await db.getMatchingItemHeadingsInSet(
+        [await consuming("\\mathrm{N_{2}}")],
+        setKey,
+        { offset: 0, count: 20 },
+      ),
+    ).toEqual([]);
   });
 });
 
 describe("set headings", () => {
   it("should be sorted by organization and name, and leave out other sets", async () => {
-    const all = await db.getItemIdsBySet([
+    const all = await db.getItemKeysBySet([
       { ...defaultSearchTemplate()[0], typeTags: ["Effective", "Ionization"] },
     ]);
     expect(all.length).toBeGreaterThan(1);
 
     const headings = await db.getSetHeadings([
-      ...all.map(({ setId }) => setId),
-      "CrossSectionSet/does-not-exist",
+      ...all.map(({ setKey }) => setKey),
+      "does-not-exist",
     ]);
     expect(headings).toHaveLength(all.length);
 
@@ -134,59 +205,75 @@ describe("set headings", () => {
   });
 
   it("should have the key of the set as id", async () => {
-    const [{ setId }] = await db.getItemIdsBySet([
+    const [{ setKey }] = await db.getItemKeysBySet([
       await consuming("\\mathrm{Ar}"),
     ]);
-    const [heading] = await db.getSetHeadings([setId]);
+    const [heading] = await db.getSetHeadings([setKey]);
 
-    expect(heading.id).toBe(setId.replace("CrossSectionSet/", ""));
+    expect(heading.id).toBe(setKey);
     expect(typeof heading.organization).toBe("string");
   });
 });
 
 describe("cross section headings", () => {
-  const allIds = async () =>
-    (await db.getItemIdsBySet([
+  const allKeys = async () =>
+    (await db.getItemKeysBySet([
       { ...defaultSearchTemplate()[0], typeTags: ["Effective", "Ionization"] },
-    ])).flatMap(({ itemIds }) => itemIds);
+    ])).flatMap(({ itemKeys }) => itemKeys);
 
-  it("should be in the order of the ids", async () => {
-    const ids = [...new Set(await allIds())];
-    expect(ids.length).toBeGreaterThan(2);
+  it("should be in the order of the keys", async () => {
+    const itemKeys = [...new Set(await allKeys())];
+    expect(itemKeys.length).toBeGreaterThan(2);
 
-    const keys = async (ids: Array<string>) =>
-      (await db.getItemHeadings(ids)).map(({ id }) => `CrossSection/${id}`);
+    const keys = async (itemKeys: Array<string>) =>
+      (await db.getItemHeadings(itemKeys)).map(({ id }) => id);
 
-    expect(await keys(ids)).toEqual(ids);
-    expect(await keys([...ids].reverse())).toEqual([...ids].reverse());
-    expect([...await keys(ids.slice(0, 2)), ...await keys(ids.slice(2))])
-      .toEqual(ids);
+    expect(await keys(itemKeys)).toEqual(itemKeys);
+    expect(await keys([...itemKeys].reverse())).toEqual(
+      [...itemKeys].reverse(),
+    );
+    expect([
+      ...await keys(itemKeys.slice(0, 2)),
+      ...await keys(itemKeys.slice(2)),
+    ]).toEqual(itemKeys);
   });
 
-  it("should leave out ids that do not exist", async () => {
-    const [id] = await allIds();
+  it("should leave out keys that do not exist", async () => {
+    const [key] = await allKeys();
 
     expect(
-      (await db.getItemHeadings(["CrossSection/missing", id, "State/1"]))
-        .map((heading) => `CrossSection/${heading.id}`),
-    ).toEqual([id]);
+      (await db.getItemHeadings(["missing", key])).map(({ id }) => id),
+    ).toEqual([key]);
     expect(await db.getItemHeadings([])).toEqual([]);
+  });
+
+  it("should leave out keys of documents that are not cross sections", async () => {
+    const [{ setKey, itemKeys: [key] }] = await db.getItemKeysBySet([
+      await consuming("\\mathrm{Ar}"),
+    ]);
+
+    // The set is published, like the cross section, and its key is not the key
+    // of a cross section.
+    expect(await setNames([setKey])).toEqual(["Ar set"]);
+    expect(
+      (await db.getItemHeadings([setKey, key])).map(({ id }) => id),
+    ).toEqual([key]);
   });
 });
 
 describe("a set without an organization", () => {
   it("should have no heading", async () => {
-    const [{ setId }] = await db.getItemIdsBySet([
+    const [{ setKey }] = await db.getItemKeysBySet([
       await consuming("\\mathrm{N_{2}}"),
     ]);
-    expect(await setNames([setId])).toEqual(["N2 set"]);
+    expect(await setNames([setKey])).toEqual(["N2 set"]);
 
     await db.getDB().query(aql`
       FOR css IN CrossSectionSet
-        FILTER css._id == ${setId}
+        FILTER css._key == ${setKey}
         REMOVE PARSE_IDENTIFIER(css.organization).key IN Organization
     `);
 
-    expect(await db.getSetHeadings([setId])).toEqual([]);
+    expect(await db.getSetHeadings([setKey])).toEqual([]);
   });
 });
