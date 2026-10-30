@@ -216,8 +216,10 @@ test.describe("/author/set/add", () => {
       await page.locator("button:has-text(\"Submit\")").click();
 
       // The production build words this "Invalid input", `next dev` "Too small".
+      // The name and the commit message. The contributor is not empty, as the
+      // form starts with the first organization of the user.
       const warning = page.getByText(/Invalid input|Too small/);
-      await expect(warning).toHaveCount(3);
+      await expect(warning).toHaveCount(2);
     });
   });
 
