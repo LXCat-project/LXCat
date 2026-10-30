@@ -27,6 +27,26 @@ export type SetOperationError =
 
 export type SetOperationResult<T> = Result<T, SetOperationError>;
 
+const nameTaken = (doc: EditedLTPDocument): SetOperationError => ({
+  status: 400,
+  json: [
+    `A dataset with name ${doc.name} already exists for ${doc.contributor}.`,
+  ],
+});
+
+/**
+ * Translate a database error, 1210 means that a unique index is violated. That
+ * index only catches sets of the same version, so this is a fallback for the
+ * check with `isSetNameTaken`, for example when two saves race.
+ */
+const databaseError = (
+  error: any,
+  doc: EditedLTPDocument,
+): SetOperationError =>
+  error.errorNum === 1210
+    ? nameTaken(doc)
+    : { status: 400, json: [error.message] };
+
 export async function createSet(
   user: SetUser,
   doc: EditedLTPDocument,
@@ -43,18 +63,14 @@ export async function createSet(
     });
   }
 
+  if (await db().isSetNameTaken(doc.contributor, doc.name)) {
+    return err(nameTaken(doc));
+  }
+
   try {
     return ok({ id: await db().createSet(doc, "draft", 1, message) });
   } catch (error: any) {
-    if (error.errorNum === 1210) {
-      return err({
-        status: 400,
-        json: [
-          `A dataset with name ${doc.name} already exists for ${doc.contributor}.`,
-        ],
-      });
-    }
-    return err({ status: 400, json: [error.message] });
+    return err(databaseError(error, doc));
   }
 }
 
@@ -79,11 +95,15 @@ export async function updateSet(
     });
   }
 
+  if (await db().isSetNameTaken(doc.contributor, doc.name, id)) {
+    return err(nameTaken(doc));
+  }
+
   try {
     return ok({ id: await db().updateSet(id, doc, message) });
   } catch (error: any) {
     console.error(error);
-    return err({ status: 400, json: [error.message] });
+    return err(databaseError(error, doc));
   }
 }
 

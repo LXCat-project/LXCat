@@ -17,6 +17,7 @@ import {
   Loader,
   Stack,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import {
   IconAlertCircle,
   IconCalculator,
@@ -71,6 +72,26 @@ const downloadFile = (
   element.remove();
 };
 
+/** Download the content, or tell the user that it could not be produced. */
+const download = async (
+  failure: string,
+  fileName: string,
+  content: () => Promise<string>,
+) => {
+  let text;
+  try {
+    text = await content();
+  } catch {
+    notifications.show({
+      color: "red",
+      title: failure,
+      message: "Try again, or select fewer cross sections.",
+    });
+    return;
+  }
+  downloadFile(text, fileName);
+};
+
 const NUM_LINES_INIT = 5;
 
 export const PlotPageClient = (
@@ -107,12 +128,14 @@ export const PlotPageClient = (
   const idsString = processes.map(({ info: { _key: id } }) => id).join(",");
 
   const downloadReferences = async (format: keyof typeof referenceFileNames) =>
-    downloadFile(
-      await getReferencesForSelectionAction(
-        format,
-        processes.map(({ info: { _key: id } }) => id),
-      ),
+    download(
+      "Could not download the references",
       referenceFileNames[format],
+      () =>
+        getReferencesForSelectionAction(
+          format,
+          processes.map(({ info: { _key: id } }) => id),
+        ),
     );
 
   // The compute button should only be available when every process is either
@@ -166,10 +189,11 @@ export const PlotPageClient = (
                     icon: <IconCodeDots stroke={1.5} />,
                   }, {
                     text: "Plaintext",
-                    link: async () =>
-                      downloadFile(
-                        await toLegacyAction(data),
+                    link: () =>
+                      download(
+                        "Could not download the data",
                         "lxcat-data.txt",
+                        () => toLegacyAction(data),
                       ),
                     icon: <IconFileText stroke={1.5} />,
                   }]}

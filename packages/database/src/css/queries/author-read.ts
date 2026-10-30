@@ -153,3 +153,38 @@ export async function getVersionInfo(this: LXCatDatabase, key: string) {
     info !== undefined ? VersionInfo.parse(info) : undefined
   );
 }
+
+/**
+ * Checks whether a current (draft or published) set of the organization has
+ * this name. The versions of the set with key `ownKey` do not count, so that
+ * a set can keep its name. The unique index of the collection cannot do this,
+ * because it includes the version, and a new version of a set never collides
+ * with the version of another set.
+ */
+export async function isSetNameTaken(
+  this: LXCatDatabase,
+  organization: string,
+  name: string,
+  ownKey?: string,
+) {
+  const organizationId = await this.getOrganizationByName(organization);
+  if (organizationId === undefined) {
+    return false;
+  }
+
+  const cursor: Cursor<string> = await this.db.query(aql`
+    LET own = ${ownKey === undefined ? [] : [`CrossSectionSet/${ownKey}`]}
+    LET versions = FLATTEN(
+      FOR start IN own
+        RETURN (FOR v IN 0..9999999 ANY start CrossSectionSetHistory RETURN v._id)
+    )
+    FOR css IN CrossSectionSet
+      FILTER css.organization == ${organizationId}
+      FILTER css.name == ${name}
+      FILTER css.versionInfo.status IN ['draft', 'published']
+      FILTER css._id NOT IN versions
+      LIMIT 1
+      RETURN css._key
+  `);
+  return cursor.hasNext;
+}
