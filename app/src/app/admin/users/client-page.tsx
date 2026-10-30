@@ -90,7 +90,6 @@ export const AdminUsersClient: NextPage<Props> = ({
             render: (user) => (
               <Group gap="xs">
                 {Role.options
-                  .filter((r) => r !== "download")
                   .map((r) => (
                     <Checkbox
                       key={r}

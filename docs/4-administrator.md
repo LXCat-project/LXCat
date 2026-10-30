@@ -27,6 +27,7 @@ Available roles:
   dataset are member of the same organization.
 - **developer**, Can generate an API token and use the API endpoints as described in
   the [developer](5-developer) documentation.
+- **publisher**, Can publish and retract sets.
 
 ## How to let a new user edit an existing data set?
 
