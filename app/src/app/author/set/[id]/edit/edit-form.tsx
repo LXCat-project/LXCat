@@ -18,11 +18,11 @@ import {
   Space,
   Stack,
   Tabs,
-  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
 import { createFormContext } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { createSetAction, updateSetAction } from "../../actions";
@@ -65,8 +65,6 @@ export const EditForm = (
     string | null
   >(null);
 
-  const [submitMessage, setSubmitMessage] = useState<string>();
-
   const speciesMap = useMemo(
     () =>
       Object.fromEntries(
@@ -96,22 +94,55 @@ export const EditForm = (
       <form
         style={{ margin: 10 }}
         onSubmit={form.onSubmit(async (formData) => {
-          const result = formData.set._key
-            ? await updateSetAction(
-              formData.set._key,
-              formData.set,
-              formData.commitMessage,
-            )
-            : await createSetAction(formData.set, formData.commitMessage);
+          notifications.clean();
 
-          if (result.ok) {
-            const { id } = result.value;
-            form.setFieldValue("set._key", id);
-            setSubmitMessage(`Saved set with id ${id}.`);
-            window.history.pushState(null, "", `/author/set/${id}/edit`);
+          let result;
+          try {
+            result = formData.set._key
+              ? await updateSetAction(
+                formData.set._key,
+                formData.set,
+                formData.commitMessage,
+              )
+              : await createSetAction(formData.set, formData.commitMessage);
+          } catch (error) {
+            // The text of an error thrown by an action is not sent to the
+            // browser in production, so we can only describe the likely causes.
+            console.error(error);
+            notifications.show({
+              color: "red",
+              title: "Could not save the set",
+              message:
+                "The set was probably not saved. Reload the page and try again, and check that you are still signed in as an author. Your edits are still in the form, copy them first if you are unsure.",
+              autoClose: false,
+            });
+            return;
           }
-          // TODO: Handle user feedback.
-          console.log(result);
+
+          if (!result.ok) {
+            notifications.show({
+              color: "red",
+              title: "Could not save the set",
+              message: (
+                <>
+                  {result.error.map((message, index) => (
+                    <div key={index}>{message}</div>
+                  ))}
+                </>
+              ),
+              autoClose: false,
+            });
+            return;
+          }
+
+          const { id } = result.value;
+          form.setFieldValue("set._key", id);
+          window.history.pushState(null, "", `/author/set/${id}/edit`);
+          notifications.show({
+            color: "teal",
+            title: "Set saved",
+            message: `Saved set with id ${id}.`,
+          });
         })}
       >
         <Tabs
@@ -254,10 +285,7 @@ export const EditForm = (
             {...getInputProps("commitMessage")}
           />
           <Group>
-            <Button type="submit">Submit</Button>
-            <Text>
-              {submitMessage}
-            </Text>
+            <Button type="submit" loading={form.submitting}>Submit</Button>
           </Group>
         </Stack>
       </form>

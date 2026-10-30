@@ -72,6 +72,7 @@ import {
   byOwnerAndId,
   getVersionInfo as getSetVersionInfo,
   isOwnerOfSet,
+  isSetNameTaken,
   listOwnedSets,
 } from "./css/queries/author-read.js";
 import {
@@ -368,6 +369,7 @@ export class LXCatDatabase {
   // css/author_read
   public listOwnedSets = listOwnedSets;
   public isOwnerOfSet = isOwnerOfSet;
+  public isSetNameTaken = isSetNameTaken;
   public getSetByOwnerAndId = byOwnerAndId;
   public getSetVersionInfo = getSetVersionInfo;
 
