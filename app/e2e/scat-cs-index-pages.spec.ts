@@ -147,6 +147,22 @@ test.describe("cross section inspect page", () => {
     await expect(rows.nth(1)).toBeChecked();
   });
 
+  test("should deselect all processes with the header checkbox when some are selected", async ({ page }) => {
+    const table = page.locator("table:has(thead div:text(\"Reaction\"))");
+    const header = table.getByRole("checkbox", { name: "Select all records" });
+    const rows = table.locator("tbody").getByRole("checkbox");
+
+    await rows.nth(0).click();
+    await expect(header).not.toBeChecked();
+    await expect(header).toHaveJSProperty("indeterminate", true);
+
+    // Instead of selecting the process that is left out.
+    await header.click();
+    await expect(rows.nth(0)).not.toBeChecked();
+    await expect(rows.nth(1)).not.toBeChecked();
+    await expect(header).toHaveJSProperty("indeterminate", false);
+  });
+
   test("should have 2 items", async ({ page }) => {
     const table = page.locator("table:has(thead div:text(\"Reaction\"))");
     const secondCrossSection = table.locator("tbody tr").nth(1);
