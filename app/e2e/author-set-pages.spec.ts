@@ -52,3 +52,31 @@ test("only members of the organization of a set can open its editors", async ({ 
     await rootDb().stripAffiliations(userKey);
   }
 });
+
+test("a new set gets the only organization of the user as contributor", async ({ page, request }) => {
+  const organization = "Single organization";
+  const userKey = await joinOrganizations(ADMIN_EMAIL, organization);
+
+  try {
+    await page.goto("/author/set/add");
+    // The contributor is not touched, the select already shows the only
+    // organization.
+    await expect(page.getByLabel("Contributor")).toHaveValue(organization);
+    await page.getByLabel("Name *").fill("Set without contributor choice");
+    await page.getByPlaceholder("Describe which changes have").fill("Add.");
+    await page.getByRole("button", { name: "Submit" }).click();
+    await expect(page.getByText("Saved set with id")).toBeVisible();
+
+    const listed =
+      await (await request.get("/api/author/scat-css", { headers: bearer() }))
+        .json();
+    expect(listed.items).toEqual([
+      expect.objectContaining({
+        name: "Set without contributor choice",
+        organization,
+      }),
+    ]);
+  } finally {
+    await rootDb().stripAffiliations(userKey);
+  }
+});

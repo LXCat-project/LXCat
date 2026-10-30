@@ -16,10 +16,12 @@ const AddSetPage = async () => {
     return <Unauthorized />;
   }
 
+  const organizations = await db().getAffiliations(session.user.email);
+
   return (
     <EditForm
-      initialSet={emptySet()}
-      organizations={await db().getAffiliations(session.user.email)}
+      initialSet={emptySet(organizations[0]?.name)}
+      organizations={organizations}
     />
   );
 };
