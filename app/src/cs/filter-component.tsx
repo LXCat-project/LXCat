@@ -211,18 +211,4 @@ export const FilterComponent = ({
       ))}
     </Stack>
   );
-  {
-    /*<div>
-            Examples:{" "}
-            <Button
-              variant="subtle"
-              onClick={() => {
-                // TODO get reaction for Ar from db
-                onSelectionChange([]);
-              }}
-            >
-              Argon
-            </Button>
-          </div>*/
-  }
 };
