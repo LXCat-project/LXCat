@@ -34,6 +34,7 @@ export const SetTable = (
       withTableBorder
       borderRadius="md"
       idAccessor="_key"
+      className={classes.table}
       highlightOnHover
       records={setArray}
       columns={[

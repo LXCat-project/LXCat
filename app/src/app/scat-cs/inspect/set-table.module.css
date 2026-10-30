@@ -4,6 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+.table {
+  :global(.mantine-ScrollArea-viewport) {
+    max-height: 300px;
+  }
+}
+
 .nested {
   padding: 10px;
   background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));

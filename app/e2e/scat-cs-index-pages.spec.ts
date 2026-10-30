@@ -163,6 +163,15 @@ test.describe("cross section inspect page", () => {
     await expect(header).toHaveJSProperty("indeterminate", false);
   });
 
+  test("should limit the height of the table of sets", async ({ page }) => {
+    const viewport = page.locator(
+      ".mantine-datatable:has(th:has-text(\"Set name\"))",
+    )
+      .locator(".mantine-ScrollArea-viewport");
+
+    await expect(viewport).toHaveCSS("max-height", "300px");
+  });
+
   test("should have 2 items", async ({ page }) => {
     const table = page.locator("table:has(thead div:text(\"Reaction\"))");
     const secondCrossSection = table.locator("tbody tr").nth(1);
