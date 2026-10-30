@@ -35,9 +35,9 @@ import {
   updateUser,
 } from "./auth/queries.js";
 import {
-  getCSIdByReactionTemplate,
-  getCSIdsBySet,
-  getCSMatchingIdsInSet,
+  getCSKeysByReactionTemplate,
+  getCSKeysBySet,
+  getCSMatchingKeysInSet,
   getSearchOptions,
 } from "./cs/picker/queries/public.js";
 import { getReactionIndex } from "./cs/picker/queries/reaction-index.js";
@@ -386,7 +386,7 @@ export class LXCatDatabase {
   // cs/picker
   public getReactionIndex = getReactionIndex;
   public getSearchOptions = getSearchOptions;
-  public getItemIdsByReactionTemplate = getCSIdByReactionTemplate;
-  public getItemIdsBySet = getCSIdsBySet;
-  public getMatchingItemIdsInSet = getCSMatchingIdsInSet;
+  public getItemKeysByReactionTemplate = getCSKeysByReactionTemplate;
+  public getItemKeysBySet = getCSKeysBySet;
+  public getMatchingItemKeysInSet = getCSMatchingKeysInSet;
 }

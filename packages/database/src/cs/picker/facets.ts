@@ -25,21 +25,21 @@ export interface Selection {
   produces: Array<StateLeaf | undefined>;
   typeTags: Array<ReactionTypeTag>;
   reversible: Reversible;
-  setIds: Array<string>;
+  setKeys: Array<string>;
 }
 
-/** Whether `state` is `id`, or when `includeChildren` is set, below it. */
+/** Whether `state` is `key`, or when `includeChildren` is set, below it. */
 const isSelected = (
   index: ReactionIndex,
   state: string,
-  { id, includeChildren }: StateLeaf,
+  { key, includeChildren }: StateLeaf,
 ) => {
   for (
     let current: string | undefined = state;
     current !== undefined;
     current = includeChildren ? index.parents.get(current) : undefined
   ) {
-    if (current === id) return true;
+    if (current === key) return true;
   }
   return false;
 };
@@ -63,7 +63,7 @@ class Matcher {
 
   constructor(
     private readonly index: ReactionIndex,
-    { consumes, produces, typeTags, reversible, setIds }: Selection,
+    { consumes, produces, typeTags, reversible, setKeys }: Selection,
   ) {
     const reactions = index.reactions;
 
@@ -95,12 +95,14 @@ class Matcher {
         (reaction) => reaction.reversible === value,
       );
     }
-    if (setIds.length > 0) {
-      const wanted = new Set(setIds);
+    if (setKeys.length > 0) {
+      const wanted = new Set(setKeys);
       this.sets = this.constrain(
         reactions,
         (reaction) =>
-          reaction.items.some((item) => item.sets.some((id) => wanted.has(id))),
+          reaction.items.some((item) =>
+            item.sets.some((key) => wanted.has(key))
+          ),
       );
     }
   }
@@ -145,11 +147,11 @@ function stateTree(
   states: Set<string>,
   ignored: Set<string>,
 ): StateTree {
-  const summarize = (id: string, depth: number): StateSummary | undefined => {
-    if (ignored.has(id)) return undefined;
+  const summarize = (key: string, depth: number): StateSummary | undefined => {
+    if (ignored.has(key)) return undefined;
 
-    const { latex, children } = index.states.get(id)!;
-    const valid = states.has(id);
+    const { latex, children } = index.states.get(key)!;
+    const valid = states.has(key);
 
     if (depth === MAX_STATE_DEPTH) {
       return valid ? { latex, valid } : undefined;
@@ -199,10 +201,10 @@ const setChoices = (
 
   const tree: CSSetTree = {};
   for (const set of index.sets) {
-    if (!available.has(set.id)) continue;
+    if (!available.has(set.key)) continue;
 
-    tree[set.organizationId] ??= { name: set.organizationName, sets: {} };
-    tree[set.organizationId].sets[set.id] = set.name;
+    tree[set.organizationKey] ??= { name: set.organizationName, sets: {} };
+    tree[set.organizationKey].sets[set.key] = set.name;
   }
   return tree;
 };
@@ -222,7 +224,7 @@ export function reactionOptions(
     const states = new Set(reactions.flatMap((reaction) => reaction[side]));
     const ignored = new Set(
       selection[side].flatMap((leaf, other) =>
-        leaf && other !== slot ? [leaf.id] : []
+        leaf && other !== slot ? [leaf.key] : []
       ),
     );
     return stateTree(index, states, ignored);
@@ -238,43 +240,40 @@ export function reactionOptions(
 }
 
 /**
- * The ids of the cross sections that match the selection.
+ * The keys of the cross sections that match the selection.
  *
  * A cross section matches when its reaction does, and, if sets are selected,
  * when it is in one of them.
  */
-export function itemIds(index: ReactionIndex, selection: Selection) {
-  const wanted = new Set(selection.setIds);
+export function itemKeys(index: ReactionIndex, selection: Selection) {
+  const wanted = new Set(selection.setKeys);
 
   return new Matcher(index, selection).match().flatMap(({ items }) =>
     items
       .filter(({ sets }) =>
-        wanted.size === 0 || sets.some((id) => wanted.has(id))
+        wanted.size === 0 || sets.some((key) => wanted.has(key))
       )
-      .map(({ id }) => id)
+      .map(({ key }) => key)
   );
 }
 
-const itemKey = (id: string) => id.slice(id.indexOf("/") + 1);
-
 /**
- * Orders the ids of cross sections (`CrossSection/<key>`) by their key, which
- * is the order in which they were loaded.
+ * Orders the keys of cross sections, which is the order in which they were
+ * loaded.
  */
-export function compareItemIds(a: string, b: string) {
-  const [x, y] = [itemKey(a), itemKey(b)];
-  const difference = Number(x) - Number(y);
+export function compareItemKeys(a: string, b: string) {
+  const difference = Number(a) - Number(b);
 
   return Number.isNaN(difference) || difference === 0
-    ? (x < y ? -1 : x > y ? 1 : 0)
+    ? (a < b ? -1 : a > b ? 1 : 0)
     : difference;
 }
 
 /**
- * The ids of the cross sections that match any of the selections, for each set
+ * The keys of the cross sections that match any of the selections, for each set
  * that has any, in the order of the sets in the index.
  *
- * The ids of a set are unique, and ordered as `compareItemIds` does. A cross
+ * The keys of a set are unique, and ordered as `compareItemKeys` does. A cross
  * section that is in several sets is listed in each of them. If a selection
  * has selected sets, it only matches cross sections in those sets.
  */
@@ -285,25 +284,25 @@ export function itemsBySet(
   const items = new Map<string, Set<string>>();
 
   for (const selection of selections) {
-    const wanted = new Set(selection.setIds);
+    const wanted = new Set(selection.setKeys);
 
     for (const reaction of new Matcher(index, selection).match()) {
-      for (const { id, sets } of reaction.items) {
+      for (const { key, sets } of reaction.items) {
         for (const set of sets) {
           if (wanted.size > 0 && !wanted.has(set)) continue;
 
-          const ids = items.get(set) ?? new Set<string>();
-          ids.add(id);
-          items.set(set, ids);
+          const keys = items.get(set) ?? new Set<string>();
+          keys.add(key);
+          items.set(set, keys);
         }
       }
     }
   }
 
-  return index.sets.flatMap(({ id: setId }) => {
-    const ids = items.get(setId);
-    return ids === undefined
+  return index.sets.flatMap(({ key: setKey }) => {
+    const keys = items.get(setKey);
+    return keys === undefined
       ? []
-      : [{ setId, itemIds: [...ids].sort(compareItemIds) }];
+      : [{ setKey, itemKeys: [...keys].sort(compareItemKeys) }];
   });
 }

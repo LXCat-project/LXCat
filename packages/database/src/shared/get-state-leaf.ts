@@ -16,7 +16,7 @@ export interface StatePath {
  * Represents a leaf node in the state hierarchy.
  */
 export interface StateLeaf {
-  id: string;
+  key: string;
   includeChildren: boolean;
 }
 
@@ -36,25 +36,25 @@ export const getStateLeaf = ({
 }: StatePath): StateLeaf | undefined => {
   if (!particle) return undefined;
 
-  if (!electronic) return { id: particle, includeChildren: true };
+  if (!electronic) return { key: particle, includeChildren: true };
 
   if (electronic === OMIT_CHILDREN_KEY) {
-    return { id: particle, includeChildren: false };
+    return { key: particle, includeChildren: false };
   }
 
-  if (!vibrational) return { id: electronic, includeChildren: true };
+  if (!vibrational) return { key: electronic, includeChildren: true };
 
   if (vibrational === OMIT_CHILDREN_KEY) {
-    return { id: electronic, includeChildren: false };
+    return { key: electronic, includeChildren: false };
   }
 
-  if (!rotational) return { id: vibrational, includeChildren: true };
+  if (!rotational) return { key: vibrational, includeChildren: true };
 
   if (rotational === OMIT_CHILDREN_KEY) {
-    return { id: vibrational, includeChildren: false };
+    return { key: vibrational, includeChildren: false };
   }
 
-  return { id: rotational, includeChildren: false };
+  return { key: rotational, includeChildren: false };
 };
 
 /**
@@ -64,4 +64,6 @@ export const getStateLeaf = ({
  * @returns An array of StateLeaf objects extracted from the input entries.
  */
 export const getStateLeafs = (entries: Array<StatePath>): Array<StateLeaf> =>
-  entries.map(getStateLeaf).filter((id): id is StateLeaf => id !== undefined);
+  entries.map(getStateLeaf).filter((leaf): leaf is StateLeaf =>
+    leaf !== undefined
+  );

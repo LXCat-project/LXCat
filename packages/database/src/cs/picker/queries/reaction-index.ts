@@ -15,7 +15,7 @@ import {
 } from "../types.js";
 
 type StateRow = {
-  id: string;
+  key: string;
   isRoot: boolean;
   /** The LaTeX of this state at each level of the state tree. */
   latex: Array<string | null>;
@@ -40,22 +40,22 @@ async function buildReactionIndex(
             LET sets = (
               FOR css IN OUTBOUND cs IsPartOf
                 FILTER css.versionInfo.status == "published"
-                RETURN DISTINCT css._id
+                RETURN DISTINCT css._key
             )
             FILTER LENGTH(sets) > 0
-            RETURN { id: cs._id, sets }
+            RETURN { key: cs._key, sets }
         )
         FILTER LENGTH(items) > 0
         RETURN {
           consumes: (
             FOR state IN OUTBOUND reaction Consumes
               FILTER state != null
-              RETURN state._id
+              RETURN state._key
           ),
           produces: (
             FOR state IN OUTBOUND reaction Produces
               FILTER state != null
-              RETURN state._id
+              RETURN state._key
           ),
           typeTags: reaction.typeTags,
           reversible: reaction.reversible,
@@ -65,7 +65,7 @@ async function buildReactionIndex(
     all<StateRow>(aql`
       FOR state IN State
         RETURN {
-          id: state._id,
+          key: state._key,
           isRoot: NOT HAS(state.detailed, "electronic"),
           latex: [
             state.serialized.latex,
@@ -73,7 +73,7 @@ async function buildReactionIndex(
             state.serialized.electronic.vibrational.latex,
             state.serialized.electronic.vibrational.rotational.latex
           ],
-          children: (FOR child IN OUTBOUND state HasDirectSubstate RETURN child._id)
+          children: (FOR child IN OUTBOUND state HasDirectSubstate RETURN child._key)
         }
     `),
     all<IndexedSet>(aql`
@@ -86,21 +86,21 @@ async function buildReactionIndex(
         )
         FILTER org != null
         RETURN {
-          id: css._id,
+          key: css._key,
           name: css.name,
-          organizationId: org._id,
+          organizationKey: org._key,
           organizationName: org.name
         }
     `),
   ]);
 
-  const rows = new Map(stateRows.map((row) => [row.id, row]));
+  const rows = new Map(stateRows.map((row) => [row.key, row]));
   const states = new Map<string, IndexedState>();
   const parents = new Map<string, string>();
   const roots: Array<string> = [];
 
-  const add = (id: string, depth: number) => {
-    const row = rows.get(id)!;
+  const add = (key: string, depth: number) => {
+    const row = rows.get(key)!;
 
     // An edge can point to a state that does not exist, for example while a
     // set is being deleted. Such a child is not part of the tree.
@@ -108,18 +108,18 @@ async function buildReactionIndex(
       (child): child is string => child !== null && rows.has(child),
     );
 
-    states.set(id, { latex: row.latex[depth] ?? "", children });
+    states.set(key, { latex: row.latex[depth] ?? "", children });
     if (depth < MAX_STATE_DEPTH) {
       for (const child of children) {
-        parents.set(child, id);
+        parents.set(child, key);
         add(child, depth + 1);
       }
     }
   };
-  for (const { id, isRoot } of stateRows) {
+  for (const { key, isRoot } of stateRows) {
     if (isRoot) {
-      roots.push(id);
-      add(id, 0);
+      roots.push(key);
+      add(key, 0);
     }
   }
 
