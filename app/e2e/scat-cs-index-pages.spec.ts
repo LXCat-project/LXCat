@@ -128,6 +128,25 @@ test.describe("cross section inspect page", () => {
     await expect(canvas).toBeVisible();
   });
 
+  test("should select and deselect all processes with the header checkbox", async ({ page }) => {
+    const table = page.locator("table:has(thead div:text(\"Reaction\"))");
+    const header = table.getByRole("checkbox", { name: "Select all records" });
+    const rows = table.locator("tbody").getByRole("checkbox");
+
+    // Both processes are selected initially.
+    await expect(header).toBeChecked();
+
+    await header.click();
+    await expect(header).not.toBeChecked();
+    await expect(rows.nth(0)).not.toBeChecked();
+    await expect(rows.nth(1)).not.toBeChecked();
+
+    await header.click();
+    await expect(header).toBeChecked();
+    await expect(rows.nth(0)).toBeChecked();
+    await expect(rows.nth(1)).toBeChecked();
+  });
+
   test("should have 2 items", async ({ page }) => {
     const table = page.locator("table:has(thead div:text(\"Reaction\"))");
     const secondCrossSection = table.locator("tbody tr").nth(1);

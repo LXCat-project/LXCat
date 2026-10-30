@@ -17,10 +17,12 @@ import {
 import { IconEye, IconEyeClosed, IconSearch } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useMemo, useState } from "react";
+import { PAGE_SIZE } from "../../../cs/constants";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
 import classes from "./process-table.module.css";
+import { toggleAll } from "./selection";
 
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
@@ -81,6 +83,7 @@ export const ProcessTable = (
 ) => {
   const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
   const [expanded, setExpanded] = useState<Array<string>>([]);
+  const [page, setPage] = useState(1);
 
   const [records, availableTags] = useMemo(() => {
     const records = processes.filter((process) => {
@@ -97,6 +100,16 @@ export const ProcessTable = (
     ];
   }, [processes, selectedTags]);
 
+  const pageRecords = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // The header checkbox is about all the records that match the filters, not
+  // only the ones on the current page.
+  const nrSelected = useMemo(() => {
+    const selectedKeys = new Set(selected.map(({ info: { _key } }) => _key));
+    return records.filter(({ info: { _key } }) => selectedKeys.has(_key))
+      .length;
+  }, [records, selected]);
+
   return (
     <DataTable
       withTableBorder
@@ -104,7 +117,14 @@ export const ProcessTable = (
       borderRadius="md"
       idAccessor="info._key"
       className={classes.table}
-      records={records}
+      records={pageRecords}
+      totalRecords={records.length}
+      recordsPerPage={PAGE_SIZE}
+      page={page}
+      onPageChange={setPage}
+      paginationSize="sm"
+      paginationText={({ from, to, totalRecords }) =>
+        `${from}–${to} of ${totalRecords}`}
       rowExpansion={{
         allowMultiple: true,
         expandable: ({ record: { info: { comments } } }) =>
@@ -141,7 +161,10 @@ export const ProcessTable = (
               description="Show all processes that are of one of the selected types"
               data={availableTags}
               value={selectedTags}
-              onChange={setSelectedTags}
+              onChange={(tags) => {
+                setSelectedTags(tags);
+                setPage(1);
+              }}
               leftSection={<IconSearch size={16} />}
               clearable
               searchable
@@ -192,6 +215,13 @@ export const ProcessTable = (
       ]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
+      allRecordsSelectionCheckboxProps={{
+        "aria-label": "Select all records",
+        checked: records.length > 0 && nrSelected === records.length,
+        indeterminate: nrSelected > 0 && nrSelected < records.length,
+        onChange: () =>
+          onChangeSelected(toggleAll(processes, records, selected)),
+      }}
       getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
         color: colorMap.get(_key),
         className: classes.checkbox,
