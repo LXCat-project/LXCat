@@ -6,7 +6,7 @@ import { NewLTPDocument } from "@lxcat/schema";
 import { readFile } from "fs/promises";
 import { expect, test } from "playwright-test-coverage";
 import { seedDir } from "./global-setup";
-import { clickUntilVisible } from "./helpers";
+import { selectConsumed } from "./helpers";
 import { rootDb } from "./root-db";
 
 const ORGANIZATION = "Large set organization";
@@ -36,14 +36,7 @@ test("the cross sections of a set with many cross sections are paged", async ({ 
   await rootDb().createSet(doc);
 
   await page.goto("/scat-cs");
-  const n2 = page.locator(
-    "button[role=\"menuitem\"]:has-text(\"\\mathrm{N_{2}}\")",
-  );
-  await clickUntilVisible(
-    page.locator("[aria-controls=\"particle-select\"]").first(),
-    n2,
-  );
-  await n2.click();
+  await selectConsumed(page, "\\mathrm{N_{2}}");
 
   const row = page.getByRole("row", { name: /Large set/ });
   await expect(row).toContainText(String(CROSS_SECTIONS));
