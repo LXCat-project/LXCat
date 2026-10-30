@@ -5,6 +5,7 @@
 export { defaultReactionTemplate, defaultSearchTemplate } from "./default.js";
 export {
   type CSSetTree,
+  type MatchingSet,
   type ReactionOptions,
   type ReactionTemplate,
   Reversible,

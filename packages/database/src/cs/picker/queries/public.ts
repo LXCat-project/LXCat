@@ -5,8 +5,14 @@
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { LXCatDatabase } from "../../../lxcat-database.js";
 import { getStateLeaf, StateLeaf } from "../../../shared/get-state-leaf.js";
+import { PagingOptions } from "../../../shared/types/search.js";
 import { itemKeys, itemsBySet, reactionOptions, Selection } from "../facets.js";
-import { ReactionTemplate, Reversible, SearchOptions } from "../types.js";
+import {
+  MatchingSet,
+  ReactionTemplate,
+  Reversible,
+  SearchOptions,
+} from "../types.js";
 
 export async function getCSKeysByReactionTemplate(
   this: LXCatDatabase,
@@ -95,4 +101,46 @@ export async function getCSMatchingKeysInSet(
 
   return itemsBySet(await this.getReactionIndex(), selections)
     .find((set) => set.setKey === setKey)?.itemKeys ?? [];
+}
+
+/**
+ * The published sets that have cross sections matching any of the reaction
+ * templates, with the number of cross sections that match in each, and the
+ * keys of all cross sections that match, without duplicates. The sets are
+ * sorted as `getSetHeadings` sorts them.
+ */
+export async function getMatchingSets(
+  this: LXCatDatabase,
+  templates: Array<ReactionTemplate>,
+) {
+  const bySet = await this.getItemKeysBySet(templates);
+  const headings = await this.getSetHeadings(bySet.map(({ setKey }) => setKey));
+
+  const counts = new Map(
+    bySet.map(({ setKey, itemKeys }) => [setKey, itemKeys.length]),
+  );
+  const sets: Array<MatchingSet> = headings.map((heading) => ({
+    ...heading,
+    nrItems: counts.get(heading.id)!,
+  }));
+
+  const itemKeys = [...new Set(bySet.flatMap(({ itemKeys }) => itemKeys))];
+
+  return { sets, itemKeys };
+}
+
+/**
+ * The headings of a page of the cross sections of the set with key `setKey`
+ * that match any of the reaction templates, in the order of
+ * `getMatchingItemKeysInSet`.
+ */
+export async function getMatchingItemHeadingsInSet(
+  this: LXCatDatabase,
+  templates: Array<ReactionTemplate>,
+  setKey: string,
+  { offset, count }: PagingOptions,
+) {
+  const keys = await this.getMatchingItemKeysInSet(templates, setKey);
+
+  return this.getItemHeadings(keys.slice(offset, offset + count));
 }

@@ -38,6 +38,8 @@ import {
   getCSKeysByReactionTemplate,
   getCSKeysBySet,
   getCSMatchingKeysInSet,
+  getMatchingItemHeadingsInSet,
+  getMatchingSets,
   getSearchOptions,
 } from "./cs/picker/queries/public.js";
 import { getReactionIndex } from "./cs/picker/queries/reaction-index.js";
@@ -389,4 +391,6 @@ export class LXCatDatabase {
   public getItemKeysByReactionTemplate = getCSKeysByReactionTemplate;
   public getItemKeysBySet = getCSKeysBySet;
   public getMatchingItemKeysInSet = getCSMatchingKeysInSet;
+  public getMatchingSets = getMatchingSets;
+  public getMatchingItemHeadingsInSet = getMatchingItemHeadingsInSet;
 }

@@ -4,14 +4,7 @@
 
 import { PAGE_SIZE, PLOT_SIZE } from "@/cs/constants";
 import { db } from "@lxcat/database";
-import { CrossSectionSetHeading } from "@lxcat/database/item";
 import { ReactionOptions, ReactionTemplate } from "@lxcat/database/item/picker";
-
-/** A set that has cross sections that match a search. */
-export type MatchingSet = CrossSectionSetHeading & {
-  /** The number of cross sections in the set that match. */
-  nrItems: number;
-};
 
 /** The sets that match a search, and how many cross sections match in total. */
 export type Matches = Awaited<ReturnType<typeof findMatches>>;
@@ -22,25 +15,14 @@ export type Matches = Awaited<ReturnType<typeof findMatches>>;
  * nothing are ignored.
  */
 async function findMatches(template: Array<ReactionTemplate>) {
-  const bySet = await db().getItemKeysBySet(template);
-  const headings = await db().getSetHeadings(bySet.map(({ setKey }) => setKey));
-
-  const counts = new Map(
-    bySet.map(({ setKey, itemKeys }) => [setKey, itemKeys.length]),
-  );
-  const sets: Array<MatchingSet> = headings.map((heading) => ({
-    ...heading,
-    nrItems: counts.get(heading.id)!,
-  }));
-
-  const keys = [...new Set(bySet.flatMap(({ itemKeys }) => itemKeys))];
+  const { sets, itemKeys } = await db().getMatchingSets(template);
 
   return {
     sets,
-    total: keys.length,
+    total: itemKeys.length,
     // The keys of the cross sections, for a link to plot them, unless there
     // are too many to plot.
-    plotIds: keys.length <= PLOT_SIZE ? keys : null,
+    plotIds: itemKeys.length <= PLOT_SIZE ? itemKeys : null,
   };
 }
 
@@ -88,9 +70,8 @@ export async function searchSetItems(
   setKey: string,
   page: number,
 ) {
-  const keys = await db().getMatchingItemKeysInSet(template, setKey);
-
-  return db().getItemHeadings(
-    keys.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-  );
+  return db().getMatchingItemHeadingsInSet(template, setKey, {
+    offset: (page - 1) * PAGE_SIZE,
+    count: PAGE_SIZE,
+  });
 }

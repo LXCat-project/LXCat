@@ -5,6 +5,7 @@
 import { type ReactionTypeTag } from "@lxcat/schema/process";
 import { StatePath } from "../../shared/get-state-leaf.js";
 import { StateTree } from "../../shared/types/state.js";
+import { CrossSectionSetHeading } from "../public.js";
 
 export interface ReactionTemplate {
   consumes: StatePath[];
@@ -20,6 +21,12 @@ interface OrganizationSummary {
   sets: Record<string, string>;
 }
 export type CSSetTree = Record<string, OrganizationSummary>;
+
+/** A set that has cross sections that match a search. */
+export type MatchingSet = CrossSectionSetHeading & {
+  /** The number of cross sections in the set that match. */
+  nrItems: number;
+};
 
 export type ReactionOptions = {
   consumes: StateTree[];
