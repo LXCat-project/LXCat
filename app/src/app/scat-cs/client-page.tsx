@@ -169,7 +169,6 @@ export const CSClient: NextPage<Props> = ({
                     component={Link}
                     href={`/scat-cs/inspect?ids=${plotIds.join(",")}`}
                     leftSection={<IconGraph />}
-                    style={{ textDecorationLine: "none" }}
                     variant="light"
                   >
                     Plot selection

@@ -85,9 +85,3 @@
     transform: rotate(180deg);
   }
 }
-
-.item {
-  @mixin hover {
-    text-decoration-line: none;
-  }
-}

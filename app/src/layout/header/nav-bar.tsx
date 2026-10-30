@@ -64,7 +64,6 @@ const NavMenu = (
               key={item.href}
               component={Link}
               href={item.href}
-              className={classes.item}
               leftSection={
                 <ThemeIcon variant="light" size={32}>
                   <item.icon size="1.1rem" stroke={1.5} />
