@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { DataTable } from "mantine-datatable";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PAGE_SIZE } from "./constants";
 import { ReactionSummary } from "./reaction-summary";
 
@@ -44,18 +44,28 @@ export const CSTable = ({ sets, loading, loadItems }: Props) => {
   const [pages, setPages] = useState<Record<string, number>>({});
   // The cross sections that were loaded, by set and page.
   const [items, setItems] = useState<Record<string, Page>>({});
+  // The pages that are loaded or being loaded. This is not state, because a
+  // handler has to see a request that an earlier handler made in the same
+  // render, while its response is not in `items` yet.
+  const requested = useRef(new Set<string>());
   const router = useRouter();
 
   const pageOf = (setKey: string) => pages[setKey] ?? 1;
 
+  // The page of a set is the one that was asked for last, also when it fails
+  // to load. The set collapses then, and expanding it loads that page again.
   const load = async (setKey: string, page: number) => {
     setPages((pages) => ({ ...pages, [setKey]: page }));
-    if (pageKey(setKey, page) in items) return;
+
+    const key = pageKey(setKey, page);
+    if (requested.current.has(key)) return;
+    requested.current.add(key);
 
     try {
       const loaded = await loadItems(setKey, page);
-      setItems((items) => ({ ...items, [pageKey(setKey, page)]: loaded }));
+      setItems((items) => ({ ...items, [key]: loaded }));
     } catch {
+      requested.current.delete(key);
       setExpandedSets((ids) => ids.filter((id) => id !== setKey));
       notifications.show({
         color: "red",
