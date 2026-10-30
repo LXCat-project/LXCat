@@ -26,20 +26,12 @@ describe("toggleAll", () => {
     ]);
   });
 
-  test("selects every shown process when some are selected", () => {
-    expect(keys(toggleAll(processes, [b, c, d], [c]))).toEqual([
-      "b",
-      "c",
-      "d",
-    ]);
+  test("deselects the shown processes when some are selected", () => {
+    expect(keys(toggleAll(processes, [b, c, d], [c, e]))).toEqual(["e"]);
   });
 
   test("keeps the selected processes that are hidden", () => {
-    expect(keys(toggleAll(processes, [b, c], [a, c]))).toEqual([
-      "a",
-      "b",
-      "c",
-    ]);
+    expect(keys(toggleAll(processes, [b, c], [a]))).toEqual(["a", "b", "c"]);
   });
 
   test("follows the order of the processes", () => {
