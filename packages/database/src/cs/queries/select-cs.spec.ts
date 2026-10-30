@@ -583,21 +583,6 @@ describe("Selecting individual cross sections", () => {
           },
           threshold: 0,
           reference: [],
-          isPartOf: [
-            {
-              complete: false,
-              description: "Some description",
-              id: matchesId,
-              name: "H2 set",
-              organization: "Some published organization",
-              // publishedIn: null,
-              versionInfo: {
-                createdOn: expect.any(String),
-                status: "published",
-                version: 1,
-              },
-            },
-          ],
         },
       ]);
 

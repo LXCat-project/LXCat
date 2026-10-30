@@ -14,7 +14,6 @@ export type CrossSectionSetHeading = Omit<CrossSectionSet, "publishedIn"> & {
 
 export interface CrossSectionHeading {
   id: string;
-  isPartOf: Array<CrossSectionSetHeading>;
   reaction: Reaction<SerializedSpecies>;
   reference: Reference[];
   threshold: number;
