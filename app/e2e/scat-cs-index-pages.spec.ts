@@ -172,6 +172,30 @@ test.describe("cross section inspect page", () => {
     await expect(viewport).toHaveCSS("max-height", "300px");
   });
 
+  test("should filter the processes on database and set", async ({ page }) => {
+    const table = page.locator("table:has(thead div:text(\"Reaction\"))");
+    const rows = table.locator("tbody tr");
+    const filterOf = (column: string) =>
+      table.locator("th", { hasText: column }).locator(
+        ".mantine-datatable-header-cell-filter-action-icon",
+      );
+    await expect(rows).toHaveCount(2);
+
+    await filterOf("Database").click();
+    await page.getByRole("combobox", { name: "Databases" }).click();
+    await page.getByRole("option", { name: "Some other organization" })
+      .click();
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toContainText("Some other organization");
+    await expect(filterOf("Database")).toHaveAttribute("data-active", "true");
+    await page.keyboard.press("Escape");
+
+    // The sets that are left are those of the chosen database.
+    await filterOf("Set").click();
+    await page.getByRole("combobox", { name: "Sets" }).click();
+    await expect(page.getByRole("option")).toHaveCount(1);
+  });
+
   test("should have 2 items", async ({ page }) => {
     const table = page.locator("table:has(thead div:text(\"Reaction\"))");
     const secondCrossSection = table.locator("tbody tr").nth(1);

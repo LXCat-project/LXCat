@@ -11,6 +11,6 @@ export type DenormalizedProcess = {
   reaction: Reaction<SerializedSpecies>;
   info: CrossSectionInfo<ReferenceRef<string>> & {
     _key: string;
-    isPartOf: Array<SetHeader<Contributor>>;
+    isPartOf: Array<SetHeader<Contributor> & { _key: string }>;
   };
 };
