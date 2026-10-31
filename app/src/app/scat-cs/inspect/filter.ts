@@ -113,10 +113,9 @@ export const filterOptions = (
 
   const groups = new Map<string, Array<SetOption>>();
   sets.forEach(({ name, organization }, key) => {
-    groups.set(organization, [
-      ...groups.get(organization) ?? [],
-      { value: key, label: `${name} (${organization})`, name },
-    ]);
+    const items = groups.get(organization) ?? [];
+    items.push({ value: key, label: `${name} (${organization})`, name });
+    groups.set(organization, items);
   });
 
   return {
