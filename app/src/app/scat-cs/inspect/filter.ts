@@ -29,38 +29,41 @@ export type FilterOptions = {
   >;
 };
 
-// A process matches when any of its values is selected. The database and the
-// set are not those of the first set only, as a process can be in several.
-const matchers: {
-  [Key in keyof ProcessFilters]: (
-    process: DenormalizedProcess,
-    values: Array<string>,
-  ) => boolean;
-} = {
-  tags: ({ reaction }, values) =>
-    reaction.typeTags.some((tag) => values.includes(tag)),
-  organizations: ({ info }, values) =>
-    info.isPartOf.some(({ contributor }) => values.includes(contributor.name)),
-  sets: ({ info }, values) =>
-    info.isPartOf.some(({ _key }) => values.includes(_key)),
-};
+type SetFilter = "organizations" | "sets";
+type ProcessSet = DenormalizedProcess["info"]["isPartOf"][number];
 
-/** Whether a process matches the filters, except the one that is skipped. */
-const matches = (
-  process: DenormalizedProcess,
-  filters: ProcessFilters,
-  skip?: keyof ProcessFilters,
+// A process or a set matches a filter when any of its values is selected.
+const matchesTags = (
+  { reaction }: DenormalizedProcess,
+  { tags }: ProcessFilters,
+) => tags.length === 0 || reaction.typeTags.some((tag) => tags.includes(tag));
+
+/** Whether a set matches the filters, except the one that is skipped. */
+const setMatches = (
+  { _key, contributor }: ProcessSet,
+  { organizations, sets }: ProcessFilters,
+  skip?: SetFilter,
 ) =>
-  (Object.keys(matchers) as Array<keyof ProcessFilters>).every((key) =>
-    key === skip
-    || filters[key].length === 0
-    || matchers[key](process, filters[key])
-  );
+  (skip === "organizations" || organizations.length === 0
+    || organizations.includes(contributor.name))
+  && (skip === "sets" || sets.length === 0 || sets.includes(_key));
+
+/**
+ * Whether a process is in a set that matches the filters. The database and the
+ * set have to match for the same set, as a process can be in several sets.
+ */
+const matchesSets = (
+  { info }: DenormalizedProcess,
+  filters: ProcessFilters,
+) => info.isPartOf.some((set) => setMatches(set, filters));
 
 export const filterProcesses = (
   processes: Array<DenormalizedProcess>,
   filters: ProcessFilters,
-) => processes.filter((process) => matches(process, filters));
+) =>
+  processes.filter((process) =>
+    matchesTags(process, filters) && matchesSets(process, filters)
+  );
 
 /**
  * The values to choose from in each filter. These are the values of the
@@ -71,33 +74,37 @@ export const filterOptions = (
   processes: Array<DenormalizedProcess>,
   filters: ProcessFilters,
 ): FilterOptions => {
-  const matching = (skip: keyof ProcessFilters) =>
-    processes.filter((process) => matches(process, filters, skip));
-
   const tags = new Set(filters.tags);
-  matching("tags").forEach(({ reaction }) =>
-    reaction.typeTags.forEach((tag) => tags.add(tag))
-  );
+  processes
+    .filter((process) => matchesSets(process, filters))
+    .forEach(({ reaction }) =>
+      reaction.typeTags.forEach((tag) => tags.add(tag))
+    );
+
+  // The sets of the processes that match the type filter, which are offered
+  // when they match the filter of the other column.
+  const typed = processes.filter((process) => matchesTags(process, filters));
+  const setsMatching = (skip: SetFilter) =>
+    typed.flatMap(({ info }) =>
+      info.isPartOf.filter((set) => setMatches(set, filters, skip))
+    );
 
   const organizations = new Set(filters.organizations);
-  matching("organizations").forEach(({ info }) =>
-    info.isPartOf.forEach(({ contributor }) =>
-      organizations.add(contributor.name)
-    )
+  setsMatching("organizations").forEach(({ contributor }) =>
+    organizations.add(contributor.name)
   );
 
   // The sets that are chosen already can belong to processes that the other
   // filters hide, so their names are looked up in all processes.
   const sets = new Map<string, { name: string; organization: string }>();
-  const addSets = (process: DenormalizedProcess, only?: Array<string>) =>
-    process.info.isPartOf.forEach(({ _key, name, contributor }) => {
-      if (!only || only.includes(_key)) {
-        sets.set(_key, { name, organization: contributor.name });
-      }
-    });
-  matching("sets").forEach((process) => addSets(process));
+  const addSet = ({ _key, name, contributor }: ProcessSet) =>
+    sets.set(_key, { name, organization: contributor.name });
+  setsMatching("sets").forEach(addSet);
   if (filters.sets.length > 0) {
-    processes.forEach((process) => addSets(process, filters.sets));
+    processes
+      .flatMap(({ info }) => info.isPartOf)
+      .filter(({ _key }) => filters.sets.includes(_key))
+      .forEach(addSet);
   }
 
   const groups = new Map<string, Array<{ value: string; label: string }>>();

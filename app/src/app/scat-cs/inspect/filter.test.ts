@@ -69,6 +69,13 @@ describe("filterProcesses", () => {
     };
     expect(keys(filterProcesses(processes, filters))).toEqual(["d"]);
   });
+
+  test("matches the database and the set of the same set", () => {
+    // Process d is in s1 of Org A and in s3 of Org B, but not in a set of Org
+    // A that is s3.
+    const filters = { ...noFilters, organizations: ["Org A"], sets: ["s3"] };
+    expect(keys(filterProcesses(processes, filters))).toEqual([]);
+  });
 });
 
 describe("filterOptions", () => {
@@ -99,6 +106,24 @@ describe("filterOptions", () => {
     expect(options.organizations).toEqual(["Org A"]);
     expect(options.sets.map(({ items }) => items.map(({ value }) => value)))
       .toEqual([["s1", "s2"]]);
+  });
+
+  test("lists the sets of the chosen databases only", () => {
+    const filters = { ...noFilters, organizations: ["Org A"] };
+    expect(filterOptions(processes, filters).sets).toEqual([
+      {
+        group: "Org A",
+        items: [{ value: "s1", label: "Set 1" }, {
+          value: "s2",
+          label: "Set 2",
+        }],
+      },
+    ]);
+  });
+
+  test("lists the databases of the chosen sets only", () => {
+    const filters = { ...noFilters, sets: ["s3"] };
+    expect(filterOptions(processes, filters).organizations).toEqual(["Org B"]);
   });
 
   test("keeps the chosen values that the other filters hide", () => {
