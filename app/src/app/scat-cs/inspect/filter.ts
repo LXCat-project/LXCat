@@ -69,17 +69,18 @@ export const filterProcesses = (
  * The values to choose from in each filter. These are the values of the
  * processes that match the filters of the other columns, so that a choice
  * always leaves something to show, plus the values that are chosen already.
+ * Those come last, so that an option does not move when it is chosen.
  */
 export const filterOptions = (
   processes: Array<DenormalizedProcess>,
   filters: ProcessFilters,
 ): FilterOptions => {
-  const tags = new Set(filters.tags);
-  processes
-    .filter((process) => matchesSets(process, filters))
-    .forEach(({ reaction }) =>
-      reaction.typeTags.forEach((tag) => tags.add(tag))
-    );
+  const tags = new Set([
+    ...processes
+      .filter((process) => matchesSets(process, filters))
+      .flatMap(({ reaction }) => reaction.typeTags),
+    ...filters.tags,
+  ]);
 
   // The sets of the processes that match the type filter, which are offered
   // when they match the filter of the other column.
@@ -89,10 +90,10 @@ export const filterOptions = (
       info.isPartOf.filter((set) => setMatches(set, filters, skip))
     );
 
-  const organizations = new Set(filters.organizations);
-  setsMatching("organizations").forEach(({ contributor }) =>
-    organizations.add(contributor.name)
-  );
+  const organizations = new Set([
+    ...setsMatching("organizations").map(({ contributor }) => contributor.name),
+    ...filters.organizations,
+  ]);
 
   // The sets that are chosen already can belong to processes that the other
   // filters hide, so their names are looked up in all processes.

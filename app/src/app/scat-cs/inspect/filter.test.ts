@@ -126,6 +126,19 @@ describe("filterOptions", () => {
     expect(filterOptions(processes, filters).organizations).toEqual(["Org B"]);
   });
 
+  test("keeps the chosen values in their place", () => {
+    const filters = { ...noFilters, tags: ["Ionization"] };
+    expect(filterOptions(processes, filters).tags).toEqual([
+      "Elastic",
+      "Effective",
+      "Ionization",
+    ]);
+    expect(
+      filterOptions(processes, { ...noFilters, organizations: ["Org B"] })
+        .organizations,
+    ).toEqual(["Org A", "Org B"]);
+  });
+
   test("keeps the chosen values that the other filters hide", () => {
     const filters = { tags: ["Elastic"], organizations: [], sets: ["s3"] };
     expect(filterOptions(processes, filters).sets).toEqual([
