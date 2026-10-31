@@ -193,7 +193,17 @@ test.describe("cross section inspect page", () => {
     // The sets that are left are those of the chosen database.
     await filterOf("Set").click();
     await page.getByRole("combobox", { name: "Sets" }).click();
-    await expect(page.getByRole("option")).toHaveCount(1);
+    const options = page.getByRole("listbox", { name: "Sets" });
+    await expect(options.getByRole("option")).toHaveText(["Some other name"]);
+    await expect(options.getByRole("group")).toHaveText(
+      [/^Some other organization/],
+    );
+
+    // The chosen set shows its database, as the names of sets are not unique.
+    await options.getByRole("option").click();
+    await expect(
+      page.getByText("Some other name (Some other organization)"),
+    ).toBeVisible();
   });
 
   test("should have 2 items", async ({ page }) => {
