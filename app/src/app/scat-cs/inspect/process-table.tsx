@@ -6,6 +6,8 @@ import { ReferenceRef } from "@lxcat/schema/reference";
 import {
   ActionIcon,
   Box,
+  CheckIcon,
+  Combobox,
   Group,
   HoverCard,
   List,
@@ -98,6 +100,18 @@ export const ProcessTable = (
   const options = useMemo(
     () => filterOptions(processes, filters),
     [processes, filters],
+  );
+  // The options of the sets are grouped by database, so they only show the
+  // name of the set, while their label, of the chosen ones and for the search,
+  // also has the database.
+  const setNames = useMemo(
+    () =>
+      new Map(
+        options.sets.flatMap(({ items }) =>
+          items.map(({ value, name }) => [value, name])
+        ),
+      ),
+    [options.sets],
   );
 
   const changeFilter =
@@ -208,6 +222,16 @@ export const ProcessTable = (
               data={options.sets}
               value={filters.sets}
               onChange={changeFilter("sets")}
+              renderOption={({ option, checked }) => (
+                <>
+                  {checked && (
+                    <CheckIcon
+                      className={Combobox.classes.optionsDropdownCheckIcon}
+                    />
+                  )}
+                  <span>{setNames.get(option.value)}</span>
+                </>
+              )}
               leftSection={<IconSearch size={16} />}
               clearable
               searchable

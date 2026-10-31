@@ -26,6 +26,11 @@ const s1 = set("s1", "Set 1", "Org A");
 const s2 = set("s2", "Set 2", "Org A");
 const s3 = set("s3", "Set 1", "Org B");
 
+// The options of the sets in the set filter.
+const o1 = { value: "s1", label: "Set 1 (Org A)", name: "Set 1" };
+const o2 = { value: "s2", label: "Set 2 (Org A)", name: "Set 2" };
+const o3 = { value: "s3", label: "Set 1 (Org B)", name: "Set 1" };
+
 const a = process("a", ["Elastic"], [s1]);
 const b = process("b", ["Elastic", "Effective"], [s2]);
 const c = process("c", ["Ionization"], [s3]);
@@ -86,12 +91,9 @@ describe("filterOptions", () => {
       sets: [
         {
           group: "Org A",
-          items: [{ value: "s1", label: "Set 1" }, {
-            value: "s2",
-            label: "Set 2",
-          }],
+          items: [o1, o2],
         },
-        { group: "Org B", items: [{ value: "s3", label: "Set 1" }] },
+        { group: "Org B", items: [o3] },
       ],
     });
   });
@@ -113,10 +115,7 @@ describe("filterOptions", () => {
     expect(filterOptions(processes, filters).sets).toEqual([
       {
         group: "Org A",
-        items: [{ value: "s1", label: "Set 1" }, {
-          value: "s2",
-          label: "Set 2",
-        }],
+        items: [o1, o2],
       },
     ]);
   });
@@ -144,12 +143,9 @@ describe("filterOptions", () => {
     expect(filterOptions(processes, filters).sets).toEqual([
       {
         group: "Org A",
-        items: [{ value: "s1", label: "Set 1" }, {
-          value: "s2",
-          label: "Set 2",
-        }],
+        items: [o1, o2],
       },
-      { group: "Org B", items: [{ value: "s3", label: "Set 1" }] },
+      { group: "Org B", items: [o3] },
     ]);
   });
 });

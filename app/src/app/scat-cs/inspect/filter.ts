@@ -20,13 +20,16 @@ export const noFilters: ProcessFilters = {
   sets: [],
 };
 
+export type SetOption = { value: string; label: string; name: string };
+
 export type FilterOptions = {
   tags: Array<string>;
   organizations: Array<string>;
-  /** The sets, grouped by the database they are from. */
-  sets: Array<
-    { group: string; items: Array<{ value: string; label: string }> }
-  >;
+  /**
+   * The sets, grouped by the database they are from. Their label includes the
+   * database, as the names of sets are not unique.
+   */
+  sets: Array<{ group: string; items: Array<SetOption> }>;
 };
 
 type SetFilter = "organizations" | "sets";
@@ -108,11 +111,11 @@ export const filterOptions = (
       .forEach(addSet);
   }
 
-  const groups = new Map<string, Array<{ value: string; label: string }>>();
+  const groups = new Map<string, Array<SetOption>>();
   sets.forEach(({ name, organization }, key) => {
     groups.set(organization, [
       ...groups.get(organization) ?? [],
-      { value: key, label: name },
+      { value: key, label: `${name} (${organization})`, name },
     ]);
   });
 
