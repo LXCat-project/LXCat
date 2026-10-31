@@ -178,7 +178,10 @@ export const ProcessTable = (
         {
           accessor: "database",
           title: "Database",
-          render: ({ info: { isPartOf } }) => isPartOf[0].contributor.name,
+          // A process can be in several sets, which can be of one database.
+          render: ({ info: { isPartOf } }) =>
+            [...new Set(isPartOf.map(({ contributor }) => contributor.name))]
+              .join(", "),
           filter: (
             <MultiSelect
               label="Databases"
@@ -196,7 +199,8 @@ export const ProcessTable = (
         {
           accessor: "set",
           title: "Set",
-          render: ({ info: { isPartOf } }) => isPartOf[0].name,
+          render: ({ info: { isPartOf } }) =>
+            isPartOf.map(({ name }) => name).join(", "),
           filter: (
             <MultiSelect
               label="Sets"
