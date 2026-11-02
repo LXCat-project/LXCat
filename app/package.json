@@ -50,7 +50,7 @@
     "next-auth": "^4.24.15",
     "next-mdx-remote": "canary",
     "node-fetch": "^3.3.2",
-    "plotly.js-basic-dist": "^4.1.2",
+    "plotly.js-basic-dist": "^4.2.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-plotly.js": "^4.1.0",
