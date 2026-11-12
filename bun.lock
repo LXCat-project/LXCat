@@ -20,7 +20,7 @@
         "@lxcat/converter": "workspace:^",
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
-        "@mantine/carousel": "^9.7.5",
+        "@mantine/carousel": "^9.8.0",
         "@mantine/code-highlight": "^9.8.0",
         "@mantine/core": "^9.7.5",
         "@mantine/form": "^9.7.5",
@@ -606,7 +606,7 @@
 
     "@lxcat/tsconfig": ["@lxcat/tsconfig@workspace:packages/tsconfig"],
 
-    "@mantine/carousel": ["@mantine/carousel@9.7.5", "", { "peerDependencies": { "@mantine/core": "9.7.5", "@mantine/hooks": "9.7.5", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-CVIMYhddQhS355bb4fKa8S0Dml9Frpg6qfgeakhyuQzRVov49vt8Zvr1KDTV0tKs6ktV0I9x5+M87PfUOPaRVg=="],
+    "@mantine/carousel": ["@mantine/carousel@9.8.0", "", { "peerDependencies": { "@mantine/core": "9.8.0", "@mantine/hooks": "9.8.0", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-MnEmwms5EZ3W6ClIjc+Ya8MntUNLxnAOk2XEyYyk8DBzyFcE+ijr+IaMcbiPnf/e75Zij2FT+lFf43X23oIRvg=="],
 
     "@mantine/code-highlight": ["@mantine/code-highlight@9.8.0", "", { "dependencies": { "clsx": "^2.1.1", "diff": "^9.0.0" }, "peerDependencies": { "@mantine/core": "9.8.0", "@mantine/hooks": "9.8.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-hX980oBYyUdR5/FkIG3sgE0QEMxgXUMKktHZPNWii+xQ+3WBh0gnNbddaJcMcHBVD5+WDOY+UT+Y3XwMwIxcQA=="],
 
@@ -3085,10 +3085,6 @@
     "@istanbuljs/load-nyc-config/find-up": ["find-up@4.1.0", "", { "dependencies": { "locate-path": "^5.0.0", "path-exists": "^4.0.0" } }, "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="],
 
     "@istanbuljs/load-nyc-config/js-yaml": ["js-yaml@3.14.2", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg=="],
-
-    "@mantine/carousel/@mantine/hooks": ["@mantine/hooks@9.7.5", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-+3cNisLOUkzF77SjRKkG/V+svZii9WDGvcwlaxFH58b14MNohz1zWbV+WfjZt9qfzrIPPUOedks/z6PMo5rAFA=="],
-
-    "@mantine/code-highlight/@mantine/hooks": ["@mantine/hooks@9.7.5", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-+3cNisLOUkzF77SjRKkG/V+svZii9WDGvcwlaxFH58b14MNohz1zWbV+WfjZt9qfzrIPPUOedks/z6PMo5rAFA=="],
 
     "@mantine/core/@mantine/hooks": ["@mantine/hooks@9.7.5", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-+3cNisLOUkzF77SjRKkG/V+svZii9WDGvcwlaxFH58b14MNohz1zWbV+WfjZt9qfzrIPPUOedks/z6PMo5rAFA=="],
 
