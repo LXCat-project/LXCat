@@ -85,7 +85,7 @@
         "eslint": "^9.39.5",
         "eslint-config-next": "16.4.6",
         "nyc": "^18.0.0",
-        "oidc-provider": "^9.13.3",
+        "oidc-provider": "^9.14.0",
         "playwright-test-coverage": "^1.2.12",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-preset-env": "^11.6.2",
@@ -2388,7 +2388,7 @@
 
     "obug": ["obug@3.0.0", "", {}, "sha512-5vvB5+W7ePv+p3uqxi+RcW1XAzLW0/hxt3/4X4Lc4qHudzOhmBiBwOY6DRob4WnanAEGvNcLjF+KNOufrUoEQw=="],
 
-    "oidc-provider": ["oidc-provider@9.13.3", "", { "dependencies": { "debug": "^4.4.3", "jose": "^6.2.13", "koa": "^3.2.1" } }, "sha512-WmNDX9dLeItBmIqGqspmX5u6Cc7VVMrKUw2InX2T16+bwUJ8m/N5rJ3Ed+YKxE5aZqLp4YqwEi6kMJx4Ui5ffw=="],
+    "oidc-provider": ["oidc-provider@9.14.0", "", { "dependencies": { "debug": "^4.4.3", "jose": "^6.2.13", "koa": "^3.2.1" } }, "sha512-rfdRcKIq9HK0hRXCxLj3Pm8ctyHXTOMMPgjM/Q2JINWbED6Mq9QszjerCiePbKZdsr6/DUnttx/d1qlRKDl4KA=="],
 
     "oidc-token-hash": ["oidc-token-hash@5.2.0", "", {}, "sha512-6gj2m8cJZ+iSW8bm0FXdGF0YhIQbKrfP4yWTNzxc31U6MOjfEmB1rHvlYvxI1B7t7BCi1F2vYTT6YhtQRG4hxw=="],
 
