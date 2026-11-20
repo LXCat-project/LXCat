@@ -6,6 +6,8 @@ import { ReferenceRef } from "@lxcat/schema/reference";
 import {
   ActionIcon,
   Box,
+  CheckIcon,
+  Combobox,
   Group,
   HoverCard,
   List,
@@ -21,6 +23,12 @@ import { PAGE_SIZE } from "../../../cs/constants";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
+import {
+  filterOptions,
+  filterProcesses,
+  noFilters,
+  ProcessFilters,
+} from "./filter";
 import classes from "./process-table.module.css";
 import { toggleAll } from "./selection";
 
@@ -81,24 +89,36 @@ export const ProcessTable = (
   { processes, referenceMarkers, colorMap, selected, onChangeSelected }:
     ProcessTableProps,
 ) => {
-  const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
+  const [filters, setFilters] = useState<ProcessFilters>(noFilters);
   const [expanded, setExpanded] = useState<Array<string>>([]);
   const [page, setPage] = useState(1);
 
-  const [records, availableTags] = useMemo(() => {
-    const records = processes.filter((process) => {
-      if (
-        selectedTags.length
-        && !process.reaction.typeTags.some((tag) => selectedTags.includes(tag))
-      ) return false;
+  const records = useMemo(
+    () => filterProcesses(processes, filters),
+    [processes, filters],
+  );
+  const options = useMemo(
+    () => filterOptions(processes, filters),
+    [processes, filters],
+  );
+  // The options of the sets are grouped by database, so they only show the
+  // name of the set, while their label, of the chosen ones and for the search,
+  // also has the database.
+  const setNames = useMemo(
+    () =>
+      new Map(
+        options.sets.flatMap(({ items }) =>
+          items.map(({ value, name }) => [value, name])
+        ),
+      ),
+    [options.sets],
+  );
 
-      return true;
-    });
-    return [
-      records,
-      [...new Set(records.flatMap(({ reaction }) => reaction.typeTags))],
-    ];
-  }, [processes, selectedTags]);
+  const changeFilter =
+    (key: keyof ProcessFilters) => (values: Array<string>) => {
+      setFilters((filters) => ({ ...filters, [key]: values }));
+      setPage(1);
+    };
 
   const pageRecords = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -159,28 +179,65 @@ export const ProcessTable = (
             <MultiSelect
               label="Type tags"
               description="Show all processes that are of one of the selected types"
-              data={availableTags}
-              value={selectedTags}
-              onChange={(tags) => {
-                setSelectedTags(tags);
-                setPage(1);
-              }}
+              data={options.tags}
+              value={filters.tags}
+              onChange={changeFilter("tags")}
               leftSection={<IconSearch size={16} />}
               clearable
               searchable
             />
           ),
-          filtering: true,
+          filtering: filters.tags.length > 0,
         },
         {
           accessor: "database",
           title: "Database",
-          render: ({ info: { isPartOf } }) => isPartOf[0].contributor.name,
+          // A process can be in several sets, which can be of one database.
+          render: ({ info: { isPartOf } }) =>
+            [...new Set(isPartOf.map(({ contributor }) => contributor.name))]
+              .join(", "),
+          filter: (
+            <MultiSelect
+              label="Databases"
+              description="Show all processes that are from one of the selected databases"
+              data={options.organizations}
+              value={filters.organizations}
+              onChange={changeFilter("organizations")}
+              leftSection={<IconSearch size={16} />}
+              clearable
+              searchable
+            />
+          ),
+          filtering: filters.organizations.length > 0,
         },
         {
           accessor: "set",
           title: "Set",
-          render: ({ info: { isPartOf } }) => isPartOf[0].name,
+          render: ({ info: { isPartOf } }) =>
+            isPartOf.map(({ name }) => name).join(", "),
+          filter: (
+            <MultiSelect
+              label="Sets"
+              description="Show all processes that are from one of the selected sets"
+              data={options.sets}
+              value={filters.sets}
+              onChange={changeFilter("sets")}
+              renderOption={({ option, checked }) => (
+                <>
+                  {checked && (
+                    <CheckIcon
+                      className={Combobox.classes.optionsDropdownCheckIcon}
+                    />
+                  )}
+                  <span>{setNames.get(option.value)}</span>
+                </>
+              )}
+              leftSection={<IconSearch size={16} />}
+              clearable
+              searchable
+            />
+          ),
+          filtering: filters.sets.length > 0,
         },
         {
           accessor: "reference",
