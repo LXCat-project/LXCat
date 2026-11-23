@@ -69,7 +69,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@lxcat/tsconfig": "workspace:^",
-    "@testcontainers/arangodb": "^12.2.1",
+    "@testcontainers/arangodb": "^12.2.2",
     "@types/bun": "^1.4.5",
     "@types/deep-equal": "^1.0.4",
     "dprint": "^0.65.0",
