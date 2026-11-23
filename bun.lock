@@ -20,7 +20,7 @@
         "@lxcat/converter": "workspace:^",
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
-        "@mantine/carousel": "^9.8.1",
+        "@mantine/carousel": "^9.8.2",
         "@mantine/code-highlight": "^9.8.1",
         "@mantine/core": "^9.8.1",
         "@mantine/form": "^9.8.1",
@@ -610,7 +610,7 @@
 
     "@lxcat/tsconfig": ["@lxcat/tsconfig@workspace:packages/tsconfig"],
 
-    "@mantine/carousel": ["@mantine/carousel@9.8.1", "", { "peerDependencies": { "@mantine/core": "9.8.1", "@mantine/hooks": "9.8.1", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-gxwoxpgioxEdfauCCZKB81aMkS/Cp8PV4vn+4+QZqp8wQ2Xze86r2Pe9WCxhEsVoozN+S5Zxbt4PzugCeZUFSA=="],
+    "@mantine/carousel": ["@mantine/carousel@9.8.2", "", { "peerDependencies": { "@mantine/core": "9.8.2", "@mantine/hooks": "9.8.2", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-bN5e+mwxYquyMEfU7CP/tnhpP7mls0wmMYIroaFJOZpQyWiGRfezSqGkGqPV0cDnwn+9yn4rG77obU6yAHW32g=="],
 
     "@mantine/code-highlight": ["@mantine/code-highlight@9.8.1", "", { "dependencies": { "clsx": "^2.1.1", "diff": "^9.0.0" }, "peerDependencies": { "@mantine/core": "9.8.1", "@mantine/hooks": "9.8.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-1khAA57Py/XLiJylaNGDxJConbeITZTz7YnvSsbz6NASdbTYylH6a290IMOdV6H4vfyMbweWS5g/v50O2XdPFw=="],
 
