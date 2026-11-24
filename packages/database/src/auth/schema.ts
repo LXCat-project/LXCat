@@ -60,11 +60,9 @@ export type ApiToken = z.infer<typeof ApiToken>;
 
 export const Role = z.enum([
   "admin",
-  "editor", // TODO remove or implement
   "developer",
   "author",
   "publisher",
-  "download",
 ]);
 export type Role = z.infer<typeof Role>;
 
