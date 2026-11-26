@@ -4771,7 +4771,7 @@
                 },
                 "unit": {
                   "type": "string",
-                  "minLength": 1
+                  "const": "K"
                 }
               },
               "required": [
