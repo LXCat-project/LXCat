@@ -12,6 +12,7 @@ This document is for someone adding or editing data.
   - [Preparation](#preparation)
   - [Submit](#submit)
   - [Edit](#edit)
+  - [Rate coefficient data](#rate-coefficient-data)
   - [Retract](#retract)
   - [Versioning](#versioning)
   - [Organization](#organization)
@@ -60,6 +61,34 @@ To edit an existing cross section set:
      [Author scattering cross section sets](/author/set) page
    - If the draft version had a published version then the draft becomes the new published
      version and the previously published version becomes archived.
+
+## Rate coefficient data
+
+Sets can also contain rate coefficients. Each rate coefficient stores its data as one of:
+
+- `Constant`: a value with its unit, e.g.
+  `{ "type": "Constant", "value": 4.38e-13, "unit": "m^3/s" }`.
+- `LUT`: a lookup table over an independent `variable`, e.g. `T_g`.
+- `ExtendedArrhenius`: the form `a * T_g ^ b * exp(c / T_g)` with the
+  pre-exponential factor `a` and the activation temperature `c` carrying
+  their unit; `c` is stored in Kelvin. The unit of `a` depends on the
+  reaction order: `m^3/s` for two-body and `m^6/s` for three-body processes.
+- `Expression`: an expression string, see below.
+
+### Expression syntax
+
+For `Expression` data the unit literals inside the expression carry its
+dimensions; no unit is stored alongside it. Consumers such as chemcat-global
+verify the content against the rate-coefficient unit of the reaction when
+loading it.
+
+- Write operators explicitly: `2 * <m^3/s>`, not `2 <m^3/s>`.
+- Raise the gas temperature to a power in dimensionless form:
+  `3.2e-17 * (T_g / <K>) ^ -0.32 * <m^3/s>`.
+- Express activation energies as `exp(-3150.15 * <K> / T_g)`.
+- Refer to species number densities as `n[CO2]`; a three-body rate
+  coefficient combines them, e.g.
+  `1.3e-42 * <m^6/s> * (2.0 * n[H2] + 1.0 * n[H2O])`.
 
 ## Retract
 

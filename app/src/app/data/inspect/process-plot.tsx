@@ -64,10 +64,6 @@ export const ProcessPlot = (
         x = data.values.map(([x, _]) => x);
         y = data.values.map(([_, y]) => y);
         break;
-      case "Expression":
-        x = [];
-        y = [];
-        break;
       case "ExtendedArrhenius":
         x = logspace(range[0], range[1], 100);
         y = evaluateExtendedArrhenius(x, data);
@@ -83,10 +79,19 @@ export const ProcessPlot = (
     };
   };
 
+  // NOTE: Expression-type rate coefficients have no stored unit and cannot
+  // be plotted without evaluating the expression, so they are skipped here.
+  const plottable = processes
+    .map((process, index) => ({
+      process,
+      color: colors[index % colors.length],
+    }))
+    .filter(({ process }) => process.info.data.type !== "Expression");
+
   return (
     <Plot
-      data={processes.map((process, index) =>
-        makeLine(process, range, colors[index % colors.length])
+      data={plottable.map(({ process, color }) =>
+        makeLine(process, range, color)
       )}
       config={{
         toImageButtonOptions: {
