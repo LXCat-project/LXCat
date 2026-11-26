@@ -18,7 +18,6 @@ import {
   Loader,
   SegmentedControl,
   Stack,
-  Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
@@ -40,6 +39,7 @@ import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
 import { ProcessTable } from "./process-table";
 import { getReferencesForSelectionAction } from "./references-action";
+import { isPlottable } from "./selection";
 import { SetStats, SetTable } from "./set-table";
 import { TermsOfUseCheck } from "./terms-of-use-check";
 
@@ -213,7 +213,10 @@ export const PlotPageClient = (
       key,
       mapObject(
         map,
-        ([key, processes]) => [key, processes.slice(0, NUM_LINES_INIT)],
+        ([key, processes]) => [
+          key,
+          processes.filter(isPlottable).slice(0, NUM_LINES_INIT),
+        ],
       ),
     ],
   ));
@@ -235,13 +238,6 @@ export const PlotPageClient = (
   );
 
   const idsString = processes.map(({ info: { _key: id } }) => id).join(",");
-
-  const selectedProcesses = newSelected[segmentControl.dataType][
-    segmentControl.unitType
-  ];
-  const plottableProcesses = selectedProcesses.filter(
-    ({ info }) => info.data.type !== "Expression",
-  );
 
   const downloadReferences = async (format: keyof typeof referenceFileNames) =>
     download(
@@ -307,28 +303,20 @@ export const PlotPageClient = (
                 label: unitSegmentLabelMap[segmentControl.dataType][unit],
               }))}
             />
-            {plottableProcesses.length > 0
-              ? (
-                <Chart
-                  processes={plottableProcesses}
-                  colors={plottableProcesses.map((
-                    { info: { _key: id } },
-                  ) => colorMap.get(id)!)}
-                  xlabel={plotData[segmentControl.dataType][
-                    segmentControl.unitType
-                  ].xlabel}
-                  ylabel={plotData[segmentControl.dataType][
-                    segmentControl.unitType
-                  ].ylabel}
-                />
-              )
-              : (
-                <Center style={{ width: 700, height: 600 }}>
-                  <Text>
-                    Expression-type rate coefficients cannot be plotted yet.
-                  </Text>
-                </Center>
-              )}
+            <Chart
+              processes={newSelected[segmentControl.dataType][
+                segmentControl.unitType
+              ]}
+              colors={newSelected[segmentControl.dataType][
+                segmentControl.unitType
+              ].map((
+                { info: { _key: id } },
+              ) => colorMap.get(id)!)}
+              xlabel={plotData[segmentControl.dataType][segmentControl.unitType]
+                ?.xlabel}
+              ylabel={plotData[segmentControl.dataType][segmentControl.unitType]
+                ?.ylabel}
+            />
           </Stack>
         </Grid.Col>
         <Grid.Col span="auto">

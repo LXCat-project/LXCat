@@ -22,7 +22,7 @@ import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
 import classes from "./process-table.module.css";
-import { toggleAll } from "./selection";
+import { isPlottable, toggleAll } from "./selection";
 
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
@@ -102,13 +102,18 @@ export const ProcessTable = (
 
   const pageRecords = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  // The header checkbox is about all the records that match the filters, not
-  // only the ones on the current page.
+  // The header checkbox is about all the selectable records that match the
+  // filters, not only the ones on the current page.
+  const selectable = useMemo(
+    () => records.filter(isPlottable),
+    [records],
+  );
+
   const nrSelected = useMemo(() => {
     const selectedKeys = new Set(selected.map(({ info: { _key } }) => _key));
-    return records.filter(({ info: { _key } }) => selectedKeys.has(_key))
+    return selectable.filter(({ info: { _key } }) => selectedKeys.has(_key))
       .length;
-  }, [records, selected]);
+  }, [selectable, selected]);
 
   return (
     <DataTable
@@ -215,12 +220,13 @@ export const ProcessTable = (
       ]}
       selectedRecords={selected}
       onSelectedRecordsChange={onChangeSelected}
+      isRecordSelectable={isPlottable}
       allRecordsSelectionCheckboxProps={{
         "aria-label": "Select all records",
-        checked: records.length > 0 && nrSelected === records.length,
-        indeterminate: nrSelected > 0 && nrSelected < records.length,
+        checked: selectable.length > 0 && nrSelected === selectable.length,
+        indeterminate: nrSelected > 0 && nrSelected < selectable.length,
         onChange: () =>
-          onChangeSelected(toggleAll(processes, records, selected)),
+          onChangeSelected(toggleAll(processes, selectable, selected)),
       }}
       getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
         color: colorMap.get(_key),

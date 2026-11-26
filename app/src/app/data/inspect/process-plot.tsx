@@ -14,8 +14,10 @@ import { DenormalizedProcess } from "../denormalized-process";
 interface ChartProps {
   processes: Array<DenormalizedProcess>;
   colors: Array<string>;
-  xlabel: string;
-  ylabel: string;
+  // Axis titles are absent for data whose unit is unknown, e.g. the
+  // expression-type rate coefficients, which cannot be plotted.
+  xlabel?: string;
+  ylabel?: string;
 }
 
 const Plot = createPlotlyComponent(Plotly);
@@ -79,19 +81,10 @@ export const ProcessPlot = (
     };
   };
 
-  // NOTE: Expression-type rate coefficients have no stored unit and cannot
-  // be plotted without evaluating the expression, so they are skipped here.
-  const plottable = processes
-    .map((process, index) => ({
-      process,
-      color: colors[index % colors.length],
-    }))
-    .filter(({ process }) => process.info.data.type !== "Expression");
-
   return (
     <Plot
-      data={plottable.map(({ process, color }) =>
-        makeLine(process, range, color)
+      data={processes.map((process, index) =>
+        makeLine(process, range, colors[index % colors.length])
       )}
       config={{
         toImageButtonOptions: {

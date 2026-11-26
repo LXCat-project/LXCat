@@ -5,6 +5,14 @@
 import { DenormalizedProcess } from "../denormalized-process";
 
 /**
+ * Whether the process can be selected for plotting. Expression-type rate
+ * coefficients have no stored unit and cannot be plotted without evaluating
+ * the expression, so they cannot be selected.
+ */
+export const isPlottable = ({ info }: DenormalizedProcess) =>
+  info.data.type !== "Expression";
+
+/**
  * The selection after the header checkbox is clicked, where `shown` are the
  * processes that match the filters, on any page. If any of them is selected,
  * they are all deselected, and otherwise they are all selected.
