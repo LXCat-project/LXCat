@@ -172,7 +172,13 @@
                     "Attachment",
                     "Ionization",
                     "Dissociative",
-                    "Recombination"
+                    "Recombination",
+                    "Association",
+                    "Dissociation",
+                    "Exchange",
+                    "ChargeExchange",
+                    "Penning",
+                    "Radiation"
                   ]
                 }
               }
@@ -188,147 +194,245 @@
           "info": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "const": "CrossSection"
-                },
-                "comments": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "references": {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "comments": {
-                            "minItems": 1,
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "minLength": 1
-                            }
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "comments"
-                        ],
-                        "additionalProperties": false
-                      }
-                    ]
-                  }
-                },
-                "data": {
+              "oneOf": [
+                {
                   "type": "object",
                   "properties": {
                     "type": {
                       "type": "string",
-                      "const": "LUT"
+                      "const": "CrossSection"
                     },
-                    "labels": {
-                      "type": "array",
-                      "prefixItems": [
-                        {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        {
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      ]
-                    },
-                    "units": {
-                      "type": "array",
-                      "prefixItems": [
-                        {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        {
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      ]
-                    },
-                    "values": {
+                    "comments": {
                       "type": "array",
                       "items": {
-                        "type": "array",
-                        "prefixItems": [
+                        "type": "string"
+                      }
+                    },
+                    "references": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
                           {
-                            "type": "number"
+                            "type": "string",
+                            "minLength": 1
                           },
                           {
-                            "type": "number"
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "comments": {
+                                "minItems": 1,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "comments"
+                            ],
+                            "additionalProperties": false
                           }
                         ]
                       }
+                    },
+                    "data": {
+                      "$ref": "#/$defs/LUTData"
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "massRatio": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "statisticalWeightRatio": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "threshold": {
+                      "type": "number"
+                    },
+                    "isPartOf": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_key": {
+                      "$ref": "#/$defs/Key"
+                    },
+                    "versionInfo": {
+                      "$ref": "#/$defs/VersionInfo"
                     }
                   },
                   "required": [
                     "type",
-                    "labels",
-                    "units",
-                    "values"
+                    "references",
+                    "data",
+                    "threshold",
+                    "isPartOf",
+                    "_key",
+                    "versionInfo"
                   ],
                   "additionalProperties": false
                 },
-                "parameters": {
+                {
                   "type": "object",
                   "properties": {
-                    "massRatio": {
-                      "type": "number",
-                      "exclusiveMinimum": 0
+                    "type": {
+                      "type": "string",
+                      "const": "RateCoefficient"
                     },
-                    "statisticalWeightRatio": {
-                      "type": "number",
-                      "exclusiveMinimum": 0
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "references": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "comments": {
+                                "minItems": 1,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "comments"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "data": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/$defs/ConstantData"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "LUT"
+                            },
+                            "labels": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              ]
+                            },
+                            "units": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              ]
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "number"
+                                  }
+                                ]
+                              }
+                            },
+                            "variable": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "labels",
+                            "units",
+                            "values",
+                            "variable"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "$ref": "#/$defs/ExtendedArrheniusData"
+                        },
+                        {
+                          "$ref": "#/$defs/Expression"
+                        }
+                      ]
+                    },
+                    "threshold": {
+                      "type": "number"
+                    },
+                    "isPartOf": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_key": {
+                      "$ref": "#/$defs/Key"
+                    },
+                    "versionInfo": {
+                      "$ref": "#/$defs/VersionInfo"
                     }
                   },
+                  "required": [
+                    "type",
+                    "references",
+                    "data",
+                    "threshold",
+                    "isPartOf",
+                    "_key",
+                    "versionInfo"
+                  ],
                   "additionalProperties": false
-                },
-                "threshold": {
-                  "type": "number"
-                },
-                "isPartOf": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "_key": {
-                  "$ref": "#/$defs/Key"
-                },
-                "versionInfo": {
-                  "$ref": "#/$defs/VersionInfo"
                 }
-              },
-              "required": [
-                "type",
-                "references",
-                "data",
-                "threshold",
-                "isPartOf",
-                "_key",
-                "versionInfo"
-              ],
-              "additionalProperties": false
+              ]
             }
           }
         },
@@ -1119,6 +1223,9 @@
           "$ref": "#/$defs/Electron"
         },
         {
+          "$ref": "#/$defs/AnyParticle"
+        },
+        {
           "$ref": "#/$defs/Atom"
         },
         {
@@ -1173,6 +1280,29 @@
         "charge": {
           "type": "number",
           "const": -1
+        }
+      },
+      "required": [
+        "type",
+        "composition",
+        "charge"
+      ],
+      "additionalProperties": false
+    },
+    "AnyParticle": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AnyParticle"
+        },
+        "composition": {
+          "type": "string",
+          "const": "M"
+        },
+        "charge": {
+          "type": "number",
+          "const": 0
         }
       },
       "required": [
@@ -4522,6 +4652,164 @@
       "required": [
         "summary",
         "latex"
+      ],
+      "additionalProperties": false
+    },
+    "LUTData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "LUT"
+        },
+        "labels": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "units": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "labels",
+        "units",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "ConstantData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Constant"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "unit",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ExtendedArrheniusData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "ExtendedArrhenius"
+        },
+        "coefficients": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "unit"
+              ],
+              "additionalProperties": false
+            },
+            "b": {
+              "type": "number"
+            },
+            "c": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "unit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type",
+        "coefficients"
+      ],
+      "additionalProperties": false
+    },
+    "Expression": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Expression"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "expression"
       ],
       "additionalProperties": false
     }

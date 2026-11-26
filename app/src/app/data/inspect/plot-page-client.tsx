@@ -130,10 +130,7 @@ const getUnitOfData = (process: DenormalizedProcess) => {
     case "Expression":
       return process.info.data.type;
     case "ExtendedArrhenius":
-      const numConsumed = process
-        .reaction.lhs
-        .map(({ count }) => count).reduce((a, b) => a + b, 0);
-      return `m^${3 * (numConsumed - 1)}/s`;
+      return process.info.data.coefficients.a.unit;
     case "LUT":
       return process.info.data.units[1];
   }

@@ -6,6 +6,7 @@ import { array, literal, number, object, string, TypeOf } from "zod";
 import { Pair, registerType } from "./util.js";
 
 export * from "../process/rate-coefficient/extended-arrhenius.js";
+export * from "./unit-value.js";
 
 export const Constant = object({
   type: literal("Constant"),
