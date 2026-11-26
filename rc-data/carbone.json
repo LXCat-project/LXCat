@@ -9,11 +9,11 @@
       "id": "Harder2016",
       "content-domain": { "domain": [], "crossmark-restriction": false },
       "published-print": { "date-parts": [[2017, 6]] },
-      "DOI": "10.1002\/ppap.201600120",
+      "DOI": "10.1002/ppap.201600120",
       "type": "article-journal",
       "created": { "date-parts": [[2016, 11, 18]], "date-time": "2016-11-18T07:06:49Z", "timestamp": 1479452809000 },
       "source": "Crossref",
-      "title": "Homogeneous CO<sub>2<\/sub> conversion by microwave plasma: Wave propagation and diagnostics",
+      "title": "Homogeneous CO<sub>2</sub> conversion by microwave plasma: Wave propagation and diagnostics",
       "prefix": "10.1002",
       "volume": "14",
       "author": [
@@ -137,14 +137,14 @@
       "language": "en",
       "deposited": { "date-parts": [[2023, 9, 11]], "date-time": "2023-09-11T19:48:39Z", "timestamp": 1694461719000 },
       "score": 1,
-      "resource": { "primary": { "URL": "https:\/\/onlinelibrary.wiley.com\/doi\/10.1002\/ppap.201600120" } },
+      "resource": { "primary": { "URL": "https://onlinelibrary.wiley.com/doi/10.1002/ppap.201600120" } },
       "subtitle": [],
       "short-title": [],
       "issued": { "date-parts": [[2016, 11, 18]] },
       "references-count": 40,
       "journal-issue": { "issue": "6", "published-print": { "date-parts": [[2017, 6]] } },
-      "alternative-id": ["10.1002\/ppap.201600120"],
-      "URL": "http:\/\/dx.doi.org\/10.1002\/ppap.201600120",
+      "alternative-id": ["10.1002/ppap.201600120"],
+      "URL": "http://dx.doi.org/10.1002/ppap.201600120",
       "relation": {},
       "ISSN": "1612-8850",
       "subject": [],
@@ -158,13 +158,13 @@
       "issue": "7S",
       "content-domain": { "domain": ["iopscience.iop.org"], "crossmark-restriction": false },
       "published-print": { "date-parts": [[1997, 7, 1]] },
-      "DOI": "10.1143\/jjap.36.4997",
+      "DOI": "10.1143/jjap.36.4997",
       "type": "article-journal",
       "created": { "date-parts": [[2002, 10, 1]], "date-time": "2002-10-01T22:25:44Z", "timestamp": 1033511144000 },
       "page": "4997",
-      "update-policy": "https:\/\/doi.org\/10.1088\/crossmark-policy",
+      "update-policy": "https://doi.org/10.1088/crossmark-policy",
       "source": "Crossref",
-      "title": "Chemical Kinetic Modelling of Non-Equilibrium Ar-CO<sub> 2<\/sub> Thermal Plasmas",
+      "title": "Chemical Kinetic Modelling of Non-Equilibrium Ar-CO<sub> 2</sub> Thermal Plasmas",
       "prefix": "10.35848",
       "volume": "36",
       "author": [
@@ -176,12 +176,12 @@
         { "year": "1988", "key": "" },
         { "year": "1987", "key": "" },
         { "year": "1990", "key": "" },
-        { "year": "1980", "key": "", "doi-asserted-by": "publisher", "DOI": "10.1007\/978-3-642-67452-5" },
+        { "year": "1980", "key": "", "doi-asserted-by": "publisher", "DOI": "10.1007/978-3-642-67452-5" },
         {
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "383",
-          "DOI": "10.1007\/BF00564626",
+          "DOI": "10.1007/BF00564626",
           "volume": "3",
           "year": "1983",
           "journal-title": "Plasma Chem. & Plasma Process."
@@ -190,7 +190,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "160",
-          "DOI": "10.1002\/cjce.5450470211",
+          "DOI": "10.1002/cjce.5450470211",
           "volume": "47",
           "year": "1969",
           "journal-title": "Canadian J. Chem. Eng."
@@ -201,7 +201,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "N",
-          "DOI": "10.1021\/i160060a007",
+          "DOI": "10.1021/i160060a007",
           "volume": "15",
           "year": "1976",
           "journal-title": "Ind. Eng. Chem. Fundam."
@@ -211,7 +211,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1217",
-          "DOI": "10.1080\/00222338108063228",
+          "DOI": "10.1080/00222338108063228",
           "volume": "A16",
           "year": "1981",
           "journal-title": "J. Macromol. Sci.-Chem."
@@ -220,7 +220,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1769",
-          "DOI": "10.1016\/0022-1902(81)80381-8",
+          "DOI": "10.1016/0022-1902(81)80381-8",
           "volume": "43",
           "year": "1981",
           "journal-title": "J. Inorg. Nucl. Chem."
@@ -229,7 +229,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1210",
-          "DOI": "10.1515\/zpch-1982-263152",
+          "DOI": "10.1515/zpch-1982-263152",
           "volume": "263",
           "year": "1982",
           "journal-title": "Z. Phys. Chem. (Leipzig)"
@@ -238,7 +238,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "59",
-          "DOI": "10.1007\/BF00567372",
+          "DOI": "10.1007/BF00567372",
           "volume": "4",
           "year": "1984",
           "journal-title": "Plasma Chem. & Plasma Process."
@@ -247,7 +247,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "811",
-          "DOI": "10.1002\/aic.690300517",
+          "DOI": "10.1002/aic.690300517",
           "volume": "30",
           "year": "1984",
           "journal-title": "AIChE J."
@@ -257,7 +257,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "621",
-          "DOI": "10.1002\/ctpp.19840240609",
+          "DOI": "10.1002/ctpp.19840240609",
           "volume": "24",
           "year": "1984",
           "journal-title": "Beitr. Plasmaphys."
@@ -267,7 +267,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "394",
-          "DOI": "10.1007\/BF00871110",
+          "DOI": "10.1007/BF00871110",
           "volume": "54",
           "year": "1988",
           "journal-title": "J. Eng. Phys."
@@ -299,7 +299,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "444",
-          "DOI": "10.1109\/27.3858",
+          "DOI": "10.1109/27.3858",
           "volume": "16",
           "year": "1988",
           "journal-title": "IEEE Trans. Plasma Sci."
@@ -308,7 +308,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "578",
-          "DOI": "10.1109\/PROC.1971.8218",
+          "DOI": "10.1109/PROC.1971.8218",
           "volume": "59",
           "year": "1971",
           "journal-title": "Proc. IEEE"
@@ -317,7 +317,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1031",
-          "DOI": "10.1088\/0022-3727\/15\/6\/012",
+          "DOI": "10.1088/0022-3727/15/6/012",
           "volume": "15",
           "year": "1982",
           "journal-title": "J. Phys. D: Appl. Phys."
@@ -326,7 +326,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "19",
-          "DOI": "10.1016\/S0092-640X(69)80020-3",
+          "DOI": "10.1016/S0092-640X(69)80020-3",
           "volume": "1",
           "year": "1969",
           "journal-title": "At. Data"
@@ -335,7 +335,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1",
-          "DOI": "10.1103\/RevModPhys.38.1",
+          "DOI": "10.1103/RevModPhys.38.1",
           "volume": "38",
           "year": "1966",
           "journal-title": "Rev. Mod. Phys."
@@ -344,7 +344,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "254",
-          "DOI": "10.1103\/PhysRev.30.254",
+          "DOI": "10.1103/PhysRev.30.254",
           "volume": "30",
           "year": "1932",
           "journal-title": "Phys. Rev."
@@ -353,7 +353,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "237",
-          "DOI": "10.1016\/0020-7381(74)80028-8",
+          "DOI": "10.1016/0020-7381(74)80028-8",
           "volume": "13",
           "year": "1974",
           "journal-title": "Int. J. Mass Spectrom. & Ion Phys."
@@ -365,7 +365,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "645",
-          "DOI": "10.1351\/pac198860050645",
+          "DOI": "10.1351/pac198860050645",
           "volume": "60",
           "year": "1988",
           "journal-title": "Pure & Appl. Chem."
@@ -374,7 +374,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "1999",
-          "DOI": "10.1088\/0022-3727\/17\/10\/011",
+          "DOI": "10.1088/0022-3727/17/10/011",
           "volume": "17",
           "year": "1984",
           "journal-title": "J. Phys. D: J. Appl. Phys."
@@ -383,7 +383,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "2320",
-          "DOI": "10.1088\/0022-3700\/5\/12\/025",
+          "DOI": "10.1088/0022-3700/5/12/025",
           "volume": "5",
           "year": "1972",
           "journal-title": "J. Phys. B: Atom. Mol. Phys."
@@ -392,7 +392,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "N",
-          "DOI": "10.1016\/0092-640X(78)90027-X",
+          "DOI": "10.1016/0092-640X(78)90027-X",
           "volume": "22",
           "year": "1978",
           "journal-title": "Atomic Data & Nucl. Data Tables"
@@ -401,7 +401,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "211",
-          "DOI": "10.1016\/0020-7381(77)80050-8",
+          "DOI": "10.1016/0020-7381(77)80050-8",
           "volume": "25",
           "year": "1977",
           "journal-title": "Int. J. Mass Spectrom. & Ion Phys."
@@ -412,7 +412,7 @@
           "key": "",
           "doi-asserted-by": "publisher",
           "first-page": "402",
-          "DOI": "10.2514\/3.10406",
+          "DOI": "10.2514/3.10406",
           "volume": "28",
           "year": "1990",
           "journal-title": "AIAA J."
@@ -421,39 +421,39 @@
       "container-title": "Japanese Journal of Applied Physics",
       "link": [
         {
-          "URL": "https:\/\/iopscience.iop.org\/article\/10.1143\/JJAP.36.4997",
-          "content-type": "text\/html",
+          "URL": "https://iopscience.iop.org/article/10.1143/JJAP.36.4997",
+          "content-type": "text/html",
           "content-version": "vor",
           "intended-application": "text-mining"
         },
         {
-          "URL": "https:\/\/iopscience.iop.org\/article\/10.1143\/JJAP.36.4997\/pdf",
-          "content-type": "application\/pdf",
+          "URL": "https://iopscience.iop.org/article/10.1143/JJAP.36.4997/pdf",
+          "content-type": "application/pdf",
           "content-version": "vor",
           "intended-application": "text-mining"
         },
         {
-          "URL": "https:\/\/iopscience.iop.org\/article\/10.1143\/JJAP.36.4997\/pdf",
-          "content-type": "application\/pdf",
+          "URL": "https://iopscience.iop.org/article/10.1143/JJAP.36.4997/pdf",
+          "content-type": "application/pdf",
           "content-version": "vor",
           "intended-application": "syndication"
         },
         {
-          "URL": "https:\/\/iopscience.iop.org\/article\/10.1143\/JJAP.36.4997\/pdf",
-          "content-type": "application\/pdf",
+          "URL": "https://iopscience.iop.org/article/10.1143/JJAP.36.4997/pdf",
+          "content-type": "application/pdf",
           "content-version": "vor",
           "intended-application": "similarity-checking"
         }
       ],
       "deposited": { "date-parts": [[2022, 12, 14]], "date-time": "2022-12-14T17:56:59Z", "timestamp": 1671040619000 },
       "score": 1,
-      "resource": { "primary": { "URL": "https:\/\/iopscience.iop.org\/article\/10.1143\/JJAP.36.4997" } },
+      "resource": { "primary": { "URL": "https://iopscience.iop.org/article/10.1143/JJAP.36.4997" } },
       "subtitle": [],
       "short-title": [],
       "issued": { "date-parts": [[1997, 7, 1]] },
       "references-count": 42,
       "journal-issue": { "issue": "7S", "published-print": { "date-parts": [[1997, 7, 1]] } },
-      "URL": "http:\/\/dx.doi.org\/10.1143\/JJAP.36.4997",
+      "URL": "http://dx.doi.org/10.1143/JJAP.36.4997",
       "relation": {},
       "ISSN": "0021-4922",
       "subject": [],
@@ -494,36 +494,12 @@
   },
   "complete": true,
   "states": {
-    "CO2": {
-      "type": "LinearTriatomInversionCenter",
-      "composition": [["C", 1], ["O", 2]],
-      "charge": 0
-    },
-    "CO": {
-      "type": "HeteronuclearDiatom",
-      "composition": [["C", 1], ["O", 1]],
-      "charge": 0
-    },
-    "O2": {
-      "type": "HomonuclearDiatom",
-      "composition": [["O", 2]],
-      "charge": 0
-    },
-    "O": {
-      "type": "Atom",
-      "composition": [["O", 1]],
-      "charge": 0
-    },
-    "C": {
-      "type": "Atom",
-      "composition": [["C", 1]],
-      "charge": 0
-    },
-    "M": {
-      "type": "AnyParticle",
-      "composition": "M",
-      "charge": 0
-    }
+    "CO2": { "type": "LinearTriatomInversionCenter", "composition": [["C", 1], ["O", 2]], "charge": 0 },
+    "CO": { "type": "HeteronuclearDiatom", "composition": [["C", 1], ["O", 1]], "charge": 0 },
+    "O2": { "type": "HomonuclearDiatom", "composition": [["O", 2]], "charge": 0 },
+    "O": { "type": "Atom", "composition": [["O", 1]], "charge": 0 },
+    "C": { "type": "Atom", "composition": [["C", 1]], "charge": 0 },
+    "M": { "type": "AnyParticle", "composition": "M", "charge": 0 }
   },
   "processes": [
     {
@@ -541,11 +517,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 4.38e-13,
+              "a": { "value": 4.38e-13, "unit": "m^3/s" },
               "b": 0,
-              "c": -64753
-            },
-            "unit": "m^3/s"
+              "c": { "value": -64753, "unit": "K" }
+            }
           }
         }
       ]
@@ -565,11 +540,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 4.38e-13,
+              "a": { "value": 4.38e-13, "unit": "m^3/s" },
               "b": 0,
-              "c": -64753
-            },
-            "unit": "m^3/s"
+              "c": { "value": -64753, "unit": "K" }
+            }
           }
         }
       ]
@@ -589,11 +563,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 3.72e-16,
+              "a": { "value": 3.72e-16, "unit": "m^3/s" },
               "b": 0,
-              "c": -60227
-            },
-            "unit": "m^3/s"
+              "c": { "value": -60227, "unit": "K" }
+            }
           }
         }
       ]
@@ -613,11 +586,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 7.77e-18,
+              "a": { "value": 7.77e-18, "unit": "m^3/s" },
               "b": 0,
-              "c": -18219
-            },
-            "unit": "m^3/s"
+              "c": { "value": -18219, "unit": "K" }
+            }
           }
         }
       ]
@@ -637,11 +609,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 8.14e-15,
+              "a": { "value": 8.14e-15, "unit": "m^3/s" },
               "b": 0,
-              "c": -59647
-            },
-            "unit": "m^3/s"
+              "c": { "value": -59647, "unit": "K" }
+            }
           }
         }
       ]
@@ -661,11 +632,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 1.99e-14,
+              "a": { "value": 1.99e-14, "unit": "m^3/s" },
               "b": 0,
-              "c": -57907
-            },
-            "unit": "m^3/s"
+              "c": { "value": -57907, "unit": "K" }
+            }
           }
         }
       ]
@@ -685,11 +655,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 2.41e-15,
+              "a": { "value": 2.41e-15, "unit": "m^3/s" },
               "b": 0,
-              "c": -59415
-            },
-            "unit": "m^3/s"
+              "c": { "value": -59415, "unit": "K" }
+            }
           }
         }
       ]
@@ -709,11 +678,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 2.57e-15,
+              "a": { "value": 2.57e-15, "unit": "m^3/s" },
               "b": 0,
-              "c": -59647
-            },
-            "unit": "m^3/s"
+              "c": { "value": -59647, "unit": "K" }
+            }
           }
         }
       ]
@@ -733,11 +701,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 6.54e-45,
+              "a": { "value": 6.54e-45, "unit": "m^6/s" },
               "b": 0,
-              "c": -2205
-            },
-            "unit": "m^6/s"
+              "c": { "value": -2205, "unit": "K" }
+            }
           }
         }
       ]
@@ -757,11 +724,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 6.54e-45,
+              "a": { "value": 6.54e-45, "unit": "m^6/s" },
               "b": 0,
-              "c": -2205
-            },
-            "unit": "m^6/s"
+              "c": { "value": -2205, "unit": "K" }
+            }
           }
         }
       ]
@@ -780,12 +746,7 @@
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
-            "coefficients": {
-              "a": 6.51e-48,
-              "b": 0,
-              "c": 1857
-            },
-            "unit": "m^6/s"
+            "coefficients": { "a": { "value": 6.51e-48, "unit": "m^6/s" }, "b": 0, "c": { "value": 1857, "unit": "K" } }
           }
         }
       ]
@@ -805,11 +766,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 1.23e-18,
+              "a": { "value": 1.23e-18, "unit": "m^3/s" },
               "b": 0,
-              "c": -15318
-            },
-            "unit": "m^3/s"
+              "c": { "value": -15318, "unit": "K" }
+            }
           }
         }
       ]
@@ -826,11 +786,7 @@
           "type": "RateCoefficient",
           "threshold": 0,
           "references": ["Harder2016"],
-          "data": {
-            "type": "Constant",
-            "value": 6.81e-46,
-            "unit": "m^6/s"
-          }
+          "data": { "type": "Constant", "value": 6.81e-46, "unit": "m^6/s" }
         }
       ]
     },
@@ -848,12 +804,7 @@
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
-            "coefficients": {
-              "a": 2.19e-45,
-              "b": 0,
-              "c": 2321
-            },
-            "unit": "m^6/s"
+            "coefficients": { "a": { "value": 2.19e-45, "unit": "m^6/s" }, "b": 0, "c": { "value": 2321, "unit": "K" } }
           }
         }
       ]
@@ -870,11 +821,7 @@
           "type": "RateCoefficient",
           "threshold": 0,
           "references": ["Harder2016"],
-          "data": {
-            "type": "Constant",
-            "value": 2.76e-46,
-            "unit": "m^6/s"
-          }
+          "data": { "type": "Constant", "value": 2.76e-46, "unit": "m^6/s" }
         }
       ]
     },
@@ -890,11 +837,7 @@
           "type": "RateCoefficient",
           "threshold": 0,
           "references": ["Harder2016"],
-          "data": {
-            "type": "Constant",
-            "value": 2.76e-46,
-            "unit": "m^6/s"
-          }
+          "data": { "type": "Constant", "value": 2.76e-46, "unit": "m^6/s" }
         }
       ]
     },
@@ -913,11 +856,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 1.46,
+              "a": { "value": 1.46, "unit": "m^3/s" },
               "b": -3.52,
-              "c": -128700.0
-            },
-            "unit": "m^3/s"
+              "c": { "value": -128700.0, "unit": "K" }
+            }
           }
         }
       ]
@@ -934,11 +876,7 @@
           "type": "RateCoefficient",
           "threshold": 0,
           "references": ["Beuthe1997"],
-          "data": {
-            "type": "Constant",
-            "value": 1e-21,
-            "unit": "m^3/s"
-          }
+          "data": { "type": "Constant", "value": 1e-21, "unit": "m^3/s" }
         }
       ]
     },
@@ -957,11 +895,10 @@
           "data": {
             "type": "ExtendedArrhenius",
             "coefficients": {
-              "a": 9.1e-34,
+              "a": { "value": 9.1e-34, "unit": "m^6/s" },
               "b": -3.08,
-              "c": 2114.0
-            },
-            "unit": "m^6/s"
+              "c": { "value": 2114.0, "unit": "K" }
+            }
           }
         }
       ]
