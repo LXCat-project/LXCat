@@ -163,6 +163,39 @@ describe("LTPDocument", () => {
       unit: "eV",
     });
   });
+  test("Should accept an energy rate coefficient", () => {
+    const doc: unknown = {
+      contributor: "TestOrganization",
+      name: "TestSet",
+      description: "",
+      complete: false,
+      states: {},
+      references: {},
+      processes: [
+        {
+          reaction: {
+            lhs: [],
+            rhs: [],
+            reversible: false,
+            typeTags: ["Elastic"],
+          },
+          info: [{
+            type: "EnergyRateCoefficient",
+            data: {
+              type: "LUT",
+              labels: ["Electron temperature", "Energy rate coefficient"],
+              units: ["eV", "eV*m^3/s"],
+              variable: "T_e",
+              values: [[0, 0]],
+            },
+          }],
+        },
+      ],
+    };
+    expect(NewLTPDocument.parse(doc).processes[0].info[0].type).toEqual(
+      "EnergyRateCoefficient",
+    );
+  });
   test("An edited document can contain both new and existing processes", () => {
     const doc: EditedLTPDocument = {
       _key: "123",

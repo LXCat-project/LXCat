@@ -5,6 +5,7 @@
 import type { Contributor, SetHeader } from "@lxcat/schema";
 import type {
   CrossSectionInfo,
+  EnergyRateCoefficientInfo,
   RateCoefficientInfo,
   Reaction,
 } from "@lxcat/schema/process";
@@ -19,6 +20,10 @@ export type DenormalizedProcess = {
       isPartOf: Array<SetHeader<Contributor>>;
     }
     | RateCoefficientInfo<ReferenceRef<string>> & {
+      _key: string;
+      isPartOf: Array<SetHeader<Contributor>>;
+    }
+    | EnergyRateCoefficientInfo<ReferenceRef<string>> & {
       _key: string;
       isPartOf: Array<SetHeader<Contributor>>;
     };

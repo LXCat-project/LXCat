@@ -5,6 +5,7 @@
 import { Keyed, Reference, SetHeader, versioned } from "@lxcat/schema";
 import {
   CrossSectionInfo,
+  EnergyRateCoefficientInfo,
   Process,
   ProcessInfo,
   RateCoefficientInfo,
@@ -28,6 +29,7 @@ export const KeyedProcess = <
     discriminatedUnion("type", [
       Keyed(CrossSectionInfo(ReferenceType)),
       Keyed(RateCoefficientInfo(ReferenceType)),
+      Keyed(EnergyRateCoefficientInfo(ReferenceType)),
     ]),
   );
 
@@ -50,6 +52,7 @@ export const OwnedProcess = Process(
       }),
     ),
     versioned(RateCoefficientInfo(Reference)),
+    versioned(EnergyRateCoefficientInfo(Reference)),
   ]),
 );
 export type OwnedProcess = output<typeof OwnedProcess>;

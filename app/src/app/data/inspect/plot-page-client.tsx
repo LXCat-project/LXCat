@@ -100,6 +100,7 @@ const NUM_LINES_INIT = 5;
 const tabData = [
   { value: "CrossSection", label: "Cross Sections" },
   { value: "RateCoefficient", label: "Rate Coefficients" },
+  { value: "EnergyRateCoefficient", label: "Energy Rate Coefficients" },
 ];
 
 const plotData: Record<
@@ -120,6 +121,13 @@ const plotData: Record<
     "m^6/s": {
       xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
       ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^6/s}\\right)$",
+    },
+  },
+  "EnergyRateCoefficient": {
+    "eV*m^3/s": {
+      xlabel: "$\\text{Electron temperature }\\left(\\mathrm{eV}\\right)$",
+      ylabel:
+        "$\\text{Energy Rate Coefficient} \\left(\\mathrm{eV\\,m^3/s}\\right)$",
     },
   },
 };
@@ -146,6 +154,9 @@ const unitSegmentLabelMap: Record<string, Record<string, string>> = {
     "m^3/s": "Two-body",
     "m^6/s": "Three-body",
     "Expression": "Expression",
+  },
+  "EnergyRateCoefficient": {
+    "eV*m^3/s": "eV*m^3/s",
   },
 };
 

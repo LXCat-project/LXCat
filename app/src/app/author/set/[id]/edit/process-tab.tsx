@@ -119,6 +119,7 @@ const ProcessInfoData = (
 const typeLabelMap = {
   "CrossSection": "Cross section",
   "RateCoefficient": "Rate coefficient",
+  "EnergyRateCoefficient": "Energy rate coefficient",
 };
 
 // An optional energy loss with its unit, e.g. `{ value: 2, unit: "eV" }`.

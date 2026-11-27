@@ -81,6 +81,14 @@ transferred per reaction, as a value with its unit, e.g.
 `threshold` property (in eV), the energy loss of a rate coefficient is
 stored separately from its data.
 
+### Energy rate coefficient data
+
+A process can also store an `EnergyRateCoefficient` info item: the rate at
+which it transfers energy, e.g. the elastic power loss of an electron
+collision. It accepts the same data types as a rate coefficient, but the
+unit of its data carries the energy, e.g. a lookup table with units
+`["eV", "eV*m^3/s"]`.
+
 ### Expression syntax
 
 For `Expression` data the unit literals inside the expression carry its

@@ -6,6 +6,7 @@ import { discriminatedUnion, output, ZodType } from "zod";
 import { PartialKeyed } from "../partial-keyed.js";
 import { CrossSectionInfo } from "./cross-section/cross-section.js";
 import { Process } from "./process.js";
+import { EnergyRateCoefficientInfo } from "./rate-coefficient/energy-rate-coefficient.js";
 import { RateCoefficientInfo } from "./rate-coefficient/rate-coefficient.js";
 
 export const EditedProcess = <
@@ -19,6 +20,7 @@ export const EditedProcess = <
       [
         PartialKeyed(CrossSectionInfo(ReferenceType)),
         PartialKeyed(RateCoefficientInfo(ReferenceType)),
+        PartialKeyed(EnergyRateCoefficientInfo(ReferenceType)),
       ],
     ),
   );

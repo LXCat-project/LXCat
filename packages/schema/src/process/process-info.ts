@@ -4,6 +4,7 @@
 
 import { discriminatedUnion, ZodType } from "zod";
 import { CrossSectionInfo } from "./cross-section/cross-section.js";
+import { EnergyRateCoefficientInfo } from "./rate-coefficient/energy-rate-coefficient.js";
 import { RateCoefficientInfo } from "./rate-coefficient/rate-coefficient.js";
 
 // NOTE: This object is a discriminated union over all the possible process info
@@ -14,4 +15,5 @@ export const ProcessInfo = <ReferenceType extends ZodType>(
   discriminatedUnion("type", [
     CrossSectionInfo(ReferenceType),
     RateCoefficientInfo(ReferenceType),
+    EnergyRateCoefficientInfo(ReferenceType),
   ]);

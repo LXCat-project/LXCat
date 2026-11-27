@@ -6,6 +6,7 @@ import { discriminatedUnion, output, ZodType } from "zod";
 import { versioned } from "../versioned.js";
 import { CrossSectionInfo } from "./cross-section/cross-section.js";
 import { Process } from "./process.js";
+import { EnergyRateCoefficientInfo } from "./rate-coefficient/energy-rate-coefficient.js";
 import { RateCoefficientInfo } from "./rate-coefficient/rate-coefficient.js";
 
 export const VersionedProcess = <
@@ -17,6 +18,7 @@ export const VersionedProcess = <
     discriminatedUnion("type", [
       versioned(CrossSectionInfo(ReferenceType)),
       versioned(RateCoefficientInfo(ReferenceType)),
+      versioned(EnergyRateCoefficientInfo(ReferenceType)),
     ]),
   );
 

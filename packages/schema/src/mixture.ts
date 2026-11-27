@@ -16,6 +16,7 @@ import { Reference, ReferenceRef } from "./common/reference.js";
 import { Contributor } from "./contributor.js";
 import { CrossSectionInfo } from "./process/index.js";
 import { Process } from "./process/process.js";
+import { EnergyRateCoefficientInfo } from "./process/rate-coefficient/energy-rate-coefficient.js";
 import { RateCoefficientInfo } from "./process/rate-coefficient/rate-coefficient.js";
 import { SetReference } from "./process/set-reference.js";
 import { SelfReference } from "./self-reference.js";
@@ -43,6 +44,13 @@ const MixtureBody = <ReferenceType extends ZodType>(
           versioned(
             object({
               ...RateCoefficientInfo(ReferenceRef(string().min(1))).shape,
+              ...SetReference.shape,
+            }),
+          ),
+          versioned(
+            object({
+              ...EnergyRateCoefficientInfo(ReferenceRef(string().min(1)))
+                .shape,
               ...SetReference.shape,
             }),
           ),
