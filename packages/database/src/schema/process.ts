@@ -42,17 +42,14 @@ export type KeyedProcess<StateType, ReferenceType> = output<
 
 export const OwnedProcess = Process(
   SerializedSpecies,
-  Process(
-    SerializedSpecies,
-    discriminatedUnion("type", [
-      versioned(
-        object({
-          ...CrossSectionInfo(Reference).shape,
-          isPartOf: array(Keyed(SetHeader(string().min(1)))),
-        }),
-      ),
-      versioned(RateCoefficientInfo(Reference)),
-    ]),
-  ),
+  discriminatedUnion("type", [
+    versioned(
+      object({
+        ...CrossSectionInfo(Reference).shape,
+        isPartOf: array(Keyed(SetHeader(string().min(1)))),
+      }),
+    ),
+    versioned(RateCoefficientInfo(Reference)),
+  ]),
 );
 export type OwnedProcess = output<typeof OwnedProcess>;
