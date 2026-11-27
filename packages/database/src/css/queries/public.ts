@@ -33,6 +33,68 @@ export async function getItemIdsInSet(this: LXCatDatabase, setId: string) {
   return cursor.all();
 }
 
+// Process as it leaves the AQL query of `byId`: the reaction is
+// duplicated in serialized form, but the id of the reaction node is
+// carried along so processes of the same reaction can be regrouped.
+type QueriedProcess = {
+  reactionId: string;
+  info: Array<{ type: string }>;
+};
+
+// Ingest splits a process with multiple info entries into one cross
+// section per entry (see `createSet`), which loses the pairing between a
+// rate coefficient and the energy rate coefficient of the same process.
+// Reunite an `EnergyRateCoefficient` info with the process of the same
+// reaction that carries the info it belongs to: consumers such as ChemCat
+// expect both info entries on a single process, and cannot make sense of
+// a process that has an energy rate coefficient but no rate coefficient.
+const groupEnergyRateCoefficients = <T extends QueriedProcess>(
+  processes: T[],
+): T[] => {
+  // The index of the process that holds the non-energy info of a reaction.
+  const base = new Map<string, number>();
+  // The indexes of the processes that only hold energy rate coefficient
+  // infos of a reaction.
+  const energyOnly = new Map<string, number[]>();
+
+  processes.forEach((process, index) => {
+    const hasInfoOfItsOwn = process.info.some(
+      (info) => info.type !== "EnergyRateCoefficient",
+    );
+    if (hasInfoOfItsOwn) {
+      if (!base.has(process.reactionId)) {
+        base.set(process.reactionId, index);
+      }
+    } else if (process.info.length > 0) {
+      const merged = energyOnly.get(process.reactionId) ?? [];
+      merged.push(index);
+      energyOnly.set(process.reactionId, merged);
+    }
+  });
+
+  return processes
+    .map((process, index) => {
+      // The first process of a reaction with info of its own absorbs the
+      // energy rate coefficient infos of the reaction. A reaction with
+      // several rate coefficients keeps them on separate processes; the
+      // energy rate coefficients then join the first of those.
+      if (base.get(process.reactionId) === index) {
+        const absorbed = (energyOnly.get(process.reactionId) ?? []).flatMap(
+          (merged) => processes[merged].info,
+        );
+        return { ...process, info: [...process.info, ...absorbed] };
+      }
+      return process;
+    })
+    .filter((_, index) => {
+      const reactionId = processes[index].reactionId;
+      // An energy rate coefficient without a rate coefficient of the same
+      // reaction cannot be regrouped, so keep it as its own process.
+      return base.get(reactionId) === undefined
+        || !(energyOnly.get(reactionId) ?? []).includes(index);
+    });
+};
+
 export async function byId(
   this: LXCatDatabase,
   id: string,
@@ -108,6 +170,7 @@ export async function byId(
           )
           RETURN {
             reaction,
+            reactionId: cs.reaction,
             info: [MERGE({ _key: cs._key, versionInfo: cs.versionInfo, references: refs2 }, cs.info)]
           }
       )
@@ -119,7 +182,15 @@ export async function byId(
       LET set = MERGE(UNSET(css, ["_rev", "_id", "organization"]), { references: refs, states, processes, contributor})
       RETURN HAS(set, "publishedIn") ? MERGE(set, {publishedIn: PARSE_IDENTIFIER(css.publishedIn).key}) : set
     `);
-  return VersionedLTPDocument.parseAsync(await cursor.next());
+  const raw = (await cursor.next()) as
+    | { processes: QueriedProcess[] }
+    | undefined;
+  return VersionedLTPDocument.parseAsync(
+    raw === undefined ? raw : {
+      ...raw,
+      processes: groupEnergyRateCoefficients(raw.processes),
+    },
+  );
 }
 
 export interface KeyedVersionInfo extends VersionInfo {
