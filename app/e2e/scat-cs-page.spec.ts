@@ -16,6 +16,11 @@ const csTest = test.extend({
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();
+    // The modal only closes after the async server action that accepts the
+    // terms of use resolves, so wait for it instead of racing its unmount.
+    await expect(
+      page.getByRole("heading", { name: "Terms of use" }),
+    ).toBeHidden();
 
     await use(page);
   },

@@ -123,6 +123,12 @@ test.describe("given 2 dummy sets", () => {
       const { setId } = await getSeededSet(request);
       await page.goto(`/scat-css/${setId}`);
       await page.locator("text=I agree with the terms of use").click();
+      // The modal only closes after the async server action that accepts
+      // the terms of use resolves, so wait for it instead of racing its
+      // unmount, which can close an already-open download menu.
+      await expect(
+        page.getByRole("heading", { name: "Terms of use" }),
+      ).toBeHidden();
     });
 
     test("should have single process listed", async ({ page }) => {
