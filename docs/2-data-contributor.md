@@ -75,6 +75,12 @@ Sets can also contain rate coefficients. Each rate coefficient stores its data a
   reaction order: `m^3/s` for two-body and `m^6/s` for three-body processes.
 - `Expression`: an expression string, see below.
 
+A rate coefficient can also store an optional `energyLoss`, the energy
+transferred per reaction, as a value with its unit, e.g.
+`{ "value": 2.0, "unit": "eV" }`. Where a cross section stores this in its
+`threshold` property (in eV), the energy loss of a rate coefficient is
+stored separately from its data.
+
 ### Expression syntax
 
 For `Expression` data the unit literals inside the expression carry its

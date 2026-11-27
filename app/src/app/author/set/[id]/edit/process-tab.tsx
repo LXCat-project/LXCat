@@ -16,10 +16,12 @@ import {
   Button,
   Center,
   Fieldset,
+  Group,
   ScrollArea,
   Select,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
 import {
   IconPlaylistAdd,
@@ -118,6 +120,41 @@ const typeLabelMap = {
   "CrossSection": "Cross section",
   "RateCoefficient": "Rate coefficient",
 };
+
+// An optional energy loss with its unit, e.g. `{ value: 2, unit: "eV" }`.
+const EnergyLossInput = (
+  { energyLoss, onChange }: {
+    energyLoss?: { value: number; unit: string };
+    onChange: (
+      energyLoss: { value: number; unit: string } | undefined,
+    ) => MaybePromise<void>;
+  },
+) => (
+  <Group gap="xs" align="flex-end">
+    <ScientificInput
+      style={{ flex: 1 }}
+      label="Energy loss"
+      value={energyLoss?.value}
+      onChange={(value) =>
+        onChange(
+          value === undefined
+            ? undefined
+            : { value, unit: energyLoss?.unit ?? "eV" },
+        )}
+    />
+    <TextInput
+      style={{ width: 130 }}
+      label="Unit"
+      value={energyLoss?.unit ?? ""}
+      onChange={({ currentTarget: { value: unit } }) =>
+        onChange(
+          unit === "" || energyLoss === undefined
+            ? energyLoss
+            : { ...energyLoss, unit },
+        )}
+    />
+  </Group>
+);
 const typeSelectData = Object
   .entries(typeLabelMap)
   .map(([value, label]) => ({ value, label }));
@@ -167,12 +204,23 @@ const ProcessInfoItem = (
               onChange={(references) => onChange({ ...info, references })}
             />
           </Fieldset>
-          <ScientificInput
-            label="Energy loss (eV)"
-            value={info.threshold}
-            onChange={(threshold) =>
-              onChange({ ...info, threshold: threshold ?? 0 })}
-          />
+          {info.type === "CrossSection"
+            ? (
+              <ScientificInput
+                label="Threshold (eV)"
+                value={info.threshold}
+                onChange={(threshold) =>
+                  onChange({ ...info, threshold: threshold ?? 0 })}
+              />
+            )
+            : info.type === "RateCoefficient"
+            ? (
+              <EnergyLossInput
+                energyLoss={info.energyLoss}
+                onChange={(energyLoss) => onChange({ ...info, energyLoss })}
+              />
+            )
+            : <></>}
           <Fieldset legend="Data">
             <ProcessInfoData
               data={info.data}

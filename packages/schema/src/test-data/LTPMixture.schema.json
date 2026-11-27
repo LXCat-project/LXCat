@@ -404,8 +404,22 @@
                         }
                       ]
                     },
-                    "threshold": {
-                      "type": "number"
+                    "energyLoss": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number"
+                        },
+                        "unit": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "unit"
+                      ],
+                      "additionalProperties": false
                     },
                     "isPartOf": {
                       "type": "array",
@@ -423,7 +437,6 @@
                   "required": [
                     "type",
                     "data",
-                    "threshold",
                     "isPartOf",
                     "_key",
                     "versionInfo"

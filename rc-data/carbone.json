@@ -512,7 +512,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -535,7 +534,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -558,7 +556,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -581,7 +578,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -604,7 +600,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -627,7 +622,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -650,7 +644,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -673,7 +666,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -696,7 +688,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -719,7 +710,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -742,7 +732,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -761,7 +750,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -784,7 +772,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": { "type": "Constant", "value": 6.81e-46, "unit": "m^6/s" }
         }
@@ -800,7 +787,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -819,7 +805,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": { "type": "Constant", "value": 2.76e-46, "unit": "m^6/s" }
         }
@@ -835,7 +820,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Harder2016"],
           "data": { "type": "Constant", "value": 2.76e-46, "unit": "m^6/s" }
         }
@@ -851,7 +835,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0.0,
           "references": ["Beuthe1997"],
           "data": {
             "type": "ExtendedArrhenius",
@@ -874,7 +857,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Beuthe1997"],
           "data": { "type": "Constant", "value": 1e-21, "unit": "m^3/s" }
         }
@@ -890,7 +872,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["Beuthe1997"],
           "data": {
             "type": "ExtendedArrhenius",

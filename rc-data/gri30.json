@@ -93,7 +93,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -112,7 +111,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -131,7 +129,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -150,7 +147,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -166,7 +162,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -185,7 +180,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "9.465072682890926e-17 * <m^3/s>" }
         }
@@ -201,7 +195,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.3284312537390773e-16 * <m^3/s>" }
         }
@@ -217,7 +210,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.49080860076077e-17 * <m^3/s>" }
         }
@@ -233,7 +225,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.49080860076077e-17 * <m^3/s>" }
         }
@@ -249,7 +240,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.402327679899664e-17 * <m^3/s>" }
         }
@@ -265,7 +255,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -284,7 +273,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -303,7 +291,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -319,7 +306,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -335,7 +321,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -354,7 +339,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738466e-17 * <m^3/s>" }
         }
@@ -370,7 +354,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738466e-17 * <m^3/s>" }
         }
@@ -386,7 +369,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -405,7 +387,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -424,7 +405,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -440,7 +420,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -459,7 +438,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -478,7 +456,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -497,7 +474,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -513,7 +489,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -532,7 +507,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.7196075104694165e-17 * <m^3/s>" }
         }
@@ -548,7 +522,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -567,7 +540,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738467e-16 * <m^3/s>" }
         }
@@ -583,7 +555,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -602,7 +573,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -621,7 +591,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -640,7 +609,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -659,7 +627,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -678,7 +645,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "5.735371186710024e-41 * (T_g / <K>) ^ -1.24 * <m^6/s>" }
         }
@@ -694,7 +660,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.104821132805523e-41 * (T_g / <K>) ^ -0.76 * <m^6/s>" }
         }
@@ -710,7 +675,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "7.169213983387531e-41 * (T_g / <K>) ^ -1.24 * <m^6/s>" }
         }
@@ -726,7 +690,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.930172995527412e-42 * (T_g / <K>) ^ -0.8 * <m^6/s>" }
         }
@@ -742,7 +705,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -761,7 +723,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -780,7 +741,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.4816509942495298e-43 * (T_g / <K>) ^ -0.6 * <m^6/s>" }
         }
@@ -796,7 +756,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.654433996166353e-40 * (T_g / <K>) ^ -1.25 * <m^6/s>" }
         }
@@ -812,7 +771,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.5165644964858238e-39 * (T_g / <K>) ^ -2 * <m^6/s>" }
         }
@@ -828,7 +786,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -847,7 +804,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -866,7 +822,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -885,7 +840,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -904,7 +858,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -923,7 +876,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -942,7 +894,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.739889460836847e-16 * <m^3/s>" }
         }
@@ -958,7 +909,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -977,7 +927,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -993,7 +942,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1012,7 +960,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1031,7 +978,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1050,7 +996,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.2188356753056034e-16 * <m^3/s>" }
         }
@@ -1066,7 +1011,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1085,7 +1029,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1104,7 +1047,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1123,7 +1065,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1142,7 +1083,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -1158,7 +1098,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1177,7 +1116,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1196,7 +1134,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1215,7 +1152,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1234,7 +1170,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -1250,7 +1185,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1269,7 +1203,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1288,7 +1221,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1307,7 +1239,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1326,7 +1257,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1345,7 +1275,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1364,7 +1293,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1383,7 +1311,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -1399,7 +1326,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1418,7 +1344,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1437,7 +1362,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1456,7 +1380,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.3210781343476933e-18 * <m^3/s>" }
         }
@@ -1472,7 +1395,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1491,7 +1413,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738467e-16 * <m^3/s>" }
         }
@@ -1507,7 +1428,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1526,7 +1446,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1545,7 +1464,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738466e-17 * <m^3/s>" }
         }
@@ -1561,7 +1479,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1580,7 +1497,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1599,7 +1515,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1618,7 +1533,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1637,7 +1551,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1656,7 +1569,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1675,7 +1587,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1694,7 +1605,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -1710,7 +1620,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -1726,7 +1635,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -1742,7 +1650,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1761,7 +1668,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -1777,7 +1683,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1796,7 +1701,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1815,7 +1719,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1834,7 +1737,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1853,7 +1755,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1872,7 +1773,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -1888,7 +1788,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1907,7 +1806,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869233e-18 * <m^3/s>" }
         }
@@ -1923,7 +1821,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869233e-18 * <m^3/s>" }
         }
@@ -1939,7 +1836,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1958,7 +1854,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -1977,7 +1872,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -1993,7 +1887,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2012,7 +1905,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2031,7 +1923,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2050,7 +1941,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2069,7 +1959,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869233e-18 * <m^3/s>" }
         }
@@ -2085,7 +1974,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2104,7 +1992,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2123,7 +2010,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2142,7 +2028,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2161,7 +2046,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2180,7 +2064,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -2196,7 +2079,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738466e-18 * <m^3/s>" }
         }
@@ -2212,7 +2094,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.276837673917141e-17 * <m^3/s>" }
         }
@@ -2228,7 +2109,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2247,7 +2127,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2266,7 +2145,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2285,7 +2163,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -2301,7 +2178,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -2317,7 +2193,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.114221714073651e-16 * <m^3/s>" }
         }
@@ -2333,7 +2208,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2352,7 +2226,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2371,7 +2244,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.642156268695386e-17 * <m^3/s>" }
         }
@@ -2387,7 +2259,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -2403,7 +2274,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "9.96323440304308e-17 * <m^3/s>" }
         }
@@ -2419,7 +2289,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2438,7 +2307,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2457,7 +2325,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2476,7 +2343,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -2492,7 +2358,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2511,7 +2376,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2530,7 +2394,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2549,7 +2412,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.642156268695386e-17 * <m^3/s>" }
         }
@@ -2565,7 +2427,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2584,7 +2445,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2603,7 +2463,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -2619,7 +2478,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2638,7 +2496,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2657,7 +2514,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.6495093880867704e-17 * <m^3/s>" }
         }
@@ -2673,7 +2529,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.992646880608616e-17 * <m^3/s>" }
         }
@@ -2689,7 +2544,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.1623773470216927e-16 * <m^3/s>" }
         }
@@ -2705,7 +2559,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2724,7 +2577,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-17 * <m^3/s>" }
         }
@@ -2740,7 +2592,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2759,7 +2610,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2778,7 +2628,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.494485160456462e-17 * <m^3/s>" }
         }
@@ -2794,7 +2643,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.1623773470216926e-17 * <m^3/s>" }
         }
@@ -2810,7 +2658,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.3247546940433852e-17 * <m^3/s>" }
         }
@@ -2826,7 +2673,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2845,7 +2691,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2864,7 +2709,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2883,7 +2727,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2902,7 +2745,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2921,7 +2763,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2940,7 +2781,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.397107449876346e-17 * <m^3/s>" }
         }
@@ -2956,7 +2796,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2975,7 +2814,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -2994,7 +2832,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3013,7 +2850,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3032,7 +2868,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3051,7 +2886,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3070,7 +2904,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3089,7 +2922,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3108,7 +2940,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3127,7 +2958,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3146,7 +2976,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3165,7 +2994,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3184,7 +3012,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3203,7 +3030,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3222,7 +3048,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3241,7 +3066,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3260,7 +3084,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738466e-17 * <m^3/s>" }
         }
@@ -3276,7 +3099,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3295,7 +3117,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3314,7 +3135,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3333,7 +3153,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3352,7 +3171,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3371,7 +3189,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3390,7 +3207,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3409,7 +3225,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3428,7 +3243,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3447,7 +3261,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3466,7 +3279,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3485,7 +3297,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3504,7 +3315,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.642156268695386e-17 * <m^3/s>" }
         }
@@ -3520,7 +3330,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3539,7 +3348,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -3555,7 +3363,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.3210781343476933e-21 * (T_g / <K>) ^ 1.2 * <m^3/s>" }
         }
@@ -3571,7 +3378,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3590,7 +3396,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3609,7 +3414,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.49080860076077e-17 * <m^3/s>" }
         }
@@ -3625,7 +3429,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3644,7 +3447,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.586764385095509e-17 * (T_g / <K>) ^ -0.23 * <m^3/s>" }
         }
@@ -3660,7 +3462,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.06096759518454e-16 * (T_g / <K>) ^ -0.45 * <m^3/s>" }
         }
@@ -3676,7 +3477,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.98161720152154e-18 * <m^3/s>" }
         }
@@ -3692,7 +3492,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.476102361978002e-17 * <m^3/s>" }
         }
@@ -3708,7 +3507,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3727,7 +3525,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3746,7 +3543,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "330000000.0 * <s^-1>" }
         }
@@ -3762,7 +3558,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3781,7 +3576,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869233e-18 * <m^3/s>" }
         }
@@ -3797,7 +3591,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.151347667934617e-17 * <m^3/s>" }
         }
@@ -3813,7 +3606,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.1623773470216927e-16 * <m^3/s>" }
         }
@@ -3829,7 +3621,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.302695335869234e-17 * <m^3/s>" }
         }
@@ -3845,7 +3636,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -3861,7 +3651,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.151347667934617e-17 * <m^3/s>" }
         }
@@ -3877,7 +3666,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3896,7 +3684,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.151347667934617e-17 * <m^3/s>" }
         }
@@ -3912,7 +3699,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3931,7 +3717,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3950,7 +3735,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -3969,7 +3753,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.2786150817238618e-16 * <m^3/s>" }
         }
@@ -3985,7 +3768,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.642156268695386e-17 * <m^3/s>" }
         }
@@ -4001,7 +3783,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4020,7 +3801,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4039,7 +3819,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4058,7 +3837,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.9022668078585394e-17 * <m^3/s>" }
         }
@@ -4074,7 +3852,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "8.966910962738771e-17 * <m^3/s>" }
         }
@@ -4090,7 +3867,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.1513476679346165e-18 * <m^3/s>" }
         }
@@ -4106,7 +3882,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.321078134347693e-17 * <m^3/s>" }
         }
@@ -4122,7 +3897,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4141,7 +3915,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4160,7 +3933,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4179,7 +3951,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4198,7 +3969,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4217,7 +3987,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4236,7 +4005,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4255,7 +4023,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4274,7 +4041,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4293,7 +4059,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4312,7 +4077,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4331,7 +4095,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4350,7 +4113,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4369,7 +4131,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4388,7 +4149,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4407,7 +4167,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4426,7 +4185,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4445,7 +4203,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4464,7 +4221,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.1550242276303085e-17 * <m^3/s>" }
         }
@@ -4480,7 +4236,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.815563294804155e-17 * <m^3/s>" }
         }
@@ -4496,7 +4251,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "6.80821017541277e-17 * <m^3/s>" }
         }
@@ -4512,7 +4266,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.6900732888216316e-17 * <m^3/s>" }
         }
@@ -4528,7 +4281,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.084926105247663e-17 * <m^3/s>" }
         }
@@ -4544,7 +4296,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4563,7 +4314,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4582,7 +4332,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4601,7 +4350,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4620,7 +4368,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4639,7 +4386,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4658,7 +4404,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4677,7 +4422,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4696,7 +4440,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.6531859477824626e-17 * <m^3/s>" }
         }
@@ -4712,7 +4455,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.3210781343476933e-18 * <m^3/s>" }
         }
@@ -4728,7 +4470,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.992646880608616e-17 * <m^3/s>" }
         }
@@ -4744,7 +4485,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.992646880608616e-17 * <m^3/s>" }
         }
@@ -4760,7 +4500,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.6605390671738467e-16 * <m^3/s>" }
         }
@@ -4776,7 +4515,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4795,7 +4533,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4814,7 +4551,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4833,7 +4569,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4852,7 +4587,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4871,7 +4605,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4890,7 +4623,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4909,7 +4641,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4928,7 +4659,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4947,7 +4677,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4966,7 +4695,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -4985,7 +4713,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5004,7 +4731,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.494485160456462e-17 * <m^3/s>" }
         }
@@ -5020,7 +4746,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5039,7 +4764,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5058,7 +4782,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5077,7 +4800,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5096,7 +4818,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5115,7 +4836,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5134,7 +4854,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5153,7 +4872,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5172,7 +4890,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5191,7 +4908,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "5.596016656375864e-17 * <m^3/s>" }
         }
@@ -5207,7 +4923,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5226,7 +4941,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.8199508176225358e-16 * <m^3/s>" }
         }
@@ -5242,7 +4956,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5261,7 +4974,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5280,7 +4992,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5299,7 +5010,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5318,7 +5028,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5337,7 +5046,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5356,7 +5064,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5375,7 +5082,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5394,7 +5100,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5413,7 +5118,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5432,7 +5136,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5451,7 +5154,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5470,7 +5172,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5489,7 +5190,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5508,7 +5208,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5527,7 +5226,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5546,7 +5244,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5565,7 +5262,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5584,7 +5280,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "2.49080860076077e-16 * <m^3/s>" }
         }
@@ -5600,7 +5295,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.0055757115846624e-20 * <m^3/s>" }
         }
@@ -5616,7 +5310,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.9022668078585396e-20 * <m^3/s>" }
         }
@@ -5632,7 +5325,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.6531859477824626e-17 * <m^3/s>" }
         }
@@ -5648,7 +5340,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.8265929738912313e-17 * <m^3/s>" }
         }
@@ -5664,7 +5355,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.992646880608616e-17 * <m^3/s>" }
         }
@@ -5680,7 +5370,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.9982225921932786e-17 * <m^3/s>" }
         }
@@ -5696,7 +5385,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5715,7 +5403,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5734,7 +5421,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5753,7 +5439,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5772,7 +5457,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5791,7 +5475,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5810,7 +5493,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5829,7 +5511,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "1.600759660755588e-16 * <m^3/s>" }
         }
@@ -5845,7 +5526,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5864,7 +5544,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5883,7 +5562,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.00189915188897e-17 * <m^3/s>" }
         }
@@ -5899,7 +5577,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": {
             "type": "Expression",
@@ -5918,7 +5595,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "4.00189915188897e-17 * <m^3/s>" }
         }
@@ -5934,7 +5610,6 @@
       "info": [
         {
           "type": "RateCoefficient",
-          "threshold": 0,
           "references": ["GRI30"],
           "data": { "type": "Expression", "expression": "3.1998587824440024e-17 * (T_g / <K>) ^ -0.32 * <m^3/s>" }
         }

@@ -126,6 +126,43 @@ describe("LTPDocument", () => {
     expect(NewLTPDocument.parse(doc).processes[0].info[0].references)
       .toBeUndefined();
   });
+  test("Should accept a rate coefficient with and without energy loss", () => {
+    const rateCoefficient = {
+      reaction: {
+        lhs: [],
+        rhs: [],
+        reversible: false,
+        typeTags: ["Elastic"],
+      },
+      info: [{
+        type: "RateCoefficient",
+        data: {
+          type: "Constant",
+          value: 4.38e-13,
+          unit: "m^3/s",
+        },
+      }],
+    } as const;
+    const doc = {
+      contributor: "TestOrganization",
+      name: "TestSet",
+      description: "",
+      complete: false,
+      states: {},
+      references: {},
+      processes: [{ ...rateCoefficient }],
+    };
+    expect(NewLTPDocument.parse(doc).processes[0].info[0].energyLoss)
+      .toBeUndefined();
+    doc.processes[0].info[0] = {
+      ...rateCoefficient.info[0],
+      energyLoss: { value: 2, unit: "eV" },
+    };
+    expect(NewLTPDocument.parse(doc).processes[0].info[0].energyLoss).toEqual({
+      value: 2,
+      unit: "eV",
+    });
+  });
   test("An edited document can contain both new and existing processes", () => {
     const doc: EditedLTPDocument = {
       _key: "123",
