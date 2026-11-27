@@ -64,7 +64,7 @@ const MixtureBody = <ReferenceType extends ZodType>(
       (doc) =>
         doc.processes
           .flatMap(({ info }) => info)
-          .flatMap(({ references }) => references)
+          .flatMap(({ references }) => references ?? [])
           .every((reference) =>
             typeof reference === "string"
               ? reference in doc.references

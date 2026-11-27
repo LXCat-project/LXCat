@@ -162,7 +162,7 @@ const ProcessInfoItem = (
           </Fieldset>
           <Fieldset legend="References">
             <ReferenceSection
-              selected={info.references}
+              selected={info.references ?? []}
               references={references}
               onChange={(references) => onChange({ ...info, references })}
             />

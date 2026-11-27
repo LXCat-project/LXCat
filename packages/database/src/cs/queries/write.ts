@@ -46,6 +46,7 @@ export async function createCS(
   }
 
   const { references, _key, ...infoBody } = info[0];
+  const referenceList = references ?? [];
 
   const versionInfo: VersionInfo = {
     status,
@@ -61,7 +62,7 @@ export async function createCS(
     info: infoBody,
   });
 
-  for (const ref of references) {
+  for (const ref of referenceList) {
     if (typeof ref === "string") {
       await this.insertEdge("References", csId, refDict[ref]);
     } else {
@@ -224,6 +225,7 @@ export async function updateDraftCS(
   }
 
   const { references, ...infoBody } = info[0];
+  const referenceList = references ?? [];
 
   const reactionId = await this.insertReactionWithDict(stateDict, reaction);
   // TODO remove orphaned reaction?
@@ -235,9 +237,9 @@ export async function updateDraftCS(
   };
   await this.db.collection("CrossSection").replace({ _key: key }, doc);
 
-  if (references.length > 0) {
+  if (referenceList.length > 0) {
     // handle updated refs
-    for (const ref of references) {
+    for (const ref of referenceList) {
       if (typeof ref === "string") {
         await this.insertEdge(
           "References",
@@ -259,7 +261,7 @@ export async function updateDraftCS(
 
     await this.dropReferencesFromExcluding(
       `CrossSection/${key}`,
-      references.map((ref) =>
+      referenceList.map((ref) =>
         typeof ref === "string" ? refDict[ref] : refDict[ref.id]
       ),
     );

@@ -245,7 +245,7 @@ export const EditForm = (
                     ...process,
                     info: process.info.map((info) => ({
                       ...info,
-                      references: info.references.filter((ref) =>
+                      references: (info.references ?? []).filter((ref) =>
                         (typeof ref === "object" ? ref.id : ref) in referenceMap
                       ),
                     })),

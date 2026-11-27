@@ -191,7 +191,7 @@ export const ProcessTable = (
           accessor: "reference",
           title: "Source",
           render: ({ info: { references } }) =>
-            renderReferences(references, referenceMarkers),
+            renderReferences(references ?? [], referenceMarkers),
         },
         {
           accessor: "actions",

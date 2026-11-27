@@ -276,7 +276,6 @@
                   },
                   "required": [
                     "type",
-                    "references",
                     "data",
                     "threshold",
                     "isPartOf",
@@ -423,7 +422,6 @@
                   },
                   "required": [
                     "type",
-                    "references",
                     "data",
                     "threshold",
                     "isPartOf",

@@ -550,7 +550,7 @@ function isEqualProcess(
       // We need to add the keys when comparing to prevCS, as prevCS info
       // objects will always contain a key.
       _key: prevCS.info[i]._key,
-      references: mapReferences(referenceLookup, info.references),
+      references: mapReferences(referenceLookup, info.references ?? []),
     })),
   };
 
@@ -566,7 +566,7 @@ function isEqualProcess(
     reaction: mapReaction(prevStateLookup, prevCS.reaction),
     info: prevCS.info.map((info) => ({
       ...info,
-      references: info.references.map((r) =>
+      references: (info.references ?? []).map((r) =>
         typeof r === "string"
           ? `Reference/${r}`
           : { ...r, id: `Reference/${r.id}` }

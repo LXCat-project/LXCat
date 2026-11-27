@@ -94,6 +94,38 @@ describe("LTPDocument", () => {
       }),
     );
   });
+  test("Should accept an info item without references", () => {
+    const doc: NewLTPDocument = {
+      contributor: "TestOrganization",
+      name: "TestSet",
+      description: "",
+      complete: false,
+      states: {},
+      references: {},
+      processes: [
+        {
+          reaction: {
+            lhs: [],
+            rhs: [],
+            reversible: false,
+            typeTags: ["Elastic"],
+          },
+          info: [{
+            type: "CrossSection",
+            threshold: 0,
+            data: {
+              type: "LUT",
+              labels: ["Energy", "Cross section"],
+              units: ["eV", "m^2"],
+              values: [[0, 0]],
+            },
+          }],
+        },
+      ],
+    };
+    expect(NewLTPDocument.parse(doc).processes[0].info[0].references)
+      .toBeUndefined();
+  });
   test("An edited document can contain both new and existing processes", () => {
     const doc: EditedLTPDocument = {
       _key: "123",

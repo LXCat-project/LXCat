@@ -16,6 +16,8 @@ export const ProcessInfoBase = <
   object({
     type: literal(type),
     comments: array(string()).optional(),
-    references: array(referenceType),
+    // An info item without references is valid, e.g. when the process is
+    // taken from a model whose source does not state one.
+    references: array(referenceType).optional(),
     data: dataType,
   });

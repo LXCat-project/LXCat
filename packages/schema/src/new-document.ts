@@ -42,7 +42,7 @@ export const NewLTPDocument = object({
 }, (ctx) =>
   ctx.value.processes
     .flatMap(({ info }) => info)
-    .flatMap(({ references }) => references)
+    .flatMap(({ references }) => references ?? [])
     .forEach((reference) => {
       const key = typeof reference === "string" ? reference : reference.id;
       const valid = key in ctx.value.references;
