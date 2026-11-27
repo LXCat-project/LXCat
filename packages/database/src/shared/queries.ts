@@ -42,21 +42,33 @@ export async function upsertDocument(
   return result.next();
 }
 
+/**
+ * Insert an edge.
+ *
+ * By default an existing edge between the same `_from` and `_to` is reused
+ * instead of inserting a duplicate. Reaction stoichiometry edges are the
+ * exception: a reaction can consume or produce the same state more than
+ * once, so those pass `dedupe: false`.
+ */
 export async function insertEdge(
   this: LXCatDatabase,
   collection: string,
   from: string,
   to: string,
   properties: Record<string, unknown> = {},
+  dedupe = true,
 ): Promise<string> {
   const edge_object = { _from: from, _to: to };
+  const edge = { ...edge_object, ...properties };
 
   const result = await this.db.query(
-    "UPSERT @from_to INSERT @edge UPDATE {} IN @@collection LET ret = NEW RETURN ret._id",
+    dedupe
+      ? "UPSERT @from_to INSERT @edge UPDATE {} IN @@collection LET ret = NEW RETURN ret._id"
+      : "INSERT @edge IN @@collection LET ret = NEW RETURN ret._id",
     {
       "@collection": collection,
-      from_to: edge_object,
-      edge: { ...edge_object, ...properties },
+      ...(dedupe ? { from_to: edge_object } : {}),
+      edge,
     },
   );
 
@@ -366,14 +378,16 @@ export async function insertReactionWithDict(
   });
 
   for (const entry of mappedReaction.lhs) {
+    // The same state can be consumed (or produced) more than once, so
+    // these edges must not be deduplicated on `(_from, _to)`.
     await this.insertEdge("Consumes", r_id, entry.state, {
       count: entry.count,
-    });
+    }, false);
   }
   for (const entry of mappedReaction.rhs) {
     await this.insertEdge("Produces", r_id, entry.state, {
       count: entry.count,
-    });
+    }, false);
   }
 
   return r_id;
