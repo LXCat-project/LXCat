@@ -71,9 +71,12 @@ csTest.describe("Cross section page", () => {
   csTest("should be able to download RIS references", async ({ page }) => {
     await page.locator("text=Download references").click();
 
+    // `text=RIS` also substring-matches the citations in the still-open
+    // terms-of-use modal, like the "Christophorou" author in the Pitchford
+    // reference, which makes the click flaky until the modal unmounts.
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.locator("text=RIS").click(),
+      page.getByRole("menuitem", { name: "RIS" }).click(),
     ]);
 
     const path = await download.path();
