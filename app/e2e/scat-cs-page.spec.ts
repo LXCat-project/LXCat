@@ -16,6 +16,11 @@ const csTest = test.extend({
 
     // accept tos
     await page.locator("text=I agree with the terms of use").click();
+    // The modal only closes after the async server action that accepts the
+    // terms of use resolves, so wait for it instead of racing its unmount.
+    await expect(
+      page.getByRole("heading", { name: "Terms of use" }),
+    ).toBeHidden();
 
     await use(page);
   },
@@ -71,9 +76,12 @@ csTest.describe("Cross section page", () => {
   csTest("should be able to download RIS references", async ({ page }) => {
     await page.locator("text=Download references").click();
 
+    // `text=RIS` also substring-matches the citations in the still-open
+    // terms-of-use modal, like the "Christophorou" author in the Pitchford
+    // reference, which makes the click flaky until the modal unmounts.
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.locator("text=RIS").click(),
+      page.getByRole("menuitem", { name: "RIS" }).click(),
     ]);
 
     const path = await download.path();
