@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
+/* The disabled checkbox of data that cannot be plotted. In dark theme the
+ * default disabled styling is nearly invisible. */
 .table {
     :global(.mantine-ScrollArea-viewport) {
         max-height: 400px;
@@ -18,7 +19,16 @@
     }
 }
 
+.checkboxDisabled {
+    :global(.mantine-Checkbox-input) {
+        &:disabled {
+            cursor: not-allowed;
+            border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-5));
+        }
+    }
+}
+
 .nested {
-  padding: 10px;
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));
+    padding: 10px;
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-8));
 }

@@ -21,6 +21,7 @@ import { PAGE_SIZE } from "../../../cs/constants";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
+import { ExpandableInfo, expandableInfo } from "./expanded-info";
 import classes from "./process-table.module.css";
 import { isPlottable, toggleAll } from "./selection";
 
@@ -75,6 +76,39 @@ const renderReferences = (
       )}
     <Text size="sm">]</Text>
   </Group>
+);
+
+// The details of a process, shown when its row is expanded.
+const Expanded = ({ info }: { info: ExpandableInfo }) => (
+  <Box className={classes.nested}>
+    {info.comments
+      && (
+        <>
+          <Text fw={700}>Comments:</Text>
+          <List type="unordered">
+            {info.comments.map((comment, index) => (
+              <List.Item key={index}>
+                <Text>{comment}</Text>
+              </List.Item>
+            ))}
+          </List>
+        </>
+      )}
+    {info.constant
+      && (
+        <Group>
+          <Text fw={700}>Value:</Text>
+          <Text>{info.constant.value} {info.constant.unit}</Text>
+        </Group>
+      )}
+    {info.expression
+      && (
+        <Group>
+          <Text fw={700}>Expression:</Text>
+          <Text ff="mono">{info.expression}</Text>
+        </Group>
+      )}
+  </Box>
 );
 
 export const ProcessTable = (
@@ -132,29 +166,26 @@ export const ProcessTable = (
         `${from}–${to} of ${totalRecords}`}
       rowExpansion={{
         allowMultiple: true,
-        expandable: ({ record: { info: { comments } } }) =>
-          comments !== undefined && comments.length > 0,
+        expandable: ({ record: { info } }) =>
+          expandableInfo(info) !== undefined,
         expanded: {
           recordIds: expanded,
           onRecordIdsChange: setExpanded,
         },
-        content: ({ record: { info: { comments } } }) => (
-          <Box className={classes.nested}>
-            <Text fw={700}>Comments:</Text>
-            <List type="unordered">
-              {comments?.map((comment, index) => (
-                <List.Item key={index}>
-                  <Text>{comment}</Text>
-                </List.Item>
-              ))}
-            </List>
-          </Box>
+        content: ({ record: { info } }) => (
+          <Expanded info={expandableInfo(info)!} />
         ),
       }}
       columns={[
         {
           accessor: "reaction",
           render: (record) => <Latex>{reactionAsLatex(record.reaction)}</Latex>,
+        },
+        {
+          accessor: "data",
+          title: "Data",
+          width: 120,
+          render: ({ info: { data } }) => <Text size="sm">{data.type}</Text>,
         },
         {
           accessor: "type",
@@ -197,18 +228,18 @@ export const ProcessTable = (
           accessor: "actions",
           textAlign: "center",
           width: 80,
-          render: ({ info: { _key, comments } }) => {
-            if (comments && comments.length > 0) {
-              return expanded.includes(_key)
+          render: ({ info }) => {
+            if (expandableInfo(info) !== undefined) {
+              return expanded.includes(info._key)
                 ? (
-                  <Tooltip label="Hide comments">
+                  <Tooltip label="Hide details">
                     <ActionIcon size="sm" variant="subtle">
                       <IconEyeClosed size={20} />
                     </ActionIcon>
                   </Tooltip>
                 )
                 : (
-                  <Tooltip label="Show comments">
+                  <Tooltip label="Show details">
                     <ActionIcon size="sm" variant="subtle">
                       <IconEye size={20} />
                     </ActionIcon>
@@ -228,10 +259,15 @@ export const ProcessTable = (
         onChange: () =>
           onChangeSelected(toggleAll(processes, selectable, selected)),
       }}
-      getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
-        color: colorMap.get(_key),
-        className: classes.checkbox,
-      })}
+      getRecordSelectionCheckboxProps={(record) => {
+        const { _key } = record.info;
+        return isPlottable(record)
+          ? { color: colorMap.get(_key), className: classes.checkbox }
+          : {
+            className: classes.checkboxDisabled,
+            title: "Expression data cannot be plotted yet",
+          };
+      }}
     />
   );
 };
