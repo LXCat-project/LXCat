@@ -6,6 +6,7 @@ import { ReferenceRef } from "@lxcat/schema/reference";
 import {
   ActionIcon,
   Box,
+  Checkbox,
   Group,
   HoverCard,
   List,
@@ -154,6 +155,16 @@ export const ProcessTable = (
       .length;
   }, [selectable, selected]);
 
+  const isSelected = ({ info: { _key } }: DenormalizedProcess) =>
+    selected.some(({ info: { _key: key } }) => key === _key);
+
+  const toggleRecord = (record: DenormalizedProcess) =>
+    onChangeSelected(
+      isSelected(record)
+        ? selected.filter(({ info: { _key } }) => _key !== record.info._key)
+        : [...selected, record],
+    );
+
   return (
     <DataTable
       withTableBorder
@@ -181,7 +192,49 @@ export const ProcessTable = (
           <Expanded info={expandableInfo(info)!} />
         ),
       }}
+      customRowAttributes={(record) =>
+        isSelected(record) ? { "data-selected": true } : {}}
       columns={[
+        {
+          accessor: "select",
+          title: (
+            <Checkbox
+              aria-label="Select all records"
+              checked={selectable.length > 0
+                && nrSelected === selectable.length}
+              indeterminate={nrSelected > 0 && nrSelected < selectable.length}
+              onChange={() =>
+                onChangeSelected(toggleAll(processes, selectable, selected))}
+            />
+          ),
+          width: 40,
+          textAlign: "center",
+          render: (record) => {
+            const plottable = isPlottable(record);
+            const checkbox = (
+              <Checkbox
+                aria-label="Select process"
+                checked={isSelected(record)}
+                disabled={!plottable}
+                color={colorMap.get(record.info._key)}
+                className={plottable
+                  ? classes.checkbox
+                  : classes.checkboxDisabled}
+                onChange={() => toggleRecord(record)}
+              />
+            );
+            return plottable
+              ? checkbox
+              : (
+                <Tooltip
+                  position="right"
+                  label="Expression data cannot be plotted yet"
+                >
+                  {checkbox}
+                </Tooltip>
+              );
+          },
+        },
         {
           accessor: "reaction",
           render: (record) => <Latex>{reactionAsLatex(record.reaction)}</Latex>,
@@ -256,27 +309,6 @@ export const ProcessTable = (
           },
         },
       ]}
-      selectedRecords={selected}
-      onSelectedRecordsChange={onChangeSelected}
-      isRecordSelectable={isPlottable}
-      allRecordsSelectionCheckboxProps={{
-        "aria-label": "Select all records",
-        checked: selectable.length > 0 && nrSelected === selectable.length,
-        indeterminate: nrSelected > 0 && nrSelected < selectable.length,
-        onChange: () =>
-          onChangeSelected(toggleAll(processes, selectable, selected)),
-      }}
-      getRecordSelectionCheckboxProps={(record) => {
-        const { _key } = record.info;
-        return isPlottable(record)
-          ? { color: colorMap.get(_key), className: classes.checkbox }
-          : {
-            className: classes.checkboxDisabled,
-            // The disabled input itself does not fire hover events, so
-            // the tooltip goes on the root element.
-            wrapperProps: { title: "Expression data cannot be plotted yet" },
-          };
-      }}
     />
   );
 };
