@@ -14,6 +14,9 @@ import { DenormalizedProcess } from "../denormalized-process";
 interface ChartProps {
   processes: Array<DenormalizedProcess>;
   colors: Array<string>;
+  // The x range of the plotted group, from its tabulated data: constant
+  // lines span it and Arrhenius coefficients are sampled over it.
+  range: [number, number];
   // Axis titles are absent for data whose unit is unknown, e.g. the
   // expression-type rate coefficients, which cannot be plotted.
   xlabel?: string;
@@ -23,29 +26,9 @@ interface ChartProps {
 const Plot = createPlotlyComponent(Plotly);
 
 export const ProcessPlot = (
-  { processes, colors, xlabel, ylabel }: ChartProps,
+  { processes, colors, range, xlabel, ylabel }: ChartProps,
 ) => {
   const { layout, axis, markerOutline } = usePlotTheme();
-
-  const range = processes.reduce<[number, number]>((acc, { info }) => {
-    if (info.data.type == "LUT") {
-      const min = info.data.values[0][0];
-      const max = info.data.values[0][info.data.values.length - 1];
-
-      if (min < acc[0]) {
-        acc[0] = min;
-      }
-      if (max > acc[1]) {
-        acc[1] = max;
-      }
-    }
-    return acc;
-  }, [Number.MAX_VALUE, 0.]);
-
-  if (range[0] == Number.MAX_VALUE) {
-    range[0] = 273.;
-    range[1] = 10000.;
-  }
 
   const makeLine = (
     process: DenormalizedProcess,

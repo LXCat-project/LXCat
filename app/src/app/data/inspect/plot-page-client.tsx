@@ -7,17 +7,18 @@
 import { FormattedReference } from "@/citation/formatted-reference";
 import { FormattedReferenceLink as Reference } from "@/citation/formatted-reference-link";
 import { annotateMixture } from "@/shared/annotate-mixture";
-import { mapObject } from "@/shared/utils";
 import { LTPMixture } from "@lxcat/schema";
 import {
   Alert,
   Button,
   Center,
+  Fieldset,
   Grid,
   Group,
   Loader,
   SegmentedControl,
   Stack,
+  Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
@@ -37,7 +38,7 @@ import { ButtonMultiDownload } from "./button-multi-download";
 import { colorScheme } from "./colors";
 import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
-import { PlotGroup, plotGroupOf } from "./plot-groups";
+import { groupsOf, membersOf, YGroup } from "./plot-groups";
 import { ProcessTable } from "./process-table";
 import { getReferencesForSelectionAction } from "./references-action";
 import { isPlottable } from "./selection";
@@ -122,78 +123,94 @@ export const PlotPageClient = (
     ...new Set(processes.map((process) => process.info.type)),
   ];
 
-  // The plot groups per info type, keyed by the group's key and ordered by
-  // first appearance. Processes are plotted together only when their axes
-  // agree, e.g. rate coefficients over the electron temperature and over
-  // the gas temperature get separate plots.
-  const groupMap: Record<string, Map<string, PlotGroup>> = Object.fromEntries(
-    infoTypes.map((type) => {
-      const groups = new Map<string, PlotGroup>();
-      for (const process of processes) {
-        if (process.info.type !== type) {
-          continue;
-        }
-        const group = plotGroupOf(process);
-        if (!groups.has(group.key)) {
-          groups.set(group.key, group);
-        }
-      }
-      return [type, groups];
-    }),
-  );
-
-  const processMap: Record<
-    string,
-    Record<string, Array<DenormalizedProcess>>
-  > = Object.fromEntries(
-    infoTypes.map((kind) => [
-      kind,
-      Object.fromEntries(
-        [...groupMap[kind]].map((
-          [group],
-        ) => [
-          group,
-          processes.filter((process) =>
-            process.info.type === kind
-            && plotGroupOf(process).key === group
-          ),
-        ]),
-      ),
+  // The plot groups per info type: y-axis groups (Two-body, Three-body,
+  // …) that each contain x-axis groups (electron temperature, gas
+  // temperature, …). Processes without an x axis (constants, expressions)
+  // are members of their y-axis group and appear in the table and plot of
+  // every x-axis group of it; a y-axis group without x-axis groups has no
+  // plot and is only listed in the table.
+  const groupsByType: Record<string, Array<YGroup>> = Object.fromEntries(
+    infoTypes.map((type) => [
+      type,
+      groupsOf(processes.filter((process) => process.info.type === type)),
     ]),
   );
 
   const [segmentControl, setSegmentControl] = useState({
     dataType: infoTypes[0],
-    group: [...groupMap[infoTypes[0]].keys()][0],
+    yGroup: groupsByType[infoTypes[0]][0].key,
+    // Undefined when the y-axis group has no tabulated data.
+    xGroup: groupsByType[infoTypes[0]][0].xGroups[0]?.key as
+      | string
+      | undefined,
   });
 
   const [newSelected, setNewSelected] = useState<
-    Record<string, Record<string, Array<DenormalizedProcess>>>
-  >(mapObject(
-    processMap,
-    (
-      [key, map],
-    ) => [
-      key,
-      mapObject(
-        map,
-        ([key, processes]) => [
-          key,
-          processes.filter(isPlottable).slice(0, NUM_LINES_INIT),
-        ],
+    Record<string, Record<string, Record<string, Array<DenormalizedProcess>>>>
+  >(Object.fromEntries(
+    Object.entries(groupsByType).map(([type, yGroups]) => [
+      type,
+      Object.fromEntries(
+        yGroups.map((yGroup) => [
+          yGroup.key,
+          Object.fromEntries(
+            yGroup.xGroups.map((xGroup) => [
+              xGroup.key,
+              membersOf(xGroup, yGroup).filter(isPlottable).slice(
+                0,
+                NUM_LINES_INIT,
+              ),
+            ]),
+          ),
+        ]),
       ),
-    ],
+    ]),
   ));
 
   const [warningVisible, setWarningVisibility] = useState(true);
 
+  // The current selection: the y group of the info type and, within it,
+  // the x group (undefined when it has no tabulated data).
+  const yGroups = groupsByType[segmentControl.dataType];
+  const yGroup = yGroups.find(({ key }) => key === segmentControl.yGroup)!;
+  const xGroup = segmentControl.xGroup === undefined
+    ? undefined
+    : yGroup.xGroups.find(({ key }) => key === segmentControl.xGroup);
+
+  const tableProcesses = xGroup
+    ? membersOf(xGroup, yGroup)
+    : yGroup.axisAgnostic;
+  // The selection of a group without tabulated data has no plot, so it is
+  // inert; only the tabulated groups carry a selection.
+  const selected = xGroup
+    ? newSelected[segmentControl.dataType][yGroup.key][xGroup.key]
+    : [];
+  const onChangeSelected = (processes: Array<DenormalizedProcess>) => {
+    if (xGroup) {
+      setNewSelected({
+        ...newSelected,
+        [segmentControl.dataType]: {
+          ...newSelected[segmentControl.dataType],
+          [yGroup.key]: {
+            ...newSelected[segmentControl.dataType][yGroup.key],
+            [xGroup.key]: processes,
+          },
+        },
+      });
+    }
+  };
+
+  // A stable color per process, indexed within its x-axis group.
   const colorMap = new Map(
-    Object.values(processMap).flatMap((map) => Object.values(map)).flatMap(
-      processes =>
-        processes.map((
-          { info: { _key: id } },
-          index,
-        ) => [id, colorScheme[index % colorScheme.length]]),
+    Object.values(groupsByType).flatMap((yGroups) =>
+      yGroups.flatMap((yGroup) =>
+        yGroup.xGroups.flatMap((xGroup) =>
+          membersOf(xGroup, yGroup).map((
+            { info: { _key: id } },
+            index,
+          ) => [id, colorScheme[index % colorScheme.length]])
+        )
+      )
     ),
   );
 
@@ -251,58 +268,72 @@ export const PlotPageClient = (
               onChange={(dataType) =>
                 setSegmentControl({
                   dataType,
-                  group: [...groupMap[dataType].keys()][0],
+                  yGroup: groupsByType[dataType][0].key,
+                  xGroup: groupsByType[dataType][0].xGroups[0]?.key,
                 })}
               data={tabData.filter((entry) => infoTypes.includes(entry.value))}
             />
-            <SegmentedControl
-              className={groupMap[segmentControl.dataType].size > 1
-                ? ""
-                : classes.hidden}
-              value={segmentControl.group}
-              onChange={(group) =>
-                setSegmentControl({ ...segmentControl, group })}
-              data={[...groupMap[segmentControl.dataType]].map((
-                [value, { label }],
-              ) => ({ value, label }))}
-            />
-            <Chart
-              processes={newSelected[segmentControl.dataType][
-                segmentControl.group
-              ]}
-              colors={newSelected[segmentControl.dataType][
-                segmentControl.group
-              ].map((
-                { info: { _key: id } },
-              ) => colorMap.get(id)!)}
-              xlabel={groupMap[segmentControl.dataType].get(
-                segmentControl.group,
-              )?.xlabel}
-              ylabel={groupMap[segmentControl.dataType].get(
-                segmentControl.group,
-              )?.ylabel}
-            />
+            <Fieldset legend="Plot">
+              <Stack>
+                {yGroups.length > 1
+                  && (
+                    <SegmentedControl
+                      value={segmentControl.yGroup}
+                      onChange={(yGroup) =>
+                        setSegmentControl({
+                          dataType: segmentControl.dataType,
+                          yGroup,
+                          xGroup: yGroups.find(({ key }) => key === yGroup)!
+                            .xGroups[0]?.key,
+                        })}
+                      data={yGroups.map(({ key, label }) => ({
+                        value: key,
+                        label,
+                      }))}
+                    />
+                  )}
+                {yGroup.xGroups.length > 1
+                  && (
+                    <SegmentedControl
+                      value={segmentControl.xGroup}
+                      onChange={(xGroup) =>
+                        setSegmentControl({ ...segmentControl, xGroup })}
+                      data={yGroup.xGroups.map(({ key, label }) => ({
+                        value: key,
+                        label,
+                      }))}
+                    />
+                  )}
+                {xGroup
+                  ? (
+                    <Chart
+                      processes={selected}
+                      colors={selected.map((
+                        { info: { _key: id } },
+                      ) => colorMap.get(id)!)}
+                      range={[xGroup.xmin, xGroup.xmax]}
+                      xlabel={xGroup.xlabel}
+                      ylabel={xGroup.ylabel}
+                    />
+                  )
+                  : (
+                    <Text c="dimmed">
+                      This group has no tabulated data to plot; see the table
+                      below for its processes.
+                    </Text>
+                  )}
+              </Stack>
+            </Fieldset>
           </Stack>
         </Grid.Col>
         <Grid.Col span="auto">
           <Stack>
             <ProcessTable
-              processes={processMap[segmentControl.dataType][
-                segmentControl.group
-              ]}
+              processes={tableProcesses}
               referenceMarkers={referenceMarkers}
               colorMap={colorMap}
-              selected={newSelected[segmentControl.dataType][
-                segmentControl.group
-              ]}
-              onChangeSelected={(processes) =>
-                setNewSelected({
-                  ...newSelected,
-                  [segmentControl.dataType]: {
-                    ...newSelected[segmentControl.dataType],
-                    [segmentControl.group]: processes,
-                  },
-                })}
+              selected={selected}
+              onChangeSelected={onChangeSelected}
             />
             <SetTable
               sets={data.sets}
