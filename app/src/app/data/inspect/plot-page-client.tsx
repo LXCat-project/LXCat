@@ -37,6 +37,7 @@ import { ButtonMultiDownload } from "./button-multi-download";
 import { colorScheme } from "./colors";
 import classes from "./inspect.module.css";
 import { toLegacyAction } from "./legacy-action";
+import { PlotGroup, plotGroupOf } from "./plot-groups";
 import { ProcessTable } from "./process-table";
 import { getReferencesForSelectionAction } from "./references-action";
 import { isPlottable } from "./selection";
@@ -103,63 +104,6 @@ const tabData = [
   { value: "EnergyRateCoefficient", label: "Energy Rate Coefficients" },
 ];
 
-const plotData: Record<
-  string,
-  Record<string, { xlabel: string; ylabel: string }>
-> = {
-  "CrossSection": {
-    "m^2": {
-      xlabel: "$\\text{Energy }\\left(\\mathrm{eV}\\right)$",
-      ylabel: "$\\text{Cross section} \\left(\\mathrm{m}^2\\right)$",
-    },
-  },
-  "RateCoefficient": {
-    "m^3/s": {
-      xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
-      ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^3/s}\\right)$",
-    },
-    "m^6/s": {
-      xlabel: "$\\text{Gas temperature }\\left(\\mathrm{K}\\right)$",
-      ylabel: "$\\text{Rate Coefficient} \\left(\\mathrm{m^6/s}\\right)$",
-    },
-  },
-  "EnergyRateCoefficient": {
-    "eV*m^3/s": {
-      xlabel: "$\\text{Electron temperature }\\left(\\mathrm{eV}\\right)$",
-      ylabel:
-        "$\\text{Energy Rate Coefficient} \\left(\\mathrm{eV\\,m^3/s}\\right)$",
-    },
-  },
-};
-
-const getUnitOfData = (process: DenormalizedProcess) => {
-  switch (process.info.data.type) {
-    case "Constant":
-      return process.info.data.unit;
-    // Expression data has no stored unit; group it under a pseudo-unit.
-    case "Expression":
-      return "Expression";
-    case "ExtendedArrhenius":
-      return process.info.data.coefficients.a.unit;
-    case "LUT":
-      return process.info.data.units[1];
-  }
-};
-
-const unitSegmentLabelMap: Record<string, Record<string, string>> = {
-  "CrossSection": {
-    "m^2": "m^2",
-  },
-  "RateCoefficient": {
-    "m^3/s": "Two-body",
-    "m^6/s": "Three-body",
-    "Expression": "Expression",
-  },
-  "EnergyRateCoefficient": {
-    "eV*m^3/s": "eV*m^3/s",
-  },
-};
-
 export const PlotPageClient = (
   { processes, refs, setStats, setMismatch, data, permaLink, forceTermsOfUse }:
     {
@@ -178,16 +122,24 @@ export const PlotPageClient = (
     ...new Set(processes.map((process) => process.info.type)),
   ];
 
-  const unitTypes: Record<string, Array<string>> = Object.fromEntries(
-    infoTypes.map((
-      type,
-    ) => [type, [
-      ...new Set(
-        processes.filter((process) => process.info.type === type).map(
-          getUnitOfData,
-        ),
-      ),
-    ]]),
+  // The plot groups per info type, keyed by the group's key and ordered by
+  // first appearance. Processes are plotted together only when their axes
+  // agree, e.g. rate coefficients over the electron temperature and over
+  // the gas temperature get separate plots.
+  const groupMap: Record<string, Map<string, PlotGroup>> = Object.fromEntries(
+    infoTypes.map((type) => {
+      const groups = new Map<string, PlotGroup>();
+      for (const process of processes) {
+        if (process.info.type !== type) {
+          continue;
+        }
+        const group = plotGroupOf(process);
+        if (!groups.has(group.key)) {
+          groups.set(group.key, group);
+        }
+      }
+      return [type, groups];
+    }),
   );
 
   const processMap: Record<
@@ -197,12 +149,13 @@ export const PlotPageClient = (
     infoTypes.map((kind) => [
       kind,
       Object.fromEntries(
-        unitTypes[kind].map((
-          unitType,
+        [...groupMap[kind]].map((
+          [group],
         ) => [
-          unitType,
+          group,
           processes.filter((process) =>
-            process.info.type === kind && getUnitOfData(process) === unitType
+            process.info.type === kind
+            && plotGroupOf(process).key === group
           ),
         ]),
       ),
@@ -211,7 +164,7 @@ export const PlotPageClient = (
 
   const [segmentControl, setSegmentControl] = useState({
     dataType: infoTypes[0],
-    unitType: unitTypes[infoTypes[0]][0],
+    group: [...groupMap[infoTypes[0]].keys()][0],
   });
 
   const [newSelected, setNewSelected] = useState<
@@ -298,35 +251,36 @@ export const PlotPageClient = (
               onChange={(dataType) =>
                 setSegmentControl({
                   dataType,
-                  unitType: unitTypes[dataType][0],
+                  group: [...groupMap[dataType].keys()][0],
                 })}
               data={tabData.filter((entry) => infoTypes.includes(entry.value))}
             />
             <SegmentedControl
-              className={unitTypes[segmentControl.dataType].length > 1
+              className={groupMap[segmentControl.dataType].size > 1
                 ? ""
                 : classes.hidden}
-              value={segmentControl.unitType}
-              onChange={(unitType) =>
-                setSegmentControl({ ...segmentControl, unitType })}
-              data={unitTypes[segmentControl.dataType].map((unit) => ({
-                value: unit,
-                label: unitSegmentLabelMap[segmentControl.dataType][unit],
-              }))}
+              value={segmentControl.group}
+              onChange={(group) =>
+                setSegmentControl({ ...segmentControl, group })}
+              data={[...groupMap[segmentControl.dataType]].map((
+                [value, { label }],
+              ) => ({ value, label }))}
             />
             <Chart
               processes={newSelected[segmentControl.dataType][
-                segmentControl.unitType
+                segmentControl.group
               ]}
               colors={newSelected[segmentControl.dataType][
-                segmentControl.unitType
+                segmentControl.group
               ].map((
                 { info: { _key: id } },
               ) => colorMap.get(id)!)}
-              xlabel={plotData[segmentControl.dataType][segmentControl.unitType]
-                ?.xlabel}
-              ylabel={plotData[segmentControl.dataType][segmentControl.unitType]
-                ?.ylabel}
+              xlabel={groupMap[segmentControl.dataType].get(
+                segmentControl.group,
+              )?.xlabel}
+              ylabel={groupMap[segmentControl.dataType].get(
+                segmentControl.group,
+              )?.ylabel}
             />
           </Stack>
         </Grid.Col>
@@ -334,19 +288,19 @@ export const PlotPageClient = (
           <Stack>
             <ProcessTable
               processes={processMap[segmentControl.dataType][
-                segmentControl.unitType
+                segmentControl.group
               ]}
               referenceMarkers={referenceMarkers}
               colorMap={colorMap}
               selected={newSelected[segmentControl.dataType][
-                segmentControl.unitType
+                segmentControl.group
               ]}
               onChangeSelected={(processes) =>
                 setNewSelected({
                   ...newSelected,
                   [segmentControl.dataType]: {
                     ...newSelected[segmentControl.dataType],
-                    [segmentControl.unitType]: processes,
+                    [segmentControl.group]: processes,
                   },
                 })}
             />
