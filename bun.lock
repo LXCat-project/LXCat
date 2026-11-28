@@ -21,7 +21,7 @@
         "@lxcat/database": "workspace:^",
         "@lxcat/schema": "workspace:^",
         "@mantine/carousel": "^9.8.2",
-        "@mantine/code-highlight": "^9.8.1",
+        "@mantine/code-highlight": "^9.8.2",
         "@mantine/core": "^9.8.2",
         "@mantine/form": "^9.8.2",
         "@mantine/hooks": "^9.8.2",
@@ -612,7 +612,7 @@
 
     "@mantine/carousel": ["@mantine/carousel@9.8.2", "", { "peerDependencies": { "@mantine/core": "9.8.2", "@mantine/hooks": "9.8.2", "embla-carousel": ">=8.0.0", "embla-carousel-react": ">=8.0.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-bN5e+mwxYquyMEfU7CP/tnhpP7mls0wmMYIroaFJOZpQyWiGRfezSqGkGqPV0cDnwn+9yn4rG77obU6yAHW32g=="],
 
-    "@mantine/code-highlight": ["@mantine/code-highlight@9.8.1", "", { "dependencies": { "clsx": "^2.1.1", "diff": "^9.0.0" }, "peerDependencies": { "@mantine/core": "9.8.1", "@mantine/hooks": "9.8.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-1khAA57Py/XLiJylaNGDxJConbeITZTz7YnvSsbz6NASdbTYylH6a290IMOdV6H4vfyMbweWS5g/v50O2XdPFw=="],
+    "@mantine/code-highlight": ["@mantine/code-highlight@9.8.2", "", { "dependencies": { "clsx": "^2.1.1", "diff": "^9.0.0" }, "peerDependencies": { "@mantine/core": "9.8.2", "@mantine/hooks": "9.8.2", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-L+69TylIuDw5T45DQWTnC/JbOckpyl5JFtdPjSVTrgTS3LLCAsQk+BVF2fZXhKG2/YrxlV7LYvTR1gJXrNpowA=="],
 
     "@mantine/core": ["@mantine/core@9.8.2", "", { "dependencies": { "@floating-ui/react": "^0.27.20", "clsx": "^2.1.1", "react-number-format": "^5.4.5", "react-remove-scroll": "^2.7.2", "type-fest": "^5.10.0" }, "peerDependencies": { "@mantine/hooks": "9.8.2", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-PEBlIr5A80Indc8mIp+JcMzmmtv2YioubzXsLossk4cDhgm3YX2DBFQi/hQknmOaU6wt9h8l4T8s4gh6WPM21Q=="],
 
@@ -3233,10 +3233,6 @@
     "@istanbuljs/load-nyc-config/find-up": ["find-up@4.1.0", "", { "dependencies": { "locate-path": "^5.0.0", "path-exists": "^4.0.0" } }, "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="],
 
     "@istanbuljs/load-nyc-config/js-yaml": ["js-yaml@3.14.2", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg=="],
-
-    "@mantine/code-highlight/@mantine/core": ["@mantine/core@9.8.1", "", { "dependencies": { "@floating-ui/react": "^0.27.20", "clsx": "^2.1.1", "react-number-format": "^5.4.5", "react-remove-scroll": "^2.7.2", "type-fest": "^5.10.0" }, "peerDependencies": { "@mantine/hooks": "9.8.1", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-+ayBTxun7MslJL6x4qaylVy6TyHu3o68+PH22gt70eJSHgy0CHYR/c2q+BYxS8WvORuc4f5mr0xFbi0vzlgHug=="],
-
-    "@mantine/code-highlight/@mantine/hooks": ["@mantine/hooks@9.8.1", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-aAbY3zcqrS/n+wbMnKBXMiF5TJ7HZ06sH455Cf4ZkWRXko9Td2FYSe9aONCzXFaW62XqaWHBICyeIsAmUds3uA=="],
 
     "@maplibre/maplibre-gl-style-spec/@mapbox/unitbezier": ["@mapbox/unitbezier@0.0.1", "", {}, "sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw=="],
 
