@@ -25,6 +25,11 @@ import { ExpandableInfo, expandableInfo } from "./expanded-info";
 import classes from "./process-table.module.css";
 import { isPlottable, toggleAll } from "./selection";
 
+// The schema's data-type names, shortened for the table column.
+const dataTypeLabels: Record<string, string> = {
+  ExtendedArrhenius: "Arrhenius",
+};
+
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
   referenceMarkers: Map<string, number>;
@@ -185,7 +190,9 @@ export const ProcessTable = (
           accessor: "data",
           title: "Data",
           width: 120,
-          render: ({ info: { data } }) => <Text size="sm">{data.type}</Text>,
+          render: ({ info: { data } }) => (
+            <Text size="sm">{dataTypeLabels[data.type] ?? data.type}</Text>
+          ),
         },
         {
           accessor: "type",
@@ -265,7 +272,9 @@ export const ProcessTable = (
           ? { color: colorMap.get(_key), className: classes.checkbox }
           : {
             className: classes.checkboxDisabled,
-            title: "Expression data cannot be plotted yet",
+            // The disabled input itself does not fire hover events, so
+            // the tooltip goes on the root element.
+            wrapperProps: { title: "Expression data cannot be plotted yet" },
           };
       }}
     />
