@@ -6,6 +6,7 @@ import { ReferenceRef } from "@lxcat/schema/reference";
 import {
   ActionIcon,
   Box,
+  Checkbox,
   Group,
   HoverCard,
   List,
@@ -21,8 +22,14 @@ import { PAGE_SIZE } from "../../../cs/constants";
 import { reactionAsLatex } from "../../../cs/reaction";
 import { Latex } from "../../../shared/latex";
 import { DenormalizedProcess } from "../denormalized-process";
+import { ExpandableInfo, expandableInfo } from "./expanded-info";
 import classes from "./process-table.module.css";
 import { isPlottable, toggleAll } from "./selection";
+
+// The schema's data-type names, shortened for the table column.
+const dataTypeLabels: Record<string, string> = {
+  ExtendedArrhenius: "Arrhenius",
+};
 
 export type ProcessTableProps = {
   processes: Array<DenormalizedProcess>;
@@ -77,6 +84,39 @@ const renderReferences = (
   </Group>
 );
 
+// The details of a process, shown when its row is expanded.
+const Expanded = ({ info }: { info: ExpandableInfo }) => (
+  <Box className={classes.nested}>
+    {info.comments
+      && (
+        <>
+          <Text fw={700}>Comments:</Text>
+          <List type="unordered">
+            {info.comments.map((comment, index) => (
+              <List.Item key={index}>
+                <Text>{comment}</Text>
+              </List.Item>
+            ))}
+          </List>
+        </>
+      )}
+    {info.constant
+      && (
+        <Group>
+          <Text fw={700}>Value:</Text>
+          <Text>{info.constant.value} {info.constant.unit}</Text>
+        </Group>
+      )}
+    {info.expression
+      && (
+        <Group>
+          <Text fw={700}>Expression:</Text>
+          <Text ff="mono">{info.expression}</Text>
+        </Group>
+      )}
+  </Box>
+);
+
 export const ProcessTable = (
   { processes, referenceMarkers, colorMap, selected, onChangeSelected }:
     ProcessTableProps,
@@ -115,6 +155,16 @@ export const ProcessTable = (
       .length;
   }, [selectable, selected]);
 
+  const isSelected = ({ info: { _key } }: DenormalizedProcess) =>
+    selected.some(({ info: { _key: key } }) => key === _key);
+
+  const toggleRecord = (record: DenormalizedProcess) =>
+    onChangeSelected(
+      isSelected(record)
+        ? selected.filter(({ info: { _key } }) => _key !== record.info._key)
+        : [...selected, record],
+    );
+
   return (
     <DataTable
       withTableBorder
@@ -132,29 +182,70 @@ export const ProcessTable = (
         `${from}–${to} of ${totalRecords}`}
       rowExpansion={{
         allowMultiple: true,
-        expandable: ({ record: { info: { comments } } }) =>
-          comments !== undefined && comments.length > 0,
+        expandable: ({ record: { info } }) =>
+          expandableInfo(info) !== undefined,
         expanded: {
           recordIds: expanded,
           onRecordIdsChange: setExpanded,
         },
-        content: ({ record: { info: { comments } } }) => (
-          <Box className={classes.nested}>
-            <Text fw={700}>Comments:</Text>
-            <List type="unordered">
-              {comments?.map((comment, index) => (
-                <List.Item key={index}>
-                  <Text>{comment}</Text>
-                </List.Item>
-              ))}
-            </List>
-          </Box>
+        content: ({ record: { info } }) => (
+          <Expanded info={expandableInfo(info)!} />
         ),
       }}
+      customRowAttributes={(record) =>
+        isSelected(record) ? { "data-selected": true } : {}}
       columns={[
+        {
+          accessor: "select",
+          title: (
+            <Checkbox
+              aria-label="Select all records"
+              checked={selectable.length > 0
+                && nrSelected === selectable.length}
+              indeterminate={nrSelected > 0 && nrSelected < selectable.length}
+              onChange={() =>
+                onChangeSelected(toggleAll(processes, selectable, selected))}
+            />
+          ),
+          width: 40,
+          textAlign: "center",
+          render: (record) => {
+            const plottable = isPlottable(record);
+            const checkbox = (
+              <Checkbox
+                aria-label="Select process"
+                checked={isSelected(record)}
+                disabled={!plottable}
+                color={colorMap.get(record.info._key)}
+                className={plottable
+                  ? classes.checkbox
+                  : classes.checkboxDisabled}
+                onChange={() => toggleRecord(record)}
+              />
+            );
+            return plottable
+              ? checkbox
+              : (
+                <Tooltip
+                  position="right"
+                  label="Expression data cannot be plotted yet"
+                >
+                  {checkbox}
+                </Tooltip>
+              );
+          },
+        },
         {
           accessor: "reaction",
           render: (record) => <Latex>{reactionAsLatex(record.reaction)}</Latex>,
+        },
+        {
+          accessor: "data",
+          title: "Data",
+          width: 120,
+          render: ({ info: { data } }) => (
+            <Text size="sm">{dataTypeLabels[data.type] ?? data.type}</Text>
+          ),
         },
         {
           accessor: "type",
@@ -197,18 +288,18 @@ export const ProcessTable = (
           accessor: "actions",
           textAlign: "center",
           width: 80,
-          render: ({ info: { _key, comments } }) => {
-            if (comments && comments.length > 0) {
-              return expanded.includes(_key)
+          render: ({ info }) => {
+            if (expandableInfo(info) !== undefined) {
+              return expanded.includes(info._key)
                 ? (
-                  <Tooltip label="Hide comments">
+                  <Tooltip label="Hide details">
                     <ActionIcon size="sm" variant="subtle">
                       <IconEyeClosed size={20} />
                     </ActionIcon>
                   </Tooltip>
                 )
                 : (
-                  <Tooltip label="Show comments">
+                  <Tooltip label="Show details">
                     <ActionIcon size="sm" variant="subtle">
                       <IconEye size={20} />
                     </ActionIcon>
@@ -218,20 +309,6 @@ export const ProcessTable = (
           },
         },
       ]}
-      selectedRecords={selected}
-      onSelectedRecordsChange={onChangeSelected}
-      isRecordSelectable={isPlottable}
-      allRecordsSelectionCheckboxProps={{
-        "aria-label": "Select all records",
-        checked: selectable.length > 0 && nrSelected === selectable.length,
-        indeterminate: nrSelected > 0 && nrSelected < selectable.length,
-        onChange: () =>
-          onChangeSelected(toggleAll(processes, selectable, selected)),
-      }}
-      getRecordSelectionCheckboxProps={({ info: { _key } }) => ({
-        color: colorMap.get(_key),
-        className: classes.checkbox,
-      })}
     />
   );
 };
